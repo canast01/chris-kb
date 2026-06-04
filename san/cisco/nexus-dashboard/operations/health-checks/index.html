@@ -3447,6 +3447,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3634,7 +3653,7 @@
 
 
 <h1 id="cisco-nexus-dashboard-operations-health-checks">Cisco Nexus Dashboard — Operations Health Checks<a class="headerlink" href="#cisco-nexus-dashboard-operations-health-checks" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to any cluster node</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to any cluster node</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show cluster health summary</span>
@@ -3698,7 +3717,17 @@
 <a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>│<span class="w">                                                                                                       </span>│
 <a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Nexus Dashboard UI → System → Services — verify all platform services show <strong>Running</strong>; any Stopped or Error state needs investigation</li>
+<li>Nexus Dashboard → Sites — confirm all registered sites show <strong>Connected</strong>; Disconnected sites block policy deployment</li>
+<li>NDFC → Fabric Builder → switch inventory — verify all fabric switches appear as <strong>Managed</strong> with no discovery errors</li>
+<li>NDFC → Fabric → deployment status — check for any switches with <strong>pending</strong> or <strong>failed</strong> configuration deployments; resolve before next change window</li>
+<li>Nexus Dashboard → Alerts → open alarms — filter Critical and Major severity; review, assign, and escalate unacknowledged alarms</li>
+<li>NDFC → Operations → Backup — confirm last successful backup timestamp is within the last 24 hours; trigger manual backup if overdue</li>
+<li>SSH to each ND node: <code>df -h /data</code> — alert and escalate if any node filesystem usage exceeds <strong>80%</strong> (Elasticsearch fills fast)</li>
+</ol>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># List recent backups</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>acs<span class="w"> </span>backup<span class="w"> </span>list

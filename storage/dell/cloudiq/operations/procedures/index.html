@@ -4154,6 +4154,83 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#connect-a-storage-system-to-cloudiq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connect a Storage System to CloudIQ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acknowledge-an-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledge an Alert
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-custom-capacity-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Custom Capacity Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-threshold-based-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Threshold-Based Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-performance-anomaly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Performance Anomaly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-proactive-recommendation-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Proactive Recommendation Implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-system-inventory-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export System Inventory Report
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4425,6 +4502,69 @@ Procedures reference covering Maintenance Window.
 <li>After the window: remove or allow the maintenance window to expire</li>
 <li>Re-verify that alert notifications resume (send a test or wait for the next scheduled health poll)</li>
 <li>Confirm the system reconnects and health score is visible in the dashboard</li>
+</ol>
+<hr />
+<h2 id="connect-a-storage-system-to-cloudiq">Connect a Storage System to CloudIQ<a class="headerlink" href="#connect-a-storage-system-to-cloudiq" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Install the CloudIQ SupportAssist agent (SCG — Secure Connect Gateway) on a VM or physical host in the same management network as the storage system</li>
+<li>In the SCG management UI, add the storage system: enter the management IP, admin username, and password</li>
+<li>SCG begins collecting telemetry and forwarding it to the Dell CloudIQ cloud endpoint over HTTPS (port 443 outbound)</li>
+<li>Log in to the CloudIQ portal (cloudiq.dell.com) and confirm the system appears under <strong>Infrastructure → Storage Systems</strong></li>
+<li>Allow up to 15 minutes for the first telemetry collection to complete; verify health score and capacity data are populating correctly</li>
+</ol>
+<h2 id="acknowledge-an-alert">Acknowledge an Alert<a class="headerlink" href="#acknowledge-an-alert" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Log in to the CloudIQ portal and navigate to <strong>Alerts</strong></li>
+<li>Locate the alert using filters (severity, system, date range)</li>
+<li>Select the alert and click <strong>Acknowledge</strong></li>
+<li>Add notes describing the investigation status or known cause</li>
+<li>Optionally assign the alert to an owner (team member or queue)</li>
+<li>Track the alert to resolution — alerts remain in the acknowledged state until manually resolved or auto-closed by CloudIQ when the condition clears</li>
+</ol>
+<h2 id="create-a-custom-capacity-report">Create a Custom Capacity Report<a class="headerlink" href="#create-a-custom-capacity-report" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>CloudIQ → Capacity</strong></li>
+<li>Use the system selector to choose which storage systems to include in the report</li>
+<li>Apply any desired filters (site, model, tier)</li>
+<li>To export on demand: click <strong>Export</strong> and select CSV format — download the file for use in external reporting tools</li>
+<li>To schedule a recurring report: click <strong>Schedule Report</strong> → set frequency (daily, weekly, monthly) → enter email recipients → save</li>
+<li>Confirm delivery by checking the specified email inbox after the first scheduled run</li>
+</ol>
+<h2 id="configure-threshold-based-notifications">Configure Threshold-Based Notifications<a class="headerlink" href="#configure-threshold-based-notifications" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>CloudIQ → Settings → Notifications</strong></li>
+<li>Click <strong>Add Rule</strong> and select the notification type (e.g. capacity threshold)</li>
+<li>Set the threshold value (e.g. pool capacity used &gt; 80%)</li>
+<li>Select the scope: all systems, a specific site, or individual systems</li>
+<li>Configure email recipients for the notification</li>
+<li>Save the rule, then click <strong>Test</strong> to send a test notification and confirm delivery</li>
+<li>Verify the rule appears in the active notifications list</li>
+</ol>
+<h2 id="review-performance-anomaly">Review Performance Anomaly<a class="headerlink" href="#review-performance-anomaly" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>CloudIQ → Performance</strong> and locate the anomaly (flagged automatically by CloudIQ ML)</li>
+<li>Click the anomaly to open the detail view — review the contributing metrics (latency, IOPS, bandwidth) and the time range</li>
+<li>Correlate the anomaly start time with any change activity recorded in the ITSM change log</li>
+<li>If the anomaly aligns with a known change or maintenance window, add a note and <strong>Dismiss</strong> the anomaly</li>
+<li>If the anomaly is unexplained, drill into the affected volumes or hosts for further investigation and open a Dell support case if needed</li>
+<li>Document the outcome in the ITSM ticket</li>
+</ol>
+<h2 id="request-proactive-recommendation-implementation">Request Proactive Recommendation Implementation<a class="headerlink" href="#request-proactive-recommendation-implementation" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>CloudIQ → Recommendations</strong></li>
+<li>Review the list of active recommendations — each includes a description, impact assessment, and affected systems</li>
+<li>Select the recommendation and click <strong>View Details</strong> to review the full impact and any prerequisites</li>
+<li>For self-service actions (e.g. configuration tuning): follow the embedded steps and implement within an approved change window</li>
+<li>For actions requiring Dell support (e.g. firmware update, hardware replacement): click <strong>Schedule with Dell</strong> — this opens a Dell support engagement</li>
+<li>After implementation, confirm the recommendation is marked as resolved in CloudIQ</li>
+</ol>
+<h2 id="export-system-inventory-report">Export System Inventory Report<a class="headerlink" href="#export-system-inventory-report" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Navigate to <strong>CloudIQ → Inventory</strong></li>
+<li>Select the systems to include (or leave unfiltered for all managed systems)</li>
+<li>Click <strong>Export</strong> and select CSV format</li>
+<li>The downloaded file includes model, serial number, firmware version, site, and management IP for each managed system</li>
+<li>Use the CSV for asset audits, CMDB updates, or capacity planning reviews</li>
 </ol>
 
 

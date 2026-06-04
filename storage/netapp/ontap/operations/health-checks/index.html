@@ -3634,6 +3634,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#health-check-decision-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4025,6 +4036,17 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Cluster health</strong> — <code>cluster show -health true</code> — all nodes should return Healthy</li>
+<li><strong>Node status</strong> — <code>system node show</code> — all nodes should be Online</li>
+<li><strong>Volume health</strong> — <code>volume show -health-status degraded</code> — should return no entries</li>
+<li><strong>Aggregate status</strong> — <code>aggr show -state !online</code> — should return no entries</li>
+<li><strong>Disk health</strong> — <code>disk show -state !present</code> and <code>disk show -broken-count</code> — count should be 0</li>
+<li><strong>SVM status</strong> — <code>vserver show -state !running</code> — all SVMs should be Running</li>
+<li><strong>SnapMirror health</strong> — <code>snapmirror show -health false</code> — should return empty</li>
+<li><strong>NVRAM battery</strong> — <code>system node show -fields nvram-battery-status</code> — all should show Ok</li>
+</ol>
 <h2 id="health-check-decision-flow">Health Check Decision Flow<a class="headerlink" href="#health-check-decision-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     start([Start Health Check]) --&gt; clusterShow["cluster show\nall nodes healthy?"]

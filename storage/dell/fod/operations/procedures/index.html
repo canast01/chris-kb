@@ -4176,6 +4176,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#activate-a-features-on-demand-licence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activate a Features on Demand Licence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renew-an-expiring-fod-licence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renew an Expiring FOD Licence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-all-active-fod-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List All Active FOD Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deactivate-an-unused-fod-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deactivate an Unused FOD Feature
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-fod-usage-vs-entitlement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit FOD Usage vs Entitlement
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4504,6 +4559,62 @@ Procedures reference covering Incident Triage, Maintenance Window, Operational T
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="activate-a-features-on-demand-licence">Activate a Features on Demand Licence<a class="headerlink" href="#activate-a-features-on-demand-licence" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Obtain the activation key from Dell (delivered via the Dell licensing portal or by email)</li>
+<li>Apply the key using SYMCLI:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-auth<span class="w"> </span>&lt;activation-key&gt;<span class="w"> </span>activate
+</code></pre></div></li>
+<li>Verify the feature is now active:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fod
+</code></pre></div>
+   The target feature should show status <code>Active</code>.</li>
+<li>Update the CMDB and the licence inventory record with the feature name, activation date, and expiry date</li>
+<li>Store the activation key in the organisation's secret/licence vault</li>
+</ol>
+<h2 id="renew-an-expiring-fod-licence">Renew an Expiring FOD Licence<a class="headerlink" href="#renew-an-expiring-fod-licence" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Monitor expiry dates from the quarterly audit or via <code>symcfg -sid &lt;sid&gt; list -fod -v</code></li>
+<li>Contact Dell or log in to MyService360 to purchase a renewal for the expiring feature</li>
+<li>Receive the new activation key from Dell (typically via email or the licensing portal)</li>
+<li>Apply the renewal key within an approved change window:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-auth<span class="w"> </span>&lt;new-activation-key&gt;<span class="w"> </span>activate
+</code></pre></div></li>
+<li>Verify the new expiry date:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fod<span class="w"> </span>-v
+</code></pre></div></li>
+<li>Update the CMDB and licence inventory with the new expiry date</li>
+</ol>
+<h2 id="list-all-active-fod-features">List All Active FOD Features<a class="headerlink" href="#list-all-active-fod-features" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all FOD features with name, status, and expiry date</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fod<span class="w"> </span>-v
+</code></pre></div>
+<p>The output includes feature name, licence state (Active / Inactive / Expired), and expiry date. Use this output as the basis for quarterly licence audits and renewals.</p>
+<h2 id="deactivate-an-unused-fod-feature">Deactivate an Unused FOD Feature<a class="headerlink" href="#deactivate-an-unused-fod-feature" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Confirm with the application or storage team that the feature is genuinely unused and safe to deactivate</li>
+<li>Raise a change request — deactivation may affect functionality if any workload still depends on the feature</li>
+<li>Deactivate the feature:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-auth<span class="w"> </span>&lt;key&gt;<span class="w"> </span>deactivate<span class="w"> </span>-feature<span class="w"> </span>&lt;feature-name&gt;
+</code></pre></div></li>
+<li>Verify the feature is no longer active:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fod
+</code></pre></div></li>
+<li>Update the CMDB and licence inventory; return the licence to Dell or reallocate to another array as applicable</li>
+</ol>
+<h2 id="audit-fod-usage-vs-entitlement">Audit FOD Usage vs Entitlement<a class="headerlink" href="#audit-fod-usage-vs-entitlement" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Export the full FOD feature list for each array:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-fod<span class="w"> </span>-v<span class="w"> </span>&gt;<span class="w"> </span>fod_audit_&lt;sid&gt;.txt
+</code></pre></div></li>
+<li>Compare the exported list against the organisation's licence entitlement register (CMDB or licence spreadsheet)</li>
+<li>Identify any features that are active but not in the entitlement register (potential unlicensed use)</li>
+<li>Identify any features in the entitlement register that are not active on the array (potential unused licences)</li>
+<li>For over-licensed features: plan deactivation or reallocation</li>
+<li>For unused entitlements: confirm whether the feature was never applied or was deactivated; update the inventory accordingly</li>
+<li>Document audit findings and remediation actions; repeat quarterly</li>
+</ol>
 
 
 

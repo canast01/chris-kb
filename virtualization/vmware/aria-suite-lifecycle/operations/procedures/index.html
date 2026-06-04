@@ -4682,6 +4682,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#add-a-product-to-an-existing-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Product to an Existing Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scale-out-an-existing-deployment-add-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale Out an Existing Deployment (Add Node)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-a-product-via-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade a Product via LCM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import-a-product-binary-to-the-locker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import a Product Binary to the Locker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotate-all-passwords-for-an-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotate All Passwords for an Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommission-an-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission an Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5094,6 +5160,68 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 <li>LCM runs a pre-delete check and then powers off and deletes the product VMs from vCenter</li>
 <li>Remove the product's DNS records and IP address reservations from IPAM</li>
 <li>Archive the product's Locker credentials (do not delete until confirmed decommissioned)</li>
+</ol>
+<hr />
+<h2 id="add-a-product-to-an-existing-environment">Add a Product to an Existing Environment<a class="headerlink" href="#add-a-product-to-an-existing-environment" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM → Lifecycle Operations → Environments → select the target environment</li>
+<li>Click <strong>Add Product</strong> → select the product and version from the Locker (binary must already be imported)</li>
+<li>Complete the product wizard: configure FQDN, IP addresses, sizing, and linked vCenter</li>
+<li>Submit — LCM deploys the product VMs to the target vCenter</li>
+<li>Monitor via <strong>Requests</strong> — each step shown with pass/fail status</li>
+<li>Post-deploy: validate product health via <strong>Environments → product card → Health Check</strong></li>
+</ol>
+<hr />
+<h2 id="scale-out-an-existing-deployment-add-node">Scale Out an Existing Deployment (Add Node)<a class="headerlink" href="#scale-out-an-existing-deployment-add-node" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM → Lifecycle Operations → Environments → select the product to scale</li>
+<li>Click <strong>Scale Out</strong> → select the node type: <strong>Replica</strong> (active-active) or <strong>Worker</strong> (processing node, product-dependent)</li>
+<li>Configure IP address, FQDN, and vCenter placement for the new node</li>
+<li>Submit — LCM deploys and joins the new node to the existing product cluster</li>
+<li>Monitor via <strong>Requests</strong></li>
+<li>Post-deploy: validate cluster status — all nodes should show green in the product's own UI</li>
+</ol>
+<hr />
+<h2 id="upgrade-a-product-via-lcm">Upgrade a Product via LCM<a class="headerlink" href="#upgrade-a-product-via-lcm" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM → Lifecycle Operations → Environments → product card → <strong>Upgrade</strong></li>
+<li>Select the target version (must be available in the Locker — import binary first if not present)</li>
+<li>Click <strong>Run Precheck</strong> — LCM validates certificates, disk space, connectivity, and snapshot state</li>
+<li>Resolve any Precheck failures before proceeding (common: expired certificates, low disk space)</li>
+<li>Schedule the upgrade window — confirm outage impact with application teams</li>
+<li>Click <strong>Upgrade</strong> — monitor each phase via <strong>Requests</strong></li>
+<li>Post-upgrade validation: product health check green, verify version in product UI, run smoke tests</li>
+</ol>
+<hr />
+<h2 id="import-a-product-binary-to-the-locker">Import a Product Binary to the Locker<a class="headerlink" href="#import-a-product-binary-to-the-locker" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM → Locker → Product Binaries → <strong>Import</strong></li>
+<li>Choose import method:</li>
+<li><strong>My VMware Download URL</strong> — provide a direct download link (LCM downloads directly)</li>
+<li><strong>Upload</strong> — upload a locally downloaded binary from the LCM UI</li>
+<li>LCM verifies the SHA-256 checksum after import — confirm the checksum matches VMware's published value</li>
+<li>Binary is now listed in the Locker and available for new deployments and upgrades</li>
+</ol>
+<hr />
+<h2 id="rotate-all-passwords-for-an-environment">Rotate All Passwords for an Environment<a class="headerlink" href="#rotate-all-passwords-for-an-environment" title="Permanent link">&para;</a></h2>
+<ol>
+<li>LCM → Lifecycle Operations → Environments → select the environment</li>
+<li>Click <strong>Rotate Passwords</strong> → select scope: <strong>All Products</strong> (or select individual products)</li>
+<li>Confirm the operation — LCM generates new passwords and updates them across all product nodes</li>
+<li>Monitor via <strong>Requests</strong> — each product's password rotation shown as a subtask</li>
+<li>After completion: verify no service disruptions — check product health for all components in the environment</li>
+<li>Update any external integrations (ITSM connectors, monitoring agents) that use the rotated credentials</li>
+</ol>
+<hr />
+<h2 id="decommission-an-environment">Decommission an Environment<a class="headerlink" href="#decommission-an-environment" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Confirm all workloads have been migrated off the environment — no active VMs or services should depend on it</li>
+<li>Remove all external integrations pointing to the environment (cloud accounts, monitoring adapters, ITSM plugins)</li>
+<li>LCM → Lifecycle Operations → Environments → select the environment → <strong>Delete</strong></li>
+<li>LCM runs a pre-delete check and then removes all product registrations from its database</li>
+<li>LCM powers off and deletes product VMs from the linked vCenter</li>
+<li>Verify in vCenter that all product VMs are deleted and datastores freed</li>
+<li>Clean up: remove DNS records, IP reservations from IPAM, and firewall rules for the decommissioned environment</li>
 </ol>
 
 

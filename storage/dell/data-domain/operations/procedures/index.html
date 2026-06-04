@@ -4380,6 +4380,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#add-a-replication-context-dd-boost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Replication Context (DD Boost)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-nfs-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure NFS Export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-cifs-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure CIFS Share
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-filesystem-cleaner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Filesystem Cleaner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-replication-throttle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Replication Throttle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expand-data-domain-capacity-dd-expansion-shelf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expand Data Domain Capacity (DD Expansion Shelf)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4842,6 +4908,86 @@ Procedures reference covering Change Readiness, Maintenance Window, Filesystem C
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Cleaning taking too long</span>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>system<span class="w"> </span>show<span class="w"> </span>stats<span class="w">   </span><span class="c1"># check if high I/O is causing slowdown</span>
 </code></pre></div>
+<hr />
+<h2 id="add-a-replication-context-dd-boost">Add a Replication Context (DD Boost)<a class="headerlink" href="#add-a-replication-context-dd-boost" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add a DD Boost replication context from source MTree to target Data Domain</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>replication<span class="w"> </span>add<span class="w"> </span><span class="nb">source</span><span class="w"> </span>ddboost://&lt;source-dd&gt;/data/col1/&lt;source-mtree&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>destination<span class="w"> </span>ddboost://target-dd.example.com/data/col1/&lt;target-mtree&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Initialise the context — seeds the initial copy to the DR system</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>replication<span class="w"> </span>initialize<span class="w"> </span>ddboost://&lt;source-dd&gt;/data/col1/&lt;source-mtree&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Monitor initialisation progress</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>replication<span class="w"> </span>status
+</code></pre></div>
+<p>Monitor with <code>replication show all</code> until the context reports <code>Normal</code> state. Initial seeding time depends on dataset size and WAN bandwidth.</p>
+<h2 id="configure-nfs-export">Configure NFS Export<a class="headerlink" href="#configure-nfs-export" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Add an NFS export for the specified MTree, restricting access to a single client IP</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nfs<span class="w"> </span>add<span class="w"> </span>/data/col1/&lt;mtree&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;client-IP&gt;<span class="w"> </span>options<span class="w"> </span>ro,sec<span class="o">=</span>sys
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># To allow read-write access for a subnet</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>nfs<span class="w"> </span>add<span class="w"> </span>/data/col1/&lt;mtree&gt;<span class="w"> </span>clients<span class="w"> </span>&lt;subnet&gt;/&lt;prefix&gt;<span class="w"> </span>options<span class="w"> </span>rw,sec<span class="o">=</span>sys
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Enable the NFS service if not already running</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>nfs<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Verify the export is listed</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>nfs<span class="w"> </span>show<span class="w"> </span>exports
+</code></pre></div>
+<p>Test the mount from the client:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dd-ip&gt;:/data/col1/&lt;mtree&gt;<span class="w"> </span>/mnt/test
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ls<span class="w"> </span>/mnt/test
+</code></pre></div></p>
+<h2 id="configure-cifs-share">Configure CIFS Share<a class="headerlink" href="#configure-cifs-share" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Create a CIFS share pointing to the MTree</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>cifs<span class="w"> </span>share<span class="w"> </span>create<span class="w"> </span>&lt;share-name&gt;<span class="w"> </span><span class="s2">&quot;&lt;description&gt;&quot;</span><span class="w"> </span>/data/col1/&lt;mtree&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Enable the share</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>cifs<span class="w"> </span>share<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;share-name&gt;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Verify the share is listed</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>cifs<span class="w"> </span>share<span class="w"> </span>show
+</code></pre></div>
+<p>Test access from a Windows client by mapping a drive to <code>\\&lt;dd-hostname&gt;\&lt;share-name&gt;</code> using an account with access. Confirm read/write as expected by the share permissions.</p>
+<h2 id="run-filesystem-cleaner">Run Filesystem Cleaner<a class="headerlink" href="#run-filesystem-cleaner" title="Permanent link">&para;</a></h2>
+<p>Run during a low-activity backup window to reclaim space without impacting throughput.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Start an immediate cleaning cycle</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Monitor progress in real time</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>watch
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Check cleaning status at any time</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+</code></pre></div>
+<p>Cleaning reclaims space from expired or deleted backup data. Run <code>filesys show space</code> before and after to confirm space was recovered. See also the <a href="#filesystem-cleaning">Filesystem Cleaning</a> section for scheduling and troubleshooting.</p>
+<h2 id="change-replication-throttle">Change Replication Throttle<a class="headerlink" href="#change-replication-throttle" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Set a bandwidth limit in bytes per second (e.g. 50 MB/s = 52428800 bps)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>replication<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="m">52428800</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># View current throttle setting</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>replication<span class="w"> </span>throttle<span class="w"> </span>show
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Remove the throttle limit (full bandwidth)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>replication<span class="w"> </span>throttle<span class="w"> </span>del
+</code></pre></div>
+<p>Apply a throttle during business hours to protect production I/O from replication traffic. Remove or raise the limit during off-peak windows to reduce replication lag. Verify lag after any change with <code>replication show stats</code>.</p>
+<h2 id="expand-data-domain-capacity-dd-expansion-shelf">Expand Data Domain Capacity (DD Expansion Shelf)<a class="headerlink" href="#expand-data-domain-capacity-dd-expansion-shelf" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Physically install the expansion shelf and connect the SAS cables per the Dell hardware installation guide</li>
+<li>Power on the expansion shelf and wait for it to initialise</li>
+<li>On the Data Domain, check that new disks are detected:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>disk<span class="w"> </span>show<span class="w"> </span>state
+</code></pre></div>
+   New disks should appear as <code>Available</code></li>
+<li>Expand the filesystem to include the new capacity:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>filesys<span class="w"> </span>expand
+</code></pre></div></li>
+<li>Verify the expanded capacity is reflected in the usable pool:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+</code></pre></div></li>
+<li>Update the CMDB with the new raw and usable capacity figures and close the change record</li>
+</ol>
 
 
 

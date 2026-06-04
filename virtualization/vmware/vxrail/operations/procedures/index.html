@@ -4904,6 +4904,94 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#run-vxrail-lcm-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run VxRail LCM Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-node-to-the-vxrail-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Node to the VxRail Cluster
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replace-a-failed-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace a Failed Disk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-smtp-for-vxrail-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure SMTP for VxRail Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update-vxrail-manager-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update VxRail Manager Credentials
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-vxrail-log-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate VxRail Log Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-idrac-access-on-vxrail-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure iDRAC Access on VxRail Node
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-vxrail-cluster-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check VxRail Cluster Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5345,6 +5433,104 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Wait for Remaining Bytes = 0 before declaring the replacement complete</span>
 </code></pre></div>
 <p>Validate in vCenter: <strong>Cluster → Monitor → vSAN → Health</strong> — all checks should return to green.</p>
+<hr />
+<h2 id="run-vxrail-lcm-upgrade">Run VxRail LCM Upgrade<a class="headerlink" href="#run-vxrail-lcm-upgrade" title="Permanent link">&para;</a></h2>
+<ol>
+<li>VxRail Manager → LCM → <strong>Upgrade</strong></li>
+<li>Select the target version — VxRail Manager queries the VxRail update repository and shows available releases</li>
+<li>Click <strong>Run Compatibility Check</strong> — validates that all nodes, firmware, and vCenter versions are compatible with the target release</li>
+<li>Resolve any compatibility failures before proceeding (common: vCenter version too old, incompatible firmware baseline)</li>
+<li>Click <strong>Download Bundle</strong> — VxRail Manager downloads the upgrade bundle (may take time depending on bundle size)</li>
+<li>Schedule the upgrade window — confirm with application teams; a rolling upgrade causes brief per-node vMotion activity but no cluster-wide outage</li>
+<li>Click <strong>Start Upgrade</strong> — VxRail Manager upgrades one node at a time: places node in maintenance mode, applies firmware and ESXi upgrade, exits maintenance mode, waits for resync, then moves to the next node</li>
+<li>Monitor progress: VxRail Manager → LCM → <strong>Events</strong></li>
+<li>Post-upgrade validation: run the Post-Change Validation checklist; confirm all nodes show the new ESXi and VxRail version</li>
+</ol>
+<hr />
+<h2 id="add-a-node-to-the-vxrail-cluster">Add a Node to the VxRail Cluster<a class="headerlink" href="#add-a-node-to-the-vxrail-cluster" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Rack the new node in the VxRail rack and connect all cables: management, vMotion, vSAN, and VM network uplinks</li>
+<li>Configure iDRAC with a static management IP and verify it is reachable from the management network</li>
+<li>VxRail Manager → <strong>Add Node</strong> — VxRail Manager discovers the new node via the iDRAC IP</li>
+<li>Complete the Add Node wizard:</li>
+<li>Confirm node hardware is compatible with the existing cluster (model and disk configuration)</li>
+<li>Configure IP addresses: management, vMotion, vSAN for the new node</li>
+<li>Map the node to the correct VxRail network profile</li>
+<li>Submit — VxRail Manager installs ESXi on the new node, joins it to the vSphere cluster, and claims vSAN disk groups automatically</li>
+<li>Wait for vSAN rebalance to complete (<code>esxcli vsan debug resync list</code> — Remaining Bytes = 0)</li>
+<li>Run the Post-Change Validation checklist</li>
+</ol>
+<hr />
+<h2 id="replace-a-failed-disk">Replace a Failed Disk<a class="headerlink" href="#replace-a-failed-disk" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In vCenter: <strong>Cluster → Monitor → vSAN → Physical Disks</strong> — identify the failed disk (shows as Absent or Degraded)</li>
+<li>Note the node and disk slot from the physical disk detail pane</li>
+<li>Confirm the failure in iDRAC: SSH to the node's iDRAC → <code>racadm getsel | tail -30</code> — look for drive fault events</li>
+<li>Initiate vSAN evacuation for the node: put the node in maintenance mode with <strong>Full data migration</strong> (see <a href="#node-maintenance-mode-procedure">Node Maintenance Mode</a>)</li>
+<li>Physically hot-swap the failed disk — the failed drive's carrier LED is amber; insert the replacement in the same slot</li>
+<li>Verify iDRAC detects the new disk: <code>racadm storage get pdisks</code></li>
+<li>Exit maintenance mode — the node rejoins the cluster</li>
+<li>VxRail Manager automatically reclaims the new disk into the existing vSAN disk group; monitor in vCenter → <strong>Cluster → Configure → vSAN → Disk Management</strong></li>
+<li>Wait for vSAN rebuild to complete (<code>esxcli vsan debug resync list</code> — Remaining Bytes = 0)</li>
+</ol>
+<hr />
+<h2 id="configure-smtp-for-vxrail-alerts">Configure SMTP for VxRail Alerts<a class="headerlink" href="#configure-smtp-for-vxrail-alerts" title="Permanent link">&para;</a></h2>
+<ol>
+<li>VxRail Manager → Settings → <strong>SMTP</strong></li>
+<li>Configure:</li>
+<li><strong>Relay host</strong> — SMTP relay FQDN or IP (e.g., <code>smtp.example.local</code>)</li>
+<li><strong>Port</strong> — typically 25 (unauthenticated relay) or 587 (STARTTLS)</li>
+<li><strong>From address</strong> — sender address for VxRail alert emails (e.g., <code>vxrail-alerts@example.local</code>)</li>
+<li>Add alert email recipients: enter one or more recipient addresses</li>
+<li>Click <strong>Test Email</strong> — verify a test message is received at the configured address</li>
+<li>Save — VxRail Manager will now send email alerts for hardware faults, vSAN health changes, and upgrade events</li>
+</ol>
+<hr />
+<h2 id="update-vxrail-manager-credentials">Update VxRail Manager Credentials<a class="headerlink" href="#update-vxrail-manager-credentials" title="Permanent link">&para;</a></h2>
+<p>Required when vCenter, PSC, or service account passwords are rotated outside of VxRail Manager.</p>
+<ol>
+<li>VxRail Manager → Settings → <strong>Credentials</strong></li>
+<li>Locate the credential entry to update (vCenter admin, PSC admin, or SDDC Manager if VCF-managed)</li>
+<li>Click <strong>Edit</strong> → enter the new password</li>
+<li>Click <strong>Test Connectivity</strong> — VxRail Manager validates the credential against the target system</li>
+<li>Save — VxRail Manager resumes normal operations using the updated credential</li>
+</ol>
+<p>If connectivity fails after a credential update, verify the password was entered correctly and that the account has not been locked.</p>
+<hr />
+<h2 id="generate-vxrail-log-bundle">Generate VxRail Log Bundle<a class="headerlink" href="#generate-vxrail-log-bundle" title="Permanent link">&para;</a></h2>
+<p>Used for Dell support case submission or in-house troubleshooting.</p>
+<ol>
+<li>VxRail Manager → Support → <strong>Log Bundle</strong></li>
+<li>Select the scope:</li>
+<li><strong>All nodes</strong> — includes logs from every node in the cluster (large bundle; use for cluster-wide issues)</li>
+<li><strong>Specific node</strong> — include only the affected node's logs (use for single-node hardware issues)</li>
+<li>Click <strong>Generate</strong> — VxRail Manager collects logs from all selected nodes and assembles the bundle</li>
+<li>When generation completes, click <strong>Download</strong> — save the <code>.zip</code> file locally</li>
+<li>Attach the bundle to the Dell support case via the Dell SupportAssist portal or upload directly to the support case</li>
+</ol>
+<hr />
+<h2 id="configure-idrac-access-on-vxrail-node">Configure iDRAC Access on VxRail Node<a class="headerlink" href="#configure-idrac-access-on-vxrail-node" title="Permanent link">&para;</a></h2>
+<p>iDRAC provides out-of-band access for hardware monitoring, remote console, and node discovery.</p>
+<ol>
+<li>Connect to the iDRAC management IP via browser (<code>https://&lt;idrac-ip&gt;</code>) — default credentials are on the node's service tag label</li>
+<li>Navigate to <strong>iDRAC Settings → Network</strong> → configure a static IP, subnet, gateway, and DNS</li>
+<li>Navigate to <strong>iDRAC Settings → User Authentication</strong> → set a strong admin password and disable the default root account if policy requires</li>
+<li>Configure IPMI over LAN: <strong>iDRAC Settings → Network → IPMI Settings</strong> → enable if required for third-party monitoring tools</li>
+<li>Configure Redfish API access: <strong>iDRAC Settings → Services → Redfish</strong> → enable for programmatic OOB management</li>
+<li>Test remote console: <strong>Virtual Console → Launch</strong> — verify KVM access to the host</li>
+</ol>
+<hr />
+<h2 id="check-vxrail-cluster-compliance">Check VxRail Cluster Compliance<a class="headerlink" href="#check-vxrail-cluster-compliance" title="Permanent link">&para;</a></h2>
+<p>Compliance checks validate that all nodes are running the expected firmware and configuration baseline.</p>
+<ol>
+<li>VxRail Manager → Inventory → <strong>Cluster</strong></li>
+<li>Review the compliance status column for each node — all nodes should show <strong>Compliant</strong></li>
+<li>For any node showing <strong>Non-Compliant</strong>, click the node to expand the detail view:</li>
+<li><strong>Firmware drift</strong> — node firmware version does not match the cluster's active firmware baseline; remediate via LCM</li>
+<li><strong>Configuration drift</strong> — host profile or VxRail configuration differs from the cluster template; investigate and re-apply profile via vCenter <strong>Host Profiles</strong></li>
+<li>After remediation, re-run the compliance check to confirm all nodes return to Compliant status</li>
+<li>Schedule periodic compliance checks (monthly recommended) as part of ongoing operational governance</li>
+</ol>
 
 
 

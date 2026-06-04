@@ -3694,6 +3694,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3980,6 +3991,16 @@
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Relationship health</strong> — <code>snapmirror show -health false</code> — should return empty</li>
+<li><strong>Lag time</strong> — <code>snapmirror show -fields lag-time | sort -k2 -r | head -10</code> — flag any relationship with lag exceeding 2× its schedule interval</li>
+<li><strong>Failed transfers</strong> — <code>snapmirror show -transfer-error !- | grep -v healthy</code> — investigate any transfer errors</li>
+<li><strong>Broken-off relationships</strong> — <code>snapmirror show -state broken-off</code> — should be empty during normal operations</li>
+<li><strong>Throttle check</strong> — <code>snapmirror show -fields throttle</code> — verify throttle is not inadvertently set to 0 during business hours</li>
+<li><strong>Vault relationship status</strong> — <code>snapmirror show -policy-type vault</code> — check all SnapVault relationships are current</li>
+<li><strong>Policy compliance</strong> — <code>snapmirror policy show</code> — verify a schedule is attached to all relationships</li>
+</ol>
 <hr />
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>

@@ -4099,6 +4099,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#create-an-object-storage-bucket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an Object Storage Bucket
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-bucket-lifecycle-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Bucket Lifecycle Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-access-keys-for-an-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Access Keys for an Application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-bucket-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable Bucket Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-a-previous-object-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore a Previous Object Version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-capacity-utilisation-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate Capacity Utilisation Report
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4405,6 +4471,61 @@ Procedures reference covering COD Activation Procedure, Incident Triage.
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="create-an-object-storage-bucket">Create an Object Storage Bucket<a class="headerlink" href="#create-an-object-storage-bucket" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Log in to the COD management portal and navigate to <strong>Buckets → New Bucket</strong></li>
+<li>Specify the bucket name (must be globally unique within the namespace), storage class, and whether versioning should be enabled</li>
+<li>Configure a retention policy if required (WORM / compliance mode)</li>
+<li>Set the access policy: private (default), authenticated read, or public — apply the principle of least privilege</li>
+<li>Click <strong>Save</strong> — the bucket is immediately available for object PUT/GET operations</li>
+<li>Test by uploading a small test object using the portal or S3 CLI: <code>aws s3 cp test.txt s3://&lt;bucket-name&gt;/ --endpoint-url &lt;cod-endpoint&gt;</code></li>
+</ol>
+<h2 id="configure-bucket-lifecycle-policy">Configure Bucket Lifecycle Policy<a class="headerlink" href="#configure-bucket-lifecycle-policy" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In the COD portal, navigate to <strong>Buckets</strong> and select the target bucket</li>
+<li>Click <strong>Lifecycle → Add Rule</strong></li>
+<li>Configure a transition rule: move objects to the cold storage tier after N days of last access</li>
+<li>Configure an expiration rule: permanently delete objects after N days (or N days after transition)</li>
+<li>Set a rule scope: apply to all objects or to objects matching a specific prefix or tag</li>
+<li>Click <strong>Save</strong> — lifecycle rules are evaluated daily; changes take effect within 24 hours</li>
+<li>Monitor the <strong>Analytics → Storage Tiers</strong> view to confirm objects are transitioning as expected</li>
+</ol>
+<h2 id="create-access-keys-for-an-application">Create Access Keys for an Application<a class="headerlink" href="#create-access-keys-for-an-application" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In the COD portal, navigate to <strong>Users/Applications</strong> and select or create a service account dedicated to the application</li>
+<li>Click <strong>Generate Access Key</strong> — the portal displays the Access Key ID and Secret Access Key once</li>
+<li>Save both values securely in the organisation's secret management store (e.g. HashiCorp Vault) immediately — the secret cannot be retrieved again</li>
+<li>Configure the application with the endpoint URL, Access Key ID, and Secret Access Key</li>
+<li>Test connectivity: <code>aws s3 ls s3://&lt;bucket-name&gt;/ --endpoint-url &lt;cod-endpoint&gt;</code></li>
+<li>Rotate access keys on the schedule defined in the security policy; delete old keys after rotation is confirmed</li>
+</ol>
+<h2 id="enable-bucket-replication">Enable Bucket Replication<a class="headerlink" href="#enable-bucket-replication" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In the COD portal, navigate to <strong>Buckets</strong> and select the source bucket</li>
+<li>Click <strong>Replication → Configure Replication</strong></li>
+<li>Enter the destination bucket name and target endpoint/region</li>
+<li>Specify the replication scope: all objects, or objects matching a prefix or tag</li>
+<li>Enable replication and save — the portal starts replicating new objects immediately</li>
+<li>Test replication: upload a test object to the source bucket and confirm it appears in the destination bucket within the expected replication lag window</li>
+</ol>
+<h2 id="restore-a-previous-object-version">Restore a Previous Object Version<a class="headerlink" href="#restore-a-previous-object-version" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In the COD portal, navigate to <strong>Buckets</strong> and select the bucket (versioning must be enabled)</li>
+<li>Click <strong>Objects</strong> and locate the object to restore</li>
+<li>Click the object name to open the version history — all versions are listed with timestamp and size</li>
+<li>Select the desired previous version and click <strong>Restore</strong> — COD copies the selected version as the new current version</li>
+<li>Verify the restored content is accessible: download and confirm the object content is as expected</li>
+<li>The previous (overwritten) version is retained in history unless a lifecycle expiration rule removes it</li>
+</ol>
+<h2 id="generate-capacity-utilisation-report">Generate Capacity Utilisation Report<a class="headerlink" href="#generate-capacity-utilisation-report" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In the COD portal, navigate to <strong>Analytics → Capacity</strong></li>
+<li>Set the date range for the report period</li>
+<li>Review the breakdown by bucket, storage class (hot vs cold), and total namespace usage</li>
+<li>Click <strong>Export CSV</strong> to download the report for capacity planning, chargeback, or finance review</li>
+<li>Schedule recurring exports if the portal supports it, or automate via the COD S3 API to pull usage metrics on a schedule</li>
+</ol>
 
 
 
