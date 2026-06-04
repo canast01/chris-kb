@@ -21,8 +21,6 @@ purearray set --proxy https://<proxy-host>:<port>
 # Step 5: Check firewall rules
 # Array management IP must have outbound TCP 443 to pure1.purestorage.com
 # Verify with network team if connectivity test fails
-```
-
 ```text
 ┌─────────────────────────────────────── Pure1 — Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │

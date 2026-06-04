@@ -27,8 +27,6 @@ curl -sk -X GET \
   "https://cloudiq.apis.dell.com/cloudiq/rest/v1/reports/<reportId>/download" \
   -H "Authorization: Bearer <access_token>" \
   -o cloudiq-health-report.pdf
-```
-
 ```text
 ┌───────────────────────────────────────── CloudIQ — Reporting ─────────────────────────────────────────┐
 │                                                                                                       │

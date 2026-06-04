@@ -75,8 +75,6 @@ function New-RASRImage {
 # New-RASRImage -Destination "\\nas01\rasr-images\$env:COMPUTERNAME" `
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
-```
-
 ```text
 ┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │

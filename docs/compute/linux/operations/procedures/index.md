@@ -12,8 +12,6 @@ dpkg -l | awk 'NR>5' > /tmp/pre-change-packages.txt   # Ubuntu
 
 # Capture running kernel
 uname -r
-```
-
 ```text
 ┌──────────────────────────────────── Linux Operations — Procedures ────────────────────────────────────┐
 │                                                                                                       │

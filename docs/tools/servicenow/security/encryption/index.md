@@ -9,8 +9,6 @@ gs.getProperty('glide.http.ssl_check_cert')  // Should return 'true'
 // For a specific REST message — verify SSL is enforced
 // System Web Services → Outbound → REST Messages
 // Open REST Message → HTTP Methods → SSL enforcement: Enforce SSL/TLS
-```
-
 ```text
 ┌──────────────────────────────────────── ServiceNow Encryption ────────────────────────────────────────┐
 │                                                                                                       │

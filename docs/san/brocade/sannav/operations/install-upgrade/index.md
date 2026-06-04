@@ -15,8 +15,6 @@ sannav status
 
 # Change default admin password
 passwd admin
-```
-
 ```text
 ┌──────────────────────────────── Brocade SANnav — Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │

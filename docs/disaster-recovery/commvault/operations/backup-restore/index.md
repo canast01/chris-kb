@@ -4,8 +4,6 @@
 curl -s -X POST "https://commserve.example.com/webconsole/api/Login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>"}' | jq '.token'
-```
-
 ```text
 ┌────────────────────────────── Commvault Backup and Restore — Procedures ──────────────────────────────┐
 │                                                                                                       │

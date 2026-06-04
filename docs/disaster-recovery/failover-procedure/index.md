@@ -3,8 +3,6 @@
 ```bash
 symrdf -g <rdfgroup> query
 # Confirm R2 volumes are Synchronized or Consistent before failing over
-```
-
 ```text
 ┌──────────────────────────────────────── DR Failover Procedure ────────────────────────────────────────┐
 │                                                                                                       │

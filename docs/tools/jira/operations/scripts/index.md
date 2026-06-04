@@ -8,8 +8,6 @@ export JIRA_DB_HOST="db.example.com"
 export JIRA_DB_NAME="jiradb"
 export JIRA_DB_USER="jira"
 export PGPASSWORD="${JIRA_DB_PASSWORD}"
-```
-
 ```text
 ┌────────────────────────────────────── Jira — Operations Scripts ──────────────────────────────────────┐
 │                                                                                                       │

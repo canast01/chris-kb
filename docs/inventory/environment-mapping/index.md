@@ -32,8 +32,6 @@
 - DNS: api.payments.example.com → alb-pay-prod CNAME
 - TLS cert: *.payments.example.com — expires 2027-03-01
 - Secrets: vault path `secret/payments/db_password`, `secret/payments/fraud_api_key`
-```
-
 ```text
 ┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
 │                                                                                                       │

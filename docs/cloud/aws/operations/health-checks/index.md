@@ -9,8 +9,6 @@ aws health describe-events \
 
 # Current caller identity (confirm correct account/role)
 aws sts get-caller-identity
-```
-
 ```text
 ┌─────────────────────────────────── AWS Operations — Health Checks ────────────────────────────────────┐
 │                                                                                                       │

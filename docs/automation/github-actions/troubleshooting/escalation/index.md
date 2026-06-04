@@ -6,8 +6,6 @@ open https://githubstatus.com
 
 # Subscribe to status notifications via the GitHub Status API
 curl https://www.githubstatus.com/api/v2/status.json | jq '.status'
-```
-
 ```text
 ┌───────────────────────────────────── GitHub Actions — Escalation ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

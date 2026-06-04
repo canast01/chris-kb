@@ -12,8 +12,6 @@ cp internal-ca.crt /etc/pki/ca-trust/source/anchors/internal-ca.crt
 update-ca-trust extract
 # Verify
 trust list | grep "internal-ca"
-```
-
 ```text
 ┌─────────────────────────────────── Integration — Certificate Trust ───────────────────────────────────┐
 │                                                                                                       │

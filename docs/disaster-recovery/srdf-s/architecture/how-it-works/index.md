@@ -23,8 +23,6 @@ graph LR
   class PM_B dr
   class HA host
   class HB dr
-```
-
 ```text
 ┌──────────────────────────────────────── SRDF/S — How It Works ────────────────────────────────────────┐
 │                                                                                                       │

@@ -53,8 +53,6 @@ graph LR
     J <-->|REST API| DASH
     J <-->|REST API| SCRIPTS
     J <-->|REST API| EXT
-```
-
 ```text
 ┌────────────────────────────────── Jira — Architecture Integrations ───────────────────────────────────┐
 │                                                                                                       │

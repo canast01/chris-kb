@@ -21,8 +21,6 @@ flowchart TD
     errType -->|Drift after apply| refreshOnly["terraform apply\n-refresh-only"]
     errType -->|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
     enableDebug --> reviewLog["Review provider\nAPI call trace"]
-```
-
 ```text
 ┌────────────────────────────────────── Terraform — Common Issues ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

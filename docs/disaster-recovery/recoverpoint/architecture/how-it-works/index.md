@@ -26,8 +26,6 @@ graph LR
   class RPA2 dr
   class STG_A,STG_B store
   class H_A host
-```
-
 ```text
 ┌───────────────────────────────────── RecoverPoint — How It Works ─────────────────────────────────────┐
 │                                                                                                       │

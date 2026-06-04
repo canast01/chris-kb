@@ -18,8 +18,6 @@ SELECT indexname,
        pg_size_pretty(pg_relation_size(indexname::regclass)) AS index_size
 FROM pg_indexes
 ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
-```
-
 ```text
 ┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
 │                                                                                                       │

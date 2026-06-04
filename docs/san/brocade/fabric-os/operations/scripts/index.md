@@ -93,8 +93,6 @@ printf " Overall: %s\n" "$(status_label $overall)"
 echo "=============================="
 
 exit $overall
-```
-
 ```text
 ┌───────────────────────────────────── Brocade Fabric OS — Scripts ─────────────────────────────────────┐
 │                                                                                                       │

@@ -29,8 +29,6 @@ autosupport send <case-number>
 # 8. Manually generate a support bundle (if AutoSupport is not working)
 support bundle generate
 # Bundle is saved to /ddr/var/support/ — download via SCP or SFTP
-```
-
 ```text
 ┌───────────────────────────────────── Dell Data Domain Escalation ─────────────────────────────────────┐
 │                                                                                                       │

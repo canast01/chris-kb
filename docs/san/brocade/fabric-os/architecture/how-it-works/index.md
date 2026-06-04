@@ -25,8 +25,6 @@ graph TB
   class DIRA,DIRB,DIRC,DIRD ctrl
   class FA,PM store
   class H1,H2 host
-```
-
 ```text
 ┌────────────────────────────────── Brocade Fabric OS — How It Works ───────────────────────────────────┐
 │                                                                                                       │

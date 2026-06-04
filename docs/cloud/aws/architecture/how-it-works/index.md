@@ -27,8 +27,6 @@ graph TB
   class ORG,LOG,AUDIT,PROD ctrl
   class VPC,PUB,PRIV net
   class IGW,TGW cloud
-```
-
 ```text
 ┌─────────────────────────────────── AWS Architecture — How It Works ───────────────────────────────────┐
 │                                                                                                       │

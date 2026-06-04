@@ -17,8 +17,6 @@ flowchart TD
     F --> G{All checks\npassing?}
     G -->|Yes| H[Ready — proceed\nwith onboarding]
     G -->|No| I[Remediate blockers\nbefore proceeding]
-```
-
 ```text
 ┌──────────────────────────────────────── Environment Readiness ────────────────────────────────────────┐
 │                                                                                                       │

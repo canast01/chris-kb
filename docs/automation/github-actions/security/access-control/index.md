@@ -16,7 +16,6 @@ flowchart TD
     repoSecret --> secretCtx
     orgSecret --> secretCtx
     secretCtx --> step
-```
 ```text
 ┌─────────────────────────────────── GitHub Actions — Access Control ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

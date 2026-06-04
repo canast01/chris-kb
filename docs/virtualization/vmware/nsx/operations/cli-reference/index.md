@@ -15,8 +15,6 @@ get services
 get service http
 get service manager
 get service controller
-```
-
 ```text
 ┌───────────────────────────────────────── NSX — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │

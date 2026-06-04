@@ -14,8 +14,6 @@ fix(api): handle null response from billing service
 chore(deps): upgrade boto3 to 1.34.0
 docs(runbook): add k8s drain procedure
 refactor(cache): replace in-memory store with Redis
-```
-
 ```text
 ┌─────────────────────────────────────── Git — Design Standards ────────────────────────────────────────┐
 │                                                                                                       │

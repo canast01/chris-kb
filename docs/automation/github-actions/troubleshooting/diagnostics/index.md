@@ -26,8 +26,6 @@ flowchart TD
     uiCheck -->|"Need local iteration"| actLocal --> identify
     uiCheck -->|"Context issue"| dumpCtx --> identify
     uiCheck -->|"Logs clear"| runLogs --> identify
-```
-
 ```text
 ┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

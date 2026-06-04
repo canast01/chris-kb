@@ -52,8 +52,6 @@ flowchart TD
   class ROLE,CMD,FABRIC,SIEM goodNode
   class REJECT badNode
   class AAA,FCSP decisionNode
-```
-
 ```text
 ┌───────────────────────────────── Cisco MDS — Security Authentication ─────────────────────────────────┐
 │                                                                                                       │

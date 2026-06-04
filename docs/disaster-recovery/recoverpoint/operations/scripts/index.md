@@ -108,8 +108,6 @@ if non_active:
 else:
     print("RESULT: ALL CGs ACTIVE")
     sys.exit(0)
-```
-
 ```text
 ┌─────────────────────────────────────── RecoverPoint — Scripts ────────────────────────────────────────┐
 │                                                                                                       │

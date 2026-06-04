@@ -12,8 +12,6 @@ Privileges to include:
     - Network.Assign (for network customisation)
   Virtual Machine:
     - Virtual Machine.Provisioning.* (for recovery)
-```
-
 ```text
 ┌──────────────────────────────────────── SRM — Access Control ─────────────────────────────────────────┐
 │                                                                                                       │

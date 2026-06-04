@@ -28,8 +28,6 @@ isi statistics client list \
   --sort=latency \
   --limit=10 \
   --format table
-```
-
 ```text
 ┌──────────────────────────────────── InsightIQ — Workload Analysis ────────────────────────────────────┐
 │                                                                                                       │

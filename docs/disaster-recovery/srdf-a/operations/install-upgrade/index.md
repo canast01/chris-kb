@@ -18,8 +18,6 @@ symrdf -g <dgname> -sid <r1_sid> resume -noprompt
 # Step 6 — Verify pair state returns to Consistent
 symrdf -g <dgname> -sid <r1_sid> query
 # Wait for SyncInProg → Consistent transition before closing the change window
-```
-
 ```text
 ┌───────────────────────────────────── SRDF/A — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

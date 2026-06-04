@@ -49,8 +49,6 @@ flowchart TD
     style abortTest fill:#be123c,color:#fff
     style enableAccess fill:#b45309,color:#fff
     style disableAccess fill:#b45309,color:#fff
-```
-
 ```text
 ┌──────────────────────────────────── RecoverPoint — CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │

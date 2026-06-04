@@ -15,8 +15,6 @@ acs backup status
 
 # List available backups
 acs backup list
-```
-
 ```text
 ┌───────────────────────── Cisco Nexus Dashboard — Operations Backup & Restore ─────────────────────────┐
 │                                                                                                       │

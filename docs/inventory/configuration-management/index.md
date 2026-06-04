@@ -13,8 +13,6 @@ ansible-playbook -i inventory/ baseline-check.yml --check --diff
 
 # Show facts (current config state)
 ansible -i inventory/ all -m setup -a "filter=ansible_distribution*"
-```
-
 ```text
 ┌───────────────────────────── Inventory — Configuration Management (CMDB) ─────────────────────────────┐
 │                                                                                                       │

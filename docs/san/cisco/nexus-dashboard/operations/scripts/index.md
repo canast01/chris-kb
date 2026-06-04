@@ -30,8 +30,6 @@ cleanup() {
   echo "Session logged out"
 }
 trap cleanup EXIT
-```
-
 ```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Operations Scripts ──────────────────────────────┐
 │                                                                                                       │

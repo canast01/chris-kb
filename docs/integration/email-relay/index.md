@@ -2,8 +2,6 @@
 
 ```bash
 postfix reload
-```
-
 ```text
 ┌────────────────────────────────── Integration — Email Relay (SMTP) ───────────────────────────────────┐
 │                                                                                                       │

@@ -94,8 +94,6 @@ flowchart TD
     style unplannedFO fill:#7c3aed,color:#fff
     style validateApp fill:#15803d,color:#fff
     style waitSite fill:#6b7280,color:#fff
-```
-
 ```text
 ┌───────────────────────────────────────── SRDF/A — Procedures ─────────────────────────────────────────┐
 │                                                                                                       │

@@ -24,8 +24,6 @@ sudo systemctl reload nginx
 # Verify the new certificate is served
 openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1.corp.example.com \
   </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
-```
-
 ```text
 ┌───────────────────────────────────── Brocade SANnav — Encryption ─────────────────────────────────────┐
 │                                                                                                       │

@@ -26,8 +26,6 @@ graph TB
   class LCM mgmt
   class VROPS,VRLI,VRA,VRNI ctrl
   class ADMIN host
-```
-
 ```text
 ┌────────────────────────────────────── How Aria Suite LCM Works ───────────────────────────────────────┐
 │                                                                                                       │

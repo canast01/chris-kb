@@ -12,8 +12,6 @@ Get-Content "C:\Logs\RASR\rasrutil_$(Get-Date -Format 'yyyyMMdd').log" -Wait -Ta
 Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} -MaxEvents 100 |
     Select-Object TimeCreated, Id, LevelDisplayName, Message |
     Export-Csv "C:\Temp\RASR-AppEvents.csv" -NoTypeInformation
-```
-
 ```text
 ┌───────────────────────────────────────── RASR — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │

@@ -3,8 +3,6 @@
 ```bash
 ansible-galaxy collection install community.vmware
 pip install PyVmomi vsphere-automation-sdk-python
-```
-
 ```text
 ┌─────────────────────────────────────── Ansible — Integrations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -24,8 +24,6 @@ flowchart TD
     checkCred --> refreshCred["Get-Credential again\nor Import-Clixml new file"]
     errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
-```
-
 ```text
 ┌───────────────────────────────────── PowerShell — Common Issues ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

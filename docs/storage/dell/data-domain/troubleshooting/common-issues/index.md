@@ -3,8 +3,6 @@
 ```bash
 replication disable <context>
 replication enable <context>
-```
-
 ```text
 ┌─────────────────────────────────── Dell Data Domain Common Issues ────────────────────────────────────┐
 │                                                                                                       │

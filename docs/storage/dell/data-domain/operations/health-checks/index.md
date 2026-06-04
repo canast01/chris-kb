@@ -23,8 +23,6 @@ flowchart TD
     L -->|Yes| M["ddboost status\nReset credentials if needed"]
     L -->|No| N([All checks passed])
     D & G & J & M --> N
-```
-
 ```text
 ┌─────────────────────────────────── Dell Data Domain Health Checks ────────────────────────────────────┐
 │                                                                                                       │

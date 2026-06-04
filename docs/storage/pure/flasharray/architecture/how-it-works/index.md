@@ -51,8 +51,6 @@ flowchart LR
   CT0 -.->|"ownership migrates"| CT1
   EVENT --> CT1
   P0 -.->|"MPIO promotes P1\nas Active/Optimised"| P1
-```
-
 ```text
 ┌─────────────────────────────────── Pure FlashArray — How It Works ────────────────────────────────────┐
 │                                                                                                       │

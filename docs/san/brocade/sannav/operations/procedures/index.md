@@ -12,8 +12,6 @@ mapsPolicy --enable dflt_aggressive_policy
 
 # Verify active policy
 mapsPolicy --show
-```
-
 ```text
 ┌─────────────────────────────── Brocade SANnav — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │

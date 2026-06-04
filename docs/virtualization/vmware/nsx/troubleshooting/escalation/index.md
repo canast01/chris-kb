@@ -15,8 +15,6 @@ curl -sk -u 'admin:password' \
 # Download the bundle (URL returned in the status response)
 curl -sk -u 'admin:password' \
   -O "https://<nsx-manager>/api/v1/node/support-bundles/download/<bundle-id>"
-```
-
 ```text
 ┌────────────────────────────────────────── NSX — Escalation ───────────────────────────────────────────┐
 │                                                                                                       │

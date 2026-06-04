@@ -23,8 +23,6 @@ graph TB
   class VRLI ctrl
   class IDX store
   class SRC1,SRC2,SRC3,ADMIN host
-```
-
 ```text
 ┌─────────────────────────────── Aria Operations for Logs — How It Works ───────────────────────────────┐
 │                                                                                                       │

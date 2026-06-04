@@ -23,8 +23,6 @@ show port-channel summary
 
 # 7. Check domain IDs for conflict
 show fcdomain domain-list vsan 10
-```
-
 ```text
 ┌────────────────────────────── Cisco MDS — Troubleshooting Common Issues ──────────────────────────────┐
 │                                                                                                       │

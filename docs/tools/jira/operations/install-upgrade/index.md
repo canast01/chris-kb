@@ -12,8 +12,6 @@ for p in plugins:
 " | sort > /tmp/jira-plugins-before.txt
 
 cat /tmp/jira-plugins-before.txt
-```
-
 ```text
 ┌───────────────────────────────────── Jira — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

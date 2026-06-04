@@ -5,8 +5,6 @@
 export SN_INSTANCE="https://mycompany.service-now.com"
 export SN_USER="api_svc_account"
 export SN_PASS="your-password"
-```
-
 ```text
 ┌─────────────────────────────────── ServiceNow — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │

@@ -18,8 +18,6 @@ sudo systemctl restart rsyslog
 # Verify forwarding
 logger -t sannav-test "Test syslog message from SANnav"
 # Check SIEM for the test message
-```
-
 ```text
 ┌──────────────────────────────────── Brocade SANnav — Integrations ────────────────────────────────────┐
 │                                                                                                       │

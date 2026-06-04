@@ -80,8 +80,6 @@ echo "==============================="
 printf " Overall: %s\n" "$(status_label $overall)"
 echo "==============================="
 exit $overall
-```
-
 ```text
 ┌───────────────────────────────── Cisco MDS 9000 — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │

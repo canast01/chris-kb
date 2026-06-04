@@ -14,8 +14,6 @@ jobs:
         run: |
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                https://api.github.com/repos/${{ github.repository }}
-```
-
 ```text
 ┌─────────────────────────────────── GitHub Actions — Authentication ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

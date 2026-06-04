@@ -20,8 +20,6 @@ chmod 1775 /opt/shared
 
 # SGID on a directory — new files inherit group
 chmod 2775 /opt/projects
-```
-
 ```text
 ┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
 │                                                                                                       │

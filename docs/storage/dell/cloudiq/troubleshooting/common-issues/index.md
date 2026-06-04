@@ -13,8 +13,6 @@ systemctl restart dsagw
 # Watch logs live for telemetry errors
 journalctl -u dsagw -f
 # Look for: "connection refused", "TLS handshake failed", "authentication error"
-```
-
 ```text
 ┌───────────────────────────────────── Dell CloudIQ Common Issues ──────────────────────────────────────┐
 │                                                                                                       │

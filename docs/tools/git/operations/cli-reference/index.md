@@ -21,8 +21,6 @@ git remote -v
 git remote add origin <url>
 git remote remove <name>
 git remote set-url origin <new_url>
-```
-
 ```text
 ┌───────────────────────────────────────── Git — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │

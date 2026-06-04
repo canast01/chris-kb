@@ -45,8 +45,6 @@ flowchart TD
     class ostDD,msdpPool,pureSnap,s3Cloud storage
     class vadp,cyberark source
     class opscenter,siem ops
-```
-
 ```text
 ┌──────────────────────────────── NetBackup — Architecture Integrations ────────────────────────────────┐
 │                                                                                                       │

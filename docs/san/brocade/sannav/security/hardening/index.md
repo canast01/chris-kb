@@ -11,8 +11,6 @@ passwd admin
 
 # Change default OS root password (if accessible)
 sudo passwd root
-```
-
 ```text
 ┌───────────────────────────────── Brocade SANnav — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │

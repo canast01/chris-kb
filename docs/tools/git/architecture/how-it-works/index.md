@@ -32,8 +32,6 @@ graph TD
     FORK -->|git push| LC
     LC -->|git push| FORK
     FORK -->|Pull Request / MR| REMOTE
-```
-
 ```text
 ┌───────────────────────────────────────── Git — How It Works ──────────────────────────────────────────┐
 │                                                                                                       │

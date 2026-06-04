@@ -4,8 +4,6 @@
 export INSTANCE="https://mycompany.service-now.com"
 export USER="api_user"
 export PASS="your-password"
-```
-
 ```text
 ┌───────────────────────────────────── ServiceNow — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │

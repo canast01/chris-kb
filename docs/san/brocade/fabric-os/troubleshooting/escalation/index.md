@@ -15,8 +15,6 @@ supportsave
 # - Fabric database (zone, device, routing)
 # - Port statistics
 # - SNMP trap history
-```
-
 ```text
 ┌─────────────────────────── Brocade Fabric OS — Troubleshooting Escalation ────────────────────────────┐
 │                                                                                                       │

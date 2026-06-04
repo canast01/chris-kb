@@ -8,8 +8,6 @@ git push origin --tags
 # Mirror to secondary backup remote
 git remote add backup git@backup-gitlab.example.com:ansible/infrastructure.git
 git push backup --mirror
-```
-
 ```text
 ┌───────────────────────────────────── Ansible — Backup & Restore ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

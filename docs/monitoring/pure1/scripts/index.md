@@ -36,8 +36,6 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
     resp = requests.get(f"{PURE1_API}{path}", headers=headers, params=params)
     resp.raise_for_status()
     return resp.json()
-```
-
 ```text
 ┌────────────────────────────────────── Pure1 — Scripts Reference ──────────────────────────────────────┐
 │                                                                                                       │

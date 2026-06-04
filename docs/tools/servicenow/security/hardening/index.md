@@ -16,8 +16,6 @@ Object.keys(criticalProps).forEach(function(prop) {
   var status = (actual === expected) ? 'OK' : 'FAIL';
   gs.info('[' + status + '] ' + prop + ': expected=' + expected + ' actual=' + actual);
 });
-```
-
 ```text
 ┌──────────────────────────────────────── ServiceNow Hardening ─────────────────────────────────────────┐
 │                                                                                                       │

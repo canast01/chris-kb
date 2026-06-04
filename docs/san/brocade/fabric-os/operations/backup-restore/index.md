@@ -27,8 +27,6 @@ flowchart TD
     style done fill:#15803d,color:#fff
     style change fill:#2563eb,color:#fff
     style failure fill:#dc2626,color:#fff
-```
-
 ```text
 ┌─────────────────────────────── Brocade Fabric OS — Backup and Restore ────────────────────────────────┐
 │                                                                                                       │

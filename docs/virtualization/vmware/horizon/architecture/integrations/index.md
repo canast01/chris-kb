@@ -6,8 +6,6 @@
 
 # Check DNS resolves AD DCs
 nslookup _ldap._tcp.dc._msdcs.<your-domain>
-```
-
 ```text
 ┌──────────────────────────────────── VMware Horizon — Integrations ────────────────────────────────────┐
 │                                                                                                       │

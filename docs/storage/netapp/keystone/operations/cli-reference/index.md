@@ -20,8 +20,6 @@ keystone-collector list-arrays
 # Update Collector software
 keystone-collector upgrade --check     # dry-run
 keystone-collector upgrade --apply
-```
-
 ```text
 ┌───────────────────────────── NetApp Keystone — Operations: CLI Reference ─────────────────────────────┐
 │                                                                                                       │

@@ -2,8 +2,6 @@
 
 ```bash
 symcfg list -v | grep "Microcode"
-```
-
 ```text
 ┌───────────────────────────────────── SRDF/S — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

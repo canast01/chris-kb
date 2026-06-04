@@ -49,8 +49,6 @@ echo "  Report complete — $(date '+%Y-%m-%d %H:%M:%S')"
 echo "  Review output above for COD reserve vs. activated capacity."
 echo "  Alert if activated capacity approaches total installed capacity."
 echo "========================================"
-```
-
 ```text
 ┌────────────────────────────────────────── Dell COD Scripts ───────────────────────────────────────────┐
 │                                                                                                       │

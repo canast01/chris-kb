@@ -10,8 +10,6 @@ awk -F',' 'NR>1 {
   if (days < 90 && days >= 0) printf "EXPIRING: %s | %s | %d days | Owner: %s\n", $1, $2, days, $5
   if (days < 0) printf "EXPIRED: %s | %s | %d days ago | Owner: %s\n", $1, $2, -days, $5
 }' support-contracts.csv
-```
-
 ```text
 ┌──────────────────────────────────── Inventory — Support Contracts ────────────────────────────────────┐
 │                                                                                                       │

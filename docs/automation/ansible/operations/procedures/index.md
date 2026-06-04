@@ -85,8 +85,6 @@ graph LR
     awxExecutor --> vaultCreds
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
-```
-
 ```text
 ┌──────────────────────────────────────── Ansible — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

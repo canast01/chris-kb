@@ -37,8 +37,6 @@ flowchart TD
     style CLI fill:#5c35cc,color:#fff
     style STATE fill:#1565c0,color:#fff
     style LOCK fill:#c62828,color:#fff
-```
-
 ```text
 ┌────────────────────────────────────── Terraform — How It Works ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

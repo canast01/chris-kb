@@ -18,8 +18,6 @@ vsipioctl getstats -f <filter-name>
 # Step 3 — Traceflow from the VM to the gateway
 # NSX Manager UI: Plan & Troubleshoot → Traceflow
 # Source: VM vNIC, Destination: gateway IP, Protocol: ICMP
-```
-
 ```text
 ┌───────────────────────────────────────── NSX — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │

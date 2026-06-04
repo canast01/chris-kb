@@ -31,8 +31,6 @@ graph TD
     dd --> net
     dd --> proto
     dd --> enc
-```
-
 ```text
 ┌───────────────────────────────────── Dell Data Domain Hardening ──────────────────────────────────────┐
 │                                                                                                       │

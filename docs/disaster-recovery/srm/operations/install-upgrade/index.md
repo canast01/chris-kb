@@ -39,8 +39,6 @@ flowchart TD
     class vc,srmUpgrade,vrUpgrade,sraUpdate,validate,fixVC action
     class srmCheck check
     class start,done terminal
-```
-
 ```text
 ┌─────────────────────────────────────── SRM — Install & Upgrade ───────────────────────────────────────┐
 │                                                                                                       │

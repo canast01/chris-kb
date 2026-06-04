@@ -13,8 +13,6 @@ curl -sk -u 'admin:password' \
     "minimum_password_length": 20
   }' \
   "https://<nsx-manager>/api/v1/node/aaa/auth-policy"
-```
-
 ```text
 ┌──────────────────────────────────────── NSX — Authentication ─────────────────────────────────────────┐
 │                                                                                                       │

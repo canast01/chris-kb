@@ -62,8 +62,6 @@ elif [[ "$PLATFORM" == "gitlab" ]]; then
 fi
 
 echo "Done. Repositories in: $DEST_DIR"
-```
-
 ```text
 ┌────────────────────────────────────── Git — Operations Scripts ───────────────────────────────────────┐
 │                                                                                                       │

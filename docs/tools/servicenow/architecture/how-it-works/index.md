@@ -39,8 +39,6 @@ flowchart LR
         DEV
         TEST
     end
-```
-
 ```text
 ┌────────────────────────────────────── ServiceNow — How It Works ──────────────────────────────────────┐
 │                                                                                                       │

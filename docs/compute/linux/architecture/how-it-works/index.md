@@ -30,8 +30,6 @@ graph TB
   class DISK store
   class NIC,NET net
   class ADMIN host
-```
-
 ```text
 ┌──────────────────────────────────────── Linux — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │

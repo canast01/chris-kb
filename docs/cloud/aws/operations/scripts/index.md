@@ -68,8 +68,6 @@ if [[ "${STOPPED_COUNT}" -gt 0 ]]; then
 fi
 
 echo -e "${GREEN}Health check PASSED.${RESET}"
-```
-
 ```text
 ┌──────────────────────────────── AWS Operations — Scripts & Automation ────────────────────────────────┐
 │                                                                                                       │

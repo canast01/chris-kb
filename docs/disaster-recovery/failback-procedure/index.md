@@ -13,8 +13,6 @@ purecli drive list | grep -v healthy
 # Confirm primary SAN fabric healthy
 show interface fc brief           # Cisco MDS
 switchshow                        # Brocade
-```
-
 ```text
 ┌──────────────────────────────────────── DR Failback Procedure ────────────────────────────────────────┐
 │                                                                                                       │

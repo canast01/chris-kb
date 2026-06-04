@@ -20,8 +20,6 @@ echo ""
 echo "=== Active Alerts (Critical) ==="
 curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=active" | \
   jq -r '.alerts[] | "\(.name)\t\(.timestamp)"' | column -t
-```
-
 ```text
 ┌──────────────────────────── Aria Operations for Logs — Scripts Reference ─────────────────────────────┐
 │                                                                                                       │

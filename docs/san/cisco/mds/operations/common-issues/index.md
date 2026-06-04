@@ -12,8 +12,6 @@ show interface fc1/3 | include reason
 
 # Check recent log events for this interface
 show logging last 100 | grep fc1/3
-```
-
 ```text
 ┌───────────────────────────── Cisco MDS 9000 — Common Operational Issues ──────────────────────────────┐
 │                                                                                                       │

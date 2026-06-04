@@ -17,8 +17,6 @@ for c in data.get('results', []):
     dt = datetime.fromtimestamp(last_hb, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if last_hb else 'Never'
     print(f\"{c.get('nickname',''):<25} {c.get('status',''):<15} Last HB: {dt}\")
 "
-```
-
 ```text
 ┌───────────────────────────────────────── vRNI Health Checks ──────────────────────────────────────────┐
 │                                                                                                       │

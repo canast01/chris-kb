@@ -29,8 +29,6 @@ flowchart TD
     defCheck -- No --> investigate
     rebootCheck -- No --> allGood
     rebootCheck -- Yes --> investigate
-```
-
 ```text
 ┌─────────────────────────────────── Windows Server — Health Checks ────────────────────────────────────┐
 │                                                                                                       │

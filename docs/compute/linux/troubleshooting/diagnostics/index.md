@@ -31,8 +31,6 @@ flowchart LR
     journalSrc --> journalctl
     journalSrc --> rsyslogSrc --> siemDst
     journalctl --> grep
-```
-
 ```text
 ┌───────────────────────────────────────── Linux — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │

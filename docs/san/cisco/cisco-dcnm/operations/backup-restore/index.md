@@ -15,8 +15,6 @@ scp /var/backup/dcnm/dcnm-db-$(date +%Y%m%d-%H%M).sql.gz \
 
 # List backups
 ls -lh /var/backup/dcnm/
-```
-
 ```text
 ┌─────────────────────────────────── Cisco DCNM — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │

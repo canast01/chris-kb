@@ -23,8 +23,6 @@ flowchart TD
     I --> |Yes| K[DR lead sign-off]
     K --> L[Reintroduce to production\nIRE isolation maintained until complete]
     L --> M([IRE stand-down])
-```
-
 ```text
 ┌───────────────────────────────────────────── IRE Restore ─────────────────────────────────────────────┐
 │                                                                                                       │

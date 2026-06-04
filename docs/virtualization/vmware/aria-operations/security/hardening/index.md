@@ -6,8 +6,6 @@ echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -subject -dates -issuer
 
 # Confirm it is self-signed (Issuer == Subject)
-```
-
 ```text
 ┌───────────────────────────────── Aria Operations Security Hardening ──────────────────────────────────┐
 │                                                                                                       │

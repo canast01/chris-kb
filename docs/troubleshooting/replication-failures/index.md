@@ -54,8 +54,6 @@ flowchart TD
     X -- Yes --> Y[Reconfigure replication\nCheck VR appliance health]
     B -- Veeam Rep --> Z[Get-VBRJob type Replica\nCheck last session result]
     Z --> AA[Review session log\nCheck network path to replica host]
-```
-
 ```text
 ┌───────────────────────────────── Replication Failure Troubleshooting ─────────────────────────────────┐
 │                                                                                                       │

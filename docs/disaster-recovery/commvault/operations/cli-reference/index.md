@@ -29,8 +29,6 @@ sequenceDiagram
     MA-->>JM: Job complete — update catalog
     JM-->>Sched: Job status: Completed
     note over MA,Storage: Auxiliary copy job (separate schedule)\ncopies from primary to secondary (offsite/tape/cloud)
-```
-
 ```text
 ┌──────────────────────── Commvault CLI Reference — qoperation, qlist, qmodify ─────────────────────────┐
 │                                                                                                       │

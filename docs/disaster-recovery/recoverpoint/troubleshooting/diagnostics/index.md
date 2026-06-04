@@ -3,8 +3,6 @@
 ```bash
 # Via boxmgmt
 boxmgmt support collect_bundle
-```
-
 ```text
 ┌───────────────────────────────────── RecoverPoint — Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │

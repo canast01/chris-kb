@@ -7,8 +7,6 @@ winget install --id Microsoft.PowerShell --source winget
 # Or via MSI — download from github.com/PowerShell/PowerShell/releases
 # After install, verify:
 pwsh --version
-```
-
 ```text
 ┌─────────────────────────────────── PowerShell — Install & Upgrade ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

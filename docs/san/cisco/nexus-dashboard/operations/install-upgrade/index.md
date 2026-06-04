@@ -14,8 +14,6 @@ acs cluster init \
 # Monitor cluster formation (takes 10-20 minutes)
 acs health
 # Wait until all nodes show Healthy
-```
-
 ```text
 ┌──────────────────────── Cisco Nexus Dashboard — Operations Install & Upgrade ─────────────────────────┐
 │                                                                                                       │

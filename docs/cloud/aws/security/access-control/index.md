@@ -18,8 +18,6 @@
     }
   ]
 }
-```
-
 ```text
 ┌─────────────────────────── AWS Access Control — Least-Privilege IAM Design ───────────────────────────┐
 │                                                                                                       │

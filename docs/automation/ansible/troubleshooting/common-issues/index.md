@@ -24,8 +24,6 @@ flowchart TD
     checkVault -->|Yes| checkModule["Is the required\ncollection installed?"]
     checkModule -->|No| installCol["ansible-galaxy collection install\n<namespace.collection>"]
     checkModule -->|Yes| resolved["Examine task output\n& register debug"]
-```
-
 ```text
 ┌─────────────────────────────────────── Ansible — Common Issues ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

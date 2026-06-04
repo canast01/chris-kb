@@ -10,8 +10,6 @@ sudo /etc/init.d/support-bundle.sh
 ls /data/support-bundles/
 # Transfer via SCP:
 scp ubuntu@vrni.example.local:/data/support-bundles/<bundle>.tar.gz /local/path/
-```
-
 ```text
 ┌─────────────────────────────────────────── vRNI Escalation ───────────────────────────────────────────┐
 │                                                                                                       │

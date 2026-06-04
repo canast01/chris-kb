@@ -23,8 +23,6 @@ curl -u user:token -X PUT \
   "https://your-instance.atlassian.net/wiki/rest/api/content/12345" \
   -H "Content-Type: application/json" \
   -d '{"version":{"number":4},"type":"page","title":"Updated Title","body":{"storage":{"value":"<p>New content</p>","representation":"storage"}}}'
-```
-
 ```text
 ┌───────────────────────────────── Confluence — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │

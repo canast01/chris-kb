@@ -15,8 +15,6 @@ sudo keytool -import -trustcacerts -alias corp-ldap-ca \
 
 # Restart SANnav to pick up new truststore
 sudo sannav restart
-```
-
 ```text
 ┌─────────────────────────────────── Brocade SANnav — Authentication ───────────────────────────────────┐
 │                                                                                                       │

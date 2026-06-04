@@ -17,8 +17,6 @@ fio --name=fill --ioengine=posixaio --rw=randwrite --size=1G --numjobs=4 --runti
 tc qdisc add dev eth0 root netem loss 20%
 # Remove after test
 tc qdisc del dev eth0 root
-```
-
 ```text
 ┌──────────────────────────────────── Performance — Failure Testing ────────────────────────────────────┐
 │                                                                                                       │

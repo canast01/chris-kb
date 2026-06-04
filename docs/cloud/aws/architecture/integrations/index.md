@@ -18,8 +18,6 @@ flowchart LR
     expire["Expiration\ndelete after retention period"]
 
     upload -->|"Lifecycle rule"| ia -->|"Lifecycle rule"| glacier -->|"Lifecycle rule"| deepArchive -->|"Lifecycle rule"| expire
-```
-
 ```text
 ┌─────────────────────────────────── AWS Architecture — Integrations ───────────────────────────────────┐
 │                                                                                                       │

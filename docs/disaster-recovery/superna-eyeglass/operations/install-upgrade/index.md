@@ -21,8 +21,6 @@ flowchart TD
     done(["Upgrade complete"])
 
     exportCfg --> deployOVA --> importCfg --> verifyScore --> validate24h --> decommOld --> done
-```
-
 ```text
 ┌──────────────────────────────── Superna Eyeglass — Install & Upgrade ─────────────────────────────────┐
 │                                                                                                       │

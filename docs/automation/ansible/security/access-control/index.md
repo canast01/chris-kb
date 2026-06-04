@@ -18,8 +18,6 @@ graph TD
     ORG --> PROJ[Projects]
     ORG --> JT[Job Templates]
     USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
-```
-
 ```text
 ┌────────────────────────────────────── Ansible — Access Control ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

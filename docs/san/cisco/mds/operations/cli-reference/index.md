@@ -6,8 +6,6 @@ show inventory         # chassis, modules, transceivers with serial numbers
 show system uptime
 show license usage
 show feature           # enabled features (zone, dpvm, fcsp, etc.)
-```
-
 ```text
 ┌─────────────────────────────────── Cisco MDS 9000 — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │

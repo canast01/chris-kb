@@ -34,8 +34,6 @@ resources:
     properties:
       networkType: existing
       name: VLAN-100-Servers
-```
-
 ```text
 ┌──────────────────────────────────── Aria Automation — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
