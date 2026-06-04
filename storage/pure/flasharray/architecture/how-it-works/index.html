@@ -25,7 +25,7 @@
     
     
       
-        <title>FlashArray — How It Works - Chris KB</title>
+        <title>Pure FlashArray — How It Works - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FlashArray — How It Works · Chris KB">
+  <meta property="og:title" content="Pure FlashArray — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="FlashArray — How It Works · Chris KB">
+  <meta name="twitter:title" content="Pure FlashArray — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -92,7 +92,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#flasharray-how-it-works" class="md-skip">
+        <a href="#pure-flasharray-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -128,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              FlashArray — How It Works
+              Pure FlashArray — How It Works
             
           </span>
         </div>
@@ -3474,10 +3474,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#architecture-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Architecture Overview
       
     </span>
   </a>
@@ -3485,10 +3485,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
+  <a href="#controller-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        HA Topology
+        Controller Architecture
       
     </span>
   </a>
@@ -3496,10 +3496,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#protection-groups" class="md-nav__link">
+  <a href="#purity-operating-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Protection Groups
+        Purity Operating Environment
       
     </span>
   </a>
@@ -3507,10 +3507,87 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#safemode" class="md-nav__link">
+  <a href="#data-reduction-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SafeMode
+        Data Reduction Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mermaid-diagram-io-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mermaid Diagram: I/O Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-groups-and-snapshots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Groups and Snapshots
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#activedr-and-activecluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ActiveDR and ActiveCluster
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms Glossary
       
     </span>
   </a>
@@ -3705,120 +3782,360 @@
 
 
 
-<h1 id="flasharray-how-it-works">FlashArray — How It Works<a class="headerlink" href="#flasharray-how-it-works" title="Permanent link">&para;</a></h1>
+<h1 id="pure-flasharray-how-it-works">Pure FlashArray — How It Works<a class="headerlink" href="#pure-flasharray-how-it-works" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-How It Works reference covering Overview, HA Topology, ActiveCluster (Pods), Protection Groups, SafeMode.
+Internal architecture and data-path reference: controller pair, NVRAM write path, Purity data reduction pipeline, read/write paths, Protection Groups, ActiveDR, ActiveCluster, and host connectivity.
 </div>
 
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS. It is purpose-built for block workloads — databases, virtualisation, and latency-sensitive applications — and is designed around three core principles: all-flash always (no spinning disk tiering), active-active dual-controller high availability with no single point of failure, and non-disruptive operations including upgrades, hardware replacement, and capacity expansion.</p>
-<p>FlashArray ships in three product lines:</p>
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<p>FlashArray is an all-NVMe (FA//X and FA//C) or all-flash (FA//m) block storage array built on a dual-controller, active-active architecture. There is no concept of a primary and secondary controller — both CT0 and CT1 serve host I/O simultaneously at all times. The array is designed so that any single hardware failure (a controller, a DirectFlash Module, an NVMe shelf, or a port) does not interrupt host I/O.</p>
+<p>The three product lines share the same Purity//FA operating environment and the same management surface:</p>
+<table>
+<thead>
+<tr>
+<th>Product Line</th>
+<th>Media</th>
+<th>Primary Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FA//X</td>
+<td>NVMe TLC NAND</td>
+<td>Tier-1 databases, latency-sensitive workloads, NVMe-oF</td>
+</tr>
+<tr>
+<td>FA//C</td>
+<td>NVMe QLC NAND</td>
+<td>Secondary storage, backup staging, dev/test</td>
+</tr>
+<tr>
+<td>FA//E</td>
+<td>High-capacity QLC</td>
+<td>Large-scale consolidation at lowest $/TB</td>
+</tr>
+</tbody>
+</table>
+<p>DirectFlash Modules (DFMs) are the distinguishing hardware element of FA//X. Unlike standard SSDs, DFMs expose raw NAND directly via PCIe/NVMe, bypassing the embedded Flash Translation Layer (FTL). Purity manages flash wear-levelling, garbage collection, and block allocation at the OS level — giving it full visibility and control over the flash media, which eliminates write amplification introduced by a conventional SSD controller.</p>
+<h2 id="controller-architecture">Controller Architecture<a class="headerlink" href="#controller-architecture" title="Permanent link">&para;</a></h2>
+<p>Each FlashArray contains exactly two controllers: CT0 and CT1. They share access to the same NVMe shelves or DirectFlash Modules through a dual-ported NVMe fabric on the backplane.</p>
+<p>Key hardware components per controller:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-core CPU</td>
+<td>Runs Purity//FA OS; handles I/O scheduling, deduplication, compression, and management</td>
+</tr>
+<tr>
+<td>NVRAM (DRAM + capacitor)</td>
+<td>Write buffer; absorbs incoming writes before destage to flash</td>
+</tr>
+<tr>
+<td>NVRAM mirror interconnect</td>
+<td>High-speed dedicated link between CT0 and CT1; synchronises NVRAM in real time</td>
+</tr>
+<tr>
+<td>NVMe host ports</td>
+<td>FC, iSCSI, or NVMe-oF ports presented to hosts</td>
+</tr>
+<tr>
+<td>Capacitor backup</td>
+<td>Protects in-flight NVRAM data on power loss; ensures safe flush to flash</td>
+</tr>
+</tbody>
+</table>
+<p>The NVRAM mirror is the durability guarantee. A host write is acknowledged only after both CT0 and CT1 have recorded the write in their respective NVRAMs. If a controller fails mid-write, the surviving controller holds a complete copy of all pending writes and serves I/O without interruption.</p>
+<h2 id="purity-operating-environment">Purity Operating Environment<a class="headerlink" href="#purity-operating-environment" title="Permanent link">&para;</a></h2>
+<p>Purity//FA is the operating system that runs on both controllers. It is a purpose-built storage OS — not a general-purpose Linux distribution — tuned entirely for flash I/O patterns. Core responsibilities:</p>
 <ul>
-<li><strong>//X series</strong> — NVMe-based, highest performance; targets Tier-1 databases and NVMe/FC or NVMe/RoCE workloads</li>
-<li><strong>//C series</strong> — QLC NAND, capacity-optimised; targets secondary workloads, backup staging, and dev/test at lower cost per TB</li>
-<li><strong>//E series</strong> — Maximum density with high-capacity QLC drives; targets large-scale consolidation at the lowest $/TB</li>
+<li><strong>I/O scheduling</strong> — distributes I/O across both controllers and all DFMs; balances load dynamically</li>
+<li><strong>Inline data reduction</strong> — deduplication and compression on every write before data hits flash</li>
+<li><strong>Thin provisioning</strong> — volumes consume physical capacity only for written data; overprovisioning is expected</li>
+<li><strong>Protection Groups</strong> — defines snapshot consistency groups and async replication schedules</li>
+<li><strong>Replication</strong> — ActiveDR (async) and ActiveCluster (sync) replication to remote arrays</li>
+<li><strong>REST API</strong> — all management operations are available via versioned REST; the GUI and CLI are API consumers</li>
+<li><strong>Pure1 integration</strong> — telemetry, capacity forecasting, and AI-driven support sent to Pure's cloud analytics platform</li>
 </ul>
-<p>All models share the same Purity//FA OS, the same CLI and REST API surface, and the same operational model.</p>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>FlashArray operates in an active-active dual-controller configuration. Both CT0 and CT1 serve host I/O simultaneously — there is no standby controller. Volume ownership is distributed across both controllers; load balancing occurs via ALUA (Asymmetric Logical Unit Access).</p>
-<p><strong>Failover behaviour:</strong></p>
+<p>Non-disruptive upgrades (NDU) of Purity are performed by restarting one controller at a time. The surviving controller carries all I/O while the other upgrades, then roles reverse. The host experiences no I/O interruption if multipathing is correctly configured.</p>
+<h2 id="data-reduction-pipeline">Data Reduction Pipeline<a class="headerlink" href="#data-reduction-pipeline" title="Permanent link">&para;</a></h2>
+<p>All writes pass through the data reduction pipeline in Purity before touching flash media. The pipeline is inline — it runs synchronously on the write path, not as a background post-process.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Host write
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ▼
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>NVRAM (CT active + CT peer mirror)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │  ACK returned to host here
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    ▼
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>[Background destage to flash]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    ├── Step 1: Zero-block detection
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    │     Blocks containing all zeroes are stored as metadata only (no physical write)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    ├── Step 2: Global deduplication
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    │     SHA-based fingerprint computed per chunk
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    │     Fingerprint looked up in global dedup hash table
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    │     If match found: reference pointer written, no duplicate physical write
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    ├── Step 3: Inline compression (LZ4 → zstd)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    │     Unique (post-dedup) data compressed with LZ4
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    │     Further compressible segments passed to zstd
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    └── Step 4: Write to DirectFlash Modules
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>          Purity manages NAND block allocation, wear-levelling, and garbage collection directly
+</code></pre></div>
+<p>Deduplication is global across all volumes in the array — a block written to a database volume that matches a block on a backup volume is stored once. There is no per-volume scope limitation. The data reduction ratio is displayed in real time via the GUI or CLI (<code>purearray get --space</code>).</p>
+<h2 id="read-path">Read Path<a class="headerlink" href="#read-path" title="Permanent link">&para;</a></h2>
+<p>Reads follow a cache-first sequence:</p>
 <ol>
-<li>If one controller fails (hardware fault, NDU restart, or Purity upgrade), the surviving controller takes ownership of all volumes within seconds.</li>
-<li>Hosts with proper multipathing (at least two active paths, one to each controller) experience no I/O interruption — the multipath driver promotes the surviving paths immediately.</li>
-<li>The failed controller reboots automatically and rejoins the active-active pair once healthy; volume ownership rebalances back.</li>
-<li>There is no manual intervention required for controller failover or rejoin under normal circumstances.</li>
+<li>Host issues a read request via FC, iSCSI, or NVMe-oF</li>
+<li>The owning controller checks NVRAM — if the block was recently written and is still in the write buffer, it is served directly from NVRAM (sub-100µs)</li>
+<li>If not in NVRAM, Purity reads from the DirectFlash Modules via the NVMe fabric</li>
+<li>Purity decompresses the data on the way out (hardware-accelerated on FA//X)</li>
+<li>Deduplication is transparent on reads — the dedup hash table maps logical addresses to physical blocks; the host receives assembled data with no extra latency step</li>
+<li>Data is returned to the host — typical read latency is under 200µs end-to-end</li>
 </ol>
-<p><strong>Requirements for zero-impact failover:</strong></p>
-<ul>
-<li>Every host must have at least two HBAs or NICs connected to the array, one per controller</li>
-<li>Fabric zoning (FC) or iSCSI network design must ensure paths reach both CT0 and CT1</li>
-<li>Host multipath driver (DM-Multipath, Windows MPIO, or VMware PSP) must be active and configured for ALUA</li>
-</ul>
+<p>There is no read penalty from deduplication. Reads are served by both controllers simultaneously, with ALUA used to designate preferred and non-preferred paths per volume.</p>
+<h2 id="write-path">Write Path<a class="headerlink" href="#write-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Host issues a write via FC, iSCSI, or NVMe-oF to the volume's preferred controller</li>
+<li>The active controller receives the write and writes it to local NVRAM</li>
+<li>The NVRAM mirror interconnect replicates the write to the peer controller's NVRAM — this step completes before the host ACK is sent</li>
+<li>The ACK is returned to the host — at this point the write is durable (survives a controller failure)</li>
+<li>The background destage process drains NVRAM writes to DirectFlash Modules via the data reduction pipeline described above</li>
+<li>Destage is continuous and parallel — it does not block new incoming writes</li>
+</ol>
+<p>Peak write throughput is bounded by NVRAM size (how much write burst the array can absorb). Sustained write throughput is bounded by flash write bandwidth. On FA//X models with multiple DFMs, sustained write bandwidth is typically in the tens of GB/s range.</p>
+<h2 id="mermaid-diagram-io-architecture">Mermaid Diagram: I/O Architecture<a class="headerlink" href="#mermaid-diagram-io-architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
-  subgraph "Host MPIO"
-    P0["Path 0\nHBA0 → Fabric A → CT0\n(Active / Optimised)"]
-    P1["Path 1\nHBA1 → Fabric B → CT1\n(Active / Non-Optimised)"]
-  end
-  subgraph "FlashArray"
-    CT0["CT0 — volume owner\n(preferred path)"]
-    CT1["CT1 — secondary\n(ALUA non-optimised)"]
-    CT0 &lt;--&gt;|"NVMe mirror"| CT1
-  end
-  P0 --&gt; CT0
-  P1 --&gt; CT1
-  EVENT["CT0 fails or NDU restarts"]
-  CT0 -.-&gt;|"ownership migrates"| CT1
-  EVENT --&gt; CT1
-  P0 -.-&gt;|"MPIO promotes P1\nas Active/Optimised"| P1
-```text
-┌─────────────────────────────────── Pure FlashArray — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Write I/O Path: Host to HBA to Controller to NVRAM to Dedup/Compress to Flash         │   │
-│   │           Step 1: Host writes LUN; controller receives I/O on FC / iSCSI / NVMe port          │   │
-│   │         Step 2: Write lands in NVRAM on active CT; mirrored to peer CT via NVRAM link         │   │
-│   │          Step 3: ACK returned to host after NVRAM mirror; data is durable before ACK          │   │
-│   │     Step 4: Purity destages NVRAM to DirectFlash: hash dedup then compress then write DFM     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Host sees &lt; 1 ms latency; NVRAM absorbs burst while destage happens asynchronously                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      NVRAM Write Buffer     │  │   Dedup / Compress Engine   │  │   DirectFlash (DFM) Layer   │   │
-│   │      CT0 NVRAM: primary     │  │ Global hash: SHA fingerprint│  │  NVMe-native: no FTL layer  │   │
-│   │    CT1 NVRAM: mirror copy   │  │  Pattern: zero-block detect │  │ DFM wear-levelled by Purity │   │
-│   │   ACK: after both mirrors   │  │   LZ4: inline compression   │  │   Hot/warm/cold data tiers  │   │
-│   │ Capacitor backup: safe flush│  │    Reduction: 4:1 typical   │  │    NAND: MLC/QLC modules    │   │
-│   │    NVRAM drain on destage   │  │  Written unique chunks only │  │   SSD life: Purity manages  │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    HA failover: CT0 fails, CT1 takes all I/O; NVRAM safe; &lt; 30 s transparent failover                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Write Path    │    Read Path     │    HA Failover    │   Dedup Stats    │    CLI Verify    │   │
-│   │ Host to CT NVRAM │  CT to DFM read  │ CT0 heartbeat lost│ puredataset list │  purearray get   │   │
-│   │Mirror to peer CT │ Cache hit first  │   CT1 takes over  │ Data reduction % │purearray monitor │   │
-│   │   ACK to host    │  NVRAM prefetch  │     &lt; 30 s RTO    │  Unique data GB  │  puredrive list  │   │
-│   │ Destage to flash │No rebuild needed │  Transparent host │ Space savings %  │ purevolume list  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  CT0 + CT1 controllers · NVRAM DIMMs · DirectFlash modules · SAS/NVMe shelf interconnect · FC switch  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  NVRAM mirror  = Synchronous mirror of write buffer between CT0 and CT1 before host ACK               │
-│  Destage       = Process of draining NVRAM writes to flash; runs continuously in background           │
-│  Inline dedup  = Deduplication applied on every I/O before write; global hash fingerprint             │
-│  LZ4           = Compression algorithm used by Purity; fast, low-CPU, good ratio on block data        │
-│  DFM           = DirectFlash Module; Pure-custom NVMe SSD with no FTL overhead layer                  │
-│  FTL           = Flash Translation Layer; removed in DFM so Purity handles flash mapping directly     │
-│  Data reduction= Ratio of logical written to physical flash used; includes dedup + compression        │
-│  Capacitor     = Backup power on NVRAM; ensures safe flush to flash on power loss                     │
-│  HA failover   = Automatic controller failover; CT1 adopts all I/O from failed CT0 within 30 s        │
-│  Read path     = Reads served from NVRAM cache or DirectFlash; no read penalty from dedup             │
-│  Zero-block    = Pattern-detected zero blocks stored as metadata only; highest dedup ratio            │
-│  Heartbeat     = Inter-controller health signal; loss triggers failover to surviving controller       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
-<h2 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h2>
-<p>Protection groups coordinate crash-consistent snapshots and async replication across multiple volumes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>prod-oracle-pg
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purepgroup<span class="w"> </span>addvollist<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--vollist<span class="w"> </span>prod-oracle-data-01,prod-oracle-redo-01
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purepgroup<span class="w"> </span>schedule<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--snap-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--snap-frequency<span class="w"> </span><span class="m">3600</span><span class="w"> </span>--snap-for-days<span class="w"> </span><span class="m">7</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>purepgroup<span class="w"> </span>connect<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--target<span class="w"> </span>dr-fa-01
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purepgroup<span class="w"> </span>snap<span class="w"> </span>--pgroup<span class="w"> </span>prod-oracle-pg<span class="w"> </span>--suffix<span class="w"> </span>premigration-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>purepgroup<span class="w"> </span>list<span class="w"> </span>--schedule
-</code></pre></div>
-<h2 id="safemode">SafeMode<a class="headerlink" href="#safemode" title="Permanent link">&para;</a></h2>
-<p>SafeMode makes snapshot retention policies immutable at the array level. Once enabled, protection group schedules and retention policies cannot be modified without a dual-approval process via Pure Support, and individual snapshots cannot be deleted by any local admin until the retention window expires. Designed to protect against ransomware attacks where an attacker has gained admin credentials.</p>
-<p><strong>Enabling SafeMode:</strong> contact Pure Support — activation requires a Pure Support engineer and cannot be done from the CLI. This is intentional.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purearray<span class="w"> </span>list<span class="w"> </span>--safemode<span class="w">   </span><span class="c1"># verify SafeMode status</span>
-</code></pre></div>
+    subgraph HOST["Host Layer"]
+        H1["Application Server\nFC / iSCSI / NVMe-oF HBA"]
+    end
+
+    subgraph CTRL["Controller Pair"]
+        CT0["CT0\nPurity OS\nNVMe Ports\nNVRAM"]
+        CT1["CT1\nPurity OS\nNVMe Ports\nNVRAM"]
+        CT0 &lt;--&gt;|"NVRAM Mirror\nHigh-speed interconnect\nWrite durable when both confirm"| CT1
+    end
+
+    subgraph FLASH["DirectFlash Layer"]
+        DFM1["DirectFlash Module 1\nNVMe raw NAND\nPurity-managed FTL"]
+        DFM2["DirectFlash Module 2\nNVMe raw NAND\nPurity-managed FTL"]
+        DFM3["DirectFlash Module N\nNVMe raw NAND\nPurity-managed FTL"]
+    end
+
+    H1 --&gt;|"FC / iSCSI / NVMe-oF\nALUA preferred path"| CT0
+    H1 -.-&gt;|"Non-optimised path\nActive on CT0 failure"| CT1
+    CT0 --&gt;|"Destage: dedup + compress\nthen write"| DFM1
+    CT0 --&gt;|"Destage"| DFM2
+    CT1 --&gt;|"Destage"| DFM3
+
+    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
+    classDef ctrl fill:#15803d,stroke:#14532d,color:#fff
+    classDef nvram fill:#b45309,stroke:#92400e,color:#fff
+    classDef flash fill:#7c3aed,stroke:#5b21b6,color:#fff
+
+    class H1 host
+    class CT0,CT1 ctrl
+    class DFM1,DFM2,DFM3 flash</code></pre>
+<h2 id="protection-groups-and-snapshots">Protection Groups and Snapshots<a class="headerlink" href="#protection-groups-and-snapshots" title="Permanent link">&para;</a></h2>
+<p>A Protection Group (pgroup) defines a set of volumes that must be snapped together to form a crash-consistent point-in-time copy. All volumes in a pgroup are snapped atomically — the snapshot represents the exact same moment for every member volume.</p>
+<p>Snapshot behaviour:</p>
+<ul>
+<li><strong>Instant creation</strong> — snapshots are pointer-based; no data is copied at creation time. A snapshot of 50 TB of volumes takes milliseconds and consumes no additional space at the moment of creation.</li>
+<li><strong>Space efficiency</strong> — only changed blocks after the snapshot consume additional physical space. Unchanged blocks are shared between the live volume and all snapshots referencing them.</li>
+<li><strong>Schedules</strong> — pgroups support automated snapshot schedules with configurable frequency and retention period (e.g., hourly for 7 days, daily for 30 days).</li>
+<li><strong>AsyncDR</strong> — pgroups can be connected to a target FlashArray and replicate snapshots asynchronously for disaster recovery.</li>
+</ul>
+<p>Key parameters per pgroup schedule:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>snap-frequency</code></td>
+<td>How often a local snapshot is taken (in seconds)</td>
+</tr>
+<tr>
+<td><code>snap-for-days</code></td>
+<td>How long local snapshots are retained</td>
+</tr>
+<tr>
+<td><code>replicate-frequency</code></td>
+<td>How often snapshots are sent to the replication target</td>
+</tr>
+<tr>
+<td><code>replicate-for-days</code></td>
+<td>How long replicated snapshots are retained on the target</td>
+</tr>
+</tbody>
+</table>
+<h2 id="activedr-and-activecluster">ActiveDR and ActiveCluster<a class="headerlink" href="#activedr-and-activecluster" title="Permanent link">&para;</a></h2>
+<p>Pure provides two tiers of replication, suited to different RPO and RTO requirements.</p>
+<p><strong>ActiveDR (asynchronous)</strong></p>
+<ul>
+<li>Replicates snapshots asynchronously from a source FlashArray to a target FlashArray</li>
+<li>RPO is configurable — as low as 30 seconds for critical pgroups</li>
+<li>The target volumes are accessible read-only during normal operation</li>
+<li>On failover, an administrator promotes the target volumes to read-write; hosts are remapped to the target array</li>
+<li>Designed for geographic DR where the network between sites has measurable latency</li>
+</ul>
+<p><strong>ActiveCluster (synchronous)</strong></p>
+<ul>
+<li>Provides synchronous, zero-RPO replication between two FlashArrays across a campus or metropolitan distance (typically &lt;5 ms RTT)</li>
+<li>Uses the Pod construct — a pod contains volumes replicated synchronously across both sites</li>
+<li>Both copies are active simultaneously — hosts at both sites can read and write to the same volumes</li>
+<li>A mediator (hosted in Pure1 cloud or a third site) provides arbitration in the event of a network partition — it prevents split-brain by designating which site should remain active</li>
+<li>On a site failure, the surviving site's FlashArray continues serving I/O with zero data loss and transparent host failover (if the host's multipath software supports ALUA-based path selection)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>ActiveDR</th>
+<th>ActiveCluster</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RPO</td>
+<td>~30 seconds</td>
+<td>0 (synchronous)</td>
+</tr>
+<tr>
+<td>RTO</td>
+<td>Minutes (admin action)</td>
+<td>Seconds (automatic)</td>
+</tr>
+<tr>
+<td>Distance</td>
+<td>Any (async)</td>
+<td>Typically &lt;5 ms RTT</td>
+</tr>
+<tr>
+<td>Both sites active</td>
+<td>No (target read-only)</td>
+<td>Yes (active-active pod)</td>
+</tr>
+<tr>
+<td>Mediator required</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
+<p>FlashArray presents volumes as block devices regardless of the host protocol used. All host protocol options are fully supported on the same array hardware simultaneously.</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Speed</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FC</td>
+<td>Up to 32 Gb/s</td>
+<td>Standard for enterprise SAN; requires FC fabric</td>
+</tr>
+<tr>
+<td>iSCSI</td>
+<td>10–25 GbE</td>
+<td>IP-based; lower cost fabric; suitable for most workloads</td>
+</tr>
+<tr>
+<td>NVMe/FC</td>
+<td>Up to 32 Gb/s</td>
+<td>NVMe over Fibre Channel; lowest latency on FC fabrics</td>
+</tr>
+<tr>
+<td>NVMe/RoCE</td>
+<td>25–100 GbE</td>
+<td>NVMe over RDMA; requires RoCE-capable NICs and switches</td>
+</tr>
+<tr>
+<td>NVMe/TCP</td>
+<td>25 GbE+</td>
+<td>NVMe over TCP; no special hardware required beyond standard Ethernet</td>
+</tr>
+</tbody>
+</table>
+<p>Host configuration guidelines:</p>
+<ul>
+<li>Zone each host HBA to ports on <strong>both</strong> CT0 and CT1 to ensure paths to both controllers</li>
+<li>Configure ALUA on the host multipath driver — this allows FlashArray to designate preferred paths and allows transparent failover on controller restart or NDU</li>
+<li>Pure recommends at least two paths per host, one to each controller; four paths (two per controller) for critical workloads</li>
+</ul>
+<p><strong>Pure1</strong> is Pure Storage's cloud management portal. It ingests telemetry from all registered FlashArrays and provides centralised capacity planning, anomaly detection, AI-driven support case pre-population, and predictive replace notifications for hardware components — without requiring a separate on-premises management VM.</p>
+<h2 id="key-terms-glossary">Key Terms Glossary<a class="headerlink" href="#key-terms-glossary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DirectFlash Module (DFM)</td>
+<td>Pure-designed NVMe flash module that exposes raw NAND to Purity, bypassing the standard SSD Flash Translation Layer</td>
+</tr>
+<tr>
+<td>NVRAM</td>
+<td>Non-volatile RAM used as a write buffer on each controller; mirrored to the peer controller before host ACK is sent</td>
+</tr>
+<tr>
+<td>Purity</td>
+<td>The operating system running on FlashArray controllers; handles I/O, data reduction, replication, and management</td>
+</tr>
+<tr>
+<td>ActiveDR</td>
+<td>Pure's asynchronous replication feature; replicates Protection Group snapshots to a remote FlashArray with configurable RPO</td>
+</tr>
+<tr>
+<td>ActiveCluster</td>
+<td>Pure's synchronous replication feature; provides RPO=0 active-active stretched volumes across two FlashArrays</td>
+</tr>
+<tr>
+<td>Protection Group</td>
+<td>A named set of volumes that are snapped together atomically to form a crash-consistent point-in-time copy</td>
+</tr>
+<tr>
+<td>Snapshot</td>
+<td>A pointer-based, instant, space-efficient point-in-time copy of one or more volumes; no data is copied at creation</td>
+</tr>
+<tr>
+<td>Deduplication</td>
+<td>Inline global process that computes a SHA fingerprint per data chunk and stores only one copy of any duplicate chunk</td>
+</tr>
+<tr>
+<td>Compression</td>
+<td>Inline data reduction using LZ4 and zstd algorithms applied to unique (post-dedup) data before it is written to flash</td>
+</tr>
+<tr>
+<td>Mediator</td>
+<td>A third-party arbitration service (hosted in Pure1 or a third site) used by ActiveCluster to prevent split-brain on network partition</td>
+</tr>
+<tr>
+<td>Pure1</td>
+<td>Pure Storage's cloud analytics and management portal; provides fleet-wide visibility, AI-driven support, and capacity forecasting</td>
+</tr>
+<tr>
+<td>FlashArray</td>
+<td>Pure Storage's block storage platform; available in FA//X (NVMe), FA//C (QLC), and FA//E (high-density) product lines</td>
+</tr>
+</tbody>
+</table>
 
 
 

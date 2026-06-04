@@ -25,7 +25,7 @@
     
     
       
-        <title>PowerMax — How It Works - Chris KB</title>
+        <title>Dell PowerMax — How It Works - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="PowerMax — How It Works · Chris KB">
+  <meta property="og:title" content="Dell PowerMax — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="PowerMax — How It Works · Chris KB">
+  <meta name="twitter:title" content="Dell PowerMax — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -92,7 +92,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#powermax-how-it-works" class="md-skip">
+        <a href="#dell-powermax-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -128,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              PowerMax — How It Works
+              Dell PowerMax — How It Works
             
           </span>
         </div>
@@ -3970,10 +3970,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#architecture-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Architecture Overview
       
     </span>
   </a>
@@ -3981,10 +3981,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#director-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture
+        Director Architecture
       
     </span>
   </a>
@@ -3992,10 +3992,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
+  <a href="#global-cache" class="md-nav__link">
     <span class="md-ellipsis">
       
-        HA Topology
+        Global Cache
       
     </span>
   </a>
@@ -4003,10 +4003,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
+  <a href="#mermaid-diagram-io-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Components
+        Mermaid Diagram: I/O Architecture
       
     </span>
   </a>
@@ -4014,10 +4014,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#connectivity" class="md-nav__link">
+  <a href="#srdf-replication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Connectivity
+        SRDF Replication
       
     </span>
   </a>
@@ -4025,10 +4025,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#srdf-pair-states" class="md-nav__link">
+  <a href="#storage-resource-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SRDF Pair States
+        Storage Resource Management
       
     </span>
   </a>
@@ -4036,10 +4036,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-symcli-commands" class="md-nav__link">
+  <a href="#host-connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key SYMCLI Commands
+        Host Connectivity
       
     </span>
   </a>
@@ -4047,10 +4047,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sizing" class="md-nav__link">
+  <a href="#unisphere-for-powermax" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sizing
+        Unisphere for PowerMax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms Glossary
       
     </span>
   </a>
@@ -4245,178 +4256,148 @@
 
 
 
-<h1 id="powermax-how-it-works">PowerMax — How It Works<a class="headerlink" href="#powermax-how-it-works" title="Permanent link">&para;</a></h1>
+<h1 id="dell-powermax-how-it-works">Dell PowerMax — How It Works<a class="headerlink" href="#dell-powermax-how-it-works" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-How It Works reference covering Overview, Architecture, HA Topology, Components, Connectivity and 3 more sections.
+Internal architecture and data-path reference: Director architecture, Global Cache, SRDF replication, storage resource management, host connectivity, and Unisphere management.
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Dell PowerMax — How It Works ─────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     PowerMax operational flow: request → controller → data service → host acknowledgement     │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Data path: host I/O → PowerMax controller → storage media → persistent write         │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │ Management: Unisphere for PowerMax / Solutions Enabler provides unified control for all opera │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           Protection: snapshots, replication, and redundancy ensure data durability           │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Host I/O → PowerMax controller → storage media → acknowledge → replicate                           │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │           Function          │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │    SRDF Sync     │   Zero-RPO DR    │    RDF protocol   │   Certificate    │   Metro &lt;200ms   │   │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    SRDF Async    │  Near-zero RPO   │    RDF protocol   │   Certificate    │   Any distance   │   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    TimeFinder    │ Local snapshots  │      Internal     │ Solutions Enabl  │   256 snaps/SG   │   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │Solutions Enabler │   CLI/API mgmt   │    HTTPS/symcli   │   Certificate    │     Symm CLI     │   │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    Storage group      = logical container for volumes sharing service level and host access policy    │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Dell PowerMax is an enterprise NVMe-oF all-flash array engineered for mission-critical tier-1 workloads. It is available in two models: <strong>PowerMax 2000</strong> (1–4 engines) and <strong>PowerMax 8000</strong> (1–8 engines). All flash media is NVMe, data is served over NVMe-oF (NVMe over FC or NVMe/TCP) or traditional FC/iSCSI, and latency is consistently sub-millisecond at scale. The array runs PowerMaxOS and is managed via Unisphere for PowerMax or SYMCLI (Solutions Enabler).</p>
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  FA1["FA Director A\nFC / NVMe-oF"] &amp; FA2["FA Director B\nFC / NVMe-oF"] --&gt; XB["Crossbar Interconnect"]
-  SR1["SRDF Director A"] &amp; SR2["SRDF Director B"] --&gt; XB
-  XB --&gt; FLASH[("NVMe Flash\nNVMe-SCM / eTLC")]
-  FA1 &amp; FA2 --&gt; FAB["SAN Fabric\n(Brocade / Cisco)"]
-  FAB --&gt; H(["Hosts — Oracle / SQL / SAP"])
-  SR1 &amp; SR2 --&gt;|"SRDF/S or SRDF/A"| REMOTE["Remote PowerMax"]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  class FA1,FA2,SR1,SR2 ctrl
-  class XB,FAB net
-  class FLASH store
-  class H host
-  class REMOTE dr</code></pre>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>PowerMax is architected around no single point of failure:</p>
+
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<p>PowerMax is Dell's flagship enterprise all-NVMe storage array, purpose-built for mission-critical tier-1 workloads including mainframe, OLTP databases, ERP platforms, and financial transaction systems. It uses a massively parallel director-based architecture: multiple independent processing boards (Directors) share access to a large global DRAM cache and back-end NVMe flash drives.</p>
+<p>Two models are available:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Max Engines</th>
+<th>Max Raw Capacity</th>
+<th>Target Workload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PowerMax 2500</td>
+<td>2 engines</td>
+<td>~4 PB</td>
+<td>Mid-enterprise; tier-1 databases</td>
+</tr>
+<tr>
+<td>PowerMax 8500</td>
+<td>8 engines</td>
+<td>~9 PB</td>
+<td>Large enterprise; SRDF metro clusters, mainframe</td>
+</tr>
+</tbody>
+</table>
+<p>The Hypermax OS runs on all director boards simultaneously. There is no single master controller — every director is a fully active processing node sharing the same global state through the crossbar interconnect and global cache. This architecture delivers millions of IOPS at sub-millisecond latency without creating bottlenecks at a centralised controller.</p>
+<h2 id="director-architecture">Director Architecture<a class="headerlink" href="#director-architecture" title="Permanent link">&para;</a></h2>
+<p>Directors are the compute and I/O processing units inside a PowerMax engine. Each engine contains at least two director boards, and all directors share a common crossbar interconnect to reach global cache and the back-end NVMe drives.</p>
+<p>There are three classes of directors, each with a distinct role:</p>
+<p><strong>Front-End (FA) Directors</strong></p>
+<p>Front-end directors face the host network. They terminate host I/O sessions and pass data into global cache.</p>
 <ul>
-<li><strong>Director redundancy</strong>: Every engine has two directors (A and B). If one director fails, the peer director takes over all I/O for that engine without host disruption.</li>
-<li><strong>Global memory mirroring</strong>: Write cache is mirrored across both directors of an engine. A director failure does not result in data loss.</li>
-<li><strong>Multi-pathing</strong>: Hosts connect to ports on both directors. PowerPath or native MPIO ensures automatic path failover on director or port failure.</li>
-<li><strong>NVMe drive protection</strong>: Data is protected by RAID-5 (3+1) or RAID-6 (6+2 / 8+2). No single drive loss causes data unavailability.</li>
-<li><strong>SRDF replication</strong>: SRDF/S (zero RPO, ≤10ms RTT) and SRDF/A (~30s RPO, any distance) provide site-level redundancy.</li>
-<li><strong>Power and cooling</strong>: Dual redundant power feeds and N+1 cooling fans per engine.</li>
+<li>Connect to hosts via FC (32 Gb/s), iSCSI (25 GbE), NVMe/FC, or FICON (mainframe)</li>
+<li>Each FA director hosts multiple host-facing ports; zoning and masking views are applied here</li>
+<li>ALUA path states are managed per FA director port — preferred and non-preferred paths are defined in Masking Views</li>
 </ul>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Engine</td>
-<td>Physical cabinet unit; each engine contains two directors. PowerMax 2000 supports 1–4 engines; PowerMax 8000 supports 1–8 engines.</td>
-</tr>
-<tr>
-<td>Director</td>
-<td>The compute and I/O controller within an engine. Each engine has two directors in an active-active pair.</td>
-</tr>
-<tr>
-<td>Front-end Director (FED)</td>
-<td>Handles host connectivity via FC, FICON, and NVMe/FC port adapters.</td>
-</tr>
-<tr>
-<td>Back-end Director (BED)</td>
-<td>Manages the NVMe flash drives. All drives are NVMe-AF (all-flash NVMe).</td>
-</tr>
-<tr>
-<td>SRDF Director (RDF)</td>
-<td>Dedicated director ports for SRDF replication links.</td>
-</tr>
-<tr>
-<td>Global Memory</td>
-<td>DRAM shared across all directors; stores write cache and metadata; RAID 1 across directors.</td>
-</tr>
-<tr>
-<td>Unisphere for PowerMax</td>
-<td>Web-based management; deployed as a vApp or virtual appliance.</td>
-</tr>
-<tr>
-<td>Solutions Enabler (SE)</td>
-<td>Host-based toolkit; provides SYMCLI for scripted operations.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Director Type</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Fibre Channel (FC)</td>
-<td>Front-end</td>
-<td>32 Gb/s FC ports; standard for tier-1 block workloads</td>
-</tr>
-<tr>
-<td>NVMe/FC</td>
-<td>Front-end</td>
-<td>NVMe over FC for lowest-latency host access</td>
-</tr>
-<tr>
-<td>NVMe/TCP</td>
-<td>Front-end</td>
-<td>NVMe over TCP; supported on PowerMax 2000/8000 with appropriate firmware</td>
-</tr>
-<tr>
-<td>iSCSI</td>
-<td>Front-end</td>
-<td>25 GbE iSCSI for IP-connected hosts</td>
-</tr>
-<tr>
-<td>SRDF (FC)</td>
-<td>RDF</td>
-<td>Dedicated RDF ports; 8 Gb/s or 16 Gb/s FC</td>
-</tr>
-<tr>
-<td>SRDF/IP</td>
-<td>RDF</td>
-<td>IP-based SRDF for sites without FC dark fibre</td>
-</tr>
-</tbody>
-</table>
-<p>Zone each host HBA port to ports on <strong>both</strong> directors of an engine (cross-director zoning). Use PowerPath/VE for VMware environments.</p>
-<h2 id="srdf-pair-states">SRDF Pair States<a class="headerlink" href="#srdf-pair-states" title="Permanent link">&para;</a></h2>
+<p><strong>Back-End (DA) Directors</strong></p>
+<p>Back-end directors face the NVMe flash drives. They move data between global cache and the physical flash media.</p>
+<ul>
+<li>Connect to NVMe drive bays via a direct PCIe fabric</li>
+<li>Manage RAID protection (RAID-5 3+1, RAID-6 6+2 or 8+2) across NVMe drives</li>
+<li>Execute destage operations — moving dirty write data from global cache to NVMe drives during idle periods and continuously under load</li>
+</ul>
+<p><strong>RDF Directors (RA)</strong></p>
+<p>RDF directors handle SRDF replication traffic between PowerMax arrays.</p>
+<ul>
+<li>Connect to remote PowerMax arrays via dedicated FC or IP links</li>
+<li>All SRDF replication traffic is isolated to RA director ports — it does not compete with host I/O on FA director ports</li>
+<li>Each SRDF group (RDF group) is bound to a specific pair of RA directors at source and target</li>
+</ul>
+<h2 id="global-cache">Global Cache<a class="headerlink" href="#global-cache" title="Permanent link">&para;</a></h2>
+<p>The global cache is a large DRAM memory pool shared by all directors in the array. It acts as the staging area for all reads and writes.</p>
+<p>Key properties:</p>
+<ul>
+<li>Size ranges from tens of GB to over 2 TB depending on model and configuration</li>
+<li>All host writes land in global cache first; the host ACK is returned after the write is in cache and mirrored to the peer director's cache — not after it is written to NVMe drives</li>
+<li>All reads are checked in global cache first; a cache hit avoids a back-end NVMe read entirely, reducing latency to DRAM speeds (microseconds)</li>
+<li>Write data in global cache is destaged to NVMe drives by back-end directors asynchronously; destage policy is managed by the Dynamic Cache Management (DCM) subsystem</li>
+<li>Cache is RAID-1 mirrored across directors within the same engine — a single director failure does not cause data loss</li>
+</ul>
+<p><strong>Vault protection:</strong> In the event of a power failure, PowerMax uses battery-backed NVRAM to safely flush the contents of global cache to a dedicated vault area on the NVMe drives. On power restoration, the array replays the vault log and restores the cache to its pre-failure state before accepting new host I/O.</p>
+<h2 id="mermaid-diagram-io-architecture">Mermaid Diagram: I/O Architecture<a class="headerlink" href="#mermaid-diagram-io-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph HOSTS["Host Layer"]
+        H1["Production Hosts\nOracle / SQL / SAP\nFC / iSCSI / FICON"]
+    end
+
+    subgraph FEDIR["Front-End Directors"]
+        FA1["FA Director A\nFC / iSCSI ports\nMasking Views"]
+        FA2["FA Director B\nFC / iSCSI ports\nMasking Views"]
+    end
+
+    subgraph CACHE["Global Cache"]
+        GC["DRAM Cache\nTens–hundreds of GB\nRAID-1 across directors\nVault on power loss"]
+    end
+
+    subgraph BEDIR["Back-End Directors"]
+        DA1["DA Director A\nNVMe drive control\nRAID-5/6 protection"]
+        DA2["DA Director B\nNVMe drive control\nRAID-5/6 protection"]
+    end
+
+    subgraph NVME["NVMe Flash"]
+        DRV["NVMe Drive Bays\neTLC / SCM\nRAID protected"]
+    end
+
+    subgraph SRDF["SRDF Replication"]
+        RA1["RA Director A\nRDF Group links"]
+        RA2["RA Director B\nRDF Group links"]
+    end
+
+    REMOTE["Remote PowerMax\nSRDF/S or SRDF/A target"]
+
+    H1 --&gt;|"FC / iSCSI host I/O"| FA1
+    H1 --&gt;|"FC / iSCSI host I/O"| FA2
+    FA1 --&gt; GC
+    FA2 --&gt; GC
+    GC --&gt; DA1
+    GC --&gt; DA2
+    DA1 --&gt; DRV
+    DA2 --&gt; DRV
+    GC --&gt; RA1
+    GC --&gt; RA2
+    RA1 --&gt;|"SRDF/S or SRDF/A\nRDF protocol over FC or IP"| REMOTE
+    RA2 --&gt;|"SRDF/S or SRDF/A"| REMOTE
+
+    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
+    classDef dir fill:#15803d,stroke:#14532d,color:#fff
+    classDef cache fill:#15803d,stroke:#14532d,color:#fff
+    classDef nvme fill:#b45309,stroke:#92400e,color:#fff
+    classDef srdf fill:#7c3aed,stroke:#5b21b6,color:#fff
+
+    class H1 host
+    class FA1,FA2,DA1,DA2 dir
+    class GC cache
+    class DRV nvme
+    class RA1,RA2,REMOTE srdf</code></pre>
+<h2 id="srdf-replication">SRDF Replication<a class="headerlink" href="#srdf-replication" title="Permanent link">&para;</a></h2>
+<p>SRDF (Symmetrix Remote Data Facility) is PowerMax's native replication protocol, used for disaster recovery and metro high availability. SRDF operates at the volume (device) level — individual devices or groups of devices are paired between a source (R1) and a target (R2) PowerMax.</p>
+<p><strong>SRDF/S — Synchronous</strong></p>
+<ul>
+<li>Every host write to an R1 device is immediately mirrored to the R2 device on the remote PowerMax before the ACK is returned to the host</li>
+<li>RPO = 0 — no data can be lost at the R2 site if the R1 site fails</li>
+<li>RTO depends on the failover procedure, but R2 data is always fully current</li>
+<li>Requires low-latency network between sites — typically &lt;10 ms RTT; higher latency degrades host write response time directly</li>
+<li>Best suited for metro distances (same city or campus)</li>
+</ul>
+<p><strong>SRDF/A — Asynchronous</strong></p>
+<ul>
+<li>Writes are buffered at the R1 site and transmitted to R2 in periodic delta sets (typically every 15–30 seconds)</li>
+<li>RPO = the delta set cycle time — typically less than 30 seconds for configured workloads</li>
+<li>R2 data lags R1 by one delta set; the lag is consistent and monitored</li>
+<li>No latency impact on host writes — the host ACK does not wait for R2 confirmation</li>
+<li>Suitable for any network distance, including intercontinental replication</li>
+</ul>
+<p><strong>SRDF pair states:</strong></p>
 <table>
 <thead>
 <tr>
@@ -4427,72 +4408,181 @@ How It Works reference covering Overview, Architecture, HA Topology, Components,
 <tbody>
 <tr>
 <td>Synchronized</td>
-<td>In sync — normal SRDF/S production state</td>
+<td>Normal SRDF/S state — R1 and R2 are in sync</td>
 </tr>
 <tr>
 <td>Consistent</td>
-<td>R2 consistent, receiving cycles — normal SRDF/A state</td>
+<td>Normal SRDF/A state — R2 consistent, receiving delta sets</td>
 </tr>
 <tr>
 <td>Synchronizing</td>
-<td>Catching up — data transfer in progress</td>
+<td>Data transfer in progress — catching up after a pause</td>
 </tr>
 <tr>
 <td>Suspended</td>
-<td>Paused — writes queued on R1</td>
+<td>SRDF link paused; writes queuing on R1</td>
 </tr>
 <tr>
 <td>Partitioned</td>
-<td>Communication lost between R1 and R2</td>
+<td>Network connectivity lost between R1 and R2</td>
 </tr>
 <tr>
 <td>Failed Over</td>
-<td>R2 is R/W, R1 is NR — after failover</td>
+<td>R2 is read-write; R1 is not ready — post-failover state</td>
 </tr>
 </tbody>
 </table>
-<h2 id="key-symcli-commands">Key SYMCLI Commands<a class="headerlink" href="#key-symcli-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Array health and configuration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># SRDF pair states</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>query
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Synchronized\|Consistent&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Storage groups and devices</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>symsg<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># SnapVX snapshots</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symsnap<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;storage-group&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Suspend / resume SRDF</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg_id&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<h2 id="storage-resource-management">Storage Resource Management<a class="headerlink" href="#storage-resource-management" title="Permanent link">&para;</a></h2>
+<p>PowerMax organises storage through a hierarchy of logical constructs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Physical NVMe Drives
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    └── Storage Resource Pool (SRP)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>          └── Storage Group (SG)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                └── Thin Devices (TDEVs)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                      └── Masking View → Host
 </code></pre></div>
-<h2 id="sizing">Sizing<a class="headerlink" href="#sizing" title="Permanent link">&para;</a></h2>
+<p><strong>Thin Devices (TDEVs):</strong> The logical block devices presented to hosts. TDEVs are thin-provisioned — physical capacity is allocated from the SRP only as data is written. A TDEV can be presented as much larger than the physical capacity available.</p>
+<p><strong>Storage Groups (SGs):</strong> A named container grouping one or more TDEVs together. Service Levels (Diamond, Platinum, Gold, Silver, Bronze) are applied at the SG level to set performance expectations enforced by DPTM (Dynamic Performance and Tiering Management).</p>
+<p><strong>Storage Resource Pools (SRPs):</strong> Aggregate the physical NVMe drive capacity. All TDEVs draw physical capacity from an SRP. In models with mixed media (NVMe + SCM), FAST (Fully Automated Storage Tiering) automatically migrates hot data to the faster tier and cold data to the denser tier.</p>
+<p><strong>Masking Views:</strong> Define the access relationship between a host, a port group (set of FA director ports), and a storage group. A Masking View is what causes a TDEV to appear as a block device on a specific host — without a Masking View, no host can see any device, regardless of zoning.</p>
+<h2 id="host-connectivity">Host Connectivity<a class="headerlink" href="#host-connectivity" title="Permanent link">&para;</a></h2>
+<p>PowerMax supports a wide range of host protocols, all serviced through Front-End Directors.</p>
 <table>
 <thead>
 <tr>
-<th>Model</th>
-<th>Engines</th>
-<th>Max Raw Capacity</th>
-<th>Use Case</th>
+<th>Protocol</th>
+<th>Speed</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PowerMax 2000</td>
-<td>1–4</td>
-<td>Up to ~4.5 PB</td>
-<td>Mid-enterprise; tier-1 databases</td>
+<td>Fibre Channel</td>
+<td>32 Gb/s</td>
+<td>Standard for enterprise block; dual-fabric zoning required</td>
 </tr>
 <tr>
-<td>PowerMax 8000</td>
-<td>1–8</td>
-<td>Up to ~9 PB</td>
-<td>Large enterprise; SRDF/S metro clusters</td>
+<td>iSCSI</td>
+<td>25 GbE</td>
+<td>IP SAN; requires dedicated network or VLAN</td>
+</tr>
+<tr>
+<td>NVMe/FC</td>
+<td>32 Gb/s</td>
+<td>NVMe over FC; lowest host-visible latency</td>
+</tr>
+<tr>
+<td>NVMe/TCP</td>
+<td>25 GbE+</td>
+<td>NVMe over TCP; supported on PowerMax 2500/8500</td>
+</tr>
+<tr>
+<td>FICON</td>
+<td>Mainframe</td>
+<td>IBM z-series channel attachment; dedicated FA director cards</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PowerPath</strong> is Dell's multipathing software, installed on hosts. It aggregates multiple paths (from different FA directors) into a single virtual device, provides automatic path failover on director or port failure, and applies intelligent load balancing across active paths. PowerPath/VE is the VMware-specific variant.</p>
+<p>Cross-director zoning is the recommended practice — each host HBA should be zoned to ports on both FA Director A and FA Director B. This ensures that a director failure leaves at least one active path per host without requiring manual intervention.</p>
+<h2 id="unisphere-for-powermax">Unisphere for PowerMax<a class="headerlink" href="#unisphere-for-powermax" title="Permanent link">&para;</a></h2>
+<p>Unisphere is the browser-based management interface for PowerMax. It runs as a virtual appliance (vApp) on a vCenter environment and exposes both a GUI and a REST API.</p>
+<ul>
+<li>REST API base: <code>https://&lt;unisphere-host&gt;:8443/univmax/restapi/</code></li>
+<li>All operations available in the GUI are also available via REST — array configuration, storage group management, masking, SRDF management, snapshot management, and performance metrics</li>
+<li>Multiple PowerMax arrays can be managed from a single Unisphere instance</li>
+</ul>
+<p><strong>Solutions Enabler (SYMCLI)</strong> is the host-based command-line toolkit for PowerMax management. It communicates with the array directly over a gatekeeper device (a small SCSI device presented to the Solutions Enabler host).</p>
+<p>Commonly used SYMCLI command families:</p>
+<table>
+<thead>
+<tr>
+<th>Command Prefix</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symcfg</code></td>
+<td>Array-level configuration and status</td>
+</tr>
+<tr>
+<td><code>symsg</code></td>
+<td>Storage group management</td>
+</tr>
+<tr>
+<td><code>sympd</code></td>
+<td>Physical drive status</td>
+</tr>
+<tr>
+<td><code>symrdf</code></td>
+<td>SRDF pair management and failover</td>
+</tr>
+<tr>
+<td><code>symsnap</code></td>
+<td>TimeFinder SnapVX snapshot management</td>
+</tr>
+<tr>
+<td><code>symmaskdb</code></td>
+<td>Masking view and initiator group management</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-terms-glossary">Key Terms Glossary<a class="headerlink" href="#key-terms-glossary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Director</td>
+<td>An independent processing board inside a PowerMax engine; comes in FA (front-end), DA (back-end), and RA (RDF/replication) variants</td>
+</tr>
+<tr>
+<td>Global Cache</td>
+<td>A large DRAM pool shared by all directors; all reads and writes pass through it; RAID-1 protected across director pairs</td>
+</tr>
+<tr>
+<td>SRDF/S</td>
+<td>SRDF Synchronous — writes are mirrored to the remote R2 array before host ACK; RPO=0; suitable for metro distances</td>
+</tr>
+<tr>
+<td>SRDF/A</td>
+<td>SRDF Asynchronous — writes are batched into delta sets and sent to R2 periodically; configurable RPO (~30 seconds); suitable for any distance</td>
+</tr>
+<tr>
+<td>TDEV</td>
+<td>Thin Device — the thin-provisioned logical block volume presented to a host; physical capacity allocated from an SRP on write</td>
+</tr>
+<tr>
+<td>SRP</td>
+<td>Storage Resource Pool — the aggregate of physical NVMe drives from which TDEVs draw capacity</td>
+</tr>
+<tr>
+<td>FAST</td>
+<td>Fully Automated Storage Tiering — automatically migrates data between NVMe tiers (e.g., SCM for hot, eTLC for warm) based on access frequency</td>
+</tr>
+<tr>
+<td>Masking View</td>
+<td>The access-control object that binds a host initiator group, a port group, and a storage group — determines which devices a host can see</td>
+</tr>
+<tr>
+<td>PowerPath</td>
+<td>Dell multipathing software installed on hosts; aggregates multiple FA director paths, provides failover and load balancing</td>
+</tr>
+<tr>
+<td>Hypermax OS</td>
+<td>The operating system running on all PowerMax director boards; manages cache, scheduling, SRDF, and data services</td>
+</tr>
+<tr>
+<td>RDF Group</td>
+<td>A numbered replication group on PowerMax; binds R1 and R2 devices together for SRDF replication on specific RA director ports</td>
+</tr>
+<tr>
+<td>Solutions Enabler</td>
+<td>Dell's host-based CLI toolkit (SYMCLI) for PowerMax; required for scripted and advanced management operations</td>
 </tr>
 </tbody>
 </table>

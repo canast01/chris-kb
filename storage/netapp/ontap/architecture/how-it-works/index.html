@@ -25,7 +25,7 @@
     
     
       
-        <title>ONTAP — How It Works - Chris KB</title>
+        <title>NetApp ONTAP — How It Works - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ONTAP — How It Works · Chris KB">
+  <meta property="og:title" content="NetApp ONTAP — How It Works · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ONTAP — How It Works · Chris KB">
+  <meta name="twitter:title" content="NetApp ONTAP — How It Works · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -92,7 +92,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ontap-how-it-works" class="md-skip">
+        <a href="#netapp-ontap-how-it-works" class="md-skip">
           Skip to content
         </a>
       
@@ -128,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ONTAP — How It Works
+              NetApp ONTAP — How It Works
             
           </span>
         </div>
@@ -3460,10 +3460,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#architecture-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Architecture Overview
       
     </span>
   </a>
@@ -3471,10 +3471,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ha-topology" class="md-nav__link">
+  <a href="#ha-pair-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        HA Topology
+        HA Pair Architecture
       
     </span>
   </a>
@@ -3482,10 +3482,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cluster-networking" class="md-nav__link">
+  <a href="#wafl-write-anywhere-file-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cluster Networking
+        WAFL — Write Anywhere File Layout
       
     </span>
   </a>
@@ -3493,10 +3493,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-hierarchy" class="md-nav__link">
+  <a href="#aggregate-svm-volume-hierarchy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage Hierarchy
+        Aggregate → SVM → Volume Hierarchy
       
     </span>
   </a>
@@ -3504,10 +3504,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#svm-storage-vm-architecture" class="md-nav__link">
+  <a href="#data-protocols" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SVM (Storage VM) Architecture
+        Data Protocols
       
     </span>
   </a>
@@ -3515,10 +3515,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#protocol-stack" class="md-nav__link">
+  <a href="#mermaid-diagram-io-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Protocol Stack
+        Mermaid Diagram: I/O Architecture
       
     </span>
   </a>
@@ -3526,10 +3526,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-protection-built-ins" class="md-nav__link">
+  <a href="#snapmirror-and-snapvault" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Protection Built-ins
+        SnapMirror and SnapVault
       
     </span>
   </a>
@@ -3537,10 +3537,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#aggregate-health" class="md-nav__link">
+  <a href="#metrocluster-and-ontap-mediator" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Aggregate Health
+        MetroCluster and ONTAP Mediator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapcenter-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnapCenter Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms Glossary
       
     </span>
   </a>
@@ -3735,359 +3757,410 @@
 
 
 
-<h1 id="ontap-how-it-works">ONTAP — How It Works<a class="headerlink" href="#ontap-how-it-works" title="Permanent link">&para;</a></h1>
+<h1 id="netapp-ontap-how-it-works">NetApp ONTAP — How It Works<a class="headerlink" href="#netapp-ontap-how-it-works" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-How It Works reference covering Overview, HA Topology, Cluster Networking, Storage Hierarchy, SVM (Storage VM) Architecture and 3 more sections.
+Internal architecture and data-path reference: HA pair design, WAFL filesystem, Aggregate-SVM-Volume hierarchy, data protocols, SnapMirror, MetroCluster, ONTAP Mediator, and SnapCenter integration.
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── NetApp ONTAP — How It Works ─────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       ONTAP operational flow: request → controller → data service → host acknowledgement      │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           Data path: host I/O → ONTAP controller → storage media → persistent write           │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │ Management: ONTAP System Manager / ONTAP CLI provides unified control for all operational fun │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           Protection: snapshots, replication, and redundancy ensure data durability           │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Host I/O → ONTAP controller → storage media → acknowledge → replicate                              │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │       SVM        │ Tenant isolation │   All protocols   │  Kerberos/NTLM   │  Virtual server  │   │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    SnapMirror    │  DR replication  │    SM protocol    │   Certificate    │  Async or sync   │   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    FlexClone     │  Instant clone   │      Internal     │    Admin role    │ Space-efficient  │   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │      SM-BC       │ Zero-RPO active- │    SM protocol    │     Mediator     │     SAN only     │   │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>NetApp ONTAP is a clustered storage operating system that abstracts physical hardware into logical constructs, enabling non-disruptive operations, multi-protocol data access, and built-in data protection. The hierarchy flows from cluster → nodes → aggregates → SVMs → volumes, with data served across NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3 protocols simultaneously from a single cluster.</p>
-<p>ONTAP runs on three hardware forms:</p>
-<ul>
-<li><strong>AFF (All Flash FAS)</strong> — all-NVMe or all-SSD arrays optimised for latency-sensitive workloads</li>
-<li><strong>FAS (Fabric-Attached Storage)</strong> — hybrid flash/disk arrays for capacity-optimised or mixed workloads</li>
-<li><strong>ONTAP Select</strong> — software-defined ONTAP running on commodity x86 servers (VMware or KVM hypervisor)</li>
-</ul>
-<h2 id="ha-topology">HA Topology<a class="headerlink" href="#ha-topology" title="Permanent link">&para;</a></h2>
-<p>ONTAP HA pairs are active-active: both nodes serve I/O simultaneously and each holds a full copy of the partner's NVRAM write log. In the event of a node failure, the surviving node performs an automatic storage failover (takeover) within ~45 seconds.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Node1 as Node 1 (failed)
-    participant Node2 as Node 2 (surviving)
-    participant Clients
-    Note over Node1,Node2: Node 1 panic / power loss
-    Node1--xNode2: HA heartbeat lost (~45 s)
-    Node2-&gt;&gt;Node2: Detect partner failure
-    Node2-&gt;&gt;Node2: Take ownership of Node 1 aggregates
-    Node2--&gt;&gt;Clients: Serve I/O for all LIFs (both nodes)
-    Note over Node2,Clients: Node 1 recovering...
-    Node1-&gt;&gt;Node1: Boot and rejoin cluster
-    Node2-&gt;&gt;Node1: storage failover giveback
-    Node1-&gt;&gt;Node1: Reclaim own aggregates
-    Node1--&gt;&gt;Clients: Resume serving own LIFs
-    Note over Node1,Node2: Both nodes: Connected, Not in takeover</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>takeover<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-to-take-over&gt;<span class="w">   </span><span class="c1"># planned takeover</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w">                                    </span><span class="c1"># monitor takeover / giveback</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-name&gt;<span class="w">            </span><span class="c1"># return ownership</span>
-</code></pre></div>
+
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<p>ONTAP is NetApp's unified storage operating system. A single ONTAP cluster can serve block, file, and object workloads simultaneously from the same hardware — NFS, CIFS/SMB, iSCSI, FC, NVMe/FC, NVMe/TCP, and S3 all run on the same cluster at the same time. The cluster scales from a single HA pair up to 24 HA pairs of nodes, with capacity expansion and non-disruptive workload migration across nodes.</p>
+<p>ONTAP runs on four platform types:</p>
 <table>
 <thead>
 <tr>
-<th>Takeover Mode</th>
-<th>Trigger</th>
+<th>Platform</th>
+<th>Type</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Automatic</td>
-<td>Node panic, power loss, disk shelf loss</td>
-<td>Within ~45 s; requires <code>storage failover modify -enabled true</code></td>
+<td>AFF (All Flash FAS)</td>
+<td>Purpose-built all-flash hardware</td>
+<td>Optimised for sub-millisecond latency; NVMe-native on AFF A-series</td>
 </tr>
 <tr>
-<td>Manual planned</td>
-<td><code>storage failover takeover</code></td>
-<td>Used for software upgrades and maintenance</td>
+<td>FAS (Fabric-Attached Storage)</td>
+<td>Hybrid flash/HDD hardware</td>
+<td>Capacity-optimised; suitable for NAS, backup, and archive</td>
 </tr>
 <tr>
-<td>Partial</td>
-<td>Specific aggregate relocation</td>
-<td><code>storage aggregate relocation start</code> — moves aggregate without full node takeover</td>
+<td>ASA (All-SAN Array)</td>
+<td>All-flash SAN-optimised</td>
+<td>Simplified SAN-only configuration; symmetric active-active paths</td>
+</tr>
+<tr>
+<td>ONTAP Select</td>
+<td>Software-defined on x86</td>
+<td>Runs on VMware ESXi or KVM; supports cloud and edge deployments</td>
 </tr>
 </tbody>
 </table>
-<h2 id="cluster-networking">Cluster Networking<a class="headerlink" href="#cluster-networking" title="Permanent link">&para;</a></h2>
+<p>ONTAP Cloud (Cloud Volumes ONTAP) runs the same OS in AWS, Azure, and GCP, enabling SnapMirror replication directly between on-premises ONTAP clusters and cloud-hosted ONTAP instances.</p>
+<h2 id="ha-pair-architecture">HA Pair Architecture<a class="headerlink" href="#ha-pair-architecture" title="Permanent link">&para;</a></h2>
+<p>Two ONTAP controller nodes form an HA pair. Both nodes are active simultaneously — each serves its own set of aggregates and volumes, and each holds the partner node's NVRAM write log as a mirror. Under normal operation the workload is split across both nodes; under takeover one node serves the entire workload.</p>
+<p>Key hardware components per node:</p>
 <table>
 <thead>
 <tr>
-<th>Network</th>
-<th>Traffic</th>
-<th>Speed</th>
-<th>Notes</th>
+<th>Component</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Cluster network</td>
-<td>NVRAM sync, HA heartbeat, volume moves</td>
-<td>10/25/100GbE</td>
-<td>Dedicated switch fabric; must be low-latency</td>
+<td>Multi-core CPU</td>
+<td>Runs ONTAP kernel, WAFL, protocol stacks, data services</td>
 </tr>
 <tr>
-<td>Data network</td>
-<td>NFS, SMB, iSCSI, NVMe/TCP LIFs</td>
-<td>10/25GbE+</td>
-<td>Client-facing; LIFs float across ports per failover group</td>
+<td>NVRAM</td>
+<td>Write buffer; holds incoming writes before they are committed to disk as a consistency point</td>
 </tr>
 <tr>
-<td>FC fabric</td>
-<td>FC and FCoE SAN traffic</td>
-<td>16G/32G FC</td>
-<td>Dual-fabric zoning; LIFs represented as WWPNs</td>
+<td>HA interconnect</td>
+<td>Dedicated high-speed link between node pairs; carries NVRAM mirror and heartbeat</td>
 </tr>
 <tr>
-<td>Management network</td>
-<td>CLI, API, System Manager</td>
-<td>1GbE</td>
-<td>Dedicated management port per node; cluster-management LIF</td>
+<td>Cluster network ports</td>
+<td>10/25/100 GbE; carry inter-node traffic for volume moves, NVRAM sync, and SnapMirror</td>
 </tr>
 <tr>
-<td>Intercluster network</td>
-<td>SnapMirror, cluster peering</td>
-<td>10/25GbE</td>
-<td>Dedicated intercluster LIFs per node; separate VLAN recommended</td>
+<td>Data network ports</td>
+<td>Client-facing; NFS, SMB, iSCSI, NVMe/TCP LIFs assigned here</td>
+</tr>
+<tr>
+<td>FC HBA ports</td>
+<td>SAN client-facing; FC and FCoE LIFs assigned here</td>
 </tr>
 </tbody>
 </table>
-<p><strong>LIF management:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,home-port,curr-node,curr-port,status-oper
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-is-home<span class="w"> </span><span class="nb">false</span><span class="w">   </span><span class="c1"># LIFs not on home port (migrated due to failover)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>*<span class="w">              </span><span class="c1"># revert all LIFs to home after maintenance</span>
-</code></pre></div>
-<h2 id="storage-hierarchy">Storage Hierarchy<a class="headerlink" href="#storage-hierarchy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  └── Node(s)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        └── Aggregate(s)     ← physical RAID groups; owned by a node
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>              └── Volume(s)  ← logical containers; thin or thick provisioned
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                    ├── Snapshots      ← point-in-time, read-only copies within the volume
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                    ├── LUNs           ← block devices for iSCSI/FC (inside a volume)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                    ├── Qtrees/Shares  ← NFS exports and SMB shares
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                    └── Files          ← NAS files served via NFS or SMB
-</code></pre></div>
-<p><strong>WAFL (Write Anywhere File Layout)</strong> is ONTAP's internal filesystem engine. Key characteristics:</p>
+<p><strong>Takeover and giveback</strong> are the HA mechanisms:</p>
 <ul>
-<li><strong>Copy-on-write</strong>: WAFL never overwrites existing data blocks. New writes go to free space; old blocks become snapshot data — making snapshot creation near-instant.</li>
-<li><strong>Consistency point (CP)</strong>: WAFL accumulates writes in NVRAM and flushes to disk in batches every 10 seconds or when NVRAM is ~80% full.</li>
-<li><strong>NVRAM mirroring</strong>: The HA partner mirrors NVRAM content in real time over the cluster interconnect — in-flight writes survive a node failure without data loss.</li>
+<li><strong>Takeover</strong> — when the partner node fails, the surviving node automatically takes ownership of the failed node's aggregates and begins serving all its volumes and LIFs</li>
+<li><strong>Giveback</strong> — when the failed node recovers and rejoins the cluster, the surviving node returns the borrowed aggregates and LIFs back to their home node</li>
+<li>Takeover completes in approximately 45 seconds under automatic failover; LIFs migrate to the surviving node and client access resumes without remounting</li>
 </ul>
+<p>The NVRAM mirror means that no acknowledged writes are lost during takeover. WAFL only acknowledges a write to the host after the write is recorded in NVRAM on both nodes.</p>
+<h2 id="wafl-write-anywhere-file-layout">WAFL — Write Anywhere File Layout<a class="headerlink" href="#wafl-write-anywhere-file-layout" title="Permanent link">&para;</a></h2>
+<p>WAFL is ONTAP's internal filesystem engine. It is not a POSIX filesystem exposed to users — it is the internal data management layer that underpins all volumes, LUNs, and snapshots.</p>
+<p><strong>Copy-on-write design:</strong> WAFL never overwrites existing data blocks in place. When data is modified, WAFL writes the new version to a free location and updates the metadata pointer. The old block remains in place and becomes the snapshot's view of the data. This property is what makes ONTAP snapshots instant and non-disruptive — creating a snapshot requires only locking the current set of block pointers, not copying any data.</p>
+<p><strong>Consistency Points (CPs):</strong> WAFL accumulates writes in NVRAM and flushes them to disk in batches called consistency points. A CP is triggered either by a timer (every 10 seconds by default) or when NVRAM fills to approximately 80% capacity. Each CP represents a fully consistent, crash-recoverable state of all volumes on the node. If a node crashes mid-CP, the previous CP is the recovery point — no data acknowledged before the crash is lost.</p>
+<p><strong>RAID-DP and RAID-TEC:</strong> ONTAP protects data within aggregates using double-parity RAID (RAID-DP) or triple-parity RAID (RAID-TEC). RAID-DP tolerates any two simultaneous drive failures within a RAID group; RAID-TEC tolerates three simultaneous failures, making it suitable for very large SATA drive aggregates where the statistical probability of a triple failure during rebuild is non-negligible.</p>
 <table>
 <thead>
 <tr>
 <th>RAID Type</th>
 <th>Parity Disks</th>
-<th>Survives</th>
+<th>Simultaneous Failure Tolerance</th>
 <th>Typical Use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>RAID-DP</td>
-<td>2 per RAID group</td>
-<td>2 simultaneous disk failures</td>
-<td>Standard; AFF and FAS default</td>
+<td>2</td>
+<td>2 drives</td>
+<td>Standard; AFF and FAS default for all disk types</td>
 </tr>
 <tr>
 <td>RAID-TEC</td>
-<td>3 per RAID group</td>
-<td>3 simultaneous disk failures</td>
-<td>Large SATA aggregates; &gt;20 disks per RAID group</td>
+<td>3</td>
+<td>3 drives</td>
+<td>Large SATA aggregates; groups larger than 20 disks</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,raidtype
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
+<h2 id="aggregate-svm-volume-hierarchy">Aggregate → SVM → Volume Hierarchy<a class="headerlink" href="#aggregate-svm-volume-hierarchy" title="Permanent link">&para;</a></h2>
+<p>ONTAP organises storage through a layered hierarchy. Understanding this hierarchy is fundamental to diagnosing capacity issues, designing multi-tenancy, and planning data protection.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Physical Drives (NVMe, SSD, HDD, or mixed)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    └── RAID Groups (RAID-DP or RAID-TEC)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>          └── Aggregate (storage pool owned by a node)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                └── Volume (FlexVol or FlexGroup — logical container)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                      ├── Snapshot copies (WAFL PiT copies; stored in volume)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                      ├── LUNs (for SAN: iSCSI, FC, NVMe)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                      ├── NVMe Namespaces (NVMe/FC or NVMe/TCP)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                      └── Files / Shares (for NAS: NFS exports, SMB shares)
 </code></pre></div>
-<h2 id="svm-storage-vm-architecture">SVM (Storage VM) Architecture<a class="headerlink" href="#svm-storage-vm-architecture" title="Permanent link">&para;</a></h2>
-<p>SVMs are the data access layer — analogous to virtual storage appliances within the cluster. Each SVM has its own namespace, network interfaces (data LIFs), protocol configuration, security domain (export policies, CIFS ACLs, RBAC), and name services (DNS, LDAP, NIS). SVMs enable multi-tenancy on a shared cluster.</p>
-<table>
-<thead>
-<tr>
-<th>SVM Type</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>data</code></td>
-<td>User-configured SVM; serves NAS and/or SAN data to clients</td>
-</tr>
-<tr>
-<td><code>admin</code></td>
-<td>Cluster management SVM; used for cluster-level administration</td>
-</tr>
-<tr>
-<td><code>node</code></td>
-<td>Per-node management SVM; used for node-level access and system functions</td>
-</tr>
-<tr>
-<td><code>system</code></td>
-<td>Internal ONTAP SVMs for cluster services; not user-configurable</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,type,state,allowed-protocols
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,junction-path<span class="w">   </span><span class="c1"># SVM namespace</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-</code></pre></div>
-<h2 id="protocol-stack">Protocol Stack<a class="headerlink" href="#protocol-stack" title="Permanent link">&para;</a></h2>
+<p>Volumes (FlexVols) are the primary logical container. A volume is always owned by a single node's aggregate but can be accessed via LIFs on both nodes in the HA pair. FlexGroups are scale-out volumes that span multiple aggregates across multiple nodes, designed for very large NAS workloads that exceed the limits of a single FlexVol.</p>
+<p><strong>SVMs (Storage Virtual Machines)</strong> sit above the volume layer and provide multi-tenancy isolation. Each SVM has:</p>
+<ul>
+<li>Its own namespace (junction-path tree of mounted volumes)</li>
+<li>Its own set of LIFs (IP addresses or WWPNs)</li>
+<li>Its own protocol configuration (NFS exports, CIFS shares, iSCSI targets)</li>
+<li>Its own authentication and name-service configuration (LDAP, Active Directory, NIS, local users)</li>
+<li>Its own RBAC roles — SVM admin cannot access other SVMs or the cluster admin SVM</li>
+</ul>
+<p>SVMs are the data access boundary. A host connects to an SVM's LIF and sees only that SVM's volumes and shares.</p>
+<h2 id="data-protocols">Data Protocols<a class="headerlink" href="#data-protocols" title="Permanent link">&para;</a></h2>
+<p>A single ONTAP cluster serves all major storage protocols simultaneously. Protocol selection is per-SVM and per-volume:</p>
 <table>
 <thead>
 <tr>
 <th>Protocol</th>
-<th>Layer</th>
-<th>Port</th>
+<th>Standard</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>NFSv3</td>
-<td>NAS</td>
-<td>UDP/TCP 2049</td>
-<td>Stateless; most compatible; widely used for VMware</td>
+<td>UDP/TCP port 2049</td>
+<td>Stateless; widely compatible; recommended for VMware VMFS-NFS datastores</td>
 </tr>
 <tr>
 <td>NFSv4.1 / pNFS</td>
-<td>NAS</td>
-<td>TCP 2049</td>
-<td>Stateful; parallel NFS for scale-out; Kerberos support</td>
+<td>TCP port 2049</td>
+<td>Stateful; Kerberos support; parallel NFS for performance at scale</td>
 </tr>
 <tr>
-<td>SMB 2.1/3.0/3.1.1</td>
-<td>NAS</td>
-<td>TCP 445</td>
-<td>Windows file sharing; SMB 3.0 supports encryption</td>
+<td>SMB 2.1 / 3.0 / 3.1.1</td>
+<td>TCP port 445</td>
+<td>Windows file sharing; SMB 3.0 adds encryption and multichannel</td>
 </tr>
 <tr>
 <td>iSCSI</td>
-<td>SAN</td>
-<td>TCP 3260</td>
-<td>Block storage over Ethernet; standard for IP SANs</td>
+<td>TCP port 3260</td>
+<td>Block storage over Ethernet; iSCSI initiator connects to SVM iSCSI LIF</td>
 </tr>
 <tr>
 <td>FC / FCoE</td>
-<td>SAN</td>
 <td>N/A</td>
-<td>Block storage over Fibre Channel; low latency</td>
+<td>Block storage over Fibre Channel; LIFs presented as WWPNs on FC fabric</td>
 </tr>
 <tr>
 <td>NVMe/FC</td>
-<td>SAN</td>
 <td>N/A</td>
-<td>NVMe namespace access over FC fabric; AFF platforms</td>
+<td>NVMe namespaces over FC fabric; supported on AFF A-series and C-series</td>
 </tr>
 <tr>
 <td>NVMe/TCP</td>
-<td>SAN</td>
-<td>TCP 4420</td>
-<td>NVMe namespace access over IP; ONTAP 9.10+</td>
+<td>TCP port 4420</td>
+<td>NVMe namespaces over IP; ONTAP 9.10.1 and later</td>
 </tr>
 <tr>
 <td>S3</td>
-<td>Object</td>
-<td>TCP 80/443</td>
-<td>Object storage via ONTAP S3 service; ONTAP 9.8+</td>
+<td>TCP 80 / 443</td>
+<td>Object storage via ONTAP's built-in S3 service; ONTAP 9.8 and later</td>
 </tr>
 </tbody>
 </table>
-<h2 id="data-protection-built-ins">Data Protection Built-ins<a class="headerlink" href="#data-protection-built-ins" title="Permanent link">&para;</a></h2>
+<p>All protocols are served from the same physical hardware and the same underlying volumes and aggregates. An NFS export and an iSCSI LUN can coexist in the same aggregate and even the same SVM.</p>
+<h2 id="mermaid-diagram-io-architecture">Mermaid Diagram: I/O Architecture<a class="headerlink" href="#mermaid-diagram-io-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph HOSTS["Host Layer"]
+        H1["NAS Client\nNFS / SMB"]
+        H2["SAN Host\niSCSI / FC / NVMe"]
+    end
+
+    subgraph SVM["SVM — Protocol Layer"]
+        SVMN["NAS SVM\nNFS exports\nSMB shares\nData LIFs"]
+        SVMS["SAN SVM\niSCSI target\nFC WWPNs\nNVMe subsystem"]
+    end
+
+    subgraph VOL["Volume Layer"]
+        V1["FlexVol A\nNFS junction\nSnapshots"]
+        V2["FlexVol B\nLUN or Namespace\nSnapshots"]
+    end
+
+    subgraph AGG["Aggregate Layer"]
+        AGG1["Aggregate 1\nRAID-DP\nNode 1 ownership"]
+        AGG2["Aggregate 2\nRAID-DP\nNode 2 ownership"]
+    end
+
+    subgraph MEDIA["Physical Media"]
+        M1["NVMe / SSD / HDD\nRAID-protected drives"]
+    end
+
+    REMOTE["Remote ONTAP\nor Cloud Volumes ONTAP"]
+
+    H1 --&gt;|"NFS / SMB"| SVMN
+    H2 --&gt;|"iSCSI / FC / NVMe"| SVMS
+    SVMN --&gt; V1
+    SVMS --&gt; V2
+    V1 --&gt; AGG1
+    V2 --&gt; AGG2
+    AGG1 --&gt; M1
+    AGG2 --&gt; M1
+    V1 --&gt;|"SnapMirror\nasync or sync"| REMOTE
+    V2 --&gt;|"SnapMirror\nasync or sync"| REMOTE
+
+    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
+    classDef svm fill:#15803d,stroke:#14532d,color:#fff
+    classDef vol fill:#15803d,stroke:#14532d,color:#fff
+    classDef agg fill:#b45309,stroke:#92400e,color:#fff
+    classDef media fill:#b45309,stroke:#92400e,color:#fff
+    classDef snap fill:#7c3aed,stroke:#5b21b6,color:#fff
+
+    class H1,H2 host
+    class SVMN,SVMS svm
+    class V1,V2 vol
+    class AGG1,AGG2 agg
+    class M1 media
+    class REMOTE snap</code></pre>
+<h2 id="snapmirror-and-snapvault">SnapMirror and SnapVault<a class="headerlink" href="#snapmirror-and-snapvault" title="Permanent link">&para;</a></h2>
+<p>SnapMirror is ONTAP's native data replication engine. It operates at the volume level and transfers only changed WAFL blocks between snapshots — making replication incremental and network-efficient.</p>
+<p><strong>SnapMirror Asynchronous (XDP)</strong></p>
+<ul>
+<li>Transfers Snapshot copies from a source volume to a destination volume on a schedule (e.g., hourly, every 5 minutes)</li>
+<li>The destination volume is read-only during normal operation; it can be broken off and made read-write for DR failover</li>
+<li>RPO equals the replication frequency — typically minutes to hours depending on configuration</li>
+<li>Supported between any two ONTAP systems, including ONTAP Cloud (cross-cloud and cloud-to-on-premises)</li>
+</ul>
+<p><strong>SnapMirror Synchronous</strong></p>
+<ul>
+<li>Every write to the source volume is synchronously confirmed at the destination before the host ACK is returned</li>
+<li>RPO = 0 — no data loss on failover</li>
+<li>Requires low-latency network between sites; available in StrictSync mode (zero loss, I/O stops if destination is unreachable) and Sync mode (degrades to async if link fails)</li>
+</ul>
+<p><strong>SnapVault (SnapMirror Vault)</strong></p>
+<p>SnapVault (now configured as SnapMirror XDP with a vault policy) is the backup-oriented variant. It is designed for long-term retention at a secondary site, not for active failover:</p>
+<ul>
+<li>The destination retains more snapshots than the source — enabling point-in-time recovery going back days, weeks, or months</li>
+<li>The relationship is initialised from the source but managed by a separate retention policy at the destination</li>
+<li>Used in conjunction with SnapCenter for application-consistent backup workflows</li>
+</ul>
+<h2 id="metrocluster-and-ontap-mediator">MetroCluster and ONTAP Mediator<a class="headerlink" href="#metrocluster-and-ontap-mediator" title="Permanent link">&para;</a></h2>
+<p><strong>MetroCluster</strong> extends the HA pair architecture across two physical data centres. It synchronously mirrors all data between Site A and Site B at the storage layer. From the host perspective, all volumes are always available at both sites — there is no RPO and no RTO for storage-layer failures.</p>
+<p>MetroCluster components:</p>
 <table>
 <thead>
 <tr>
-<th>Feature</th>
-<th>Layer</th>
-<th>Description</th>
+<th>Component</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>RAID-DP / RAID-TEC</td>
-<td>Disk</td>
-<td>Protects against simultaneous disk failures within an aggregate</td>
+<td>Node pairs at each site</td>
+<td>Two HA pairs (one per site) each mirror data to the opposite site</td>
 </tr>
 <tr>
-<td>HA takeover</td>
-<td>Node</td>
-<td>Automatic failover to partner node within ~45 seconds</td>
+<td>FC-VI or IP switch fabric</td>
+<td>Carries the MetroCluster inter-site replication traffic</td>
 </tr>
 <tr>
-<td>Snapshots</td>
-<td>Volume</td>
-<td>Point-in-time recovery; near-instant; policy-driven</td>
+<td>SyncMirror</td>
+<td>The block-level mirroring engine within ONTAP; underpins MetroCluster</td>
 </tr>
 <tr>
-<td>SnapMirror (async)</td>
-<td>Volume/SVM</td>
-<td>Asynchronous replication to a remote cluster for DR</td>
-</tr>
-<tr>
-<td>SnapVault (XDP)</td>
-<td>Volume</td>
-<td>Long-term backup retention to a secondary cluster</td>
-</tr>
-<tr>
-<td>SnapMirror Synchronous</td>
-<td>Volume</td>
-<td>Near-zero RPO replication with synchronous write confirmation</td>
-</tr>
-<tr>
-<td>SnapMirror Business Continuity (SMBC)</td>
-<td>Volume group</td>
-<td>Zero RPO and zero RTO for SAN workloads; transparent failover</td>
-</tr>
-<tr>
-<td>MetroCluster</td>
-<td>Cluster</td>
-<td>Stretch cluster across two data centers with synchronous mirroring</td>
+<td>ONTAP Mediator</td>
+<td>Third-site arbitration service; prevents split-brain when inter-site link fails</td>
 </tr>
 </tbody>
 </table>
-<h2 id="aggregate-health">Aggregate Health<a class="headerlink" href="#aggregate-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used<span class="w">   </span><span class="c1"># capacity per aggregate</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online<span class="w">                              </span><span class="c1"># aggregates not online</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w">                                          </span><span class="c1"># failed or broken disks</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w">              </span><span class="c1"># RAID status</span>
-</code></pre></div>
+<p><strong>ONTAP Mediator</strong> is a Linux-based service installed on a third location (outside both production sites). When the inter-site link between MetroCluster nodes fails (network partition), both sides believe they are the survivor. The Mediator breaks the tie by maintaining a quorum vote — the side that can reach the Mediator stays active; the other side fences itself. Without the Mediator, an administrator must manually arbitrate a split-brain scenario.</p>
+<p><strong>SnapMirror active sync</strong> (formerly SnapMirror Business Continuity, SM-BC) provides a similar RPO=0 and RTO~0 capability at the volume group level, without requiring full MetroCluster hardware:</p>
+<ul>
+<li>Works for SAN workloads (iSCSI, FC) only</li>
+<li>Volumes are synchronously mirrored; both copies are readable by hosts</li>
+<li>ONTAP Mediator is required for automatic failover</li>
+<li>Simpler to deploy than MetroCluster; suitable for two-site clusters without dedicated MetroCluster fabric</li>
+</ul>
+<h2 id="snapcenter-integration">SnapCenter Integration<a class="headerlink" href="#snapcenter-integration" title="Permanent link">&para;</a></h2>
+<p>SnapCenter is NetApp's centralised backup orchestration tool. It coordinates application-consistent snapshot workflows across the host OS, the application, and ONTAP — so that a snapshot captures data in a transactionally consistent state, not just a crash-consistent one.</p>
+<p>SnapCenter workflow for a database backup:</p>
+<ol>
+<li>SnapCenter plugin on the host quiesces the application (e.g., puts SQL Server databases in backup mode, or calls Oracle RMAN begin backup)</li>
+<li>SnapCenter calls the ONTAP REST API to create a Snapshot on the volume hosting the database data</li>
+<li>SnapCenter unquiesces the application (online backup mode ends)</li>
+<li>Optionally, SnapCenter triggers a SnapMirror update to replicate the new Snapshot to a remote ONTAP or SnapVault destination</li>
+<li>The Snapshot is catalogued in the SnapCenter repository for restore browsing</li>
+</ol>
+<p>Supported applications with native SnapCenter plugins:</p>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+<th>Plugin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft SQL Server</td>
+<td>SnapCenter Plugin for SQL Server</td>
+</tr>
+<tr>
+<td>Oracle Database</td>
+<td>SnapCenter Plugin for Oracle</td>
+</tr>
+<tr>
+<td>SAP HANA</td>
+<td>SnapCenter Plugin for SAP HANA</td>
+</tr>
+<tr>
+<td>Microsoft Exchange</td>
+<td>SnapCenter Plugin for Exchange</td>
+</tr>
+<tr>
+<td>VMware vSphere VMs</td>
+<td>SnapCenter Plugin for VMware (ONTAP Tools)</td>
+</tr>
+<tr>
+<td>Custom applications</td>
+<td>SnapCenter Agent (generic pre/post quiesce scripts)</td>
+</tr>
+</tbody>
+</table>
+<p>SnapCenter manages retention policies at the backup job level. Expired backup copies are deleted from both the source ONTAP snapshot and the SnapVault destination, ensuring no orphaned snapshots accumulate on the array.</p>
+<h2 id="key-terms-glossary">Key Terms Glossary<a class="headerlink" href="#key-terms-glossary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WAFL</td>
+<td>Write Anywhere File Layout — ONTAP's internal filesystem engine; uses copy-on-write, enabling instant non-disruptive snapshots</td>
+</tr>
+<tr>
+<td>Aggregate</td>
+<td>A RAID group of physical drives owned by a specific ONTAP node; the physical storage pool from which volumes draw capacity</td>
+</tr>
+<tr>
+<td>SVM</td>
+<td>Storage Virtual Machine — a logical storage server with its own namespace, LIFs, protocols, and security domain; enables multi-tenancy</td>
+</tr>
+<tr>
+<td>Volume</td>
+<td>A logical data container (FlexVol or FlexGroup) within an aggregate; thin-provisioned; holds files, LUNs, NVMe namespaces, and snapshots</td>
+</tr>
+<tr>
+<td>SnapMirror</td>
+<td>ONTAP's native replication engine; transfers incremental Snapshot deltas to a remote ONTAP system; supports async and synchronous modes</td>
+</tr>
+<tr>
+<td>SnapVault</td>
+<td>SnapMirror vault policy variant; designed for long-term backup retention at a secondary site, not active-active failover</td>
+</tr>
+<tr>
+<td>HA pair</td>
+<td>Two ONTAP nodes sharing disk shelf access and NVRAM mirror; provides automatic node-level failover (takeover) with RPO=0</td>
+</tr>
+<tr>
+<td>Takeover / Giveback</td>
+<td>The HA mechanism: takeover = surviving node adopts failed partner's aggregates; giveback = recovered node reclaims its aggregates</td>
+</tr>
+<tr>
+<td>NVRAM</td>
+<td>Non-volatile RAM write buffer per node; holds writes until a consistency point flush; mirrored to partner node over HA interconnect</td>
+</tr>
+<tr>
+<td>MetroCluster</td>
+<td>ONTAP stretch-cluster technology; synchronously mirrors all data across two sites; provides RPO=0 and transparent site failover</td>
+</tr>
+<tr>
+<td>ONTAP Mediator</td>
+<td>Third-site Linux service; provides quorum arbitration for MetroCluster and SnapMirror active sync to prevent split-brain</td>
+</tr>
+<tr>
+<td>SnapCenter</td>
+<td>NetApp's backup orchestration tool; coordinates application quiesce, ONTAP snapshot creation, and SnapMirror/SnapVault replication</td>
+</tr>
+</tbody>
+</table>
 
 
 
