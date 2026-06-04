@@ -3608,91 +3608,91 @@ Day-to-day operational tasks and how-to guides.
     netlogon --&gt; ntds
     ntds --&gt; dns
     w32time --&gt; netlogon
-    bfe --&gt; winrm</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────── Windows Server — Operations Procedures ────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Standard procedures: user provisioning, server decommission, patch process, and AD cleanup.          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              User Provisioning               │  │             Server Decommission             │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Create AD user + set attributes        │  │          Remove from all AD groups          │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Add to role-based AD groups          │  │           Disable computer account          │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │          Set mailbox: Exchange/365           │  │            Migrate data + shares            │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         MFA: enrol TOTP / smart card         │  │           Delete after 30-day hold          │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    Provisioning via AD group membership drives access; decom must clear AD object                     │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │               Patch Procedure                │  │                  AD Cleanup                 │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         Download from WSUS / catalog         │  │          Inactive computers: 90-day         │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        Test on non-prod server first         │  │       Stale users: disable then delete      │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        Schedule window + notify users        │  │        Empty groups: quarterly review       │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │        Apply + verify + reboot check         │  │           SPNs: check for orphans           │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Domain Controllers · WSUS server · Exchange/365 · backup system                                      │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Role-based groups= AD security groups named by role; drive resource access                           │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Smart card     = hardware MFA token; requires certificate enrollment                                 │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Computer account= AD object for server; disable before decommission                                  │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  30-day hold    = quarantine period before deleting decommissioned object                             │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  WSUS           = Windows Server Update Services; centralised patch repo                              │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Patch window   = agreed maintenance window; communicated to stakeholders                             │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Inactive computers= lastLogonTimestamp &gt; 90 days; candidate for disable                              │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  SPN            = Service Principal Name; Kerberos service identifier; orphans cause auth fail        │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Stale user     = account not used in &gt; 90 days; disable before delete                                │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Empty group    = AD group with no members; clean up to reduce audit noise                            │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  mailbox        = Exchange/365 mailbox; license must be unassigned on decom                           │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  TOTP MFA       = time-based one-time password; enforced via Azure AD CA                              │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+    bfe --&gt; winrm
+```text
+┌─────────────────────────────── Windows Server — Operations Procedures ────────────────────────────────┐
+│                                                                                                       │
+│  Standard procedures: user provisioning, server decommission, patch process, and AD cleanup.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              User Provisioning               │  │             Server Decommission             │   │
+│   │       Create AD user + set attributes        │  │          Remove from all AD groups          │   │
+│   │         Add to role-based AD groups          │  │           Disable computer account          │   │
+│   │          Set mailbox: Exchange/365           │  │            Migrate data + shares            │   │
+│   │         MFA: enrol TOTP / smart card         │  │           Delete after 30-day hold          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Provisioning via AD group membership drives access; decom must clear AD object                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Patch Procedure                │  │                  AD Cleanup                 │   │
+│   │         Download from WSUS / catalog         │  │          Inactive computers: 90-day         │   │
+│   │        Test on non-prod server first         │  │       Stale users: disable then delete      │   │
+│   │        Schedule window + notify users        │  │        Empty groups: quarterly review       │   │
+│   │        Apply + verify + reboot check         │  │           SPNs: check for orphans           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Domain Controllers · WSUS server · Exchange/365 · backup system                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Role-based groups= AD security groups named by role; drive resource access                           │
+│  Smart card     = hardware MFA token; requires certificate enrollment                                 │
+│  Computer account= AD object for server; disable before decommission                                  │
+│  30-day hold    = quarantine period before deleting decommissioned object                             │
+│  WSUS           = Windows Server Update Services; centralised patch repo                              │
+│  Patch window   = agreed maintenance window; communicated to stakeholders                             │
+│  Inactive computers= lastLogonTimestamp &gt; 90 days; candidate for disable                              │
+│  SPN            = Service Principal Name; Kerberos service identifier; orphans cause auth fail        │
+│  Stale user     = account not used in &gt; 90 days; disable before delete                                │
+│  Empty group    = AD group with no members; clean up to reduce audit noise                            │
+│  mailbox        = Exchange/365 mailbox; license must be unassigned on decom                           │
+│  TOTP MFA       = time-based one-time password; enforced via Azure AD CA                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <hr />
 <h2 id="service-management">Service Management<a class="headerlink" href="#service-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check service status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">*</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Start / stop / restart</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Start-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Stop-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-Force</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Set startup type</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Disabled</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Manual</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check service status</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">*</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Start / stop / restart</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Start-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Stop-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-Force</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Set startup type</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Disabled</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Manual</span>
 </code></pre></div>
 <h3 id="listing-services">Listing Services<a class="headerlink" href="#listing-services" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># All running services</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Automatic-start services that are stopped</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># All services with start type</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">StartType</span><span class="p">,</span> <span class="n">Name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># All running services</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Automatic-start services that are stopped</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># All services with start type</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartType</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">StartType</span><span class="p">,</span> <span class="n">Name</span>
 </code></pre></div>
 <h3 id="service-account-and-dependencies">Service Account and Dependencies<a class="headerlink" href="#service-account-and-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># View service account via WMI</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-CimInstance</span> <span class="n">Win32_Service</span> <span class="n">-Filter</span> <span class="s2">&quot;Name=&#39;wuauserv&#39;&quot;</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">StartName</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">StartMode</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># All services not running as LocalSystem or NetworkService</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-CimInstance</span> <span class="n">Win32_Service</span> <span class="p">|</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartName</span> <span class="n">-notin</span> <span class="p">@(</span><span class="s2">&quot;LocalSystem&quot;</span><span class="p">,</span><span class="s2">&quot;NT AUTHORITY\NetworkService&quot;</span><span class="p">,</span><span class="s2">&quot;NT AUTHORITY\LocalService&quot;</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">StartName</span><span class="p">,</span> <span class="n">State</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Service dependencies</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">(</span><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;).</span><span class="n">DependentServices</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">(</span><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;).</span><span class="n">ServicesDependedOn</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># View service account via WMI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-CimInstance</span> <span class="n">Win32_Service</span> <span class="n">-Filter</span> <span class="s2">&quot;Name=&#39;wuauserv&#39;&quot;</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">StartName</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">StartMode</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># All services not running as LocalSystem or NetworkService</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Get-CimInstance</span> <span class="n">Win32_Service</span> <span class="p">|</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartName</span> <span class="n">-notin</span> <span class="p">@(</span><span class="s2">&quot;LocalSystem&quot;</span><span class="p">,</span><span class="s2">&quot;NT AUTHORITY\NetworkService&quot;</span><span class="p">,</span><span class="s2">&quot;NT AUTHORITY\LocalService&quot;</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">StartName</span><span class="p">,</span> <span class="n">State</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Service dependencies</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">(</span><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;).</span><span class="n">DependentServices</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">(</span><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;).</span><span class="n">ServicesDependedOn</span>
 </code></pre></div>
 <h3 id="key-infrastructure-services">Key Infrastructure Services<a class="headerlink" href="#key-infrastructure-services" title="Permanent link">&para;</a></h3>
 <table>
@@ -3762,27 +3762,27 @@ Day-to-day operational tasks and how-to guides.
 </tbody>
 </table>
 <h3 id="remote-service-management">Remote Service Management<a class="headerlink" href="#remote-service-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check service on a remote server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Restart service on remote server</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-Force</span> <span class="p">}</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Check multiple servers at once</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;srv01&quot;</span><span class="p">,</span><span class="s2">&quot;srv02&quot;</span><span class="p">,</span><span class="s2">&quot;srv03&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">$servers</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="nv">$svc</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-ComputerName</span> <span class="nv">$_</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Server</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">Status</span><span class="p">;</span> <span class="n">StartType</span> <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">StartType</span> <span class="p">}</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check service on a remote server</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Restart service on remote server</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-Force</span> <span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Check multiple servers at once</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;srv01&quot;</span><span class="p">,</span><span class="s2">&quot;srv02&quot;</span><span class="p">,</span><span class="s2">&quot;srv03&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">$servers</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nv">$svc</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ServiceName</span><span class="p">&gt;</span> <span class="n">-ComputerName</span> <span class="nv">$_</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Server</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">Status</span><span class="p">;</span> <span class="n">StartType</span> <span class="p">=</span> <span class="nv">$svc</span><span class="p">.</span><span class="n">StartType</span> <span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="service-logs-via-event-viewer">Service Logs via Event Viewer<a class="headerlink" href="#service-logs-via-event-viewer" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Service start/stop events (Event ID 7036)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">7036</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Unexpected service termination (Event ID 7034)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">7034</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">10</span> <span class="p">|</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Service start/stop events (Event ID 7036)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">7036</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Unexpected service termination (Event ID 7034)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">7034</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
 <h2 id="patching">Patching<a class="headerlink" href="#patching" title="Permanent link">&para;</a></h2>
 <p>Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.</p>
@@ -3799,84 +3799,84 @@ Day-to-day operational tasks and how-to guides.
     wsus --&gt;|"approves updates"| gpo --&gt; clientWU --&gt; download --&gt; install --&gt; reboot --&gt; report
     report --&gt;|"compliance data"| wsus</code></pre>
 <h3 id="pre-patch-checklist">Pre-Patch Checklist<a class="headerlink" href="#pre-patch-checklist" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># 1. Confirm system health</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Used</span><span class="p">/(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Used</span><span class="p">+</span><span class="nv">$_</span><span class="p">.</span><span class="n">Free</span><span class="p">)</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">.</span><span class="n">85</span> <span class="p">}</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># 2. Capture current installed updates (rollback reference)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="nb">Select-Object</span> <span class="n">HotFixID</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">InstalledOn</span> <span class="p">|</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">pre-patch-hotfixes</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># 3. Capture OS version and build</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="no">[System.Environment]</span><span class="p">::</span><span class="n">OSVersion</span><span class="p">.</span><span class="n">Version</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion&quot;</span><span class="p">).</span><span class="n">CurrentBuild</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># 4. List pending updates without installing</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nv">$Session</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nv">$Searcher</span> <span class="p">=</span> <span class="nv">$Session</span><span class="p">.</span><span class="n">CreateUpdateSearcher</span><span class="p">()</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="nv">$Results</span> <span class="p">=</span> <span class="nv">$Searcher</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="nv">$Results</span><span class="p">.</span><span class="n">Updates</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># 1. Confirm system health</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Used</span><span class="p">/(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Used</span><span class="p">+</span><span class="nv">$_</span><span class="p">.</span><span class="n">Free</span><span class="p">)</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">.</span><span class="n">85</span> <span class="p">}</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># 2. Capture current installed updates (rollback reference)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="nb">Select-Object</span> <span class="n">HotFixID</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="n">InstalledOn</span> <span class="p">|</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">pre-patch-hotfixes</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># 3. Capture OS version and build</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="no">[System.Environment]</span><span class="p">::</span><span class="n">OSVersion</span><span class="p">.</span><span class="n">Version</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion&quot;</span><span class="p">).</span><span class="n">CurrentBuild</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># 4. List pending updates without installing</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nv">$Session</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="nv">$Searcher</span> <span class="p">=</span> <span class="nv">$Session</span><span class="p">.</span><span class="n">CreateUpdateSearcher</span><span class="p">()</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="nv">$Results</span> <span class="p">=</span> <span class="nv">$Searcher</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="nv">$Results</span><span class="p">.</span><span class="n">Updates</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 </code></pre></div>
 <h3 id="windows-update-via-powershell-pswindowsupdate">Windows Update via PowerShell (PSWindowsUpdate)<a class="headerlink" href="#windows-update-via-powershell-pswindowsupdate" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Install PSWindowsUpdate module (if not present)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">PSWindowsUpdate</span> <span class="n">-Force</span> <span class="n">-Scope</span> <span class="n">AllUsers</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># List available updates</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Get-WindowsUpdate</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># Install all updates</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Install-WindowsUpdate</span> <span class="n">-AcceptAll</span> <span class="n">-AutoReboot</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Install security updates only</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Install-WindowsUpdate</span> <span class="n">-Category</span> <span class="s2">&quot;Security Updates&quot;</span> <span class="n">-AcceptAll</span> <span class="n">-AutoReboot</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c"># Install specific KB</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nb">Install-WindowsUpdate</span> <span class="n">-KBArticleID</span> <span class="n">KB5034440</span> <span class="n">-AcceptAll</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Install PSWindowsUpdate module (if not present)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">PSWindowsUpdate</span> <span class="n">-Force</span> <span class="n">-Scope</span> <span class="n">AllUsers</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># List available updates</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-WindowsUpdate</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Install all updates</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Install-WindowsUpdate</span> <span class="n">-AcceptAll</span> <span class="n">-AutoReboot</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Install security updates only</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Install-WindowsUpdate</span> <span class="n">-Category</span> <span class="s2">&quot;Security Updates&quot;</span> <span class="n">-AcceptAll</span> <span class="n">-AutoReboot</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Install specific KB</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">Install-WindowsUpdate</span> <span class="n">-KBArticleID</span> <span class="n">KB5034440</span> <span class="n">-AcceptAll</span>
 </code></pre></div>
 <h3 id="wsus-force-client-update-cycle">WSUS — Force Client Update Cycle<a class="headerlink" href="#wsus-force-client-update-cycle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>:: Detect and download from WSUS
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>wuauclt /detectnow
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>wuauclt /updatenow
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>:: Or via UsoClient (Windows 10/2019+)
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>UsoClient StartScan
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>UsoClient StartDownload
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>UsoClient StartInstall
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>:: Detect and download from WSUS
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>wuauclt /detectnow
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>wuauclt /updatenow
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>:: Or via UsoClient (Windows 10/2019+)
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>UsoClient StartScan
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>UsoClient StartDownload
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>UsoClient StartInstall
 </code></pre></div>
 <h3 id="pending-reboot-detection">Pending Reboot Detection<a class="headerlink" href="#pending-reboot-detection" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">function</span> <span class="nb">Test-PendingReboot</span> <span class="p">{</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="nv">$pending</span> <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired&quot;</span> <span class="n">-EA</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        <span class="nv">$pending</span> <span class="p">+=</span> <span class="s2">&quot;WindowsUpdate&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="p">}</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager&quot;</span> <span class="n">-Name</span> <span class="n">PendingFileRenameOperations</span> <span class="n">-EA</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="nv">$pending</span> <span class="p">+=</span> <span class="s2">&quot;PendingFileRename&quot;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="p">}</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending&quot;</span> <span class="n">-EA</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="nv">$pending</span> <span class="p">+=</span> <span class="s2">&quot;CBS&quot;</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="p">}</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$pending</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Reboot pending: </span><span class="p">$(</span><span class="nv">$pending</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;No reboot pending&quot;</span> <span class="p">}</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="p">}</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="nb">Test-PendingReboot</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">function</span> <span class="nb">Test-PendingReboot</span> <span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="nv">$pending</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired&quot;</span> <span class="n">-EA</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="nv">$pending</span> <span class="p">+=</span> <span class="s2">&quot;WindowsUpdate&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="p">}</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager&quot;</span> <span class="n">-Name</span> <span class="n">PendingFileRenameOperations</span> <span class="n">-EA</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="nv">$pending</span> <span class="p">+=</span> <span class="s2">&quot;PendingFileRename&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="p">}</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending&quot;</span> <span class="n">-EA</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="nv">$pending</span> <span class="p">+=</span> <span class="s2">&quot;CBS&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="p">}</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$pending</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;Reboot pending: </span><span class="p">$(</span><span class="nv">$pending</span> <span class="n">-join</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;No reboot pending&quot;</span> <span class="p">}</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">}</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nb">Test-PendingReboot</span>
 </code></pre></div>
 <h3 id="post-patch-validation">Post-Patch Validation<a class="headerlink" href="#post-patch-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Confirm OS is on expected build after update</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion&quot;</span><span class="p">).</span><span class="n">CurrentBuild</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Confirm critical services are running</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">W32tm</span><span class="p">,</span> <span class="n">WinRM</span><span class="p">,</span> <span class="n">EventLog</span><span class="p">,</span> <span class="n">Netlogon</span><span class="p">,</span> <span class="n">NTDS</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c"># Check for any new failed services</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c"># Check system log for errors post-reboot</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">LogName</span>   <span class="p">=</span> <span class="s1">&#39;System&#39;</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">Level</span>     <span class="p">=</span> <span class="n">2</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>    <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">2</span><span class="p">)</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Confirm OS is on expected build after update</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion&quot;</span><span class="p">).</span><span class="n">CurrentBuild</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Confirm critical services are running</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">W32tm</span><span class="p">,</span> <span class="n">WinRM</span><span class="p">,</span> <span class="n">EventLog</span><span class="p">,</span> <span class="n">Netlogon</span><span class="p">,</span> <span class="n">NTDS</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># Check for any new failed services</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">Get-Service</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">StartType</span> <span class="o">-eq</span> <span class="s2">&quot;Automatic&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;Running&quot;</span> <span class="p">}</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c"># Check system log for errors post-reboot</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">LogName</span>   <span class="p">=</span> <span class="s1">&#39;System&#39;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">Level</span>     <span class="p">=</span> <span class="n">2</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 <h3 id="patch-schedule-standards">Patch Schedule Standards<a class="headerlink" href="#patch-schedule-standards" title="Permanent link">&para;</a></h3>
 <table>

@@ -3964,48 +3964,48 @@
     rpaA["RPA Cluster Site A"]
     rpaA --&gt;|"WAN replication"| rpaB["RPA Cluster Site B"]
     rpaB --&gt; drJournal["DR Journal Volumes"]
-    drJournal --&gt; drReplica["DR Replica Volumes"]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── RecoverPoint — Integrations ─────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      RP4VM integrates with vCenter, VMware SRM, PowerMax/VMAX array splitters, and VPLEX      │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │    SRM integration: RP4VM SRA enables SRM to orchestrate failover via RecoverPoint journals   │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       Array splitter (PowerMax): writes intercepted at array; no ESXi splitter required       │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │     VPLEX integration: RP4VM protects VPLEX virtual volumes across geo-stretched clusters     │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    vCenter ◄──► RP4VM plugin ◄──► RPA cluster ◄──► SRM SRA ◄──► SRM recovery plans                    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │          vSphere / SRM Integration           │  │          Array / VPLEX Integration          │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             RP4VM vCenter plugin             │  │           PowerMax array splitter           │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           SRM SRA for RecoverPoint           │  │             VMAX array splitter             │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           Protection group mapping           │  │            VPLEX virtual volumes            │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           Recovery plan execution            │  │           No ESXi splitter needed           │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │           Test failover automation           │  │             XtremIO integration             │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    Physical: SRA plugin on SRM server; array splitter on PowerMax; VPLEX needs RP licence             │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    SRA              = Storage Replication Adapter; on SRM server; translates SRM → RP API             │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    RP4VM plugin     = vCenter plugin; CG management, failover, image access in UI                     │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    Array splitter   = Intercepts writes in array firmware; higher performance than ESXi               │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    VPLEX integration= RP journals VPLEX virtual volumes; enables CDP for geo-stretched metro clusters │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Protection group = SRM construct; maps to RP4VM consistency group; defines what SRM protects       │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    Recovery plan    = SRM ordered script of steps for failover; calls RP4VM SRA at failover step      │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    XtremIO          = All-flash array from Dell; supports RP4VM via array splitter licence            │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│    PowerMax splitter= Writes forked inside PowerMax engine; RPA receives copy without ESXi module     │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    API endpoint     = RP REST API on RPA management IP; used by SRA and automation scripts            │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│    CG-to-PG mapping = Each SRM protection group maps 1:1 to an RP4VM consistency group                │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Bubble network   = Isolated VLAN created by SRM for test failover; test VMs unreachable from prod  │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    VPLEX Metro      = Synchronous stretch cluster; RP adds CDP layer for any-point recovery on top    │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+    drJournal --&gt; drReplica["DR Replica Volumes"]
+```text
+┌───────────────────────────────────── RecoverPoint — Integrations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      RP4VM integrates with vCenter, VMware SRM, PowerMax/VMAX array splitters, and VPLEX      │   │
+│   │    SRM integration: RP4VM SRA enables SRM to orchestrate failover via RecoverPoint journals   │   │
+│   │       Array splitter (PowerMax): writes intercepted at array; no ESXi splitter required       │   │
+│   │     VPLEX integration: RP4VM protects VPLEX virtual volumes across geo-stretched clusters     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    vCenter ◄──► RP4VM plugin ◄──► RPA cluster ◄──► SRM SRA ◄──► SRM recovery plans                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          vSphere / SRM Integration           │  │          Array / VPLEX Integration          │   │
+│   │             RP4VM vCenter plugin             │  │           PowerMax array splitter           │   │
+│   │           SRM SRA for RecoverPoint           │  │             VMAX array splitter             │   │
+│   │           Protection group mapping           │  │            VPLEX virtual volumes            │   │
+│   │           Recovery plan execution            │  │           No ESXi splitter needed           │   │
+│   │           Test failover automation           │  │             XtremIO integration             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SRA plugin on SRM server; array splitter on PowerMax; VPLEX needs RP licence             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SRA              = Storage Replication Adapter; on SRM server; translates SRM → RP API             │
+│    RP4VM plugin     = vCenter plugin; CG management, failover, image access in UI                     │
+│    Array splitter   = Intercepts writes in array firmware; higher performance than ESXi               │
+│    VPLEX integration= RP journals VPLEX virtual volumes; enables CDP for geo-stretched metro clusters │
+│    Protection group = SRM construct; maps to RP4VM consistency group; defines what SRM protects       │
+│    Recovery plan    = SRM ordered script of steps for failover; calls RP4VM SRA at failover step      │
+│    XtremIO          = All-flash array from Dell; supports RP4VM via array splitter licence            │
+│    PowerMax splitter= Writes forked inside PowerMax engine; RPA receives copy without ESXi module     │
+│    API endpoint     = RP REST API on RPA management IP; used by SRA and automation scripts            │
+│    CG-to-PG mapping = Each SRM protection group maps 1:1 to an RP4VM consistency group                │
+│    Bubble network   = Isolated VLAN created by SRM for test failover; test VMs unreachable from prod  │
+│    VPLEX Metro      = Synchronous stretch cluster; RP adds CDP layer for any-point recovery on top    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <hr />
 <h2 id="vmware-srm-integration">VMware SRM Integration<a class="headerlink" href="#vmware-srm-integration" title="Permanent link">&para;</a></h2>
 <p>The RecoverPoint SRA enables SRM to use RecoverPoint consistency groups as protection sources:</p>
@@ -4065,15 +4065,15 @@
 <hr />
 <h2 id="api-integration">API Integration<a class="headerlink" href="#api-integration" title="Permanent link">&para;</a></h2>
 <p>RecoverPoint REST API for automation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;rpa-ip&gt;/rest/users/sessions
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List consistency groups</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>GET<span class="w"> </span>/rest/consistency_groups
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Enable image access (for test failover)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>PUT<span class="w"> </span>/rest/consistency_groups/<span class="o">{</span>id<span class="o">}</span>/clusters/<span class="o">{</span>clusterId<span class="o">}</span>/image_access/enable
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Body:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;scenario&quot;</span>:<span class="w"> </span><span class="s2">&quot;LOGGED_ACCESS&quot;</span>,<span class="w"> </span><span class="s2">&quot;consistency&quot;</span>:<span class="w"> </span><span class="s2">&quot;CRASH_CONSISTENT&quot;</span><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;rpa-ip&gt;/rest/users/sessions
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List consistency groups</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>GET<span class="w"> </span>/rest/consistency_groups
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Enable image access (for test failover)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>PUT<span class="w"> </span>/rest/consistency_groups/<span class="o">{</span>id<span class="o">}</span>/clusters/<span class="o">{</span>clusterId<span class="o">}</span>/image_access/enable
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Body:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;scenario&quot;</span>:<span class="w"> </span><span class="s2">&quot;LOGGED_ACCESS&quot;</span>,<span class="w"> </span><span class="s2">&quot;consistency&quot;</span>:<span class="w"> </span><span class="s2">&quot;CRASH_CONSISTENT&quot;</span><span class="o">}</span>
 </code></pre></div>
 
 

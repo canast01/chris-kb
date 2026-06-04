@@ -3303,7 +3303,7 @@
 
 
 <h1 id="confluence-common-issues">Confluence — Common Issues<a class="headerlink" href="#confluence-common-issues" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check heap size in setenv.sh</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check heap size in setenv.sh</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(Xmx|Xms)&quot;</span><span class="w"> </span>/opt/atlassian/confluence/bin/setenv.sh
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Look for OOM events in logs</span>
@@ -3316,297 +3316,297 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">CONF_PID</span><span class="o">=</span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>confluence<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CONF_PID</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="m">5</span><span class="w">   </span><span class="c1"># 5 samples, 5-second interval</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># &quot;O&quot; column = Old generation %. Alert if &gt; 90% consistently</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="sb">```</span>text
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>┌─────────────────────────────────────<span class="w"> </span>Confluence<span class="w"> </span>—<span class="w"> </span>Common<span class="w"> </span>Issues<span class="w"> </span>──────────────────────────────────────┐
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">                               </span>Confluence<span class="w"> </span>Frequent<span class="w"> </span>Issue<span class="w"> </span>Patterns<span class="w">                              </span>│<span class="w">   </span>│
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">           </span>OOM<span class="w"> </span>crash:<span class="w"> </span>heap<span class="w"> </span>too<span class="w"> </span>small<span class="p">;</span><span class="w"> </span>increase<span class="w"> </span>-Xmx<span class="p">;</span><span class="w"> </span>check<span class="w"> </span><span class="k">for</span><span class="w"> </span>memory-leaking<span class="w"> </span>plugins<span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">         </span>Slow<span class="w"> </span>pages:<span class="w"> </span>DB<span class="w"> </span>slow<span class="w"> </span>queries<span class="w"> </span>or<span class="w"> </span>GC<span class="w"> </span>pressure<span class="p">;</span><span class="w"> </span>check<span class="w"> </span>pg_stat_activity<span class="w"> </span>and<span class="w"> </span>GC<span class="w"> </span>log<span class="w">         </span>│<span class="w">   </span>│
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>│<span class="w">     </span>Search<span class="w"> </span>broken:<span class="w"> </span>Lucene<span class="w"> </span>index<span class="w"> </span>stale<span class="p">;</span><span class="w"> </span>trigger<span class="w"> </span>full<span class="w"> </span>reindex<span class="w"> </span>from<span class="w"> </span>Admin<span class="w"> </span>&gt;<span class="w"> </span>Content<span class="w"> </span>Indexing<span class="w">     </span>│<span class="w">   </span>│
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">   </span>│<span class="w">           </span>Auth<span class="w"> </span>fails:<span class="w"> </span>LDAP<span class="w"> </span>sync<span class="w"> </span>failure<span class="w"> </span>or<span class="w"> </span>SAML<span class="w"> </span>cert<span class="w"> </span>expired<span class="p">;</span><span class="w"> </span>check<span class="w"> </span>directory<span class="w"> </span>config<span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">    </span>Most<span class="w"> </span>Confluence<span class="w"> </span>issues<span class="w"> </span>fall<span class="w"> </span>into<span class="w"> </span>four<span class="w"> </span>categories:<span class="w"> </span>memory,<span class="w"> </span>performance,<span class="w"> </span>search,<span class="w"> </span>auth<span class="w">                </span>│
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">                          </span>▼<span class="w">                                                 </span>▼<span class="w">                          </span>│
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">                    </span>Issue<span class="w">                     </span>│<span class="w">  </span>│<span class="w">                  </span>Resolution<span class="w">                 </span>│<span class="w">   </span>│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>│<span class="w">                 </span>OOM<span class="w"> </span>/<span class="w"> </span>crash<span class="w">                  </span>│<span class="w">  </span>│<span class="w">         </span>Increase<span class="w"> </span>-Xmx<span class="p">;</span><span class="w"> </span>check<span class="w"> </span>plugins<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>│<span class="w">               </span>Slow<span class="w"> </span>page<span class="w"> </span>loads<span class="w">                </span>│<span class="w">  </span>│<span class="w">              </span>DB<span class="w"> </span>index<span class="p">;</span><span class="w"> </span>tune<span class="w"> </span>GC<span class="w">              </span>│<span class="w">   </span>│
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">   </span>│<span class="w">             </span>Search<span class="w"> </span>missing<span class="w"> </span>pages<span class="w">             </span>│<span class="w">  </span>│<span class="w">           </span>Full<span class="w"> </span>reindex<span class="w"> </span>from<span class="w"> </span>admin<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">   </span>│<span class="w">               </span>SAML<span class="w"> </span>login<span class="w"> </span>fails<span class="w">               </span>│<span class="w">  </span>│<span class="w">            </span>Check<span class="w"> </span>IdP<span class="w"> </span>cert<span class="w"> </span>expiry<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">   </span>│<span class="w">               </span>Attachments<span class="w"> </span><span class="m">404</span><span class="w">                </span>│<span class="w">  </span>│<span class="w">             </span>Remount<span class="w"> </span>NFS<span class="w"> </span>home<span class="w"> </span>dir<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">   </span>│<span class="w">             </span>DB<span class="w"> </span>connection<span class="w"> </span>errors<span class="w">             </span>│<span class="w">  </span>│<span class="w">              </span>Increase<span class="w"> </span>pool<span class="w"> </span>size<span class="w">             </span>│<span class="w">   </span>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">  </span>Physical<span class="w"> </span>Infrastructure<span class="w"> </span><span class="o">(</span>the<span class="w"> </span>hardware<span class="w"> </span>everything<span class="w"> </span>above<span class="w"> </span>runs<span class="w"> </span>on<span class="o">)</span>:<span class="w">                                     </span>│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">  </span>Confluence<span class="w"> </span>VMs<span class="w"> </span>·<span class="w"> </span>PostgreSQL<span class="w"> </span>·<span class="w"> </span>NFS<span class="w"> </span>home<span class="w"> </span>·<span class="w"> </span>IdP<span class="w"> </span><span class="o">(</span>Okta/ADFS<span class="o">)</span><span class="w"> </span>·<span class="w"> </span>load<span class="w"> </span>balancer<span class="w">                             </span>│
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">  </span>Key<span class="w"> </span>terms:<span class="w">                                                                                           </span>│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">  </span>-Xmx<span class="w">         </span><span class="o">=</span><span class="w"> </span>JVM<span class="w"> </span>max<span class="w"> </span>heap<span class="p">;</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>setenv.sh<span class="p">;</span><span class="w"> </span>increase<span class="w"> </span><span class="k">if</span><span class="w"> </span>OOM<span class="w"> </span>crashes<span class="w"> </span>occur<span class="w"> </span>frequently<span class="w">              </span>│
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">  </span>GC<span class="w"> </span><span class="nv">pressure</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>garbage<span class="w"> </span>collection<span class="w"> </span>running<span class="w"> </span>too<span class="w"> </span>frequently<span class="p">;</span><span class="w"> </span>indicates<span class="w"> </span>heap<span class="w"> </span>too<span class="w"> </span>small<span class="w">                   </span>│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│<span class="w">  </span><span class="nv">Reindex</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>Admin<span class="w"> </span>&gt;<span class="w"> </span>Content<span class="w"> </span>Indexing<span class="w"> </span>&gt;<span class="w"> </span>Rebuild<span class="w"> </span>Index<span class="p">;</span><span class="w"> </span>fixes<span class="w"> </span>stale<span class="w"> </span>Lucene<span class="w"> </span>search<span class="w">                   </span>│
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│<span class="w">  </span>SAML<span class="w"> </span><span class="nv">cert</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>IdP<span class="w"> </span>signing<span class="w"> </span>cert<span class="p">;</span><span class="w"> </span>expires<span class="w"> </span>on<span class="w"> </span>a<span class="w"> </span>schedule<span class="p">;</span><span class="w"> </span>update<span class="w"> </span><span class="k">in</span><span class="w"> </span>SAML<span class="w"> </span>config<span class="w">                        </span>│
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">  </span>NFS<span class="w"> </span><span class="nv">remount</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>umount<span class="w"> </span><span class="k">then</span><span class="w"> </span>mount<span class="p">;</span><span class="w"> </span>or<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nfs-client.target<span class="w">                             </span>│
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│<span class="w">  </span>DB<span class="w"> </span><span class="nv">pool</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>JDBC<span class="w"> </span>connection<span class="w"> </span>pool<span class="p">;</span><span class="w"> </span>increase<span class="w"> </span>maxPoolSize<span class="w"> </span><span class="k">in</span><span class="w"> </span>dbconfig.xml<span class="w">                            </span>│
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│<span class="w">  </span>GC<span class="w"> </span><span class="nv">log</span><span class="w">       </span><span class="o">=</span><span class="w"> </span>JVM<span class="w"> </span>GC<span class="w"> </span>log<span class="p">;</span><span class="w"> </span><span class="nb">enable</span><span class="w"> </span>with<span class="w"> </span>-Xlog:gc*<span class="w"> </span><span class="k">in</span><span class="w"> </span>JVM<span class="w"> </span>args<span class="p">;</span><span class="w"> </span>shows<span class="w"> </span>pause<span class="w"> </span>durations<span class="w">                  </span>│
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│<span class="w">  </span>Plugin<span class="w"> </span><span class="nv">leak</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>some<span class="w"> </span>Confluence<span class="w"> </span>plugins<span class="w"> </span>have<span class="w"> </span>memory<span class="w"> </span>leaks<span class="p">;</span><span class="w"> </span>disable<span class="w"> </span>to<span class="w"> </span><span class="nb">test</span><span class="w">                            </span>│
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│<span class="w">  </span>LDAP<span class="w"> </span><span class="nv">sync</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>Admin<span class="w"> </span>&gt;<span class="w"> </span>User<span class="w"> </span>Management<span class="w"> </span>&gt;<span class="w"> </span>User<span class="w"> </span>Directories<span class="p">;</span><span class="w"> </span>trigger<span class="w"> </span>manual<span class="w"> </span>sync<span class="w">                       </span>│
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│<span class="w">  </span><span class="nv">pg_stat_activity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PostgreSQL<span class="w"> </span>view<span class="p">;</span><span class="w"> </span>shows<span class="w"> </span>running<span class="w"> </span>queries<span class="p">;</span><span class="w"> </span>find<span class="w"> </span>slow<span class="w"> </span>or<span class="w"> </span>blocked<span class="w"> </span>queries<span class="w">              </span>│
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│<span class="w">  </span>Content<span class="w"> </span><span class="nv">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Lucene<span class="w"> </span>index<span class="w"> </span>managed<span class="w"> </span>by<span class="w"> </span>Confluence<span class="p">;</span><span class="w"> </span>stored<span class="w"> </span><span class="k">in</span><span class="w"> </span>CONFLUENCE_HOME/index<span class="w">                  </span>│
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│<span class="w">  </span>Attachment<span class="w"> </span><span class="nv">404</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>attachment<span class="w"> </span>served<span class="w"> </span>from<span class="w"> </span>NFS<span class="p">;</span><span class="w"> </span>NFS<span class="w"> </span><span class="nv">unavailable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">404</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>all<span class="w"> </span>attachments<span class="w">               </span>│
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── Confluence — Common Issues ──────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                               Confluence Frequent Issue Patterns                              │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           OOM crash: heap too small; increase -Xmx; check for memory-leaking plugins          │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Slow pages: DB slow queries or GC pressure; check pg_stat_activity and GC log         │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │     Search broken: Lucene index stale; trigger full reindex from Admin &gt; Content Indexing     │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Auth fails: LDAP sync failure or SAML cert expired; check directory config          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Most Confluence issues fall into four categories: memory, performance, search, auth                │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │                    Issue                     │  │                  Resolution                 │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │                 OOM / crash                  │  │         Increase -Xmx; check plugins        │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │               Slow page loads                │  │              DB index; tune GC              │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Search missing pages             │  │           Full reindex from admin           │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │               SAML login fails               │  │            Check IdP cert expiry            │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │               Attachments 404                │  │             Remount NFS home dir            │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │             DB connection errors             │  │              Increase pool size             │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Confluence VMs · PostgreSQL · NFS home · IdP (Okta/ADFS) · load balancer                             │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  -Xmx         = JVM max heap; set in setenv.sh; increase if OOM crashes occur frequently              │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  GC pressure  = garbage collection running too frequently; indicates heap too small                   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Reindex      = Admin &gt; Content Indexing &gt; Rebuild Index; fixes stale Lucene search                   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  SAML cert    = IdP signing cert; expires on a schedule; update in SAML config                        │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  NFS remount  = umount then mount; or systemctl restart nfs-client.target                             │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  DB pool      = JDBC connection pool; increase maxPoolSize in dbconfig.xml                            │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  GC log       = JVM GC log; enable with -Xlog:gc* in JVM args; shows pause durations                  │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Plugin leak  = some Confluence plugins have memory leaks; disable to test                            │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  LDAP sync    = Admin &gt; User Management &gt; User Directories; trigger manual sync                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  pg_stat_activity = PostgreSQL view; shows running queries; find slow or blocked queries              │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Content index = Lucene index managed by Confluence; stored in CONFLUENCE_HOME/index                  │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Attachment 404 = attachment served from NFS; NFS unavailable = 404 for all attachments               │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Run VACUUM ANALYZE on the Confluence database</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;VACUUM ANALYZE;&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 2. Rebuild the search index (reduces DB fallback queries)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Rebuild</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 3. Disable profiling macro or limit results in Jira Issues macros</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Edit affected pages: reduce JQL result counts, add caching</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># 4. Enable macro performance warnings</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Admin &gt; General Configuration &gt; Logging &gt; </span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">#   com.atlassian.confluence.macro = WARN</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Run VACUUM ANALYZE on the Confluence database</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;VACUUM ANALYZE;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check index errors</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(IndexException|LuceneIndex|index corrupt|Lucene)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Rebuild the search index (reduces DB fallback queries)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Rebuild</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check index directory size and modification time</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/mnt/confluence-shared/index/
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 3. Disable profiling macro or limit results in Jira Issues macros</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Edit affected pages: reduce JQL result counts, add caching</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># 4. Enable macro performance warnings</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Admin &gt; General Configuration &gt; Logging &gt; </span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   com.atlassian.confluence.macro = WARN</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check available disk space</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/confluence-shared
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check index errors</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(IndexException|LuceneIndex|index corrupt|Lucene)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check index directory size and modification time</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/mnt/confluence-shared/index/
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check available disk space</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/confluence-shared
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Option A: Partial re-index (faster; recovers without full rebuild)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Re-index</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Option B: Full index rebuild (use when corruption suspected)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># 1. Stop Confluence (or put in maintenance mode)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># 2. Rename or delete the corrupt index:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>mv<span class="w"> </span>/mnt/confluence-shared/index<span class="w"> </span>/mnt/confluence-shared/index_corrupt_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 3. Start Confluence — it will auto-detect missing index and start rebuild</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># 4. Monitor: Admin &gt; Content Indexing</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Note: Confluence is usable but search is degraded during rebuild</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check rebuild progress via REST</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/search/index&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{status, progress}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Option A: Partial re-index (faster; recovers without full rebuild)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Re-index</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Option B: Full index rebuild (use when corruption suspected)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 1. Stop Confluence (or put in maintenance mode)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># 2. Rename or delete the corrupt index:</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>mv<span class="w"> </span>/mnt/confluence-shared/index<span class="w"> </span>/mnt/confluence-shared/index_corrupt_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Start Confluence — it will auto-detect missing index and start rebuild</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 4. Monitor: Admin &gt; Content Indexing</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Note: Confluence is usable but search is degraded during rebuild</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Check rebuild progress via REST</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/search/index&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{status, progress}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable LDAP debug logging</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Admin &gt; Logging and Profiling:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">#   com.atlassian.confluence.user.crowd = DEBUG</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#   com.atlassian.crowd = DEBUG</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Test LDAP connectivity from the Confluence server</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-confluence,OU=Services,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>-w<span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>cn<span class="w"> </span>mail<span class="w"> </span>sAMAccountName
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Check the directory sync log</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>grep<span class="w"> </span><span class="s2">&quot;CrowdException\|LDAPException\|directory.*error&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable LDAP debug logging</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Admin &gt; Logging and Profiling:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">#   com.atlassian.confluence.user.crowd = DEBUG</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">#   com.atlassian.crowd = DEBUG</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Test LDAP connectivity from the Confluence server</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-confluence,OU=Services,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-w<span class="w"> </span><span class="s2">&quot;&lt;password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>cn<span class="w"> </span>mail<span class="w"> </span>sAMAccountName
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Check the directory sync log</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>grep<span class="w"> </span><span class="s2">&quot;CrowdException\|LDAPException\|directory.*error&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Update bind account password in Confluence:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Admin &gt; User Management &gt; User Directories &gt; [Directory] &gt; Edit</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Update the &quot;Password&quot; field with the new service account password</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Test connection using the &quot;Test Connection&quot; button in the directory config</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 3. Trigger manual sync:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Admin &gt; User Directories &gt; [Directory] &gt; Synchronise</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 4. If nested groups cause issues — flatten or enable nested group support:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Admin &gt; User Directories &gt; [Directory] &gt; Enable nested groups</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 5. Verify LDAP TLS cert if using ldaps://</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.example.com:636<span class="w"> </span>-showcerts<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Update bind account password in Confluence:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Admin &gt; User Management &gt; User Directories &gt; [Directory] &gt; Edit</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Update the &quot;Password&quot; field with the new service account password</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find plugin errors in the log</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(PluginException|BundleException|OSGi)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 2. Test connection using the &quot;Test Connection&quot; button in the directory config</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 3. Trigger manual sync:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Admin &gt; User Directories &gt; [Directory] &gt; Synchronise</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 4. If nested groups cause issues — flatten or enable nested group support:</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Admin &gt; User Directories &gt; [Directory] &gt; Enable nested groups</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 5. Verify LDAP TLS cert if using ldaps://</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.example.com:636<span class="w"> </span>-showcerts<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Identify which macros are on a broken page:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># - View page source → search for &quot;ac:name&quot; attributes</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check plugin state via REST</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/plugins/1.0/plugins/com.example.problematic-plugin&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{key, version, enabled, state}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find plugin errors in the log</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(PluginException|BundleException|OSGi)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Identify which macros are on a broken page:</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># - View page source → search for &quot;ac:name&quot; attributes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Disable the conflicting plugin via REST</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/vnd.atl.plugins+json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/plugins/1.0/plugins/com.example.problematic-plugin/enabled&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;enabled&quot;: false}&#39;</span>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check plugin state via REST</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/plugins/1.0/plugins/com.example.problematic-plugin&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{key, version, enabled, state}&#39;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Clear OSGi cache (requires restart)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/mnt/confluence-shared/plugins-osgi-cache/*
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>/opt/atlassian/confluence/bin/stop-confluence.sh
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>/opt/atlassian/confluence/bin/start-confluence.sh
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Update plugin to latest compatible version via Admin &gt; Manage Apps</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Disable the conflicting plugin via REST</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/vnd.atl.plugins+json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/plugins/1.0/plugins/com.example.problematic-plugin/enabled&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;enabled&quot;: false}&#39;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Clear OSGi cache (requires restart)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/mnt/confluence-shared/plugins-osgi-cache/*
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>/opt/atlassian/confluence/bin/stop-confluence.sh
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>/opt/atlassian/confluence/bin/start-confluence.sh
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Update plugin to latest compatible version via Admin &gt; Manage Apps</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check security log for failed auth events</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify the admin account is in the internal directory (failsafe)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Admin &gt; User Management &gt; Users &gt; search for &quot;admin&quot; → check directory source</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check for cookie/session issues in Tomcat config</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(sessionCookieName|sessionCookiePath|secure)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>/opt/atlassian/confluence/conf/server.xml
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check security log for failed auth events</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify the admin account is in the internal directory (failsafe)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Admin &gt; User Management &gt; Users &gt; search for &quot;admin&quot; → check directory source</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check for cookie/session issues in Tomcat config</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(sessionCookieName|sessionCookiePath|secure)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>/opt/atlassian/confluence/conf/server.xml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Reset admin password via database (emergency access)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># 1. Generate a bcrypt hash of the new password</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s2">import bcrypt</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s2">pw = b&#39;NewAdminPass123!&#39;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s2">hashed = bcrypt.hashpw(pw, bcrypt.gensalt(rounds=10))</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s2">print(hashed.decode())</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s2">&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 2. Update in the database</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;UPDATE cwd_user SET credential = &#39;\$2a\$10\$...&lt;hash&gt;...&#39;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="s2">      WHERE user_name = &#39;admin&#39;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="s2">      AND directory_id = (</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="s2">        SELECT id FROM cwd_directory WHERE directory_name = &#39;Confluence Internal Directory&#39;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="s2">      );&quot;</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># 3. For reverse proxy login loops — ensure these headers are set:</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># X-Forwarded-Proto: https</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># X-Forwarded-Host: confluence.example.com</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># And server.xml has: proxyName=&quot;confluence.example.com&quot; proxyPort=&quot;443&quot; scheme=&quot;https&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Reset admin password via database (emergency access)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># 1. Generate a bcrypt hash of the new password</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s2">import bcrypt</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s2">pw = b&#39;NewAdminPass123!&#39;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s2">hashed = bcrypt.hashpw(pw, bcrypt.gensalt(rounds=10))</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s2">print(hashed.decode())</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s2">&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 2. Update in the database</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;UPDATE cwd_user SET credential = &#39;\$2a\$10\$...&lt;hash&gt;...&#39;</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s2">      WHERE user_name = &#39;admin&#39;</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s2">      AND directory_id = (</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="s2">        SELECT id FROM cwd_directory WHERE directory_name = &#39;Confluence Internal Directory&#39;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="s2">      );&quot;</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># 3. For reverse proxy login loops — ensure these headers are set:</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># X-Forwarded-Proto: https</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># X-Forwarded-Host: confluence.example.com</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># And server.xml has: proxyName=&quot;confluence.example.com&quot; proxyPort=&quot;443&quot; scheme=&quot;https&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check NFS mount status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>confluence
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/confluence-shared
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Test write access to attachments directory</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>touch<span class="w"> </span>/mnt/confluence-shared/attachments/test_write_<span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Write OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Write FAILED&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Check attachment size limit</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/settings/attachmentSettings&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check NFS mount status</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>confluence
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/confluence-shared
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Test write access to attachments directory</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>touch<span class="w"> </span>/mnt/confluence-shared/attachments/test_write_<span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Write OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Write FAILED&quot;</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Check attachment size limit</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/settings/attachmentSettings&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Increase attachment size limit</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Admin &gt; General Configuration &gt; Further Configuration &gt; Attachment Size</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Or via REST:</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/settings/attachmentSettings&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;attachmentSize&quot;: 209715200}&#39;</span><span class="w">  </span><span class="c1"># 200 MB in bytes</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># 2. Fix nginx body size limit (nginx.conf or site config)</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># client_max_body_size 250m;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Then: nginx -s reload</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># 3. Re-mount NFS if disconnected</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>umount<span class="w"> </span>/mnt/confluence-shared
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>nfs-server:/confluence-shared<span class="w"> </span>/mnt/confluence-shared
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Increase attachment size limit</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Admin &gt; General Configuration &gt; Further Configuration &gt; Attachment Size</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Or via REST:</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/settings/attachmentSettings&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;attachmentSize&quot;: 209715200}&#39;</span><span class="w">  </span><span class="c1"># 200 MB in bytes</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># 2. Fix nginx body size limit (nginx.conf or site config)</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># client_max_body_size 250m;</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Then: nginx -s reload</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># 3. Re-mount NFS if disconnected</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>umount<span class="w"> </span>/mnt/confluence-shared
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>nfs-server:/confluence-shared<span class="w"> </span>/mnt/confluence-shared
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Current connection count vs maximum</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) AS used,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s2">             (SELECT setting::int FROM pg_settings WHERE name=&#39;max_connections&#39;) AS max_conn</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s2">      FROM pg_stat_activity;&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Identify long-running queries</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, now() - query_start AS duration, state, query</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s2">      FROM pg_stat_activity</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s2">      WHERE state != &#39;idle&#39;</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="s2">      AND query_start &lt; now() - interval &#39;30 seconds&#39;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s2">      ORDER BY duration DESC;&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Current connection count vs maximum</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Kill long-running/stuck queries</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) AS used,</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="s2">             (SELECT setting::int FROM pg_settings WHERE name=&#39;max_connections&#39;) AS max_conn</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="s2">      FROM pg_stat_activity;&quot;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Identify long-running queries</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, now() - query_start AS duration, state, query</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="s2">      FROM pg_stat_activity</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="s2">      WHERE state != &#39;idle&#39;</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="s2">      AND query_start &lt; now() - interval &#39;30 seconds&#39;</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="s2">      ORDER BY duration DESC;&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_terminate_backend(pid)</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="s2">      FROM pg_stat_activity</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="s2">      WHERE state != &#39;idle&#39;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="s2">      AND query_start &lt; now() - interval &#39;5 minutes&#39;;&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># 2. Increase connection pool in confluence.cfg.xml</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># &lt;property name=&quot;hibernate.c3p0.max_size&quot;&gt;60&lt;/property&gt;</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># &lt;property name=&quot;hibernate.c3p0.min_size&quot;&gt;20&lt;/property&gt;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># (requires restart)</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># 3. Increase PostgreSQL max_connections (requires DB restart)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;ALTER SYSTEM SET max_connections = 300;&quot;</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># Then restart PostgreSQL</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Kill long-running/stuck queries</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_terminate_backend(pid)</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="s2">      FROM pg_stat_activity</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="s2">      WHERE state != &#39;idle&#39;</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="s2">      AND query_start &lt; now() - interval &#39;5 minutes&#39;;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Check cluster membership on each node</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[].address&#39;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Test Hazelcast port reachability between nodes</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.0.1.12<span class="w"> </span><span class="m">5801</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;BLOCKED&quot;</span>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># 2. Increase connection pool in confluence.cfg.xml</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># &lt;property name=&quot;hibernate.c3p0.max_size&quot;&gt;60&lt;/property&gt;</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># &lt;property name=&quot;hibernate.c3p0.min_size&quot;&gt;20&lt;/property&gt;</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># (requires restart)</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># 3. Increase PostgreSQL max_connections (requires DB restart)</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;ALTER SYSTEM SET max_connections = 300;&quot;</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># Then restart PostgreSQL</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Check Hazelcast-specific logs</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(Hazelcast|ClusterService|MemberLeft|MemberJoined)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Check cluster membership on each node</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[].address&#39;</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Test Hazelcast port reachability between nodes</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.0.1.12<span class="w"> </span><span class="m">5801</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;BLOCKED&quot;</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Check Hazelcast-specific logs</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(Hazelcast|ClusterService|MemberLeft|MemberJoined)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 1. Confirm firewall rules allow TCP 5801 between all cluster node IPs</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">5801</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># 2. Recheck NFS mount on isolated node</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/mnt/confluence-shared
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Remount if stale:</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>umount<span class="w"> </span>-l<span class="w"> </span>/mnt/confluence-shared<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>mount<span class="w"> </span>/mnt/confluence-shared
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># 3. Restart the isolated node after fixing connectivity</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>/opt/atlassian/confluence/bin/stop-confluence.sh
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>/opt/atlassian/confluence/bin/start-confluence.sh
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># 4. After node rejoin, verify cluster in Admin &gt; Clustering</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># 5. Flush caches: Admin &gt; Cache Management &gt; Flush All Caches</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Confirm firewall rules allow TCP 5801 between all cluster node IPs</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">5801</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># 2. Recheck NFS mount on isolated node</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/mnt/confluence-shared
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Remount if stale:</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>umount<span class="w"> </span>-l<span class="w"> </span>/mnt/confluence-shared<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>mount<span class="w"> </span>/mnt/confluence-shared
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check mail queue and error queue</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/admin/mail/queue&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Check logs for mail errors</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(MailException|SMTPException|JavaMailSender)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># 3. Restart the isolated node after fixing connectivity</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>/opt/atlassian/confluence/bin/stop-confluence.sh
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>/opt/atlassian/confluence/bin/start-confluence.sh
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># 4. After node rejoin, verify cluster in Admin &gt; Clustering</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="c1"># 5. Flush caches: Admin &gt; Cache Management &gt; Flush All Caches</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># Test SMTP from the server</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="s2">import smtplib</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="s2">s = smtplib.SMTP(&#39;smtp.example.com&#39;, 587)</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="s2">s.starttls()</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="s2">s.login(&#39;user@example.com&#39;, &#39;password&#39;)</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="s2">print(&#39;SMTP login OK&#39;)</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="s2">s.quit()</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="s2">&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check mail queue and error queue</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/admin/mail/queue&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Check logs for mail errors</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(MailException|SMTPException|JavaMailSender)&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1"># Test SMTP from the server</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="s2">import smtplib</span>
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="s2">s = smtplib.SMTP(&#39;smtp.example.com&#39;, 587)</span>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="s2">s.starttls()</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="s2">s.login(&#39;user@example.com&#39;, &#39;password&#39;)</span>
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="s2">print(&#39;SMTP login OK&#39;)</span>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="s2">s.quit()</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="s2">&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># 1. Flush the error queue</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Admin &gt; Mail &gt; Mail Error Queue &gt; Resend All</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># 2. Restart mail queue if paused</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/admin/mail/queue&quot;</span><span class="w">  </span><span class="c1"># Flushes queue</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c1"># 3. Update SMTP credentials</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Admin &gt; General Configuration &gt; Mail Servers &gt; Edit</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># 4. Send test email from admin UI</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="c1"># Admin &gt; General Configuration &gt; Mail Servers &gt; Send Test Email</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># 1. Flush the error queue</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Admin &gt; Mail &gt; Mail Error Queue &gt; Resend All</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># 2. Restart mail queue if paused</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/rest/api/admin/mail/queue&quot;</span><span class="w">  </span><span class="c1"># Flushes queue</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># 3. Update SMTP credentials</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1"># Admin &gt; General Configuration &gt; Mail Servers &gt; Edit</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1"># 4. Send test email from admin UI</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="c1"># Admin &gt; General Configuration &gt; Mail Servers &gt; Send Test Email</span>
 </code></pre></div></p>
 
 

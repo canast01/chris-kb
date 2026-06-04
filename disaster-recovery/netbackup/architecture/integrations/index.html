@@ -3957,49 +3957,49 @@ NetBackup Integration reference covering Integration Architecture, SIEM Integrat
     class master master
     class ostDD,msdpPool,pureSnap,s3Cloud storage
     class vadp,cyberark source
-    class opscenter,siem ops</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── NetBackup — Architecture Integrations ────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                            NetBackup — External Integration Points                            │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │            Auth: NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles            │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                       Storage: connected via 443 (Web UI) · 1556 (vnetd)                      │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │      Encryption: AES-256 backup encryption; KMS key management; TLS 1.2+ on all channels      │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                          ▼                        ▼                        ▼                          │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │          AD / LDAP          │  │         443 (Web UI)        │  │        SNMP / syslog        │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           SAML SSO          │  │         1556 (vnetd)        │  │         REST webhook        │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Media Server  = data mover between client and storage; can be co-located with master                 │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  bplist        = CLI to list available backup images for a client, policy, or date range              │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+    class opscenter,siem ops
+```text
+┌──────────────────────────────── NetBackup — Architecture Integrations ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            NetBackup — External Integration Points                            │   │
+│   │            Auth: NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles            │   │
+│   │                       Storage: connected via 443 (Web UI) · 1556 (vnetd)                      │   │
+│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+│   │      Encryption: AES-256 backup encryption; KMS key management; TLS 1.2+ on all channels      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                        ▼                        ▼                          │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+│   │          AD / LDAP          │  │         443 (Web UI)        │  │        SNMP / syslog        │   │
+│   │           SAML SSO          │  │         1556 (vnetd)        │  │         REST webhook        │   │
+│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+│  Media Server  = data mover between client and storage; can be co-located with master                 │
+│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <p>Alert on: <code>backup failed</code>, <code>policy modified</code>, <code>client deleted</code>, <code>catalog backup failed</code>.</p>
 <h2 id="cyberark-integration">CyberArk Integration<a class="headerlink" href="#cyberark-integration" title="Permanent link">&para;</a></h2>
 <p>NetBackup retrieves service account passwords from CyberArk at runtime:</p>
@@ -4010,8 +4010,8 @@ NetBackup Integration reference covering Integration Architecture, SIEM Integrat
 </ol>
 <h2 id="opscenter-it-analytics">OpsCenter / IT Analytics<a class="headerlink" href="#opscenter-it-analytics" title="Permanent link">&para;</a></h2>
 <p>Connect OpsCenter to the master server for centralised reporting:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify master server is connected to OpsCenter</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/opt/SYMCOpsCenterServer/bin/opscenteragent<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify master server is connected to OpsCenter</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/opt/SYMCOpsCenterServer/bin/opscenteragent<span class="w"> </span>status
 </code></pre></div>
 <p>Key reports:
 - Job success rate by policy

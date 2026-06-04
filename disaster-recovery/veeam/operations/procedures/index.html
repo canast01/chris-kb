@@ -4134,47 +4134,47 @@ Operational procedures covering backup job creation, copy job setup, SOBR manage
     note over Admin,ESXi: Test OK — choose: Undo IVR (discard)\nor Migrate to production storage (commit)
     Admin-&gt;&gt;VBR: Undo Instant Recovery
     VBR-&gt;&gt;vCenter: Unregister IVR VM
-    VBR-&gt;&gt;Proxy: Unmount vPower NFS datastore</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Veeam — Procedures ──────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              Routine Procedures              │  │                DR Procedures                │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Add new protection source           │  │              Initiate failover              │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Modify retention policy            │  │               Validate replica              │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          Expire old recover points           │  │              Redirect host I/O              │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │           Service account rotation           │  │            Failback to production           │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │                             Change Control Requirements for Veeam                             │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           All changes to protection policies require change ticket with rollback plan         │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │                      Failover tests must be scheduled in maintenance window                   │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+    VBR-&gt;&gt;Proxy: Unmount vPower NFS datastore
+```text
+┌───────────────────────────────────────── Veeam — Procedures ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Change Control Requirements for Veeam                             │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <hr />
 <h2 id="sobr-capacity-management">SOBR Capacity Management<a class="headerlink" href="#sobr-capacity-management" title="Permanent link">&para;</a></h2>
 <h3 id="offload-policy">Offload Policy<a class="headerlink" href="#offload-policy" title="Permanent link">&para;</a></h3>
@@ -4184,9 +4184,9 @@ Operational procedures covering backup job creation, copy job setup, SOBR manage
 <li><strong>Copy backups to object storage as soon as they are created</strong> — use this for a continuous offload model (no delay).</li>
 <li><strong>Encrypt data uploaded to object storage</strong> — always enable for cloud targets.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Trigger SOBR offload (capacity tier upload)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$sobr</span> <span class="p">=</span> <span class="nb">Get-VBRScaleOutBackupRepository</span> <span class="n">-Name</span> <span class="s2">&quot;SOBR-Primary&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Invoke-VBRScaleOutBackupRepositoryOffload</span> <span class="n">-ScaleOutBackupRepository</span> <span class="nv">$sobr</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Trigger SOBR offload (capacity tier upload)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$sobr</span> <span class="p">=</span> <span class="nb">Get-VBRScaleOutBackupRepository</span> <span class="n">-Name</span> <span class="s2">&quot;SOBR-Primary&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Invoke-VBRScaleOutBackupRepositoryOffload</span> <span class="n">-ScaleOutBackupRepository</span> <span class="nv">$sobr</span>
 </code></pre></div>
 <h3 id="sealing-extents">Sealing Extents<a class="headerlink" href="#sealing-extents" title="Permanent link">&para;</a></h3>
 <p>When an extent needs to be decommissioned:</p>

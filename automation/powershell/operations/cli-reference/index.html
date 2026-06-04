@@ -3707,202 +3707,202 @@ PowerShell is Microsoft's cross-platform command shell and scripting language. U
     readHost --&gt; processLogic
     processLogic --&gt; exportCsv
     exportCsv --&gt; sendEmail
-    processLogic --&gt; logResult</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │               Essential PowerShell commands for daily infrastructure operations               │   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                                                                                                       │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                Core Commands                 │  │               Utility Commands              │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          Get-Command -Module &lt;name&gt;          │  │             Measure-Object -Sum             │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │             Get-Help &lt;cmd&gt; -Full             │  │         Where-Object { $_.X -eq Y }         │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │            Get-Member (alias: gm)            │  │           Select-Object -First 10           │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │          Get-Module -ListAvailable           │  │          Sort-Object -Property Name         │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │             Import-Module &lt;name&gt;             │  │         Group-Object -Property Type         │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │                File and Data                 │  │               Remote Execution              │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           Get-Content, Set-Content           │  │         Invoke-Command -ScriptBlock         │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │            Import-Csv, Export-Csv            │  │            Enter-PSSession &lt;host&gt;           │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       ConvertTo-Json, ConvertFrom-Json       │  │          Copy-Item -ToSession $sess         │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        Invoke-RestMethod (API calls)         │  │             Disconnect-PSSession            │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │    Get-Member     = inspect object properties and methods; essential for pipeline debugging   │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │  ForEach-Object = pipeline loop; alias: %; $_  is current object; use for per-item processing │   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │              Where-Object   = filter pipeline; alias: ?; $_.Property -eq &quot;value&quot;              │   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+    processLogic --&gt; logResult
+```text
+┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Essential PowerShell commands for daily infrastructure operations               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Core Commands                 │  │               Utility Commands              │   │
+│   │          Get-Command -Module &lt;name&gt;          │  │             Measure-Object -Sum             │   │
+│   │             Get-Help &lt;cmd&gt; -Full             │  │         Where-Object { $_.X -eq Y }         │   │
+│   │            Get-Member (alias: gm)            │  │           Select-Object -First 10           │   │
+│   │          Get-Module -ListAvailable           │  │          Sort-Object -Property Name         │   │
+│   │             Import-Module &lt;name&gt;             │  │         Group-Object -Property Type         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                File and Data                 │  │               Remote Execution              │   │
+│   │           Get-Content, Set-Content           │  │         Invoke-Command -ScriptBlock         │   │
+│   │            Import-Csv, Export-Csv            │  │            Enter-PSSession &lt;host&gt;           │   │
+│   │       ConvertTo-Json, ConvertFrom-Json       │  │          Copy-Item -ToSession $sess         │   │
+│   │        Invoke-RestMethod (API calls)         │  │             Disconnect-PSSession            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Get-Member     = inspect object properties and methods; essential for pipeline debugging   │   │
+│   │  ForEach-Object = pipeline loop; alias: %; $_  is current object; use for per-item processing │   │
+│   │              Where-Object   = filter pipeline; alias: ?; $_.Property -eq "value"              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <hr />
 <h2 id="files-filesystem">Files &amp; Filesystem<a class="headerlink" href="#files-filesystem" title="Permanent link">&para;</a></h2>
 <p>PowerShell cmdlets for navigating directories, reading and writing files, and working with CSV and JSON data. These work the same on Windows and Linux.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Navigation</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Location</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Set-Location</span> <span class="n">C</span><span class="p">:\</span><span class="n">scripts</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Get-ChildItem</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-ChildItem</span> <span class="n">-Recurse</span> <span class="n">-Filter</span> <span class="s2">&quot;*.ps1&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># File operations</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;.\file.txt&quot;</span> <span class="n">-ItemType</span> <span class="n">File</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Copy-Item</span> <span class="n">source</span><span class="p">.</span><span class="n">txt</span> <span class="n">dest</span><span class="p">.</span><span class="n">txt</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Move-Item</span> <span class="n">source</span><span class="p">.</span><span class="n">txt</span> <span class="n">dest</span><span class="p">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Remove-Item</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Get-Content</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Set-Content</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span> <span class="s2">&quot;content&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Add-Content</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span> <span class="s2">&quot;new line&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c"># CSV / JSON</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">Import-Csv</span> <span class="n">data</span><span class="p">.</span><span class="n">csv</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">output</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nv">$obj</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nv">$json</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c"># Test path (returns true/false — useful in scripts)</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="nb">Test-Path</span> <span class="s2">&quot;C:\scripts\file.ps1&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Navigation</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Location</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Set-Location</span> <span class="n">C</span><span class="p">:\</span><span class="n">scripts</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Get-ChildItem</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-ChildItem</span> <span class="n">-Recurse</span> <span class="n">-Filter</span> <span class="s2">&quot;*.ps1&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># File operations</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;.\file.txt&quot;</span> <span class="n">-ItemType</span> <span class="n">File</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Copy-Item</span> <span class="n">source</span><span class="p">.</span><span class="n">txt</span> <span class="n">dest</span><span class="p">.</span><span class="n">txt</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Move-Item</span> <span class="n">source</span><span class="p">.</span><span class="n">txt</span> <span class="n">dest</span><span class="p">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Remove-Item</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Get-Content</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Set-Content</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span> <span class="s2">&quot;content&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Add-Content</span> <span class="n">file</span><span class="p">.</span><span class="n">txt</span> <span class="s2">&quot;new line&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># CSV / JSON</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Import-Csv</span> <span class="n">data</span><span class="p">.</span><span class="n">csv</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">output</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nv">$obj</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nv">$json</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c"># Test path (returns true/false — useful in scripts)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">Test-Path</span> <span class="s2">&quot;C:\scripts\file.ps1&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="remoting-pssession">Remoting (PSSession)<a class="headerlink" href="#remoting-pssession" title="Permanent link">&para;</a></h2>
 <p>PowerShell Remoting lets you run commands on remote machines as if you were logged in. <code>Invoke-Command</code> can target dozens of servers at once — essential for large-scale administration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Interactive session on a remote host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Enter-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Exit-PSSession</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Persistent session (reuse for multiple commands)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="nb">Get-Service</span> <span class="p">}</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Remove-PSSession</span> <span class="nv">$session</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Run the same command on multiple hosts in parallel</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;srv1&quot;</span><span class="p">,</span> <span class="s2">&quot;srv2&quot;</span><span class="p">,</span> <span class="s2">&quot;srv3&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="nv">$servers</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">hostname</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Interactive session on a remote host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Enter-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Exit-PSSession</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Persistent session (reuse for multiple commands)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="nb">Get-Service</span> <span class="p">}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Remove-PSSession</span> <span class="nv">$session</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Run the same command on multiple hosts in parallel</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;srv1&quot;</span><span class="p">,</span> <span class="s2">&quot;srv2&quot;</span><span class="p">,</span> <span class="s2">&quot;srv3&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="nv">$servers</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">hostname</span> <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="services-processes">Services &amp; Processes<a class="headerlink" href="#services-processes" title="Permanent link">&para;</a></h2>
 <p>Query, start, stop, and configure Windows services. Find and kill processes. These are the operational building blocks for Windows system administration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Services</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Start-Service</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Stop-Service</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Restart-Service</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Processes</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-Process</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Get-Process</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">Stop-Process</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Stop-Process</span> <span class="n">-Id</span> <span class="p">&lt;</span><span class="n">pid</span><span class="p">&gt;</span> <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Services</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Service</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Start-Service</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Stop-Service</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Restart-Service</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Set-Service</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-StartupType</span> <span class="n">Automatic</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Processes</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-Process</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-Process</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Stop-Process</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">Stop-Process</span> <span class="n">-Id</span> <span class="p">&lt;</span><span class="n">pid</span><span class="p">&gt;</span> <span class="n">-Force</span>
 </code></pre></div>
 <hr />
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <p>Control what happens when a cmdlet fails. The default is to keep running — change <code>$ErrorActionPreference</code> or use <code>-ErrorAction</code> to make failures terminate, or suppress them silently.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Try/catch — catch terminating errors</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">try</span> <span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;nonexistent&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Failed: $_&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Global error behavior</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s2">&quot;Stop&quot;</span>      <span class="c"># terminate on any error</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s2">&quot;Continue&quot;</span>  <span class="c"># default — log and keep going</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Per-command error behavior</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;test&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>   <span class="c"># suppress errors</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;test&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>               <span class="c"># force terminating</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Try/catch — catch terminating errors</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;nonexistent&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Failed: $_&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Global error behavior</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s2">&quot;Stop&quot;</span>      <span class="c"># terminate on any error</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s2">&quot;Continue&quot;</span>  <span class="c"># default — log and keep going</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Per-command error behavior</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;test&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>   <span class="c"># suppress errors</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;test&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>               <span class="c"># force terminating</span>
 </code></pre></div>
 <hr />
 <h2 id="vmware-powercli">VMware PowerCLI<a class="headerlink" href="#vmware-powercli" title="Permanent link">&para;</a></h2>
 <p>PowerCLI is the official VMware module for managing vSphere from PowerShell. It connects to vCenter and lets you manage VMs, hosts, clusters, datastores, and more with full scripting capability.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Install and configure</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Install-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">PowerCLI</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-ParticipateInCeip</span> <span class="nv">$false</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Connect / disconnect</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># VMs — list and filter</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Get-VM</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c"># VM power operations</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="nb">Restart-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="nb">Suspend-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c"># VM configuration</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-NumCpu</span> <span class="n">4</span> <span class="n">-MemoryGB</span> <span class="n">16</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="c"># Snapshots</span>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;pre-patch&quot;</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="nb">Remove-Snapshot</span> <span class="n">-Snapshot</span> <span class="p">&lt;</span><span class="n">snap</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Snapshot</span> <span class="p">&lt;</span><span class="n">snap</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>    <span class="c"># revert</span>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="c"># Hosts</span>
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="nb">Get-VMHost</span>
-<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">Version</span>
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-State</span> <span class="n">Maintenance</span>
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>
-<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="c"># Clusters</span>
-<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="nb">Get-Cluster</span>
-<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="nb">Get-Cluster</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span>
-<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Get-VM</span>
-<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>
-<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="c"># Datastores</span>
-<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="nb">Get-Datastore</span>
-<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CapacityGB</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
-<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">)</span> <span class="o">-lt</span> <span class="n">0</span><span class="p">.</span><span class="n">2</span> <span class="p">}</span>
-<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>
-<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="c"># vSAN</span>
-<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="nb">Get-VsanView</span>
-<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">&lt;</span><span class="n">cluster</span><span class="p">&gt;</span>
-<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>
-<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="c"># Resource pools</span>
-<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a><span class="nb">Get-ResourcePool</span>
-<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="nb">Get-ResourcePool</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
-<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>
-<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="c"># vCenter events</span>
-<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">100</span>
-<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a><span class="nb">Get-VIEvent</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
-<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>
-<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a><span class="c"># Tags</span>
-<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a><span class="nb">Get-Tag</span>
-<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="nb">Get-TagCategory</span>
-<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a><span class="nb">New-Tag</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="p">&lt;</span><span class="n">category</span><span class="p">&gt;</span>
-<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-TagAssignment</span>
-<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a><span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Install and configure</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Install-Module</span> <span class="n">VMware</span><span class="p">.</span><span class="n">PowerCLI</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-InvalidCertificateAction</span> <span class="n">Ignore</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Set-PowerCLIConfiguration</span> <span class="n">-ParticipateInCeip</span> <span class="nv">$false</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Connect / disconnect</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># VMs — list and filter</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-VM</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span> <span class="p">}</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c"># VM power operations</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nb">Restart-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="nb">Suspend-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c"># VM configuration</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-NetworkAdapter</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-NumCpu</span> <span class="n">4</span> <span class="n">-MemoryGB</span> <span class="n">16</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="c"># Snapshots</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;pre-patch&quot;</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="nb">Remove-Snapshot</span> <span class="n">-Snapshot</span> <span class="p">&lt;</span><span class="n">snap</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="n">-Snapshot</span> <span class="p">&lt;</span><span class="n">snap</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>    <span class="c"># revert</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="c"># Hosts</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="nb">Get-VMHost</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="nb">Get-VMHost</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">Version</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="nb">Set-VMHost</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-State</span> <span class="n">Maintenance</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="c"># Clusters</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="nb">Get-Cluster</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="nb">Get-Cluster</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="c"># Datastores</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="nb">Get-Datastore</span>
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CapacityGB</span><span class="p">,</span> <span class="n">FreeSpaceGB</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">)</span> <span class="o">-lt</span> <span class="n">0</span><span class="p">.</span><span class="n">2</span> <span class="p">}</span>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="c"># vSAN</span>
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="nb">Get-VsanView</span>
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">&lt;</span><span class="n">cluster</span><span class="p">&gt;</span>
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
+<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="c"># Resource pools</span>
+<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="nb">Get-ResourcePool</span>
+<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="nb">Get-ResourcePool</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>
+<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="c"># vCenter events</span>
+<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">100</span>
+<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="nb">Get-VIEvent</span> <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a>
+<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="c"># Tags</span>
+<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="nb">Get-Tag</span>
+<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="nb">Get-TagCategory</span>
+<a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a><span class="nb">New-Tag</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;</span> <span class="n">-Category</span> <span class="p">&lt;</span><span class="n">category</span><span class="p">&gt;</span>
+<a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-TagAssignment</span>
+<a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a><span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="p">&lt;</span><span class="n">tag</span><span class="p">&gt;</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">name</span><span class="p">&gt;)</span>
 </code></pre></div>
 <hr />
 <h2 id="reporting">Reporting<a class="headerlink" href="#reporting" title="Permanent link">&para;</a></h2>
 <p>Generate reports from PowerCLI data — export VM inventories to CSV, produce host utilization summaries, or audit snapshot usage across the environment.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># VM inventory to CSV</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Datastore&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Datastore</span><span class="p">).</span><span class="n">Name</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vm_inventory</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Host utilization summary</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPU%&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CpuUsageMhz</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CpuTotalMhz</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Mem%&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span> <span class="p">|</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="nb">Format-Table</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># Snapshot report — sorted by size</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)}}</span> <span class="p">|</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># VM inventory to CSV</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">NumCpu</span><span class="p">,</span> <span class="n">MemoryGB</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Datastore&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Datastore</span><span class="p">).</span><span class="n">Name</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vm_inventory</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Host utilization summary</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPU%&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CpuUsageMhz</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CpuTotalMhz</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Mem%&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span> <span class="p">|</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="nb">Format-Table</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># Snapshot report — sorted by size</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)}}</span> <span class="p">|</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
 </code></pre></div>
 
 

@@ -3460,7 +3460,7 @@
 
 
 <h1 id="cisco-nexus-dashboard-security-hardening">Cisco Nexus Dashboard — Security Hardening<a class="headerlink" href="#cisco-nexus-dashboard-security-hardening" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the ND cluster</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to the ND cluster</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Change the default admin password (via GUI: Admin Console &gt; Security &gt; Users &gt; admin)</span>
@@ -3468,129 +3468,129 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>passwd<span class="w"> </span>ndadmin
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Use a password meeting corporate complexity policy (20+ characters)</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Store in vault; treat as break-glass</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="sb">```</span>text
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>┌─────────────────────────────<span class="w"> </span>Cisco<span class="w"> </span>Nexus<span class="w"> </span>Dashboard<span class="w"> </span>—<span class="w"> </span>Security<span class="w"> </span>Hardening<span class="w"> </span>──────────────────────────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">  </span>Hardening<span class="w"> </span>checklist:<span class="w"> </span>replace<span class="w"> </span>default<span class="w"> </span>certs,<span class="w"> </span>restrict<span class="w"> </span>access,<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>AAA,<span class="w"> </span>audit<span class="w"> </span>logging.<span class="w">              </span>│
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">   </span>│<span class="w">              </span>Platform<span class="w"> </span>Hardening<span class="w">              </span>│<span class="w">  </span>│<span class="w">              </span>Network<span class="w"> </span>Hardening<span class="w">              </span>│<span class="w">   </span>│
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">   </span>│<span class="w">           </span>Replace<span class="w"> </span>self-signed<span class="w"> </span>cert<span class="w">           </span>│<span class="w">  </span>│<span class="w">          </span>IP<span class="w"> </span>allowlist:<span class="w"> </span>mgmt<span class="w"> </span><span class="nb">source</span><span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>│<span class="w">          </span>Enable<span class="w"> </span>SAML/LDAP:<span class="w"> </span>no<span class="w"> </span><span class="nb">local</span><span class="w">          </span>│<span class="w">  </span>│<span class="w">           </span>OOB<span class="w"> </span>mgmt:<span class="w"> </span>dedicated<span class="w"> </span>VLAN<span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">        </span>Disable<span class="w"> </span>default<span class="w"> </span>admin:<span class="w"> </span>rename<span class="w">         </span>│<span class="w">  </span>│<span class="w">           </span>Firewall:<span class="w"> </span>port<span class="w"> </span><span class="m">443</span><span class="w"> </span>only<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">        </span>Password<span class="w"> </span>policy:<span class="w"> </span>max<span class="w"> </span>strength<span class="w">         </span>│<span class="w">  </span>│<span class="w">             </span>NTP<span class="w"> </span>auth:<span class="w"> </span>keyed<span class="w"> </span>NTP<span class="w">             </span>│<span class="w">   </span>│
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">         </span>Session<span class="w"> </span>timeout:<span class="w"> </span><span class="m">15</span><span class="w"> </span>min<span class="w"> </span>idle<span class="w">         </span>│<span class="w">  </span>│<span class="w">             </span>Syslog<span class="w"> </span>TLS:<span class="w"> </span>to<span class="w"> </span>SIEM<span class="w">             </span>│<span class="w">   </span>│
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">  </span>Replace<span class="w"> </span>certs<span class="w"> </span>and<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>AAA<span class="w"> </span>first<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>restrict<span class="w"> </span>network<span class="w"> </span>access<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>audit<span class="w">                         </span>│
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">                          </span>▼<span class="w">                                                 </span>▼<span class="w">                          </span>│
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">             </span>App-Level<span class="w"> </span>Hardening<span class="w">              </span>│<span class="w">  </span>│<span class="w">              </span>Ongoing<span class="w"> </span>Compliance<span class="w">             </span>│<span class="w">   </span>│
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">        </span>NDFC:<span class="w"> </span>disable<span class="w"> </span>unused<span class="w"> </span>features<span class="w">         </span>│<span class="w">  </span>│<span class="w">           </span>Quarterly<span class="w"> </span>access<span class="w"> </span>review<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">         </span>NDO:<span class="w"> </span>limit<span class="w"> </span>deploy<span class="w"> </span>approvers<span class="w">          </span>│<span class="w">  </span>│<span class="w">          </span>Cert<span class="w"> </span>expiry:<span class="w"> </span>monitor<span class="w"> </span>&lt;<span class="w"> </span>30d<span class="w">         </span>│<span class="w">   </span>│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>│<span class="w">         </span>NDI:<span class="w"> </span>restrict<span class="w"> </span>telemetry<span class="w"> </span><span class="nb">read</span><span class="w">         </span>│<span class="w">  </span>│<span class="w">         </span>Patch:<span class="w"> </span>apply<span class="w"> </span>within<span class="w"> </span><span class="m">30</span><span class="w"> </span>days<span class="w">         </span>│<span class="w">   </span>│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>│<span class="w">          </span>API:<span class="w"> </span>service<span class="w"> </span>accounts<span class="w"> </span>only<span class="w">          </span>│<span class="w">  </span>│<span class="w">         </span>PSIRT:<span class="w"> </span>subscribe<span class="w"> </span>advisories<span class="w">         </span>│<span class="w">   </span>│
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">   </span>│<span class="w">        </span>Minimal<span class="w"> </span>roles:<span class="w"> </span>least<span class="w"> </span>privilege<span class="w">        </span>│<span class="w">  </span>│<span class="w">            </span>Backup:<span class="w"> </span>verify<span class="w"> </span>monthly<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">  </span>Physical<span class="w"> </span>Infrastructure<span class="w"> </span><span class="o">(</span>the<span class="w"> </span>hardware<span class="w"> </span>everything<span class="w"> </span>above<span class="w"> </span>runs<span class="w"> </span>on<span class="o">)</span>:<span class="w">                                     </span>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">  </span>ND<span class="w"> </span>cluster<span class="w"> </span>·<span class="w"> </span>CA<span class="w"> </span>server<span class="w"> </span>·<span class="w"> </span>SAML<span class="w"> </span>IdP<span class="w"> </span>·<span class="w"> </span>SIEM<span class="w"> </span>·<span class="w"> </span>NTP<span class="w"> </span>server<span class="w"> </span>·<span class="w"> </span>OOB<span class="w"> </span>management<span class="w"> </span>switch<span class="w">                        </span>│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">  </span>Key<span class="w"> </span>terms:<span class="w">                                                                                           </span>│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">  </span>Self-signed<span class="w"> </span><span class="nv">cert</span><span class="o">=</span><span class="w"> </span>Default<span class="w"> </span>ND<span class="w"> </span>cert<span class="p">;</span><span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>replaced<span class="w"> </span>with<span class="w"> </span>CA-signed<span class="w"> </span>before<span class="w"> </span>production<span class="w">                 </span>│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">  </span>IP<span class="w"> </span><span class="nv">allowlist</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>Network-level<span class="w"> </span>restriction<span class="w"> </span>on<span class="w"> </span>which<span class="w"> </span><span class="nb">source</span><span class="w"> </span>IPs<span class="w"> </span>can<span class="w"> </span>reach<span class="w"> </span>port<span class="w"> </span><span class="m">443</span><span class="w">                    </span>│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">  </span>OOB<span class="w"> </span><span class="nv">VLAN</span><span class="w">       </span><span class="o">=</span><span class="w"> </span>Dedicated<span class="w"> </span>out-of-band<span class="w"> </span>management<span class="w"> </span>network<span class="w"> </span>isolated<span class="w"> </span>from<span class="w"> </span>data<span class="w"> </span>path<span class="w">                    </span>│
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">  </span><span class="nv">PSIRT</span><span class="w">          </span><span class="o">=</span><span class="w"> </span>Cisco<span class="w"> </span>Product<span class="w"> </span>Security<span class="w"> </span>Incident<span class="w"> </span>Response<span class="w"> </span>Team<span class="p">;</span><span class="w"> </span>publishes<span class="w"> </span>CVEs<span class="w">                       </span>│
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">  </span>Least<span class="w"> </span><span class="nv">privilege</span><span class="o">=</span><span class="w"> </span>Each<span class="w"> </span>user/service<span class="w"> </span>account<span class="w"> </span>has<span class="w"> </span>only<span class="w"> </span>the<span class="w"> </span>minimum<span class="w"> </span>required<span class="w"> </span>permissions<span class="w">                 </span>│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│<span class="w">  </span>Session<span class="w"> </span><span class="nv">timeout</span><span class="o">=</span><span class="w"> </span>Idle<span class="w"> </span>UI<span class="w"> </span>session<span class="w"> </span>automatically<span class="w"> </span>terminated<span class="w"> </span>after<span class="w"> </span>inactivity<span class="w"> </span>period<span class="w">                    </span>│
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│<span class="w">  </span>NTP<span class="w"> </span><span class="nv">auth</span><span class="w">       </span><span class="o">=</span><span class="w"> </span>Keyed<span class="w"> </span>NTP<span class="w"> </span>ensuring<span class="w"> </span><span class="nb">time</span><span class="w"> </span>sync<span class="w"> </span>from<span class="w"> </span>trusted<span class="w"> </span>server<span class="w"> </span>only<span class="w">                               </span>│
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">  </span>Service<span class="w"> </span><span class="nv">account</span><span class="o">=</span><span class="w"> </span>Dedicated<span class="w"> </span>ND<span class="w"> </span>user<span class="w"> </span><span class="k">for</span><span class="w"> </span>automation<span class="p">;</span><span class="w"> </span>separate<span class="w"> </span>from<span class="w"> </span>human<span class="w"> </span>accounts<span class="w">                      </span>│
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│<span class="w">  </span>Deploy<span class="w"> </span><span class="nv">approver</span><span class="o">=</span><span class="w"> </span>NDO<span class="w"> </span>role<span class="w"> </span>permitted<span class="w"> </span>to<span class="w"> </span>push<span class="w"> </span>templates<span class="w"> </span>to<span class="w"> </span>production<span class="w"> </span>APIC<span class="w"> </span>sites<span class="w">                       </span>│
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│<span class="w">  </span>Access<span class="w"> </span><span class="nv">review</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>Periodic<span class="w"> </span>audit<span class="w"> </span>of<span class="w"> </span>all<span class="w"> </span>user<span class="w"> </span>accounts<span class="w"> </span>and<span class="w"> </span>role<span class="w"> </span>assignments<span class="w">                            </span>│
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│<span class="w">  </span>Patch<span class="w"> </span><span class="nv">window</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>Defined<span class="w"> </span>maintenance<span class="w"> </span>period<span class="w"> </span><span class="k">for</span><span class="w"> </span>applying<span class="w"> </span>ND<span class="w"> </span>software<span class="w"> </span>updates<span class="w">                         </span>│
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│<span class="w">  </span>Syslog<span class="w"> </span><span class="nv">TLS</span><span class="w">     </span><span class="o">=</span><span class="w"> </span>Encrypted<span class="w"> </span>syslog<span class="w"> </span>stream<span class="w"> </span>forwarding<span class="w"> </span>audit<span class="w"> </span>events<span class="w"> </span>to<span class="w"> </span>SIEM<span class="w">                             </span>│
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────── Cisco Nexus Dashboard — Security Hardening ──────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Hardening checklist: replace default certs, restrict access, enable AAA, audit logging.              │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              Platform Hardening              │  │              Network Hardening              │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           Replace self-signed cert           │  │          IP allowlist: mgmt source          │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Enable SAML/LDAP: no local          │  │           OOB mgmt: dedicated VLAN          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │        Disable default admin: rename         │  │           Firewall: port 443 only           │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Password policy: max strength         │  │             NTP auth: keyed NTP             │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │         Session timeout: 15 min idle         │  │             Syslog TLS: to SIEM             │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Replace certs and enable AAA first; then restrict network access; then audit                         │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             App-Level Hardening              │  │              Ongoing Compliance             │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        NDFC: disable unused features         │  │           Quarterly access review           │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         NDO: limit deploy approvers          │  │          Cert expiry: monitor &lt; 30d         │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         NDI: restrict telemetry read         │  │         Patch: apply within 30 days         │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          API: service accounts only          │  │         PSIRT: subscribe advisories         │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Minimal roles: least privilege        │  │            Backup: verify monthly           │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  ND cluster · CA server · SAML IdP · SIEM · NTP server · OOB management switch                        │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Self-signed cert= Default ND cert; must be replaced with CA-signed before production                 │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  IP allowlist   = Network-level restriction on which source IPs can reach port 443                    │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  OOB VLAN       = Dedicated out-of-band management network isolated from data path                    │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  PSIRT          = Cisco Product Security Incident Response Team; publishes CVEs                       │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Least privilege= Each user/service account has only the minimum required permissions                 │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Session timeout= Idle UI session automatically terminated after inactivity period                    │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  NTP auth       = Keyed NTP ensuring time sync from trusted server only                               │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Service account= Dedicated ND user for automation; separate from human accounts                      │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Deploy approver= NDO role permitted to push templates to production APIC sites                       │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Access review  = Periodic audit of all user accounts and role assignments                            │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Patch window   = Defined maintenance period for applying ND software updates                         │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Syslog TLS     = Encrypted syslog stream forwarding audit events to SIEM                             │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>   WARNING: This system is for authorized use only.
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>   All connections are monitored and recorded.
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>   Unauthorized access is prohibited and may result in legal action.
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   ```text
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>3. Click **Save**. The banner appears below the login form.
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>---
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>## 7. Backup Encryption
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Enable backup encryption to protect backup archives at rest on the remote backup server:
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>1. Navigate to **Admin Console &gt; Operations &gt; Backup &gt; Settings**.
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>2. Enable **Encrypt Backups**.
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>3. Set a strong passphrase (20+ characters).
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>4. Store the passphrase in vault immediately.
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Without backup encryption, backup archives contain all ND configuration including switch credentials in their encrypted form — still sensitive and should not be stored in plain text on a backup server.
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>---
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>## 8. Audit Logging
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>Ensure audit logging is enabled and forwarded to the SIEM:
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>1. **Admin Console &gt; Operations &gt; Audit Logs** — confirm events are being recorded.
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>2. Configure syslog forwarding to forward audit events to the SIEM:
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>   ```bash
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>   acs system syslog add --server 10.10.3.50 --port 514 --protocol tcp
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>   ```
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>3. Set up SIEM alerts for:
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>   - Multiple failed logins (&gt; 5 in 5 minutes)
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>   - Admin account login events
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>   - Configuration changes (zone changes, user additions)
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>   - Login from unexpected source IP
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>---
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>## 9. Kubernetes Security Baseline
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>ND&#39;s Kubernetes control plane has several security defaults that should be verified:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>   WARNING: This system is for authorized use only.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   All connections are monitored and recorded.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   Unauthorized access is prohibited and may result in legal action.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   ```text
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>3. Click **Save**. The banner appears below the login form.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>---
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## 7. Backup Encryption
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Enable backup encryption to protect backup archives at rest on the remote backup server:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>1. Navigate to **Admin Console &gt; Operations &gt; Backup &gt; Settings**.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>2. Enable **Encrypt Backups**.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>3. Set a strong passphrase (20+ characters).
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>4. Store the passphrase in vault immediately.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Without backup encryption, backup archives contain all ND configuration including switch credentials in their encrypted form — still sensitive and should not be stored in plain text on a backup server.
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>---
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>## 8. Audit Logging
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Ensure audit logging is enabled and forwarded to the SIEM:
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>1. **Admin Console &gt; Operations &gt; Audit Logs** — confirm events are being recorded.
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>2. Configure syslog forwarding to forward audit events to the SIEM:
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>   ```bash
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>   acs system syslog add --server 10.10.3.50 --port 514 --protocol tcp
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>   ```
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>3. Set up SIEM alerts for:
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>   - Multiple failed logins (&gt; 5 in 5 minutes)
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>   - Admin account login events
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>   - Configuration changes (zone changes, user additions)
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>   - Login from unexpected source IP
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>---
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>## 9. Kubernetes Security Baseline
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>ND&#39;s Kubernetes control plane has several security defaults that should be verified:
 </code></pre></div></p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Confirm no pods are running as root unnecessarily</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.namespace}{&quot;\t&quot;}{.metadata.name}{&quot;\t&quot;}{.spec.securityContext.runAsUser}{&quot;\n&quot;}{end}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Confirm no privileged pods (outside of system namespaces)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">for item in data[&#39;items&#39;]:</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">    ns = item[&#39;metadata&#39;][&#39;namespace&#39;]</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">    name = item[&#39;metadata&#39;][&#39;name&#39;]</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">    for c in item[&#39;spec&#39;].get(&#39;containers&#39;,[]):</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">        if c.get(&#39;securityContext&#39;,{}).get(&#39;privileged&#39;):</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">            print(f&#39;Privileged: {ns}/{name}/{c[\&quot;name\&quot;]}&#39;)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;kube-system\|kube-proxy\|cilium&quot;</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># ND system pods require some elevated privileges; app pods should not</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Confirm NetworkPolicies are in place (Cilium enforces by default in ND)</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;NetworkPolicy&quot;</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># Should be non-zero</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Confirm no pods are running as root unnecessarily</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.metadata.namespace}{&quot;\t&quot;}{.metadata.name}{&quot;\t&quot;}{.spec.securityContext.runAsUser}{&quot;\n&quot;}{end}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^</span>$<span class="s2">&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Confirm no privileged pods (outside of system namespaces)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">for item in data[&#39;items&#39;]:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">    ns = item[&#39;metadata&#39;][&#39;namespace&#39;]</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">    name = item[&#39;metadata&#39;][&#39;name&#39;]</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">    for c in item[&#39;spec&#39;].get(&#39;containers&#39;,[]):</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">        if c.get(&#39;securityContext&#39;,{}).get(&#39;privileged&#39;):</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">            print(f&#39;Privileged: {ns}/{name}/{c[\&quot;name\&quot;]}&#39;)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;kube-system\|kube-proxy\|cilium&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># ND system pods require some elevated privileges; app pods should not</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Confirm NetworkPolicies are in place (Cilium enforces by default in ND)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>kubectl<span class="w"> </span>get<span class="w"> </span>networkpolicies<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;NetworkPolicy&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Should be non-zero</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check NTP status on all nodes</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># If NTP is not configured or not synchronised:</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify synchronisation (may take 2-5 minutes after adding NTP servers)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Expected: server reachable, stratum ≤ 3, offset &lt; 100ms</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Check NTP status on all nodes</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># If NTP is not configured or not synchronised:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.10<span class="w"> </span>--prefer
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span><span class="m">10</span>.10.0.11
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify synchronisation (may take 2-5 minutes after adding NTP servers)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>acs<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected: server reachable, stratum ≤ 3, offset &lt; 100ms</span>
 </code></pre></div></p>
 
 
