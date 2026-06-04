@@ -61,6 +61,13 @@ Multi-Factor Authentication (MFA) reference covering Overview, MFA Authenticatio
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Authentication flows, MFA method management, health checks, enrollment</div>
+  </a>
+</div>
 
 ## Overview
 

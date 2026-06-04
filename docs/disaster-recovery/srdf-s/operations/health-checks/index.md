@@ -87,6 +87,19 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **SRDF group state:** `symrdf -g <group> query` — all pairs must show RDF State: Synchronized
+2. **Write latency overhead:** `symstat -sid <sid> -rdfg <group> -type rdf` — check write penalty vs threshold (<10ms addition)
+3. **WAN RTT:** measure round-trip to DR site — SRDF/S requires <10ms RTT for acceptable performance
+4. **Link health:** `symrdf -g <group> verifylink` — all paths healthy, no single-path warning
+5. **Director status:** `symmaskdb -sid <sid> list -dir` — all RDF directors Online
+6. **Pair count:** `symrdf -g <group> query | grep -c Synchronized` — should equal total device count
+7. **Failed over pairs (none expected in normal ops):** `symrdf -g <group> query | grep -v Synchronized` — should be empty
+8. **SRDF/Star check (if 3-site configured):** `symrdf -star -g <group> query` — all hops synchronized
+9. **Bias setting (for split-brain protection):** `symrdf -g <group> query | grep -i bias` — verify correct site has bias
+10. **PowerPath multipath status on hosts:** `powermt display dev=all | grep -i dead` — should return empty
+
 **WAN Latency Impact on Write Performance:**
 
 SRDF/S adds one WAN round trip to every host write. The relationship is approximately:

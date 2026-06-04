@@ -376,3 +376,409 @@ az automation hybrid-runbook-worker-group list -g <rg> --automation-account-name
 | Scheduled job not running | Schedule enabled? | Verify schedule `isEnabled=true`; check next run time |
 | Update Management not scanning VM | Log Analytics agent | Verify MMA/AMA agent is healthy and workspace matches automation account |
 | Hybrid Runbook Worker offline | Worker process | Restart `HybridRunbookWorkerService` on the on-premises host |
+
+---
+
+## Create a Virtual Machine (Azure CLI)
+
+```bash
+# Set common variables
+RG=my-resource-group
+LOCATION=uksouth
+VM=my-vm-01
+
+# Create the resource group if it does not exist
+az group create --name $RG --location $LOCATION
+
+# Create the VM
+az vm create \
+  --resource-group $RG \
+  --name $VM \
+  --image Ubuntu2204 \
+  --size Standard_D2s_v3 \
+  --admin-username azureuser \
+  --ssh-key-values ~/.ssh/id_rsa.pub \
+  --vnet-name my-vnet \
+  --subnet my-subnet \
+  --nsg my-nsg \
+  --public-ip-sku Standard \
+  --tags Env=prod Owner=ops
+
+# Verify the VM is running
+az vm show -g $RG -n $VM \
+  --show-details \
+  --query '{Name:name,State:powerState,IP:publicIps,PrivateIP:privateIps}' \
+  -o table
+```
+
+Common `--size` options:
+
+| Series | Use case |
+|---|---|
+| Standard_B2s | Dev/test, burstable |
+| Standard_D2s_v3 | General purpose |
+| Standard_F4s_v2 | CPU-intensive |
+| Standard_E4s_v3 | Memory-intensive |
+
+---
+
+## Resize a Virtual Machine
+
+```bash
+RG=my-resource-group
+VM=my-vm-01
+
+# --- Step 1: Check available sizes in the VM's current region/zone ---
+az vm list-vm-resize-options \
+  --resource-group $RG \
+  --name $VM \
+  --query '[].name' -o table
+
+# --- Step 2: Deallocate (stop + release compute) ---
+az vm deallocate \
+  --resource-group $RG \
+  --name $VM
+
+# Wait for deallocated state
+az vm wait \
+  --resource-group $RG \
+  --name $VM \
+  --custom "instanceView.statuses[?code=='PowerState/deallocated']"
+
+# --- Step 3: Resize ---
+az vm resize \
+  --resource-group $RG \
+  --name $VM \
+  --size Standard_D4s_v3
+
+# --- Step 4: Start ---
+az vm start \
+  --resource-group $RG \
+  --name $VM
+
+# Confirm new size
+az vm show \
+  --resource-group $RG \
+  --name $VM \
+  --query "hardwareProfile.vmSize" -o tsv
+```
+
+> If the target size is unavailable in the current cluster, Azure may move the VM to a new host during resize. Confirm the application restarts cleanly after the resize.
+
+---
+
+## Create and Attach a Managed Disk
+
+```bash
+RG=my-resource-group
+VM=my-vm-01
+DISK=data-disk-01
+
+# Get the AZ of the target VM (disk must match)
+AZ=$(az vm show -g $RG -n $VM --query 'zones[0]' -o tsv)
+
+# Create a Premium SSD managed disk
+az disk create \
+  --resource-group $RG \
+  --name $DISK \
+  --size-gb 256 \
+  --sku Premium_LRS \
+  --zone $AZ \
+  --tags Purpose=data Owner=ops
+
+# Attach to the VM
+az vm disk attach \
+  --resource-group $RG \
+  --vm-name $VM \
+  --name $DISK
+
+# --- In-guest: extend partition (SSH into the VM) ---
+# List block devices
+lsblk
+
+# Partition and format the new disk (example: /dev/sdc)
+sudo parted /dev/sdc --script mklabel gpt mkpart primary xfs 0% 100%
+sudo mkfs.xfs /dev/sdc1
+
+# Mount
+sudo mkdir -p /data
+sudo mount /dev/sdc1 /data
+
+# Persist across reboots
+echo '/dev/sdc1 /data xfs defaults,nofail 0 2' | sudo tee -a /etc/fstab
+
+# Verify disk is visible on the VM
+az vm show -g $RG -n $VM \
+  --query 'storageProfile.dataDisks[].{Name:name,LUN:lun,SizeGB:diskSizeGb,SKU:managedDisk.storageAccountType}' \
+  -o table
+```
+
+---
+
+## Create a Network Security Group Rule
+
+```bash
+RG=my-resource-group
+NSG=my-nsg
+
+# Inbound rule — allow HTTPS from anywhere
+az network nsg rule create \
+  --resource-group $RG \
+  --nsg-name $NSG \
+  --name Allow-HTTPS-Inbound \
+  --priority 100 \
+  --direction Inbound \
+  --access Allow \
+  --protocol Tcp \
+  --source-address-prefixes '*' \
+  --source-port-ranges '*' \
+  --destination-address-prefixes '*' \
+  --destination-port-ranges 443
+
+# Inbound rule — allow SSH from a specific IP range
+az network nsg rule create \
+  --resource-group $RG \
+  --nsg-name $NSG \
+  --name Allow-SSH-CorpNet \
+  --priority 110 \
+  --direction Inbound \
+  --access Allow \
+  --protocol Tcp \
+  --source-address-prefixes 10.0.0.0/8 \
+  --destination-port-ranges 22
+
+# Outbound rule — deny internet egress for sensitive VMs
+az network nsg rule create \
+  --resource-group $RG \
+  --nsg-name $NSG \
+  --name Deny-Internet-Outbound \
+  --priority 4000 \
+  --direction Outbound \
+  --access Deny \
+  --protocol '*' \
+  --source-address-prefixes 'VirtualNetwork' \
+  --destination-address-prefixes Internet \
+  --destination-port-ranges '*'
+
+# Verify current rules
+az network nsg rule list \
+  --resource-group $RG \
+  --nsg-name $NSG \
+  --query '[].{Name:name,Priority:priority,Dir:direction,Access:access,Protocol:protocol,DestPort:destinationPortRange}' \
+  -o table
+```
+
+Priority rules: lower number = higher priority. Range is 100–4096. Azure evaluates rules in priority order and stops at the first match.
+
+---
+
+## Configure Azure Backup for a VM
+
+```bash
+VAULT=my-recovery-vault
+RG=my-resource-group
+VM=my-vm-01
+POLICY=DefaultPolicy
+
+# Create Recovery Services vault (if not existing)
+az backup vault create \
+  --resource-group $RG \
+  --name $VAULT \
+  --location uksouth
+
+# List available backup policies
+az backup policy list \
+  --resource-group $RG \
+  --vault-name $VAULT \
+  --query '[].name' -o table
+
+# Enable backup protection for the VM
+az backup protection enable-for-vm \
+  --resource-group $RG \
+  --vault-name $VAULT \
+  --vm $VM \
+  --policy-name $POLICY
+
+# Verify protection status
+az backup item show \
+  --resource-group $RG \
+  --vault-name $VAULT \
+  --container-name "iaasvmcontainerv2;$RG;$VM" \
+  --name "vm;iaasvmcontainerv2;$RG;$VM" \
+  --backup-management-type AzureIaasVM \
+  --query '{VM:properties.friendlyName,Status:properties.protectionStatus,LastBackup:properties.lastBackupTime}' \
+  -o table
+
+# Trigger an on-demand backup
+az backup protection backup-now \
+  --resource-group $RG \
+  --vault-name $VAULT \
+  --container-name "iaasvmcontainerv2;$RG;$VM" \
+  --item-name "vm;iaasvmcontainerv2;$RG;$VM" \
+  --backup-management-type AzureIaasVM \
+  --retain-until 2025-12-31
+```
+
+---
+
+## Set Up Azure Monitor Alert
+
+```bash
+RG=my-resource-group
+VM=my-vm-01
+
+# Get the VM resource ID
+VM_ID=$(az vm show -g $RG -n $VM --query id -o tsv)
+
+# Create an action group (email notification target)
+az monitor action-group create \
+  --resource-group $RG \
+  --name ops-email-group \
+  --short-name opsalerts \
+  --action email ops-lead ops-lead@example.com
+
+# Get action group resource ID
+AG_ID=$(az monitor action-group show -g $RG -n ops-email-group --query id -o tsv)
+
+# Create a metrics alert — CPU > 80% for 5 minutes
+az monitor metrics alert create \
+  --name "High-CPU-$VM" \
+  --resource-group $RG \
+  --scopes $VM_ID \
+  --condition "avg Percentage CPU > 80" \
+  --window-size 5m \
+  --evaluation-frequency 1m \
+  --severity 2 \
+  --description "CPU utilisation exceeded 80% for 5 minutes" \
+  --action $AG_ID
+
+# Create a metrics alert — Available Memory < 1 GB
+az monitor metrics alert create \
+  --name "Low-Memory-$VM" \
+  --resource-group $RG \
+  --scopes $VM_ID \
+  --condition "avg Available Memory Bytes < 1073741824" \
+  --window-size 5m \
+  --evaluation-frequency 1m \
+  --severity 2 \
+  --action $AG_ID
+
+# Verify alerts
+az monitor metrics alert list \
+  --resource-group $RG \
+  --query '[].{Name:name,Severity:severity,Enabled:enabled,Condition:criteria.allOf[0].metricName}' \
+  -o table
+```
+
+Severity levels: 0 (Critical) → 1 (Error) → 2 (Warning) → 3 (Informational) → 4 (Verbose).
+
+---
+
+## Create a Storage Account and Container
+
+```bash
+RG=my-resource-group
+SA=mystorageacct$RANDOM   # must be globally unique, 3-24 lowercase alphanumeric
+CONTAINER=app-data
+
+# Create storage account
+az storage account create \
+  --resource-group $RG \
+  --name $SA \
+  --location uksouth \
+  --kind StorageV2 \
+  --sku Standard_LRS \
+  --access-tier Hot \
+  --min-tls-version TLS1_2 \
+  --allow-blob-public-access false \
+  --https-only true
+
+# Get the storage account key
+SA_KEY=$(az storage account keys list -g $RG -n $SA --query '[0].value' -o tsv)
+
+# Create a private blob container
+az storage container create \
+  --name $CONTAINER \
+  --account-name $SA \
+  --account-key $SA_KEY \
+  --public-access off
+
+# Enable blob versioning
+az storage account blob-service-properties update \
+  --resource-group $RG \
+  --account-name $SA \
+  --enable-versioning true
+
+# Verify
+az storage account show \
+  --resource-group $RG \
+  --name $SA \
+  --query '{Name:name,SKU:sku.name,Kind:kind,AccessTier:accessTier,HTTPS:supportsHttpsTrafficOnly}' \
+  -o table
+
+az storage container list \
+  --account-name $SA \
+  --account-key $SA_KEY \
+  --query '[].{Name:name,LeaseState:properties.leaseState,PublicAccess:properties.publicAccess}' \
+  -o table
+```
+
+| SKU | Replication | Use case |
+|---|---|---|
+| Standard_LRS | 3x within one datacenter | Dev/test, low cost |
+| Standard_ZRS | 3x across availability zones | Zone-resilient |
+| Standard_GRS | LRS + async copy to paired region | Regional DR |
+| Premium_LRS | SSD-backed, low latency | High-throughput workloads |
+
+---
+
+## Configure Entra ID (Azure AD) Group and Role Assignment
+
+```bash
+RG=my-resource-group
+
+# --- Step 1: Create a security group in Entra ID ---
+az ad group create \
+  --display-name "Platform-Ops-Team" \
+  --mail-nickname "platform-ops-team" \
+  --description "Azure platform operations team — prod subscription access"
+
+# Get the group object ID
+GROUP_ID=$(az ad group show --group "Platform-Ops-Team" --query id -o tsv)
+
+# --- Step 2: Add members to the group ---
+USER_ID=$(az ad user show --id user@example.com --query id -o tsv)
+az ad group member add --group "Platform-Ops-Team" --member-id $USER_ID
+
+# --- Step 3: Assign a built-in RBAC role at subscription scope ---
+SUB_ID=$(az account show --query id -o tsv)
+
+az role assignment create \
+  --assignee-object-id $GROUP_ID \
+  --assignee-principal-type Group \
+  --role "Contributor" \
+  --scope "/subscriptions/$SUB_ID"
+
+# --- Step 4: Assign a role at resource group scope (more restrictive) ---
+az role assignment create \
+  --assignee-object-id $GROUP_ID \
+  --assignee-principal-type Group \
+  --role "Virtual Machine Contributor" \
+  --scope "/subscriptions/$SUB_ID/resourceGroups/$RG"
+
+# Verify role assignments for the group
+az role assignment list \
+  --assignee $GROUP_ID \
+  --query '[].{Role:roleDefinitionName,Scope:scope}' \
+  -o table
+```
+
+Common built-in roles:
+
+| Role | Scope of access |
+|---|---|
+| Owner | Full access including role assignments |
+| Contributor | Full CRUD except role assignments |
+| Reader | Read-only |
+| Virtual Machine Contributor | Create/manage VMs, not the VNet or Storage |
+| Storage Blob Data Contributor | Read/write blob data (not account management) |

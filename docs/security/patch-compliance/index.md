@@ -56,6 +56,13 @@ Patch Compliance Monitoring reference covering Patch Classification, Windows Pat
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Patch scanning, SLA tracking, WSUS/SCCM management, exception handling</div>
+  </a>
+</div>
 
 ## Patch Classification
 

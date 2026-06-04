@@ -70,6 +70,51 @@ sequenceDiagram
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+Run these commands on the VBR server each morning for a complete health snapshot.
+
+1. **VBR service status** — confirm the core service is running:
+   ```powershell
+   Get-Service -Name VeeamBackupSvc | Select Status,DisplayName
+   ```
+2. **Backup job status (last 24 h)** — check every scheduled job's last result:
+   ```powershell
+   Get-VBRJob | Where {$_.IsScheduleEnabled} | Select Name,@{n='LastResult';e={$_.GetLastResult()}}
+   ```
+3. **Repository free space** — flag any repo below 10 % free:
+   ```powershell
+   Get-VBRBackupRepository | Select Name,@{n='FreeGB';e={[math]::Round($_.GetContainer().CachedFreeSpace/1GB,1)}}
+   ```
+4. **Failed backup sessions** — list all failures in the last 24 h:
+   ```powershell
+   Get-VBRSession | Where {$_.Result -eq 'Failed' -and $_.CreationTime -gt (Get-Date).AddHours(-24)} | Select JobName,CreationTime,Result
+   ```
+5. **Proxy connectivity** — verify all proxies are reachable:
+   ```powershell
+   Get-VBRViProxy | Select Name,Host,@{n='Status';e={$_.Host.GetConnectionStatus()}}
+   ```
+6. **Tape library health** (if applicable) — confirm all drives are online:
+   ```powershell
+   Get-VBRTapeLibrary | Select Name,State,DriveCount
+   ```
+7. **Veeam ONE alarms** (if deployed) — surface the latest errors:
+   ```powershell
+   Get-VBRAAuditEntry | Where {$_.Severity -eq 'Error'} | Select -First 20
+   ```
+8. **License expiry** — verify the licence is valid and not near expiry:
+   ```powershell
+   Get-VBRInstalledLicense | Select Edition,ExpirationDate,Status
+   ```
+9. **Replica health** (if replication jobs exist) — check last result for every replica job:
+   ```powershell
+   Get-VBRJob -Type Replica | Select Name,@{n='LastResult';e={$_.GetLastResult()}}
+   ```
+10. **VBR database connection** — confirm the configuration database is reachable:
+    ```powershell
+    Get-VBRDatabaseConnection | Select ServerName,DatabaseName
+    ```
+
 Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).
 
 ### Tape Check (if applicable)

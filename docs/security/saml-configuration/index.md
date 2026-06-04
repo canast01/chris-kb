@@ -60,6 +60,13 @@ Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP conc
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Azure AD and Okta setup, attribute mapping, certificate lifecycle, SSO troubleshooting</div>
+  </a>
+</div>
 
 ---
 

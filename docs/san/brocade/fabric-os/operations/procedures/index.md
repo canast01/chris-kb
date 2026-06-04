@@ -169,3 +169,108 @@ nszonemember "<alias_or_wwn>"
 | Two hosts in same zone | `zoneshow` | Split into single-initiator zones immediately |
 | Alias WWN is wrong | `alishow` | Delete and recreate alias with correct WWN |
 | Change not persisted after reboot | | Run `cfgsave` after every change |
+
+## Add a New Switch to an Existing Fabric
+
+Connect ISL cables → `switchDisable` on new switch → configure domain ID (must be unique in fabric) → set fabric parameters to match existing → `switchEnable` → verify `fabricshow` shows new switch.
+
+```bash
+# Disable new switch before connecting to fabric
+switchDisable
+
+# Set domain ID (must be unique across the fabric)
+configure
+# Answer domain ID prompt with a unique value
+
+# Re-enable switch
+switchEnable
+
+# Verify new switch appears in fabric
+fabricshow
+```
+
+## Create a Zone and Zone Configuration
+
+`zonecreate "zone_host01_array01", "10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02"` → `cfgadd "cfg_prod", "zone_host01_array01"` → `cfgsave` → `cfgenable "cfg_prod"`.
+
+```bash
+zonecreate "zone_host01_array01", "10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02"
+cfgadd "cfg_prod", "zone_host01_array01"
+cfgsave
+cfgenable "cfg_prod"
+```
+
+## Add a Member to an Existing Zone
+
+`zoneadd "zone_host01_array01", "10:00:00:00:00:00:00:03"` → `cfgsave` → `cfgenable "cfg_prod"`.
+
+```bash
+zoneadd "zone_host01_array01", "10:00:00:00:00:00:00:03"
+cfgsave
+cfgenable "cfg_prod"
+```
+
+## Remove a Zone Member
+
+`zoneremove "zone_host01_array01", "10:00:00:00:00:00:00:03"` → `cfgsave` → `cfgenable`.
+
+```bash
+zoneremove "zone_host01_array01", "10:00:00:00:00:00:00:03"
+cfgsave
+cfgenable "cfg_prod"
+```
+
+## Replace a Failed SFP
+
+Identify failed port with `portshow <port>` → hot-replace SFP (no switch reboot needed) → verify with `sfpshow <port>`.
+
+```bash
+# Identify the failed port
+portshow <port>
+
+# Hot-replace SFP (no reboot needed)
+# -- Physical replacement --
+
+# Verify new SFP
+sfpshow <port>
+```
+
+## Replace a Failed Switch (Fabric Resilience)
+
+ISL failover to redundant paths → install replacement switch → restore domain ID and port config from backup → reconnect ISLs → verify fabric.
+
+```bash
+# Verify redundant paths are carrying traffic before replacing
+fabricshow
+portshow
+
+# After replacement: restore config from backup
+configdownload -all -P ftp -h <server> -u <user> -f <filename>
+
+# Verify fabric topology is restored
+fabricshow
+```
+
+## Collect Support Bundle
+
+`supportsave` → saves fabric and switch state to USB or remote FTP — use for TAC cases.
+
+```bash
+supportsave
+```
+
+## Monitor Port Errors
+
+`porterrshow` — shows CRC errors, LR in/out, link failures per port; investigate any port with non-zero CRC.
+
+```bash
+porterrshow
+```
+
+## Back Up Switch Configuration
+
+`configupload -all -P ftp -h <server> -u <user> -f <filename>` — saves running configuration for DR.
+
+```bash
+configupload -all -P ftp -h <server> -u <user> -f <filename>
+```

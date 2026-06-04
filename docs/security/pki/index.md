@@ -56,6 +56,13 @@ Public Key Infrastructure (PKI) reference covering PKI Architecture (Typical Ent
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Certificate issuance, renewal, revocation, ADCS health checks</div>
+  </a>
+</div>
 
 ## PKI Architecture (Typical Enterprise)
 

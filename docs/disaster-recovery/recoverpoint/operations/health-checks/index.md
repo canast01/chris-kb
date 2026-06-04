@@ -64,6 +64,47 @@ cluster quorum check
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+Run these commands via SSH to the RPA cluster management IP each day for a complete RecoverPoint health snapshot.
+
+1. **RPA cluster health** — confirm all RPA nodes are Online and cluster is healthy:
+   ```bash
+   get_system_settings
+   ```
+   Or review the health dashboard in Unisphere for RecoverPoint.
+2. **Replication link status** — all links must show Status: Active:
+   ```bash
+   get_links
+   ```
+3. **Consistency group health** — all CGs must show Protection Status: Active:
+   ```bash
+   get_groups
+   ```
+4. **RPO compliance** — review each CG's displayed RPO lag; flag any CG reporting "RPO Violated" and escalate immediately.
+5. **Journal space** — verify journal free space is above 20 % per CG:
+   ```bash
+   get_journal_capacity
+   ```
+6. **Splitter connectivity** — all splitters must show Status: Connected:
+   ```bash
+   get_splitters
+   ```
+7. **WAN link bandwidth** — check replication throughput against link capacity; sustained >80 % utilisation requires investigation:
+   ```bash
+   get_statistics
+   ```
+8. **RPA firmware consistency** — confirm all RPAs in the cluster run the same firmware version:
+   ```bash
+   get_rpa_settings
+   ```
+9. **RecoverPoint alerts** — review open alerts; acknowledge known ones and investigate any new alerts:
+   ```bash
+   get_alerts
+   ```
+10. **Fan-out replication** (if configured) — verify all target copies are current within their configured RPO; flag any copy lagging beyond target.
+
 ```bash
 # List journal volumes with utilization
 journals list

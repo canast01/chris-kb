@@ -56,6 +56,13 @@ Security Incident Handling reference covering Severity Classification, Phase 1 �
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Incident lifecycle, containment, eradication, recovery procedures</div>
+  </a>
+</div>
 
 ## Severity Classification
 

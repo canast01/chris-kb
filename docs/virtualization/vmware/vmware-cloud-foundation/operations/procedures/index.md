@@ -194,3 +194,398 @@ SDDC Manager → Security → Password Management
 | Domain manager | `/var/log/vmware/vcf/domainmanager/` |
 | NSX Manager | NSX Manager UI → System → Support Bundle |
 | ESXi (per host) | `/var/log/hostd.log`, `/var/log/vmkernel.log` |
+
+---
+
+## Commission a Host into the Free Pool
+
+Commissioning prepares a bare-metal server for use by VCF by registering it with SDDC Manager and validating it against the Hardware Compatibility List. Once commissioned, the host enters the **Unassigned** state and is available for workload domain assignment.
+
+**Pre-requisites:** host is physically racked, cabled to management, vMotion, vSAN, and uplink networks; iDRAC/iLO is reachable; ESXi ISO matches the VCF BOM.
+
+1. Rack the server and connect all required network cables (management, vMotion, vSAN, overlay uplinks, and out-of-band management).
+2. Configure BIOS baseline: enable HT, set boot order to internal disk first, disable legacy boot if using UEFI, set the correct power profile.
+3. Install ESXi from the VCF-certified ISO — use the version specified in the SDDC Manager BOM.
+
+    ```bash
+    # Verify ESXi build number after installation
+    esxcli system version get
+    ```
+
+4. Assign the host a static IP, FQDN, and DNS A/PTR records. Verify forward and reverse resolution from SDDC Manager.
+
+    ```bash
+    # From SDDC Manager appliance — verify DNS
+    nslookup esxi-host-01.domain.local
+    nslookup 192.168.10.51
+    ```
+
+5. Verify NTP synchronisation on the ESXi host.
+
+    ```bash
+    esxcli system ntp get
+    esxcli system ntp set --server=ntp.domain.local --enabled=true
+    ```
+
+6. In SDDC Manager: navigate to **Inventory → Hosts → Commission Hosts**.
+7. Enter the host FQDN, root credentials, and storage type. SDDC Manager runs automated validations:
+    - HCL compatibility check
+    - SSH connectivity
+    - DNS resolution (forward + reverse)
+    - NTP sync
+    - Network connectivity to vCenter and NSX
+8. Resolve any `WARN` or `ERROR` items reported by the validation before proceeding.
+9. Confirm commissioning. The host moves to **Unassigned** state in the free pool.
+
+    ```bash
+    # Query host status via SDDC Manager API (optional verification)
+    curl -sk -u admin@local \
+      https://sddc-manager.domain.local/v1/hosts \
+      | python3 -m json.tool | grep -E '"status"|"fqdn"'
+    ```
+
+---
+
+## Create a Workload Domain
+
+A workload domain is an isolated logical unit within VCF consisting of a vCenter Server instance, one or more NSX Managers, and one or more vSAN-backed clusters. SDDC Manager orchestrates the entire deployment from a single workflow.
+
+**Pre-requisites:** at least 4 hosts are in the free pool (minimum 3 for vSAN stretched requires 4), DNS entries for vCenter and NSX FQDNs are pre-created, and an IP pool is configured in SDDC Manager Network Settings.
+
+1. Navigate to **SDDC Manager → Inventory → Workload Domains → Add Domain**.
+2. Select domain type: **VI** (Virtual Infrastructure) for standard workloads.
+3. Provide the domain name and select the primary cluster configuration.
+4. Assign hosts from the free pool — minimum 3 hosts for vSAN; minimum 4 for vSAN stretched cluster.
+5. Configure vCenter Server:
+    - Enter the FQDN (must resolve in DNS before proceeding)
+    - Enter the datacenter and cluster names
+    - Select the appropriate size (tiny/small/medium/large)
+6. Configure NSX — choose **shared** (use existing NSX deployment from management domain) or **new** (deploy dedicated NSX Manager cluster):
+    - If new: provide 3 NSX Manager FQDNs, VIP FQDN, and admin credentials
+7. Configure vSAN storage policy, failure tolerance method (FTT=1 or FTT=2), and disk group layout.
+8. Review the generated JSON specification. Validate all IP addresses, FQDNs, and VLANs before submitting.
+
+    ```bash
+    # Export the draft spec for offline review (SDDC Mgr API)
+    curl -sk -u admin@local \
+      "https://sddc-manager.domain.local/v1/domains/validations" \
+      -H "Content-Type: application/json" \
+      -d @domain-spec.json | python3 -m json.tool
+    ```
+
+9. Click **Deploy**. SDDC Manager sequentially deploys: vCenter → NSX → vSAN → joins hosts.
+10. Monitor progress in **SDDC Manager → Tasks**. Total deployment time is typically 45–90 minutes.
+11. Post-deploy validation:
+    - Log in to the new vCenter and confirm hosts are connected
+    - Confirm vSAN health in vCenter → Cluster → Monitor → vSAN → Health
+    - Confirm NSX transport nodes show **Up** status
+
+---
+
+## Expand a Workload Domain (Add Hosts)
+
+Expanding a workload domain adds capacity to an existing cluster by pulling commissioned hosts from the free pool. SDDC Manager handles ESXi configuration, vSAN disk group creation, and NSX transport node preparation automatically.
+
+**Pre-requisites:** the additional hosts are commissioned and in the **Unassigned** (free pool) state; the cluster has sufficient vSAN capacity to absorb a temporary rebalance.
+
+1. Commission any new physical hosts into the free pool (see **Commission a Host into the Free Pool** above).
+2. Navigate to **SDDC Manager → Inventory → Workload Domains**.
+3. Select the target domain and then select the target cluster within that domain.
+4. Click **Actions → Expand**.
+5. Select one or more hosts from the free pool to add to the cluster.
+6. Review the summary — SDDC Manager will:
+    - Configure ESXi networking (VMkernel adapters, vSwitches/DVS)
+    - Add the host to vCenter
+    - Join the host to the vSAN cluster and create disk groups
+    - Prepare the host as an NSX transport node
+7. Click **Apply**. Monitor progress in **SDDC Manager → Tasks**.
+8. Post-expansion validation:
+
+    ```bash
+    # Verify host count in cluster via ESXi CLI (run from any host in the cluster)
+    esxcli hardware platform get
+    # Or via vCenter API
+    curl -sk -u administrator@vsphere.local \
+      "https://vcenter.domain.local/api/vcenter/cluster" | python3 -m json.tool
+    ```
+
+    - Confirm the new host appears as **Connected** in vCenter
+    - Confirm vSAN rebalance completes and disk health is green
+    - Confirm NSX transport node status is **Up**
+
+---
+
+## Delete a Workload Domain
+
+Deleting a workload domain permanently removes the vCenter, NSX, and all associated clusters from VCF management. Hosts return to the free pool. This operation is irreversible — ensure all workloads are migrated before proceeding.
+
+**Pre-requisites (mandatory before initiating delete):**
+
+- All VMs are powered off or migrated to another domain
+- vSAN datastore is empty (no VMs, no templates, no ISO files)
+- No dependent services (vRA, HCX, Tanzu) are still registered against this domain
+
+1. Migrate all running VMs off the domain using vMotion or Storage vMotion to an alternate domain.
+2. Verify the vSAN datastore is empty:
+
+    ```bash
+    # SSH to any ESXi host in the cluster
+    esxcli storage vmfs extent list
+    # Or check via vCenter: Storage → Datastore → Files
+    ```
+
+3. Remove any add-on services (HCX, vRA, Aria) that reference this domain in SDDC Manager.
+4. Navigate to **SDDC Manager → Inventory → Workload Domains**.
+5. Select the target domain.
+6. Click **Actions → Delete**.
+7. Confirm the decommission prompt. SDDC Manager will:
+    - Deregister NSX from vCenter
+    - Remove hosts from vCenter clusters
+    - Uninstall NSX transport node preparation
+    - Destroy vCenter and NSX VM instances
+    - Return hosts to the **Unassigned** free pool
+8. Monitor progress in **SDDC Manager → Tasks**. Duration is typically 20–40 minutes.
+9. Post-deletion: confirm hosts appear in the free pool under **Inventory → Hosts**.
+
+---
+
+## Rotate Passwords (All Components)
+
+SDDC Manager centrally manages credentials for all VCF components (ESXi, vCenter, NSX, SDDC Manager itself, and PSC). Password rotation should be performed on a scheduled basis and is mandatory after any suspected credential compromise.
+
+**Note:** Rotation is orchestrated by SDDC Manager — do not rotate passwords directly in individual product UIs, as this will cause credential drift and break SDDC Manager's ability to manage those components.
+
+1. Navigate to **SDDC Manager → Security → Password Management**.
+2. Select the **Resource Type** (e.g., ESXi, vCenter, NSX Manager, SDDC Manager, PSC).
+3. Select specific resources or use **Select All** for that resource type.
+4. Click **Rotate**.
+5. Review the confirmation dialog — note which accounts will be rotated.
+6. Click **Confirm**. SDDC Manager rotates credentials in the correct dependency order.
+
+    ```bash
+    # Monitor rotation task status via API
+    curl -sk -u admin@local \
+      "https://sddc-manager.domain.local/v1/tasks?pageSize=5" \
+      | python3 -m json.tool | grep -E '"status"|"name"'
+    ```
+
+7. Verify the rotation task completes with **SUCCESSFUL** status in **SDDC Manager → Tasks**.
+8. Confirm no downstream services are impacted:
+    - vCenter alarms: check for authentication errors
+    - NSX Manager: confirm all transport nodes remain **Up**
+    - Any external integrations (vRA, Aria Automation) may require credential updates in their own configuration
+9. Update the enterprise vault (HashiCorp Vault, CyberArk, etc.) with the new credentials if not auto-synced.
+
+---
+
+## Rotate Certificates (All Components)
+
+VCF components use TLS certificates managed by SDDC Manager. Certificates can be signed by the embedded VMware CA, a Microsoft CA (via integration), or an external CA using a CSR workflow. Renewing before expiry avoids service disruption.
+
+**Pre-requisites:** verify current certificate expiry dates before scheduling; plan for brief service restarts on NSX Manager during rotation.
+
+1. Navigate to **SDDC Manager → Security → Certificate Management**.
+2. Review the certificate inventory table — identify components with certificates expiring within 60 days.
+3. Select the target component (e.g., SDDC Manager, vCenter, NSX Manager).
+4. Click **Renew** (for VMware CA-signed certs) or **Generate CSR** (for external CA workflow):
+
+    **VMware CA / Microsoft CA (auto-sign):**
+    - Select certificate authority
+    - Click **Generate CSR and Sign** — SDDC Manager handles the full cycle
+
+    **External CA (manual CSR):**
+
+    ```bash
+    # After generating the CSR in SDDC Manager, download it
+    # Submit to your CA, then import the signed cert + chain:
+    # SDDC Manager → Certificate Management → select component → Import Certificate
+    ```
+
+5. Click **Renew** / **Apply**. SDDC Manager pushes the new certificate and restarts the affected service.
+6. Verify the cert chain after rotation:
+
+    ```bash
+    # Verify vCenter certificate from command line
+    openssl s_client -connect vcenter.domain.local:443 -showcerts </dev/null 2>/dev/null \
+      | openssl x509 -noout -subject -issuer -dates
+
+    # Verify SDDC Manager certificate
+    openssl s_client -connect sddc-manager.domain.local:443 -showcerts </dev/null 2>/dev/null \
+      | openssl x509 -noout -subject -issuer -dates
+    ```
+
+7. Confirm SDDC Manager re-registers trust with vCenter and NSX after certificate replacement — check that no **Certificate Invalid** alarms appear.
+8. For NSX Manager: verify transport node connectivity is restored after the cert rotation completes.
+
+---
+
+## Run an LCM Precheck
+
+The Lifecycle Management (LCM) Precheck validates the environment against a set of prerequisites before an upgrade is permitted to proceed. Always run a precheck at least 48 hours before a scheduled maintenance window to allow time to resolve findings.
+
+**Scope:** precheck evaluates hardware compatibility, software interoperability, network connectivity, certificate validity, free disk space, and vSAN health.
+
+1. Navigate to **SDDC Manager → Lifecycle Management → Upgrade**.
+2. Select the component to be upgraded (e.g., SDDC Manager, vCenter, ESXi, NSX).
+3. Ensure the target upgrade bundle has been downloaded (see **Apply a VCF Upgrade Bundle**).
+4. Click **Run Precheck**.
+5. SDDC Manager executes checks across all affected components. This takes 5–15 minutes.
+6. Review the results categorised by severity:
+    - **INFO** — informational; no action required
+    - **WARN** — advisory; resolve before upgrade if possible
+    - **ERROR** — blocking; upgrade cannot proceed until resolved
+
+    ```bash
+    # Retrieve precheck results via API for export to change ticket
+    curl -sk -u admin@local \
+      "https://sddc-manager.domain.local/v1/upgradables/prechecks" \
+      | python3 -m json.tool
+    ```
+
+7. Common ERROR items and remediation:
+    - **Certificate expiry** → rotate certs (see **Rotate Certificates** above)
+    - **vSAN health degraded** → resolve disk/network faults before proceeding
+    - **Insufficient disk space** → free space on SDDC Manager appliance (`/var` must have >20 GB free)
+    - **DNS/NTP drift** → correct on affected hosts
+
+    ```bash
+    # Check SDDC Manager appliance disk usage
+    df -h /var
+    ```
+
+8. Re-run precheck after resolving issues; proceed to upgrade only when all ERRORs are cleared.
+
+---
+
+## Apply a VCF Upgrade Bundle
+
+VCF upgrades are applied via the LCM module in SDDC Manager. The upgrade order is fixed: SDDC Manager → vCenter → NSX → ESXi hosts → vSAN. Never upgrade components out of order.
+
+**Pre-requisites:** precheck has completed with zero ERRORs; a maintenance window is scheduled; all VMs with HA/DRS enabled are in a known state; snapshots of management VMs are taken.
+
+1. Navigate to **SDDC Manager → Lifecycle Management → Check for Updates**.
+2. SDDC Manager contacts the VMware depot and lists available bundles. If the environment is air-gapped, upload the bundle manually:
+
+    ```bash
+    # Copy bundle to SDDC Manager (from a jump host with access)
+    scp vcf-bundle-4.x.x.x.tar.gz vcf@sddc-manager.domain.local:/nfs/vmware/vcf/nfs-mount/bundles/
+
+    # Trigger a local depot rescan
+    curl -sk -u admin@local -X POST \
+      "https://sddc-manager.domain.local/v1/bundles/retrigger" \
+      -H "Content-Type: application/json"
+    ```
+
+3. Select the target bundle. Verify the SHA-256 checksum matches the VMware KB for that release:
+
+    ```bash
+    sha256sum vcf-bundle-4.x.x.x.tar.gz
+    # Compare output to the checksum published in the VMware release notes
+    ```
+
+4. Click **Download** and wait for the bundle status to show **SUCCESSFUL**.
+5. Schedule the upgrade window in SDDC Manager (date, time, notification email).
+6. Run Precheck one final time immediately before the maintenance window opens (see above).
+7. Click **Upgrade**. SDDC Manager upgrades components in the correct dependency order:
+    - SDDC Manager appliance (self-upgrade; brief UI outage)
+    - vCenter Server
+    - NSX Manager cluster (rolling)
+    - ESXi hosts (sequential, with maintenance mode; DRS evacuates VMs)
+    - vSAN on-disk format upgrade (if applicable)
+8. Monitor progress in **SDDC Manager → Tasks**. Do not interrupt the upgrade once started.
+
+    ```bash
+    # Tail the LCM log during upgrade for real-time status
+    tail -f /var/log/vmware/vcf/lcm/lcm.log
+    ```
+
+9. Post-upgrade validation:
+    - Confirm SDDC Manager build number matches the target release
+    - Confirm all vCenter, NSX, and ESXi versions match the BOM
+    - Run vSAN health check
+    - Verify NSX transport nodes are **Up**
+    - Remove any pre-upgrade snapshots from management VMs
+
+---
+
+## Configure a Network Pool
+
+Network pools define the IP address ranges and VLAN assignments that SDDC Manager allocates to hosts and components during workload domain creation. Pools must be created before deploying a new domain.
+
+**Note:** network pools are consumed at domain creation time and cannot be changed after the domain is deployed. Plan IP ranges carefully to avoid overlap.
+
+1. Navigate to **SDDC Manager → Network Settings → Network Pools**.
+2. Click **New Pool**.
+3. Provide a descriptive pool name (e.g., `wld-01-pool`).
+4. Configure the network types required for the target domain:
+    - **Management** network: VLAN ID, subnet, gateway, MTU, IP range start/end
+    - **vMotion** network: VLAN ID, subnet, gateway, MTU, IP range start/end
+    - **vSAN** network: VLAN ID, subnet, gateway, MTU, IP range start/end
+    - **NSX Host Overlay** (TEP) network: VLAN ID, subnet, gateway, MTU, IP range start/end
+5. Verify that IP ranges are sized to accommodate the maximum expected host count in the domain (current + future expansion).
+6. Click **Save**. The pool appears in the network pool inventory.
+
+    ```bash
+    # List configured network pools via API
+    curl -sk -u admin@local \
+      "https://sddc-manager.domain.local/v1/network-pools" \
+      | python3 -m json.tool | grep -E '"name"|"id"'
+    ```
+
+7. The network pool is automatically assigned to the domain during the **Create a Workload Domain** workflow — select it in the vCenter/NSX configuration step.
+8. Post-creation: verify the allocated IPs appear under **SDDC Manager → Network Settings → IP Allocations**.
+
+---
+
+## Review Audit Logs
+
+SDDC Manager records all administrative actions (login events, task submissions, configuration changes) in its audit log. Audit logs are essential for change control reviews, security investigations, and compliance reporting.
+
+**Retention:** the audit log file rolls over when it reaches 100 MB. For long-term retention, configure a syslog target in **SDDC Manager → Administration → Syslog**.
+
+**Via CLI (SDDC Manager appliance):**
+
+```bash
+# View the last 100 audit log entries
+tail -100 /var/log/vmware/vcf/commonsvcs/audit.log
+
+# Search for a specific user's actions
+grep "user@domain.local" /var/log/vmware/vcf/commonsvcs/audit.log | tail -50
+
+# Filter for login events
+grep -i "LOGIN\|LOGOUT\|AUTH" /var/log/vmware/vcf/commonsvcs/audit.log | tail -50
+
+# Filter for a specific action type (e.g., password rotation, domain creation)
+grep -i "ROTATE\|COMMISSION\|CREATE_DOMAIN" /var/log/vmware/vcf/commonsvcs/audit.log
+```
+
+**Via SDDC Manager UI:**
+
+1. Navigate to **SDDC Manager → Administration → Audit Logs**.
+2. Apply filters:
+    - **User** — filter by the account that performed the action
+    - **Action** — filter by operation type (e.g., Commission, Rotate, Upgrade)
+    - **Timeframe** — set start and end date/time for the review window
+    - **Resource** — filter by target resource (host FQDN, domain name, etc.)
+3. Export results to CSV for inclusion in change management records or security reports.
+
+**Syslog forwarding (recommended for compliance):**
+
+```bash
+# Configure syslog target via SDDC Manager API
+curl -sk -u admin@local -X POST \
+  "https://sddc-manager.domain.local/v1/syslog-configuration" \
+  -H "Content-Type: application/json" \
+  -d '{"host": "syslog.domain.local", "port": 514, "protocol": "UDP"}'
+```
+
+**Key audit log fields:**
+
+| Field | Description |
+|---|---|
+| `timestamp` | UTC time of the event |
+| `user` | Account that initiated the action |
+| `action` | Operation performed (e.g., `COMMISSION_HOST`) |
+| `resource` | Target resource FQDN or ID |
+| `status` | `SUCCESS`, `FAILURE`, or `IN_PROGRESS` |
+| `sourceIp` | Client IP address of the initiating session |

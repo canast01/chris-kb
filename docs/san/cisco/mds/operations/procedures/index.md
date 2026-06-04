@@ -245,3 +245,90 @@ switch# show fcns database vsan 10
 switch# show zone vsan 10
 switch# show zoneset active vsan 10
 ```
+
+## Add a New Switch to an Existing VSAN
+
+Connect ISL → on existing switch: `vsan database; vsan <id> interface fc1/1` → on new switch: set domain ID to auto → `no shutdown` → verify `show topology` includes new switch.
+
+```bash
+# On existing switch: add ISL port to VSAN
+switch# vsan database
+switch(config-vsan-db)# vsan <id> interface fc1/1
+switch(config-vsan-db)# exit
+
+# On new switch: bring up ISL port
+switch# interface fc1/1
+switch(config-if)# no shutdown
+
+# Verify new switch appears in fabric topology
+switch# show topology
+```
+
+## Create a Device Alias
+
+`device-alias database; device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01; device-alias commit` — simplifies zone membership management.
+
+```bash
+switch# device-alias database
+switch(config-device-alias-db)# device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01
+switch(config-device-alias-db)# exit
+switch# device-alias commit
+```
+
+## Create an IVR Zone (Inter-VSAN Routing)
+
+Configure IVR topology → `ivr zoneset name ivr_prod` → `ivr zone name zone_ivr_host01_array01` → add members from different VSANs → `ivr zoneset activate name ivr_prod`.
+
+```bash
+# Configure IVR topology
+switch# ivr topology distribute
+
+# Create IVR zone with members from different VSANs
+switch# ivr zone name zone_ivr_host01_array01
+switch(config-ivr-zone)# member pwwn 10:00:00:00:00:00:00:01 vsan 10
+switch(config-ivr-zone)# member pwwn 50:00:00:00:00:00:00:02 vsan 20
+switch(config-ivr-zone)# exit
+
+# Add to IVR zone set and activate
+switch# ivr zoneset name ivr_prod
+switch(config-ivr-zoneset)# member zone_ivr_host01_array01
+switch(config-ivr-zoneset)# exit
+switch# ivr zoneset activate name ivr_prod
+```
+
+## Check Fabric Login Table
+
+`show flogi database vsan <id>` — lists all logged-in devices with FCID and WWPN; confirm expected hosts and arrays present.
+
+```bash
+switch# show flogi database vsan <id>
+```
+
+## Collect NX-OS Tech-Support for TAC
+
+`show tech-support` → save output to file; `copy running-config bootflash:switch-config-backup.cfg` for configuration backup.
+
+```bash
+# Collect tech-support (redirect to file)
+switch# show tech-support > bootflash:tech-support-$(date +%Y%m%d).txt
+
+# Save configuration backup
+switch# copy running-config bootflash:switch-config-backup.cfg
+```
+
+## Replace a Failed Module (Line Card)
+
+`out-of-service module <slot>` → physically swap module → `no out-of-service module <slot>` → verify `show module` shows Online.
+
+```bash
+# Take module out of service
+switch# out-of-service module <slot>
+
+# -- Physical swap of line card --
+
+# Bring module back into service
+switch# no out-of-service module <slot>
+
+# Verify module is Online
+switch# show module
+```

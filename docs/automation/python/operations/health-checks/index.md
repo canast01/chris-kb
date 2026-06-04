@@ -2,8 +2,203 @@
 
 
 <div class="kb-summary">
-Health Checks reference covering Python Automation Health Check Flow, Incident Triage.
+Health Checks reference covering Environment Health, Package Management, Scheduled Scripts.
 </div>
+
+## Run This Routine
+
+```bash
+# 1. Python version
+python3 --version && pip3 --version
+
+# 2. Virtual environment status
+ls -la ~/.venv/ 2>/dev/null || echo "No default venv"
+
+# 3. Installed packages — key automation libraries
+pip3 list | grep -E "requests|boto3|azure|vmware|ansible|paramiko"
+
+# 4. Dependency conflicts
+pip3 check
+
+# 5. Script syntax check (sample)
+python3 -m py_compile <script.py> && echo "OK"
+
+# 6. Cron / scheduled script health — verify expected jobs present
+crontab -l | grep python
+```
+
+> **Dependency conflicts:** `pip3 check` reports any installed packages with unsatisfied or conflicting dependencies. Any output here requires remediation before running automation scripts in production.
+
+---
+
+## Environment Health
+
+A consistent Python environment — correct interpreter version, active virtual environment, and matching `.python-version` — is the foundation of reliable automation.
+
+**Check interpreter version**
+
+```bash
+python3 --version
+pip3 --version
+which python3
+```
+
+**Check pyenv version (if using pyenv)**
+
+```bash
+pyenv version
+cat .python-version
+```
+
+The `.python-version` file records the required Python version for the project. `pyenv` activates it automatically when entering the directory.
+
+**Verify virtual environment is active**
+
+```bash
+echo $VIRTUAL_ENV
+python3 -c "import sys; print(sys.prefix)"
+```
+
+If `VIRTUAL_ENV` is empty, activate the venv before running scripts:
+
+```bash
+source /opt/automation/venv/bin/activate
+```
+
+**Check for environment variable completeness**
+
+```bash
+python3 -c "import os; print([k for k in ['API_URL','API_TOKEN','LOG_DIR'] if k not in os.environ])"
+```
+
+Replace the list with the environment variables your scripts require.
+
+**Key health indicators**
+
+| Indicator | Healthy | Action Required |
+|---|---|---|
+| Python version | Matches `.python-version` or runbook spec | Install correct version via pyenv or package manager |
+| Virtual environment | Active and matches project | Recreate venv if dependencies are mismatched |
+| `sys.prefix` | Points to project venv | Deactivate global pip installs; use venv |
+| Required env vars | All present | Set missing variables in systemd unit or cron environment |
+
+---
+
+## Package Management
+
+Package version drift causes subtle breakage when an upstream library changes its API. Conflicts between installed packages can cause import failures that only surface at runtime.
+
+**List installed packages**
+
+```bash
+pip3 list
+pip3 list --outdated
+```
+
+**Check for dependency conflicts**
+
+```bash
+pip3 check
+```
+
+Any output from `pip3 check` indicates a broken dependency graph that must be resolved.
+
+**Audit for known CVEs**
+
+```bash
+pip3 install safety
+safety check
+```
+
+**Export current dependencies (freeze)**
+
+```bash
+pip3 freeze > requirements-$(date +%Y%m%d).txt
+```
+
+**Install from pinned requirements**
+
+```bash
+pip3 install -r requirements.txt
+```
+
+**Verify a specific critical library is importable**
+
+```bash
+python3 -c "import requests; print(requests.__version__)"
+python3 -c "import boto3; print(boto3.__version__)"
+python3 -c "import paramiko; print(paramiko.__version__)"
+```
+
+**Key health indicators**
+
+| Indicator | Healthy | Action Required |
+|---|---|---|
+| `pip3 check` output | Empty (no conflicts) | Resolve conflicts by adjusting pinned versions |
+| CVE scan | Zero known vulnerabilities | Upgrade affected packages |
+| Outdated packages | None critical | Schedule controlled upgrades |
+| `requirements.txt` present | Yes, committed to VCS | Freeze and commit current state |
+
+---
+
+## Scheduled Scripts
+
+Python automation scripts commonly run on a schedule via cron or systemd timers. Silent failures in scheduled scripts are a frequent source of undetected automation gaps.
+
+**List all cron jobs running Python scripts**
+
+```bash
+crontab -l | grep python
+```
+
+**Check system-wide cron for Python jobs**
+
+```bash
+grep -r "python" /etc/cron.d/ /etc/cron.daily/ /etc/cron.hourly/ /etc/cron.weekly/ 2>/dev/null
+```
+
+**Check cron daemon is running**
+
+```bash
+systemctl status cron
+# or on RHEL/CentOS:
+systemctl status crond
+```
+
+**Review recent cron execution log**
+
+```bash
+grep CRON /var/log/syslog | tail -50
+# or on RHEL/CentOS:
+grep CRON /var/log/cron | tail -50
+```
+
+**Check systemd timer units (alternative to cron)**
+
+```bash
+systemctl list-timers --all | grep python
+```
+
+**Verify script output log (if scripts redirect output)**
+
+```bash
+# Example: check last run time and exit status from a log file
+tail -20 /var/log/automation/<script-name>.log
+```
+
+**Key health indicators**
+
+| Indicator | Healthy | Action Required |
+|---|---|---|
+| Expected cron entries present | All jobs in `crontab -l` | Re-add missing entries |
+| Cron daemon status | `active (running)` | Restart and investigate stop reason |
+| Last run time | Within expected schedule interval | Check for silent failures in log |
+| Script exit code in log | `0` | Debug with manual run; check tracebacks |
+| Log file growth | Normal, not zero-length | Confirm output redirection in cron entry |
+
+---
+
+## Python Automation Health Check Flow
 
 ```text
 ┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
@@ -29,9 +224,6 @@ Health Checks reference covering Python Automation Health Check Flow, Incident T
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-## Python Automation Health Check Flow
-
-
 
 ## Incident Triage
 

@@ -56,6 +56,13 @@ Compliance Standards reference covering Framework Overview, ISO 27001 — Key Co
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Framework controls, evidence collection, gap assessments, audit preparation</div>
+  </a>
+</div>
 
 ## Framework Overview
 

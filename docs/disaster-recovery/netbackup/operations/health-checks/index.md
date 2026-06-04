@@ -44,6 +44,53 @@ Health Checks reference covering Daily Check Flow, Daily Checklist, Job Monitori
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+Run these commands on the NetBackup Primary Server each morning for a complete health snapshot.
+
+1. **NBU services status** — confirm all NetBackup daemons/services are running:
+   ```bash
+   nbservices
+   ```
+2. **Job activity summary** — review active and queued job counts:
+   ```bash
+   bpdbjobs -summary
+   ```
+3. **Failed jobs (last 24 h)** — list all failed jobs with detail:
+   ```bash
+   bpdbjobs -filter starttime=-24:00:00,status=FAILED -l | head -50
+   ```
+4. **Media server connectivity** — test connectivity to each media server (repeat per host):
+   ```bash
+   bptestbpcd -host <media-server>
+   ```
+5. **Storage unit status** — confirm all STUs are Online:
+   ```bash
+   nbdevquery -liststu -U
+   ```
+6. **MSDP pool status** — check dedup pool free space:
+   ```bash
+   nbdevquery -listdp -U
+   ```
+7. **Client connectivity sample** — spot-check critical clients (repeat per host):
+   ```bash
+   bptestbpcd -host <client>
+   ```
+8. **Catalog backup recency** — confirm catalog was backed up recently:
+   ```bash
+   bpbackupdb -h <primary-server> -l | head -5
+   ```
+9. **Policy compliance** — verify a critical policy completed successfully in the last 24 h:
+   ```bash
+   bpdbjobs -filter policy=<critical-policy>,starttime=-24:00:00 -l
+   ```
+10. **License check** — confirm licence keys are valid and not expired:
+    ```bash
+    nbdevconfig -listconfig | grep -i license
+    ```
+    Or check Admin Console → Host Properties → License Keys.
+
 ## Daily Check Flow
 
 

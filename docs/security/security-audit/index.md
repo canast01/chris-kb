@@ -56,6 +56,13 @@ Security Audit Procedure reference covering Audit Types, Scope Definition, Confi
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Audit types, configuration checks, evidence collection, findings documentation</div>
+  </a>
+</div>
 
 ## Audit Types
 

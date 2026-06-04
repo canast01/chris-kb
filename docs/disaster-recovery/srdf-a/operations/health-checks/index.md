@@ -52,6 +52,20 @@ echo "Current lag: ${LAG} seconds"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+1. **SRDF group state:** `symrdf -g <group> query` — all pairs should show RDF State: Synchronized or Consistent
+2. **Cycle time:** `symrdf -g <group> query -detail | grep -i cycle` — verify within RPO target
+3. **Delta sets:** `symrdf -g <group> dset show` — check no delta set is accumulating unexpectedly
+4. **Link health:** `symrdf -g <group> verifylink` — verify physical paths are all healthy
+5. **DSE (Dynamic Synchronization Enabler) status:** `symrdf -g <group> dse query` — check DSE mode active if configured
+6. **WAN latency impact:** `symrdf -g <group> perf` — check cycle time trend vs WAN latency
+7. **SRDF director health:** `symmaskdb -sid <array-sid> list -dir` — all RDF directors should show Status: Online
+8. **Emulation (if synchronous fallback configured):** `symrdf -g <group> query | grep -i mode` — note current mode
+9. **Consistency protection:** `symrdf -g <group> query | grep -i protect` — verify consistency protection active
+10. **Open replication tracks:** `symrdf -g <group> query | grep -i tracks` — should approach 0 for healthy async
+
 ```bash
 # Full health check — save output with timestamp
 symrdf -g 20 -type A query -detail > /tmp/srdf_a_health_$(date +%Y%m%d_%H%M%S).txt

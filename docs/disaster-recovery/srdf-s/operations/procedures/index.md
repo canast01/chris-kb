@@ -321,3 +321,88 @@ ping -c 10 <dr_site_ip>
 # Capture post-change state for the change ticket
 symrdf query -g <dgname> > /tmp/srdf_s_postchange_$(date +%Y%m%d_%H%M).txt
 ```
+
+## Query SRDF/S Group Status
+
+`symrdf -sid <sid> -rdfg <group> query` — shows all device pairs, RDF State (Synchronized/Failed Over/etc.), and track counts.
+
+```bash
+symrdf -sid <sid> -rdfg <group> query
+```
+
+## Verify WAN Latency Acceptability
+
+Measure RTT between SRDF director ports; target <10ms. `symrdf -sid <sid> -rdfg <group> verifylink` — all paths healthy.
+
+```bash
+symrdf -sid <sid> -rdfg <group> verifylink
+```
+
+## Perform a Planned Failover (Failover)
+
+`symrdf -sid <sid> -rdfg <group> failover` — suspends writes to R1, finalizes R2, makes R2 read-write. Used for planned maintenance.
+
+```bash
+symrdf -sid <sid> -rdfg <group> failover
+```
+
+## Perform a Disaster Recovery Failover (Failover Force)
+
+`symrdf -sid <sid> -rdfg <group> failover -force` — forces R2 to become R/W without R1 acknowledgement. Use when R1 is unavailable.
+
+```bash
+symrdf -sid <sid> -rdfg <group> failover -force
+```
+
+## Fail Back After Recovery
+
+`symrdf -sid <sid> -rdfg <group> failback` — re-synchronizes from R2 back to R1 and resumes normal synchronous replication.
+
+```bash
+symrdf -sid <sid> -rdfg <group> failback
+```
+
+## Suspend Replication (Planned Maintenance)
+
+`symrdf -sid <sid> -rdfg <group> suspend` — temporarily halts replication while keeping pairs intact. Resume with `symrdf resume`.
+
+```bash
+# Suspend
+symrdf -sid <sid> -rdfg <group> suspend
+
+# Resume after maintenance
+symrdf -sid <sid> -rdfg <group> resume
+```
+
+## Check Bias Setting
+
+`symrdf -sid <sid> -rdfg <group> query | grep -i bias` — identifies which site has preferred access during a split-brain scenario.
+
+```bash
+symrdf -sid <sid> -rdfg <group> query | grep -i bias
+```
+
+## Add Devices to an Existing SRDF/S Group
+
+`symrdf addpair -sid <source-sid> -rdfg <group> -dev <new-R1-devices> -remote_dev <new-R2-devices>` then `symrdf establish` for the new pairs.
+
+```bash
+symrdf addpair -sid <source-sid> -rdfg <group> -dev <new-R1-devices> -remote_dev <new-R2-devices>
+symrdf -sid <source-sid> -rdfg <group> -dev <new-R1-devices> establish
+```
+
+## Remove Devices from SRDF/S Group
+
+`symrdf deletepair -sid <sid> -rdfg <group> -dev <devices>` — removes pair relationship. Data on R2 becomes independent.
+
+```bash
+symrdf deletepair -sid <sid> -rdfg <group> -dev <devices>
+```
+
+## Collect SRDF Performance Metrics
+
+`symstat -sid <sid> -rdfg <group> -type rdf` — shows throughput, write pending count, and latency metrics for capacity planning.
+
+```bash
+symstat -sid <sid> -rdfg <group> -type rdf
+```

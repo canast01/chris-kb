@@ -61,3 +61,43 @@ qlist services
 │  Mount Path     = File system path on MediaAgent where disk library chunks are stored                 │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Add a Client
+
+CommCell Console → Client Computers → New Client → push install or manual install → configure content path.
+
+## Create a Storage Policy
+
+Policies → Storage Policies → New → select primary disk library → add secondary copy → set retention.
+
+## Create a Subclient and Schedule
+
+Client → Agent → Subclient → configure content → assign storage policy → set Full + Incremental schedule.
+
+## Run an Ad-Hoc Backup
+
+Right-click subclient → Backup → Full or Incremental → monitor in Job Controller.
+
+## Restore Files from Backup
+
+Client → Agent → Subclient → Browse and Restore → select restore point → choose files → restore to original or alternate location.
+
+## Change a Backup Schedule
+
+Subclient → Properties → Schedules tab → modify frequency, time, or retention.
+
+## Retire a Client
+
+CommCell Console → select client → Deconfigure → Release Licence → Delete Client (after confirming all backups no longer needed).
+
+## Rotate Storage Policy Copies (Tape to Tape)
+
+CommCell Console → Storage Policies → select policy → Copies → initiate auxiliary copy job to move data to secondary media.
+
+## Check Backup SLA Compliance
+
+CommCell Console → Reports → Backup Job Summary → filter by last 24h → identify missed or failed jobs by client.
+
+## Recover the CommServe Database
+
+Boot DR CommServe (if primary lost) → restore CommServe DB from backup → reconnect MediaAgents → verify client connections restored.

@@ -60,6 +60,13 @@ Canonical LDAP/Active Directory integration reference for all KB-covered product
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Connectivity testing, service account standards, sync troubleshooting</div>
+  </a>
+</div>
 
 ---
 

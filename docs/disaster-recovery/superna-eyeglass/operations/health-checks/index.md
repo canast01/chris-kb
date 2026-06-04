@@ -79,6 +79,19 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Eyeglass service health:** browser to `https://<eyeglass-appliance>:443` — dashboard should load without errors
+2. **Configuration replication status:** Eyeglass Dashboard → Configuration Replication — check all jobs show Last Sync within expected window
+3. **Share/export sync:** Eyeglass → File Replication → check all critical SMB shares and NFS exports are synced
+4. **DR failover readiness:** Eyeglass → DR Testing → check Runbook shows Ready status for all target clusters
+5. **Quota sync:** Eyeglass → Quota Manager → check all quotas replicated to DR cluster
+6. **Local user/group sync:** Eyeglass → User and Group Replication → verify sync status
+7. **Eyeglass appliance disk space:** SSH to appliance → `df -h /` — alert if >80%
+8. **Eyeglass version and updates:** Settings → About → note version; check for available updates
+9. **Alert history:** Eyeglass → Alerts — review and acknowledge any open Critical or Warning alerts
+10. **Test failover readiness:** Eyeglass → DR Test → verify last test date; flag if untested >90 days
+
 | SyncIQ Status | Meaning | Action |
 |---|---|---|
 | running | Active sync in progress | Monitor; confirm completion |

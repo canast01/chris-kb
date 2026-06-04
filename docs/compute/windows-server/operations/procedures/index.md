@@ -287,3 +287,358 @@ Get-WinEvent -FilterHashtable @{
 | Production non-critical | Monthly (Patch Tuesday + 7 days) | Saturday 02:00–06:00 |
 | Production critical | Monthly + emergency for CVE ≥ 9.0 | Agreed maintenance window |
 | Domain Controllers | Monthly — stagger DCs | Off-hours; verify replication after each |
+
+---
+
+## Install a Windows Server Role
+
+Install a role or feature using PowerShell or Server Manager and perform any required post-install configuration.
+
+```powershell
+# List all available roles and features
+Get-WindowsFeature | Where-Object Installed -eq $false | Select-Object Name, DisplayName | Format-Table -AutoSize
+
+# Install a role — example: IIS Web Server
+Install-WindowsFeature -Name Web-Server -IncludeManagementTools
+
+# Install multiple features at once
+Install-WindowsFeature -Name Web-Server, Web-Asp-Net45, Web-Http-Logging -IncludeManagementTools
+
+# Install with all sub-features
+Install-WindowsFeature -Name AD-Domain-Services -IncludeAllSubFeature -IncludeManagementTools
+
+# Check if a reboot is required after install
+(Install-WindowsFeature -Name <FeatureName>).RestartNeeded
+```
+
+```powershell
+# Server Manager GUI alternative — launch from PowerShell
+ServerManager.exe
+
+# Verify the feature is installed
+Get-WindowsFeature -Name Web-Server | Select-Object Name, Installed, InstallState
+
+# Remove a feature
+Uninstall-WindowsFeature -Name <FeatureName> -Remove
+```
+
+Post-install steps vary by role — for example, AD DS requires `Install-ADDSForest` or `Install-ADDSDomainController` after the binaries are installed.
+
+---
+
+## Configure NTP
+
+Configure Windows Time service to synchronise with a specified NTP server. Required on member servers and especially critical on Domain Controllers.
+
+```cmd
+:: Stop the time service before reconfiguring
+net stop w32tm
+
+:: Configure manual NTP peers (use multiple servers separated by spaces)
+w32tm /config /manualpeerlist:"ntp1.example.local,0x8 ntp2.example.local,0x8" /syncfromflags:manual /reliable:yes /update
+
+:: Start the time service
+net start w32tm
+
+:: Force an immediate sync
+w32tm /resync /force
+
+:: Verify sync status
+w32tm /query /status
+w32tm /query /peers
+```
+
+```powershell
+# PowerShell equivalents
+Set-Service -Name w32tm -StartupType Automatic
+Start-Service w32tm
+
+# Check current source and offset
+w32tm /query /status | Select-String "Source|Offset|Stratum"
+
+# Sync health check — should show "Source: ntp1.example.local" and Stratum < 5
+w32tm /query /status
+```
+
+On domain-joined servers, NTP is typically managed by the DC hierarchy (PDC Emulator syncs to external NTP). Only configure manual peers on the PDC Emulator and isolated servers.
+
+---
+
+## Add a Disk and Format
+
+Bring a new disk online, initialise it, partition it, format it, and assign a drive letter.
+
+```powershell
+# List all disks and their status
+Get-Disk | Select-Object Number, FriendlyName, OperationalStatus, PartitionStyle,
+    @{N="SizeGB"; E={[math]::Round($_.Size/1GB, 1)}}
+
+# Bring the disk online (if Offline)
+Set-Disk -Number <DiskNumber> -IsOffline $false
+
+# Initialise as GPT (recommended for disks > 2 TB and all new deployments)
+Initialize-Disk -Number <DiskNumber> -PartitionStyle GPT
+
+# Create a new partition using all available space
+New-Partition -DiskNumber <DiskNumber> -UseMaximumSize -AssignDriveLetter
+
+# Format as NTFS with a label
+Format-Volume -DriveLetter <Letter> -FileSystem NTFS -NewFileSystemLabel "DataDisk" -Confirm:$false
+```
+
+```cmd
+:: diskpart alternative for scripted use
+diskpart
+list disk
+select disk <n>
+online disk
+attributes disk clear readonly
+convert gpt
+create partition primary
+format fs=ntfs label="DataDisk" quick
+assign letter=D
+exit
+```
+
+```powershell
+# Verify the new volume
+Get-PSDrive -PSProvider FileSystem | Where-Object Name -eq <Letter>
+Get-Volume -DriveLetter <Letter>
+```
+
+---
+
+## Configure Windows Firewall Rule
+
+Create an inbound or outbound firewall rule using PowerShell. Rules can target specific ports, protocols, programs, or services.
+
+```powershell
+# Allow inbound TCP on a specific port — example: HTTPS (443)
+New-NetFirewallRule `
+    -DisplayName "Allow HTTPS Inbound" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 443 `
+    -Action Allow `
+    -Profile Domain,Private
+
+# Block outbound TCP to a remote port
+New-NetFirewallRule `
+    -DisplayName "Block Telnet Outbound" `
+    -Direction Outbound `
+    -Protocol TCP `
+    -RemotePort 23 `
+    -Action Block `
+    -Profile Any
+
+# Allow a specific program
+New-NetFirewallRule `
+    -DisplayName "Allow MyApp" `
+    -Direction Inbound `
+    -Program "C:\Program Files\MyApp\myapp.exe" `
+    -Action Allow `
+    -Profile Domain
+```
+
+```powershell
+# List all custom firewall rules
+Get-NetFirewallRule | Where-Object { $_.Owner -eq $null } |
+    Select-Object DisplayName, Direction, Action, Enabled, Profile | Format-Table -AutoSize
+
+# Disable a rule by name
+Disable-NetFirewallRule -DisplayName "Allow HTTPS Inbound"
+
+# Remove a rule
+Remove-NetFirewallRule -DisplayName "Allow HTTPS Inbound"
+
+# Check rules affecting a specific port
+Get-NetFirewallRule | Get-NetFirewallPortFilter | Where-Object LocalPort -eq 443
+```
+
+Profile selection: `Domain` = domain-joined network, `Private` = home/trusted network, `Public` = untrusted network. Use `Any` only when necessary.
+
+---
+
+## Configure Windows Event Log Forwarding
+
+Set up Event Log forwarding so source computers push events to a central collector using Windows Event Forwarding (WEF).
+
+On the **collector** server:
+
+```cmd
+:: Enable WinRM on the collector
+winrm quickconfig -q
+
+:: Configure the Windows Event Collector service
+wecutil qc /q
+```
+
+On the **source** computers (via GPO or locally):
+
+```cmd
+:: Enable WinRM on source machines
+winrm quickconfig -q
+
+:: Add the collector computer account to the local Event Log Readers group
+net localgroup "Event Log Readers" "<DOMAIN>\<CollectorServer>$" /add
+```
+
+Create a subscription on the **collector**:
+
+```powershell
+# Create a subscription XML file, then import it
+wecutil cs C:\WEF\subscription.xml
+
+# List existing subscriptions
+wecutil es
+
+# Check subscription status
+wecutil gr <SubscriptionName>
+
+# Retry a subscription that is not receiving events
+wecutil rs <SubscriptionName>
+```
+
+```powershell
+# Verify events are arriving on the collector
+Get-WinEvent -LogName "ForwardedEvents" -MaxEvents 20 |
+    Select-Object TimeCreated, MachineName, Id, Message | Format-List
+```
+
+Events appear in the `ForwardedEvents` log on the collector. Use source-initiated subscriptions (pull model via GPO) for large deployments.
+
+---
+
+## Join a Domain
+
+Join a Windows Server to an Active Directory domain, with optional Organisational Unit (OU) placement.
+
+```powershell
+# Join a domain — will prompt for domain admin credentials
+Add-Computer -DomainName "corp.example.local" -Restart
+
+# Join and place the computer account in a specific OU
+Add-Computer `
+    -DomainName "corp.example.local" `
+    -OUPath "OU=Servers,OU=IT,DC=corp,DC=example,DC=local" `
+    -Credential (Get-Credential) `
+    -Restart
+
+# Join without immediately rebooting (reboot manually)
+Add-Computer `
+    -DomainName "corp.example.local" `
+    -Credential (Get-Credential) `
+    -Force
+```
+
+```powershell
+# Verify domain membership after reboot
+(Get-WmiObject Win32_ComputerSystem).Domain
+[System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+
+# Check Netlogon service is running (required for domain auth)
+Get-Service -Name Netlogon | Select-Object Name, Status
+
+# Confirm the computer account exists in AD (run from a DC or AD tools machine)
+Get-ADComputer -Identity <ComputerName> | Select-Object Name, DistinguishedName, Enabled
+```
+
+Pre-requisites: DNS must resolve the domain name, time must be within 5 minutes of the DC (Kerberos requirement), and the joining account must have permissions to create computer objects in the target OU.
+
+---
+
+## Apply Windows Updates
+
+Install Windows Updates using the PSWindowsUpdate PowerShell module or WSUS, and verify the system state after patching.
+
+```powershell
+# Install PSWindowsUpdate module if not present
+Install-Module -Name PSWindowsUpdate -Force -Scope AllUsers -Confirm:$false
+
+# List available updates without installing
+Get-WindowsUpdate
+
+# Install all available updates and auto-reboot if required
+Install-WindowsUpdate -AcceptAll -AutoReboot
+
+# Install security updates only
+Install-WindowsUpdate -Category "Security Updates" -AcceptAll -AutoReboot
+
+# Install a specific KB
+Install-WindowsUpdate -KBArticleID KB5034440 -AcceptAll
+
+# Check pending reboot state
+Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+```
+
+```powershell
+# WSUS / built-in Windows Update — force a scan and install cycle
+UsoClient StartScan
+UsoClient StartDownload
+UsoClient StartInstall
+
+# List recently installed hotfixes
+Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10 HotFixID, Description, InstalledOn
+
+# Verify OS build after patching
+(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").CurrentBuild
+(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").UBR
+```
+
+```powershell
+# Post-patch: confirm critical services are still running
+Get-Service -Name W32tm, WinRM, EventLog, Netlogon -ErrorAction SilentlyContinue |
+    Select-Object Name, Status
+
+# Check for new failed auto-start services
+Get-Service | Where-Object { $_.StartType -eq "Automatic" -and $_.Status -ne "Running" }
+```
+
+---
+
+## Configure Remote Desktop (RDP)
+
+Enable Remote Desktop Protocol on a Windows Server, configure the firewall, and enforce Network Level Authentication (NLA).
+
+```powershell
+# Enable RDP by clearing the deny flag in the registry
+Set-ItemProperty `
+    -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' `
+    -Name "fDenyTSConnections" `
+    -Value 0
+
+# Enforce Network Level Authentication (NLA) — required for security
+Set-ItemProperty `
+    -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' `
+    -Name "UserAuthentication" `
+    -Value 1
+
+# Allow RDP through Windows Firewall
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+# Or create the rule explicitly:
+New-NetFirewallRule `
+    -DisplayName "Allow RDP Inbound" `
+    -Direction Inbound `
+    -Protocol TCP `
+    -LocalPort 3389 `
+    -Action Allow `
+    -Profile Domain,Private
+```
+
+```powershell
+# Verify RDP is enabled
+(Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server').fDenyTSConnections
+# 0 = RDP enabled, 1 = RDP disabled
+
+# Check NLA setting
+(Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp').UserAuthentication
+# 1 = NLA required (correct), 0 = NLA not required (insecure)
+
+# Restart the Remote Desktop Services service to apply changes
+Restart-Service -Name TermService -Force
+
+# Confirm the service is listening on port 3389
+Get-NetTCPConnection -LocalPort 3389 | Select-Object LocalAddress, LocalPort, State
+```
+
+Restrict RDP access to specific IP ranges using a firewall rule `-RemoteAddress` parameter. Disable RDP on servers that do not require it. Consider using Windows Admin Center or SSH as alternatives for server management.

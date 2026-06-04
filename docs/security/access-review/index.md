@@ -57,6 +57,13 @@ Periodic access reviews ensure that users and service accounts hold only the per
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Review workflows, AD exports, stale account cleanup, audit evidence</div>
+  </a>
+</div>
 
 ## Review Schedule
 

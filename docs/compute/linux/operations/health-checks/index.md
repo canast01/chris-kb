@@ -5,6 +5,52 @@
 Routine checks, service validation, and status verification.
 </div>
 
+## Run This Routine
+
+Run these commands in sequence at the start of any health check or before making changes to a Linux server.
+
+```bash
+# 1. OS version and uptime
+cat /etc/os-release && uptime
+
+# 2. CPU and load average
+top -bn1 | head -5
+# Or use vmstat for a 3-sample view:
+vmstat 1 3
+
+# 3. Memory usage
+free -h
+
+# 4. Disk usage (exclude tmpfs mounts)
+df -h --output=source,size,used,avail,pcent | grep -v tmpfs
+
+# 5. Filesystem errors in kernel ring buffer
+dmesg | grep -i "error\|fail\|fault" | tail -20
+
+# 6. Failed systemd services
+systemctl --failed
+
+# 7. Network interface status and routing
+ip addr show && ip route show
+
+# 8. Recent login failures
+grep "Failed password" /var/log/secure | tail -10
+# Ubuntu/Debian:
+# grep "Failed password" /var/log/auth.log | tail -10
+
+# 9. Open listening ports
+ss -tlnp
+
+# 10. Pending security updates
+yum check-update --security 2>/dev/null | wc -l
+# Ubuntu/Debian:
+# apt list --upgradable 2>/dev/null | wc -l
+```
+
+A healthy server returns: `systemctl --failed` = 0 units, all filesystems below 85% used, no recent kernel errors, load average below CPU count.
+
+---
+
 ## Health Check Flow
 
 ```mermaid
@@ -358,3 +404,202 @@ journalctl --vacuum-size=500M
 # SystemMaxUse=2G
 systemctl restart systemd-journald
 ```
+
+---
+
+## CPU Health
+
+Commands to assess CPU utilisation and identify processes causing high load.
+
+```bash
+# Load average vs. CPU count — load > nCPUs indicates saturation
+nproc
+uptime
+
+# Snapshot of CPU usage by process
+top -bn1 | head -20
+
+# Per-CPU utilisation over 3 samples
+mpstat -P ALL 1 3
+
+# Top CPU-consuming processes
+ps aux --sort=-%cpu | head -15
+
+# Processor interrupt and context-switch rates
+vmstat 1 5
+```
+
+What to look for:
+- Load average 1-minute value consistently above `nproc` output indicates CPU saturation.
+- `%iowait` above 20% in `mpstat` output suggests disk I/O is blocking CPU.
+- Single-core pinned at 100% may indicate a runaway process or missing multi-threading.
+- `%steal` above 5% on VMs indicates the hypervisor is overcommitting CPU resources.
+
+---
+
+## Memory Health
+
+Commands to assess memory availability and detect Out-of-Memory (OOM) events.
+
+```bash
+# Summary: total / used / free / available
+free -h
+
+# Detailed breakdown from kernel
+cat /proc/meminfo | grep -E "MemTotal|MemFree|MemAvailable|SwapTotal|SwapFree|Cached|Buffers"
+
+# Top memory-consuming processes
+ps aux --sort=-%mem | head -15
+
+# OOM kill events
+journalctl -k --since "24 hours ago" | grep -i "oom\|killed process\|out of memory"
+dmesg | grep -i "out of memory" | tail -10
+
+# Swap usage — high swap usage with low available RAM = memory pressure
+swapon --show
+```
+
+What to look for:
+- `MemAvailable` below 10% of `MemTotal` indicates memory pressure.
+- Any OOM kill events in `dmesg` require immediate investigation — a process was terminated by the kernel.
+- Swap usage above 20% of swap total on a system with low available RAM indicates the system is swapping heavily.
+- Large `Cached` value is normal and healthy — Linux uses free memory as page cache.
+
+---
+
+## Disk and Filesystem Health
+
+Commands to assess filesystem usage, I/O performance, and detect disk errors.
+
+```bash
+# Filesystem usage — flag anything above 85%
+df -h | awk 'NR==1 || $5+0 > 80'
+
+# Inode usage — can fill independently of block usage
+df -i | awk 'NR==1 || $5+0 > 80'
+
+# I/O statistics — await (ms) and utilisation per device
+iostat -xz 1 3
+
+# Disk errors in kernel ring buffer
+dmesg | grep -iE "error|failed|reset|timeout|I/O error" | grep -iE "sd[a-z]|nvme|dm-" | tail -20
+
+# Large files or directories consuming unexpected space
+du -sh /var/log/* 2>/dev/null | sort -h | tail -10
+du -sh /tmp/* 2>/dev/null | sort -h | tail -10
+```
+
+What to look for:
+- Any filesystem above 85% used requires action — logs and application data will fail to write at 100%.
+- `await` above 20ms in `iostat` output indicates disk latency; above 100ms is critical.
+- `%util` above 80% in `iostat` means the device is saturated.
+- Hardware errors in `dmesg` (`I/O error`, `blk_update_request`, `reset`) may indicate a failing disk — escalate immediately.
+- Inode exhaustion (`df -i` shows 100%) prevents file creation even when block space is available.
+
+---
+
+## Network Health
+
+Commands to verify interface state, connectivity, and detect errors or unexpected connections.
+
+```bash
+# Interface status and IP addresses
+ip -br addr
+ip link show
+
+# Routing table
+ip route show
+
+# Active listening ports
+ss -tlnp
+
+# Interface error and drop counters
+ip -s link show
+
+# Connection counts by state
+ss -s
+
+# Recent network-related kernel events
+dmesg | grep -iE "link is down|link is up|reset adapter|carrier" | tail -10
+
+# DNS resolution test
+dig corp.local
+```
+
+What to look for:
+- Any interface showing `DOWN` state that should be `UP` requires immediate investigation.
+- Non-zero `RX errors` or `TX errors` in `ip -s link` output indicate NIC or cabling issues.
+- Unexpected listening ports in `ss -tlnp` may indicate an unauthorized service.
+- High `CLOSE-WAIT` or `TIME-WAIT` connection counts in `ss -s` may indicate application connection handling issues.
+- `link is down` messages in `dmesg` that are not expected (scheduled maintenance) indicate network instability.
+
+---
+
+## Service Health
+
+Commands to check the state of systemd services and review recent service failures.
+
+```bash
+# Failed services — should return 0 in a healthy state
+systemctl --failed
+
+# Check a specific service
+systemctl status <service-name>
+
+# Services that auto-started unexpectedly (restart loops)
+journalctl --since "24 hours ago" | grep "Start request repeated" | tail -10
+
+# Recent service stop/start events
+journalctl --since "1 hour ago" | grep -iE "started|stopped|failed|killed" | grep -v "^--" | tail -20
+
+# Services enabled at boot
+systemctl list-unit-files --type=service --state=enabled
+```
+
+What to look for:
+- Any unit in `systemctl --failed` output requires immediate investigation and resolution.
+- Services entering a restart loop (`Start request repeated too quickly`) indicate a configuration or dependency problem.
+- `Killed` entries in the journal often indicate OOM kills — correlate with memory health checks.
+- Services that were `Active: active (running)` and are now `inactive (dead)` without a scheduled stop.
+
+---
+
+## Security Health
+
+Commands to verify security controls, access policy, and detect suspicious activity.
+
+```bash
+# SELinux enforcement status (RHEL/AlmaLinux)
+getenforce
+sestatus | grep -E "mode|status"
+
+# AppArmor status (Ubuntu/Debian)
+aa-status 2>/dev/null | head -5
+
+# Recent SELinux denials
+ausearch -m avc --start recent 2>/dev/null | tail -20
+
+# Failed SSH login attempts
+grep "Failed password" /var/log/secure | tail -20
+# Ubuntu: grep "Failed password" /var/log/auth.log | tail -20
+
+# Currently logged-in users
+who
+w
+
+# Recent sudo usage
+journalctl -u sudo --since "24 hours ago" | tail -20
+
+# Open ports — verify all are expected
+ss -tlnp
+
+# Check for accounts with empty passwords
+awk -F: '($2 == "") {print $1}' /etc/shadow 2>/dev/null
+```
+
+What to look for:
+- SELinux should be `Enforcing` on production RHEL systems — `Permissive` means policy is not being enforced.
+- Repeated failed SSH logins from the same IP indicate a brute-force attack — consider `fail2ban` or firewall block.
+- Unexpected users in `who` output or logins at unusual hours warrant investigation.
+- Any account with an empty password in `/etc/shadow` is a critical security misconfiguration.
+- Unexpected listening ports may indicate a backdoor or misconfigured service.
