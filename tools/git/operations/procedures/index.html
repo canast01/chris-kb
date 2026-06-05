@@ -3308,6 +3308,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Repository
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clone-a-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clone a Repository
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-switch-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Switch Branches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit-and-push-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commit and Push Changes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-merge-request-pull-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Merge Request / Pull Request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resolve-a-merge-conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve a Merge Conflict
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revert-a-bad-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revert a Bad Commit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manage-access-tokens-and-deploy-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manage Access Tokens and Deploy Keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3642,6 +3738,107 @@
 <a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>git<span class="w"> </span>fsck<span class="w"> </span>--no-reflogs<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;dangling commit&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>git<span class="w"> </span>stash<span class="w"> </span>show<span class="w"> </span><span class="o">{}</span>
 </code></pre></div></p>
+<hr />
+<h2 id="create-a-repository">Create a Repository<a class="headerlink" href="#create-a-repository" title="Permanent link">&para;</a></h2>
+<p>Set up a new repository in the UI or locally and connect to a remote.</p>
+<p>GitLab/GitHub UI: navigate to <strong>New Repository</strong> → set name, visibility (public / private / internal), optionally initialise with a README → copy the clone URL.</p>
+<p>CLI (local init then push):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>init<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>&lt;url&gt;
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>git<span class="w"> </span>add<span class="w"> </span>README.md
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;init&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div>
+<hr />
+<h2 id="clone-a-repository">Clone a Repository<a class="headerlink" href="#clone-a-repository" title="Permanent link">&para;</a></h2>
+<p>Download a copy of an existing repository to a local working directory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># HTTPS clone (uses username + token)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://&lt;host&gt;/&lt;owner&gt;/&lt;repo&gt;.git
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># SSH clone (uses SSH key)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>git<span class="w"> </span>clone<span class="w"> </span>git@&lt;host&gt;:&lt;owner&gt;/&lt;repo&gt;.git
+</code></pre></div>
+<p>After cloning, verify <code>git status</code> shows a clean working tree before making changes.</p>
+<hr />
+<h2 id="create-and-switch-branches">Create and Switch Branches<a class="headerlink" href="#create-and-switch-branches" title="Permanent link">&para;</a></h2>
+<p>Create a feature branch from the latest main and push it to the remote to enable pull requests.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Create and switch (legacy syntax)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/my-branch
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Create and switch (modern syntax)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>feature/my-branch
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Push the new branch and set upstream tracking</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/my-branch
+</code></pre></div>
+<p>Always branch from an up-to-date main: <code>git switch main &amp;&amp; git pull</code> before creating the branch.</p>
+<hr />
+<h2 id="commit-and-push-changes">Commit and Push Changes<a class="headerlink" href="#commit-and-push-changes" title="Permanent link">&para;</a></h2>
+<p>Stage, commit, and push changes to the remote branch.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Stage specific files</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>git<span class="w"> </span>add<span class="w"> </span>&lt;file1&gt;<span class="w"> </span>&lt;file2&gt;
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Stage interactively (review each hunk)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>git<span class="w"> </span>add<span class="w"> </span>-p
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Commit with a descriptive message</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix: handle null pointer on startup&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Push to the tracked remote branch</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>git<span class="w"> </span>push
+</code></pre></div>
+<p>Write commit messages in the imperative mood and reference the issue or ticket number where applicable.</p>
+<hr />
+<h2 id="create-a-merge-request-pull-request">Create a Merge Request / Pull Request<a class="headerlink" href="#create-a-merge-request-pull-request" title="Permanent link">&para;</a></h2>
+<p>Open a review request from a pushed feature branch.</p>
+<p><strong>GitLab:</strong> Push branch → navigate to the repository → click <strong>New Merge Request</strong> → set source branch and target branch → assign a reviewer → add a description linking the issue → <strong>Submit</strong>.</p>
+<p><strong>GitHub:</strong> Navigate to <strong>Pull Requests &gt; New Pull Request</strong> → compare branches → fill in title and description → assign reviewers → <strong>Create Pull Request</strong>.</p>
+<p>Ensure CI passes before requesting review.</p>
+<hr />
+<h2 id="resolve-a-merge-conflict">Resolve a Merge Conflict<a class="headerlink" href="#resolve-a-merge-conflict" title="Permanent link">&para;</a></h2>
+<p>Conflicts occur when two branches modify the same lines. Resolve them before the merge or rebase can complete.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Fetch latest and attempt merge</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>git<span class="w"> </span>fetch
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>git<span class="w"> </span>merge<span class="w"> </span>origin/main
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Git marks conflicting files — open each and look for conflict markers:</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># your changes</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># =======</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># incoming changes</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># &gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Edit the file to keep the correct content, remove the markers, then:</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>git<span class="w"> </span>add<span class="w"> </span>&lt;resolved-file&gt;
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>git<span class="w"> </span>commit
+</code></pre></div>
+<hr />
+<h2 id="revert-a-bad-commit">Revert a Bad Commit<a class="headerlink" href="#revert-a-bad-commit" title="Permanent link">&para;</a></h2>
+<p>Choose the approach based on whether the bad commit has already been pushed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Safe revert — creates a new commit that undoes the changes (use after push)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>git<span class="w"> </span>revert<span class="w"> </span>&lt;commit-sha&gt;
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>git<span class="w"> </span>push
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Hard reset — discards the commit locally (use only before push)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>&lt;commit-sha&gt;
+</code></pre></div>
+<p>Never hard-reset a commit that others have already pulled from a shared branch.</p>
+<hr />
+<h2 id="manage-access-tokens-and-deploy-keys">Manage Access Tokens and Deploy Keys<a class="headerlink" href="#manage-access-tokens-and-deploy-keys" title="Permanent link">&para;</a></h2>
+<p>Control programmatic access to repositories via tokens and deploy keys.</p>
+<p><strong>GitLab personal access token:</strong></p>
+<ol>
+<li><strong>Settings &gt; Access Tokens &gt; Add new token</strong> → set a name, expiry date, and required scopes (e.g., <code>read_repository</code>, <code>write_repository</code>).</li>
+<li>Copy the token immediately — it is not shown again.</li>
+<li>Store in a secrets manager; never commit to a repository.</li>
+</ol>
+<p><strong>Deploy keys (read-only CI access):</strong></p>
+<ol>
+<li><strong>Settings &gt; Repository &gt; Deploy Keys &gt; Add Deploy Key</strong> → paste the public key from the CI service.</li>
+<li>Enable <strong>Write access</strong> only if the CI pipeline needs to push (e.g., auto-tagging).</li>
+<li>Rotate tokens and keys on a schedule or immediately on suspected compromise.</li>
+</ol>
 
 
 

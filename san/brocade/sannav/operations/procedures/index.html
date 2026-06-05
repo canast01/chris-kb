@@ -3409,6 +3409,83 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#add-a-fabric-to-sannav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Fabric to SANnav
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discover-or-rediscover-switches-in-a-fabric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discover or Rediscover Switches in a Fabric
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-a-fabric-health-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate a Fabric Health Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-maps-alert-thresholds-and-email-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure MAPS Alert Thresholds and Email Notifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-a-performance-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate a Performance Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-fabric-topology-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Fabric Topology Diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-sannav-software" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade SANnav Software
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3674,6 +3751,81 @@
 <a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">                                                                                                       </span>│
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<hr />
+<h2 id="add-a-fabric-to-sannav">Add a Fabric to SANnav<a class="headerlink" href="#add-a-fabric-to-sannav" title="Permanent link">&para;</a></h2>
+<p>Registering a new fabric allows SANnav to discover, monitor, and manage all switches in that fabric from a single pane of glass.</p>
+<ol>
+<li>Log in to SANnav and navigate to <strong>Fabric Management &gt; Add Fabric</strong>.</li>
+<li>Enter the seed switch IP address (principal switch for the target fabric).</li>
+<li>Provide SNMPv3 credentials (auth and priv) and SSH credentials for the seed switch.</li>
+<li>Click <strong>Discover</strong> to initiate fabric discovery.</li>
+<li>Wait for the topology view to populate — progress is shown in <strong>Monitor &gt; Jobs &gt; Fabric Discovery</strong>.</li>
+<li>Confirm all expected switches appear and ISL links are green before saving.</li>
+</ol>
+<hr />
+<h2 id="discover-or-rediscover-switches-in-a-fabric">Discover or Rediscover Switches in a Fabric<a class="headerlink" href="#discover-or-rediscover-switches-in-a-fabric" title="Permanent link">&para;</a></h2>
+<p>Use this when new switches are added to an existing fabric or when SANnav shows stale or missing topology data.</p>
+<ol>
+<li>In SANnav, navigate to <strong>SAN &gt; Fabrics</strong> and select the relevant fabric.</li>
+<li>Click <strong>Actions &gt; Discover</strong> (for a new fabric) or <strong>Actions &gt; Rediscover</strong> (for an existing fabric).</li>
+<li>Wait for the discovery job to complete.</li>
+<li>Navigate to <strong>SAN &gt; Fabrics &gt; [Fabric Name] &gt; Switches</strong> and verify all switches appear in the topology.</li>
+<li>Investigate any switch that remains in <strong>Unmanaged</strong> state — common causes are credential mismatch, firewall blocking SSH/SNMP, or unreachable management IP.</li>
+</ol>
+<hr />
+<h2 id="generate-a-fabric-health-report">Generate a Fabric Health Report<a class="headerlink" href="#generate-a-fabric-health-report" title="Permanent link">&para;</a></h2>
+<p>Use this for routine health reviews or before planned changes to establish a baseline.</p>
+<ol>
+<li>In SANnav, navigate to <strong>Reports &gt; Fabric Health</strong>.</li>
+<li>Select the target fabric and set the time range (e.g., last 7 days).</li>
+<li>Click <strong>Generate</strong>.</li>
+<li>Review the report for port errors (CRC, loss-of-sync), ISL utilisation percentages, and any offline ports.</li>
+<li>Export as PDF for change record attachment or CSV for trend analysis.</li>
+</ol>
+<hr />
+<h2 id="configure-maps-alert-thresholds-and-email-notifications">Configure MAPS Alert Thresholds and Email Notifications<a class="headerlink" href="#configure-maps-alert-thresholds-and-email-notifications" title="Permanent link">&para;</a></h2>
+<p>MAPS (Monitoring and Alerting Policy Suite) drives proactive alerting on port errors, BB credit starvation, and ISL saturation.</p>
+<ol>
+<li>In SANnav, navigate to <strong>Monitoring &gt; MAPS Policies</strong>.</li>
+<li>Select the active policy for the target fabric (e.g., <code>dflt_aggressive_policy</code>).</li>
+<li>Adjust thresholds for port errors, BB credits, and ISL utilisation to match site standards.</li>
+<li>Navigate to <strong>Notifications</strong> within the policy and configure the SMTP relay (host, port, sender address) and recipient list.</li>
+<li>Click <strong>Test Alert</strong> to confirm email delivery.</li>
+<li>Save and apply the updated policy to the fabric.</li>
+</ol>
+<hr />
+<h2 id="generate-a-performance-report">Generate a Performance Report<a class="headerlink" href="#generate-a-performance-report" title="Permanent link">&para;</a></h2>
+<p>Use this to identify throughput bottlenecks, IOPS hotspots, or latency outliers across the fabric.</p>
+<ol>
+<li>In SANnav, navigate to <strong>Reports &gt; Performance</strong>.</li>
+<li>Select the switches or individual ports to include in the report.</li>
+<li>Set the metric to report on: port throughput (MB/s), IOPS, or latency (ms).</li>
+<li>Set the time range for the report.</li>
+<li>Click <strong>Generate</strong>.</li>
+<li>Review peak vs. average values — sustained peak throughput approaching port speed indicates saturation.</li>
+<li>Export the report as CSV for trend tracking or PDF for stakeholder review.</li>
+</ol>
+<hr />
+<h2 id="export-fabric-topology-diagram">Export Fabric Topology Diagram<a class="headerlink" href="#export-fabric-topology-diagram" title="Permanent link">&para;</a></h2>
+<p>Use this to produce an up-to-date fabric topology diagram for documentation, change records, or incident review.</p>
+<ol>
+<li>In SANnav, navigate to <strong>Topology</strong> and select the target fabric.</li>
+<li>Click <strong>Export</strong>.</li>
+<li>Choose the output format: <strong>PNG</strong> for document embedding or <strong>SVG</strong> for scalable diagrams.</li>
+<li>Save the exported file and attach to the relevant documentation or change record.</li>
+</ol>
+<hr />
+<h2 id="upgrade-sannav-software">Upgrade SANnav Software<a class="headerlink" href="#upgrade-sannav-software" title="Permanent link">&para;</a></h2>
+<p>Upgrade SANnav during a scheduled maintenance window — fabric management is unavailable while the upgrade applies.</p>
+<ol>
+<li>In SANnav, navigate to <strong>Administration &gt; Software Management</strong>.</li>
+<li>Click <strong>Check for Updates</strong> to retrieve available upgrade bundles from the Brocade update server.</li>
+<li>Download the upgrade bundle (or upload a locally downloaded bundle if the SANnav VM has no internet access).</li>
+<li>Schedule the upgrade for an approved maintenance window and notify stakeholders.</li>
+<li>Apply the upgrade — SANnav services will restart automatically.</li>
+<li>Verify all SANnav services have resumed: check <strong>Administration &gt; System Status</strong>.</li>
+<li>Confirm all fabrics have reconnected and topology data is current in <strong>SAN &gt; Fabrics</strong>.</li>
+</ol>
 
 
 
