@@ -175,3 +175,149 @@ git stash drop stash@{2}
 git fsck --no-reflogs | grep "dangling commit" | awk '{print $3}' | \
   xargs -I{} git stash show {}
 ```
+
+---
+
+## Create a Repository
+
+Set up a new repository in the UI or locally and connect to a remote.
+
+GitLab/GitHub UI: navigate to **New Repository** → set name, visibility (public / private / internal), optionally initialise with a README → copy the clone URL.
+
+CLI (local init then push):
+
+```bash
+git init <name>
+cd <name>
+git remote add origin <url>
+git add README.md
+git commit -m "init"
+git push -u origin main
+```
+
+---
+
+## Clone a Repository
+
+Download a copy of an existing repository to a local working directory.
+
+```bash
+# HTTPS clone (uses username + token)
+git clone https://<host>/<owner>/<repo>.git
+
+# SSH clone (uses SSH key)
+git clone git@<host>:<owner>/<repo>.git
+```
+
+After cloning, verify `git status` shows a clean working tree before making changes.
+
+---
+
+## Create and Switch Branches
+
+Create a feature branch from the latest main and push it to the remote to enable pull requests.
+
+```bash
+# Create and switch (legacy syntax)
+git checkout -b feature/my-branch
+
+# Create and switch (modern syntax)
+git switch -c feature/my-branch
+
+# Push the new branch and set upstream tracking
+git push -u origin feature/my-branch
+```
+
+Always branch from an up-to-date main: `git switch main && git pull` before creating the branch.
+
+---
+
+## Commit and Push Changes
+
+Stage, commit, and push changes to the remote branch.
+
+```bash
+# Stage specific files
+git add <file1> <file2>
+
+# Stage interactively (review each hunk)
+git add -p
+
+# Commit with a descriptive message
+git commit -m "fix: handle null pointer on startup"
+
+# Push to the tracked remote branch
+git push
+```
+
+Write commit messages in the imperative mood and reference the issue or ticket number where applicable.
+
+---
+
+## Create a Merge Request / Pull Request
+
+Open a review request from a pushed feature branch.
+
+**GitLab:** Push branch → navigate to the repository → click **New Merge Request** → set source branch and target branch → assign a reviewer → add a description linking the issue → **Submit**.
+
+**GitHub:** Navigate to **Pull Requests > New Pull Request** → compare branches → fill in title and description → assign reviewers → **Create Pull Request**.
+
+Ensure CI passes before requesting review.
+
+---
+
+## Resolve a Merge Conflict
+
+Conflicts occur when two branches modify the same lines. Resolve them before the merge or rebase can complete.
+
+```bash
+# Fetch latest and attempt merge
+git fetch
+git merge origin/main
+
+# Git marks conflicting files — open each and look for conflict markers:
+# <<<<<<< HEAD
+# your changes
+# =======
+# incoming changes
+# >>>>>>> origin/main
+
+# Edit the file to keep the correct content, remove the markers, then:
+git add <resolved-file>
+git commit
+```
+
+---
+
+## Revert a Bad Commit
+
+Choose the approach based on whether the bad commit has already been pushed.
+
+```bash
+# Safe revert — creates a new commit that undoes the changes (use after push)
+git revert <commit-sha>
+git push
+
+# Hard reset — discards the commit locally (use only before push)
+git reset --hard <commit-sha>
+```
+
+Never hard-reset a commit that others have already pulled from a shared branch.
+
+---
+
+## Manage Access Tokens and Deploy Keys
+
+Control programmatic access to repositories via tokens and deploy keys.
+
+**GitLab personal access token:**
+
+1. **Settings > Access Tokens > Add new token** → set a name, expiry date, and required scopes (e.g., `read_repository`, `write_repository`).
+2. Copy the token immediately — it is not shown again.
+3. Store in a secrets manager; never commit to a repository.
+
+**Deploy keys (read-only CI access):**
+
+1. **Settings > Repository > Deploy Keys > Add Deploy Key** → paste the public key from the CI service.
+2. Enable **Write access** only if the CI pipeline needs to push (e.g., auto-tagging).
+3. Rotate tokens and keys on a schedule or immediately on suspected compromise.

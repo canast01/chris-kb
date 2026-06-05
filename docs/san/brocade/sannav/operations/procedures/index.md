@@ -82,3 +82,92 @@ snmpconfig --show snmpv3
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Add a Fabric to SANnav
+
+Registering a new fabric allows SANnav to discover, monitor, and manage all switches in that fabric from a single pane of glass.
+
+1. Log in to SANnav and navigate to **Fabric Management > Add Fabric**.
+2. Enter the seed switch IP address (principal switch for the target fabric).
+3. Provide SNMPv3 credentials (auth and priv) and SSH credentials for the seed switch.
+4. Click **Discover** to initiate fabric discovery.
+5. Wait for the topology view to populate — progress is shown in **Monitor > Jobs > Fabric Discovery**.
+6. Confirm all expected switches appear and ISL links are green before saving.
+
+---
+
+## Discover or Rediscover Switches in a Fabric
+
+Use this when new switches are added to an existing fabric or when SANnav shows stale or missing topology data.
+
+1. In SANnav, navigate to **SAN > Fabrics** and select the relevant fabric.
+2. Click **Actions > Discover** (for a new fabric) or **Actions > Rediscover** (for an existing fabric).
+3. Wait for the discovery job to complete.
+4. Navigate to **SAN > Fabrics > [Fabric Name] > Switches** and verify all switches appear in the topology.
+5. Investigate any switch that remains in **Unmanaged** state — common causes are credential mismatch, firewall blocking SSH/SNMP, or unreachable management IP.
+
+---
+
+## Generate a Fabric Health Report
+
+Use this for routine health reviews or before planned changes to establish a baseline.
+
+1. In SANnav, navigate to **Reports > Fabric Health**.
+2. Select the target fabric and set the time range (e.g., last 7 days).
+3. Click **Generate**.
+4. Review the report for port errors (CRC, loss-of-sync), ISL utilisation percentages, and any offline ports.
+5. Export as PDF for change record attachment or CSV for trend analysis.
+
+---
+
+## Configure MAPS Alert Thresholds and Email Notifications
+
+MAPS (Monitoring and Alerting Policy Suite) drives proactive alerting on port errors, BB credit starvation, and ISL saturation.
+
+1. In SANnav, navigate to **Monitoring > MAPS Policies**.
+2. Select the active policy for the target fabric (e.g., `dflt_aggressive_policy`).
+3. Adjust thresholds for port errors, BB credits, and ISL utilisation to match site standards.
+4. Navigate to **Notifications** within the policy and configure the SMTP relay (host, port, sender address) and recipient list.
+5. Click **Test Alert** to confirm email delivery.
+6. Save and apply the updated policy to the fabric.
+
+---
+
+## Generate a Performance Report
+
+Use this to identify throughput bottlenecks, IOPS hotspots, or latency outliers across the fabric.
+
+1. In SANnav, navigate to **Reports > Performance**.
+2. Select the switches or individual ports to include in the report.
+3. Set the metric to report on: port throughput (MB/s), IOPS, or latency (ms).
+4. Set the time range for the report.
+5. Click **Generate**.
+6. Review peak vs. average values — sustained peak throughput approaching port speed indicates saturation.
+7. Export the report as CSV for trend tracking or PDF for stakeholder review.
+
+---
+
+## Export Fabric Topology Diagram
+
+Use this to produce an up-to-date fabric topology diagram for documentation, change records, or incident review.
+
+1. In SANnav, navigate to **Topology** and select the target fabric.
+2. Click **Export**.
+3. Choose the output format: **PNG** for document embedding or **SVG** for scalable diagrams.
+4. Save the exported file and attach to the relevant documentation or change record.
+
+---
+
+## Upgrade SANnav Software
+
+Upgrade SANnav during a scheduled maintenance window — fabric management is unavailable while the upgrade applies.
+
+1. In SANnav, navigate to **Administration > Software Management**.
+2. Click **Check for Updates** to retrieve available upgrade bundles from the Brocade update server.
+3. Download the upgrade bundle (or upload a locally downloaded bundle if the SANnav VM has no internet access).
+4. Schedule the upgrade for an approved maintenance window and notify stakeholders.
+5. Apply the upgrade — SANnav services will restart automatically.
+6. Verify all SANnav services have resumed: check **Administration > System Status**.
+7. Confirm all fabrics have reconnected and topology data is current in **SAN > Fabrics**.

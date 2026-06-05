@@ -67,6 +67,33 @@ Reusable health checks for virtualization operations.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+Run these steps at the start of any virtualization operations shift or before a planned change window. These are cross-product checks — for product-specific detail, see each product's own health-checks page.
+
+1. **vCenter connectivity** — confirm the UI is reachable and returning HTTP 200:
+   ```bash
+   curl -sk -o /dev/null -w "%{http_code}" https://<vcenter>/ui
+   ```
+2. **ESXi host count** — vCenter → **Hosts and Clusters** → verify expected host count; investigate any hosts showing as disconnected or not responding.
+3. **vSAN health** — vCenter → **Cluster → Monitor → vSAN Health** → all checks should show green; flag any WARN or ERROR status and check the detail pane for the affected component.
+4. **NSX Manager cluster** — confirm all NSX Manager nodes report as Up:
+   ```bash
+   curl -sk -u 'admin:pw' https://<nsx>/api/v1/cluster/status
+   ```
+5. **VM alarm count** — vCenter → **Alarms → Active Alarms** → review count by severity; investigate any P1 (red) or P2 (yellow) alarms before proceeding with any change work.
+6. **DRS/HA status** — vCenter → **Cluster → Summary** → verify HA is Enabled with no admission control failures, and DRS is Enabled and not in manual-override mode.
+7. **vMotion queue** — vCenter → **Recent Tasks** → filter for vMotion tasks; any task running longer than 30 minutes indicates a stalled migration that needs investigation.
+8. **Storage alarm** — vCenter → **Datastores** → check that no datastore exceeds 85% used capacity; flag any datastore in maintenance mode that is not expected to be there.
+9. **Backup job status** — cross-check with Veeam or Commvault: all jobs from the last 24 hours should show **Completed** or **Completed with Warnings** (investigate warnings); any **Failed** job requires immediate follow-up before changes proceed.
+10. **Certificate expiry** — check the vCenter certificate expiry and flag if fewer than 60 days remain:
+    ```bash
+    openssl s_client -connect <vcenter>:443 </dev/null 2>/dev/null | openssl x509 -noout -dates
+    ```
+
+---
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="daily-health-check/">

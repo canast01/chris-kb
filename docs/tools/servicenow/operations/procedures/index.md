@@ -326,3 +326,103 @@ for INC in $INCIDENTS; do
     -d "{\"work_notes\": \"${NOTE}\"}"
 done
 ```
+
+---
+
+## Create an Incident
+
+Log a new incident when a service disruption or degradation is detected or reported.
+
+1. Navigate to **Incident > New** in the ServiceNow menu.
+2. Set **Category** and **Subcategory** to classify the issue type.
+3. Set **Impact** (scope of users affected) and **Urgency** (speed of business impact required) — these drive the calculated Priority.
+4. Set the **Assignment Group** to route the ticket to the correct team.
+5. Enter a clear short description and detailed description of the issue.
+6. Click **Submit** and note the INC number for tracking and communication.
+
+---
+
+## Escalate an Incident
+
+Escalate when the assigned team is unable to resolve within the SLA threshold or when business impact increases.
+
+1. Open the INC record.
+2. Change the **Assignment Group** to the escalation team (e.g., a senior ops or vendor team).
+3. Increase the **Priority** level if the impact has grown.
+4. Add a **Work Note** documenting the escalation reason, actions taken to date, and who was notified.
+5. Notify the on-call engineer or escalation contact via chat or phone — do not rely on the ticket notification alone.
+
+---
+
+## Create a Change Request
+
+Raise a Change Request before making any modification to production infrastructure or services.
+
+1. Navigate to **Change > Create New**.
+2. Select the change type: **Normal** (CAB approval required), **Standard** (pre-approved template), or **Emergency** (expedited approval path).
+3. Fill in: short description, full description, implementation plan, back-out plan, and risk assessment.
+4. Set planned start and end dates, assignment group, and impacted CIs.
+5. Submit the record — it enters the approval workflow automatically based on change type.
+
+---
+
+## Approve or Reject a Change
+
+Review and action pending change approvals assigned to you or your group.
+
+1. Navigate to **My Approvals** in the ServiceNow menu.
+2. Open the change record awaiting approval.
+3. Review the description, implementation plan, back-out plan, and risk rating.
+4. Click **Approve** or **Reject** — add a comment explaining the decision, especially for rejections.
+5. Normal changes follow CAB review; the CAB chair collates approvals before scheduling the change.
+
+---
+
+## Create a Problem Record
+
+Raise a Problem record when an incident recurs or when root cause investigation is required.
+
+1. Navigate to **Problem > New**.
+2. Link all related incident records to the Problem to establish impact.
+3. Assign to the problem management team responsible for the affected service.
+4. Document any known **workaround** so incident teams can apply it while the root cause is investigated.
+5. Investigate root cause — update the record with findings as they develop.
+6. When resolved, document the Root Cause Analysis (RCA) and close the Problem record.
+
+---
+
+## Configure a Business Rule or Workflow
+
+Business rules automate field updates, notifications, or record creation on insert or update events.
+
+1. Navigate to **ServiceNow Studio** or **Process Automation > Business Rules**.
+2. Select the correct application scope to avoid modifying out-of-box rules.
+3. Create a new business rule: set **When** (Before / After), **Operation** (Insert / Update / Delete), and the **Table** it applies to.
+4. Write the **Condition** (filter) and **Script** (server-side JavaScript).
+5. Test the rule in the development instance by triggering the relevant record operation.
+6. Promote to production only after UAT passes in the dev/test instance.
+
+---
+
+## Import Users from Active Directory (LDAP)
+
+Use LDAP integration to auto-provision and sync user accounts from Active Directory into ServiceNow.
+
+1. Navigate to **LDAP > New LDAP Server**.
+2. Configure the server: hostname, port, Base DN, and bind credentials (service account).
+3. Click **Test Connection** to verify connectivity.
+4. Configure the **Import Set** (staging table) and **Transform Map** (field mapping from LDAP attributes to `sys_user` fields).
+5. Schedule the import to run on a recurring basis (e.g., every 30 minutes) to keep accounts in sync.
+6. Verify imported users appear in **User Management** with correct groups and roles.
+
+---
+
+## Export Data to Excel / CSV
+
+Export list view data for reporting, auditing, or offline analysis.
+
+1. Navigate to the module containing the records you need (e.g., **Incident**, **Change**, **CMDB**).
+2. Apply filters to scope the export (e.g., date range, assignment group, state).
+3. Right-click any column header and select **Export**, or use the list **Actions** menu and choose **Export**.
+4. Choose the format: **Excel** (`.xlsx`) or **CSV** — CSV is preferred for large datasets or scripted processing.
+5. Download the file from the browser.
