@@ -25,6 +25,7 @@ Test-WSMan -ComputerName <target>
 
 # 6. PowerShell Core availability — verify if cross-platform scripts require PS Core
 pwsh -Version
+```
 ```text
 ┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

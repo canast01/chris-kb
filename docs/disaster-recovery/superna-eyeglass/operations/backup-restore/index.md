@@ -42,7 +42,6 @@ flowchart LR
     EG --> NFS
     EG --> SFTP
 ```
-
 ```text
 ┌───────────────────────────────── Superna Eyeglass — Backup & Restore ─────────────────────────────────┐
 │                                                                                                       │

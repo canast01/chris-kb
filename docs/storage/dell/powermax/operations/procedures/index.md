@@ -377,3 +377,97 @@ symcfg -sid <sid> list -srp
 symcfg -sid <sid> show -pool -thin -demand
 # Warning: do not exceed 85% subscribed on the SRP
 ```
+
+## Create a Storage Group and Add Devices
+
+A Storage Group (SG) is the logical container that groups volumes under a common service level and host access policy. Create the SG first, then add devices to it.
+
+```bash
+# Step 1 — Create the storage group with an SRP and service level
+symsg -sid <sid> create <sg-name> -srp SRP_1 -slo Diamond
+
+# Step 2 — Add an existing device to the storage group
+symsg -sid <sid> -sg <sg-name> add dev <device-id>
+
+# Step 3 — Verify the storage group contents
+symsg -sid <sid> show <sg-name>
+```
+
+Verify the output shows the device listed under the storage group with the correct service level applied. If adding multiple devices, repeat the `add dev` command for each device ID or use a device range: `add dev <first-id>:<last-id>`.
+
+## Create a Masking View
+
+A Masking View grants host access by linking a Storage Group (volumes), a Port Group (FA ports), and an Initiator Group (host HBAs). All three components must exist before the Masking View can be created.
+
+```bash
+# Create the masking view linking SG, PG, and IG
+symaccess -sid <sid> create view \
+    -name <view-name> \
+    -sg <sg-name> \
+    -pg <port-group> \
+    -ig <initiator-group>
+
+# Verify the masking view was created
+symaccess show view <view-name> -sid <sid>
+```
+
+After creating the masking view, rescan the host to confirm it sees the expected LUNs:
+
+```bash
+# Linux
+rescan-scsi-bus.sh
+multipath -ll
+
+# VMware
+esxcli storage core adapter rescan --all
+```
+
+Confirm the host sees the correct number of LUNs and paths before closing the change.
+
+## Create a SnapVX Snapshot
+
+SnapVX provides space-efficient point-in-time snapshots of a storage group. Snapshots can be linked to a target storage group for read/write access without affecting the source.
+
+```bash
+# Step 1 — Create a SnapVX snapshot of a storage group
+symsnap -sid <sid> -sg <sg-name> create -name <snap-name>
+
+# Step 2 — Link the snapshot to a target storage group (for access/testing)
+symsnap -sid <sid> -sg <sg-name> link \
+    -name <snap-name> \
+    -lnsg <target-sg>
+
+# Verify the snapshot exists
+symsnap list -sid <sid> -sg <sg-name>
+
+# Verify the link is established
+symsnap list -sid <sid> -sg <sg-name> -linked
+```
+
+The target SG must already exist. Linked snapshots can be used for data validation, test/dev access, or backup offload. Unlink when no longer needed: `symsnap -sid <sid> -sg <sg-name> unlink -name <snap-name> -lnsg <target-sg>`.
+
+## Perform SRDF Failover and Failback
+
+SRDF failover moves production access from the source (R1) site to the target (R2) site. Use for DR testing or an actual site failure. Always confirm SRDF state before and after each step.
+
+```bash
+# Confirm SRDF pair state before failover
+symrdf query -sid <sid> -rdfg <group>
+# Expected: Synchronized (SRDF/S) or Consistent (SRDF/A)
+
+# Step 1 — Perform failover (R2 devices become read/write)
+symrdf -sid <sid> -rdfg <group> failover
+
+# Verify R2 is now active
+symrdf query -sid <sid> -rdfg <group>
+# Expected: Partitioned or Failed Over — R2 devices active
+
+# Step 2 — When ready to return to production, perform failback
+symrdf -sid <sid> -rdfg <group> failback
+
+# Verify the pair has returned to synchronized state
+symrdf query -sid <sid> -rdfg <group>
+# Expected: Synchronized or Consistent
+```
+
+For SRDF/A (asynchronous), allow time after failback for the delta to resync before confirming the pair as fully consistent. Monitor resync progress with `symrdf list -sid <sid> -rdfg <group>`.

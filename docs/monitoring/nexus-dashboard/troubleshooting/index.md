@@ -15,6 +15,7 @@ acs logs --type alert
 
 # Check ND cluster node connectivity
 acs nodes
+```
 ```text
 ┌────────────────────────────────── Nexus Dashboard — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │

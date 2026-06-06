@@ -13,6 +13,7 @@ pstcli --action show --object cluster | grep -i encrypt
 
 # View individual drive encryption status
 uemcli /stor/drive show -detail | grep -i encrypt
+```
 ```text
 ┌────────────────────────────────────────── RASR — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │

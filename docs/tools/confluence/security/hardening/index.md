@@ -8,6 +8,7 @@ Administrator account policy:
 - Admin accounts must not be shared — one account per person
 - Admin accounts reviewed and recertified quarterly
 - Admin sessions expire after 60–120 minutes (configure via session timeout)
+```
 ```text
 ┌─────────────────────────────────────── Confluence — Hardening ────────────────────────────────────────┐
 │                                                                                                       │

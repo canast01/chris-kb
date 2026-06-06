@@ -395,3 +395,51 @@ Application-layer validation:
 - [ ] Update the change management ticket with post-change validation results and close the window
 
 Document the change completion time, the engineer who performed it, and any deviations from the planned procedure in the CMDB record for the array.
+
+## Submit a Non-Disruptive Controller Upgrade Request
+
+When an Evergreen//Forever entitlement includes a controller upgrade, the request is raised through Pure Support. Pure performs the upgrade without requiring downtime on the storage side.
+
+1. Log in to **Pure1** and navigate to **Support → Cases → New Case**
+2. Enter the subject as "Evergreen Controller Upgrade" and describe the array serial number and target controller generation
+3. Pure Support schedules the upgrade window and confirms compatibility with the current Purity version
+4. During the upgrade window, Pure engineers perform the non-disruptive controller swap following the rolling replacement sequence
+5. After the upgrade, verify the new controller generation is active:
+
+```bash
+# Confirm both controllers are online with the new hardware generation
+purearray list --controllers
+# The 'type' or 'model' field should reflect the updated controller generation
+```
+
+Confirm no new alerts appeared after the refresh and that all host paths are fully restored before closing the change record.
+
+## Track Hardware Refresh Timeline
+
+Evergreen//Forever entitlement includes scheduled hardware refreshes. Use Pure1 to track the refresh window and plan accordingly.
+
+1. Log in to **Pure1** and navigate to **My Fleet → select array**
+2. Select the **Hardware** tab and note the current controller and shelf generation
+3. Cross-reference the controller generation with the Evergreen//Forever entitlement terms to identify the refresh window deadline
+4. If the refresh window is within 90 days, notify the Pure account team to confirm the scheduled date and any pre-requisites (Purity version compatibility, maintenance blackouts)
+5. Update the CMDB record with the controller generation, the refresh window deadline, and the planned refresh date
+
+Ensure Purity is at a supported version for the target controller generation before the refresh window arrives. Pure will specify the required upgrade path if a Purity upgrade is needed before the hardware refresh.
+
+## Confirm Purity Upgrade Eligibility
+
+Before scheduling a Purity upgrade, confirm the array is eligible and that the target version is appropriate for the current hardware and workload.
+
+1. Log in to **Pure1** and navigate to **Software → select array**
+2. Review the **Available Upgrades** list — Pure1 shows only versions compatible with the current controller and Purity release line
+3. Run the Upgrade Advisor: Pure1 evaluates array health, snapshot count, ActiveCluster pod state, and host path counts and flags any blockers
+4. Review all Upgrade Advisor findings and resolve any blockers before scheduling
+5. Schedule the upgrade via Pure1 or initiate via CLI with Pure Support engaged:
+
+```bash
+# Initiate Purity upgrade to a specific target version
+purearray upgrade --version <target>
+# Pure Support must be engaged before running this command in production
+```
+
+Confirm the upgrade readiness check passes without blockers before setting the maintenance window: `purearray upgrade --check`.

@@ -49,6 +49,7 @@ DCNM tracks a fabric's intended state and can push diffs to switches, enabling c
 ```bash
 ssh admin@<switch-ip>
 show running-config | section <changed-feature>
+```
 ```text
 ┌───────────────────────────────── Cisco DCNM — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │
@@ -162,6 +163,45 @@ tar czf /tmp/dcnm-logs-<date>.tar.gz /usr/local/cisco/dcm/fm/logs/
 
 ---
 
+## Configure PTP (Precision Time Protocol) for Media Networks
+
+PTP is required on media production fabrics (broadcast, video-over-IP) to synchronise clocks across switches to sub-microsecond accuracy.
+
+1. In DCNM, navigate to **Configure → PTP** and enable PTP on the target fabric
+2. Assign the grandmaster clock — typically the highest-accuracy clock source on the network (GPS-disciplined NTP appliance or dedicated PTP grandmaster)
+3. Deploy the PTP configuration across all fabric switches via DCNM
+4. After deployment, verify PTP synchronisation on each switch:
+
+```bash
+ssh admin@<switch-ip>
+show ptp clock
+```
+
+Confirm the **Clock Identity** field matches the grandmaster and the **Offset from master** is within the acceptable range (typically < 1 µs for media networks). Investigate any switch showing **Free-run** state or high offset values.
+
+---
+
+## Back Up and Restore DCNM Configuration
+
+Regular configuration backups ensure DCNM can be restored after a platform failure or data loss event.
+
+**Back up DCNM:**
+
+1. In DCNM, navigate to **Administration → Backup**
+2. Select the backup scope — include fabric configurations, device credentials, and policy templates
+3. Click **Backup** and download the backup archive file to a secure off-appliance location
+4. Label the backup with the date and DCNM version: `dcnm-backup-<version>-<YYYYMMDD>.tar.gz`
+
+**Restore DCNM:**
+
+1. In DCNM, navigate to **Administration → Restore**
+2. Click **Upload File** and select the backup archive
+3. Click **Apply** — DCNM restores the configuration from the archive
+4. After restore, verify all fabrics show **Connected** status and fabric discovery is functional
+5. Re-run fabric compliance to confirm switch configurations match the restored intended state
+
+---
+
 ## Upgrade DCNM Software
 
 DCNM upgrades follow Cisco's supported upgrade path. Never skip major versions without consulting the Cisco upgrade compatibility matrix.
@@ -198,6 +238,7 @@ curl -sk -b dcnm-cookie.txt -X POST \
       {"aliasName": "purestor01-ct0-fc0", "pwwn": "52:4a:93:70:ab:cd:ef:00"}
     ]
   }' | python3 -m json.tool
+```
 ```text
 ┌───────────────────────────────── Cisco DCNM — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │

@@ -18,7 +18,6 @@ flowchart TD
     G -->|Yes| H[Declare success\nRemove snapshot\nClose change ticket]
     G -->|No| I[Rollback decision\nor targeted fix]
 ```
-
 ```text
 ┌─────────────────────────────────────── Post-Upgrade Validation ───────────────────────────────────────┐
 │                                                                                                       │

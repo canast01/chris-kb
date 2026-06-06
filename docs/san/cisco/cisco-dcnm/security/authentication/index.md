@@ -14,6 +14,7 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 
 # Restart DCNM to apply
 /usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
+```
 ```text
 ┌───────────────────────────────────── Cisco DCNM — Authentication ─────────────────────────────────────┐
 │                                                                                                       │

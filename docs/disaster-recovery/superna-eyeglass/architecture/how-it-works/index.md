@@ -27,7 +27,6 @@ graph LR
   class EG mgmt
   class ADMIN,DNS host
 ```
-
 ```text
 ┌─────────────────────────────────── Superna Eyeglass — How It Works ───────────────────────────────────┐
 │                                                                                                       │

@@ -27,7 +27,6 @@ flowchart TD
     uiCheck -->|"Context issue"| dumpCtx --> identify
     uiCheck -->|"Logs clear"| runLogs --> identify
 ```
-
 ```text
 ┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

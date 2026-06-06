@@ -10,6 +10,7 @@ grep -i "error\|fail\|exception" /var/log/vmware/nsx-manager/manager.log | tail 
 
 # Search audit log for admin actions
 grep -i "role\|login\|delete\|create" /var/log/vmware/nsx-manager/audit.log | tail -20
+```
 ```text
 ┌────────────────────────────────────────── NSX — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │

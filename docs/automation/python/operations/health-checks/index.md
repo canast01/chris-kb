@@ -25,6 +25,7 @@ python3 -m py_compile <script.py> && echo "OK"
 
 # 6. Cron / scheduled script health — verify expected jobs present
 crontab -l | grep python
+```
 ```text
 ┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

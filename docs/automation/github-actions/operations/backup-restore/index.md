@@ -26,6 +26,7 @@ done
 EOF
 chmod +x /usr/local/bin/github-repo-mirror.sh
 echo "0 2 * * * /usr/local/bin/github-repo-mirror.sh" | crontab -
+```
 ```text
 ┌────────────────────────────────── GitHub Actions — Backup & Restore ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

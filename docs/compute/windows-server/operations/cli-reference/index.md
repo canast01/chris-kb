@@ -33,7 +33,6 @@ flowchart LR
         gpoCmds["gpresult\ngpupdate"]
     end
 ```
-
 ```text
 ┌─────────────────────────────────── Windows Server — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │

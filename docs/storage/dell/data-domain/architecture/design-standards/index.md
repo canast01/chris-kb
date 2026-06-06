@@ -31,7 +31,6 @@ graph TD
     nbOracle -->|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
     cvSQL -->|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]
 ```
-
 ```text
 ┌────────────────────────────────── Dell Data Domain Design Standards ──────────────────────────────────┐
 │                                                                                                       │

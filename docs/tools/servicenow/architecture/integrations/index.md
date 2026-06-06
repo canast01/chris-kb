@@ -40,7 +40,6 @@ graph LR
     SNOW <-->|"REST / Webhook"| DT
     SNOW <-->|"REST / Webhook"| SPL
 ```
-
 ```text
 ┌─────────────────────────────── ServiceNow — Architecture Integrations ────────────────────────────────┐
 │                                                                                                       │

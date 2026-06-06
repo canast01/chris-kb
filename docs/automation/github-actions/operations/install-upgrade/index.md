@@ -3,6 +3,7 @@
 ```bash
 cd /opt/actions-runner   # or wherever the runner is installed
 ./config.sh --version
+```
 ```text
 ┌───────────────────────────────── GitHub Actions — Install & Upgrade ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

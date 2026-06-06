@@ -13,6 +13,7 @@ sudo systemctl start hms   # restart if stopped
 # Check Collector disk usage (stops uploading when >85% full)
 df -h
 sudo journalctl --vacuum-size=1G   # free journal space
+```
 ```text
 ┌───────────────────────────────────────── vRNI Common Issues ──────────────────────────────────────────┐
 │                                                                                                       │

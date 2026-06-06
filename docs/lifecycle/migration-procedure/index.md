@@ -14,6 +14,7 @@ Rollback window:  <how long can we roll back>
 Dependencies:     <external services / integrations>
 Data volume:      <GB / TB>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 ```text
 ┌───────────────────────────────────────── Migration Procedure ─────────────────────────────────────────┐
 │                                                                                                       │

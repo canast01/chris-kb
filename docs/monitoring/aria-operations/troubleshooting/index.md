@@ -12,6 +12,7 @@ curl -sk -X GET \
   "https://aria-ops.example.com/suite-api/api/adapterinstances/<adapterId>/monitoringstate" \
   -H "Authorization: vRealizeOpsToken <token>" \
   -H "Accept: application/json"
+```
 ```text
 ┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │

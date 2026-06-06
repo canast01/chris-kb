@@ -132,7 +132,6 @@ flowchart TD
     style disableImageAccess fill:#b45309,color:#fff
     style confirmActive fill:#15803d,color:#fff
 ```
-
 ```text
 ┌────────────────────────────────────── RecoverPoint — Procedures ──────────────────────────────────────┐
 │                                                                                                       │
@@ -357,3 +356,46 @@ alarms list
 | DR Test (image access) | 15–30 minutes | RPO at time of bookmark |
 | Full failover | 30–90 minutes (plus app validation) | RPO at last journal point |
 | Point-in-time recovery | 30–60 minutes | Any point within journal window |
+
+---
+
+## Add Volumes to a Consistency Group
+
+Use the RecoverPoint CLI to add new volumes to an existing consistency group:
+
+```bash
+add_volumes_to_group -g <cg-name> -v <volume-id>
+```
+
+After adding volumes, verify the CG protection status to confirm the new volumes are being replicated:
+
+```bash
+group status --gname <cg-name>
+```
+
+Confirm the CG returns to ACTIVE state with all volumes included before closing the change. If the CG shows a degraded state after adding volumes, check storage connectivity and journal capacity.
+
+---
+
+## Perform an Image Access (Test Failover)
+
+Image Access allows a point-in-time copy of a CG to be mounted at the recovery site for testing without impacting production replication.
+
+1. In the RecoverPoint UI, navigate to the Consistency Group and select **Image Access**
+2. Select the desired point in time — choose a bookmark or specify a timestamp within the journal window
+3. Click **Enable Image Access** — RecoverPoint presents the DR copy volumes at the selected point in time
+4. Mount the volumes at the recovery site and run application tests to validate data integrity
+5. Once testing is complete, click **Disable Image Access** (or **Unmount** from the UI) to release the image
+6. Confirm the CG returns to ACTIVE replication state and RPO is back within SLA
+
+---
+
+## Change RPO Target
+
+Modify the synchronisation interval for a Consistency Group to adjust the RPO target:
+
+1. In the RecoverPoint UI, navigate to the Consistency Group and open **Settings**
+2. Select **Protection Policy**
+3. Modify the synchronisation interval — lower values reduce RPO but increase journal write rate and bandwidth consumption
+4. Click **Apply** to save the new policy
+5. Monitor the CG cycle time after the change to confirm the new interval is being achieved — check **group status** to verify the actual RPO matches the new target

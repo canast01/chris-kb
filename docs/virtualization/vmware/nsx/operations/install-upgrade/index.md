@@ -9,6 +9,7 @@ join management-plane <node1-ip> username admin thumbprint <node1-thumbprint>
 
 # Get node 1's thumbprint from node 1 CLI:
 get certificate api thumbprint
+```
 ```text
 ┌────────────────────────────────────── NSX — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

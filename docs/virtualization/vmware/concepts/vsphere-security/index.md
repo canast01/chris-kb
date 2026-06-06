@@ -10,7 +10,7 @@ vSphere VM Encryption (introduced in vSphere 6.5) encrypts VM data at rest — v
 
 ### How VM Encryption Works
 
-```
+```text
 ┌───────────────────────────────────────────────────────────────────┐
 │                    vSphere VM Encryption Flow                                                         │
 │                                                                                                       │
@@ -81,7 +81,7 @@ vSphere Trust Authority (introduced in vSphere 7.0) provides a way to attest the
 
 vTA uses two separate clusters:
 
-```
+```text
 ┌─────────────────────────┐      ┌─────────────────────────────────┐
 │  Trust Authority Cluster│      │      Trusted Cluster                                                 │
 │  (TA hosts)             │      │  (workload hosts)                                                    │
@@ -404,7 +404,7 @@ esxcli software vib list --rebooting-image | awk '{print $1, $5}'
 
 ## Security Architecture Summary
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │                  vSphere Security Layers                                                              │
 │                                                                                                       │

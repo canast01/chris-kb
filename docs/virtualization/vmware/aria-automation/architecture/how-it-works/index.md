@@ -35,7 +35,6 @@ graph TB
   class ADMIN host
   class CLOUDS cloud
 ```
-
 ```text
 ┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
 │                                                                                                       │

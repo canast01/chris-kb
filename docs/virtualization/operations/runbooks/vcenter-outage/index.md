@@ -3,6 +3,7 @@
 ```bash
 ping <vcenter-ip>
 nslookup <vcenter-fqdn>
+```
 ```text
 ┌─────────────────────────────────────── vCenter Outage Runbook ────────────────────────────────────────┐
 │                                                                                                       │

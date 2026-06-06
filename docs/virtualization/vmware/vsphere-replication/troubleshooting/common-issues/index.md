@@ -36,8 +36,6 @@
 
 **Symptoms:** Replication status error: network connectivity to target VRA
 
-```
-
 ```bash
 # From source ESXi host shell:
 nc -vz vra-amsterdam.example.local 31031

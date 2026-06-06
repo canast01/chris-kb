@@ -32,6 +32,7 @@ pyenv local 3.12.3
 # Verify
 python --version
 which python   # Should point to ~/.pyenv/shims/python
+```
 ```text
 ┌───────────────────────────────────── Python — Install & Upgrade ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

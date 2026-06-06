@@ -6,6 +6,7 @@ Start-Process -Wait -FilePath "VeeamAgentWindows.exe" -ArgumentList "/silent /ac
 
 # Verify service is running
 Get-Service -Name "Veeam Agent for Microsoft Windows"
+```
 ```text
 ┌───────────────────────────────── Windows Server — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │

@@ -24,6 +24,7 @@ links statistics
 
 # Cluster quorum state
 cluster quorum check
+```
 ```text
 ┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
 │                                                                                                       │

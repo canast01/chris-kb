@@ -10,6 +10,7 @@ Host github.com gitlab.corp.example.com
     Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
     MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
     HostKeyAlgorithms ssh-ed25519,rsa-sha2-512
+```
 ```text
 ┌────────────────────────────────────────── Git — Encryption ───────────────────────────────────────────┐
 │                                                                                                       │

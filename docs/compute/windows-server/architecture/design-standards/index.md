@@ -18,7 +18,6 @@ flowchart LR
 
     localGPO --> siteGPO --> domainGPO --> ouParentGPO --> ouChildGPO --> applied
 ```
-
 ```text
 ┌────────────────────────────────── Windows Server — Design Standards ──────────────────────────────────┐
 │                                                                                                       │

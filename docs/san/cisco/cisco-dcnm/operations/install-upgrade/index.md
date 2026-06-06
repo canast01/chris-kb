@@ -23,6 +23,7 @@ ssh root@dcnm-dc1-standby.corp.example.com
 # Verify HA status from active node
 /usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
 # Expected: ACTIVE/STANDBY pair, VIP reachable
+```
 ```text
 ┌────────────────────────────────── Cisco DCNM — Install and Upgrade ───────────────────────────────────┐
 │                                                                                                       │

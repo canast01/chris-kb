@@ -27,7 +27,6 @@ graph LR
     apply --> postPlan
     apply --> stateBackup
 ```
-
 ```text
 ┌─────────────────────────────────────── Terraform — Procedures ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -296,3 +295,121 @@ terraform graph | dot -Tsvg > plan.svg
 | Which resource is affected? | `terraform state show <resource>` |
 | Is the provider API reachable? | Test with AWS/Azure/GCP CLI |
 | Was a recent apply the cause? | Check CI apply logs |
+
+## Import Existing Infrastructure
+
+`terraform import aws_instance.example i-1234567890abcdef0` → verify state: `terraform state show aws_instance.example` → update HCL to match imported config.
+
+```bash
+# Write the resource block in your .tf file first (required before importing)
+# resource "aws_instance" "example" {
+#   # attributes will be populated from state after import
+# }
+
+# Import the resource into state
+terraform import aws_instance.example i-1234567890abcdef0
+
+# Verify the imported state
+terraform state show aws_instance.example
+
+# Generate HCL from imported state (Terraform 1.5+)
+terraform plan -generate-config-out=generated.tf
+
+# Run plan — should show zero changes once HCL matches state
+terraform plan
+```
+
+```bash
+# Common import address formats
+terraform import aws_s3_bucket.logs my-bucket-name
+terraform import azurerm_resource_group.rg /subscriptions/<sub>/resourceGroups/my-rg
+terraform import google_compute_instance.vm projects/my-project/zones/us-east1-b/instances/my-vm
+```
+
+| Step | Action |
+|---|---|
+| 1 | Write the resource block in `.tf` (placeholder — attributes not needed yet) |
+| 2 | Run `terraform import <address> <resource-id>` |
+| 3 | Run `terraform state show <address>` to see what was imported |
+| 4 | Update HCL attributes to match the imported state |
+| 5 | Run `terraform plan` — expect zero changes when config matches state |
+
+## Move State Between Workspaces
+
+`terraform state mv -state-out=other.tfstate module.old module.new` or use `terraform workspace` commands → verify with `terraform plan` showing no changes.
+
+```bash
+# List existing workspaces
+terraform workspace list
+
+# Create and switch to a new workspace
+terraform workspace new staging
+terraform workspace select staging
+
+# Move a resource address within the same state file
+terraform state mv aws_instance.old_name aws_instance.new_name
+
+# Move a resource to a different state file
+terraform state mv \
+  -state-out=staging.tfstate \
+  module.app.aws_instance.web \
+  module.app.aws_instance.web
+
+# Pull state to a local file for manual editing
+terraform state pull > current.tfstate
+
+# Push a modified state file back to the remote backend
+terraform state push current.tfstate
+
+# Verify after any state move — expect zero changes
+terraform plan
+```
+
+| Command | Purpose |
+|---|---|
+| `terraform workspace new <name>` | Create an isolated state environment |
+| `terraform workspace select <name>` | Switch active workspace |
+| `terraform state mv <src> <dst>` | Rename or refactor a resource address in state |
+| `terraform state mv -state-out` | Move resource to a different state file |
+| `terraform state pull / push` | Download or upload state from the remote backend |
+
+## Manage Sensitive Outputs
+
+Mark output as sensitive: `output "password" { value = random_password.db.result; sensitive = true }` → access via: `terraform output -raw password` → never log sensitive outputs in CI.
+
+```hcl
+# outputs.tf
+output "db_password" {
+  description = "Database master password"
+  value       = random_password.db.result
+  sensitive   = true   # redacted in terraform apply/plan output
+}
+
+output "db_endpoint" {
+  description = "Database connection endpoint"
+  value       = aws_db_instance.main.endpoint
+}
+```
+
+```bash
+# Access a sensitive output value (prints raw value — handle with care)
+terraform output -raw db_password
+
+# Access as JSON (sensitive values are still redacted unless -raw is used per output)
+terraform output -json
+
+# Pass a sensitive output to another tool without logging it
+DB_PASS=$(terraform output -raw db_password)
+psql -h "$DB_HOST" -U admin -d mydb -c "\l" <<< "$DB_PASS"
+
+# Never do this — exposes the value in CI logs
+echo "Password is: $(terraform output -raw db_password)"
+```
+
+| Practice | Reason |
+|---|---|
+| `sensitive = true` on output | Redacts value in `plan` and `apply` console output |
+| `terraform output -raw` | Retrieves the raw string value for use in scripts |
+| Store secrets in Vault/SSM | Do not rely on Terraform state as a secrets store |
+| Encrypt remote backend | State contains sensitive output values in plain text |
+| Never `echo` sensitive outputs | Avoids leaking values into CI logs or shell history |

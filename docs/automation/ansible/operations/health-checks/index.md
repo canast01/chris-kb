@@ -31,6 +31,7 @@ ansible <host> -m setup -a 'filter=ansible_distribution' -i <inventory>
 
 # 8. Collection versions
 ansible-galaxy collection list
+```
 ```text
 ┌─────────────────────────────────────── Ansible — Health Checks ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

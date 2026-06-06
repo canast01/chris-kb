@@ -9,6 +9,7 @@ sar -u -f /var/log/sa/sa$(date +%d) | awk '/Average/ {print $3}'
 
 # Memory available
 free -h | awk '/Mem/ {print "Available:", $7}'
+```
 ```text
 ┌───────────────────────────────── Performance — Resource Optimisation ─────────────────────────────────┐
 │                                                                                                       │

@@ -12,6 +12,7 @@ MaxAuthTries 3
 AllowUsers ubuntu
 
 sudo systemctl restart sshd
+```
 ```text
 ┌─────────────────────────────────────── vRNI Security Hardening ───────────────────────────────────────┐
 │                                                                                                       │

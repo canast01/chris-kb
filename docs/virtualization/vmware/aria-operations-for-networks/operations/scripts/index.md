@@ -22,6 +22,7 @@ def get_token():
 
 TOKEN = get_token()
 HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "application/json"}
+```
 ```text
 ┌──────────────────────────────────────────── vRNI Scripts ─────────────────────────────────────────────┐
 │                                                                                                       │

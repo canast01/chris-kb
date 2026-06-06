@@ -12,6 +12,7 @@ add_bookmark --cg "CG_PROD_SQL" --name "Pre-Patch-2026-05-08" --type CRASH_CONSI
 
 # List bookmarks for a CG
 get_bookmarks --cg "CG_PROD_SQL"
+```
 ```text
 ┌─────────────────────────────────── RecoverPoint — Backup & Restore ───────────────────────────────────┐
 │                                                                                                       │

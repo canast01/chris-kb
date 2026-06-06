@@ -26,6 +26,7 @@ REINDEX TABLE CONCURRENTLY <schema>.<table>;
 SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index_size,
        idx_scan AS scans
 FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
+```
 ```text
 ┌────────────────────────────────── Database — Maintenance Procedures ──────────────────────────────────┐
 │                                                                                                       │

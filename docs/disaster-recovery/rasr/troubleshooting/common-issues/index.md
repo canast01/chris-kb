@@ -11,6 +11,7 @@ Get-WinEvent -LogName System -MaxEvents 50 |
 # Common fix: dependencies not started (Workstation service, TCP/IP NetBIOS Helper)
 Get-Service -Name LanmanWorkstation, lmhosts | Start-Service
 Start-Service RASRAgent
+```
 ```text
 ┌──────────────────────────────────────── RASR — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │

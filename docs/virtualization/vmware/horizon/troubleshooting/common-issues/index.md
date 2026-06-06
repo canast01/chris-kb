@@ -106,29 +106,21 @@
 **Symptoms:** Login takes >60 seconds; users report slow desktop loading
 
 1. **DEM profile migration:** First-time migration of legacy profile to DEM can take minutes — expected behavior
-```
-
 ```text
    DEM Management Console → Monitor → check profile migration queue
    ```
 
 2. **AppStack mount failure (App Volumes):** AppStack VMDK attachment is slow or failing
-```
-
 ```text
    App Volumes Manager → Activity → check for stuck attach operations
    ```
 
 3. **Antivirus scanning user profile on login:** AV exclusions needed
-```
-
 ```sql
    Exclude from scanning: %APPDATA%, %USERPROFILE%, DEM config share (\\server\dem-config)
    ```
 
 4. **Network drive mapping slow:** Group Policy login script timing out on drive mapping
-```
-
 ```text
    Enable asynchronous user Group Policy processing to prevent blocking login
    ```
@@ -158,8 +150,6 @@
 **Symptoms:** User logs in but application is not available; App Volumes Manager shows failed attachment
 
 1. **App Volumes Manager unreachable from desktop VM:**
-```
-
 ```powershell
    # From desktop VM:
    Test-NetConnection appvol-mgr.example.local -Port 443
@@ -167,8 +157,6 @@
    ```
 
 2. **VMDK attachment failure in vCenter:** AppStack VMDK is already attached to another VM (from a previous failed detach)
-```
-
 ```sql
    App Volumes Manager → AppStacks → [stack] → Assignments → check for stale attachments
    OR: vCenter → locate AppStack VMDK → detach from any VM it's currently attached to

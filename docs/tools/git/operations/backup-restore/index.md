@@ -11,6 +11,7 @@ git remote update --prune
 # Verify the mirror is complete
 git fsck --full
 git count-objects -vH
+```
 ```text
 ┌────────────────────────────────────── Git — Backup and Restore ───────────────────────────────────────┐
 │                                                                                                       │

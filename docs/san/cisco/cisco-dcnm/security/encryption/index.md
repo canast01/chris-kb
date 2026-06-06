@@ -33,6 +33,7 @@ keytool -importkeystore \
 openssl s_client -connect dcnm-dc1.corp.example.com:443 \
   -servername dcnm-dc1.corp.example.com </dev/null 2>/dev/null \
   | openssl x509 -noout -subject -issuer -enddate
+```
 ```text
 ┌─────────────────────────────────────── Cisco DCNM — Encryption ───────────────────────────────────────┐
 │                                                                                                       │

@@ -181,3 +181,36 @@ If the consumption report shows unexpected usage:
 2. Check for any large snapshots or recently provisioned volumes
 3. Engage the Keystone Success Manager via the BlueXP support portal
 4. Discrepancies must be raised before the invoice is finalized
+
+---
+
+## Request a Capacity Increase
+
+1. Log in to the Keystone portal (or BlueXP Digital Wallet if your subscription is managed there)
+2. Navigate to **Subscriptions** and select the relevant subscription
+3. Click **Request Capacity Increase**
+4. Specify the additional committed TiB required per service tier (Extreme, Performance, or Standard)
+5. Submit the request — Dell/NetApp provisions the additional capacity within the contracted SLA window
+6. Monitor the request status in the portal and confirm the new committed capacity is reflected in the dashboard once provisioned
+
+---
+
+## Generate a Consumption Report
+
+1. Log in to the Keystone portal
+2. Navigate to **Reporting → Consumption**
+3. Select the desired date range for the report
+4. Click **Export CSV** to download the consumption data
+5. Share the exported report with the finance team for chargeback or showback processing
+6. Review the report for any burst usage — identify the volumes or service levels driving burst before sharing with finance
+
+---
+
+## Raise a Keystone Service Ticket
+
+1. Log in to the Keystone portal
+2. Navigate to **Support → New Case**
+3. Select the service affected (storage service level, Keystone Collector, billing discrepancy, etc.)
+4. Describe the issue clearly — include subscription ID, affected service level, and any relevant timestamps or error messages
+5. Submit the case — the NetApp Keystone team will respond according to the contracted SLA for the reported severity level
+6. Monitor case progress in the portal and provide additional information if requested by the support team

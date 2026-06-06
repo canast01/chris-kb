@@ -22,7 +22,6 @@ flowchart LR
 
     gitRepo --> ansible --> copy --> cron --> output --> siem
 ```
-
 ```text
 ┌──────────────────────────────────── Linux — Scripts & Automation ─────────────────────────────────────┐
 │                                                                                                       │

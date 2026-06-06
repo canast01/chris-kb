@@ -96,6 +96,7 @@ except Exception as e:
 
 print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else 'CRITICAL'}")
 sys.exit(overall)
+```
 ```text
 ┌──────────────────────────────────────────── NSX — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │

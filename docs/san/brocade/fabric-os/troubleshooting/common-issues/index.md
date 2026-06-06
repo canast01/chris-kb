@@ -28,7 +28,6 @@ flowchart TD
     maps -->|"BB credit zero"| slowDrain["bottleneckmon --show\nDisable slow drain port"]
     maps -->|"ISL util high"| islAdd["Add ISL capacity\ncheck trunk group"]
 ```
-
 ```text
 ┌────────────────────────── Brocade Fabric OS — Troubleshooting Common Issues ──────────────────────────┐
 │                                                                                                       │

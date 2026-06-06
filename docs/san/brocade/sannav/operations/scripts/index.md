@@ -31,6 +31,7 @@ cleanup() {
   echo "Session logged out"
 }
 trap cleanup EXIT
+```
 ```text
 ┌───────────────────────────────── Brocade SANnav — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │

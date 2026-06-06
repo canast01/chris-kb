@@ -241,3 +241,136 @@ openssl verify -CAfile ca-bundle.pem cert.pem
 # Verify full chain (intermediate + root)
 openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
 ```
+
+---
+
+## Request a Certificate via Web Enrollment
+
+Use the ADCS Web Enrollment portal to submit a CSR and download the issued certificate when auto-enrollment is not available (non-domain systems, network appliances, Linux hosts).
+
+1. Browse to `https://<ca>/certsrv` and authenticate with a domain account that has Enroll permission on the target template.
+2. Select **Request a Certificate** → **Advanced certificate request**.
+3. Paste the Base-64 encoded CSR into the **Saved Request** field.
+4. Select the appropriate certificate template from the **Certificate Template** drop-down.
+5. Click **Submit** — if CA policy requires manager approval, the request will be marked Pending.
+6. Once issued, return to `https://<ca>/certsrv` → **View the status of a pending certificate request** → select the request → **Download certificate** (Base-64 or DER).
+7. Install the certificate on the target host and bind it to the relevant service.
+
+Verify the issued certificate includes the correct Subject CN, SANs, and issuing CA using `openssl x509 -noout -text -in cert.pem`.
+
+---
+
+## Export a Certificate with Private Key (PFX)
+
+Export a certificate and its private key from the Windows certificate store for backup or migration to another host.
+
+1. Open **Certificate Manager** (`certlm.msc`) — this opens the Local Machine store.
+2. Expand **Personal → Certificates** and locate the certificate.
+3. Right-click the certificate → **All Tasks → Export**.
+4. In the Certificate Export Wizard, select **Yes, export the private key** → **Next**.
+5. Leave format as **Personal Information Exchange — PKCS #12 (.PFX)** → check **Include all certificates in the certification path** → **Next**.
+6. Set a strong password to protect the private key → **Next**.
+7. Choose the save location → **Finish**.
+
+```powershell
+# Export via PowerShell (alternative)
+$cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object {$_.Subject -like "*webserver*"}
+$pwd = ConvertTo-SecureString "ExportP@ss!" -AsPlainText -Force
+Export-PfxCertificate -Cert $cert -FilePath C:\Export\webserver.pfx -Password $pwd
+```
+
+Store the PFX and password in separate secure locations. Delete the exported file after completing the migration.
+
+---
+
+## Configure Auto-Enrollment GPO
+
+Auto-enrollment automatically issues and renews certificates for domain members based on certificate templates, eliminating manual renewal for internal certificates.
+
+1. Open **Group Policy Management** and create or edit a GPO linked to the target OU (or domain).
+2. Navigate to **Computer Configuration → Windows Settings → Security Settings → Public Key Policies → Certificate Services Client — Auto-Enrollment**.
+3. Set **Configuration Model** to **Enabled**.
+4. Check **Renew expired certificates, update pending certificates, and remove revoked certificates**.
+5. Check **Update certificates that use certificate templates**.
+6. Click **OK** and close the editor.
+7. Force a policy refresh and trigger auto-enrollment:
+
+```cmd
+gpupdate /force
+certutil -pulse
+```
+
+8. Verify issued certificates appear in `certlm.msc` under **Personal → Certificates**.
+
+Ensure the certificate template has **Autoenroll** permission granted to the target computers or users security group. The CA must be published in AD for auto-enrollment to locate it.
+
+---
+
+## Monitor Certificate Expiry (PowerShell)
+
+Run this script on all servers to identify certificates approaching expiry before they cause service outages.
+
+```powershell
+# Find certs expiring within 60 days on the local machine
+Get-ChildItem Cert:\LocalMachine\My |
+    Where-Object {$_.NotAfter -lt (Get-Date).AddDays(60)} |
+    Select-Object Subject, Issuer, NotAfter, Thumbprint |
+    Sort-Object NotAfter
+
+# Run against multiple remote servers
+$servers = "web01","web02","app01","app02"
+foreach ($server in $servers) {
+    Invoke-Command -ComputerName $server -ScriptBlock {
+        Get-ChildItem Cert:\LocalMachine\My |
+            Where-Object {$_.NotAfter -lt (Get-Date).AddDays(60)} |
+            Select-Object @{N="Server";E={$env:COMPUTERNAME}}, Subject, NotAfter
+    }
+}
+
+# Export results to CSV for tracking
+Get-ChildItem Cert:\LocalMachine\My |
+    Where-Object {$_.NotAfter -lt (Get-Date).AddDays(60)} |
+    Select-Object Subject, NotAfter, Thumbprint |
+    Export-Csv C:\Reports\ExpiringCerts.csv -NoTypeInformation
+```
+
+Flag any certificate with fewer than 60 days remaining for immediate renewal. Certificates with fewer than 14 days are critical — raise a P1 change if the service is production.
+
+---
+
+## Revoke and Republish CRL
+
+Revoke a compromised or decommissioned certificate and publish an updated CRL so relying parties stop trusting the certificate immediately.
+
+### Revoke the Certificate
+
+1. Open **Certification Authority** MMC (`certsrv.msc`) on the issuing CA.
+2. Expand the CA node → **Issued Certificates**.
+3. Locate the certificate by serial number or subject → right-click → **All Tasks → Revoke Certificate**.
+4. Select the revocation reason (Key Compromise, CA Compromise, Affiliation Changed, Superseded, Cessation of Operation, or Certificate Hold).
+5. Confirm the revocation date and click **Yes**.
+
+```cmd
+# Revoke by serial number from the command line
+certutil -revoke <SerialNumber> <ReasonCode>
+# Reason codes: 0=Unspecified, 1=KeyCompromise, 3=Affiliation, 4=Superseded, 5=CessationOfOperation
+```
+
+### Publish an Updated CRL
+
+```cmd
+# Publish a new CRL immediately (bypasses normal publication schedule)
+certutil -CRL
+
+# Verify the CRL was published and check the next update time
+certutil -URL <CRLDistributionPoint-URL>
+```
+
+6. Browse to the CRL Distribution Point (CDP) URL configured in the CA and confirm the updated CRL is downloadable.
+7. Verify the revoked serial number appears in the CRL:
+
+```bash
+openssl crl -in crl.pem -text -noout | grep -A2 "Revoked"
+```
+
+Notify service owners relying on the revoked certificate to install a replacement immediately.

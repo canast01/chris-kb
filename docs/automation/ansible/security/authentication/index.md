@@ -6,6 +6,7 @@ ssh-keygen -t ed25519 -C "ansible-control@prod" -f ~/.ssh/ansible_ed25519 -N ""
 
 # RSA 4096 — for legacy systems that don't support Ed25519
 ssh-keygen -t rsa -b 4096 -C "ansible-control@prod" -f ~/.ssh/ansible_rsa -N ""
+```
 ```text
 ┌────────────────────────────────────── Ansible — Authentication ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

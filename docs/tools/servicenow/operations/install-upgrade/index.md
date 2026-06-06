@@ -48,7 +48,6 @@ flowchart TD
     K -- Fail --> L --> J
     K -- Pass --> M --> N --> O --> P
 ```
-
 ```text
 ┌────────────────────────────────── ServiceNow — Install and Upgrade ───────────────────────────────────┐
 │                                                                                                       │

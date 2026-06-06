@@ -3,6 +3,7 @@
 ```powershell
 # List all approved verbs
 Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
+```
 ```text
 ┌──────────────────────────────────── PowerShell — Design Standards ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

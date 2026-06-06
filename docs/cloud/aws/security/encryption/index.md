@@ -19,6 +19,7 @@ aws kms create-alias \
 
 # Verify rotation is enabled
 aws kms get-key-rotation-status --key-id $KEY_ID
+```
 ```text
 ┌──────────────────────────────── AWS Encryption — At Rest & In Transit ────────────────────────────────┐
 │                                                                                                       │

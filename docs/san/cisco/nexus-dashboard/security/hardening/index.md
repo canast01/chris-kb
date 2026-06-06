@@ -9,6 +9,7 @@ ssh ndadmin@nd-dc1-1.corp.example.com
 passwd ndadmin
 # Use a password meeting corporate complexity policy (20+ characters)
 # Store in vault; treat as break-glass
+```
 ```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Security Hardening ──────────────────────────────┐
 │                                                                                                       │
@@ -60,6 +61,7 @@ passwd ndadmin
    WARNING: This system is for authorized use only.
    All connections are monitored and recorded.
    Unauthorized access is prohibited and may result in legal action.
+```
    ```text
 3. Click **Save**. The banner appears below the login form.
 
@@ -84,6 +86,7 @@ Ensure audit logging is enabled and forwarded to the SIEM:
 
 1. **Admin Console > Operations > Audit Logs** — confirm events are being recorded.
 2. Configure syslog forwarding to forward audit events to the SIEM:
+```
    ```bash
    acs system syslog add --server 10.10.3.50 --port 514 --protocol tcp
    ```
@@ -98,8 +101,6 @@ Ensure audit logging is enabled and forwarded to the SIEM:
 ## 9. Kubernetes Security Baseline
 
 ND's Kubernetes control plane has several security defaults that should be verified:
-
-```
 
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com

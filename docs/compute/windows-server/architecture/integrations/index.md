@@ -24,7 +24,6 @@ flowchart TD
     dc --- sysvol
     client -->|"GPO download"| sysvol
 ```
-
 ```text
 ┌──────────────────────────────────── Windows Server — Integrations ────────────────────────────────────┐
 │                                                                                                       │

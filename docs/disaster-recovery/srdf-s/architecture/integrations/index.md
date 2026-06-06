@@ -38,7 +38,6 @@ graph TD
     sra1 --> r1
     sra2 --> r2
 ```
-
 ```text
 ┌───────────────────────────────── SRDF/S — Architecture Integrations ──────────────────────────────────┐
 │                                                                                                       │

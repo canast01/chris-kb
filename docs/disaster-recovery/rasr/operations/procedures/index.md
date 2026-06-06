@@ -80,6 +80,7 @@ $headers = @{ Authorization = "Bearer $token"; "Content-Type" = "application/jso
 Invoke-RestMethod -Uri "$base/protection-copies?filter=policyName eq '<policy>'" `
   -Headers $headers | Select-Object -ExpandProperty content |
   Select-Object id, createTime, expirationTime, cyberSenseStatus
+```
 ```text
 ┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -162,6 +163,7 @@ Get-Content "C:\Program Files\Dell\RASR\Logs\RASRAgent.log" -Tail 20 -Wait
 
 # Step 5: Verify image created
 Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+```
 ```text
 ┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
 │                                                                                                       │

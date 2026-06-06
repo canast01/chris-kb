@@ -16,6 +16,7 @@ snmpconfig --set trapdest -index 1 \
 # Verify
 snmpconfig --show snmpv3
 snmpconfig --show trapdest
+```
 ```text
 ┌────────────────────────────────── Brocade SANnav — Design Standards ──────────────────────────────────┐
 │                                                                                                       │

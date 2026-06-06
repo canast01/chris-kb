@@ -30,6 +30,7 @@ rotate_secret "AWS_SECRET_ACCESS_KEY" "secret/data/aws"   "secret_key"
 rotate_secret "SLACK_BOT_TOKEN"       "secret/data/slack" "bot_token"
 
 echo "All secrets rotated."
+```
 ```text
 ┌────────────────────────────────────── GitHub Actions — Scripts ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

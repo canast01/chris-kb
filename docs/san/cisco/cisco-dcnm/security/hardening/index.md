@@ -12,6 +12,7 @@ passwd root
 
 # Disable the default 'dcnm' local OS account if not needed
 usermod -L dcnm   # lock (disable password login)
+```
 ```text
 ┌─────────────────────────────────── Cisco DCNM — Security Hardening ───────────────────────────────────┐
 │                                                                                                       │

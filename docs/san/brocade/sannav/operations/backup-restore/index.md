@@ -15,6 +15,7 @@ ls -lh /opt/sannav/backups/
 # Copy backup to remote server (if not using SANnav's built-in remote transfer)
 scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
     bkp-user@backup-server.corp.example.com:/backups/sannav/dc1/
+```
 ```text
 ┌───────────────────────────────── Brocade SANnav — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │

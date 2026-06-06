@@ -291,3 +291,90 @@ Monitor inter-cluster latency — VPLEX Metro requires < 5ms RTT between sites.
 | Split-brain | Witness connectivity | Manual suspension of stale leg |
 | High replication lag | WAN latency | Check inter-cluster network |
 | Device suspended | Prior split-brain event | Resync after link recovery |
+
+## Create a Virtual Volume
+
+A VPLEX virtual volume is built from a backend storage LUN through a four-step process: claim the backend storage volume, create an extent, create a device, and expose it as a virtual volume to a host cluster.
+
+```bash
+# Step 1 — Claim backend storage volume into VPLEX
+VPlexcli:/> storage-volume claim-storage-volumes \
+    --storage-volumes /clusters/cluster-1/storage-elements/storage-volumes/<sv-name>
+
+# Step 2 — Create an extent from the claimed storage volume
+VPlexcli:/> extent create \
+    --storage-volume /clusters/cluster-1/storage-elements/storage-volumes/<sv-name> \
+    --name <extent-name>
+
+# Step 3 — Create a local device from the extent
+VPlexcli:/> device create \
+    --extents /clusters/cluster-1/storage-elements/extents/<extent-name> \
+    --geometry raid-0 \
+    --name <device-name>
+
+# Step 4 — Create a virtual volume from the device
+VPlexcli:/> virtual-volume create \
+    --device /clusters/cluster-1/devices/<device-name> \
+    --name <vv-name>
+```
+
+After creation, expose the virtual volume to hosts by adding it to a storage view: `storage-view add-virtual-volumes --storage-view /clusters/cluster-1/exports/storage-views/<sv-name> --virtual-volumes /clusters/cluster-1/virtual-volumes/<vv-name>`.
+
+## Add a Storage Volume to a Device
+
+Extend an existing VPLEX device to increase its capacity by adding a new extent. This is used to grow a virtual volume without disrupting host access.
+
+```bash
+# Extend an existing device with a new extent
+VPlexcli:/> device extend \
+    -d <device-name> \
+    -e <new-extent>
+
+# Verify device redundancy and extent membership after extension
+VPlexcli:/> device show <device-name>
+```
+
+Confirm the device shows the expected number of extents and that `operational-status` is `ok` before considering the procedure complete. If the device is part of a distributed virtual volume, allow time for the Metro resync to complete.
+
+## Migrate a Virtual Volume to New Storage
+
+Data migration moves a virtual volume's backend data from one set of storage to another without host disruption. Use this when decommissioning old arrays or rebalancing across backends.
+
+```bash
+# Navigate to the VPLEX management server via browser or CLI
+# VPLEX GUI: Data Services → Data Migration → New Migration
+
+# Step 1 — Select the source virtual volume in the migration wizard
+# Step 2 — Select the target backend storage (new array LUNs claimed into VPLEX)
+# Step 3 — Start the migration and monitor progress
+
+# Monitor migration progress via CLI
+VPlexcli:/> data-migration show
+# Check: transfer-size, completion-percentage, status
+```
+
+Migration runs in the background without interrupting host I/O. Monitor until `status: complete` is shown. After migration completes, verify the virtual volume now points to the new backend storage before decommissioning the old storage volumes.
+
+## Test Metro Node Failover
+
+Use this procedure to test that a VPLEX Metro consistency group correctly fails over to cluster-2 and resumes replication after the test, without production data loss.
+
+```bash
+# Step 1 — Suspend the consistency group on cluster-1 (simulates site failure)
+VPlexcli:/> consistency-group suspend \
+    --consistency-group /clusters/cluster-1/consistency-groups/<cg-name>
+
+# Verify cluster-2 is serving I/O — confirm hosts on cluster-2 site have full I/O access
+VPlexcli:/> ll /clusters/cluster-2/consistency-groups/<cg-name>/
+# Check: operational-status = ok; active-leg = cluster-2
+
+# Step 2 — Resume the consistency group to restore Metro replication
+VPlexcli:/> consistency-group resume \
+    --consistency-group /clusters/cluster-1/consistency-groups/<cg-name>
+
+# Step 3 — Verify Metro replication has resumed
+VPlexcli:/> ll /distributed-storage/distributed-devices/*/health-indications/
+# Expected: health-state: ok on both distributed device legs
+```
+
+After the test, confirm all distributed devices return to `in-sync` status and that the Witness connection is healthy on both clusters before closing the change record.

@@ -10,6 +10,7 @@ sudo apt-get update && sudo apt-get install terraform
 
 # Verify
 terraform version
+```
 ```text
 ┌──────────────────────────────────── Terraform — Install & Upgrade ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -41,7 +41,6 @@ flowchart TD
         R2 --> R3[Restore vCenter]
     end
 ```
-
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Backup & Restore ──────────────────────────────┐
 │                                                                                                       │

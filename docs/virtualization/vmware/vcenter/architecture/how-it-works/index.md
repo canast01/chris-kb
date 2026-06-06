@@ -70,7 +70,6 @@ graph LR
     class witness witness
     class clients client
 ```
-
 ```text
 ┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
 │                                                                                                       │

@@ -20,7 +20,6 @@ flowchart LR
 
     request --> rbacCheck --> policyCheck --> resourceGroup --> vnetPlace --> nsgApply --> diskAttach --> extensions --> running
 ```
-
 ```text
 ┌────────────────────────────────── Azure Architecture — Integrations ──────────────────────────────────┐
 │                                                                                                       │

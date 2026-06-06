@@ -18,7 +18,6 @@ flowchart TD
     G --> H[Reclaim resources\nor delete VM]
     H --> I[CMDB and\ndocumentation update]
 ```
-
 ```text
 ┌───────────────────────────────────────── System Decommission ─────────────────────────────────────────┐
 │                                                                                                       │

@@ -95,7 +95,6 @@ flowchart TD
     style validateApp fill:#15803d,color:#fff
     style waitSite fill:#6b7280,color:#fff
 ```
-
 ```text
 ┌───────────────────────────────────────── SRDF/A — Procedures ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -234,3 +233,83 @@ symrdf failover -sid <r1_sid> -rdfg <rdf_group_number> -type RDF/A -planned
 | Pair in Split state (unexpected) | Network interruption between R1 and R2 | Check inter-site network, restore connectivity, then re-establish: `symrdf resume -sid <r1_sid> -rdfg <rdf_group_number>` |
 | R2 activation required (DR failover) | Production site failure | Follow DR failover runbook; activate R2: `symrdf failover -sid <r1_sid> -rdfg <rdf_group_number>` |
 | Cycle time exceeding configured value | Write burst or link latency increase | Monitor cycle time via `symrdf queryall`, check inter-site latency with `ping` and `traceroute` |
+
+---
+
+## Query SRDF/A Group Status
+
+Check the current state of all device pairs in an SRDF/A RDF group:
+
+```bash
+symrdf -sid <sid> -rdfg <group> query
+```
+
+The output shows each device pair, the RDF state (Synchronized, Consistent, Transmitting, Suspended), and the delta track count. Review the state column to confirm all pairs are in **Consistent** state under normal operations. High delta track counts indicate replication is falling behind.
+
+---
+
+## Suspend and Resume Replication
+
+Use suspend and resume during planned maintenance to prevent delta accumulation while work is in progress.
+
+**Suspend replication:**
+
+```bash
+symrdf -sid <sid> -rdfg <group> suspend
+```
+
+**Resume replication after maintenance:**
+
+```bash
+symrdf -sid <sid> -rdfg <group> resume
+```
+
+After resuming, monitor the delta track count — it should decrease as R2 catches up. Confirm pairs return to **Consistent** state before closing the maintenance window.
+
+---
+
+## Perform a Planned Failover
+
+Initiate a planned failover when the production site is available and a controlled switchover is required:
+
+```bash
+symrdf -sid <sid> -rdfg <group> failover
+```
+
+R2 becomes read/write; R1 I/O is suspended and hosts at the production site lose access to the devices. Confirm the failover completed successfully:
+
+```bash
+symrdf -sid <sid> -rdfg <group> query
+```
+
+Verify all pairs show **Failed Over** state before presenting R2 volumes to DR hosts.
+
+---
+
+## Fail Back After Recovery
+
+After the production site is restored and the DR workload is ready to move back, re-establish normal R1→R2 async replication:
+
+```bash
+symrdf -sid <sid> -rdfg <group> failback
+```
+
+This operation resynchronises R1 from R2 and restores the original replication direction. Monitor until all pairs return to **Consistent** state and confirm production applications resume normally on R1.
+
+---
+
+## Add Devices to an Existing SRDF/A Group
+
+Add new R1/R2 device pairs to an established SRDF/A group:
+
+```bash
+symrdf addpair -sid <sid> -rdfg <group> -dev <R1-devs> -remote_dev <R2-devs>
+```
+
+After adding the pairs, establish replication for the new devices:
+
+```bash
+symrdf establish -sid <sid> -rdfg <group>
+```
+
+Monitor the establish operation until the new pairs reach **Consistent** state alongside the existing group members.

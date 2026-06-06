@@ -18,6 +18,7 @@ curl -sk -X POST https://nd-dc1.corp.example.com/nexus/api/v1/users \
     "email": "san-team@corp.example.com",
     "roles": [{"name": "Viewer", "sites": [{"name": "DC1-SAN"}, {"name": "DC2-SAN"}]}]
   }' | python3 -m json.tool
+```
 ```text
 ┌─────────────────────────── Cisco Nexus Dashboard — Security Access Control ───────────────────────────┐
 │                                                                                                       │

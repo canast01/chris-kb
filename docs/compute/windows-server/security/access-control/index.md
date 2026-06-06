@@ -17,6 +17,7 @@ Add-ADGroupMember -Identity "GG-ServerAdmins" -Members "jsmith"
 
 # View group members
 Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountName, objectClass
+```
 ```text
 ┌─────────────────────────────────── Windows Server — Access Control ───────────────────────────────────┐
 │                                                                                                       │

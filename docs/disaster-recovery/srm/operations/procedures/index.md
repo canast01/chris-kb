@@ -39,7 +39,6 @@ flowchart TD
     class assess decision
     class start,pm,fo terminal
 ```
-
 ```text
 ┌────────────────────────────────────────── SRM — Procedures ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -248,3 +247,31 @@ Get-Content "C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmw
 | Cleanup test environment | SRM Admin | End of window |
 | Produce test report (RTO, issues, actions) | SRM Admin | T+2 days |
 | Update action items in JIRA/ticketing | Infra Lead | T+5 days |
+
+---
+
+## Update Network and Resource Mappings
+
+Network and resource mappings must be kept current when protected-site or recovery-site infrastructure changes.
+
+1. In SRM, navigate to **Site Recovery → Configure → Network Mappings**
+2. Click **Edit** on any mapping that requires updating — remap source port groups to the correct recovery-site port groups
+3. Navigate to **Site Recovery → Configure → Resource Mappings**
+4. Update cluster and resource pool assignments to reflect any changes to recovery-site compute infrastructure
+5. Run the SRM recovery plan **Validate** wizard to confirm all mappings resolve correctly and no VMs report mapping errors
+6. Resolve any validation warnings before the next scheduled DR test or production use
+
+---
+
+## Upgrade SRM Appliance (8.x+)
+
+SRM 8.x ships as an appliance (OVA/VAMI managed). Follow this procedure for patch and minor version upgrades.
+
+1. Download the new SRM OVA or upgrade ISO from the VMware Customer Connect portal — verify the SHA-256 checksum
+2. Log in to the SRM appliance management UI at `https://<srm-appliance-ip>:5480`
+3. Navigate to **Appliance Management → Upgrade**
+4. Provide the path to the downloaded OVA or upgrade package
+5. Click **Run Precheck** — resolve any pre-upgrade warnings (certificate validity, disk space, vCenter connectivity) before proceeding
+6. Click **Upgrade** and monitor progress in the VAMI UI — the SRM services will restart during the upgrade
+7. After the upgrade completes, log back in to vCenter and confirm the SRM site pair reconnects and shows both protected and recovery sites as **Connected**
+8. Run a recovery plan validation to confirm all protection groups and recovery plans are intact post-upgrade

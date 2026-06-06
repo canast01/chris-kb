@@ -23,7 +23,6 @@ flowchart TD
     w32time --> netlogon
     bfe --> winrm
 ```
-
 ```text
 ┌─────────────────────────────── Windows Server — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │

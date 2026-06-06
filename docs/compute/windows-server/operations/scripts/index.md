@@ -20,7 +20,6 @@ flowchart LR
 
     gitRepo --> sccm --> servers --> schedTask --> output --> monitoring
 ```
-
 ```text
 ┌───────────────────────────────── Windows Server — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │

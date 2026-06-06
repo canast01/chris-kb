@@ -36,7 +36,6 @@ flowchart TD
     style DONE fill:#2d8a4e,color:#fff
     style VENDOR fill:#c0392b,color:#fff
 ```
-
 ```text
 ┌──────────────────────────────────── Jira — Escalation Procedures ─────────────────────────────────────┐
 │                                                                                                       │

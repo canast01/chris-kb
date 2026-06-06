@@ -24,6 +24,7 @@ grep -i "ERROR" /opt/sannav/logs/event-engine.log | tail -20
 # Check NTP sync
 timedatectl status
 # Expected: "synchronized: yes"
+```
 ```text
 ┌─────────────────────────────────── Brocade SANnav — Health Checks ────────────────────────────────────┐
 │                                                                                                       │

@@ -90,7 +90,6 @@ flowchart TD
     success --> finallyBlock
     finallyBlock --> exitCode
 ```
-
 ```text
 ┌─────────────────────────────────────── PowerShell — Procedures ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -159,3 +158,134 @@ Get-Process | Select-Object Name, Id, CPU |
     ConvertTo-Json -Depth 3 |
     Out-File C:\Reports\processes.json -Encoding UTF8
 ```
+
+## Create and Use a PowerShell Module
+
+`New-ModuleManifest -Path MyModule.psd1` → write functions in `.psm1` → `Import-Module ./MyModule.psd1` → verify with `Get-Command -Module MyModule`.
+
+```powershell
+# Create module manifest
+New-ModuleManifest -Path MyModule.psd1 `
+    -RootModule 'MyModule.psm1' `
+    -ModuleVersion '1.0.0' `
+    -Author 'Your Name' `
+    -Description 'Helper functions for automation'
+
+# Write functions in the .psm1 file
+# MyModule.psm1
+function Get-ServerStatus {
+    param([string]$ComputerName)
+    Test-Connection -ComputerName $ComputerName -Count 1 -Quiet
+}
+
+function Invoke-DailyReport {
+    # ... report logic ...
+}
+
+# Export only public functions
+Export-ModuleMember -Function Get-ServerStatus, Invoke-DailyReport
+
+# Import and use the module
+Import-Module ./MyModule.psd1
+
+# Verify exported commands
+Get-Command -Module MyModule
+```
+
+| Component | Purpose |
+|---|---|
+| `.psd1` manifest | Metadata: version, author, dependencies, exported members |
+| `.psm1` root module | Function definitions |
+| `Export-ModuleMember` | Controls which functions are public (omit to export all) |
+| `Import-Module -Force` | Reload module after editing without restarting the session |
+
+## Publish a Module to PSGallery
+
+`Publish-Module -Name MyModule -NuGetApiKey <key> -Repository PSGallery` → verify on powershellgallery.com.
+
+```powershell
+# Register PSGallery if not already registered (it is by default)
+Get-PSRepository
+
+# Obtain an API key from https://www.powershellgallery.com/account/apikeys
+
+# Publish the module
+Publish-Module -Name MyModule -NuGetApiKey '<YOUR_API_KEY>' -Repository PSGallery -Verbose
+
+# Verify the published module is available
+Find-Module -Name MyModule -Repository PSGallery
+
+# Install from PSGallery to confirm
+Install-Module -Name MyModule -Scope CurrentUser -Force
+Import-Module MyModule
+Get-Command -Module MyModule
+```
+
+| Requirement | Detail |
+|---|---|
+| Module manifest `.psd1` | Must include `ModuleVersion` and `Description` |
+| API key | Obtained from powershellgallery.com → Account → API Keys |
+| `PowerShellGet` | Must be v2+ — update with `Install-Module PowerShellGet -Force` |
+| Namespace uniqueness | Module name must not conflict with an existing PSGallery entry |
+
+## Configure PowerShell Remoting over HTTPS
+
+`Enable-PSRemoting` → configure WinRM listener on 5986 → import certificate → test: `Enter-PSSession -ComputerName <host> -UseSSL`.
+
+```powershell
+# On the remote host (run as Administrator)
+Enable-PSRemoting -Force
+
+# Create or import an SSL certificate (example using self-signed for lab)
+$cert = New-SelfSignedCertificate -DnsName 'server01.corp.local' `
+    -CertStoreLocation 'Cert:\LocalMachine\My'
+
+# Create HTTPS WinRM listener on port 5986
+New-WSManInstance -ResourceURI winrm/config/Listener `
+    -SelectorSet @{Address='*'; Transport='HTTPS'} `
+    -ValueSet @{Hostname='server01.corp.local'; CertificateThumbprint=$cert.Thumbprint}
+
+# Open firewall port 5986
+New-NetFirewallRule -DisplayName 'WinRM HTTPS' -Direction Inbound `
+    -Protocol TCP -LocalPort 5986 -Action Allow
+
+# From the management host — connect over HTTPS
+Enter-PSSession -ComputerName server01.corp.local -UseSSL `
+    -Credential (Get-Credential)
+
+# Test connectivity without opening a full session
+Test-WSMan -ComputerName server01.corp.local -UseSSL
+```
+
+| Port | Protocol | Use |
+|---|---|---|
+| 5985 | HTTP | Unencrypted — lab/trusted networks only |
+| 5986 | HTTPS | Encrypted — required for production |
+
+## Sign a Script with a Code Signing Certificate
+
+`$cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert` → `Set-AuthenticodeSignature -FilePath script.ps1 -Certificate $cert` → verify signature.
+
+```powershell
+# List available code signing certificates in the personal store
+Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert
+
+# Sign the script
+$cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Select-Object -First 1
+Set-AuthenticodeSignature -FilePath 'C:\Scripts\deploy.ps1' -Certificate $cert
+
+# Verify the signature
+Get-AuthenticodeSignature -FilePath 'C:\Scripts\deploy.ps1'
+
+# Confirm the execution policy will accept signed scripts
+Set-ExecutionPolicy AllSigned -Scope LocalMachine
+# or for scripts from other sources:
+Set-ExecutionPolicy RemoteSigned -Scope LocalMachine
+```
+
+| Status | Meaning |
+|---|---|
+| `Valid` | Signature is intact and certificate is trusted |
+| `NotSigned` | Script has no digital signature |
+| `HashMismatch` | File was modified after signing — do not run |
+| `UnknownError` | Certificate chain cannot be verified; check trust store |

@@ -32,7 +32,6 @@ graph TB
     backupServer["Backup Server"] --> scp
     monSystem["Monitoring Platform"] --> snmp3
 ```
-
 ```text
 ┌─────────────────────────────────── Brocade Fabric OS — Encryption ────────────────────────────────────┐
 │                                                                                                       │

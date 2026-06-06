@@ -10,6 +10,7 @@ purearray list --network
 
 # Set proxy if needed
 purearray set --proxy https://<proxy-host>:<port>
+```
 ```text
 ┌────────────────────────────────────── Pure1 — Integration Guide ──────────────────────────────────────┐
 │                                                                                                       │

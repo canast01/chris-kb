@@ -6,6 +6,7 @@ export SYMCLI_SID=000123456789
 
 # Or use -sid flag on each command
 symrdf -sid 000123456789 query -g <rdf_group>
+```
 ```text
 ┌────────────────────────────────────── SRDF/A — Backup & Restore ──────────────────────────────────────┐
 │                                                                                                       │

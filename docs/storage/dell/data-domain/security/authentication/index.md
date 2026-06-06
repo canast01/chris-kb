@@ -34,7 +34,6 @@ graph TD
     adminUser --> ddboostUser
     ddCLI --> auditLog
 ```
-
 ```text
 ┌─────────────────────────────────── Dell Data Domain Authentication ───────────────────────────────────┐
 │                                                                                                       │

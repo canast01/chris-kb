@@ -65,7 +65,6 @@ flowchart TD
     O -- No --> J
     P --> J
 ```
-
 ```text
 ┌────────────────────────────────── Data Protection — Data Governance ──────────────────────────────────┐
 │                                                                                                       │

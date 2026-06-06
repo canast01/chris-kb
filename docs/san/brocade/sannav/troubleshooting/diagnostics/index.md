@@ -7,6 +7,7 @@ sannav restart
 # ... reproduce issue, collect logs ...
 sudo sed -i 's/level="DEBUG"/level="INFO"/' /opt/sannav/conf/log4j2.xml
 sannav restart
+```
 ```text
 ┌──────────────────────────────────── Brocade SANnav — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │

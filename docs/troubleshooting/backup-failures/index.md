@@ -51,7 +51,6 @@ flowchart TD
     C -- Authentication --> T[Check service account in job\nTest-ADServiceAccount]
     T --> U[Reset password\nVerify AD group membership]
 ```
-
 ```text
 ┌─────────────────────────────────────────── Backup Failures ───────────────────────────────────────────┐
 │                                                                                                       │

@@ -16,6 +16,7 @@ get corfu-cluster status
 # All services running
 get services | grep -v " running"
 # The above grep shows any service NOT in running state — output should be empty
+```
 ```text
 ┌───────────────────────────────────────── NSX — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │

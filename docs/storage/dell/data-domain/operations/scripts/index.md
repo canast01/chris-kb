@@ -60,6 +60,7 @@ else
   echo "STATUS: OK — No active alerts."
   exit 0
 fi
+```
 ```text
 ┌────────────────────────────────────── Dell Data Domain Scripts ───────────────────────────────────────┐
 │                                                                                                       │

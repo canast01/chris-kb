@@ -23,6 +23,7 @@ acs system resources
 
 # 6. Kubernetes event log
 kubectl get events --all-namespaces --sort-by='.lastTimestamp' > /tmp/k8s-events-$(date +%Y%m%d).txt
+```
 ```text
 ┌───────────────────────── Cisco Nexus Dashboard — Troubleshooting Escalation ──────────────────────────┐
 │                                                                                                       │

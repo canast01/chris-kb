@@ -23,7 +23,6 @@ flowchart TD
     L2 -->|Corruption / data loss confirmed| EMERG
     L3 -->|Vendor escalation| EMERG
 ```
-
 ```text
 ┌────────────────────────────────────────── Git — Escalation ───────────────────────────────────────────┐
 │                                                                                                       │

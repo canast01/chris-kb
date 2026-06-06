@@ -55,8 +55,6 @@
    ```
 
 3. **Network connectivity from SRM Server to array management IP**:
-```
-
 ```powershell
    Test-NetConnection <flasharray-ip> -Port 443
    ```
@@ -92,8 +90,6 @@
 **Symptoms:** Protection Group status is "Error" or "Warning"
 
 1. **RPO lag exceeds configured RPO**: Replication is not keeping up
-```
-
 ```text
    Site Recovery → Replication → vSphere Replication
    Find the VMs in the PG → check "Lag" column
@@ -101,8 +97,6 @@
    ```
 
 2. **VM snapshot inconsistency** (for ABR protection groups):
-```
-
 ```text
    Check storage array — verify snapshot exists for the replication group
    SRA may need to re-discover: Site Recovery → Storage → Array Pairs → Discover Devices
@@ -128,16 +122,12 @@
    ```
 
 2. **Placeholder VM stale**: Placeholder VM at recovery site has incorrect config
-```
-
 ```sql
    # Delete placeholder VM from recovery site vCenter
    # Site Recovery → Protection → [PG] → Configure → adds placeholder VMs back automatically
    ```
 
 3. **Resource pool or datastore insufficient at recovery site**:
-```
-
 ```text
    Check recovery site CPU/RAM/storage capacity before running test
    Verify resource mappings in Site Recovery → Site Pair → Inventory Mappings
@@ -157,8 +147,6 @@
    ```
 
 2. **Protected site not fully restored**: Protected site vCenter or SRM not running
-```
-
 ```bash
    Verify: vCenter at protected site is operational
    Verify: SRM service running at protected site

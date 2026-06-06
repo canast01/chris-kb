@@ -31,7 +31,6 @@ graph TB
   class NIC,NET net
   class ADMIN host
 ```
-
 ```text
 ┌──────────────────────────────────────── Linux — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │

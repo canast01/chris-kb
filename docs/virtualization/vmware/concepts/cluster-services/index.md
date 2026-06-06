@@ -6,7 +6,7 @@ vSphere cluster services are the group of features that collectively make a clus
 
 ## Overview — How the Services Relate
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        vSphere Cluster Services                                                       │
 │                                                                                                       │

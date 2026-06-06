@@ -109,7 +109,7 @@ Storage Policy-Based Management (SPBM) is a framework that decouples storage cap
 
 ### How SPBM Works
 
-```
+```text
 ┌───────────────────────────────────────────────────────┐
 │                  SPBM Architecture                                                                    │
 │                                                                                                       │
@@ -366,7 +366,7 @@ ESXi 7.0+ supports NVMe/FC and NVMe/TCP. NVMe/TCP requires no special hardware b
 
 ## Storage Architecture Decision Reference
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────────────┐
 │               Storage Architecture Selection Guide                                                    │
 │                                                                                                       │

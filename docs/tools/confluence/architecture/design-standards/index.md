@@ -12,6 +12,7 @@ curl -u user:token \
 # Get a specific template by ID
 curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/template/TEMPLATE_ID"
+```
 ```text
 ┌──────────────────────────────────── Confluence — Design Standards ────────────────────────────────────┐
 │                                                                                                       │

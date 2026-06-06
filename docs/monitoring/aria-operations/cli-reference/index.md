@@ -13,6 +13,7 @@ vracli services
 # View logs
 tail -f /data/vcops/log/analytics.log
 tail -f /data/vcops/log/collector.log
+```
 ```text
 ┌─────────────────────────────────── Aria Operations — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │

@@ -10,6 +10,7 @@ def get_token(host, username, password):
     resp = requests.post(url, json=payload, headers=headers, verify=True)
     resp.raise_for_status()
     return resp.json()["token"]
+```
 ```text
 ┌───────────────────────────────── Aria Operations — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │

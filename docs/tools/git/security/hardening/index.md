@@ -13,6 +13,7 @@ pre-commit install
 # Also install for commit-msg and push hooks
 pre-commit install --hook-type commit-msg
 pre-commit install --hook-type pre-push
+```
 ```text
 ┌─────────────────────────────────────────── Git — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │

@@ -378,3 +378,150 @@ w32tm /config /manualpeerlist:"pool.ntp.org" /syncfromflags:manual /reliable:YES
 # Check time skew across DCs
 w32tm /monitor /computers:dc01,dc02,dc03
 ```
+
+---
+
+## Transfer FSMO Roles
+
+Transfer FSMO roles to a new DC during planned migrations or before decommissioning the current role holder.
+
+```powershell
+# Transfer PDC Emulator, RID Master, and Infrastructure Master to new DC
+Move-ADDirectoryServerOperationMasterRole -Identity <new-dc> `
+    -OperationMasterRole PDCEmulator,RIDMaster,InfrastructureMaster
+
+# Verify all roles were transferred successfully
+netdom query fsmo
+
+# Confirm via PowerShell
+Get-ADDomain | Select-Object PDCEmulator, RIDMaster, InfrastructureMaster
+Get-ADForest | Select-Object SchemaMaster, DomainNamingMaster
+```
+
+Pre-checks: confirm the target DC is healthy (`dcdiag /test:all`), replication is in sync (`repadmin /showrepl`), and a change ticket is approved. Only seize roles (via `ntdsutil`) if the original holder is permanently offline.
+
+---
+
+## Create a Group Policy Object
+
+Create and link a new GPO to enforce configuration on an OU.
+
+1. Open **Group Policy Management** (`gpmc.msc`).
+2. Expand the domain tree, right-click the target OU → **Create a GPO in this domain, and Link it here**.
+3. Enter a descriptive name (e.g., `Security Baseline - Workstations`) → **OK**.
+4. Right-click the new GPO → **Edit** → configure the required settings under Computer or User Configuration.
+5. Close the editor — the GPO is already linked to the OU.
+6. Force immediate refresh on target machines:
+
+```cmd
+gpupdate /force
+```
+
+7. Verify applied policy:
+
+```cmd
+gpresult /r
+```
+
+Use **Security Filtering** to scope the GPO to a specific group rather than all Authenticated Users when a targeted rollout is required.
+
+---
+
+## Audit Active Directory Changes
+
+Enable auditing to capture privileged account and group changes for security and compliance review.
+
+### Enable Audit Policy via GPO
+
+1. Create or edit a GPO linked to Domain Controllers OU.
+2. Navigate to **Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy Configuration → DS Access**.
+3. Enable **Audit Directory Service Changes** → Success and Failure.
+4. Run `gpupdate /force` on all DCs.
+
+### Key Event IDs to Monitor
+
+| Event ID | Description |
+|---|---|
+| 4720 | User account created |
+| 4722 | User account enabled |
+| 4725 | User account disabled |
+| 4740 | User account locked out |
+| 4756 | Member added to a security-enabled universal group |
+| 4728 | Member added to a security-enabled global group |
+| 4732 | Member added to a security-enabled local group |
+
+### Query Security Event Log
+
+```powershell
+# Find all account lockout events (4740) in the last 24 hours
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4740; StartTime=(Get-Date).AddDays(-1)} |
+    Select-Object TimeCreated, Message
+
+# Find account creation events (4720)
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4720} |
+    Select-Object TimeCreated, Message | Format-List
+```
+
+---
+
+## Recover Deleted Objects (Recycle Bin)
+
+The AD Recycle Bin preserves deleted objects with all attributes intact for the deleted object lifetime (default 180 days). The feature must be enabled before the deletion occurs.
+
+```powershell
+# Verify Recycle Bin is enabled
+Get-ADOptionalFeature -Filter {Name -like "Recycle Bin Feature"}
+
+# Enable Recycle Bin (forest-wide, requires Enterprise Admin — one-time, irreversible)
+Enable-ADOptionalFeature -Identity "Recycle Bin Feature" `
+    -Scope ForestOrConfigurationSet `
+    -Target (Get-ADForest).Name
+
+# List all deleted objects
+Get-ADObject -Filter {isDeleted -eq $true} -IncludeDeletedObjects |
+    Select-Object Name, DistinguishedName, WhenChanged
+
+# Restore a specific deleted user
+Get-ADObject -Filter {isDeleted -eq $true -and Name -like "*jsmith*"} `
+    -IncludeDeletedObjects | Restore-ADObject
+
+# Restore all deleted objects from a specific OU
+Get-ADObject -Filter {isDeleted -eq $true} -IncludeDeletedObjects |
+    Where-Object {$_.DistinguishedName -like "*OU=Finance*"} |
+    Restore-ADObject
+```
+
+Verify the restored object appears in AD Users and Computers and that group memberships are intact.
+
+---
+
+## Configure Fine-Grained Password Policy
+
+Fine-Grained Password Policies (PSOs) allow different password requirements for specific users or groups, overriding the Default Domain Policy. Requires Domain Functional Level 2008 or higher.
+
+```powershell
+# Create a PSO for service accounts (longer password, no lockout)
+New-ADFineGrainedPasswordPolicy `
+    -Name "ServiceAccounts" `
+    -MinPasswordLength 20 `
+    -PasswordHistoryCount 24 `
+    -ComplexityEnabled $true `
+    -ReversibleEncryptionEnabled $false `
+    -MinPasswordAge "1.00:00:00" `
+    -MaxPasswordAge "0" `
+    -LockoutThreshold 0 `
+    -Precedence 10
+
+# Apply the PSO to a group
+Add-ADFineGrainedPasswordPolicySubject `
+    -Identity "ServiceAccounts" `
+    -Subjects "SG-ServiceAccounts"
+
+# Verify which PSO applies to a user
+Get-ADUserResultantPasswordPolicy -Identity svc-sql
+
+# List all PSOs
+Get-ADFineGrainedPasswordPolicy -Filter * | Select-Object Name, Precedence, MinPasswordLength
+```
+
+A lower Precedence number wins when multiple PSOs apply to the same user. Apply PSOs to groups rather than individual users for easier management.

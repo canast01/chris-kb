@@ -12,6 +12,7 @@ ls -lh /tmp/vracli-support-bundle*.tar.gz
 
 # Copy to a local machine for upload
 scp root@vra-prod-01.example.local:/tmp/vracli-support-bundle*.tar.gz /tmp/
+```
 ```text
 ┌──────────────────────────────────── Aria Automation — Escalation ─────────────────────────────────────┐
 │                                                                                                       │

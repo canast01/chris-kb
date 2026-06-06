@@ -17,6 +17,7 @@
 systemctl start dcnm-server
 systemctl stop dcnm-pm        # performance manager only
 systemctl restart dcnm-events
+```
 ```text
 ┌───────────────────────────────────── Cisco DCNM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │

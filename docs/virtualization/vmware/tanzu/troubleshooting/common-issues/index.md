@@ -58,8 +58,6 @@
    ```
 
 3. **NSX-T or AVI misconfiguration**: Load balancer not assigning VIP to Supervisor
-```
-
 ```text
    NSX-T → Load Balancing → Virtual Servers → check if VIP created for Supervisor
    ```
@@ -153,8 +151,6 @@
 ## Service Type LoadBalancer Pending
 
 **Symptoms:** Service shows `EXTERNAL-IP: <pending>` for >2 minutes
-
-```
 
 ```bash
 kubectl describe svc <service-name> -n <namespace>

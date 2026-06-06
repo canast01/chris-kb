@@ -150,3 +150,109 @@ purefb policies list
 | Snapshot create fails | Capacity | Check array free space |
 | Restore failed | File system in use | Unmount/quiesce clients first |
 | Snapshots not auto-created | Policy attached? | Verify snapshot policy assignment |
+
+## Create a File System
+
+FlashBlade file systems are the primary NFS and SMB storage containers. Create the file system, configure an export policy, and mount it from clients.
+
+```bash
+# Step 1 — Create the file system
+pureds create --name <name> --size <size>T
+
+# Step 2 — Create an export policy for NFS access
+pureexportpolicy create --name <policy-name>
+
+# Step 3 — Add an NFS rule to the export policy
+# Allow a specific subnet with read/write access
+pureexportpolicy rule add --policy <policy-name> \
+    --client <client-cidr> \
+    --access rw \
+    --root-squash false
+
+# Step 4 — Apply the export policy to the file system
+pureds update --name <name> --nfs-export-policy <policy-name>
+
+# Step 5 — Mount from client
+mount -t nfs <fb-data-vip>:/<name> /mnt/<name>
+```
+
+Verify the mount is accessible and confirm read/write permissions from the client before closing the change.
+
+## Create an Object Store Bucket
+
+FlashBlade S3 buckets provide object storage accessible via the S3 API. Buckets are scoped to an account and require an access policy for external clients.
+
+```bash
+# Step 1 — Create the S3 bucket under an existing account
+purebucket create \
+    --name <bucket-name> \
+    --account <account-name>
+
+# Step 2 — Configure an access policy (via GUI or API)
+# Unisphere/Purity//FB GUI: Object Store → Buckets → select bucket → Access Policies
+# Add bucket policy granting s3:GetObject, s3:PutObject, s3:ListBucket as needed
+
+# Step 3 — Test bucket access from an S3 client
+aws s3 ls s3://<bucket-name> \
+    --endpoint-url https://<fb-s3-vip>
+```
+
+Confirm the bucket listing returns without error. For application integration, create an object store user and generate access keys: **Object Store → Users → Create User → Generate Access Key**.
+
+## Create a Snapshot Schedule
+
+Automated snapshot schedules protect file systems on a recurring basis. Create the schedule, then attach it to the target file system as a protection policy.
+
+```bash
+# Step 1 — Create the snapshot schedule
+puresnapshot schedule create \
+    --name <sched> \
+    --every 1h \
+    --keep-for 24h
+
+# Step 2 — Attach the schedule to a file system as a protection policy
+pureds create-protection \
+    --name <name> \
+    --schedule <sched>
+
+# Verify snapshots are being created after the first interval
+purefb fs-snapshot list --filter "source='<name>'"
+```
+
+Adjust `--every` and `--keep-for` values to match the RPO requirement. Longer retention periods consume more capacity — monitor array free space after enabling the schedule.
+
+## Configure Replication to a Remote FlashBlade
+
+FlashBlade-to-FlashBlade replication (ActiveDR) protects NFS file systems by continuously replicating to a remote FlashBlade. Configure the remote target first, then create the file copy job.
+
+```bash
+# Step 1 — Add the remote FlashBlade as a replication target
+pureremote create \
+    --name <target-fb> \
+    --address <ip>
+
+# Step 2 — Create the file copy replication job
+purefilecopy create \
+    --source <fs> \
+    --target <target-fb>:<fs>
+
+# Step 3 — Monitor replication progress
+purefilecopy list
+# Check: status, lag, bytes-transferred
+```
+
+Confirm the replication lag is within the RPO requirement. For Active-Active configurations where both sites serve I/O, use ActiveDR failover procedures rather than a simple file copy.
+
+## Expand a File System
+
+File system expansion on FlashBlade is non-disruptive and online. NFS and SMB clients see the new capacity immediately without remounting.
+
+```bash
+# Expand the file system to a larger size
+pureds modify --name <name> --size <new-size>T
+
+# Verify the new provisioned size
+pureds list --name <name>
+```
+
+No downtime is required. NFS clients see the new capacity immediately. Confirm the updated size is reflected in the `df -h` output from a mounted client. If the file system has a snapshot policy, verify that snapshot creation continues normally after the expansion.

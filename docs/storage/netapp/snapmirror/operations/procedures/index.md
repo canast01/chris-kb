@@ -182,3 +182,75 @@ snapmirror break -destination-path <src_svm:src_vol>
 snapmirror resync -source-path <src_svm:src_vol> \
     -destination-path <dest_svm:dest_vol>
 ```
+
+---
+
+## Initialize a SnapMirror Relationship
+
+Run the initialize command to perform the first baseline transfer from source to destination:
+
+```bash
+snapmirror initialize -source-path <vserver:vol> -destination-path <vserver:vol>
+```
+
+Monitor initialization progress — the first transfer copies all data and can take hours depending on volume size:
+
+```bash
+snapmirror show -fields state,lag-time
+```
+
+Wait until the relationship state shows **Idle** and the lag-time reflects the time since the baseline transfer completed. The destination volume is read-only once initialization finishes.
+
+---
+
+## Update SnapMirror Manually
+
+Trigger an on-demand incremental update outside the scheduled transfer window:
+
+```bash
+snapmirror update -source-path <vserver:vol> -destination-path <vserver:vol>
+```
+
+Monitor the transfer until it completes:
+
+```bash
+snapmirror show -fields state,lag-time
+```
+
+Verify that lag-time drops to near-zero after the update completes, confirming the destination is current.
+
+---
+
+## Break and Reactivate a SnapMirror Relationship
+
+**Break (for DR failover or testing):** makes the destination volume read-write and suspends replication.
+
+```bash
+snapmirror break -destination-path <vserver:vol>
+```
+
+The destination volume is now writable and can accept host I/O. Replication is suspended until the relationship is resynced.
+
+**Resync (reprotect):** re-establishes replication after a break. The destination is overwritten with data from the source; any writes made to the destination since the break will be lost.
+
+```bash
+snapmirror resync -source-path <vserver:vol> -destination-path <vserver:vol>
+```
+
+---
+
+## Change SnapMirror Schedule
+
+Modify the transfer schedule on an existing relationship:
+
+```bash
+snapmirror modify -destination-path <vserver:vol> -schedule hourly
+```
+
+Verify the updated schedule is applied:
+
+```bash
+snapmirror show -fields schedule
+```
+
+Confirm the new schedule aligns with the required RPO — more frequent schedules reduce RPO but increase network utilisation.

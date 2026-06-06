@@ -56,6 +56,69 @@ Public Key Infrastructure (PKI) reference covering PKI Architecture (Typical Ent
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```text
+┌──────────────────────────── PKI / ADCS — CA Hierarchy Deployment Sequence ────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────                │
+│  2 × Windows Server 2022 VMs: Root CA (isolated) + Issuing CA (domain-joined)                         │
+│  Root CA: static IP for initial config only — disconnect from network after install                   │
+│  Issuing CA: domain-joined, management VLAN access from all certificate consumers                     │
+│  Plan: hierarchy name, CDP/AIA HTTP URLs, key algorithm (RSA-4096 root, RSA-2048 issuing)             │
+│  Vault: CA admin creds, DSRM passwords, private key backup location before any install                │
+│                                                                                                       │
+│                                        │  build Root CA offline                                       │
+│                                        ▼                                                              │
+│  Step 2 · Root CA — Offline, Air-Gapped                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────                │
+│  Install AD CS: StandaloneRootCA  ·  RSA-4096  ·  SHA-256  ·  20-year validity                        │
+│  Set CDP/AIA extensions to point to Issuing CA HTTP publication path (not self)                       │
+│  Configure CRL: 1-year base + 6-month delta  ·  certutil -CRL to publish immediately                  │
+│  Export Root CA cert + CRL to secure media (USB) for import on Issuing CA                             │
+│  Snapshot VM; store private key backup in offline vault; disconnect from all networks                 │
+│                                                                                                       │
+│                                        │  deploy Issuing CA online                                    │
+│                                        ▼                                                              │
+│  Step 3 · Issuing CA — Enterprise ADCS                                                                │
+│  ─────────────────────────────────────────────────────────────────────────────────────                │
+│  Install AD CS: EnterpriseSubordinateCA  ·  domain-joined  ·  RSA-2048  ·  5-year validity            │
+│  Submit CSR to Root CA (offline): certutil -submit  ·  sign  ·  import response                       │
+│  Publish Root CA cert to AD NTAuth store: certutil -dspublish -f RootCA.cer RootCA                    │
+│  Verify chain: certutil -urlfetch -verify IssuingCA.cer  ·  confirm AIA + CDP resolve                 │
+│  Check: CA service running; Event ID 26 (CA started) in Application event log                         │
+│                                                                                                       │
+│                                        │  configure CRL / OCSP                                        │
+│                                        ▼                                                              │
+│  Step 4 · CRL and OCSP Infrastructure                                                                 │
+│  ─────────────────────────────────────────────────────────────────────────────────────                │
+│  Publish CRL to IIS: http://pki.<domain>/CRL/ — accessible to all cert consumers                      │
+│  Install Online Responder: Add-WindowsFeature ADCS-Online-Cert  ·  open port 80                       │
+│  Configure OCSP Signing template: grant auto-enroll to CA service account                             │
+│  Set revocation provider on Issuing CA to point at its own CRL path                                   │
+│  Verify: certutil -URL <AIA-URL>  ·  alert if CRL nextUpdate < 50% lifetime remaining                 │
+│                                                                                                       │
+│                                        │  create certificate templates                                │
+│                                        ▼                                                              │
+│  Step 5 · Certificate Templates                                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────────                │
+│  Duplicate built-in templates: Web Server → Server Auth; User → Client Auth                           │
+│  Set: key usage, EKU, 1–2 yr validity, RSA-2048 min, subject from AD or CSR                           │
+│  Grant Enroll + Auto-Enroll: Domain Computers (server certs), Domain Users (user certs)               │
+│  Publish templates: CA snap-in → Certificate Templates → New → Template to Issue                      │
+│  Test: manual request via http://IssuingCA/certsrv — confirm download and chain                       │
+│                                                                                                       │
+│                                        │  enable auto-enrollment and validate                         │
+│                                        ▼                                                              │
+│  Step 6 · Auto-Enrollment and Validation                                                              │
+│  ─────────────────────────────────────────────────────────────────────────────────────                │
+│  GPO: Cert Services Client — Auto-Enrollment → Enabled + renew expired and pending                    │
+│  Link GPO to Domain Computers OU and Domain Users OU  ·  gpupdate /force to test                      │
+│  Verify: certmgr.msc → Personal → Certificates — auto-enrolled cert present                           │
+│  Full chain validation: certutil -verify -urlfetch cert.cer on multiple consumers                     │
+│  Set expiry alerting: certutil -view -restrict "NotAfter<NOW+60D" as daily baseline                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 <div class="kb-grid">
   <a class="kb-card" href="operations/">
     <div class="kb-card-icon">⚙️</div>

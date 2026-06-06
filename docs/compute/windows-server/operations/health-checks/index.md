@@ -41,6 +41,7 @@ Get-NetFirewallProfile | Select-Object Name, Enabled
 
 # 10. Last Windows Updates installed
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 5
+```
 ```text
 ┌─────────────────────────────────── Windows Server — Health Checks ────────────────────────────────────┐
 │                                                                                                       │

@@ -30,6 +30,7 @@ curl -sk -u 'admin:password' \
     }
   }' \
   "https://<nsx-manager>/api/v1/cluster/backups/config"
+```
 ```text
 ┌────────────────────────────────────── NSX — Backup and Restore ───────────────────────────────────────┐
 │                                                                                                       │

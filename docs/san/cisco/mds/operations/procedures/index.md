@@ -74,7 +74,6 @@ flowchart TD
   class A,B,C,D,E,F,G,H,I step
   class J verify
 ```
-
 ```text
 ┌─────────────────────────────── Cisco MDS 9000 — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │

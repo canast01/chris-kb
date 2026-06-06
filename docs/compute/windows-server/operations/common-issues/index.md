@@ -38,7 +38,6 @@ flowchart TD
     resourceOk -- Yes --> svcOk
     svcOk --> resolve
 ```
-
 ```text
 ┌───────────────────────────── Windows Server — Common Operational Issues ──────────────────────────────┐
 │                                                                                                       │

@@ -35,6 +35,7 @@ When new switches are added to an existing fabric, SANnav must re-discover to up
 # On the switch — verify SNMPv3 is configured before SANnav discovery
 ssh admin@<switch-ip>
 snmpconfig --show snmpv3
+```
 ```text
 ┌─────────────────────────────── Brocade SANnav — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │

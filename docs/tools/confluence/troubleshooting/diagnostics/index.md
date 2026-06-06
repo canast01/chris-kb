@@ -38,7 +38,6 @@ flowchart TD
 
     P3 & P4 & C3 & T3 & D3 & F3 --> End([Resolve or Escalate])
 ```
-
 ```text
 ┌────────────────────────────────────── Confluence — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │

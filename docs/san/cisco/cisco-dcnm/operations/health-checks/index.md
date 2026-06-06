@@ -20,6 +20,7 @@ grep -i "ERROR\|SEVERE\|Exception" /var/log/dcnm/server.log | tail -50
 # NTP status
 timedatectl status
 # Expected: synchronized: yes
+```
 ```text
 ┌───────────────────────────────────── Cisco DCNM — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │

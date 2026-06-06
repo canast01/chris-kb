@@ -47,7 +47,6 @@ flowchart TD
     class vcenter host
     class obj cloud
 ```
-
 ```text
 ┌──────────────────────────────────────── Veeam — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │

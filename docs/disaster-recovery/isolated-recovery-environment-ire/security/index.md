@@ -6,6 +6,7 @@ $prodAdmins = (Invoke-Command -ComputerName prod-dc01 { Get-ADGroupMember Admini
 $ireAdmins  = (Invoke-Command -ComputerName ire-dc01  { Get-ADGroupMember Administrators }).Name
 Compare-Object $prodAdmins $ireAdmins -IncludeEqual | Where-Object {$_.SideIndicator -eq "=="}
 # Should return empty — no overlapping accounts
+```
 ```text
 ┌──────────────────────────────────────────── IRE Security ─────────────────────────────────────────────┐
 │                                                                                                       │

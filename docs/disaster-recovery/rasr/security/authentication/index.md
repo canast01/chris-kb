@@ -6,6 +6,7 @@ Authentication requirements:
 - Preferred: LDAP/AD integration with role-based access
 - Required for recovery operators: "Recovery Manager" or equivalent role
 - MFA: Enable for all management plane access where supported
+```
 ```text
 ┌──────────────────────────────────────── RASR — Authentication ────────────────────────────────────────┐
 │                                                                                                       │

@@ -12,6 +12,7 @@ acs nodes list
 # Check Kubernetes node status
 kubectl get nodes
 # If a node shows NotReady: investigate the node-specific issue below
+```
 ```text
 ┌──────────────────────── Cisco Nexus Dashboard — Troubleshooting Common Issues ────────────────────────┐
 │                                                                                                       │

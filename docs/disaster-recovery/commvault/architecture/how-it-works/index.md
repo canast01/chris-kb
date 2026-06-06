@@ -28,7 +28,6 @@ graph TB
   class SRC,ADMIN host
   class WEBCON mgmt
 ```
-
 ```text
 ┌─────────────────────────────── Commvault — How It Works: Job Lifecycle ───────────────────────────────┐
 │                                                                                                       │

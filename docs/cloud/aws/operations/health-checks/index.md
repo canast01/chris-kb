@@ -55,6 +55,7 @@ aws support describe-trusted-advisor-check-summaries \
     Ti39halfu8 \
   --query 'summaries[].{Name:categorySpecificSummary,Status:status}' \
   --output table
+```
 ```text
 ┌─────────────────────────────────── AWS Operations — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -306,6 +307,7 @@ aws health describe-events \
 
 # Current caller identity (confirm correct account/role)
 aws sts get-caller-identity
+```
 ```text
 ┌─────────────────────────────────── AWS Operations — Health Checks ────────────────────────────────────┐
 │                                                                                                       │

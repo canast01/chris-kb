@@ -34,7 +34,6 @@ flowchart LR
     psLog --> wef
     wef --> siem
 ```
-
 ```text
 ┌──────────────────────────────────── Windows Server — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │

@@ -12,6 +12,7 @@ TOKEN=$(curl -s -X POST "https://netapp-cloud-account.auth0.com/oauth/token" \
   }' | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 
 echo "Token acquired"
+```
 ```text
 ┌─────────────────────────────────── NetApp Keystone — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │

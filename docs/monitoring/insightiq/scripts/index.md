@@ -12,6 +12,7 @@ def iiq_get(path: str, params: dict = None) -> dict:
                         auth=AUTH, params=params, verify=True)
     resp.raise_for_status()
     return resp.json()
+```
 ```text
 ┌──────────────────────────────────── InsightIQ — Scripts Reference ────────────────────────────────────┐
 │                                                                                                       │

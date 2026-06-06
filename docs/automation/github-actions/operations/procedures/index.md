@@ -27,7 +27,6 @@ flowchart TD
     jobB -->|"all matrix legs pass"| jobC
     jobC --> deploy
 ```
-
 ```text
 ┌───────────────────────────────────── GitHub Actions — Procedures ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -606,3 +605,191 @@ updates:
       actions:
         patterns: ["*"]
 ```
+
+## Configure a Self-Hosted Runner
+
+Settings → Actions → Runners → New self-hosted runner → choose OS → follow registration commands → verify runner shows Online.
+
+```bash
+# Example registration (Linux)
+mkdir actions-runner && cd actions-runner
+curl -o actions-runner-linux-x64-2.x.x.tar.gz -L https://github.com/actions/runner/releases/download/v2.x.x/actions-runner-linux-x64-2.x.x.tar.gz
+tar xzf ./actions-runner-linux-x64-2.x.x.tar.gz
+
+# Configure the runner (token from Settings → Actions → Runners → New runner)
+./config.sh --url https://github.com/OWNER/REPO --token <REGISTRATION_TOKEN>
+
+# Start as a service
+sudo ./svc.sh install
+sudo ./svc.sh start
+
+# Verify runner status in Settings → Actions → Runners (should show Online)
+```
+
+| Step | Command / Location |
+|---|---|
+| Get registration token | Settings → Actions → Runners → New self-hosted runner |
+| Configure | `./config.sh --url <repo-url> --token <token>` |
+| Install as service | `sudo ./svc.sh install && sudo ./svc.sh start` |
+| Verify | Settings → Actions → Runners → runner shows **Online** |
+
+## Set Up Environment Protection Rules
+
+Settings → Environments → New environment → add required reviewers → configure wait timer → restrict to specific branches.
+
+```bash
+# Configure via gh CLI
+gh api --method PUT /repos/OWNER/REPO/environments/production \
+  --input - <<'EOF'
+{
+  "wait_timer": 10,
+  "reviewers": [
+    {"type": "User", "id": 12345}
+  ],
+  "deployment_branch_policy": {
+    "protected_branches": true,
+    "custom_branch_policies": false
+  }
+}
+EOF
+```
+
+```yaml
+# Reference the environment in a workflow job
+jobs:
+  deploy:
+    environment:
+      name: production
+      url: https://example.com
+    runs-on: ubuntu-24.04
+    steps:
+      - run: ./deploy.sh
+```
+
+| Setting | Purpose |
+|---|---|
+| Required reviewers | Named users or teams must approve before the job runs |
+| Wait timer | Delay (minutes) between approval and job start |
+| Branch restrictions | Only allow deployments from protected branches or named patterns |
+
+## Debug a Failing Workflow
+
+Actions → select failed run → expand failing step → review logs → add `ACTIONS_STEP_DEBUG: true` secret for verbose output → re-run.
+
+```bash
+# Enable debug logging via gh CLI (set as a secret)
+gh secret set ACTIONS_STEP_DEBUG --body "true"
+gh secret set ACTIONS_RUNNER_DEBUG --body "true"
+
+# Re-run only the failed jobs (preserves passing jobs)
+gh run rerun <run-id> --failed
+
+# Stream live logs for a running workflow
+gh run watch <run-id>
+
+# Download logs for offline inspection
+gh run download <run-id> --dir ./run-logs
+```
+
+```yaml
+# Add temporary debug step to a failing job
+- name: Debug environment
+  run: |
+    echo "Runner OS: ${{ runner.os }}"
+    echo "GitHub ref: ${{ github.ref }}"
+    env | sort
+```
+
+| Debug technique | When to use |
+|---|---|
+| `ACTIONS_STEP_DEBUG: true` secret | Need verbose runner and step output |
+| `ACTIONS_RUNNER_DEBUG: true` secret | Diagnose runner-level connectivity issues |
+| `env | sort` step | Confirm environment variables are set correctly |
+| Re-run failed jobs | Isolate transient vs. consistent failures |
+
+## Cache Dependencies for Faster Builds
+
+Add `actions/cache` step before dependency install → set key based on lock file hash → verify cache hit/miss in logs.
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # For Node.js projects
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+```
+
+```yaml
+# actions/setup-python has built-in caching (preferred for Python)
+- uses: actions/setup-python@v5
+  with:
+    python-version: '3.12'
+    cache: pip                # handles cache key automatically
+```
+
+| Cache field | Description |
+|---|---|
+| `key` | Exact cache key; cache is restored only on exact match |
+| `restore-keys` | Fallback prefixes tried in order if exact key is not found |
+| `path` | Directory or file to cache |
+| Cache hit | Logged as `Cache restored from key: …` in the step output |
+| Cache miss | Logged as `Cache not found`; cache is saved at end of job |
+
+## Schedule a Recurring Workflow
+
+Add `on: schedule: - cron: '0 6 * * 1'` trigger → verify next run time in Actions → Scheduled tab.
+
+```yaml
+on:
+  schedule:
+    - cron: '0 6 * * 1-5'   # weekdays at 06:00 UTC
+    - cron: '0 0 1 * *'     # first day of every month at 00:00 UTC
+
+jobs:
+  weekly-report:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run scheduled task
+        run: python scripts/weekly_report.py
+```
+
+```bash
+# Trigger a scheduled workflow manually for testing
+gh workflow run scheduled-report.yml
+
+# List upcoming scheduled runs (shows next trigger time)
+gh workflow list --all
+
+# View run history for a specific workflow
+gh run list --workflow=scheduled-report.yml --limit 10
+```
+
+| Cron field order | `minute hour day-of-month month day-of-week` |
+|---|---|
+| `0 6 * * 1` | Every Monday at 06:00 UTC |
+| `0 0 * * *` | Every day at midnight UTC |
+| `*/15 * * * *` | Every 15 minutes |
+| `0 9 1 * *` | First of every month at 09:00 UTC |
+
+Note: GitHub Actions schedules run in UTC. Scheduled workflows may be delayed by up to 15 minutes under high load.

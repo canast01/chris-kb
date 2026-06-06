@@ -42,7 +42,6 @@ graph TD
   class FCID allow
   class DENY block
 ```
-
 ```text
 ┌───────────────────────────────── Cisco MDS — Security Access Control ─────────────────────────────────┐
 │                                                                                                       │

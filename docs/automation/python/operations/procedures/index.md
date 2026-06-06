@@ -83,7 +83,6 @@ graph TD
     logFile --> siem
     syslogHandler --> siem
 ```
-
 ```text
 ┌───────────────────────────────────────── Python — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -367,3 +366,195 @@ def send_report(
 | JSON | `json` / `pandas` | API output, programmatic consumption |
 | PDF | `weasyprint` / `reportlab` | Formal printed documents |
 | Markdown | plain string | Wiki, GitHub, MkDocs |
+
+## Create and Manage a Virtual Environment
+
+`python3 -m venv .venv` → `source .venv/bin/activate` (Linux/Mac) or `.venv\Scripts\activate` (Windows) → install packages → `deactivate` when done.
+
+```bash
+# Create a virtual environment in the project directory
+python3 -m venv .venv
+
+# Activate (Linux / macOS)
+source .venv/bin/activate
+
+# Activate (Windows — PowerShell)
+.venv\Scripts\Activate.ps1
+
+# Activate (Windows — cmd.exe)
+.venv\Scripts\activate.bat
+
+# Confirm the active environment
+which python          # Linux/macOS
+where python          # Windows
+python --version
+
+# Install packages into the active environment
+pip install requests pandas
+
+# Save dependencies to a requirements file
+pip freeze > requirements.txt
+
+# Install from a requirements file
+pip install -r requirements.txt
+
+# Deactivate when done
+deactivate
+```
+
+| Practice | Reason |
+|---|---|
+| One venv per project | Prevents dependency conflicts between projects |
+| Add `.venv/` to `.gitignore` | The venv is not portable — recreate from `requirements.txt` |
+| Pin versions in `requirements.txt` | Reproducible installs across environments |
+| Use `pip install -e .` | Install the project itself as editable for development |
+
+## Package and Publish to PyPI
+
+`pip install build twine` → `python -m build` → `twine upload dist/*` → verify at pypi.org.
+
+```bash
+# Install build tools
+pip install build twine
+
+# Ensure pyproject.toml is complete (name, version, description, dependencies)
+
+# Build source distribution and wheel
+python -m build
+# Output: dist/mypackage-1.0.0.tar.gz and dist/mypackage-1.0.0-py3-none-any.whl
+
+# Check the distribution before uploading
+twine check dist/*
+
+# Upload to TestPyPI first to verify
+twine upload --repository testpypi dist/*
+# Test install: pip install --index-url https://test.pypi.org/simple/ mypackage
+
+# Upload to PyPI (production)
+twine upload dist/*
+# Prompts for PyPI username and API token
+
+# Using a stored .pypirc to avoid entering credentials each time
+# ~/.pypirc
+# [pypi]
+# username = __token__
+# password = pypi-<your-api-token>
+```
+
+| Step | Command |
+|---|---|
+| Build | `python -m build` |
+| Pre-upload check | `twine check dist/*` |
+| Test upload | `twine upload --repository testpypi dist/*` |
+| Production upload | `twine upload dist/*` |
+| Verify | `pip install mypackage` from a clean environment |
+
+## Write and Run Unit Tests
+
+`pip install pytest` → create `test_*.py` files → `pytest -v` → check coverage with `pytest --cov=mymodule`.
+
+```bash
+# Install pytest and coverage plugin
+pip install pytest pytest-cov
+
+# Create a test file (must match test_*.py or *_test.py naming)
+# test_utils.py
+```
+
+```python
+# test_utils.py
+from mymodule.utils import add_numbers, sanitise_input
+
+def test_add_numbers_positive():
+    assert add_numbers(2, 3) == 5
+
+def test_add_numbers_negative():
+    assert add_numbers(-1, 1) == 0
+
+def test_sanitise_input_strips_whitespace():
+    assert sanitise_input("  hello  ") == "hello"
+
+def test_sanitise_input_raises_on_empty():
+    import pytest
+    with pytest.raises(ValueError):
+        sanitise_input("")
+```
+
+```bash
+# Run all tests
+pytest -v
+
+# Run tests in a specific file
+pytest tests/test_utils.py -v
+
+# Run a single test by name
+pytest tests/test_utils.py::test_add_numbers_positive
+
+# Run with coverage report
+pytest --cov=mymodule --cov-report=term-missing
+
+# Generate HTML coverage report
+pytest --cov=mymodule --cov-report=html
+# Open htmlcov/index.html in a browser
+```
+
+| Pytest feature | Usage |
+|---|---|
+| `-v` | Verbose output — show each test name and pass/fail |
+| `-x` | Stop after the first failure |
+| `-k "keyword"` | Run only tests whose name matches the keyword |
+| `--tb=short` | Compact traceback on failures |
+| `--cov` | Measure which lines of code were executed by tests |
+
+## Use Environment Variables for Configuration
+
+`import os; val = os.environ.get('MY_VAR', 'default')` → set in shell: `export MY_VAR=value` → use python-dotenv for `.env` files: `from dotenv import load_dotenv; load_dotenv()`.
+
+```python
+import os
+from pathlib import Path
+
+# Read an environment variable with a default fallback
+db_host = os.environ.get('DB_HOST', 'localhost')
+db_port = int(os.environ.get('DB_PORT', '5432'))
+api_key = os.environ.get('API_KEY')          # returns None if not set
+
+# Fail fast if a required variable is missing
+if not api_key:
+    raise EnvironmentError("API_KEY environment variable is required but not set")
+```
+
+```bash
+# Set variables in the current shell session
+export DB_HOST=db.prod.example.com
+export API_KEY=my-secret-token
+
+# Run the script with inline variable (does not persist)
+DB_HOST=db.staging.example.com python3 my_script.py
+```
+
+```bash
+# Install python-dotenv for .env file support
+pip install python-dotenv
+```
+
+```python
+# .env file (never commit to git)
+# DB_HOST=localhost
+# API_KEY=dev-token-123
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()           # reads .env from the current directory
+db_host = os.environ.get('DB_HOST')
+api_key = os.environ.get('API_KEY')
+```
+
+| Approach | Best for |
+|---|---|
+| `os.environ.get('VAR', 'default')` | Simple config with safe fallbacks |
+| `os.environ['VAR']` | Required variables — raises `KeyError` if missing |
+| `python-dotenv` + `.env` file | Local development without exporting to the shell |
+| CI/CD secrets | Set in the pipeline; accessed via `os.environ` at runtime |
+| Never hardcode secrets | Avoids credentials leaking in version control |

@@ -30,7 +30,6 @@ graph TB
     switches["Switches / ISLs"] --> scc
     devices["Host HBAs\nStorage Targets"] --> dcc
 ```
-
 ```text
 ┌───────────────────────────────── Brocade Fabric OS — Access Control ──────────────────────────────────┐
 │                                                                                                       │

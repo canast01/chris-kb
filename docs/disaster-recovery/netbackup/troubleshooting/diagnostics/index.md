@@ -12,6 +12,7 @@ vxlogview -o 117 -d 24h -t "DEBUG|WARNING|ERROR" | less
 # 118 — nbjm (job manager)
 # 119 — nbstserv (storage service)
 # 143 — nbwebsvc (NetBackup web service)
+```
 ```text
 ┌─────────────────────────────────────── NetBackup — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │

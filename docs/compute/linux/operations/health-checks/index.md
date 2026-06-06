@@ -45,6 +45,7 @@ ss -tlnp
 yum check-update --security 2>/dev/null | wc -l
 # Ubuntu/Debian:
 # apt list --upgradable 2>/dev/null | wc -l
+```
 ```text
 ┌──────────────────────────────────────── Linux — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │

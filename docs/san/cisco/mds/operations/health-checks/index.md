@@ -9,6 +9,7 @@ show zoneset active vsan all
 show logging last 50
 show environment
 show version
+```
 ```text
 ┌─────────────────────────────────── Cisco MDS 9000 — Health Checks ────────────────────────────────────┐
 │                                                                                                       │

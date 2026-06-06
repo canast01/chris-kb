@@ -25,6 +25,7 @@ df -h /
 
 # 6. Workflow run minutes (billed plan)
 gh api /repos/<owner>/<repo>/actions/billing/minutes
+```
 ```text
 ┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

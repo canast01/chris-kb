@@ -262,6 +262,7 @@ Remote collectors allow Aria Operations to reach isolated networks (DMZ, remote 
 
 Acquire an authentication token:
 
+```
 ```bash
 TOKEN=$(curl -sk -X POST "https://<aria-ops>/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
@@ -284,4 +285,3 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 Token lifetime is 60 minutes by default; re-acquire as needed for long-running export scripts.
-```

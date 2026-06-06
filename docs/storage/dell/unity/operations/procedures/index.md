@@ -393,3 +393,81 @@ uemcli -d <ip> -u admin /prot/nfs/session show
 # Active SMB sessions
 uemcli -d <ip> -u admin /prot/smb/session show
 ```
+
+## Create a LUN
+
+Use this procedure to provision a new block LUN on Dell Unity. Confirm pool capacity headroom is at least 20% before starting.
+
+```bash
+# Step 1 — Create the LUN
+uemcli /stor/prov/luns/lun create \
+    -name <name> \
+    -pool <pool-id> \
+    -size <size>G
+
+# Step 2 — Verify the LUN was created
+uemcli /stor/prov/luns/lun show
+```
+
+Note the LUN ID returned by the create command — it is needed for host access mapping and snapshot operations. Grant host access with: `uemcli /stor/config/lunacl create -lun <lun-id> -host <host-id>`.
+
+## Create an NFS File System and Share
+
+Use this procedure to provision a new NFS file system on a Unity NAS server and export it for client access.
+
+```bash
+# Step 1 — Create the file system on a NAS server and pool
+uemcli /stor/prov/fs create \
+    -name <fs> \
+    -pool <pool-id> \
+    -size <size>G \
+    -nasServer <nas-id>
+
+# Step 2 — Create an NFS export at the root of the file system
+uemcli /stor/prov/nfs create \
+    -fs <fs-id> \
+    -path /
+
+# Verify the NFS share is listed
+uemcli /stor/prov/nfs show
+```
+
+After the export is created, mount it from a client: `mount -t nfs <nas-ip>:/<fs-name> /mnt/target`. Confirm read/write access before closing the change.
+
+## Create a Snapshot Schedule
+
+Snapshot schedules automate periodic point-in-time copies of LUNs or file systems. Create the schedule rule first, then attach it to the resource.
+
+```bash
+# Step 1 — Create a snapshot rule (every 4 hours, retain 24 snapshots)
+uemcli /prot/snap/rule create \
+    -name <rule> \
+    -interval 4h \
+    -retCount 24
+
+# Step 2 — Attach the snapshot rule to a LUN
+uemcli /stor/prov/luns/lun modify \
+    -id <id> \
+    -snapRule <rule-id>
+
+# Verify the rule is attached
+uemcli /stor/prov/luns/lun show -detail -id <id>
+```
+
+The same rule can be attached to a file system using `uemcli /stor/prov/fs modify -id <fs-id> -snapRule <rule-id>`. Verify that auto-snapshots begin appearing after the first scheduled interval.
+
+## Expand a Pool
+
+Expand a Unity storage pool by adding drives or increasing drive count. Pool expansion is non-disruptive.
+
+```bash
+# Option 1 — Add drives via CLI (speed-class drives)
+uemcli /stor/config/pool modify \
+    -id <pool-id> \
+    -addSpeedDriveCount <n>
+
+# Verify the new capacity after the expansion
+uemcli /stor/config/pool show -detail -id <pool-id>
+```
+
+Alternatively, add drives to the pool via Unisphere: navigate to **Storage → Pools → select pool → Add Drives** and select the drive count and type. Monitor pool rebuild progress in Unisphere until the pool returns to `Normal` health status. Confirm the new usable capacity is visible before closing the change.

@@ -32,7 +32,6 @@ flowchart LR
         auditCmds["ausearch · aureport\nauditd"]
     end
 ```
-
 ```text
 ┌──────────────────────────────────────── Linux — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │

@@ -35,7 +35,6 @@ flowchart TD
     hardware -- No --> changed
     changed --> resources --> services --> resolve
 ```
-
 ```text
 ┌────────────────────────────────── Linux — Common Operational Issues ──────────────────────────────────┐
 │                                                                                                       │

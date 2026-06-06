@@ -11,6 +11,7 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 # Check YAML syntax locally before submitting
 python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
   && echo "YAML OK" || echo "YAML syntax error"
+```
 ```text
 ┌─────────────────────────────────── Aria Automation — Common Issues ───────────────────────────────────┐
 │                                                                                                       │

@@ -14,6 +14,7 @@ sudo apt-get install -y git
 
 # Upgrade only
 sudo apt-get install --only-upgrade git
+```
 ```text
 ┌────────────────────────────────────── Git — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

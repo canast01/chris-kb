@@ -24,7 +24,6 @@ flowchart TD
     L -->|No| N([All checks passed])
     D & G & J & M --> N
 ```
-
 ```text
 ┌─────────────────────────────────── Dell Data Domain Health Checks ────────────────────────────────────┐
 │                                                                                                       │

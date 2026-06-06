@@ -16,6 +16,7 @@ curl -s -u "${USER}:${TOKEN}" \
   -o /dev/null -w "%{http_code}\n"
 
 echo "XML backup triggered at ${TIMESTAMP}"
+```
 ```text
 ┌────────────────────────────────────── Jira — Backup and Restore ──────────────────────────────────────┐
 │                                                                                                       │

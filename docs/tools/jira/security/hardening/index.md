@@ -10,6 +10,7 @@ curl -u "admin:TOKEN" \
 curl -u "user@corp.example.com:API_TOKEN" \
   "https://your-org.atlassian.net/rest/api/3/group/member?groupname=jira-administrators" \
   | jq -r '.values[] | "\(.displayName) - \(.emailAddress)"'
+```
 ```text
 ┌────────────────────────────────────────── Jira — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │

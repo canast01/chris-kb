@@ -7,6 +7,7 @@ curl -sk -u 'admin:<password>' \
   jq '.nodes[] | {host: .hostname, state: .state, role: .role, version: .version}'
 
 # Expected: all nodes state = "ACTIVE"
+```
 ```text
 ┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
 │                                                                                                       │

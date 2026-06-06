@@ -8,6 +8,7 @@ sudo -i
 
 # Or use sudo for individual commands
 sudo systemctl status vrni-platform
+```
 ```text
 ┌───────────────────────────────────────── vRNI CLI Reference ──────────────────────────────────────────┐
 │                                                                                                       │

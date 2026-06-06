@@ -4,6 +4,7 @@
 nc -zv destination-host port
 telnet destination-host port
 ss -tulnp
+```
 ```text
 ┌──────────────────────────────────── Networking — Network Security ────────────────────────────────────┐
 │                                                                                                       │

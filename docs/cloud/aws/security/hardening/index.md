@@ -7,6 +7,7 @@ aws iam get-account-summary \
 # Expected: AccountAccessKeysPresent=0, AccountMFAEnabled=1
 
 # MFA for root must be enabled via Console — cannot be set via CLI
+```
 ```text
 ┌──────────────────────────────── AWS Security Hardening — CIS Baseline ────────────────────────────────┐
 │                                                                                                       │

@@ -31,6 +31,7 @@ terraform validate
 
 # 8. State lock check — inspect backend for stale locks; this is informational
 terraform force-unlock --help
+```
 ```text
 ┌────────────────────────────────────── Terraform — Health Checks ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -102,8 +102,8 @@ import diagrams  # noqa: F401
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Matches the first ```text block (or bare ``` fallback for legacy files).
-_BLOCK_RE = re.compile(r'^```(?:text)?\n.*?^```$', re.MULTILINE | re.DOTALL)
+# Matches the first ```text block only (bare ``` excluded to avoid collision with inserted close fences).
+_BLOCK_RE = re.compile(r'^```text\n.*?^```$', re.MULTILINE | re.DOTALL)
 # Matches the first ```mermaid block (fallback for pages that have mermaid diagrams).
 _MERMAID_RE = re.compile(r'^```mermaid\n.*?^```$', re.MULTILINE | re.DOTALL)
 

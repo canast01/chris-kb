@@ -32,7 +32,6 @@ graph TB
     STORE --> IRE
     IRE -.->|No route back to PROD| PROD
 ```
-
 ```text
 ┌──────────────────────────────────────── IRE Network Isolation ────────────────────────────────────────┐
 │                                                                                                       │

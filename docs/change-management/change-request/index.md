@@ -30,6 +30,7 @@ Rollback Steps:
   2. Restore VM to snapshot snap-xyz
   3. Start postgresql-14
   4. Notify stakeholders
+```
 ```text
 ┌──────────────────────────────────────── Change Request (RFC) ─────────────────────────────────────────┐
 │                                                                                                       │

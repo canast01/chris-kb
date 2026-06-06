@@ -33,7 +33,6 @@ flowchart LR
 
     counters -->|"threshold exceeded"| alert
 ```
-
 ```text
 ┌─────────────────────────────────── Brocade Fabric OS — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │

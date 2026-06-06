@@ -35,7 +35,6 @@ flowchart TD
     kernel --> mac --> auth --> audit
     fs --> audit
 ```
-
 ```text
 ┌────────────────────────────────────── Linux — System Hardening ───────────────────────────────────────┐
 │                                                                                                       │

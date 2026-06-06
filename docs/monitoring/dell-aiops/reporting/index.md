@@ -28,6 +28,7 @@ curl -sk -X GET \
 curl -sk -X GET "<download_url>" \
   -H "Authorization: Bearer <access_token>" \
   -o aiops-exec-summary.pdf
+```
 ```text
 ┌─────────────────────────────────────── Dell AIOps — Reporting ────────────────────────────────────────┐
 │                                                                                                       │

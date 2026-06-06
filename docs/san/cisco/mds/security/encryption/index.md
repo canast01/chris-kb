@@ -22,6 +22,7 @@ ssh version 2
 # View active SSH sessions
 show ssh server
 show users
+```
 ```text
 ┌─────────────────────────────────── Cisco MDS — Security Encryption ───────────────────────────────────┐
 │                                                                                                       │

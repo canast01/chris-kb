@@ -85,7 +85,6 @@ graph TD
     SW_ToR_A --> Host2
     SW_ToR_B --> Host3
 ```
-
 ```text
 ┌─────────────────────────────── Architecture — High Availability Design ───────────────────────────────┐
 │                                                                                                       │

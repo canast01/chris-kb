@@ -9,6 +9,7 @@ acs system syslog add --server 10.10.3.50 --port 514 --protocol udp
 
 # Verify
 acs system syslog show
+```
 ```text
 ┌────────────────────────── Cisco Nexus Dashboard — Architecture Integrations ──────────────────────────┐
 │                                                                                                       │
