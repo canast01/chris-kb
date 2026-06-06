@@ -898,6 +898,8 @@
       
         
       
+        
+      
     
     
     
@@ -1236,6 +1238,64 @@
           
         
       
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../deploy/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
         
       
         
@@ -1454,6 +1514,8 @@
       
         
       
+        
+      
     
     
     
@@ -1510,6 +1572,8 @@
       
         
           
+        
+      
         
       
         
@@ -3402,60 +3466,60 @@
 
 
 <h1 id="cisco-dcnm-design-standards">Cisco DCNM — Design Standards<a class="headerlink" href="#cisco-dcnm-design-standards" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On each MDS switch (NX-OS CLI)</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On each MDS switch (NX-OS CLI)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>zone<span class="w"> </span>default-zone<span class="w"> </span>permit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Expected after setting deny:</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>no<span class="w"> </span>zone<span class="w"> </span>default-zone<span class="w"> </span>permit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Verify:</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Mode: Basic, Default-zone: deny</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="sb">```</span>text
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>┌────────────────────────────────────<span class="w"> </span>Cisco<span class="w"> </span>DCNM<span class="w"> </span>—<span class="w"> </span>Design<span class="w"> </span>Standards<span class="w"> </span>────────────────────────────────────┐
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">  </span>DCNM<span class="w"> </span>design:<span class="w"> </span>HA<span class="w"> </span>deployment,<span class="w"> </span>management<span class="w"> </span>VLAN,<span class="w"> </span>RBAC,<span class="w"> </span>TLS,<span class="w"> </span>backup,<span class="w"> </span>and<span class="w"> </span>scale<span class="w"> </span>limits.<span class="w">                    </span>│
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">   </span>│<span class="w">             </span>Deployment<span class="w"> </span>Standards<span class="w">             </span>│<span class="w">  </span>│<span class="w">              </span>Security<span class="w"> </span>Standards<span class="w">             </span>│<span class="w">   </span>│
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">   </span>│<span class="w">          </span>HA<span class="w"> </span>pair:<span class="w"> </span>primary<span class="w"> </span>+<span class="w"> </span>standby<span class="w">          </span>│<span class="w">  </span>│<span class="w">            </span>TLS<span class="w"> </span><span class="m">1</span>.2+<span class="w"> </span><span class="k">for</span><span class="w"> </span>all<span class="w"> </span>HTTPS<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">   </span>│<span class="w">          </span>Dedicated<span class="w"> </span>management<span class="w"> </span>VLAN<span class="w">           </span>│<span class="w">  </span>│<span class="w">          </span>TACACS+<span class="w"> </span>via<span class="w"> </span>ISE<span class="w"> </span>mandatory<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>│<span class="w">          </span><span class="m">8</span><span class="w"> </span>vCPU<span class="w"> </span>/<span class="w"> </span><span class="m">32</span><span class="w"> </span>GB<span class="w"> </span>RAM<span class="w"> </span><span class="o">(</span>large<span class="o">)</span><span class="w">          </span>│<span class="w">  </span>│<span class="w">          </span>RBAC:<span class="w"> </span><span class="nv">operator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>read-only<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">            </span>NTP<span class="w"> </span><span class="k">for</span><span class="w"> </span>all<span class="w"> </span>timestamps<span class="w">            </span>│<span class="w">  </span>│<span class="w">         </span>SNMPv3<span class="w"> </span>only<span class="p">;</span><span class="w"> </span>disable<span class="w"> </span>v1/v2c<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">          </span>Dedicated<span class="w"> </span>DNS<span class="w"> </span>entries<span class="w"> </span>mgmt<span class="w">          </span>│<span class="w">  </span>│<span class="w">           </span>IP<span class="w"> </span>whitelist<span class="w"> </span>API<span class="w"> </span>access<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">  </span>HA<span class="w"> </span>and<span class="w"> </span>dedicated<span class="w"> </span>management<span class="w"> </span>VLAN<span class="w"> </span>are<span class="w"> </span>baseline<span class="p">;</span><span class="w"> </span>ISE<span class="w"> </span>+<span class="w"> </span>TLS<span class="w"> </span>are<span class="w"> </span>security<span class="w"> </span>minimums.<span class="w">                      </span>│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">                          </span>▼<span class="w">                                                 </span>▼<span class="w">                          </span>│
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>│<span class="w">            </span>Operational<span class="w"> </span>Standards<span class="w">             </span>│<span class="w">  </span>│<span class="w">            </span>Scalability<span class="w"> </span>Guidelines<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">         </span>Backup:<span class="w"> </span>nightly<span class="w"> </span>NFS<span class="p">;</span><span class="w"> </span><span class="m">30</span>-day<span class="w">          </span>│<span class="w">  </span>│<span class="w">          </span>Max<span class="w"> </span><span class="m">2</span>,000<span class="w"> </span>switches<span class="w"> </span>/<span class="w"> </span>node<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">        </span>Alert<span class="w"> </span>review:<span class="w"> </span>daily<span class="w"> </span>SNMP<span class="w"> </span>check<span class="w">        </span>│<span class="w">  </span>│<span class="w">           </span>Max<span class="w"> </span><span class="m">200</span>,000<span class="w"> </span>ports<span class="w"> </span>/<span class="w"> </span>node<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">         </span>Zone<span class="w"> </span>changes:<span class="w"> </span>change<span class="w"> </span>ticket<span class="w">          </span>│<span class="w">  </span>│<span class="w">          </span>Separate<span class="w"> </span>SAN<span class="w"> </span>vs<span class="w"> </span>LAN<span class="w"> </span>domain<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>│<span class="w">            </span>Firmware<span class="w"> </span>via<span class="w"> </span>DCNM<span class="w"> </span>only<span class="w">            </span>│<span class="w">  </span>│<span class="w">           </span>Scale-out:<span class="w"> </span>multi-cluster<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>│<span class="w">            </span>Quarterly<span class="w"> </span>DCNM<span class="w"> </span>upgrade<span class="w">            </span>│<span class="w">  </span>│<span class="w">          </span><span class="m">2</span><span class="w"> </span>TB<span class="w"> </span>storage<span class="w"> </span>perf<span class="w"> </span><span class="nb">history</span><span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">  </span>Physical<span class="w"> </span>Infrastructure<span class="w"> </span><span class="o">(</span>the<span class="w"> </span>hardware<span class="w"> </span>everything<span class="w"> </span>above<span class="w"> </span>runs<span class="w"> </span>on<span class="o">)</span>:<span class="w">                                     </span>│
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">  </span>vSphere<span class="w"> </span>host<span class="w"> </span>·<span class="w"> </span><span class="m">2</span><span class="w"> </span>TB<span class="w"> </span>datastore<span class="w"> </span>·<span class="w"> </span>management<span class="w"> </span>Ethernet<span class="w"> </span>·<span class="w"> </span>NFS<span class="w"> </span>backup<span class="w"> </span>share<span class="w">                               </span>│
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">  </span>Key<span class="w"> </span>terms:<span class="w">                                                                                           </span>│
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">  </span>HA<span class="w"> </span><span class="nv">pair</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>DCNM<span class="w"> </span>primary<span class="w"> </span>+<span class="w"> </span>standby<span class="w"> </span>VMs<span class="p">;</span><span class="w"> </span>database<span class="w"> </span>replication<span class="w"> </span>between<span class="w"> </span>them<span class="w">                      </span>│
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">  </span>Management<span class="w"> </span><span class="nv">VLAN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>isolated<span class="w"> </span>VLAN<span class="w"> </span><span class="k">for</span><span class="w"> </span>OOB<span class="w"> </span>switch<span class="w"> </span>management<span class="w"> </span>and<span class="w"> </span>DCNM<span class="w"> </span>traffic<span class="w">                           </span>│
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">  </span><span class="nv">ISE</span><span class="w">             </span><span class="o">=</span><span class="w"> </span>Cisco<span class="w"> </span>Identity<span class="w"> </span>Services<span class="w"> </span>Engine<span class="p">;</span><span class="w"> </span>provides<span class="w"> </span>TACACS+<span class="w"> </span><span class="k">for</span><span class="w"> </span>DCNM<span class="w">                          </span>│
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">  </span>TLS<span class="w"> </span><span class="m">1</span>.2+<span class="w">        </span><span class="o">=</span><span class="w"> </span>minimum<span class="w"> </span>TLS<span class="w"> </span>version<span class="w"> </span><span class="k">for</span><span class="w"> </span>DCNM<span class="w"> </span>HTTPS<span class="w"> </span>GUI<span class="w"> </span>and<span class="w"> </span>REST<span class="w"> </span>API<span class="w">                                </span>│
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">  </span><span class="nv">RBAC</span><span class="w">            </span><span class="o">=</span><span class="w"> </span>Role-Based<span class="w"> </span>Access<span class="w"> </span>Control<span class="p">;</span><span class="w"> </span>network-admin/operator/read-only<span class="w">                        </span>│
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">  </span><span class="nv">SNMPv3</span><span class="w">          </span><span class="o">=</span><span class="w"> </span>SNMP<span class="w"> </span>version<span class="w"> </span><span class="m">3</span><span class="p">;</span><span class="w"> </span>auth<span class="w"> </span>+<span class="w"> </span>privacy<span class="w"> </span>mode<span class="p">;</span><span class="w"> </span>disable<span class="w"> </span>v1/v2c<span class="w"> </span><span class="k">in</span><span class="w"> </span>DCNM<span class="w">                        </span>│
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│<span class="w">  </span>IP<span class="w"> </span><span class="nv">whitelist</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>restrict<span class="w"> </span>REST<span class="w"> </span>API<span class="w"> </span><span class="nb">source</span><span class="w"> </span>IPs<span class="w"> </span>to<span class="w"> </span>automation<span class="w"> </span>host<span class="w"> </span>subnet<span class="w">                             </span>│
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│<span class="w">  </span>NFS<span class="w"> </span><span class="nv">backup</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>nightly<span class="w"> </span>DCNM<span class="w"> </span>config<span class="w"> </span>and<span class="w"> </span>database<span class="w"> </span><span class="nb">export</span><span class="w"> </span>to<span class="w"> </span>NFS<span class="w"> </span>mount<span class="w">                               </span>│
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">  </span><span class="m">2</span>,000<span class="w"> </span><span class="nv">switches</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>Cisco-recommended<span class="w"> </span>maximum<span class="w"> </span>MDS/Nexus<span class="w"> </span>per<span class="w"> </span>DCNM<span class="w"> </span>instance<span class="w">                              </span>│
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│<span class="w">  </span>SAN<span class="w"> </span>vs<span class="w"> </span><span class="nv">LAN</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>DCNM<span class="w"> </span>manages<span class="w"> </span>both<span class="p">;</span><span class="w"> </span>separate<span class="w"> </span>logical<span class="w"> </span>domains<span class="w"> </span>per<span class="w"> </span>best<span class="w"> </span>practice<span class="w">                      </span>│
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│<span class="w">  </span>Multi-cluster<span class="w">   </span><span class="o">=</span><span class="w"> </span>multiple<span class="w"> </span>DCNM<span class="w"> </span>instances<span class="w"> </span>federated<span class="p">;</span><span class="w"> </span>each<span class="w"> </span>manages<span class="w"> </span>a<span class="w"> </span>subset<span class="w">                           </span>│
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│<span class="w">  </span>Change<span class="w"> </span><span class="nv">ticket</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>ITSM<span class="w"> </span>requirement<span class="p">;</span><span class="w"> </span>all<span class="w"> </span>zone<span class="w"> </span>and<span class="w"> </span>config<span class="w"> </span>changes<span class="w"> </span>pre-approved<span class="w">                         </span>│
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Cisco DCNM — Design Standards ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  DCNM design: HA deployment, management VLAN, RBAC, TLS, backup, and scale limits.                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Deployment Standards             │  │              Security Standards             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          HA pair: primary + standby          │  │            TLS 1.2+ for all HTTPS           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Dedicated management VLAN           │  │          TACACS+ via ISE mandatory          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          8 vCPU / 32 GB RAM (large)          │  │          RBAC: operator = read-only         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            NTP for all timestamps            │  │         SNMPv3 only; disable v1/v2c         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Dedicated DNS entries mgmt          │  │           IP whitelist API access           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  HA and dedicated management VLAN are baseline; ISE + TLS are security minimums.                      │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Operational Standards             │  │            Scalability Guidelines           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Backup: nightly NFS; 30-day          │  │          Max 2,000 switches / node          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        Alert review: daily SNMP check        │  │           Max 200,000 ports / node          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Zone changes: change ticket          │  │          Separate SAN vs LAN domain         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │            Firmware via DCNM only            │  │           Scale-out: multi-cluster          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │            Quarterly DCNM upgrade            │  │          2 TB storage perf history          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  vSphere host · 2 TB datastore · management Ethernet · NFS backup share                               │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  HA pair         = DCNM primary + standby VMs; database replication between them                      │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Management VLAN = isolated VLAN for OOB switch management and DCNM traffic                           │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ISE             = Cisco Identity Services Engine; provides TACACS+ for DCNM                          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  TLS 1.2+        = minimum TLS version for DCNM HTTPS GUI and REST API                                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  RBAC            = Role-Based Access Control; network-admin/operator/read-only                        │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  SNMPv3          = SNMP version 3; auth + privacy mode; disable v1/v2c in DCNM                        │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  IP whitelist    = restrict REST API source IPs to automation host subnet                             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  NFS backup      = nightly DCNM config and database export to NFS mount                               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  2,000 switches  = Cisco-recommended maximum MDS/Nexus per DCNM instance                              │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  SAN vs LAN      = DCNM manages both; separate logical domains per best practice                      │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Multi-cluster   = multiple DCNM instances federated; each manages a subset                           │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Change ticket   = ITSM requirement; all zone and config changes pre-approved                         │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 
 
 

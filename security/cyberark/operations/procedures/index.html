@@ -4205,6 +4205,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#add-a-platform-for-a-new-account-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Platform for a New Account Type
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-an-account-activity-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generate an Account Activity Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-ldap-directory-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure LDAP Directory Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reset-a-failed-cpm-password-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset a Failed CPM Password Rotation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reset a Failed CPM Password Rotation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diagnose-the-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnose the Failure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attempt-verify-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attempt Verify First
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reconcile-if-verify-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconcile if Verify Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4525,6 +4608,85 @@ Operational procedures for account management, password rotation, session manage
 <li>Make one change at a time</li>
 <li>Validate after the change</li>
 </ul>
+<hr />
+<h2 id="add-a-platform-for-a-new-account-type">Add a Platform for a New Account Type<a class="headerlink" href="#add-a-platform-for-a-new-account-type" title="Permanent link">&para;</a></h2>
+<p>Platforms define how the CPM manages credentials for a specific system type. Create a custom platform when the built-in platforms do not match the target system's connection method or password policy.</p>
+<ol>
+<li>Log in to <strong>PVWA</strong> → <strong>Administration → Platform Management</strong>.</li>
+<li>Select the closest existing platform (e.g., WinServerLocal for Windows local accounts, UnixSSH for Linux).</li>
+<li>Click <strong>Duplicate</strong> → enter a unique platform name (e.g., <code>Corp-WinService-Accounts</code>).</li>
+<li>Edit the duplicated platform:</li>
+<li><strong>CPM Plugin</strong>: confirm the correct plugin (e.g., <code>WinSSH</code>, <code>Oracle</code>, <code>MySQL</code>).</li>
+<li><strong>Password Complexity</strong>: set minimum length, complexity rules, and character sets to match the target system's policy.</li>
+<li><strong>Connection Components</strong>: add or configure PSM connection components (RDP, SSH) if session recording is required.</li>
+<li>Set the <strong>Automatic Password Management</strong> interval and verification settings.</li>
+<li>Click <strong>Save</strong> → <strong>Activate</strong> the platform.</li>
+<li>Assign the platform when onboarding accounts in the target Safe.</li>
+</ol>
+<p>Test the platform with a non-production account before enabling it for production accounts — use <strong>Verify</strong> and <strong>Change</strong> from the account actions menu to confirm CPM connectivity.</p>
+<hr />
+<h2 id="generate-an-account-activity-report">Generate an Account Activity Report<a class="headerlink" href="#generate-an-account-activity-report" title="Permanent link">&para;</a></h2>
+<p>Account activity reports provide evidence of privileged account usage for audit and compliance reviews.</p>
+<ol>
+<li>Log in to <strong>PVWA</strong> → <strong>Reports</strong>.</li>
+<li>Select <strong>Accounts Activity</strong>.</li>
+<li>Set the <strong>Date Range</strong> to cover the audit period (e.g., last 90 days for quarterly review).</li>
+<li>Apply filters as required:</li>
+<li><strong>Safe</strong>: limit to a specific Safe (e.g., <code>Production-Unix-Admins</code>).</li>
+<li><strong>User</strong>: filter by a specific CyberArk user or AD account if investigating an individual.</li>
+<li><strong>Account</strong>: filter by target account username or address.</li>
+<li>Click <strong>Generate Report</strong>.</li>
+<li>Review the results — each row shows: date/time, requesting user, target account, Safe, action type (Retrieve, Connect, Verify, Change), and session duration.</li>
+<li>Click <strong>Export CSV</strong> to download the full report for audit evidence.</li>
+</ol>
+<p>For PCI-DSS or SOC 2 audits, include the CSV export in the evidence package along with the Safe membership list for the period.</p>
+<hr />
+<h2 id="configure-ldap-directory-mapping">Configure LDAP Directory Mapping<a class="headerlink" href="#configure-ldap-directory-mapping" title="Permanent link">&para;</a></h2>
+<p>LDAP Directory Mapping allows AD or LDAP group members to authenticate to PVWA and receive CyberArk role permissions without creating individual CyberArk user accounts.</p>
+<ol>
+<li>Log in to <strong>PVWA</strong> as an Administrator → <strong>Administration → Directory Mapping</strong>.</li>
+<li>Click <strong>Add</strong> → select the configured LDAP directory (e.g., <code>corp.example.com</code>).</li>
+<li>In the <strong>LDAP Group</strong> field, enter the distinguished name of the AD group:
+   <code>CN=CyberArk-Admins,OU=Groups,DC=corp,DC=example,DC=com</code></li>
+<li>In the <strong>CyberArk Role</strong> field, select the role to assign (e.g., Vault Admins, Auditors, Safe Managers).</li>
+<li>Optionally restrict access to specific Safes by configuring Safe permissions on the mapped group.</li>
+<li>Click <strong>Save</strong>.</li>
+<li>Test by logging in to PVWA with an account that is a member of the mapped AD group.</li>
+<li>Verify the user receives the expected role and Safe access.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test LDAP connectivity from the Vault server (run as Administrator)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Use ldp.exe or the built-in CyberArk LDAP test in Administration &gt; LDAP Integration</span>
+</code></pre></div>
+<p>Keep directory mappings documented with the AD group owner. Review mappings quarterly and remove any groups that no longer exist in AD.</p>
+<hr />
+<h2 id="reset-a-failed-cpm-password-rotation">Reset a Failed CPM Password Rotation<a class="headerlink" href="#reset-a-failed-cpm-password-rotation" title="Permanent link">&para;</a></h2>
+<p>When a CPM password rotation fails (e.g., the target system rejected the new password, credentials are out of sync), use the reconcile workflow to re-establish a known-good state.</p>
+<h3 id="diagnose-the-failure">Diagnose the Failure<a class="headerlink" href="#diagnose-the-failure" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Log in to <strong>PVWA</strong> → locate the account → check the <strong>Status</strong> field (shows last CPM action and error).</li>
+<li>Review the CPM log for the specific error: <code>C:\Program Files (x86)\CyberArk\Password Manager\Logs\PM_Error.log</code>.</li>
+</ol>
+<h3 id="attempt-verify-first">Attempt Verify First<a class="headerlink" href="#attempt-verify-first" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Select the account in PVWA → <strong>Actions → Verify</strong>.</li>
+<li>If Verify succeeds, the password on the target system matches the Vault — the failure may have been transient.</li>
+</ol>
+<h3 id="reconcile-if-verify-fails">Reconcile if Verify Fails<a class="headerlink" href="#reconcile-if-verify-fails" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Select the account → <strong>Actions → Reconcile</strong>.</li>
+<li>The CPM connects to the target system using the <strong>Reconcile Account</strong> (a separate admin account with permission to reset passwords).</li>
+<li>The CPM sets a new password on the target system and stores it in the Vault.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># If the reconcile account itself needs resetting, do it manually first:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># 1. Manually set the reconcile account password on the target system</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># 2. Update the reconcile account password in the Vault via PVWA:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c">#    Accounts &gt; find reconcile account &gt; Actions &gt; Update &gt; enter new password</span>
+</code></pre></div>
+<ol>
+<li>After reconciliation, run <strong>Verify</strong> again to confirm the Vault password matches the target.</li>
+<li>Document the failure reason and resolution in the change ticket.</li>
+</ol>
+<p>If reconcile also fails, check network connectivity between the CPM server and the target, firewall rules, and whether the reconcile account has the required permissions on the target system.</p>
 
 
 

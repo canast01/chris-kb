@@ -1597,6 +1597,8 @@
       
         
       
+        
+      
     
     
     
@@ -2637,6 +2639,8 @@
       
         
           
+        
+      
         
       
         
@@ -4074,6 +4078,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#query-srdfa-group-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query SRDF/A Group Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suspend-and-resume-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suspend and Resume Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perform-a-planned-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perform a Planned Failover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fail-back-after-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fail Back After Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-devices-to-an-existing-srdfa-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Devices to an Existing SRDF/A Group
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4323,7 +4382,7 @@
 <p>SRDF/A failover promotes R2 volumes to read/write. Because SRDF/A is asynchronous, R2 is consistent to the last <strong>completed cycle</strong> rather than the last write, so there is an inherent RPO equal to the lag at the moment of failure. Before failing over, always check the cycle state and lag to understand the data exposure window.</p>
 <p>Planned failover (site still accessible) uses <code>-establish</code> to immediately reverse replication after the split. Unplanned failover (primary site down) uses the standard <code>failover</code> command and requires a separate restore+establish sequence to recover replication.</p>
 <h3 id="failover-decision-flow">Failover Decision Flow<a class="headerlink" href="#failover-decision-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     incident["Incident: Primary Site Issue Reported"]
     primaryReachable{"Primary Site\nReachable?"}
     checkCycleState["Check Cycle State and Lag\nsymrdf -g 20 -type A query -detail"]
@@ -4396,7 +4455,7 @@
 <a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 <a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>│                                                                                                       │
 <a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+</code></pre></div></p>
 <table>
 <thead>
 <tr>
@@ -4535,6 +4594,46 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="query-srdfa-group-status">Query SRDF/A Group Status<a class="headerlink" href="#query-srdfa-group-status" title="Permanent link">&para;</a></h2>
+<p>Check the current state of all device pairs in an SRDF/A RDF group:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+</code></pre></div>
+<p>The output shows each device pair, the RDF state (Synchronized, Consistent, Transmitting, Suspended), and the delta track count. Review the state column to confirm all pairs are in <strong>Consistent</strong> state under normal operations. High delta track counts indicate replication is falling behind.</p>
+<hr />
+<h2 id="suspend-and-resume-replication">Suspend and Resume Replication<a class="headerlink" href="#suspend-and-resume-replication" title="Permanent link">&para;</a></h2>
+<p>Use suspend and resume during planned maintenance to prevent delta accumulation while work is in progress.</p>
+<p><strong>Suspend replication:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span><span class="nb">suspend</span>
+</code></pre></div>
+<p><strong>Resume replication after maintenance:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>resume
+</code></pre></div>
+<p>After resuming, monitor the delta track count — it should decrease as R2 catches up. Confirm pairs return to <strong>Consistent</strong> state before closing the maintenance window.</p>
+<hr />
+<h2 id="perform-a-planned-failover">Perform a Planned Failover<a class="headerlink" href="#perform-a-planned-failover" title="Permanent link">&para;</a></h2>
+<p>Initiate a planned failover when the production site is available and a controlled switchover is required:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover
+</code></pre></div>
+<p>R2 becomes read/write; R1 I/O is suspended and hosts at the production site lose access to the devices. Confirm the failover completed successfully:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+</code></pre></div>
+<p>Verify all pairs show <strong>Failed Over</strong> state before presenting R2 volumes to DR hosts.</p>
+<hr />
+<h2 id="fail-back-after-recovery">Fail Back After Recovery<a class="headerlink" href="#fail-back-after-recovery" title="Permanent link">&para;</a></h2>
+<p>After the production site is restored and the DR workload is ready to move back, re-establish normal R1→R2 async replication:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failback
+</code></pre></div>
+<p>This operation resynchronises R1 from R2 and restores the original replication direction. Monitor until all pairs return to <strong>Consistent</strong> state and confirm production applications resume normally on R1.</p>
+<hr />
+<h2 id="add-devices-to-an-existing-srdfa-group">Add Devices to an Existing SRDF/A Group<a class="headerlink" href="#add-devices-to-an-existing-srdfa-group" title="Permanent link">&para;</a></h2>
+<p>Add new R1/R2 device pairs to an established SRDF/A group:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>symrdf<span class="w"> </span>addpair<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;R1-devs&gt;<span class="w"> </span>-remote_dev<span class="w"> </span>&lt;R2-devs&gt;
+</code></pre></div>
+<p>After adding the pairs, establish replication for the new devices:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>symrdf<span class="w"> </span>establish<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;
+</code></pre></div>
+<p>Monitor the establish operation until the new pairs reach <strong>Consistent</strong> state alongside the existing group members.</p>
 
 
 

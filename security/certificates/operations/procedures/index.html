@@ -4124,6 +4124,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#request-a-certificate-via-web-enrollment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request a Certificate via Web Enrollment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-a-certificate-with-private-key-pfx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export a Certificate with Private Key (PFX)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-auto-enrollment-gpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Auto-Enrollment GPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitor-certificate-expiry-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor Certificate Expiry (PowerShell)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revoke-and-republish-crl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revoke and Republish CRL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Revoke and Republish CRL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#revoke-the-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revoke the Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-an-updated-crl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publish an Updated CRL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4563,6 +4646,111 @@ Procedures reference covering Certificate Renewal and Revocation Workflow, Renew
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Verify full chain (intermediate + root)</span>
 <a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>root.pem<span class="w"> </span>-untrusted<span class="w"> </span>intermediate.pem<span class="w"> </span>cert.pem
 </code></pre></div>
+<hr />
+<h2 id="request-a-certificate-via-web-enrollment">Request a Certificate via Web Enrollment<a class="headerlink" href="#request-a-certificate-via-web-enrollment" title="Permanent link">&para;</a></h2>
+<p>Use the ADCS Web Enrollment portal to submit a CSR and download the issued certificate when auto-enrollment is not available (non-domain systems, network appliances, Linux hosts).</p>
+<ol>
+<li>Browse to <code>https://&lt;ca&gt;/certsrv</code> and authenticate with a domain account that has Enroll permission on the target template.</li>
+<li>Select <strong>Request a Certificate</strong> → <strong>Advanced certificate request</strong>.</li>
+<li>Paste the Base-64 encoded CSR into the <strong>Saved Request</strong> field.</li>
+<li>Select the appropriate certificate template from the <strong>Certificate Template</strong> drop-down.</li>
+<li>Click <strong>Submit</strong> — if CA policy requires manager approval, the request will be marked Pending.</li>
+<li>Once issued, return to <code>https://&lt;ca&gt;/certsrv</code> → <strong>View the status of a pending certificate request</strong> → select the request → <strong>Download certificate</strong> (Base-64 or DER).</li>
+<li>Install the certificate on the target host and bind it to the relevant service.</li>
+</ol>
+<p>Verify the issued certificate includes the correct Subject CN, SANs, and issuing CA using <code>openssl x509 -noout -text -in cert.pem</code>.</p>
+<hr />
+<h2 id="export-a-certificate-with-private-key-pfx">Export a Certificate with Private Key (PFX)<a class="headerlink" href="#export-a-certificate-with-private-key-pfx" title="Permanent link">&para;</a></h2>
+<p>Export a certificate and its private key from the Windows certificate store for backup or migration to another host.</p>
+<ol>
+<li>Open <strong>Certificate Manager</strong> (<code>certlm.msc</code>) — this opens the Local Machine store.</li>
+<li>Expand <strong>Personal → Certificates</strong> and locate the certificate.</li>
+<li>Right-click the certificate → <strong>All Tasks → Export</strong>.</li>
+<li>In the Certificate Export Wizard, select <strong>Yes, export the private key</strong> → <strong>Next</strong>.</li>
+<li>Leave format as <strong>Personal Information Exchange — PKCS #12 (.PFX)</strong> → check <strong>Include all certificates in the certification path</strong> → <strong>Next</strong>.</li>
+<li>Set a strong password to protect the private key → <strong>Next</strong>.</li>
+<li>Choose the save location → <strong>Finish</strong>.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Export via PowerShell (alternative)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-like</span> <span class="s2">&quot;*webserver*&quot;</span><span class="p">}</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$pwd</span> <span class="p">=</span> <span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;ExportP@ss!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">Export-PfxCertificate</span> <span class="n">-Cert</span> <span class="nv">$cert</span> <span class="n">-FilePath</span> <span class="n">C</span><span class="p">:\</span><span class="n">Export</span><span class="p">\</span><span class="n">webserver</span><span class="p">.</span><span class="n">pfx</span> <span class="n">-Password</span> <span class="nv">$pwd</span>
+</code></pre></div>
+<p>Store the PFX and password in separate secure locations. Delete the exported file after completing the migration.</p>
+<hr />
+<h2 id="configure-auto-enrollment-gpo">Configure Auto-Enrollment GPO<a class="headerlink" href="#configure-auto-enrollment-gpo" title="Permanent link">&para;</a></h2>
+<p>Auto-enrollment automatically issues and renews certificates for domain members based on certificate templates, eliminating manual renewal for internal certificates.</p>
+<ol>
+<li>Open <strong>Group Policy Management</strong> and create or edit a GPO linked to the target OU (or domain).</li>
+<li>Navigate to <strong>Computer Configuration → Windows Settings → Security Settings → Public Key Policies → Certificate Services Client — Auto-Enrollment</strong>.</li>
+<li>Set <strong>Configuration Model</strong> to <strong>Enabled</strong>.</li>
+<li>Check <strong>Renew expired certificates, update pending certificates, and remove revoked certificates</strong>.</li>
+<li>Check <strong>Update certificates that use certificate templates</strong>.</li>
+<li>Click <strong>OK</strong> and close the editor.</li>
+<li>Force a policy refresh and trigger auto-enrollment:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gpupdate /force
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>certutil -pulse
+</code></pre></div>
+<ol>
+<li>Verify issued certificates appear in <code>certlm.msc</code> under <strong>Personal → Certificates</strong>.</li>
+</ol>
+<p>Ensure the certificate template has <strong>Autoenroll</strong> permission granted to the target computers or users security group. The CA must be published in AD for auto-enrollment to locate it.</p>
+<hr />
+<h2 id="monitor-certificate-expiry-powershell">Monitor Certificate Expiry (PowerShell)<a class="headerlink" href="#monitor-certificate-expiry-powershell" title="Permanent link">&para;</a></h2>
+<p>Run this script on all servers to identify certificates approaching expiry before they cause service outages.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Find certs expiring within 60 days on the local machine</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">60</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">Issuer</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span> <span class="p">|</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="nb">Sort-Object</span> <span class="n">NotAfter</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># Run against multiple remote servers</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="s2">&quot;web01&quot;</span><span class="p">,</span><span class="s2">&quot;web02&quot;</span><span class="p">,</span><span class="s2">&quot;app01&quot;</span><span class="p">,</span><span class="s2">&quot;app02&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$server</span> <span class="k">in</span> <span class="nv">$servers</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="nv">$server</span> <span class="n">-ScriptBlock</span> <span class="p">{</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>            <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">60</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>            <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Server&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$env:COMPUTERNAME</span><span class="p">}},</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="p">}</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="p">}</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c"># Export results to CSV for tracking</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">60</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>    <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span> <span class="p">|</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>    <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Reports</span><span class="p">\</span><span class="n">ExpiringCerts</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+</code></pre></div>
+<p>Flag any certificate with fewer than 60 days remaining for immediate renewal. Certificates with fewer than 14 days are critical — raise a P1 change if the service is production.</p>
+<hr />
+<h2 id="revoke-and-republish-crl">Revoke and Republish CRL<a class="headerlink" href="#revoke-and-republish-crl" title="Permanent link">&para;</a></h2>
+<p>Revoke a compromised or decommissioned certificate and publish an updated CRL so relying parties stop trusting the certificate immediately.</p>
+<h3 id="revoke-the-certificate">Revoke the Certificate<a class="headerlink" href="#revoke-the-certificate" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open <strong>Certification Authority</strong> MMC (<code>certsrv.msc</code>) on the issuing CA.</li>
+<li>Expand the CA node → <strong>Issued Certificates</strong>.</li>
+<li>Locate the certificate by serial number or subject → right-click → <strong>All Tasks → Revoke Certificate</strong>.</li>
+<li>Select the revocation reason (Key Compromise, CA Compromise, Affiliation Changed, Superseded, Cessation of Operation, or Certificate Hold).</li>
+<li>Confirm the revocation date and click <strong>Yes</strong>.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a># Revoke by serial number from the command line
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>certutil -revoke &lt;SerialNumber&gt; &lt;ReasonCode&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a># Reason codes: 0=Unspecified, 1=KeyCompromise, 3=Affiliation, 4=Superseded, 5=CessationOfOperation
+</code></pre></div>
+<h3 id="publish-an-updated-crl">Publish an Updated CRL<a class="headerlink" href="#publish-an-updated-crl" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># Publish a new CRL immediately (bypasses normal publication schedule)
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>certutil -CRL
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a># Verify the CRL was published and check the next update time
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>certutil -URL &lt;CRLDistributionPoint-URL&gt;
+</code></pre></div>
+<ol>
+<li>Browse to the CRL Distribution Point (CDP) URL configured in the CA and confirm the updated CRL is downloadable.</li>
+<li>Verify the revoked serial number appears in the CRL:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>openssl<span class="w"> </span>crl<span class="w"> </span>-in<span class="w"> </span>crl.pem<span class="w"> </span>-text<span class="w"> </span>-noout<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;Revoked&quot;</span>
+</code></pre></div>
+<p>Notify service owners relying on the revoked certificate to install a replacement immediately.</p>
 
 
 

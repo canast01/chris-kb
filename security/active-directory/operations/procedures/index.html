@@ -4287,6 +4287,100 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#transfer-fsmo-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transfer FSMO Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-group-policy-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Group Policy Object
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-active-directory-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Active Directory Changes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audit Active Directory Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-audit-policy-via-gpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable Audit Policy via GPO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-event-ids-to-monitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Event IDs to Monitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-security-event-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Security Event Log
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recover-deleted-objects-recycle-bin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recover Deleted Objects (Recycle Bin)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-fine-grained-password-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Fine-Grained Password Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4855,6 +4949,150 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 <a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a># Check time skew across DCs
 <a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>w32tm /monitor /computers:dc01,dc02,dc03
 </code></pre></div>
+<hr />
+<h2 id="transfer-fsmo-roles">Transfer FSMO Roles<a class="headerlink" href="#transfer-fsmo-roles" title="Permanent link">&para;</a></h2>
+<p>Transfer FSMO roles to a new DC during planned migrations or before decommissioning the current role holder.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Transfer PDC Emulator, RID Master, and Infrastructure Master to new DC</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Move-ADDirectoryServerOperationMasterRole</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="nb">new-dc</span><span class="p">&gt;</span> <span class="p">`</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">-OperationMasterRole</span> <span class="n">PDCEmulator</span><span class="p">,</span><span class="n">RIDMaster</span><span class="p">,</span><span class="n">InfrastructureMaster</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c"># Verify all roles were transferred successfully</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c"># Confirm via PowerShell</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="nb">Get-ADDomain</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">PDCEmulator</span><span class="p">,</span> <span class="n">RIDMaster</span><span class="p">,</span> <span class="n">InfrastructureMaster</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="nb">Get-ADForest</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SchemaMaster</span><span class="p">,</span> <span class="n">DomainNamingMaster</span>
+</code></pre></div>
+<p>Pre-checks: confirm the target DC is healthy (<code>dcdiag /test:all</code>), replication is in sync (<code>repadmin /showrepl</code>), and a change ticket is approved. Only seize roles (via <code>ntdsutil</code>) if the original holder is permanently offline.</p>
+<hr />
+<h2 id="create-a-group-policy-object">Create a Group Policy Object<a class="headerlink" href="#create-a-group-policy-object" title="Permanent link">&para;</a></h2>
+<p>Create and link a new GPO to enforce configuration on an OU.</p>
+<ol>
+<li>Open <strong>Group Policy Management</strong> (<code>gpmc.msc</code>).</li>
+<li>Expand the domain tree, right-click the target OU → <strong>Create a GPO in this domain, and Link it here</strong>.</li>
+<li>Enter a descriptive name (e.g., <code>Security Baseline - Workstations</code>) → <strong>OK</strong>.</li>
+<li>Right-click the new GPO → <strong>Edit</strong> → configure the required settings under Computer or User Configuration.</li>
+<li>Close the editor — the GPO is already linked to the OU.</li>
+<li>Force immediate refresh on target machines:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>gpupdate /force
+</code></pre></div>
+<ol>
+<li>Verify applied policy:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>gpresult /r
+</code></pre></div>
+<p>Use <strong>Security Filtering</strong> to scope the GPO to a specific group rather than all Authenticated Users when a targeted rollout is required.</p>
+<hr />
+<h2 id="audit-active-directory-changes">Audit Active Directory Changes<a class="headerlink" href="#audit-active-directory-changes" title="Permanent link">&para;</a></h2>
+<p>Enable auditing to capture privileged account and group changes for security and compliance review.</p>
+<h3 id="enable-audit-policy-via-gpo">Enable Audit Policy via GPO<a class="headerlink" href="#enable-audit-policy-via-gpo" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create or edit a GPO linked to Domain Controllers OU.</li>
+<li>Navigate to <strong>Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy Configuration → DS Access</strong>.</li>
+<li>Enable <strong>Audit Directory Service Changes</strong> → Success and Failure.</li>
+<li>Run <code>gpupdate /force</code> on all DCs.</li>
+</ol>
+<h3 id="key-event-ids-to-monitor">Key Event IDs to Monitor<a class="headerlink" href="#key-event-ids-to-monitor" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4720</td>
+<td>User account created</td>
+</tr>
+<tr>
+<td>4722</td>
+<td>User account enabled</td>
+</tr>
+<tr>
+<td>4725</td>
+<td>User account disabled</td>
+</tr>
+<tr>
+<td>4740</td>
+<td>User account locked out</td>
+</tr>
+<tr>
+<td>4756</td>
+<td>Member added to a security-enabled universal group</td>
+</tr>
+<tr>
+<td>4728</td>
+<td>Member added to a security-enabled global group</td>
+</tr>
+<tr>
+<td>4732</td>
+<td>Member added to a security-enabled local group</td>
+</tr>
+</tbody>
+</table>
+<h3 id="query-security-event-log">Query Security Event Log<a class="headerlink" href="#query-security-event-log" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># Find all account lockout events (4740) in the last 24 hours</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">1</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c"># Find account creation events (4720)</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4720</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+</code></pre></div>
+<hr />
+<h2 id="recover-deleted-objects-recycle-bin">Recover Deleted Objects (Recycle Bin)<a class="headerlink" href="#recover-deleted-objects-recycle-bin" title="Permanent link">&para;</a></h2>
+<p>The AD Recycle Bin preserves deleted objects with all attributes intact for the deleted object lifetime (default 180 days). The feature must be enabled before the deletion occurs.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Verify Recycle Bin is enabled</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Get-ADOptionalFeature</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;Recycle Bin Feature&quot;</span><span class="p">}</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c"># Enable Recycle Bin (forest-wide, requires Enterprise Admin — one-time, irreversible)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="n">-Identity</span> <span class="s2">&quot;Recycle Bin Feature&quot;</span> <span class="p">`</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="n">-Scope</span> <span class="n">ForestOrConfigurationSet</span> <span class="p">`</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="n">-Target</span> <span class="p">(</span><span class="nb">Get-ADForest</span><span class="p">).</span><span class="n">Name</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c"># List all deleted objects</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DistinguishedName</span><span class="p">,</span> <span class="n">WhenChanged</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c"># Restore a specific deleted user</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="o">-and</span> <span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*jsmith*&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>    <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span> <span class="nb">Restore-ADObject</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="c"># Restore all deleted objects from a specific OU</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">isDeleted</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">DistinguishedName</span> <span class="o">-like</span> <span class="s2">&quot;*OU=Finance*&quot;</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>    <span class="nb">Restore-ADObject</span>
+</code></pre></div>
+<p>Verify the restored object appears in AD Users and Computers and that group memberships are intact.</p>
+<hr />
+<h2 id="configure-fine-grained-password-policy">Configure Fine-Grained Password Policy<a class="headerlink" href="#configure-fine-grained-password-policy" title="Permanent link">&para;</a></h2>
+<p>Fine-Grained Password Policies (PSOs) allow different password requirements for specific users or groups, overriding the Default Domain Policy. Requires Domain Functional Level 2008 or higher.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Create a PSO for service accounts (longer password, no lockout)</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">New-ADFineGrainedPasswordPolicy</span> <span class="p">`</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">-Name</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="n">-MinPasswordLength</span> <span class="n">20</span> <span class="p">`</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>    <span class="n">-PasswordHistoryCount</span> <span class="n">24</span> <span class="p">`</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    <span class="n">-ComplexityEnabled</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="n">-ReversibleEncryptionEnabled</span> <span class="nv">$false</span> <span class="p">`</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="n">-MinPasswordAge</span> <span class="s2">&quot;1.00:00:00&quot;</span> <span class="p">`</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="n">-MaxPasswordAge</span> <span class="s2">&quot;0&quot;</span> <span class="p">`</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>    <span class="n">-LockoutThreshold</span> <span class="n">0</span> <span class="p">`</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>    <span class="n">-Precedence</span> <span class="n">10</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="c"># Apply the PSO to a group</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="nb">Add-ADFineGrainedPasswordPolicySubject</span> <span class="p">`</span>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>    <span class="n">-Identity</span> <span class="s2">&quot;ServiceAccounts&quot;</span> <span class="p">`</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>    <span class="n">-Subjects</span> <span class="s2">&quot;SG-ServiceAccounts&quot;</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="c"># Verify which PSO applies to a user</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="nb">Get-ADUserResultantPasswordPolicy</span> <span class="n">-Identity</span> <span class="n">svc-sql</span>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="c"># List all PSOs</span>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="nb">Get-ADFineGrainedPasswordPolicy</span> <span class="n">-Filter</span> <span class="p">*</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Precedence</span><span class="p">,</span> <span class="n">MinPasswordLength</span>
+</code></pre></div>
+<p>A lower Precedence number wins when multiple PSOs apply to the same user. Apply PSOs to groups rather than individual users for easier management.</p>
 
 
 

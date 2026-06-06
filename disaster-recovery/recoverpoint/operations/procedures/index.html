@@ -1597,6 +1597,8 @@
       
         
       
+        
+      
     
     
     
@@ -2637,6 +2639,8 @@
       
         
           
+        
+      
         
       
         
@@ -4135,6 +4139,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#add-volumes-to-a-consistency-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Volumes to a Consistency Group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perform-an-image-access-test-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perform an Image Access (Test Failover)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-rpo-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change RPO Target
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4480,7 +4517,7 @@
 </table>
 <p>For planned DR tests, use Image Access. Invoke a full failover only on declared DR events.</p>
 <h3 id="bookmark-based-recovery-flow">Bookmark-Based Recovery Flow<a class="headerlink" href="#bookmark-based-recovery-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     listBookmarks["List Available Bookmarks\ngroup list_bookmarks --gname cgname"]
     selectBookmark["Select Target Bookmark\n(or timestamp)"]
     enableImageAccess["Enable Image Access\ngroup enable-image-access --gname cgname\n--copy DR_Copy --image bookmark --access-mode virtual"]
@@ -4540,7 +4577,7 @@
 <a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>│    Post-failover    = Confirm all VMs running; validate application; set new bookmark                 │
 <a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>│                                                                                                       │
 <a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+</code></pre></div></p>
 <h3 id="post-failover-validation">Post-Failover Validation<a class="headerlink" href="#post-failover-validation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm DR copy is now in production role</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>groups<span class="w"> </span>status<span class="w"> </span>detail
@@ -4783,6 +4820,36 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="add-volumes-to-a-consistency-group">Add Volumes to a Consistency Group<a class="headerlink" href="#add-volumes-to-a-consistency-group" title="Permanent link">&para;</a></h2>
+<p>Use the RecoverPoint CLI to add new volumes to an existing consistency group:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>add_volumes_to_group<span class="w"> </span>-g<span class="w"> </span>&lt;cg-name&gt;<span class="w"> </span>-v<span class="w"> </span>&lt;volume-id&gt;
+</code></pre></div>
+<p>After adding volumes, verify the CG protection status to confirm the new volumes are being replicated:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>group<span class="w"> </span>status<span class="w"> </span>--gname<span class="w"> </span>&lt;cg-name&gt;
+</code></pre></div>
+<p>Confirm the CG returns to ACTIVE state with all volumes included before closing the change. If the CG shows a degraded state after adding volumes, check storage connectivity and journal capacity.</p>
+<hr />
+<h2 id="perform-an-image-access-test-failover">Perform an Image Access (Test Failover)<a class="headerlink" href="#perform-an-image-access-test-failover" title="Permanent link">&para;</a></h2>
+<p>Image Access allows a point-in-time copy of a CG to be mounted at the recovery site for testing without impacting production replication.</p>
+<ol>
+<li>In the RecoverPoint UI, navigate to the Consistency Group and select <strong>Image Access</strong></li>
+<li>Select the desired point in time — choose a bookmark or specify a timestamp within the journal window</li>
+<li>Click <strong>Enable Image Access</strong> — RecoverPoint presents the DR copy volumes at the selected point in time</li>
+<li>Mount the volumes at the recovery site and run application tests to validate data integrity</li>
+<li>Once testing is complete, click <strong>Disable Image Access</strong> (or <strong>Unmount</strong> from the UI) to release the image</li>
+<li>Confirm the CG returns to ACTIVE replication state and RPO is back within SLA</li>
+</ol>
+<hr />
+<h2 id="change-rpo-target">Change RPO Target<a class="headerlink" href="#change-rpo-target" title="Permanent link">&para;</a></h2>
+<p>Modify the synchronisation interval for a Consistency Group to adjust the RPO target:</p>
+<ol>
+<li>In the RecoverPoint UI, navigate to the Consistency Group and open <strong>Settings</strong></li>
+<li>Select <strong>Protection Policy</strong></li>
+<li>Modify the synchronisation interval — lower values reduce RPO but increase journal write rate and bandwidth consumption</li>
+<li>Click <strong>Apply</strong> to save the new policy</li>
+<li>Monitor the CG cycle time after the change to confirm the new interval is being achieved — check <strong>group status</strong> to verify the actual RPO matches the new target</li>
+</ol>
 
 
 

@@ -1261,6 +1261,8 @@
       
         
       
+        
+      
     
     
     
@@ -1329,6 +1331,8 @@
       
         
       
+        
+      
     
     
     
@@ -1385,6 +1389,8 @@
       
         
           
+        
+      
         
       
         
@@ -3621,6 +3627,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#import-existing-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import Existing Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#move-state-between-workspaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Move State Between Workspaces
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manage-sensitive-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manage Sensitive Outputs
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3797,7 +3836,7 @@ Procedures reference covering Standard Apply Workflow, Plan Workflows, Change Re
 </div>
 
 <h2 id="standard-apply-workflow">Standard Apply Workflow<a class="headerlink" href="#standard-apply-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
     writeCode["Write / Edit\nHCL code"]
     fmt["terraform fmt\n-recursive"]
     validate["terraform validate"]
@@ -3837,7 +3876,7 @@ Procedures reference covering Standard Apply Workflow, Plan Workflows, Change Re
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        state migration   = moving state between backends; terraform init -migrate-state       │   │
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+</code></pre></div></p>
 <p>Use <code>-target</code> sparingly — it creates drift between the plan and real state if overused.</p>
 <h3 id="passing-variables-at-apply-time">Passing Variables at Apply Time<a class="headerlink" href="#passing-variables-at-apply-time" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Inline variable values</span>
@@ -4144,6 +4183,174 @@ Procedures reference covering Standard Apply Workflow, Plan Workflows, Change Re
 <tr>
 <td>Was a recent apply the cause?</td>
 <td>Check CI apply logs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="import-existing-infrastructure">Import Existing Infrastructure<a class="headerlink" href="#import-existing-infrastructure" title="Permanent link">&para;</a></h2>
+<p><code>terraform import aws_instance.example i-1234567890abcdef0</code> → verify state: <code>terraform state show aws_instance.example</code> → update HCL to match imported config.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Write the resource block in your .tf file first (required before importing)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># resource &quot;aws_instance&quot; &quot;example&quot; {</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1">#   # attributes will be populated from state after import</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># }</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Import the resource into state</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_instance.example<span class="w"> </span>i-1234567890abcdef0
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Verify the imported state</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>aws_instance.example
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Generate HCL from imported state (Terraform 1.5+)</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-generate-config-out<span class="o">=</span>generated.tf
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># Run plan — should show zero changes once HCL matches state</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>terraform<span class="w"> </span>plan
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Common import address formats</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_s3_bucket.logs<span class="w"> </span>my-bucket-name
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>terraform<span class="w"> </span>import<span class="w"> </span>azurerm_resource_group.rg<span class="w"> </span>/subscriptions/&lt;sub&gt;/resourceGroups/my-rg
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>terraform<span class="w"> </span>import<span class="w"> </span>google_compute_instance.vm<span class="w"> </span>projects/my-project/zones/us-east1-b/instances/my-vm
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Write the resource block in <code>.tf</code> (placeholder — attributes not needed yet)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Run <code>terraform import &lt;address&gt; &lt;resource-id&gt;</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Run <code>terraform state show &lt;address&gt;</code> to see what was imported</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Update HCL attributes to match the imported state</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Run <code>terraform plan</code> — expect zero changes when config matches state</td>
+</tr>
+</tbody>
+</table>
+<h2 id="move-state-between-workspaces">Move State Between Workspaces<a class="headerlink" href="#move-state-between-workspaces" title="Permanent link">&para;</a></h2>
+<p><code>terraform state mv -state-out=other.tfstate module.old module.new</code> or use <code>terraform workspace</code> commands → verify with <code>terraform plan</code> showing no changes.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List existing workspaces</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Create and switch to a new workspace</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>staging
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>staging
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Move a resource address within the same state file</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>terraform<span class="w"> </span>state<span class="w"> </span>mv<span class="w"> </span>aws_instance.old_name<span class="w"> </span>aws_instance.new_name
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Move a resource to a different state file</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>terraform<span class="w"> </span>state<span class="w"> </span>mv<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span>-state-out<span class="o">=</span>staging.tfstate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span>module.app.aws_instance.web<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>module.app.aws_instance.web
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Pull state to a local file for manual editing</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>current.tfstate
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># Push a modified state file back to the remote backend</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>terraform<span class="w"> </span>state<span class="w"> </span>push<span class="w"> </span>current.tfstate
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c1"># Verify after any state move — expect zero changes</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>terraform<span class="w"> </span>plan
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>terraform workspace new &lt;name&gt;</code></td>
+<td>Create an isolated state environment</td>
+</tr>
+<tr>
+<td><code>terraform workspace select &lt;name&gt;</code></td>
+<td>Switch active workspace</td>
+</tr>
+<tr>
+<td><code>terraform state mv &lt;src&gt; &lt;dst&gt;</code></td>
+<td>Rename or refactor a resource address in state</td>
+</tr>
+<tr>
+<td><code>terraform state mv -state-out</code></td>
+<td>Move resource to a different state file</td>
+</tr>
+<tr>
+<td><code>terraform state pull / push</code></td>
+<td>Download or upload state from the remote backend</td>
+</tr>
+</tbody>
+</table>
+<h2 id="manage-sensitive-outputs">Manage Sensitive Outputs<a class="headerlink" href="#manage-sensitive-outputs" title="Permanent link">&para;</a></h2>
+<p>Mark output as sensitive: <code>output "password" { value = random_password.db.result; sensitive = true }</code> → access via: <code>terraform output -raw password</code> → never log sensitive outputs in CI.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># outputs.tf</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Database master password&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">random_password.db.result</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">   # redacted in terraform apply/plan output</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;db_endpoint&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Database connection endpoint&quot;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_db_instance.main.endpoint</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Access a sensitive output value (prints raw value — handle with care)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>db_password
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Access as JSON (sensitive values are still redacted unless -raw is used per output)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>terraform<span class="w"> </span>output<span class="w"> </span>-json
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Pass a sensitive output to another tool without logging it</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="nv">DB_PASS</span><span class="o">=</span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>db_password<span class="k">)</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>admin<span class="w"> </span>-d<span class="w"> </span>mydb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;\l&quot;</span><span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_PASS</span><span class="s2">&quot;</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># Never do this — exposes the value in CI logs</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Password is: </span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>-raw<span class="w"> </span>db_password<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Practice</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sensitive = true</code> on output</td>
+<td>Redacts value in <code>plan</code> and <code>apply</code> console output</td>
+</tr>
+<tr>
+<td><code>terraform output -raw</code></td>
+<td>Retrieves the raw string value for use in scripts</td>
+</tr>
+<tr>
+<td>Store secrets in Vault/SSM</td>
+<td>Do not rely on Terraform state as a secrets store</td>
+</tr>
+<tr>
+<td>Encrypt remote backend</td>
+<td>State contains sensitive output values in plain text</td>
+</tr>
+<tr>
+<td>Never <code>echo</code> sensitive outputs</td>
+<td>Avoids leaking values into CI logs or shell history</td>
 </tr>
 </tbody>
 </table>

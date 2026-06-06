@@ -4108,6 +4108,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#request-a-certificate-via-venafi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request a Certificate via Venafi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renew-an-expiring-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renew an Expiring Certificate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Renew an Expiring Certificate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-renewal-via-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Renewal via Console
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-discovery-job-agentless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a Discovery Job (Agentless)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-certificate-push-to-iis-apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up Certificate Push to IIS / Apache
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audit-certificate-policy-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit Certificate Policy Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4409,6 +4481,104 @@ Operational procedures for certificate renewal, automation, and reporting.
 <li>Make one change at a time</li>
 <li>Validate after the change</li>
 </ul>
+<hr />
+<h2 id="request-a-certificate-via-venafi">Request a Certificate via Venafi<a class="headerlink" href="#request-a-certificate-via-venafi" title="Permanent link">&para;</a></h2>
+<p>Use the Venafi console to request a new certificate for a workload or service. The request is validated against the policy folder before being submitted to the configured CA.</p>
+<ol>
+<li>Log in to the <strong>Venafi Console</strong> (TPP: <code>https://tpp.corp.example.com/vedadmin</code> or TLS Protect Cloud).</li>
+<li>Navigate to <strong>Certificates → Request</strong>.</li>
+<li>Select the correct <strong>policy folder</strong> for the target environment (e.g., <code>\VED\Policy\Production\Web</code>).</li>
+<li>Fill in the certificate details:</li>
+<li><strong>Common Name (CN)</strong>: primary FQDN (e.g., <code>api.corp.example.com</code>).</li>
+<li><strong>Subject Alternative Names (SANs)</strong>: add all additional FQDNs or IP addresses.</li>
+<li><strong>Key Algorithm / Size</strong>: RSA 2048 or ECC P-256 as per policy.</li>
+<li>Select the <strong>Certificate Authority</strong> from the drop-down (must be approved for the policy folder).</li>
+<li>Click <strong>Submit</strong>.</li>
+<li>Monitor the request status — once the CA issues the certificate, status changes to <strong>Issued</strong>.</li>
+<li>Click <strong>Download</strong> → choose format (PEM, PFX, or JKS depending on target platform).</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Request via vcert CLI (alternative to UI)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vcert<span class="w"> </span>enroll<span class="w"> </span>--url<span class="w"> </span>https://tpp.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--token<span class="w"> </span><span class="nv">$VENAFI_TOKEN</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>--zone<span class="w"> </span><span class="s2">&quot;Production\\Web&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>--cn<span class="w"> </span><span class="s2">&quot;api.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--san-dns<span class="w"> </span><span class="s2">&quot;api.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--san-dns<span class="w"> </span><span class="s2">&quot;api-internal.corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--format<span class="w"> </span>pem<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--file<span class="w"> </span>api-cert.pem
+</code></pre></div>
+<hr />
+<h2 id="renew-an-expiring-certificate">Renew an Expiring Certificate<a class="headerlink" href="#renew-an-expiring-certificate" title="Permanent link">&para;</a></h2>
+<p>Renew a certificate that is approaching its expiry date. Venafi can automate this for managed applications; use the manual process when automation is not configured.</p>
+<h3 id="manual-renewal-via-console">Manual Renewal via Console<a class="headerlink" href="#manual-renewal-via-console" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Log in to the <strong>Venafi Console</strong> → <strong>Certificates</strong>.</li>
+<li>Apply a filter: <strong>Expiration</strong> → less than 30 days.</li>
+<li>Select one or more certificates requiring renewal.</li>
+<li>Click <strong>Renew</strong> (or right-click → Renew).</li>
+<li>Confirm the CN, SANs, and CA are correct → <strong>Approve</strong>.</li>
+<li>Venafi re-requests the certificate from the CA using the existing key or a new key pair (depending on policy).</li>
+<li>Once issued, Venafi pushes the new certificate to all configured application bindings.</li>
+<li>Verify the new expiry date in the certificate details pane.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger renewal via vcert CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vcert<span class="w"> </span>renew<span class="w"> </span>--url<span class="w"> </span>https://tpp.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--token<span class="w"> </span><span class="nv">$VENAFI_TOKEN</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>--thumbprint<span class="w"> </span>&lt;certificate-thumbprint&gt;
+</code></pre></div>
+<p>Confirm the application is serving the renewed certificate using <code>openssl s_client -connect &lt;host&gt;:443</code> and checking the <code>Not After</code> date.</p>
+<hr />
+<h2 id="configure-a-discovery-job-agentless">Configure a Discovery Job (Agentless)<a class="headerlink" href="#configure-a-discovery-job-agentless" title="Permanent link">&para;</a></h2>
+<p>Network Discovery scans IP ranges for TLS certificates on open ports without requiring an agent on the target hosts, enabling inventory of unmanaged certificates.</p>
+<ol>
+<li>Log in to the <strong>Venafi Console</strong> → <strong>Certificates → Discovery</strong>.</li>
+<li>Click <strong>New Network Scan</strong> → give the job a descriptive name (e.g., <code>Prod-DMZ-Scan</code>).</li>
+<li>Configure the scan settings:</li>
+<li><strong>IP Ranges</strong>: enter CIDR ranges or individual IPs to scan (e.g., <code>10.0.10.0/24</code>).</li>
+<li><strong>Ports</strong>: add all relevant TLS ports — <code>443, 8443, 636, 993, 995, 3389, 5671</code>.</li>
+<li><strong>Scan Frequency</strong>: set a schedule (weekly or monthly for most environments).</li>
+<li>Click <strong>Save</strong> → <strong>Run Now</strong> to trigger an immediate scan.</li>
+<li>Monitor job progress under <strong>Discovery → Active Jobs</strong>.</li>
+<li>Once complete, review <strong>Discovered Certificates</strong> — certificates not currently managed by Venafi appear here.</li>
+<li>For each discovered certificate, choose <strong>Onboard to Policy</strong> → assign to the correct policy folder and CA.</li>
+</ol>
+<p>Newly onboarded certificates will be included in Venafi's lifecycle management and expiry alerting from that point forward.</p>
+<hr />
+<h2 id="set-up-certificate-push-to-iis-apache">Set Up Certificate Push to IIS / Apache<a class="headerlink" href="#set-up-certificate-push-to-iis-apache" title="Permanent link">&para;</a></h2>
+<p>Configure Venafi to automatically provision (push) issued certificates to an application server, removing the manual install step.</p>
+<ol>
+<li>Log in to the <strong>Venafi Console</strong> → <strong>Applications</strong>.</li>
+<li>Click <strong>Add</strong> → select the target platform:</li>
+<li><strong>Microsoft IIS</strong> for Windows web servers.</li>
+<li><strong>Apache</strong> for Linux-based Apache HTTPD.</li>
+<li><strong>F5 BIG-IP</strong> for load balancers.</li>
+<li>Enter the application details:</li>
+<li><strong>Hostname / IP</strong>: address of the target server.</li>
+<li><strong>Credentials</strong>: service account with permission to manage certificates on the target (e.g., IIS admin, SSH key for Apache).</li>
+<li><strong>Install Location</strong>: for IIS, specify the site binding; for Apache, specify the certificate and key file paths.</li>
+<li>Click <strong>Test Connection</strong> — Venafi will attempt to reach the target using the provided credentials.</li>
+<li>Navigate to the relevant certificate → <strong>Edit</strong> → <strong>Applications</strong> tab → associate the certificate with the new application.</li>
+<li>Click <strong>Provision</strong> to push the current certificate to the application immediately.</li>
+<li>Verify the application is serving the new certificate.</li>
+</ol>
+<p>Future renewals will automatically push the new certificate to all associated applications without manual intervention.</p>
+<hr />
+<h2 id="audit-certificate-policy-compliance">Audit Certificate Policy Compliance<a class="headerlink" href="#audit-certificate-policy-compliance" title="Permanent link">&para;</a></h2>
+<p>Use Venafi's compliance reporting to identify certificates that violate organisational policy (weak keys, wrong CA, self-signed) and generate audit evidence.</p>
+<ol>
+<li>Log in to the <strong>Venafi Console</strong> → <strong>Reporting → Compliance</strong>.</li>
+<li>Select the <strong>Policy</strong> to audit (e.g., <code>\VED\Policy\Production</code>).</li>
+<li>Review the compliance summary — violations are grouped by rule:</li>
+<li><strong>Weak Key Size</strong>: RSA &lt; 2048 or ECC &lt; P-256.</li>
+<li><strong>Self-Signed</strong>: certificates not issued by an approved CA.</li>
+<li><strong>Wrong CA</strong>: issued by a CA not listed in the policy folder's allowed CA list.</li>
+<li><strong>Expired</strong>: certificates past their <code>Not After</code> date still in service.</li>
+<li><strong>Short Validity</strong>: certificates issued with a validity period exceeding policy maximum.</li>
+<li>Click into each violation category to see the list of non-compliant certificates with Subject, Expiry, and Owner fields.</li>
+<li>Assign remediation tasks to certificate owners directly from the report.</li>
+<li>Click <strong>Generate PDF</strong> to export the full compliance report for audit evidence submission.</li>
+</ol>
+<p>Schedule automated compliance reports via <strong>Reporting → Scheduled Reports</strong> to receive a weekly or monthly email with the compliance summary for each policy folder.</p>
 
 
 
