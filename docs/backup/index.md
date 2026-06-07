@@ -1,7 +1,7 @@
 # Backup
 
 <div class="kb-summary">
-Backup platform covering enterprise backup products (Veeam, Commvault, NetBackup, Dell Cyber Recovery), backup validation procedures, and recovery testing. Backup protects data and workloads; Disaster Recovery orchestrates failover — these are distinct disciplines.
+Enterprise backup product knowledge base — Veeam, Commvault, NetBackup, and Dell Cyber Recovery vault. Backup protects data and enables point-in-time recovery; disaster recovery procedures and runbooks are in the DR section.
 </div>
 
 ```text
@@ -14,15 +14,14 @@ Backup platform covering enterprise backup products (Veeam, Commvault, NetBackup
 │   │         RPO drives backup frequency; RTO drives recovery infrastructure sizing                │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                                             ▼                                                         │
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Backup Products                    │  │           Data Protection                   │   │
-│   │   Veeam       — VM + physical backup         │  │   Backup Validation  — verify restorability │   │
-│   │   Commvault   — enterprise data platform     │  │   Recovery Testing   — DR drill procedures  │   │
-│   │   NetBackup   — enterprise tape + disk       │  │   Retention Policy   — lifecycle governance │   │
-│   │   Cyber Recovery — ransomware vault (Dell)   │  │   Classification     — data tier alignment  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                             Backup Products                                                   │   │
+│   │          Veeam       — VM + physical backup, instant recovery, Veeam ONE monitoring           │   │
+│   │          Commvault   — enterprise data platform; backup, archive, compliance, and cloud       │   │
+│   │          NetBackup   — enterprise backup for VMs, servers, databases, and tape                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   Physical Infrastructure (the hardware everything above runs on):                                    │
 │   Backup servers · proxy servers · dedup appliances · tape libraries · object storage targets         │
@@ -60,19 +59,5 @@ Backup platform covering enterprise backup products (Veeam, Commvault, NetBackup
   <span>Enterprise backup for VMs, physical servers, databases, and tape infrastructure.</span>
 </a>
 
-<a class="kb-card" href="dell-cyber-recovery/">
-  <strong>Dell Cyber Recovery</strong>
-  <span>Ransomware air-gap vault — PowerProtect + CyberSense integrity verification.</span>
-</a>
-
-<a class="kb-card" href="backup-validation/">
-  <strong>Backup Validation</strong>
-  <span>Verifying backup integrity — automated verification, test restores, and scheduling.</span>
-</a>
-
-<a class="kb-card" href="recovery-testing/">
-  <strong>Recovery Testing</strong>
-  <span>DR drill procedures, test scenarios, regulatory requirements, and lessons learned.</span>
-</a>
 
 </div>
