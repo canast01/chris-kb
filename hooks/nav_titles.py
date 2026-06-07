@@ -109,6 +109,10 @@ WORD_FIXES = {
     "cloudwatch":   "CloudWatch",
     "guardduty":    "GuardDuty",
     "rasr":         "RASR",
+    "postgresql":   "PostgreSQL",
+    "mysql":        "MySQL",
+    "srdf":         "SRDF",
+    "cyber":        "Cyber",
     # ── Azure services ───────────────────────────────────────────────────────
     "azure":        "Azure",
     "aks":          "AKS",
@@ -244,32 +248,40 @@ def on_nav(nav, **kwargs):
         # Order sections logically — core platforms first, then supporting areas.
         # Derived from the folder names MkDocs uses as section keys.
         SECTION_ORDER = [
+            # ── Core infrastructure platforms ──────────────────────────────
             "virtualization",
             "cloud",
             "storage",
             "san",
             "compute",
             "networking",
-            "monitoring",
+            # ── Data protection & recovery ─────────────────────────────────
+            "backup",
+            "disaster-recovery",
+            # ── Security & observability ───────────────────────────────────
             "security",
+            "monitoring",          # lean standards section post-Track-2
+            # ── Tooling & automation ───────────────────────────────────────
             "tools",
             "automation",
-            "disaster-recovery",
+            # ── Reference ─────────────────────────────────────────────────
+            "protocols",
+            "certifications",
+            "ai",
+            "start-here",
+            # ── Dissolving sections (kept here so they sort correctly
+            #    during the transition period; removed once empty) ──────────
             "data-protection",
             "troubleshooting",
             "runbooks",
             "change-management",
             "architecture",
             "performance",
-            "certifications",
             "project-management",
-            "protocols",
             "database",
             "integration",
             "inventory",
             "lifecycle",
-            "ai",
-            "start-here",
         ]
 
         def _section_key(item):
