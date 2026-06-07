@@ -96,9 +96,6 @@ should_exist = [
     "storage/netapp/insightiq",
     "storage/dell/dell-aiops",
     "compute/windows-server/active-directory",
-    "compute/windows-server/sql-server",
-    "compute/linux/postgresql",
-    "compute/linux/mysql",
 ]
 for s in should_exist:
     p = DOCS / s

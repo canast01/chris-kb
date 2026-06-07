@@ -278,6 +278,6 @@ Each product documents its exact ACS URL, Entity ID format, and any quirks:
 
 - [Standard LDAP Integration](../ldap-integration/index.md)
 - [MFA](../mfa/index.md)
-- [Active Directory](../active-directory/index.md)
+- [Active Directory](../../compute/windows-server/active-directory/index.md)
 - [TLS and HTTPS](../../protocols/tls/index.md)
 - [PKI](../pki/index.md)

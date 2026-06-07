@@ -93,3 +93,13 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 - [ ] SCG connectivity for the system shows CONNECTED in CloudIQ
 - [ ] Capacity forecast is unchanged or improved (no unexpected capacity consumption)
 - [ ] Alert notification routing is confirmed active — no suppression window left open
+
+## Common Health Issues
+
+| Issue | Likely Cause | Fix |
+|---|---|---|
+| System shows grey in CloudIQ | Phone-home disconnected | Verify SRS/ESRS gateway, check firewall |
+| Health score drops unexpectedly | New hardware alert generated | Check Alerts tab, drill into component detail |
+| Component status stale | Delayed telemetry | Last contact > 1 hour indicates connectivity issue |
+| Drive predictive failure alert | Vendor analysis from telemetry | Open support case — proactive replacement |
+| Replication link health degraded | WAN latency or packet loss | Check network path between replication endpoints |

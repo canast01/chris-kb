@@ -56,3 +56,19 @@
 │  ✔ Backup completed within last 24h                                                                   │
 └─────────────────────────────────────────────────────┘
 ```
+
+## Backup
+
+Aria Operations does not have a native backup tool. Use the following:
+
+| Method | What is Backed Up |
+|---|---|
+| VM snapshot (via vCenter) | Full appliance state — use before upgrades, not for operational backup |
+| File-level backup agent | PostgreSQL data files + config (requires LCM configuration) |
+| LCM backup | LCM configuration and product manifests |
+
+## EOL Tracking
+
+- Broadcom Product Lifecycle Matrix: [support.broadcom.com/group/ecx/productlifecycle](https://support.broadcom.com/group/ecx/productlifecycle)
+- Aria Suite Lifecycle Manager — check installed product versions against the matrix quarterly
+- Aim to be no more than one major version behind the current release

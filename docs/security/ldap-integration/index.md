@@ -181,14 +181,14 @@ Each product documents its exact configuration path and any non-standard field n
 - [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication/index.md)
 - [NSX — Authentication](../../virtualization/vmware/nsx/security/authentication/index.md)
 - [ONTAP — Authentication](../../storage/netapp/ontap/security/authentication/index.md)
-- [Veeam — Authentication](../../disaster-recovery/veeam/security/authentication/index.md)
+- [Veeam — Authentication](../../backup/veeam/security/authentication/index.md)
 
 ---
 
 ## Related Pages
 
 - [Standard SAML Configuration](../saml-configuration/index.md)
-- [Active Directory](../active-directory/index.md)
+- [Active Directory](../../compute/windows-server/active-directory/index.md)
 - [MFA](../mfa/index.md)
 - [PKI](../pki/index.md)
 - [TLS and HTTPS](../../protocols/tls/index.md)

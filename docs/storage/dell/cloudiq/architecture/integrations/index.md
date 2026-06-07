@@ -91,3 +91,40 @@ CloudIQ can automatically create ServiceNow incidents for CRITICAL alerts via th
 5. Test by triggering a test notification from CloudIQ and confirming the incident appears in ServiceNow.
 
 For production environments, use a ServiceNow integration user with the minimum required roles (`itil` for incident creation) rather than a shared admin account.
+
+## Overview
+
+CloudIQ collects telemetry natively from all Dell platforms via the Secure Connect Gateway. External integrations extend alert delivery and data access into broader operational toolsets including ITSM, observability platforms, and notification systems.
+
+## Native Platform Integrations (Inbound via SCG)
+
+All Dell storage and server platforms are registered in the SCG and data flows automatically.
+
+| Platform | Connection Method | Key Data |
+|---|---|---|
+| PowerStore | REST API from SCG | Health score, capacity, performance, alerts |
+| PowerMax / VMAX | REST API from SCG | Health score, capacity, SRDF, performance |
+| PowerScale / Isilon | REST API from SCG | Health score, capacity, protocol throughput |
+| Unity XT | REST API from SCG | Health score, capacity, replication status |
+| Data Domain / PowerProtect | REST API from SCG | Dedup ratios, capacity, replication health |
+| PowerEdge (via iDRAC) | iDRAC REST API from SCG | Server health, firmware, hardware faults |
+
+## Aria Operations Integration
+
+The Dell CloudIQ management pack for Aria Operations pulls health score and alert data into vROps for correlated VMware + Dell storage dashboards.
+
+Aria Operations > Admin > Solutions > Dell CloudIQ Management Pack
+- CloudIQ API URL: https://api.cloudiq.dell.com
+- Client ID / Secret: stored in Aria Operations credential store
+- Collection interval: 15 minutes
+
+## Integration Summary
+
+| Integration | Method | Purpose |
+|---|---|---|
+| PowerMax / PowerStore / PowerScale / Unity / DD | SCG telemetry (native) | Health, capacity, and performance data |
+| ServiceNow | Webhook from CloudIQ alert rules | Auto-ticket on CRITICAL alerts |
+| Slack / Teams | Webhook notification | Real-time alert notifications to ops channel |
+| Splunk / Grafana | CloudIQ REST API poller | Fleet health and capacity dashboards |
+| Aria Operations | CloudIQ management pack | VMware + Dell storage correlation |
+| Email | CloudIQ notification rules | WARNING alert distribution to team |
