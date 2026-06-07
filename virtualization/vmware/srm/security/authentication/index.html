@@ -4590,6 +4590,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4969,6 +4980,18 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 <li><a href="../../../../../security/ldap-integration/">Standard LDAP Integration</a> — field reference, service account standards, TLS requirements, and connectivity testing</li>
 <li><a href="../../../../../security/saml-configuration/">Standard SAML Configuration</a> — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements</li>
 </ul>
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>Replace default self-signed certificates in production deployments:</p>
+<ol>
+<li>Generate CSR on SRM server</li>
+<li>Sign with internal CA (or public CA for partner-site connections)</li>
+<li>Install certificate: SRM → vCenter → Site Recovery → Certificates → Replace</li>
+</ol>
+<p>Certificates used by SRM:
+- SRM ↔ vCenter: VMCA-issued or custom
+- SRM ↔ SRM (inter-site): Must be mutually trusted (both sites' CAs in trust stores)
+- SRM ↔ SRA: Inherits SRM trust store</p>
+<p>Track expiry dates in certificate inventory; SRM stops functioning if certificates expire.</p>
 
 
 

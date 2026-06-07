@@ -4584,6 +4584,105 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-srm-at-protected-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy SRM at Protected Site
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-srm-at-recovery-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy SRM at Recovery Site
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pair-the-sites_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair the Sites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-mappings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Mappings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-protection-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Protection Group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-recovery-plan_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Recovery Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-the-recovery-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test the Recovery Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5162,6 +5261,172 @@ End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. P
 </tr>
 </tbody>
 </table>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>Confirm the following before starting the deployment:</p>
+<p><strong>Infrastructure:</strong></p>
+<ul>
+<li>vCenter Server deployed and operational at both the protected site and the recovery site (linked-mode optional but not required)</li>
+<li>vSphere version and SRM version compatibility verified against the VMware Interoperability Matrix</li>
+<li>Sufficient compute and storage at the recovery site to run protected workloads under DR conditions</li>
+<li>Shared storage (for ABR) or vSphere Replication capability at both sites</li>
+</ul>
+<p><strong>Replication choice — decide before installing:</strong></p>
+<ul>
+<li><strong>vSphere Replication (VR):</strong> Built-in, hypervisor-based, no storage vendor dependency. Suitable for RPO 15 minutes or greater.</li>
+<li><strong>Array-Based Replication (ABR):</strong> Storage array replicates LUNs/volumes. Requires a Storage Replication Adapter (SRA) from the array vendor (e.g., Dell PowerStore SRA, NetApp SRA). RPO limited only by array capability.</li>
+</ul>
+<p><strong>SRM appliance form factor (version-dependent):</strong></p>
+<ul>
+<li>SRM 8.x and later: Linux OVA (recommended)</li>
+<li>SRM pre-8.x: Windows Server installer (Windows Server 2016/2019)</li>
+</ul>
+<p><strong>Networking:</strong></p>
+<ul>
+<li>TCP 443 open between SRM at protected site and SRM at recovery site</li>
+<li>TCP 9086 open between SRM appliances (inter-site SRM communication)</li>
+<li>TCP 443 open from each SRM to its local vCenter</li>
+<li>DNS resolvable FQDNs for both vCenters and both SRM appliances from either site</li>
+</ul>
+<hr />
+<h2 id="deploy-srm-at-protected-site">Deploy SRM at Protected Site<a class="headerlink" href="#deploy-srm-at-protected-site" title="Permanent link">&para;</a></h2>
+<p><strong>For OVA (SRM 8.x+):</strong></p>
+<ol>
+<li>Download the SRM OVA from the VMware Customer Connect portal.</li>
+<li>Log in to the protected-site vCenter → <strong>Actions → Deploy OVF Template</strong> → select the SRM OVA.</li>
+<li>Assign to a management cluster and datastore — do not place SRM on a datastore that is itself replicated (SRM cannot protect itself).</li>
+<li>Complete OVF properties:</li>
+<li>Hostname (FQDN), IP address, subnet mask, default gateway, DNS, NTP</li>
+<li>Admin password (record in credentials store)</li>
+<li>Power on and wait for first-boot (~5 minutes).</li>
+<li>Open <code>https://&lt;srm-appliance-ip&gt;:5480</code> → SRM Appliance Management Interface → complete configuration wizard:</li>
+<li>Set NTP sync</li>
+<li>Connect to vCenter: enter protected-site vCenter FQDN, SSO credentials → <strong>Save and Restart Services</strong></li>
+<li>Open vCenter → <strong>Menu → Site Recovery</strong> → confirm SRM appears with status <strong>OK</strong> and site name displayed.</li>
+</ol>
+<p><strong>For Windows installer (pre-8.x):</strong></p>
+<ol>
+<li>Install SRM on a Windows Server VM joined to domain.</li>
+<li>Run <code>VMware-srm-&lt;version&gt;.exe</code> → accept defaults → provide vCenter FQDN and credentials when prompted.</li>
+<li>SRM registers as a vCenter extension — verify in vCenter → <strong>Menu → Site Recovery</strong>.</li>
+</ol>
+<hr />
+<h2 id="deploy-srm-at-recovery-site">Deploy SRM at Recovery Site<a class="headerlink" href="#deploy-srm-at-recovery-site" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Repeat the identical deployment process at the recovery-site vCenter (OVA or Windows, matching version exactly).</li>
+<li>Connect the recovery-site SRM to the recovery-site vCenter using the same procedure.</li>
+<li>In both vCenters, navigate to <strong>Menu → Site Recovery</strong> → confirm SRM shows status <strong>OK</strong> at each site independently before proceeding to pairing.</li>
+</ol>
+<p>Key check: both SRM instances must run the same version. Version mismatch blocks pairing.</p>
+<hr />
+<h2 id="pair-the-sites_1">Pair the Sites<a class="headerlink" href="#pair-the-sites_1" title="Permanent link">&para;</a></h2>
+<p>Site pairing establishes the trust relationship between the two SRM instances.</p>
+<ol>
+<li>Log in to the <strong>protected-site vCenter</strong> → <strong>Menu → Site Recovery → Sites → New Site Pair</strong>.</li>
+<li>Enter the recovery-site vCenter FQDN and SSO administrator credentials → <strong>Next</strong>.</li>
+<li>SRM presents the SSL certificate thumbprint of the recovery-site vCenter — review and <strong>Accept</strong>.</li>
+<li>SRM presents the SSL certificate thumbprint of the recovery-site SRM appliance — review and <strong>Accept</strong>.</li>
+<li>Pairing completes → both sites now appear in the Site Recovery UI with status <strong>Connected</strong>.</li>
+<li>Verify from the recovery site: open recovery-site vCenter → <strong>Menu → Site Recovery → Sites</strong> → protected site listed as the peer with status <strong>Connected</strong>.</li>
+</ol>
+<hr />
+<h2 id="configure-replication">Configure Replication<a class="headerlink" href="#configure-replication" title="Permanent link">&para;</a></h2>
+<p><strong>vSphere Replication path:</strong></p>
+<ol>
+<li>Download the VR appliance OVA from VMware Customer Connect.</li>
+<li>Deploy VR appliance at the protected site → connect to protected-site vCenter (same OVA deploy procedure as SRM).</li>
+<li>Deploy VR appliance at the recovery site → connect to recovery-site vCenter.</li>
+<li>Pair VR appliances: protected-site vCenter → <strong>Menu → Site Recovery → Replication → Configure Replication</strong> → enter recovery-site VR FQDN → authenticate → <strong>Pair</strong>.</li>
+<li>Configure per-VM replication:</li>
+<li>Select a VM → right-click → <strong>All Site Recovery Actions → Configure Replication</strong></li>
+<li>Choose target site, target datastore, RPO (minimum 15 minutes for VR)</li>
+<li>Enable <strong>Guest OS quiescing</strong> for application-consistent copies (requires VMware Tools)</li>
+<li>Confirm replication status shows <strong>OK</strong> in the VR inventory</li>
+</ol>
+<p><strong>Array-Based Replication path:</strong></p>
+<ol>
+<li>Obtain the SRA package from the storage vendor (must match array firmware and SRM version).</li>
+<li>Install SRA on the SRM appliance:</li>
+<li>SRM 8.x OVA: SRM Appliance Management Interface → <strong>Storage Replication Adapters → Upload SRA</strong> → upload the vendor-provided SRA tar.gz</li>
+<li>Windows SRM: run the SRA installer on the Windows Server hosting SRM</li>
+<li>Install SRA at the recovery site using the same process.</li>
+<li>Configure array credentials: SRM UI → <strong>Configure → Array Managers → Add</strong> → enter array management IP, username, password for both protected and recovery arrays → <strong>Discover Arrays</strong>.</li>
+<li>Verify SRM discovers replicated datastore pairs under <strong>Configure → Array Pairs</strong>.</li>
+</ol>
+<hr />
+<h2 id="configure-mappings">Configure Mappings<a class="headerlink" href="#configure-mappings" title="Permanent link">&para;</a></h2>
+<p>Mappings define how protected-site objects translate to recovery-site equivalents when a recovery plan executes.</p>
+<p><strong>Network Mappings:</strong></p>
+<ol>
+<li>SRM UI (protected site) → <strong>Configure → Network Mappings → Add Mapping</strong>.</li>
+<li>Map each production port group to the corresponding DR port group at the recovery site.</li>
+<li>Add a <strong>Test Network</strong> mapping: each production port group → isolated bubble network (used during test runs only — prevents test VMs from reaching production).</li>
+</ol>
+<p><strong>Resource Mappings:</strong></p>
+<ol>
+<li>SRM UI → <strong>Configure → Resource Mappings → Add Mapping</strong>.</li>
+<li>Map protected-site cluster or resource pool → recovery-site cluster or resource pool.</li>
+</ol>
+<p><strong>Folder Mappings:</strong></p>
+<ol>
+<li>SRM UI → <strong>Configure → Folder Mappings → Add Mapping</strong>.</li>
+<li>Map protected-site VM folders to recovery-site VM folders (controls where recovered VMs appear in the vCenter inventory).</li>
+</ol>
+<p><strong>Placeholder Datastore:</strong></p>
+<ol>
+<li>SRM UI → <strong>Configure → Placeholder Datastores → Add</strong>.</li>
+<li>Select a small datastore at the recovery site — SRM uses this to register placeholder VMs that represent protected workloads.</li>
+</ol>
+<hr />
+<h2 id="create-a-protection-group">Create a Protection Group<a class="headerlink" href="#create-a-protection-group" title="Permanent link">&para;</a></h2>
+<p>A protection group defines which VMs are protected together and how they replicate.</p>
+<ol>
+<li>SRM UI → <strong>Protection Groups → New Protection Group</strong>.</li>
+<li>Name the group (e.g., <code>PG-Tier1-VMs</code>).</li>
+<li>Select replication type:</li>
+<li><strong>vSphere Replication:</strong> select VMs individually from the list of configured VR replicas</li>
+<li><strong>Array-Based Replication:</strong> select a replicated datastore — SRM automatically includes all VMs on that datastore</li>
+<li>Review detected VMs and confirm.</li>
+<li>Click <strong>Next → Finish</strong> → SRM runs validation.</li>
+<li>Resolve any validation warnings (common: missing placeholder datastore assignment, missing folder mapping for a VM).</li>
+<li>Confirm protection group status shows <strong>OK</strong> (green) with all VMs listed as <strong>Protected</strong>.</li>
+</ol>
+<hr />
+<h2 id="create-a-recovery-plan_1">Create a Recovery Plan<a class="headerlink" href="#create-a-recovery-plan_1" title="Permanent link">&para;</a></h2>
+<p>A recovery plan defines the ordered sequence of steps to recover a set of protection groups.</p>
+<ol>
+<li>SRM UI → <strong>Recovery Plans → New Recovery Plan</strong>.</li>
+<li>Name the plan (e.g., <code>RP-Tier1-Failover</code>).</li>
+<li>Add one or more protection groups to the plan.</li>
+<li>Configure priority groups:</li>
+<li><strong>Priority 1:</strong> infrastructure VMs (DNS, AD, database servers) — these power on first</li>
+<li><strong>Priority 2:</strong> application-tier VMs</li>
+<li><strong>Priority 3:</strong> non-critical workloads</li>
+<li>Within each priority, set per-VM startup delay and IP customisation if performing real failover (not required for test)</li>
+<li>Add custom recovery steps as needed:</li>
+<li>Pre-power-on scripts (e.g., mount NFS exports, update DNS)</li>
+<li>Post-power-on scripts (e.g., notify monitoring, send alert)</li>
+<li>Configure IP property mappings if VMs need different IPs at the recovery site (SRM → <strong>Configure → IP Address Mappings</strong>).</li>
+<li>Click <strong>Finish</strong> → SRM validates the plan.</li>
+<li>Resolve all validation errors before proceeding. Warnings should be reviewed but do not block testing.</li>
+</ol>
+<hr />
+<h2 id="test-the-recovery-plan">Test the Recovery Plan<a class="headerlink" href="#test-the-recovery-plan" title="Permanent link">&para;</a></h2>
+<p>Testing runs recovery in an isolated bubble network and is non-disruptive to production. It is the only way to confirm the plan works.</p>
+<ol>
+<li>SRM UI → <strong>Recovery Plans</strong> → select the plan.</li>
+<li>Click <strong>Test</strong> → confirm the test network mappings are in place → <strong>Next → Finish</strong>.</li>
+<li>Monitor execution in the <strong>Steps</strong> panel:</li>
+<li>Storage: test snapshots created from replicated data</li>
+<li>VMs: powered on at recovery site on isolated test networks</li>
+<li>Custom steps: scripts execute in configured order</li>
+<li>Verify each VM powers on and the OS boots correctly:</li>
+<li>Check vCenter at recovery site → confirm VMs visible in test state</li>
+<li>RDP or SSH into test VMs if accessible from the isolated network to verify application health</li>
+<li>Review the SRM test report: <strong>Recovery Plans → History → view last run</strong> — check for step failures or warnings.</li>
+<li>Click <strong>Cleanup</strong> when testing is complete — SRM powers off test VMs, removes test snapshots, and resets protection group state to <strong>Protected</strong>.</li>
+<li>Document the test result: date, plan name, steps executed, any failures and resolution, tester sign-off.</li>
+</ol>
+<p>Regular testing cadence recommendation: full test every 90 days, partial validation monthly.</p>
 
 
 

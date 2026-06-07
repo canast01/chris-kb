@@ -4535,6 +4535,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#firewall-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4880,6 +4902,55 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 - All SRM components must be on FIPS-capable versions
 - VRA appliances must be configured for FIPS mode during deployment</p>
 <p>Check VMware FIPS compliance documentation before enabling.</p>
+<h2 id="firewall-ports">Firewall Ports<a class="headerlink" href="#firewall-ports" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM Server</td>
+<td>vCenter</td>
+<td>443</td>
+<td>vSphere API</td>
+</tr>
+<tr>
+<td>SRM Server</td>
+<td>Remote SRM Server</td>
+<td>443, 8095</td>
+<td>Site pair communication</td>
+</tr>
+<tr>
+<td>SRM Server</td>
+<td>Array/SRA</td>
+<td>443, 9090</td>
+<td>SRA API calls</td>
+</tr>
+<tr>
+<td>vSphere Replication</td>
+<td>Remote vSphere Replication</td>
+<td>44046</td>
+<td>Replication traffic</td>
+</tr>
+</tbody>
+</table>
+<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
+<p>Replace default self-signed certificates in production deployments:</p>
+<ol>
+<li>Generate CSR on SRM server</li>
+<li>Sign with internal CA (or public CA for partner-site connections)</li>
+<li>Install certificate: SRM → vCenter → Site Recovery → Certificates → Replace</li>
+</ol>
+<p>Certificates used by SRM:
+- SRM ↔ vCenter: VMCA-issued or custom
+- SRM ↔ SRM (inter-site): Must be mutually trusted (both sites' CAs in trust stores)
+- SRM ↔ SRA: Inherits SRM trust store</p>
+<p>Track expiry dates in certificate inventory; SRM stops functioning if certificates expire.</p>
 
 
 

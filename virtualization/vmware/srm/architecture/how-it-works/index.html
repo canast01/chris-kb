@@ -4605,6 +4605,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-plan-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-replication-adapters-sras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Replication Adapters (SRAs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protection-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protection Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5050,6 +5116,128 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 </tbody>
 </table>
 <p>Network and folder mappings are bidirectional — configuring them in one direction auto-populates the reverse. Resource mappings define where recovered VMs are placed in the vCenter hierarchy.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer. SRM supports both array-based replication (via SRAs) and built-in vSphere Replication.</p>
+<h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph Protected["Protected Site"]
+        PVMs["VMs&lt;br/&gt;production workloads"]
+        PvCenter["vCenter&lt;br/&gt;compute management"]
+        PSRMServer["SRM Server&lt;br/&gt;protection groups&lt;br/&gt;vCenter plugin"]
+        Replication["Replication Engine&lt;br/&gt;vSphere Replication&lt;br/&gt;or array-based (SRA)"]
+    end
+
+    subgraph WAN["WAN / MPLS"]
+        Link["replication link&lt;br/&gt;async TCP 31031&lt;br/&gt;mgmt TCP 443, 9086"]
+    end
+
+    subgraph Recovery["Recovery Site"]
+        RVMs["Placeholder VMs&lt;br/&gt;shadow inventory"]
+        RvCenter["vCenter&lt;br/&gt;compute management"]
+        RSRMServer["SRM Server&lt;br/&gt;recovery plans&lt;br/&gt;vCenter plugin"]
+        RecoveryPlan["Recovery Plan&lt;br/&gt;power-on order&lt;br/&gt;IP customisation"]
+    end
+
+    PVMs --- PvCenter
+    PvCenter --- PSRMServer
+    PSRMServer --- Replication
+    Replication --&gt;|"async replication (TCP 31031)"| Link
+    PSRMServer --&gt;|"management (TCP 443, 9086)"| Link
+    Link --&gt;|"async replication (TCP 31031)"| RVMs
+    Link --&gt;|"management (TCP 443, 9086)"| RSRMServer
+    RSRMServer --- RecoveryPlan
+    RecoveryPlan --&gt;|"recovery plan execution"| RVMs
+    RVMs --- RvCenter
+
+    style PVMs fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PvCenter fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PSRMServer fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Replication fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Link fill:#b45309,stroke:#92400e,color:#fff
+    style RVMs fill:#15803d,stroke:#166534,color:#fff
+    style RvCenter fill:#15803d,stroke:#166534,color:#fff
+    style RSRMServer fill:#15803d,stroke:#166534,color:#fff
+    style RecoveryPlan fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<h2 id="recovery-plan-modes">Recovery Plan Modes<a class="headerlink" href="#recovery-plan-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Test</td>
+<td>SRM creates a temporary snapshot of R2/replica; powers on VMs in isolated network; production replication continues; test cleanup removes snapshot</td>
+</tr>
+<tr>
+<td>Planned migration</td>
+<td>Orderly shutdown of protected VMs, final sync, then power-on at recovery site</td>
+</tr>
+<tr>
+<td>Unplanned failover</td>
+<td>Protected site unavailable; SRM fails over using most recent replicated state</td>
+</tr>
+</tbody>
+</table>
+<h2 id="storage-replication-adapters-sras">Storage Replication Adapters (SRAs)<a class="headerlink" href="#storage-replication-adapters-sras" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Vendor</th>
+<th>SRA</th>
+<th>Supported Replication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dell EMC</td>
+<td>Dell EMC SRA for PowerMax</td>
+<td>SRDF/A, SRDF/S</td>
+</tr>
+<tr>
+<td>Pure Storage</td>
+<td>Pure Storage SRA</td>
+<td>ActiveCluster (sync), async replication</td>
+</tr>
+<tr>
+<td>NetApp</td>
+<td>NetApp SRA for ONTAP</td>
+<td>SnapMirror (async), SnapMirror Synchronous</td>
+</tr>
+</tbody>
+</table>
+<p>SRAs must be installed on both sites and must match the same major version.</p>
+<h2 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Granularity</th>
+<th>Replication Backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Array-based</td>
+<td>Datastore (all VMs on the datastore)</td>
+<td>SRA (vendor-specific)</td>
+</tr>
+<tr>
+<td>vSphere Replication</td>
+<td>Per-VM</td>
+<td>Built-in vSphere Replication appliance</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vsphere-replication">vSphere Replication<a class="headerlink" href="#vsphere-replication" title="Permanent link">&para;</a></h2>
+<ul>
+<li>RPO: 5 minutes minimum (no lower)</li>
+<li>Consistency: crash-consistent by default; application-consistent with quiescing enabled</li>
+<li>Bandwidth: compressed and deduplicated; can be throttled per-VM</li>
+<li>No SRA required — replication engine is embedded in the vSphere Replication appliance (one per site)</li>
+</ul>
 
 
 

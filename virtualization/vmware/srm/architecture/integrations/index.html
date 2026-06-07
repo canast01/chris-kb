@@ -4627,6 +4627,94 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#integration-points-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Points Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dell-emc-sra-for-powermax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dell EMC SRA for PowerMax
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pure-storage-sra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pure Storage SRA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netapp-snapmirror-sra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetApp SnapMirror SRA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-replication-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Replication Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-network-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Network Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aria-operations-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbook-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbook Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5156,6 +5244,84 @@ Integrations reference covering Storage Replication Adapter (SRA) Integration, v
 </tr>
 </tbody>
 </table>
+<h2 id="integration-points-overview">Integration Points Overview<a class="headerlink" href="#integration-points-overview" title="Permanent link">&para;</a></h2>
+<p>SRM sits at the centre of multiple integration layers — storage, networking, monitoring, and orchestration all connect through a defined interface.</p>
+<hr />
+<h2 id="dell-emc-sra-for-powermax">Dell EMC SRA for PowerMax<a class="headerlink" href="#dell-emc-sra-for-powermax" title="Permanent link">&para;</a></h2>
+<p>The Dell EMC SRA translates SRM storage operations into SYMCLI/Unisphere REST API calls against PowerMax arrays.</p>
+<p><strong>Installation:</strong></p>
+<ol>
+<li>Download the Dell EMC SRA from the Dell support portal — match the SRA version to the SRM version in use.</li>
+<li>Install on both protected-site and recovery-site SRM servers (Windows <code>.exe</code> installer or Linux package).</li>
+<li>In SRM: Site Recovery → Configure → Array Managers → Add.</li>
+<li>Provide PowerMax Unisphere credentials and array SID.</li>
+<li>SRM discovers all SRDF groups visible to that Unisphere instance.</li>
+</ol>
+<p><strong>Configuration notes:</strong></p>
+<ul>
+<li>The Unisphere account used by SRA requires the <strong>StorageAdmin</strong> role on both arrays.</li>
+<li>If Unisphere manages multiple arrays, configure a separate Array Manager entry per array serial (SID).</li>
+<li>SRA test failover uses SnapVX on the R2 — ensure adequate SnapVX capacity on the DR array before running tests.</li>
+</ul>
+<hr />
+<h2 id="pure-storage-sra">Pure Storage SRA<a class="headerlink" href="#pure-storage-sra" title="Permanent link">&para;</a></h2>
+<p>The Pure Storage SRA supports both <strong>ActiveCluster</strong> (synchronous, stretch cluster) and <strong>async pod replication</strong>.</p>
+<ul>
+<li>For ActiveCluster: SRM recovery plans perform a controlled cutover of write access between sites.</li>
+<li>For async replication: SRM presents the async replica to the recovery site hosts.</li>
+<li>Install Pure1 SRA on both SRM servers; configure with FlashArray management VIP and API token credentials.</li>
+</ul>
+<hr />
+<h2 id="netapp-snapmirror-sra">NetApp SnapMirror SRA<a class="headerlink" href="#netapp-snapmirror-sra" title="Permanent link">&para;</a></h2>
+<p>The NetApp SRA for ONTAP supports SnapMirror Asynchronous and SnapMirror Synchronous.</p>
+<ul>
+<li>Protection groups map to SnapMirror destination volumes.</li>
+<li>Test failover uses a FlexClone of the destination volume.</li>
+<li>SRM reprotect (post-failover reverse replication) triggers a SnapMirror reverse resync.</li>
+</ul>
+<p>Configure with ONTAP management LIF credentials. Both source and destination SVM must be accessible from the SRM server at the corresponding site.</p>
+<hr />
+<h2 id="vsphere-replication-configuration">vSphere Replication Configuration<a class="headerlink" href="#vsphere-replication-configuration" title="Permanent link">&para;</a></h2>
+<p>vSphere Replication is built into vSphere and requires no SRA.</p>
+<p><strong>Configure per-VM replication:</strong></p>
+<ol>
+<li>Right-click a VM in vCenter → Site Recovery → Configure Replication.</li>
+<li>Select a target replication server (remote vSphere Replication appliance).</li>
+<li>Set RPO (5 minutes to 24 hours), quiescing, and network compression.</li>
+<li>Monitor replication health: vCenter → Site Recovery → vSphere Replication → Monitor.</li>
+</ol>
+<p><strong>Bandwidth estimate:</strong> vSphere Replication bandwidth ≈ (VM change rate per RPO window) × (1 / compression ratio). For a VM with 5GB/hour change rate and 15-minute RPO, expect ~1.25GB per cycle before compression.</p>
+<hr />
+<h2 id="nsx-network-mapping">NSX Network Mapping<a class="headerlink" href="#nsx-network-mapping" title="Permanent link">&para;</a></h2>
+<p>When VMs are protected by SRM across NSX-T environments, network mappings ensure VMs connect to the correct segments at the recovery site.</p>
+<p><strong>Configure in SRM:</strong></p>
+<ol>
+<li>Site Recovery → Configure → Network Mappings.</li>
+<li>Map each source NSX segment to the corresponding recovery site segment.</li>
+<li>For test failover, map to an isolated test segment to avoid IP conflicts.</li>
+</ol>
+<p>NSX Distributed Firewall (DFW) policy follows the VM via Security Group tags — the VM's group membership is preserved after failover without requiring manual firewall rule reconfiguration.</p>
+<hr />
+<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
+<p>The SRM monitoring pack for Aria Operations provides:</p>
+<ul>
+<li><strong>Protection group state</strong> — healthy / degraded / failed per group</li>
+<li><strong>RPO compliance</strong> — current vs. target RPO per VM</li>
+<li><strong>Recovery plan readiness</strong> — last test date, test outcome</li>
+<li><strong>Replication lag</strong> — for vSphere Replication-based protection groups</li>
+</ul>
+<p>Configure the SRM management pack in Aria Operations under Administration → Solutions → Cloud Accounts: add the SRM endpoint with vCenter credentials.</p>
+<hr />
+<h2 id="runbook-integration">Runbook Integration<a class="headerlink" href="#runbook-integration" title="Permanent link">&para;</a></h2>
+<p>For SRM to execute custom scripts as part of a Recovery Plan:</p>
+<ol>
+<li>In the Recovery Plan → View Steps → right-click a step → Add Step.</li>
+<li>Choose <strong>Call a script on the SRM server</strong> (runs PowerShell or shell scripts on the SRM server itself) or <strong>Run a program in the virtual machine</strong> (requires VMware Tools).</li>
+</ol>
+<p>Example use cases:
+- Pre-failover: disable monitoring alerts to suppress DR failover noise
+- Post-failover: update DNS records pointing services to the recovery site
+- Post-failover: notify stakeholders via webhook</p>
 
 
 
