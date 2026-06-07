@@ -16,7 +16,7 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 │   │  · vSAN Disk or Component Failure         │   │  · Provision a New Workload                      ││
 │   │  · vMotion Failing                        │   │  · Certificate Expiry and Rotation               ││
 │   │  · NSX Connectivity Broken                │   │  · DR Test / Planned Failover                    ││
-│   │    ... + 10 more                          │   │    ... + 5 more                                  ││
+│   │    ... + 13 more                          │   │    ... + 6 more                                  ││
 │   └───────────────────────────────────────────┘   └───────────────────────────────────────────────────┘│
 │                                                                                                       │
 │                              ▼                                          ▼                             │
@@ -109,6 +109,21 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
   <span>vSR status, bandwidth, RPO breach, failover decision.</span>
 </a>
 
+<a class="kb-card" href="storage-apd-datastore-inaccessible/">
+  <strong>Storage APD — Datastore Inaccessible</strong>
+  <span>All paths down, APD vs PDL, VMCP timeout, fabric recovery, VM restart.</span>
+</a>
+
+<a class="kb-card" href="vm-snapshot-consolidation-required/">
+  <strong>VM Snapshot Consolidation Required</strong>
+  <span>Orphaned delta files, consolidation failure, vmkfstools repair, backup agent fix.</span>
+</a>
+
+<a class="kb-card" href="ha-admission-control-breach/">
+  <strong>HA Admission Control Breach</strong>
+  <span>Multi-host failure, capacity exhausted, restart triage, policy relaxation, N+1 sizing.</span>
+</a>
+
 </div>
 
 ### Tasks
@@ -163,6 +178,11 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 <a class="kb-card" href="enable-vsan-encryption/">
   <strong>Enable vSAN Encryption</strong>
   <span>KMS/NKP setup, encryption policy, full data rebuild, key backup.</span>
+</a>
+
+<a class="kb-card" href="vcenter-upgrade-failure/">
+  <strong>vCenter Upgrade Failure / Rollback</strong>
+  <span>Stage 1 vs Stage 2, rollback snapshot, SuiteLC path, pre-upgrade checklist.</span>
 </a>
 
 </div>
