@@ -44,44 +44,6 @@ Service Availability Monitoring reference covering Availability Calculation, Upt
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────── Performance — Service Availability ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Measure and report service availability; track downtime; compare against SLA targets     │   │
-│   │     Availability = (total time - downtime) / total time * 100; track per service per month    │   │
-│   │         Planned maintenance excluded from calculation if pre-approved and communicated        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Availability Tiers              │  │                 Measurement                 │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           99.9% = 8.7h/yr downtime           │  │           Monitor: synthetic check          │   │
-│   │               99.95% = 4.4h/yr               │  │          Log outage: start/end time         │   │
-│   │              99.99% = 52 min/yr              │  │          Calculate monthly percent          │   │
-│   │             99.999% = 5.2 min/yr             │  │            Report to stakeholders           │   │
-│   │           Target per service tier            │  │             Trend vs SLA target             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │   Availability   │   Downtime/yr    │    Downtime/mo    │       Tier       │     Example      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │      99.9%       │    8.7 hours     │      43.8 min     │     Standard     │     Dev/test     │   │
-│   │      99.95%      │    4.4 hours     │      21.9 min     │     Business     │  Internal apps   │   │
-│   │      99.99%      │      52 min      │      4.4 min      │     Critical     │  Prod services   │   │
-│   │     99.999%      │     5.2 min      │       26 sec      │     Mission      │    Core infra    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Synthetic check = Automated probe that tests service endpoint; detects outages before users        │
-│    Maintenance window= Planned downtime; communicated in advance; excluded from availability calc     │
-│    Error budget  = 1 - SLO; allowable downtime; consumed by incidents and planned maintenance         │
-│    Nines         = Number of 9s in availability %; four nines (99.99%) = 52 min/yr max                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## AWS Route 53 Health Checks
 
 ```bash

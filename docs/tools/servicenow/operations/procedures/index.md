@@ -168,16 +168,6 @@ curl -s -u user:token -G \
   --data-urlencode 'sysparm_fields=number,short_description,risk,start_date' \
   | jq -r '.result[] | [.number, .short_description, .risk, .start_date] | @csv'
 ```
-```text
-Structure:
-  Service Catalog
-  └── Category (e.g., Infrastructure, Access, Software)
-      └── Catalog Item (e.g., "Request new VM")
-          └── Request (sc_request) — top-level record
-              └── Request Item (sc_req_item) — one per catalog item ordered
-                  └── Approval records
-                  └── Tasks (sc_task) — fulfillment steps
-```
 ```bash
 # Query open requests for a user
 curl -u user:token -G \

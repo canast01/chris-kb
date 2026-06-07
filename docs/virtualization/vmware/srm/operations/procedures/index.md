@@ -92,33 +92,6 @@ Procedures ───────────────────────
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```text
-
-### Test Failover Procedure
-
-1. Navigate to **Recovery Plans** > select plan > **Test**.
-2. When prompted, choose whether to sync recent changes before test (recommended).
-3. SRM creates isolated snapshot datastores at the recovery site.
-4. Monitor the recovery steps in the **Recovery Steps** tab — each step shows status, duration, and any errors.
-5. Once all VMs are powered on, validate application functionality within the bubble network.
-6. Click **Cleanup** to tear down the test environment. Do not leave test environments running longer than needed — stale snapshots can fill journal/snapshot space.
-
-!!! tip "RTO Measurement"
-    Record the elapsed time shown in the **Recovery Steps** pane at the point when the last application health check passes. This is your actual RTO — compare against the tier target RTO in the standards document.
-
-### Common Test Failover Issues
-
-| Symptom | Likely Cause | Resolution |
-|---|---|---|
-| VM fails to power on — datastore inaccessible | Snapshot not created by SRA | Check SRA logs; verify array replication is healthy |
-| IP customisation not applied | Missing IP customisation rule for VM | Add rule in Recovery Plan > IP Customisation |
-| Post-power-on script fails | Script path not accessible from SRM service account | Fix UNC path; verify service account permissions |
-| VM registers on wrong datastore | Datastore mapping misconfigured | Update datastore mapping in Site Recovery > Array Managers |
-| Test cleanup hangs | Snapshot deletion failed at array | Manually delete snapshot at array; then retry cleanup |
-
----
-
-
 ## Planned Migration
 
 A planned migration gracefully shuts down VMs at the protected site, performs a final replication sync, then powers them on at the recovery site. Both sites must be operational.
@@ -150,6 +123,7 @@ A planned migration gracefully shuts down VMs at the protected site, performs a 
 ---
 
 
+```text
 ## Emergency Failover (Disaster Recovery)
 
 Used when the protected site is unavailable. VMs are powered on from the most recent replica image. Some data loss is expected depending on RPO at the time of failure.
@@ -166,6 +140,7 @@ Used when the protected site is unavailable. VMs are powered on from the most re
 8. Validate services and notify stakeholders.
 9. Document the actual RPO: check the replication lag or journal timestamp at the time of failure.
 
+```
 ```bash
 # After failover, check SRDF or RecoverPoint state for data loss assessment
 # PowerMax SRDF example
@@ -296,3 +271,198 @@ SRM 8.x ships as an appliance (OVA/VAMI managed). Follow this procedure for patc
 6. Click **Upgrade** and monitor progress in the VAMI UI — the SRM services will restart during the upgrade
 7. After the upgrade completes, log back in to vCenter and confirm the SRM site pair reconnects and shows both protected and recovery sites as **Connected**
 8. Run a recovery plan validation to confirm all protection groups and recovery plans are intact post-upgrade
+
+---
+
+
+## Create a Protection Group
+
+A protection group is a logical collection of VMs that are replicated and failed over together. This procedure covers creating a vSphere Replication-based protection group.
+
+1. In vCenter, navigate to **Site Recovery → Protection Groups → New Protection Group**.
+2. Enter a name and select the **Site Pair** (protected site → recovery site).
+3. Select **Protection group type: vSphere Replication** (choose "Array Based Replication" if using SRA-managed replication).
+4. Select the VMs to include — only VMs with an active vSphere Replication session are listed. If a VM is not shown, configure replication on the VM first before adding it to the group.
+5. Set the **RPO** target (5 minutes to 24 hours) — this is the maximum acceptable data loss window for the group.
+6. Click **Next**, review the summary, then click **Finish**.
+7. Monitor the protection group status — it should transition to **OK** within one replication cycle.
+8. If any VM shows **Not Configured** or **Error** state, click the VM and review the replication health details to identify the blocking issue.
+
+```powershell
+# PowerCLI — list all protection groups and their status
+$srm = $global:DefaultSrmServers[0]
+$pgs = $srm.ExtensionData.Protection.ListProtectionGroups()
+foreach ($pg in $pgs) {
+    $info = $pg.GetInfo()
+    Write-Host "$($info.Name) — State: $($pg.GetProtectionState())"
+}
+```
+
+---
+
+
+## Create a Recovery Plan
+
+A recovery plan is an automated runbook that defines how VMs are brought online at the recovery site. It can span one or more protection groups.
+
+1. In vCenter, navigate to **Site Recovery → Recovery Plans → New Recovery Plan**.
+2. Enter a name and select the **recovery site** (the site where VMs will be powered on during failover).
+3. On the **Protection Groups** page, add one or more protection groups that this plan will recover.
+4. On the **Test Networks** page, assign bubble network port groups for test failover — these are isolated VLANs used only during test mode and must not route to production.
+5. On the **Recovery Settings** page:
+   - Configure **Network Mappings** to map source port groups to recovery-site port groups.
+   - Add **IP Customisation** rules for any VMs that require a different IP address at the recovery site.
+   - Set **Startup Priority** — Priority 1 VMs power on first (infrastructure/database tier); priority 3 last (web/application tier).
+   - Add any custom recovery steps (scripts, manual checkpoints) at the appropriate position in the plan.
+6. Click **Next**, review, then click **Finish**.
+7. Once created, click **Validate** to run the plan validation wizard — resolve all errors and warnings before the plan is used in a test or actual failover.
+
+```powershell
+# PowerCLI — list recovery plans and current state
+$srm = $global:DefaultSrmServers[0]
+$plans = $srm.ExtensionData.Recovery.ListPlans()
+foreach ($plan in $plans) {
+    $info = $plan.GetInfo()
+    Write-Host "$($info.Name) — State: $($info.State)"
+}
+```
+
+---
+
+
+## Run a Test Failover (Non-Disruptive)
+
+A test failover validates a recovery plan using isolated bubble networks. Production VMs at the protected site remain fully operational throughout the test.
+
+1. In vCenter, navigate to **Site Recovery → Recovery Plans → [plan name]**.
+2. Click **Test** — do not click Run; Test mode is the non-disruptive option.
+3. When prompted, choose **Synchronize recent changes before test** (recommended) to use the most current replica point.
+4. SRM creates isolated snapshot datastores at the recovery site and registers test VMs on the assigned bubble networks.
+5. Monitor progress in the **Recovery Steps** tab — each step shows status (running / success / error), elapsed time, and any error messages.
+6. Once all VMs are powered on, validate within the bubble network:
+   - VMs boot successfully and guest OS is healthy.
+   - Application services start and respond on expected ports.
+   - Record the total elapsed time as your measured RTO for the plan.
+7. When validation is complete, click **Cleanup** — SRM powers off test VMs, deletes snapshot copies, and removes the temporary datastore mounts.
+8. Document results: RTO achieved, any failed steps, and remediation actions required before the next test.
+
+!!! warning "Always Run Cleanup"
+    Never leave a test failover running longer than necessary. Stale test snapshots consume replication journal space and can cause RPO violations on production replication sessions.
+
+---
+
+
+## Run a Disaster Recovery (Protected Site Down)
+
+Use this procedure when the protected site is confirmed unreachable and a forced failover is required. Some data loss from the replication lag at the time of failure is expected.
+
+1. Confirm the protected site is unreachable via out-of-band means (DCIM console, physical access, ISP circuit status) — rule out a transient network issue before declaring a site failure.
+2. Invoke the DR change record and notify all stakeholders per the incident response process.
+3. At the recovery site vCenter, navigate to **Site Recovery → Recovery Plans → [plan name]**.
+4. Click **Run** → select **Disaster Recovery** mode.
+5. SRM warns that the protected site is unreachable and that data loss may occur — acknowledge and confirm to proceed.
+6. SRM begins the recovery sequence using the last available replica:
+   - No pre-power-off steps execute (protected site is unavailable).
+   - No final replication sync is possible — recovery uses the last committed replica point.
+   - VMs are registered and powered on in the defined startup priority order.
+7. Monitor recovery step progress in the **Recovery Steps** tab — resolve any per-VM errors manually if needed.
+8. Once VMs are online, validate applications and services at the recovery site and notify stakeholders of recovery status.
+9. Document the actual RPO: check the replication journal or array snapshot timestamp to determine the last successful replication point before the failure.
+
+```bash
+# Check last RecoverPoint journal timestamp (run on RecoverPoint appliance)
+boxmgmt cg check_all
+
+# PowerMax SRDF — query replication state and last sync time
+symrdf -sid <SYMID> -rdfg <RDFG> query
+```
+
+---
+
+
+## Add a VM to an Existing Protection Group
+
+When a new VM requires DR coverage, add it to an existing vSphere Replication protection group. Replication must be fully configured and in an active replicating state before the VM can join a protection group.
+
+**Step 1 — Configure vSphere Replication on the VM**
+
+1. In vCenter, right-click the VM → **All vSphere Replication Actions → Configure Replication**.
+2. Select the target recovery site vCenter as the replication target.
+3. Select the target datastore at the recovery site for the replica files.
+4. Set the RPO to match or be lower than the protection group's RPO target.
+5. Click **Finish** and wait for the initial full sync to complete — the VM must show **Replicating** status (not **Initial sync**) before proceeding.
+
+**Step 2 — Add VM to the Protection Group**
+
+1. Navigate to **Site Recovery → Protection Groups → [group name]**.
+2. Click **Edit** on the protection group, then select **Add VMs**.
+3. Select the VM from the list of eligible replicated VMs — only VMs with active replication sessions appear.
+4. Click **OK** — SRM validates that replication is active and RPO is within the group's tolerance.
+5. Confirm the protection group status returns to **OK** and the new VM shows no errors in the VM list.
+
+```powershell
+# PowerCLI — check vSphere Replication state for a specific VM
+$vm = Get-VM -Name "web-prod-01"
+$hbr = Get-SpbmReplicationGroup -VM $vm
+$hbr | Select-Object Name, State, Rpo, LatestRpo
+```
+
+---
+
+
+## Change RPO on a vSphere Replication VM
+
+Adjust the recovery point objective for a VM already enrolled in vSphere Replication. The change is made at the vSphere Replication layer; SRM reflects the updated value automatically.
+
+1. In vCenter, navigate to the VM → **Configure** tab → **vSphere Replication** → **Replication** section.
+2. Click **Edit** (pencil icon) on the active replication session.
+3. On the **Replication Settings** page, adjust the **RPO slider** to the new target value (range: 5 minutes to 24 hours).
+4. Click **Next** through any remaining wizard pages without changing other settings, then click **Finish**.
+5. vSphere Replication applies the new RPO immediately; the replication schedule adjusts to meet the new interval.
+6. In SRM, navigate to **Protection Groups → [group name]** and confirm the VM now reflects the updated RPO value in the VM list.
+7. If the new RPO is tighter than the group's target, verify the VM is achieving it — check the **Latest RPO** column and ensure it is at or below the configured target after the next replication cycle completes.
+
+```powershell
+# PowerCLI — report configured and latest RPO for all replicated VMs
+Connect-VIServer -Server <vCenter-FQDN>
+$vms = Get-VM
+foreach ($vm in $vms) {
+    $hbr = Get-SpbmReplicationGroup -VM $vm -ErrorAction SilentlyContinue
+    if ($hbr) {
+        Write-Host "$($vm.Name) — Configured RPO: $($hbr.Rpo) min — Latest RPO: $($hbr.LatestRpo) min"
+    }
+}
+```
+
+---
+
+
+## Remove VM from Protection (Decommission)
+
+When a VM is decommissioned or no longer requires DR coverage, remove it cleanly from SRM to avoid orphaned replication jobs and replica files consuming storage at the recovery site.
+
+**Step 1 — Remove from SRM Protection Group**
+
+1. Navigate to **Site Recovery → Protection Groups → [group name]**.
+2. Select the VM in the group's VM list.
+3. Click **Remove from Protection Group** — SRM removes the VM from the group but does not stop the underlying replication session.
+4. Confirm the protection group status returns to **OK** with the remaining VMs intact.
+
+**Step 2 — Stop vSphere Replication on the VM**
+
+1. In vCenter, right-click the VM → **All vSphere Replication Actions → Remove Replication**.
+2. Confirm the removal — this stops the replication session and removes the replica VMDK files at the recovery site datastore.
+
+**Step 3 — Verify No Orphaned Replication Jobs**
+
+1. At the recovery site vCenter, navigate to **vSphere Replication → Incoming Replications**.
+2. Confirm no incoming replication entry exists for the decommissioned VM.
+3. Browse the recovery-site datastore to confirm no orphaned replica VMDK files remain from the removed VM.
+
+```powershell
+# PowerCLI — list all incoming replication sessions at the recovery site
+# Run against the recovery site vCenter
+Connect-VIServer -Server <recovery-vcenter-FQDN>
+$incoming = Get-SpbmReplicationGroup
+$incoming | Where-Object { $_.State -ne "Replicating" } | Select-Object Name, State, LatestRpo
+```

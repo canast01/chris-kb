@@ -52,43 +52,6 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────────── Release Management ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Release management: package, schedule, and coordinate multi-change deployments        │   │
-│   │         Release calendar: scheduled windows, freeze periods, and dependency sequencing        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Planning          │  │          Execution          │  │          Close-out          │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │      Release packaging      │  │       Sequenced deploy      │  │        Release review       │   │
-│   │        Dependency map       │  │         Gate checks         │  │       Lessons learned       │   │
-│   │      Go/No-Go criteria      │  │       Rollback trigger      │  │        Metrics review       │   │
-│   │        Freeze periods       │  │        Communication        │  │        Backlog update       │   │
-│   │      Stakeholder comms      │  │        Live dashboard       │  │         RFC closure         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │      Phase       │     Timeline     │        Gate       │      Owner       │     Artefact     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     Planning     │      T-14d       │    Release plan   │   Release mgr    │   Release doc    │   │
-│   │      Freeze      │       T-7d       │    No new items   │    Change mgr    │  Freeze notice   │   │
-│   │     Go/No-Go     │       T-1h       │  All checks pass  │   Release mgr    │   Decision log   │   │
-│   │      Review      │       T+2d       │   Success verify  │   Release mgr    │  Review report   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Release package= Group of related changes deployed together in a coordinated window                │
-│    Freeze period  = No new changes added to release after freeze date; scope locked                   │
-│    Dependency map = Which changes must complete before others can start; sequence critical            │
-│    Go/No-Go call  = Release decision meeting T-1h; all dependencies and pre-checks confirmed          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Go / No-Go Decision
 
 At the start of the change window, explicitly confirm go/no-go:

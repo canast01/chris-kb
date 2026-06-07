@@ -57,52 +57,6 @@ The vCenter adapter is the primary collection source and is configured during in
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────────── Aria Operations — Integrations ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   Core Platform Integrations                                  │   │
-│   │            vCenter: primary data source — inventory, metrics, events, tags, alarms            │   │
-│   │            NSX: network topology, logical switches, edges, DFW rules, and BGP state           │   │
-│   │              vSAN: cluster health, capacity, performance, and disk group metrics              │   │
-│   │              Aria Automation: request lifecycle, deployment state, and cost data              │   │
-│   │               Aria Logs: log-based alerts forwarded to Aria Ops as notifications              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Adapters connect Aria Ops to external systems; each adapter has its own credential and schedule    │
-│                                                                                                       │
-│                                                  ▼                                                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Infrastructure Adapters            │  │             ITSM / Notification             │   │
-│   │             Dell EMC: PowerStore             │  │            ServiceNow: CMDB sync            │   │
-│   │           Pure Storage FlashArray            │  │              SMTP: email alerts             │   │
-│   │             NetApp ONTAP adapter             │  │              SNMP trap outbound             │   │
-│   │              Cisco UCS adapter               │  │             Slack/Teams webhook             │   │
-│   │               AWS/Azure cloud                │  │              PagerDuty REST API             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Adapter processes run inside Aria Ops master node · outbound plugins use TCP 443/25/162              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Adapter = PAK-based plugin that collects data from a specific source (storage, cloud, network)       │
-│  PAK file = Plugin/adapter package distributed by VMware or partner; installed via Solutions UI       │
-│  Credential = Stored username/password or token used by adapter to authenticate to source             │
-│  Collection interval = Frequency at which adapter queries source; typically 5 minutes                 │
-│  Outbound plugin = Connector for sending alert notifications (SMTP, SNMP, REST, webhook)              │
-│  CMDB sync = Pushing Aria Ops object inventory into ServiceNow CMDB via adapter                       │
-│  Tag propagation = vSphere tags imported by vCenter adapter and applied to Aria Ops objects           │
-│  Cloud account = AWS/Azure subscription registered in Aria Ops for cross-cloud visibility             │
-│  REST adapter = Generic HTTP adapter for any REST API source not covered by a PAK                     │
-│  Webhook = HTTP POST payload sent by outbound plugin when alert fires                                 │
-│  SNMP trap = UDP notification sent to network management system on alert condition                    │
-│  Alert notification = Outbound message triggered when alert changes state (firing or resolved)        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 Separate plugins are recommended per team channel for targeted routing.
 
 ## Aria Logs Integration

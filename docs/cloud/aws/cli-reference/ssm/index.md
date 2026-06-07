@@ -52,54 +52,6 @@ Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenan
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────────────── AWS CLI — SSM ────────────────────────────────────────────┐
-│                                                                                                       │
-│  Systems Manager CLI for session manager, run command, parameter store, and patching.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Session Manager                │  │                 Run Command                 │   │
-│   │         start-session: shell access          │  │         send-command: execute script        │   │
-│   │         terminate-session: end shell         │  │            list-commands: history           │   │
-│   │            list-sessions: active             │  │            get-command-invocation           │   │
-│   │              No SSH/RDP needed               │  │        describe-instance-information        │   │
-│   │             Logs: CloudWatch/S3              │  │           list-command-invocations          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Session Manager replaces SSH bastion; run-command executes scripts fleet-wide                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Parameter Store                │  │                Patch Manager                │   │
-│   │         put-parameter: store secret          │  │           describe-patch-baselines          │   │
-│   │           get-parameter: retrieve            │  │         get-patch-baseline: details         │   │
-│   │            get-parameters-by-path            │  │        describe-instance-patch-states       │   │
-│   │           delete-parameter: remove           │  │          describe-patch-group-state         │   │
-│   │         SecureString: KMS-encrypted          │  │      register-patch-baseline-for-group      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSM Agent (on EC2) · SSM endpoints (VPC) · KMS · CloudWatch · S3 (session logs)                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Session Manager = Secure shell access via SSM without SSH port or key pair                           │
-│  Run Command     = Execute scripts or documents on managed instances fleet-wide                       │
-│  SSM Agent       = Lightweight agent installed on EC2; connects to SSM service                        │
-│  Parameter Store = Hierarchical key-value store for config and secrets                                │
-│  SecureString    = Parameter type encrypted with KMS key; for passwords/tokens                        │
-│  get-parameters-by-path= Retrieves all parameters under a /path/ prefix                               │
-│  Patch baseline  = Defines which patches are approved for auto-install                                │
-│  Patch group     = Tag-based instance group assigned to a patch baseline                              │
-│  describe-instance-patch-states= Shows patch compliance per instance                                  │
-│  SSM document    = JSON/YAML runbook defining steps for Run Command                                   │
-│  VPC endpoint    = Private SSM connectivity; no internet required for agent                           │
-│  Managed instance= EC2 or on-prem server with SSM agent registered to account                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Parameter Store
 
 ```bash

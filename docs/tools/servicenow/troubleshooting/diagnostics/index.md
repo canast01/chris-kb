@@ -80,53 +80,6 @@ Access: `https://<instance>.service-now.com/stats.do`
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────────────── ServiceNow Diagnostics ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Diagnostic URLs (append to instance URL)                           │   │
-│   │                stats.do — node health: memory, threads, DB pool, request queue                │   │
-│   │              incident_list.do?sysparm_query= — direct table queries for any table             │   │
-│   │                 sys_log_list.do — application log; filter by source and level                 │   │
-│   │                  fixscripts.do — one-time scripts for data fixes (admin only)                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐                                                    │
-│   │           Performance Diagnostics            │                                                    │
-│   │           Transaction log analysis           │                                                    │
-│   │            Slow query log review             │                                                    │
-│   │        Script profiler (sys_ui_page)         │                                                    │
-│   │             Semaphore leak check             │                                                    │
-│   └──────────────────────────────────────────────┘                                                    │
-│                                                     ┌─────────────────────────────────────────────┐   │
-│                                                     │           Integration Diagnostics           │   │
-│                                                     │            ECC queue error review           │   │
-│                                                     │            REST message log check           │   │
-│                                                     │            MID server log tailing           │   │
-│                                                     │           Discovery status review           │   │
-│                                                     └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow SaaS nodes · MID server VM · log aggregation (Splunk/ELK)                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  stats.do    = real-time node statistics page; memory heap, thread counts, queue depth                │
-│  sys_log     = application log table; records script errors and info messages                         │
-│  Transaction = single user request from arrival to response; logged with duration                     │
-│  Semaphore   = concurrency lock; leaks cause requests to queue and time out                           │
-│  Script profiler= measures script execution time; identifies slow business rules                      │
-│  ECC queue   = External Communication Channel; queues outbound REST/SOAP calls                        │
-│  MID server log= agent.log on MID server host; shows discovery and integration errors                 │
-│  Slow query  = SQL taking >1s; logged in transaction log; requires index review                       │
-│  fixscripts.do= admin page to run server-side fix scripts for data corrections                        │
-│  Discovery   = ServiceNow CMDB auto-population via MID server network scans                           │
-│  REST message= outbound HTTP integration; result logged in sys_rest_message_fn                        │
-│  Queue depth = pending requests waiting for available thread; high depth = saturation                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 **Action:** Disable the offending Business Rule and investigate the script logic.
 
 ---

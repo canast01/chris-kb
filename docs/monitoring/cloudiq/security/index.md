@@ -53,39 +53,6 @@ CloudIQ supports SAML 2.0 SSO integration with enterprise IdPs (Okta, Azure AD, 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────────── CloudIQ — Security ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Access Control                │  │                Data Security                │   │
-│   │              Dell account + MFA              │  │             TLS 1.2+ in transit             │   │
-│   │              RBAC: Admin/Viewer              │  │              Encrypted at rest              │   │
-│   │             Service account only             │  │           No config pushed to arr           │   │
-│   │             Annual access review             │  │           Telemetry only — no data          │   │
-│   │             Audit log in CloudIQ             │  │             Dell SOC2 compliant             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Data stored in Dell cloud datacentres · customer data isolated per tenant · SOC2 Type II             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Dell account MFA = Multi-factor authentication required for cloudiq.dell.com login                   │
-│  RBAC = Role-Based Access Control; Admin (full) vs Viewer (read-only) roles                           │
-│  Service account = Non-personal account for API access; password rotated per policy                   │
-│  Telemetry only = CloudIQ receives metrics and events; does not access user data or files             │
-│  No config push = CloudIQ is monitoring-only; it cannot change array configuration                    │
-│  TLS 1.2 = Minimum transport encryption for all CloudIQ connections                                   │
-│  Encrypted at rest = Telemetry data encrypted in Dell cloud storage                                   │
-│  SOC2 Type II = Dell security audit certification; covers data handling and access controls           │
-│  Audit log = Record of logins and configuration changes viewable in CloudIQ admin section             │
-│  Tenant isolation = Each customer organisation data separated in multi-tenant cloud                   │
-│  Annual review = Yearly audit of CloudIQ users; remove stale accounts and inappropriate roles         │
-│  API token security = client_id/secret treated as password; never logged or committed to code         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 For internal arrays with self-signed certificates, add them to the SCG trust store:
 ```text
 SCG admin UI > Security > Trusted Certificates > Add Certificate

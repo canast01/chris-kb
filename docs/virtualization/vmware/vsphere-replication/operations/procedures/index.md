@@ -48,23 +48,6 @@ Enables continuous asynchronous replication of a single VM to a recovery site. U
 5. On the **Seeds** screen: if the VM's VMDK files already exist at the target (e.g., from a previous backup or clone), point VR to them to skip the full initial sync and only replicate deltas.
 6. Review the summary and click **Finish**.
 7. Monitor the initial sync under **vCenter → Site Recovery → Replications**. Status moves: `Syncing (initial)` → `OK`.
-
-```text
-vCenter → [VM] → right-click → vSphere Replication → Configure
-
-  Step 1: Target site      → amsterdam (recovery site)
-  Step 2: Target location  → vcenter-amsterdam.example.local
-                             Datastore: target-datastore-01
-  Step 3: Settings         → RPO: 1 Hour
-                             Recovery point instances: 3
-                             Quiesce: Yes
-                             Network compression: Yes
-                             Encryption: Yes
-  Step 4: Seeds            → Use existing data at target (if applicable)
-
-  → Finish
-```
-
 ---
 
 ## Configure vSphere Replication for Multiple VMs (Bulk)
@@ -84,20 +67,6 @@ Onboard a group of VMs at once when protecting an entire application tier or mig
 6. Monitor progress in **Replications** — each VM shows its sync percentage and estimated time to first `OK` status.
 
 **Note:** If VMs have significantly different storage sizes, consider staggering their initial syncs by configuring them in smaller groups to avoid saturating the replication network or target datastore throughput.
-
-```text
-vCenter → Site Recovery → Replications → New
-
-  Select VMs: [vm-app01, vm-app02, vm-db01]
-  Target site:      amsterdam
-  Target datastore: target-datastore-01
-  RPO:              1 Hour
-  Instances:        3
-  Quiesce:          Yes
-
-  → Finish (VR queues initial sync for each VM)
-```
-
 ---
 
 ## Change RPO for an Existing Replication
@@ -113,13 +82,6 @@ Adjust the recovery point objective for a VM whose protection tier has changed �
    - Maximum: 24 hours.
 4. Click **OK**. The new RPO takes effect immediately for the next scheduled sync cycle.
 5. Verify the change: the **RPO** column in the Replications view updates within a few seconds.
-
-```text
-vCenter → Site Recovery → Replications → [VM] → right-click → Edit
-  Replication settings → RPO: 15 minutes   ← change to new value
-  → OK → effective immediately
-```
-
 **RPO violation:** If the replication cannot meet the configured RPO (due to network congestion, large change rate, or VRS overload), vCenter raises an alert. Address by reducing change rate, increasing bandwidth, or raising the RPO to a achievable value.
 
 ---
@@ -139,15 +101,6 @@ Temporarily suspends replication traffic for a VM without removing the replicati
 1. Navigate to **vCenter → Site Recovery → Replications**.
 2. Right-click the paused VM and select **Resume**.
 3. vSphere Replication performs a delta sync from the last successful sync point — only changed blocks since the pause are transferred. Full resync is not required.
-
-```text
-vCenter → Site Recovery → Replications → [VM] → right-click → Pause
-  Status: Paused
-
-vCenter → Site Recovery → Replications → [VM] → right-click → Resume
-  # VM resumes from last sync point — only delta changes replicated after resume
-```
-
 **RPO impact:** While paused, the VM accumulates RPO debt. If paused longer than the configured RPO window, an RPO violation alert fires. This is expected — clear the alert after resuming once the replication catches up.
 
 ---
@@ -194,14 +147,6 @@ Relocate a VM's replica files to a different datastore at the target site — fo
 3. On the **Target location** screen, select the new target datastore.
 4. Click **OK**. vSphere Replication migrates the replica VMDK files to the new datastore during the next sync cycle (non-disruptively — replication continues while the move occurs).
 5. After the move completes, the **Target location** column in the Replications view reflects the new datastore.
-
-```text
-vCenter → Site Recovery → Replications → [VM] → right-click → Edit
-  Target Location → Datastore: target-datastore-02   ← new datastore
-  → OK
-  # Replica files migrate during next sync; replication remains active
-```
-
 **Note:** The datastore move is online. The VM at the source site continues running, and replication continues during the migration. No RPO impact beyond the normal sync cycle.
 
 ---
@@ -219,14 +164,6 @@ Permanently removes the replication configuration for a VM. Use when decommissio
    - **Keep replica files:** Retains the replica on the target datastore. Use if you plan to re-enable replication using these files as a seed, or if the files will serve as an ad-hoc backup copy.
 4. Click **OK**.
 5. Verify: the VM no longer appears in the **Replications** list.
-
-```text
-vCenter → Site Recovery → Replications → [VM] → right-click → Remove Replication
-  Remove replica files: Yes   ← clean up .vrepl/.hbr files from target (recommended)
-  OR:                    No   ← keep files for use as seed on re-configuration
-  → OK
-```
-
 **Caution:** Removing replication does not affect the source VM — it continues running normally. The replica at the target is a dependent copy; deleting it removes DR coverage immediately.
 
 ---
@@ -249,17 +186,6 @@ Validates that the replica is bootable and application-consistent without affect
 8. Monitor the test VM powering on in the target site's **Recent Tasks**.
 9. Validate the VM: log in, check application services, verify data integrity.
 10. Record results for DR test documentation.
-
-```text
-Target vCenter → Site Recovery → Replications → [VM] → Recover
-  Recovery type:   Test (non-destructive)
-  Recovery point:  Latest (or select specific instance)
-  Target host:     esxi-dr-01.amsterdam.example.local
-  Resource pool:   DR-Test-Pool
-  Network:         DR-Isolated-Test-Network (no uplink)
-  → Finish
-```
-
 ---
 
 ## Clean Up After a Replication Test
@@ -274,13 +200,6 @@ After a replication test is validated, the test VM must be removed. Leaving test
 4. Confirm. vSphere Replication powers off and deletes the test VM and any associated test snapshots.
 5. The original replication resumes its normal sync cycle — replication was never interrupted.
 6. Verify: the replication status returns to `OK` and the test VM is gone from the target inventory.
-
-```text
-Target vCenter → Site Recovery → Replications → [VM] (Testing) → right-click → Clean Up
-  Confirm: Yes
-  # Test VM powered off and deleted; replication resumes normal cycle
-```
-
 **Note:** Always clean up test VMs promptly. Running test VMs consume datastore space (they are full snapshots of the replica), CPU, and memory at the recovery site.
 
 ---
@@ -330,16 +249,6 @@ Confirms that the VRA is correctly registered with vCenter and SRM. Run this che
 4. In the VRA VAMI (`https://<vra-ip>:5480`), go to **Configuration → vCenter Server** and confirm the registered vCenter matches the expected FQDN.
 5. Check **Configuration → Site Recovery Manager** and confirm the SRM server is registered.
 6. Run a test replication configuration on a non-critical VM to confirm end-to-end connectivity.
-
-```text
-vCenter → Site Recovery → vSphere Replication → Replication Servers
-  VRA: vra-source.example.local   Status: Connected   Version: 8.x.x
-
-VRA VAMI (https://vra-source.example.local:5480)
-  Configuration → vCenter Server    → vcenter-source.example.local (Registered)
-  Configuration → Site Recovery Mgr → srm-source.example.local    (Registered)
-```
-
 ---
 
 ## Check SRM Protection Group Sync Status
@@ -357,15 +266,6 @@ Verifies that VR-backed SRM protection groups reflect the current replication st
 4. Click into any VM showing `Not Protected` and review the error in the **Details** pane.
 5. For out-of-sync VMs: resolve the underlying VR issue (see "Recover or Remove a Stuck Replication"), then trigger a **Sync** on the protection group to refresh status.
 6. Review the **Recovery Plans** that reference this protection group and confirm they show `Ready`.
-
-```text
-SRM → Protection → Protection Groups → [VR-PG-Critical-Apps]
-  vm-app01    Protected     RPO: 15min   Last sync: 8 minutes ago
-  vm-app02    Protected     RPO: 15min   Last sync: 12 minutes ago
-  vm-db01     Not Protected              Error: VR_ERROR_NETWORK
-  → Click vm-db01 → Details → resolve VR issue → PG Sync
-```
-
 ---
 
 ## Check Overall Replication Health
@@ -409,18 +309,6 @@ Drill into a specific VM's replication details to assess sync health, last sync 
    - **Target location:** Datastore and vCenter at the recovery site.
 4. Click the **Recovery points** tab to review available restore points and their timestamps.
 5. For detailed error information, click **Events** or check the VRS VAMI log bundle.
-
-```text
-vCenter → Site Recovery → Replications → [vm-db01]
-  Status:            OK
-  Configured RPO:    15 minutes
-  Current RPO:       8 minutes
-  Last sync:         2026-06-04 09:42:11 UTC
-  Replication server: vra-source.example.local
-  Target:            target-datastore-01 @ vcenter-amsterdam.example.local
-  Recovery points:   3 available (latest: 09:42, prev: 09:27, prev: 09:12)
-```
-
 ---
 
 ## Interpret RPO Violation Alerts
@@ -477,21 +365,6 @@ After an SRM-initiated failover, the VM is running at the recovery site. Failbac
 8. Power on the VM at the source site and validate application health.
 9. Remove the reverse replication configuration now that the VM is back at the source.
 10. Reconfigure forward replication (source → recovery) to restore DR coverage.
-
-```text
-Recovery site vCenter → [VM] → vSphere Replication → Configure
-  Target site:      source-site (original site)
-  Target datastore: original-datastore-01
-  RPO:              15 minutes
-  → Finish (initial reverse sync begins)
-
-After validation window:
-  Source site vCenter → Site Recovery → Replications → [VM] → Recover
-  Recovery type: Recovery
-  Recovery point: Latest
-  → Finish → power on at source → validate → remove reverse replication
-```
-
 ---
 
 ## Re-protect a VM (reverse replication direction)
@@ -511,17 +384,4 @@ After a failover (planned or unplanned), re-protection reconfigures replication 
 7. Click **Finish** and monitor the initial sync.
 8. Once status is `OK`, update SRM protection groups at the recovery site to include this VM in a protection group targeting the original site.
 9. Validate by running a replication test (see "Test a Replication").
-
-```text
-Recovery site vCenter → [failed-over VM] → vSphere Replication → Configure
-  Target site:      original-source-site
-  Target datastore: original-datastore-01 (use as seed if files exist)
-  RPO:              15 minutes
-  Instances:        3
-  → Finish
-
-SRM (recovery site) → Protection Groups → [Reverse-PG] → Add VM
-  → [failed-over VM] → OK
-```
-
 **Note:** Re-protection does not move the VM back to the source — it keeps the VM at the recovery site and builds a new replication stream in the reverse direction. This is the correct approach when the source site is operational but you have not yet decided to fail back.

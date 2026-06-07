@@ -59,6 +59,7 @@ Example:
 VM daily change rate = 50 GB
 With compression: (50 × 8192) / (86400 × 0.7) = 6.8 Mbps
 ```text
+```
 
 ---
 

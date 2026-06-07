@@ -62,54 +62,6 @@ vSAN D@RE encrypts all data written to disk at the disk group level, below the s
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────────────────── vSAN — Encryption ──────────────────────────────────────────┐
-│                                                                                                       │
-│  vSAN offers cluster-level data-at-rest encryption (OSA) and inline encryption                        │
-│  (ESA); both require an external KMS and use AES-256 with KEK/DEK hierarchy.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           OSA Encryption (at-rest)           │  │            ESA Inline Encryption            │   │
-│   │             Enabled per cluster              │  │           vSAN 8+ / all-NVMe only           │   │
-│   │               AES-256 XTS mode               │  │          Encrypts before disk write         │   │
-│   │            KEK from KMS wraps DEK            │  │           Lower overhead than OSA           │   │
-│   │          Re-key: rolling no outage           │  │             Same KMS integration            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  OSA encrypts data at the disk layer; ESA encrypts inline before storage commit.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              KMS Configuration               │  │              Key Management Ops             │   │
-│   │          Add KMS cluster in vCenter          │  │          Re-key: new KEK, same DEKs         │   │
-│   │          Trust KMS cert in vCenter           │  │           Shred key: wipe cluster           │   │
-│   │       Enable enc: Cluster > Configure        │  │            Backup KMS: critical!            │   │
-│   │           Erase disks when removed           │  │             KMS HA: cluster pair            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  KMS must be highly available and reachable from all ESXi hosts; losing KMS                           │
-│  access prevents encrypted VM power-on.                                                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OSA enc       = Original Storage Architecture encryption; data at rest                               │
-│  ESA inline    = Express Storage Architecture; encrypts before NVMe write                             │
-│  AES-256 XTS   = encryption algorithm; XTS mode for block storage                                     │
-│  DEK           = Data Encryption Key; per disk group; AES-256                                         │
-│  KEK           = Key Encryption Key; stored in KMS; wraps DEKs                                        │
-│  Re-key        = rotate KEK from KMS; no downtime; existing DEKs unchanged                            │
-│  Shred key     = destroy KEK in KMS; all data becomes unreadable                                      │
-│  Erase disks   = secure wipe when decommissioning encrypted disks                                     │
-│  KMS backup    = critical; if KMS lost with no backup, data is gone                                   │
-│  KMS cluster   = HA pair; both nodes hold key copies                                                  │
-│  KMIP          = Key Management Interoperability Protocol; port 5696                                  │
-│  Trust KMS cert= vCenter must trust KMS server TLS cert for KMIP                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ### KMS Setup
 
 **From vCenter UI:**

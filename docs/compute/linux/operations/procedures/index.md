@@ -409,18 +409,6 @@ visudo -f /etc/sudoers.d/<username>
 ```
 
 Drop-in file contents:
-
-```text
-# Full sudo without password (service accounts only — use sparingly)
-<username> ALL=(ALL) NOPASSWD: ALL
-
-# Full sudo with password prompt
-<username> ALL=(ALL) ALL
-
-# Restrict to specific commands only
-<username> ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart nginx, /usr/bin/journalctl
-```
-
 ```bash
 # Validate sudoers syntax before saving
 visudo -c
@@ -495,18 +483,7 @@ mount | grep /mnt/data
 ```
 
 Add entry to `/etc/fstab`:
-
-```text
-# Format: <device>  <mountpoint>  <fstype>  <options>  <dump>  <pass>
-UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  /mnt/data  xfs  defaults  0  2
-```
-
 Common NFS mount options in `/etc/fstab`:
-
-```text
-nfs-server:/export  /mnt/nfs  nfs  defaults,_netdev,nfsvers=4,hard,timeo=600  0  0
-```
-
 The `_netdev` option tells systemd to wait for the network before mounting. Use `pass` value `0` for network filesystems and non-root local disks; use `2` for additional local disks; `1` is reserved for `/`.
 
 ---
@@ -521,19 +498,6 @@ vi /etc/chrony.conf
 ```
 
 Key directives in `/etc/chrony.conf`:
-
-```text
-# Replace or supplement the default pool with your NTP servers
-server ntp1.example.local iburst
-server ntp2.example.local iburst
-
-# Allow only internal network to query this host as a server (optional)
-allow 192.168.0.0/16
-
-# Local clock as fallback (stratum 10 = very low priority)
-local stratum 10
-```
-
 ```bash
 # Restart and enable chrony
 systemctl enable --now chronyd
@@ -617,18 +581,6 @@ vi /etc/rsyslog.d/90-remote.conf
 ```
 
 Contents of `/etc/rsyslog.d/90-remote.conf`:
-
-```text
-# Forward all logs via TCP to centralised syslog (TCP is reliable; use UDP only if required)
-*.* action(type="omfwd"
-    target="syslog.example.local"
-    port="514"
-    protocol="tcp"
-    action.resumeRetryCount="-1"
-    queue.type="LinkedList"
-    queue.size="10000")
-```
-
 ```bash
 # Validate rsyslog configuration syntax
 rsyslogd -N1
@@ -767,26 +719,6 @@ chmod 600 ~/.ssh/authorized_keys
 ```
 
 Harden `/etc/ssh/sshd_config`:
-
-```text
-# Disable password authentication (key-only)
-PasswordAuthentication no
-
-# Disable root login
-PermitRootLogin no
-
-# Restrict to specific users or groups
-AllowUsers deploy ansible
-AllowGroups sshusers
-
-# Use only strong key exchange algorithms
-KexAlgorithms curve25519-sha256,diffie-hellman-group14-sha256
-
-# Idle timeout (60s interval x 5 count = 300s disconnect)
-ClientAliveInterval 60
-ClientAliveCountMax 5
-```
-
 ```bash
 # Validate sshd_config syntax before restarting
 sshd -t

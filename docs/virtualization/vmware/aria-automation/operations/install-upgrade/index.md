@@ -82,52 +82,6 @@ If LCM is already deployed and Aria Automation needs to be added:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────── Aria Automation — Install and Upgrade ────────────────────────────────┐
-│                                                                                                       │
-│  Aria Automation is deployed and upgraded via Aria Suite LCM; manual OVA only for new installs.       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Pre-Install / Pre-Upgrade           │  │           Install / Upgrade Steps           │   │
-│   │          DNS: fwd+rev for vRA FQDN           │  │        LCM: Environment → Add product       │   │
-│   │          NTP: appliance time synced          │  │        Select version from LCM depot        │   │
-│   │      vCenter: resource pool + datastore      │  │        LCM pre-checks must pass green       │   │
-│   │        TLS cert: SAN matches vRA FQDN        │  │      Deploy OVA → power on → VAMI init      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Post-install: configure vIDM, cloud accounts, projects, and catalog before handover.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Post-Install Config              │  │              Upgrade Validation             │   │
-│   │          VAMI: set FQDN, NTP, proxy          │  │        vracli status --all: all green       │   │
-│   │         vIDM integration: SAML/LDAP          │  │      Catalog items visible post-upgrade     │   │
-│   │       Cloud accounts: add vCenter/AWS        │  │        Test request: deploy small VM        │   │
-│   │      Projects and quotas: set per team       │  │        Orchestrator: workflows intact       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA OVA (4 vCPU/25 GB RAM min) · vCenter · DNS/NTP · LCM appliance · TLS CA                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM depot         = Aria Suite LCM binary repository; download product OVAs for managed deploy       │
-│  Environment       = LCM grouping of related Aria products sharing vIDM and certificates              │
-│  OVA deployment    = vCenter deploy from OVA; used for initial install only (not upgrades)            │
-│  VAMI init         = First-boot configuration wizard setting hostname, NTP, password                  │
-│  Pre-checks        = LCM automated validation of DNS, NTP, cert, and resource before deploy           │
-│  vIDM integration  = SAML trust configured in vRA VAMI; enables SSO for all Aria products             │
-│  Cloud account add = vRA wizard adding vCenter/AWS/Azure credentials and verifying connectivity       │
-│  Project quota     = Resource limits set per project after install; not set by default                │
-│  Upgrade sequence  = LCM handles version ordering; do not upgrade vRA before vIDM                     │
-│  Rollback point    = VM snapshot taken before LCM upgrade; revert if upgrade fails                    │
-│  Greenfield install = New vRA in a new LCM environment; no migration from older vRA 7.x               │
-│  SAN cert          = Subject Alternative Name; must include vRA FQDN for browser trust                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## Pre-Upgrade Checklist

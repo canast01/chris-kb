@@ -52,54 +52,6 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────── vCenter Server — Hardening ──────────────────────────────────────┐
-│                                                                                                       │
-│  vCenter hardening follows the VMware Security Hardening Guide and CIS benchmark;                     │
-│  key controls: network isolation, MFA, minimal admin, FIPS mode, audit logging.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Network Hardening               │  │               Access Hardening              │   │
-│   │         Mgmt network: dedicated VLAN         │  │            MFA: smart card/RADIUS           │   │
-│   │         Firewall: only needed ports          │  │           SSO lockout: 5 attempts           │   │
-│   │         Disable SSH when not needed          │  │         Admin group: 2 accounts max         │   │
-│   │           TLS 1.2 minimum enforced           │  │            Log: all admin actions           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Network isolation and MFA are the highest-value controls for vCenter hardening.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Patch & Config Hardening           │  │              Audit & Compliance             │   │
-│   │         Apply patches within 30 days         │  │           vCenter Chargeback audit          │   │
-│   │          FIPS mode: enable in VAMI           │  │           Syslog: forward to SIEM           │   │
-│   │          Disable banner-less login           │  │             CIS benchmark scans             │   │
-│   │          Shell access: time-limited          │  │            Review perms quarterly           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  VCSA runs on ESXi host; ESXi itself must be hardened; management VLAN must                           │
-│  be unreachable from guest VM networks.                                                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VMware Hardening Guide= published per vSphere version; CIS baseline                                  │
-│  CIS benchmark= Center for Internet Security; independent hardening standard                          │
-│  FIPS 140-2   = US federal cryptography standard; enable in VAMI > Security                           │
-│  MFA          = Multi-Factor Authentication; prevents credential-only login                           │
-│  SIEM         = Security Info and Event Mgmt; receives syslog from vCenter                            │
-│  Shell timeout= SSH session auto-closes after idle period (set to 900s)                               │
-│  Lockout      = SSO disables account after N failed login attempts                                    │
-│  Banner       = login warning message; required by some compliance frameworks                         │
-│  Dedicated VLAN= separate network segment for vCenter management traffic                              │
-│  Patch SLA    = agree cadence: critical <7d, high <30d, medium <90d                                   │
-│  Quarterly review= revoke stale/unnecessary role assignments                                          │
-│  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## TLS Configuration

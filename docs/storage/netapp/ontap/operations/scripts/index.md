@@ -815,14 +815,6 @@ exit 0;
 Press the Windows key, type `cmd`, press Enter.
 
 **Step 4 — Install the module and set variables**
-
-```text
-cpan Net::SSH2
-set ONTAP_HOST=192.168.1.100
-set ONTAP_USER=admin
-set ONTAP_PASS=yourpassword
-```
-
 **Step 5 — Run the script**
 
 ```bash

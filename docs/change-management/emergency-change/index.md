@@ -70,44 +70,6 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────────────────── Emergency Change ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Emergency change: expedited process for P1/P2 incidents requiring immediate action      │   │
-│   │       ECAB approval: verbal/email from ECAB quorum; document before or immediately after      │   │
-│   │          Retrospective RFC required within 24 hours; post-change review within 5 days         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Emergency Change Criteria           │  │                 ECAB Process                │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            Active P1/P2 incident             │  │          Call ECAB members (min 2)          │   │
-│   │             Service unavailable              │  │            Explain risk + action            │   │
-│   │           Imminent security threat           │  │           Verbal or email approval          │   │
-│   │             Regulatory deadline              │  │             Execute immediately             │   │
-│   │            No time for normal CAB            │  │           Document retrospectively          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │     Timeline     │      Action      │       Owner       │     Artefact     │     Deadline     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │       T=0        │Incident declared │    Incident mgr   │    P1 ticket     │    Immediate     │   │
-│   │     T+30 min     │  ECAB approval   │     Change mgr    │   Approval log   │      30 min      │   │
-│   │     T+24 hr      │    RFC raised    │     Change mgr    │    Retro RFC     │     24 hours     │   │
-│   │     T+5 days     │       PIR        │     Change mgr    │    PIR report    │ 5 business days  │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ECAB         = Emergency CAB; subset of CAB members available 24/7 for emergency approval          │
-│    Retrospective= RFC created after emergency change to formalise the record                          │
-│    PIR          = Post-Implementation Review; required after emergency changes within 5 days          │
-│    Quorum       = Minimum 2 ECAB members must approve; single approver insufficient                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Guardrails
 
 - Emergency changes must still have a ticket — verbal approval alone is insufficient

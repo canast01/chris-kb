@@ -145,53 +145,6 @@ sys.exit(overall)
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
-┌──────────────────────────────────────────── NSX — Scripts ────────────────────────────────────────────┐
-│                                                                                                       │
-│  NSX REST API, Python, PowerShell, and Terraform scripts for NSX automation.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Python / REST Scripts             │  │              PowerShell Scripts             │   │
-│   │          requests.get policy/api/v1          │  │            Invoke-RestMethod NSX            │   │
-│   │           List all segments + VNIs           │  │             Get-NsxLogicalSwitch            │   │
-│   │           Export DFW rules to CSV            │  │             New-NsxLogicalRouter            │   │
-│   │           Bulk group member audit            │  │            Export security policy           │   │
-│   │            Health check API poll             │  │              Connect-NSXServer              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  REST API for ops scripts; Terraform for IaC segment and policy deployment.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Terraform IaC                 │  │             Automation Patterns             │   │
-│   │            provider "nsxt" config            │  │             Idempotent API calls            │   │
-│   │             nsxt_policy_segment              │  │           Pagination: cursor param          │   │
-│   │         nsxt_policy_security_policy          │  │              Error retry on 429             │   │
-│   │          nsxt_policy_tier1_gateway           │  │            Realise status polling           │   │
-│   │         terraform plan/apply/destroy         │  │             Token refresh logic             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager VMs, management network, jump host, CI/CD runner for Terraform                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  NSX Policy API = /policy/api/v1; primary REST API for all NSX config                                 │
-│  Bearer token  = JWT auth token for NSX API; refresh via /api/session                                 │
-│  Cursor        = NSX API pagination param; use to page large result sets                              │
-│  429           = HTTP Too Many Requests; NSX rate limit; retry with backoff                           │
-│  Realise       = NSX applying changes to dataplane; poll status after                                 │
-│  Terraform NSX = HashiCorp provider for NSX; declare infra as HCL                                     │
-│  nsxt_policy_segment = Terraform resource for NSX overlay segment                                     │
-│  PowerNSX      = PowerShell module for NSX; older but widely used                                     │
-│  IaC           = Infrastructure as Code; version-controlled infra config                              │
-│  Idempotent    = API call safe to repeat; same result every time                                      │
-│  CSV export    = common audit output; DFW rules exported for review                                   │
-│  policy/api/v1 = NSX Policy API base path; preferred over MP API                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 === NSX-T Transport Node Status Monitor: 192.168.1.200 ===
 Transport nodes found: 8
 

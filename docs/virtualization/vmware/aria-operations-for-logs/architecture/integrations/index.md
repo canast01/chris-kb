@@ -60,52 +60,6 @@ In Aria Operations for Logs UI:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────── Aria Operations for Logs — Integrations ───────────────────────────────┐
-│                                                                                                       │
-│  vRLI integrates with VMware products, SIEM, ITSM, and cloud logging targets.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             VMware Integrations              │  │            External Integrations            │   │
-│   │         vCenter: event and task logs         │  │       Splunk: syslog forward + plugin       │   │
-│   │         ESXi: syslog direct to vRLI          │  │     ServiceNow: alert → ticket creation     │   │
-│   │       NSX-T: DFW + gateway audit logs        │  │           PagerDuty: alert webhook          │   │
-│   │      Aria Operations: launch-in-context      │  │        S3/NFS: archive storage target       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Content packs extend vRLI with product-specific dashboards and parsers.                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Content Pack Sources             │  │         Authentication Integrations         │   │
-│   │        VMware Solution Exchange packs        │  │       vIDM/AD: SSO for vRLI UI access       │   │
-│   │     VxRail: hardware event content pack      │  │      LDAP: group-based role assignment      │   │
-│   │       vSAN: disk/resync/health events        │  │      API key: automation ingest access      │   │
-│   │      Custom pack: import ZIP from repo       │  │      TLS: cert-auth between vRLI nodes      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI master/worker VMs · vCenter · ESXi · NSX manager · SIEM target · NTP/DNS                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Content pack      = ZIP bundle of dashboards, queries, alerts, and field extractors for a product    │
-│  Launch in context = Aria Ops opens vRLI filtered to the alerting host and time window                │
-│  SIEM forward      = vRLI sends matching events to Splunk/QRadar via syslog protocol                  │
-│  ServiceNow alert  = vRLI webhook creates ServiceNow incident on alert threshold breach               │
-│  vSolution Exchange= VMware marketplace for content packs and plugins                                 │
-│  API key           = vRLI bearer token for REST ingest API; rotate periodically                       │
-│  LDAP group        = AD security group mapped to vRLI role (User/Admin) via directory config          │
-│  Archive target    = NFS mount or S3 bucket receiving vRLI log archives for long retention            │
-│  NSX DFW logs      = Distributed Firewall rule match events ingested by vRLI for security audit       │
-│  VxRail pack       = Dell content pack for VxRail hardware events in vRLI                             │
-│  vSAN pack         = VMware content pack for vSAN health, resync, and disk fault events               │
-│  Custom field      = User-defined regex extractor creating a queryable field from log text            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 **Configure ESXi syslog via esxcli (single host):**
 ```bash
 esxcli system syslog config set --loghost="udp://vrli-prod-01.example.local:514"

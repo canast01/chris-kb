@@ -62,51 +62,6 @@ The Confluence–Jira integration is Atlassian's flagship integration and runs b
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────── Confluence — Architecture Integrations ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Confluence Integration Landscape                               │   │
-│   │        Atlassian application links: Confluence ↔ Jira for cross-product macro rendering       │   │
-│   │                 Directory: LDAP/AD user sync; SAML SSO via Okta/AD FS/Ping IdP                │   │
-│   │              REST API: v2 endpoints for spaces, pages, content; PAT or Basic auth             │   │
-│   │          Webhooks: HTTP POST events on page create/update/delete to external systems          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Integrations connect Confluence outward to auth, issue tracking, and automation systems            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Directory & Auth      │  │     Atlassian Ecosystem     │  │       External Systems      │   │
-│   │    LDAP: user/group sync    │  │     Jira: app link OAuth    │  │     REST API: automation    │   │
-│   │     SAML SSO: Okta/ADFS     │  │    Jira macro: issue list   │  │    Webhooks: CI/CD events   │   │
-│   │      Crowd: SSO for DC      │  │    Bamboo: build results    │  │     Slack: notifications    │   │
-│   │      MFA: TOTP via Okta     │  │    Bitbucket: code macro    │  │      Email: SMTP alerts     │   │
-│   │   Local accounts: fallback  │  │   Atlassian Access: audit   │  │   PDF export: server-side   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LDAP/AD DC servers · IdP (Okta/AD FS) · SMTP relay · network connectivity to Jira/Bitbucket          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  App link     = Atlassian trusted relationship between two products enabling OAuth and macros         │
-│  Crowd        = Atlassian SSO server; centralises auth for Confluence, Jira, Bitbucket                │
-│  SAML SSO     = Confluence acts as Service Provider; IdP handles credential validation                │
-│  LDAP sync    = Confluence polls LDAP on a schedule to import users and group memberships             │
-│  Webhook      = outbound HTTP POST triggered by Confluence page events                                │
-│  Jira macro   = {jira} macro embeds live issue data from linked Jira instance                         │
-│  PAT          = Personal Access Token; recommended over Basic auth for REST API access                │
-│  Atlassian Access = cloud governance layer for audit log, mobile policies, user provisioning          │
-│  PDF export   = Confluence server-side render; requires matching CSS for accurate output              │
-│  SMTP relay   = outbound mail for page notifications, comment alerts, admin emails                    │
-│  OAuth        = app link uses OAuth 1.0a or OAuth 2.0 for cross-product API trust                     │
-│  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 For live repository content, install the **Bitbucket for Confluence** app (Marketplace) which renders repository files inline with diffs and blame views.
 
 ### Webhook from GitHub to Confluence (Custom Integration)

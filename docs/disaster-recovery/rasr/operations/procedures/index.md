@@ -164,58 +164,6 @@ Get-Content "C:\Program Files\Dell\RASR\Logs\RASRAgent.log" -Tail 20 -Wait
 # Step 5: Verify image created
 Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 ```
-```text
-┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Routine Procedures              │  │                DR Procedures                │   │
-│   │          Add new protection source           │  │              Initiate failover              │   │
-│   │           Modify retention policy            │  │               Validate replica              │   │
-│   │          Expire old recover points           │  │              Redirect host I/O              │   │
-│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
-│   │           Service account rotation           │  │            Failback to production           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              Change Control Requirements for RASR                             │   │
-│   │           All changes to protection policies require change ticket with rollback plan         │   │
-│   │                      Failover tests must be scheduled in maintenance window                   │   │
-│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
-│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-RASR Console → Media → Create New Media
-  → Select output: ISO file
-  → Output path: \\nas01\rasr-images\media\rasr-media-15G-$(Get-Date -Format yyyyMM).iso
-  → Build
-
-After creation:
-  1. Map new ISO in iDRAC and verify it boots to WinPE.
-  2. Confirm network driver loads and share is reachable.
-  3. Replace old ISO reference in documentation and iDRAC pre-mapped media.
-```
 ```powershell
 $share     = "\\nas01\rasr-images\prod"
 $keepDaily = 7    # days

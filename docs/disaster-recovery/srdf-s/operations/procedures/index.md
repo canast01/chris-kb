@@ -153,18 +153,6 @@ symstat -rdf -i 10 -c 6
 # Confirm completion: all pairs Synchronized, 0 tracks
 symrdf -g 10 query -detail | grep "Invalid Tracks"
 ```
-```text
-Dev    Pair State    % Synced    Invalid Tracks
----    ----------    --------    --------------
-0A1    SyncInProg    73%         2,450
-0A2    SyncInProg    81%         1,102
-```
-```text
-Dev    Pair State     % Synced    Invalid Tracks
----    ----------     --------    --------------
-0A1    Synchronized   100%        0
-0A2    Synchronized   100%        0
-```
 ```bash
 # Step 1: Confirm R1 is the current active side and both arrays are accessible
 symcfg list

@@ -51,52 +51,6 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────────── Aria Suite LCM Security Hardening ──────────────────────────────────┐
-│                                                                                                       │
-│  Firewall rules, MFA via vIDM, minimal SSH access, and audit hardening for LCM.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Network Hardening               │  │              Account Hardening              │   │
-│   │         Firewall: allow TCP 443 only         │  │          vIDM SSO: no local logins          │   │
-│   │           Port 5480: mgmt net only           │  │         admin@local: vault + rotate         │   │
-│   │           SSH: jump host CIDR only           │  │            MFA enforced via vIDM            │   │
-│   │          Block direct internet LCM           │  │          Locker: strong encryption          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Restrict LCM network access; enforce vIDM MFA; audit all LCM admin actions.                          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Audit Logging                 │  │               Depot Hardening               │   │
-│   │             Enable LCM audit log             │  │          Offline depot: no internet         │   │
-│   │            Forward to SIEM syslog            │  │             Verify PAK checksums            │   │
-│   │          Log: all deploy + cert ops          │  │          NFS depot: restrict mount          │   │
-│   │             Retain logs 90+ days             │  │           No direct depot internet          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM on vSphere; NSX/physical firewall; vIDM for MFA; SIEM for audit logs                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Firewall Allow-list  = TCP 443 and 5480 only; deny all other inbound to LCM                          │
-│  MFA                  = Multi-Factor Auth at vIDM; all LCM logins go through vIDM                     │
-│  Minimal SSH          = SSH only from jump host CIDR; disable for all others                          │
-│  LCM Locker           = Encrypted credential store; restrict Locker admin access                      │
-│  admin@local          = Local break-glass account; rotate every 90 days                               │
-│  Audit Log            = LCM records all deployments, upgrades, cert operations                        │
-│  SIEM Forward         = Export LCM audit syslog to centralised security tool                          │
-│  Offline Depot        = Local NFS depot; no LCM internet access needed                                │
-│  PAK Checksum         = Verify SHA hash of PAK file before upload to depot                            │
-│  NFS Restrict         = Mount depot NFS read-only; restrict to LCM IP only                            │
-│  Port 5480 Restrict   = Allow VAMI only from management network CIDR                                  │
-│  Log Retention        = 90 days minimum; match compliance policy                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## TLS Configuration

@@ -53,54 +53,6 @@ VMkernel Internals — Resource Stack
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           vmkernel (Kernel Layer)            │  │             VM Execution Engine             │   │
-│   │        Schedules CPUs across all VMs         │  │          VMX process per running VM         │   │
-│   │         Memory balloon / swap / TPS          │  │         vCPU mapped to pCPU threads         │   │
-│   │          VMkernel NIC (vmknic) mgmt          │  │          Guest OS in HW virt ring 0         │   │
-│   │          Storage I/O via PSA stack           │  │            VMDK on VMFS/NFS/vSAN            │   │
-│   │       Networking via vSwitch/dvSwitch        │  │            VMM, VMX, VCPU threads           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  vmkernel sends scheduled VM I/O to PSA (storage) and vSwitch (network).                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Storage I/O Stack (PSA)            │  │              Network I/O Stack              │   │
-│   │            NMP → SATP → PSP path             │  │           vSwitch / dvSwitch ports          │   │
-│   │          iSCSI/FC/FCoE/NFS/NVMe-oF           │  │         Uplinks to physical switches        │   │
-│   │           VMFS datastores on LUNs            │  │           vmk0 mgmt / vmk1 vMotion          │   │
-│   │         vSAN uses local disk groups          │  │            vmk2 vSAN / vmk3 other           │   │
-│   │         APD/PDL handling per policy          │  │         NIOC bandwidth reservations         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 servers, NVMe/SSD/HDD, 10/25/100 GbE NICs, FC/iSCSI HBAs, ToR switches                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vmkernel  = ESXi micro-kernel; schedules CPU/mem/I/O for all VMs on host                             │
-│  VMX       = user-space process managing one running VM; I/O emulation                                │
-│  PSA       = Pluggable Storage Architecture; ESXi storage I/O framework                               │
-│  NMP       = Native Multipathing Plugin; default path selector in PSA                                 │
-│  SATP      = Storage Array Type Plugin; array-specific PSA plugin                                     │
-│  PSP       = Path Selection Policy; round-robin, fixed, or MRU per LUN                                │
-│  vmknic    = VMkernel NIC; carries mgmt/vMotion/vSAN/overlay traffic                                  │
-│  dvSwitch  = Distributed vSwitch; managed centrally by vCenter                                        │
-│  VMFS      = VMware File System; clustered FS shared across ESXi hosts                                │
-│  TPS       = Transparent Page Sharing; deduplicates identical guest mem pages                         │
-│  APD       = All Paths Down; storage path loss without PDL declared                                   │
-│  PDL       = Permanent Device Loss; device signals storage is gone permanently                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ### VMkernel Resource Scheduling
 
 ```mermaid

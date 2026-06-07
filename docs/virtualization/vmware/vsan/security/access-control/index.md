@@ -52,54 +52,6 @@ vSAN access control is implemented through vCenter's Role-Based Access Control (
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────────── vSAN — Access Control ────────────────────────────────────────┐
-│                                                                                                       │
-│  vSAN access control is managed through vCenter RBAC; dedicated vSAN admin                            │
-│  roles and storage policy permissions control cluster configuration changes.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            vCenter RBAC for vSAN             │  │           vSAN-Specific Privileges          │   │
-│   │           Host.Config.Storage priv           │  │          Datastore.Config: required         │   │
-│   │           Cluster-level Admin role           │  │            StorageProfile.Update            │   │
-│   │        No direct disk access for VMs         │  │          VsanHealth: read-only role         │   │
-│   │        Least privilege: read-only ops        │  │          Disk.Configure: only admin         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Restrict disk configuration to cluster admins; storage policy changes to vSAN admins.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               ESXi Host Access               │  │              Audit & Compliance             │   │
-│   │         SSH: disable when not needed         │  │           Log: all disk config ops          │   │
-│   │           ESXi shell: time-limited           │  │         Review: admin accounts qtrly        │   │
-│   │            Lockdown mode: enforce            │  │         Alert: unexpected disk claim        │   │
-│   │           Access via vCenter only            │  │         SIEM: forward vCenter events        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical disk access is restricted by ESXi; vSAN manages all disk I/O;                               │
-│  no direct block device access from guest VMs.                                                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RBAC          = Role-Based Access Control; vCenter permission model                                  │
-│  Privilege     = atomic permission; e.g., Datastore.Config                                            │
-│  Lockdown mode = ESXi blocks direct access; all ops via vCenter only                                  │
-│  StorageProfile= vCenter storage policy permission set                                                │
-│  VsanHealth    = read-only vSAN health monitoring privilege                                           │
-│  Disk.Configure= permission to add/remove disks from vSAN                                             │
-│  SIEM          = Security Info and Event Mgmt; receives vCenter events                                │
-│  SSH disable   = reduce attack surface; enable only for troubleshooting                               │
-│  Shell timeout = ESXi shell auto-closes after idle; set to 600s                                       │
-│  Cluster admin = role with full vSAN management privileges                                            │
-│  Audit log     = vCenter event log; captures all disk/policy changes                                  │
-│  Qtrly review  = check admin accounts; remove stale assignments                                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ## Custom Roles
 
 ### vSAN Read-Only Role (Monitoring)

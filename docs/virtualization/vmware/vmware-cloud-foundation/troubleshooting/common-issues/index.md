@@ -53,54 +53,6 @@ VCF Common Failure Points — Quick Reference
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────── VMware Cloud Foundation — Common Issues ───────────────────────────────┐
-│                                                                                                       │
-│  Common VCF issues: upgrade task failures, credential rotation stuck, domain                          │
-│  commission failures, certificate expiry, and SDDC Manager service outages.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Upgrade Task Failures             │  │              Credential Issues              │   │
-│   │          Pre-check fails: fix first          │  │          Rotation stuck: check logs         │   │
-│   │          Upgrade paused: check task          │  │          Service account locked out         │   │
-│   │         Remediate: retry failed step         │  │          Fix: unlock in AD + retry          │   │
-│   │        Rollback: snapshot (if taken)         │  │          Manual rotation: PowerVCF          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Pre-check failures must be resolved before applying any upgrade bundle.                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Commission & Domain Issues          │  │             SDDC Manager Issues             │   │
-│   │          Host commission fails: DNS          │  │          UI unreachable: check svc          │   │
-│   │       Domain create stuck: check tasks       │  │           Restart: service-control          │   │
-│   │        Cert error: renew via SDDC Mgr        │  │           DB issue: check Postgres          │   │
-│   │         VCF HCL: hardware not listed         │  │          Disk full: purge old logs          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Most VCF failures trace to DNS, NTP, network connectivity, or certificate expiry;                    │
-│  check all four before raising a GSS SR.                                                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Pre-check     = automated validation; fixes required before upgrade                                  │
-│  Remediate     = retry a failed upgrade task step in SDDC Mgr                                         │
-│  Rollback      = restore snapshot taken before upgrade attempt                                        │
-│  Credential rotation= SDDC Mgr updates service passwords; may time out                                │
-│  Commission    = add host to free pool; requires DNS + HCL validation                                 │
-│  VCF HCL       = VCF-specific HCL; server + NIC + disk must all be listed                             │
-│  service-control= restart SDDC Manager services on appliance shell                                    │
-│  Postgres      = SDDC Manager embedded DB; full = service crash                                       │
-│  Log purge     = delete old SDDC Mgr logs when disk >80%                                              │
-│  DNS failure   = most common commission failure; check A + PTR                                        │
-│  Task view     = SDDC Mgr Inventory > Tasks; shows stuck operations                                   │
-│  Cert expiry   = check SDDC Mgr Certificates tab; renew >30d ahead                                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ### Common Failure Points
 
 - Lifecycle bundle issue

@@ -123,16 +123,6 @@ flowchart TD
 ```
 
 ### Device Aliases
-
-```text
-switch# device-alias database
-switch(config-device-alias-db)# device-alias name esxi01_hba0 pwwn 10:00:00:90:fa:12:34:56
-switch(config-device-alias-db)# device-alias name fa01_ct0_p0 pwwn 52:4a:93:7c:00:00:00:01
-switch(config-device-alias-db)# device-alias name fa01_ct0_p1 pwwn 52:4a:93:7c:00:00:00:02
-switch(config-device-alias-db)# exit
-switch# device-alias commit
-```
-
 ### Create and Manage Zones
 
 ```bash

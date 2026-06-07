@@ -107,12 +107,6 @@ kubectl logs -n prelude -l app=iaas-gateway --tail=100 | grep -i "error\|vcenter
 ## Configure Image Mappings and Flavor Mappings
 
 Image mappings translate an abstract OS name (e.g., `ubuntu-22`) to a concrete template per cloud zone. Flavor mappings translate a size name (e.g., `small`) to a vSphere CPU/memory configuration or an AWS instance type. Both must be configured for each cloud zone before blueprints can deploy.
-
-```text
-Infrastructure → Configure → Image Mappings → add entry for new zone
-Infrastructure → Configure → Flavor Mappings → add entry for new zone
-```
-
 **Image Mappings:**
 
 1. Navigate to **Infrastructure → Configure → Image Mappings**.
@@ -184,11 +178,6 @@ Group membership is resolved at login time; changes in the directory are reflect
 ## Configure an Approval Policy
 
 Approval policies intercept catalog requests and require one or more approvers to sign off before provisioning begins. Configure policies to enforce change control on production deployments or high-cost catalog items.
-
-```text
-Service Broker → Content & Policies → Policies → New Policy → Approval Policy
-```
-
 1. Navigate to **Service Broker → Content & Policies → Policies**.
 2. Click **New Policy** and select **Approval Policy**.
 3. Enter a name, description, and the scope (organization-wide or per-project).
@@ -202,11 +191,6 @@ Service Broker → Content & Policies → Policies → New Policy → Approval P
 ## Assign an Approval Policy to a Catalog Item
 
 After creating an approval policy, link it to one or more catalog items so that requests for those items trigger the approval workflow.
-
-```text
-Service Broker → Content → Catalog Items → select item → Policy → assign the approval policy
-```
-
 1. Navigate to **Service Broker → Content → Catalog Items**.
 2. Click the target catalog item.
 3. Select the **Policies** tab.
@@ -296,11 +280,6 @@ Exports the current blueprint definition as a YAML file. Use for backup, version
 ## Create an ABX Action
 
 ABX (Action Based Extensibility) actions are event-driven scripts that run in response to vRA lifecycle events. Use them to integrate with external systems, send notifications, or enforce post-deployment configuration.
-
-```text
-Extensibility → Actions → New Action
-```
-
 1. Navigate to **Extensibility → Actions → New Action**.
 2. Enter a name, select the runtime (Python 3, Node.js, or PowerShell), and choose the execution context (on-premises FaaS or cloud).
 3. Paste or write the action handler. The entry point must be `handler(context, inputs)`.
@@ -329,11 +308,6 @@ def handler(context, inputs):
 ## Create an Extensibility Subscription
 
 Subscriptions bind an ABX action (or vRO workflow) to a specific lifecycle event. The subscription determines when the action fires (e.g., on deployment success, before VM power-off).
-
-```text
-Extensibility → Subscriptions → New Subscription
-```
-
 1. Navigate to **Extensibility → Subscriptions → New Subscription**.
 2. Enter a name and select the event topic (e.g., `Deployment Completed`, `Compute Provision`).
 3. Select the runnable: choose **Action** and pick the ABX action created above (or choose **Workflow** for vRO).

@@ -408,20 +408,10 @@ AON supports a natural-language query interface for flow searches, which transla
 
 1. Navigate to the **Search** bar at the top of the AON UI.
 2. Type a natural language query:
-
-```text
-show me flows between vm-web-01 and vm-db-01
-```
-
 3. AON resolves VM names to IPs and runs the equivalent structured query.
 4. Results show flow records with Source, Destination, Port, Protocol, Bytes, and Packets.
 
 **Equivalent structured query:**
-
-```text
-flows where source vm.name = 'vm-web-01' and destination vm.name = 'vm-db-01'
-```
-
 5. Apply a time range filter using the **Time Range** selector (Last 1h, Last 24h, Custom).
 6. Click any flow row for per-flow detail including first-seen / last-seen timestamps.
 
@@ -433,18 +423,7 @@ Identifies all source IPs communicating to a given destination port — useful f
 
 1. Navigate to the **Search** bar.
 2. Enter a port-based query:
-
-```text
-flows where destination port = 3306
-```
-
 3. To scope to a specific application:
-
-```text
-flows where destination application = "CRM-App" and destination port = 3306
-flows where source application = "CRM-App" and destination = internet
-```
-
 4. Review results. Group by **Source IP** or **Source Application** to identify unexpected callers.
 5. To save the query for recurring use, click **Save Search** → enter a name (e.g., `MySQL-All-Sources`).
 
@@ -530,11 +509,6 @@ Custom problem definitions trigger alerts on any flow search condition that AON 
 1. Navigate to **Settings → Alerts → Add Alert**.
 2. Enter an **Alert Name** (e.g., `Lateral-Movement-SMB`).
 3. In the **Condition** field, enter a flow search query:
-
-```text
-flows where destination port = 445 and source application != destination application
-```
-
 4. Set the **Threshold**: Count > 50 within 5 minutes.
 5. Set **Severity**: High.
 6. Set **Notification**: select an existing notification profile (email, webhook, or syslog) or click **Add Notification** to create one.

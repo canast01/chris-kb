@@ -52,54 +52,6 @@ CLI Reference reference covering EC2, S3, IAM, RDS, CloudWatch and 3 more sectio
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────────── AWS Operations — CLI Reference ────────────────────────────────────┐
-│                                                                                                       │
-│  Common AWS CLI operational commands for day-to-day management and scripting.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Identity & Config               │  │              Output & Filtering             │   │
-│   │         aws sts get-caller-identity          │  │        --output json/text/table/yaml        │   │
-│   │         aws configure list-profiles          │  │         --query JMESPath expression         │   │
-│   │         aws configure set/get region         │  │          --filter Name=Value pairs          │   │
-│   │         AWS_PROFILE env var override         │  │        --no-cli-pager: disable pager        │   │
-│   │         aws sso login --profile name         │  │        jq: JSON post-processing tool        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Use --dry-run for EC2 permission checks; --no-paginate for full result sets.                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Operational Commands             │  │              Scripting Patterns             │   │
-│   │          aws ec2 describe-instances          │  │      for loop over aws ... output text      │   │
-│   │        aws s3 sync src/ s3://bucket/         │  │        aws ... wait instance-running        │   │
-│   │        aws logs tail /group --follow         │  │          aws ... --no-paginate | jq         │   │
-│   │        aws cloudformation deploy ...         │  │         AWS_DEFAULT_REGION override         │   │
-│   │        aws ssm start-session --target        │  │       set -e + trap for error handling      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS CLI calls regional API endpoints · TLS 1.2+ over internet or private link                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  AWS CLI         = Command-line interface tool for all AWS service operations                         │
-│  Profile         = Named credential set in ~/.aws/credentials + ~/.aws/config                         │
-│  JMESPath        = Query language used with --query to filter/transform CLI output                    │
-│  --dry-run       = EC2 flag that checks permissions without executing the action                      │
-│  wait command    = CLI blocks until a resource reaches a target state (polling)                       │
-│  --no-paginate   = Returns all results at once instead of paginating the output                       │
-│  AWS_PROFILE     = Env var selecting the named credential profile for CLI calls                       │
-│  AWS_DEFAULT_REGION= Env var overriding the configured region for CLI commands                        │
-│  SSO login       = aws sso login authenticates browser-based before CLI commands                      │
-│  get-caller-identity= Returns AccountId, UserId, and ARN of current credentials                       │
-│  aws s3 sync     = Copies changed/new files between local and S3 (one-way)                            │
-│  Session Manager = aws ssm start-session; interactive shell without SSH or bastion                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ---
 
 ## S3

@@ -35,55 +35,6 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   TF standards: consistent module structure, remote state, provider pinning, CI enforcement   │   │
-│   │ Directory layout: modules/ (reusable), environments/ (per-env root), shared/ (cross-env data) │   │
-│   │    CI: terraform fmt -check → validate → tflint → checkov → plan → manual approval → apply    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                File Structure                │  │                Quality Rules                │   │
-│   │              main.tf: resources              │  │           terraform fmt -recursive          │   │
-│   │           variables.tf: all inputs           │  │              terraform validate             │   │
-│   │           outputs.tf: all exports            │  │            tflint: provider rules           │   │
-│   │       versions.tf: required_providers        │  │            checkov: security scan           │   │
-│   │       backend.tf: remote state config        │  │           No hardcoded credentials          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   tflint      = Terraform linter; checks for unused vars, deprecated syntax, provider rules   │   │
-│   │ checkov     = Bridgecrew IaC security scanner; checks for open SGs, unencrypted storage, etc. │   │
-│   │         terraform-docs = auto-generate module README from variables.tf and outputs.tf         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   TF standards: consistent module structure, remote state, provider pinning, CI enforcement   │   │
-│   │ Directory layout: modules/ (reusable), environments/ (per-env root), shared/ (cross-env data) │   │
-│   │    CI: terraform fmt -check → validate → tflint → checkov → plan → manual approval → apply    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                File Structure                │  │                Quality Rules                │   │
-│   │              main.tf: resources              │  │           terraform fmt -recursive          │   │
-│   │           variables.tf: all inputs           │  │              terraform validate             │   │
-│   │           outputs.tf: all exports            │  │            tflint: provider rules           │   │
-│   │       versions.tf: required_providers        │  │            checkov: security scan           │   │
-│   │       backend.tf: remote state config        │  │           No hardcoded credentials          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   tflint      = Terraform linter; checks for unused vars, deprecated syntax, provider rules   │   │
-│   │ checkov     = Bridgecrew IaC security scanner; checks for open SGs, unencrypted storage, etc. │   │
-│   │         terraform-docs = auto-generate module README from variables.tf and outputs.tf         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ### Module versioning policy
 
 | Environment | Policy |
