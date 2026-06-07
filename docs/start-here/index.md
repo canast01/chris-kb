@@ -31,7 +31,7 @@ Use it when you need quick notes, runbooks, checks, standards, commands, or trou
 │   │            Start with major area             │  │         Incident: go straight to TS         │   │
 │   │           Open vendor or platform            │  │           Change: use runbook page          │   │
 │   │           Use cards for deep dives           │  │         New system: check arch page         │   │
-│   │          Add notes after field work          │  │         Audit: use inventory section        │   │
+│   │          Add notes after field work          │  │       Audit: use ITSM asset inventory       │   │
 │   │           Site Map for full index            │  │          Learning: browse by topic          │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
@@ -135,7 +135,17 @@ Use it when you need quick notes, runbooks, checks, standards, commands, or trou
 
 <a class="kb-card" href="../automation/">
   <strong>Automation</strong>
-  <span>PowerShell, Python, Ansible, Terraform, GitHub Actions, and workflows.</span>
+  <span>PowerShell, Python, Ansible, Terraform, GitHub Actions, and Git.</span>
+</a>
+
+<a class="kb-card" href="../backup/">
+  <strong>Backup & Recovery</strong>
+  <span>Veeam, Commvault, NetBackup, IRE, runbooks, and DR design.</span>
+</a>
+
+<a class="kb-card" href="../itsm/">
+  <strong>ITSM</strong>
+  <span>ServiceNow, Jira, and Confluence — change management, asset inventory, and lifecycle.</span>
 </a>
 
 </div>

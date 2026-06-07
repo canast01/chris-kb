@@ -1,9 +1,9 @@
 # Usage Metrics
 
-
 <div class="kb-summary">
-Usage Metrics reference covering Current totals, Section growth, Health checks.
+Knowledge base statistics: page counts, section distribution, and content type coverage.
 </div>
+
 ```text
 ┌────────────────────────────────────────── KB Usage Metrics ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -17,20 +17,21 @@ Usage Metrics reference covering Current totals, Section growth, Health checks.
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
 │   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,100+  │  │  Storage:          346       │  │  Mermaid flowcharts: 1,206  │  │
-│   │  Sections:             27   │  │  Virtualization:   344       │  │  Formatted tables:   1,023  │  │
-│   │  CLI reference pages:  251  │  │  Cloud:            223       │  │  CLI reference pages:  251  │  │
-│   │  Pages per section:    78   │  │  Disaster Recovery: 134      │  │  ASCII diagrams:     129+   │  │
+│   │  Total pages:       2,200+  │  │  Storage:          600       │  │  ASCII diagrams:     2,050+ │  │
+│   │  Sections:             16   │  │  Virtualization:   529       │  │  Formatted tables:   1,410  │  │
+│   │  Avg pages/section:   138   │  │  Cloud:            225       │  │  Code examples:      1,132  │  │
+│   │  New 2026-06-07:      +66   │  │                              │  │  Mermaid diagrams:     455  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Section          │  Pages  │  Section            │  Pages  │  Section          │  Pages     │   │
-│   │   Storage          │   346   │  Monitoring         │   100   │  Tools            │    36      │   │
-│   │   Virtualization   │   344   │  Security           │    74   │  Compute          │    34      │   │
-│   │   Cloud            │   223   │  SAN                │    70   │  Project Mgmt     │    33      │   │
-│   │   Disaster Rcvry   │   134   │  Automation         │    67   │  Certifications   │    37      │   │
+│   │   Storage          │   600   │  SAN                │   121   │  Certifications   │    39      │   │
+│   │   Virtualization   │   529   │  ITSM               │   112   │  AI               │    32      │   │
+│   │   Cloud            │   225   │  Security           │    97   │  Monitoring Std   │    20      │   │
+│   │   Compute          │   140   │  Backup             │    80   │  Networking       │     8      │   │
+│   │   Automation       │   134   │  Protocols          │    65   │                   │            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Health: ./validate-site.sh · ./audit-site.sh · ./preview-site.sh                                   │
@@ -47,15 +48,15 @@ Usage Metrics reference covering Current totals, Section growth, Health checks.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-06-01
+Generated: 2026-06-07
 
 ## Current totals
 
 | Metric | Count |
 |---|---:|
-| Total markdown pages | 2,122 |
-| Sections | 27 |
-| Pages with full-width ASCII diagrams | 1,984 |
+| Total markdown pages | ~2,200 |
+| Sections | 16 |
+| Pages with full-width ASCII diagrams | ~2,050 |
 | Pages with formatted tables | 1,410 |
 | Pages with code examples | 1,132 |
 | Pages with Mermaid diagrams | 455 |
@@ -64,31 +65,20 @@ Generated: 2026-06-01
 
 | Section | Pages |
 |---|---:|
-| Virtualization | 448 |
-| Storage | 434 |
-| Cloud | 223 |
-| Disaster Recovery | 199 |
-| Monitoring | 118 |
-| SAN | 113 |
-| Automation | 107 |
-| Security | 96 |
-| Tools | 85 |
-| Protocols | 61 |
-| Compute | 45 |
-| Certifications | 38 |
-| Project Management | 33 |
+| Storage | 600 |
+| Virtualization | 529 |
+| Cloud | 225 |
+| Compute | 140 |
+| Automation | 134 |
+| SAN | 121 |
+| ITSM | 112 |
+| Security | 97 |
+| Backup | 80 |
+| Protocols | 65 |
+| Certifications | 39 |
 | AI | 32 |
-| Troubleshooting | 9 |
-| Change Management | 8 |
-| Data Protection | 8 |
-| Database | 8 |
-| Integration | 8 |
-| Inventory | 8 |
-| Lifecycle | 8 |
-| Performance | 8 |
-| Runbooks | 8 |
-| Architecture | 5 |
-| Networking | 5 |
+| Monitoring Standards | 20 |
+| Networking | 8 |
 | Start Here | 1 |
 | Stats | 1 |
 

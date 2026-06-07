@@ -1,9 +1,9 @@
 # Site Quality Dashboard
 
-
 <div class="kb-summary">
-Site Quality Dashboard reference covering Current state, Pages by section, Quality rules, Useful commands.
+Quality gates and content standards for the chrisanastasiadis.com knowledge base.
 </div>
+
 ```text
 ┌──────────────────────────────────── KB Site Quality Dashboard ────────────────────────────────────────┐
 │                                                                                                       │
@@ -27,10 +27,11 @@ Site Quality Dashboard reference covering Current state, Pages by section, Quali
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Section          │  Pages  │  Section            │  Pages  │  Section          │  Pages     │   │
-│   │   Storage          │   346   │  Monitoring         │   100   │  Tools            │    36      │   │
-│   │   Virtualization   │   344   │  Security           │    74   │  Compute          │    34      │   │
-│   │   Cloud            │   223   │  SAN                │    70   │  Project Mgmt     │    33      │   │
-│   │   Disaster Rcvry   │   134   │  Automation         │    67   │  Certifications   │    37      │   │
+│   │   Storage          │   600   │  SAN                │   121   │  Certifications   │    39      │   │
+│   │   Virtualization   │   529   │  ITSM               │   112   │  AI               │    32      │   │
+│   │   Cloud            │   225   │  Security           │    97   │  Monitoring Std   │    20      │   │
+│   │   Compute          │   140   │  Backup             │    80   │  Networking       │     8      │   │
+│   │   Automation       │   134   │  Protocols          │    65   │                   │            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Physical: GitHub Pages / Cloudflare CDN · MkDocs Material build · Actions CI pipeline              │
@@ -47,47 +48,36 @@ Site Quality Dashboard reference covering Current state, Pages by section, Quali
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-06-01
+Generated: 2026-06-07
 
 ## Current state
 
 | Item | Count |
 |---|---:|
-| Total markdown pages | 2,122 |
-| Pages with kb-summary | 2,120 |
-| Pages with full-width ASCII diagram | 1,984 |
-| Pages passing check-site.py | 2,122 |
+| Total markdown pages | ~2,200 |
+| Sections | 16 |
+| Pages with kb-summary | ~2,200 |
+| Pages with full-width ASCII diagram | ~2,050 |
 | MkDocs strict build warnings | 0 |
 
 ## Pages by section
 
 | Section | Pages |
 |---|---:|
-| Virtualization | 448 |
-| Storage | 434 |
-| Cloud | 223 |
-| Disaster Recovery | 199 |
-| Monitoring | 118 |
-| SAN | 113 |
-| Automation | 107 |
-| Security | 96 |
-| Tools | 85 |
-| Protocols | 61 |
-| Compute | 45 |
-| Certifications | 38 |
-| Project Management | 33 |
+| Storage | 600 |
+| Virtualization | 529 |
+| Cloud | 225 |
+| Compute | 140 |
+| Automation | 134 |
+| SAN | 121 |
+| ITSM | 112 |
+| Security | 97 |
+| Backup | 80 |
+| Protocols | 65 |
+| Certifications | 39 |
 | AI | 32 |
-| Troubleshooting | 9 |
-| Change Management | 8 |
-| Data Protection | 8 |
-| Database | 8 |
-| Integration | 8 |
-| Inventory | 8 |
-| Lifecycle | 8 |
-| Performance | 8 |
-| Runbooks | 8 |
-| Architecture | 5 |
-| Networking | 5 |
+| Monitoring Standards | 20 |
+| Networking | 8 |
 | Start Here | 1 |
 | Stats | 1 |
 
