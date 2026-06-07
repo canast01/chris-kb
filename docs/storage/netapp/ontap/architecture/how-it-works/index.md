@@ -230,6 +230,99 @@ Supported applications with native SnapCenter plugins:
 
 SnapCenter manages retention policies at the backup job level. Expired backup copies are deleted from both the source ONTAP snapshot and the SnapVault destination, ensuring no orphaned snapshots accumulate on the array.
 
+## Storage Hierarchy — Aggregate → SVM → Volume → LUN/qtree with Multi-Tenancy
+
+The diagram below shows how ONTAP layers physical drives, RAID groups, aggregates, SVMs, volumes, and sub-volume constructs (LUNs, qtrees, shares) into a coherent hierarchy. The SVM boundary is where multi-tenancy is enforced — each tenant sees only its own namespace, LIFs, and data.
+
+```mermaid
+flowchart TD
+    subgraph PHYSICAL["Physical Layer — Node-Owned Hardware"]
+        DRIVES["Physical Drives\nNVMe SSDs · SATA HDDs · SAS HDDs\nMixed media supported per aggregate"]
+        RAIDG["RAID Groups\nRAID-DP: 2 parity disks, 2-drive fault tolerance\nRAID-TEC: 3 parity disks, 3-drive fault tolerance\nTypical group: 12–28 data drives"]
+    end
+
+    subgraph AGG_LAYER["Aggregate Layer — Physical Storage Pool"]
+        AGG1["Aggregate 1\nOwned by Node 1\nPool of RAID groups\nSingle disk type per aggregate\nCapacity drawn by thin volumes"]
+        AGG2["Aggregate 2\nOwned by Node 2\nSeparate pool\nFailover: Node 1 adopts AGG2\non partner takeover"]
+    end
+
+    subgraph SVM_A["SVM — Tenant A (Production)"]
+        SVMA_LIF["LIF Set\niSCSI 192.168.10.10\nFC WWPN AA:BB:CC\nNFS 192.168.10.11"]
+        SVMA_ISCSI["iSCSI Target\niqn.2010-01.com.netapp:svm-a\nPortal group on data LIFs"]
+        SVMA_NFS["NFS Export\n/vol/oracle_data → NFS v4.1\n/vol/oracle_logs → NFS v3"]
+    end
+
+    subgraph SVM_B["SVM — Tenant B (DevTest)"]
+        SVMB_LIF["LIF Set\nSMB 192.168.20.10\nNFS 192.168.20.11"]
+        SVMB_SMB["CIFS/SMB Share\n\\\\svm-b\\projects\nAD-integrated auth"]
+        SVMB_NFS["NFS Export\n/vol/devtest → NFS v3\nSquash root, read-write"]
+    end
+
+    subgraph VOL_LAYER["Volume Layer — Logical Containers"]
+        VOL1["FlexVol: oracle_data\nSize: 5 TB (thin)\nSnap reserve: 20%\nAggregate: AGG1"]
+        VOL2["FlexVol: oracle_logs\nSize: 1 TB (thin)\nSnap reserve: 10%\nAggregate: AGG1"]
+        VOL3["FlexVol: devtest\nSize: 2 TB (thin)\nSnap reserve: 5%\nAggregate: AGG2"]
+        SNAP1["Snapshot Copies\nWAFL copy-on-write PiT copies\nInstant creation, no data copy\nRetained per volume policy"]
+    end
+
+    subgraph SUBVOL["Sub-Volume Constructs"]
+        LUN["LUN\nBlock device inside a volume\niSCSI or FC mapped via igroup\nThin-provisioned inside FlexVol"]
+        QTREE["qtree\nNFS sub-directory with own quota\nCIFS share root\nOplock and security-style scoped"]
+        SHARE["SMB Share\nMapped to a volume junction\nor qtree within SVM namespace"]
+        NS["NVMe Namespace\nNVMe/FC or NVMe/TCP\nMapped via subsystem (host group)\nLike a LUN but NVMe-native"]
+    end
+
+    DRIVES -->|"RAID-DP or RAID-TEC groups"| RAIDG
+    RAIDG -->|"Aggregate pools\nRAID groups added to aggregate"| AGG1
+    RAIDG -->|"Aggregate pools"| AGG2
+
+    AGG1 -->|"Volume carved from aggregate\ncapacity pool"| VOL1
+    AGG1 -->|"Volume carved from aggregate"| VOL2
+    AGG2 -->|"Volume carved from aggregate"| VOL3
+
+    VOL1 --> SNAP1
+    VOL2 --> SNAP1
+    VOL3 --> SNAP1
+
+    VOL1 -->|"LUN inside volume\nSAN access path"| LUN
+    VOL3 -->|"qtree inside volume\nNAS quota boundary"| QTREE
+    VOL3 -->|"SMB share on volume\nor qtree root"| SHARE
+    VOL1 -->|"NVMe Namespace\nin NVMe-capable volume"| NS
+
+    SVMA_ISCSI -->|"igroup maps LUN\nto SVM-A iSCSI target"| LUN
+    SVMA_NFS -->|"Junction-path mounts\nvolume into SVM namespace"| VOL1
+    SVMA_NFS -->|"Junction-path mount"| VOL2
+    SVMA_LIF --- SVMA_ISCSI
+    SVMA_LIF --- SVMA_NFS
+
+    SVMB_SMB -->|"Share root is qtree\nor volume junction"| SHARE
+    SVMB_NFS -->|"Export policy applied\nto volume"| VOL3
+    SVMB_LIF --- SVMB_SMB
+    SVMB_LIF --- SVMB_NFS
+
+    classDef physical fill:#374151,stroke:#1f2937,color:#fff
+    classDef agg fill:#b45309,stroke:#92400e,color:#fff
+    classDef svmA fill:#15803d,stroke:#14532d,color:#fff
+    classDef svmB fill:#0e7490,stroke:#155e75,color:#fff
+    classDef vol fill:#1d4ed8,stroke:#1e3a8a,color:#fff
+    classDef subvol fill:#7c3aed,stroke:#5b21b6,color:#fff
+
+    class DRIVES,RAIDG physical
+    class AGG1,AGG2 agg
+    class SVMA_LIF,SVMA_ISCSI,SVMA_NFS svmA
+    class SVMB_LIF,SVMB_SMB,SVMB_NFS svmB
+    class VOL1,VOL2,VOL3,SNAP1 vol
+    class LUN,QTREE,SHARE,NS subvol
+```
+
+Key points illustrated:
+
+- **Aggregate ownership** is per-node. AGG1 lives on Node 1; AGG2 on Node 2. During HA takeover, the surviving node temporarily adopts the failed partner's aggregates — this is why both nodes must be able to see all disk shelves.
+- **SVM boundary** is the multi-tenancy wall. Tenant A (Production) and Tenant B (DevTest) each have separate LIF addresses, separate namespace trees, separate export policies, and separate Active Directory integrations — even though both SVMs draw physical capacity from the same aggregates.
+- **Volumes** are thin-provisioned: a 5 TB FlexVol does not consume 5 TB of aggregate space on creation. Physical blocks are allocated only as data is written. Space guarantee settings (`volume` or `none`) control how aggressively space is reserved.
+- **Sub-volume constructs** depend on the protocol: SAN workloads use LUNs (SCSI) or NVMe Namespaces mapped via igroups/subsystems; NAS workloads use junction-path mounts, qtrees for quota management, and SMB shares — all rooted in the same volume hierarchy.
+- **Snapshot copies** are WAFL copy-on-write pointers anchored at the volume level. They are instant to create (no data movement) and share unchanged blocks with the live volume, making them space-efficient until data diverges.
+
 ## Key Terms Glossary
 
 | Term | Definition |

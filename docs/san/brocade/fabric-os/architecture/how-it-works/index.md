@@ -81,6 +81,60 @@ graph TB
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## FC Fabric Login Sequence
+
+The sequence below shows the complete login flow from a cold HBA to active SCSI I/O. WWN assignment happens at FLOGI; the fabric controller (principal switch) records the mapping in the distributed Name Server before the initiator can discover or contact any target.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant HBA as Host HBA<br/>(Initiator)
+    participant FP as F_Port<br/>(Edge Switch)
+    participant PS as Principal Switch<br/>(Fabric Controller)
+    participant NS as Name Server<br/>(0xFFFFFC)
+    participant TGT as Storage Target<br/>(Storage Array Port)
+
+    Note over HBA,PS: Phase 1 — Fabric Login (FLOGI)
+    HBA->>FP: FLOGI (WWPN, WWNN, BB_Credit, Class-of-Service)
+    FP->>PS: Forward FLOGI — request Domain ID allocation
+    PS-->>FP: ACC — Domain ID confirmed, fabric parameters
+    FP-->>HBA: ACC (FCID assigned: Domain.Area.Port, fabric BB_Credit)
+    Note over HBA: HBA now has 24-bit FCID address
+
+    Note over HBA,NS: Phase 2 — Name Server Registration (PLOGI to NS)
+    HBA->>NS: PLOGI — Port Login to Name Server (well-known addr 0xFFFFFC)
+    NS-->>HBA: ACC (Name Server session open)
+    HBA->>NS: RFT_ID — Register FC-4 Types (e.g. FCP initiator)
+    NS-->>HBA: ACC
+    HBA->>NS: RPN_ID — Register Port Name (WWPN → FCID binding)
+    NS-->>HBA: ACC
+    HBA->>NS: GID_FT — Query: get all FCIDs with FC-4 type FCP target
+    NS-->>HBA: ACC (list of target FCIDs / WWPNs)
+    Note over NS: Name Server now holds WWN→FCID mapping<br/>Fabric-wide replication via FC-GS-7
+
+    Note over HBA,TGT: Phase 3 — Target Login (PLOGI → PRLI)
+    HBA->>TGT: PLOGI — Port Login (negotiate buffer credits, data field size)
+    TGT-->>HBA: ACC (session parameters agreed)
+    HBA->>TGT: PRLI — Process Login (FCP service parameters, task retry ID)
+    TGT-->>HBA: ACC (target ready, PRLI response with FCP_RSP flags)
+    Note over HBA,TGT: Phase 4 — SCSI I/O
+
+    HBA->>TGT: FCP_CMND (SCSI CDB — e.g. READ 16, LUN 0)
+    TGT-->>HBA: FCP_XFER_RDY (if write) or FCP_DATA (read data frames)
+    TGT-->>HBA: FCP_RSP (SCSI status byte, sense data if any)
+    Note over HBA,TGT: Subsequent I/O reuses PRLI session<br/>Zone enforcement applied at ingress ASIC per frame
+```
+
+| Login Phase | Frame Type | Key Data Exchanged | Result |
+|---|---|---|---|
+| FLOGI | ELS (Extended Link Service) | WWPN, WWNN, BB_Credit request | FCID assigned by fabric |
+| PLOGI to NS | ELS | Port login to 0xFFFFFC | Name Server session open |
+| RFT_ID / RPN_ID | FC-GS (Generic Services) | FC-4 type + WWPN binding | WWN registered in Name Server |
+| GID_FT | FC-GS query | Request target FCIDs | Initiator learns reachable targets |
+| PLOGI to target | ELS | Buffer credits, data field size | Per-port session established |
+| PRLI | ELS | FCP service parameters, task retry | Target ready for SCSI commands |
+| FCP_CMND / FCP_RSP | FCP (FC-4 layer) | SCSI CDB, data, status | I/O completed |
+
 ## Name Server and Fabric Services
 
 When a device logs into the fabric, it registers its WWPN, WWNN, and FC4 type with the name server. Other devices query the name server to discover targets.
