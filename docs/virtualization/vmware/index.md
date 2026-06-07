@@ -242,4 +242,9 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
   <span>Kubernetes workload domains, cluster provisioning, and container platform.</span>
 </a>
 
+<a class="kb-card" href="powercli/">
+  <strong>PowerCLI</strong>
+  <span>VMware PowerShell automation: module reference, scripts, health checks, RBAC, and vSphere API access.</span>
+</a>
+
 </div>

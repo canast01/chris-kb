@@ -13,6 +13,32 @@
 </div>
 
 
+## Quick Access
+
+<div class="kb-grid kb-grid-4">
+
+<a class="kb-card kb-card--accent" href="virtualization/operations/health-checks/">
+  <strong>Daily Health Checks</strong>
+  <span>Pre-change, post-change, capacity, and platform checks.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/operations/runbooks/incident-response/">
+  <strong>Incident Response</strong>
+  <span>First-response triage, escalation, and evidence collection.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/reference/quick-reference/">
+  <strong>Quick Reference</strong>
+  <span>Commands, decision trees, and emergency cheat sheets.</span>
+</a>
+
+<a class="kb-card kb-card--accent" href="virtualization/operations/troubleshooting/">
+  <strong>vSphere Troubleshooting</strong>
+  <span>Host disconnects, datastore issues, certificates, VM performance.</span>
+</a>
+
+</div>
+
 ## Platforms
 
 <div class="kb-grid kb-grid-3">

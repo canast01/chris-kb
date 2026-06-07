@@ -1,0 +1,19 @@
+# PowerCLI — Troubleshooting
+
+<div class="kb-summary">
+Diagnosing and resolving PowerCLI issues: connection failures, module conflicts, API errors, certificate problems, and performance issues with large inventories.
+</div>
+
+<div class="kb-grid kb-grid-2">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Connection failures, certificate errors, module not found, cmdlet parameter errors, and session timeouts.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Debug mode, API call tracing, performance profiling, and log collection for escalation.</span>
+</a>
+
+</div>

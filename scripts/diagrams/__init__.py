@@ -21,5 +21,6 @@ from . import virtualization_ops
 from . import openshift
 from . import evs
 from . import ceph
+from . import powercli
 
 from ._core import DIAGRAMS
