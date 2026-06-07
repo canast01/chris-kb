@@ -60,4 +60,14 @@ Networking knowledge base covering switching, routing, security, and network ser
   <span>Connectivity testing, packet loss, path tracing, and reachability validation.</span>
 </a>
 
+<a class="kb-card" href="external-connectivity/">
+  <strong>External Connectivity</strong>
+  <span>Internet egress, WAN/MPLS, cloud direct connections, and partner API connectivity paths.</span>
+</a>
+
+<a class="kb-card" href="network-design/">
+  <strong>Network Design</strong>
+  <span>Enterprise network design — topology, redundancy, trust zones, and observability references.</span>
+</a>
+
 </div>

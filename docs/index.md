@@ -12,33 +12,6 @@
   </div>
 </div>
 
-
-## Quick Access
-
-<div class="kb-grid kb-grid-4">
-
-<a class="kb-card kb-card--accent" href="virtualization/operations/health-checks/">
-  <strong>Daily Health Checks</strong>
-  <span>Pre-change, post-change, capacity, and platform checks.</span>
-</a>
-
-<a class="kb-card kb-card--accent" href="virtualization/operations/runbooks/incident-response/">
-  <strong>Incident Response</strong>
-  <span>First-response triage, escalation, and evidence collection.</span>
-</a>
-
-<a class="kb-card kb-card--accent" href="virtualization/reference/quick-reference/">
-  <strong>Quick Reference</strong>
-  <span>Commands, decision trees, and emergency cheat sheets.</span>
-</a>
-
-<a class="kb-card kb-card--accent" href="virtualization/operations/troubleshooting/">
-  <strong>vSphere Troubleshooting</strong>
-  <span>Host disconnects, datastore issues, certificates, VM performance.</span>
-</a>
-
-</div>
-
 ## Platforms
 
 <div class="kb-grid kb-grid-3">
@@ -96,6 +69,11 @@
 <a class="kb-card" href="automation/">
   <strong>Automation</strong>
   <span>PowerShell, Python, Ansible, Terraform, GitHub Actions, and Git.</span>
+</a>
+
+<a class="kb-card" href="monitoring-standards/">
+  <strong>Monitoring Standards</strong>
+  <span>Alert design, dashboard standards, SLOs, capacity forecasting, log retention, and reliability engineering.</span>
 </a>
 
 </div>
