@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SRDF/S Operations](../index.md) reference. All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array.
+Part of the [SRDF/S Operations](../index.md) reference. All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array.
 </div>
 
 > Part of the [SRDF/S Operations](../index.md) reference.

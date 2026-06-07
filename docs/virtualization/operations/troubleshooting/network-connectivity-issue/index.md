@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Troubleshooting](../index.md) hub.
+Part of the [Troubleshooting](../index.md) hub.
 </div>
 ```text
 ┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐

@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Architecture](../index.md) reference.
+Part of the [Architecture](../index.md) reference.
 </div>
 
 ---

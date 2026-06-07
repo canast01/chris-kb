@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SRDF/S Operations](../index.md) reference. Regular health checks on SRDF/S replication confirm that all device pairs are synchronized, RDF directors and links are operational, and no track backlogs exist.
+Part of the [SRDF/S Operations](../index.md) reference. Regular health checks on SRDF/S replication confirm that all device pairs are synchronized, RDF directors and links are operational, and no track backlogs exist.
 </div>
 
 > Part of the [SRDF/S Operations](../index.md) reference.

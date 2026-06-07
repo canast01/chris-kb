@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Secure Connect Gateway](../index.md) reference.
+Part of the [Secure Connect Gateway](../index.md) reference.
 </div>
 ```text
 ┌──────────────────────────────────────── Dell SCG — Operations ────────────────────────────────────────┐

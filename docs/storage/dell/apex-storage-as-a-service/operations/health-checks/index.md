@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [APEX Storage as a Service](../../index.md) reference.
+Part of the [APEX Storage as a Service](../../index.md) reference.
 </div>
 ```text
 ┌─────────────────────────────────── Dell Apex STaaS — Health Checks ───────────────────────────────────┐

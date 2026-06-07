@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SnapMirror Architecture](../index.md) reference.
+Part of the [SnapMirror Architecture](../index.md) reference.
 </div>
 ```text
 ┌────────────────────────────────── NetApp SnapMirror — Integrations ───────────────────────────────────┐

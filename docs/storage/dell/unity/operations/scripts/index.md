@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Dell Unity](../../index.md) reference.
+Part of the [Dell Unity](../../index.md) reference.
 </div>
 ```text
 ┌─────────────────────────────── Dell Unity XT — Scripts and Automation ────────────────────────────────┐

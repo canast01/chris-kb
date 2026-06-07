@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SRDF/S Architecture](../index.md) reference.
+Part of the [SRDF/S Architecture](../index.md) reference.
 </div>
 
 ---

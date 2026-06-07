@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [FlashBlade Security](../index.md) reference.
+Part of the [FlashBlade Security](../index.md) reference.
 </div>
 ```text
 ┌────────────────────────────────── Pure FlashBlade — Access Control ───────────────────────────────────┐

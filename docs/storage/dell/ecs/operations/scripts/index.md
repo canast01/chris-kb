@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Dell ECS](../../index.md) reference.
+Part of the [Dell ECS](../../index.md) reference.
 </div>
 ```text
 ┌────────────────────────────────── Dell ECS — Scripts and Automation ──────────────────────────────────┐

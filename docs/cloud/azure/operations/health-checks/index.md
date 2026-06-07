@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Service health, VM status, load balancer health, and monitor alert review. See also: [Operations](../index.md) for the full daily checklist and incident triage procedures.
+Service health, VM status, load balancer health, and monitor alert review. See also: [Operations](../index.md) for the full daily checklist and incident triage procedures.
 </div>
 
 ## Run This Routine

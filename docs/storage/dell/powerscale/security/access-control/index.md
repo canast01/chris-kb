@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Roles, permissions, and least privilege access for Dell PowerScale.
+Roles, permissions, and least privilege access for Dell PowerScale.
 </div>
 ```text
 ┌────────────────────────────────── Dell PowerScale — Access Control ───────────────────────────────────┐

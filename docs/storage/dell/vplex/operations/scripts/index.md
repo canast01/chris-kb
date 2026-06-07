@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Dell VPLEX](../../index.md) reference.
+Part of the [Dell VPLEX](../../index.md) reference.
 </div>
 ```text
 ┌───────────────────────────────── Dell VPLEX — Scripts and Automation ─────────────────────────────────┐

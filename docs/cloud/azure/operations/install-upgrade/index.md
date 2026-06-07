@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> VM image management, patching via Azure Update Manager, and service upgrades.
+VM image management, patching via Azure Update Manager, and service upgrades.
 </div>
 ```text
 ┌──────────────────────────── Cloud Azure Operations — Install and Upgrade ─────────────────────────────┐

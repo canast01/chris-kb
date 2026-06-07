@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Dell Flex on Demand](../index.md) reference.
+Part of the [Dell Flex on Demand](../index.md) reference.
 </div>
 ```text
 ┌────────────────────────────────── Dell FoD — Scripts and Automation ──────────────────────────────────┐

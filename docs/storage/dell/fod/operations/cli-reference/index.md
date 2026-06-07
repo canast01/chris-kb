@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [FOD](../index.md) reference.
+Part of the [FOD](../index.md) reference.
 </div>
 ```text
 ┌────────────────────────────────────── Dell FoD — CLI Reference ───────────────────────────────────────┐

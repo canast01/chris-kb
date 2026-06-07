@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [VxRail](../index.md) reference.
+Part of the [VxRail](../index.md) reference.
 </div>
 
 VxRail Design Requirements — Key Standards

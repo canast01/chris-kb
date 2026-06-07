@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SRDF/A](../../index.md) reference. Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support.
+Part of the [SRDF/A](../../index.md) reference. Common SRDF/A issues: link failures, increasing cycle times, suspended consistency groups, and volume capacity mismatches. Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support.
 </div>
 
 > Part of the [SRDF/A](../../index.md) reference.

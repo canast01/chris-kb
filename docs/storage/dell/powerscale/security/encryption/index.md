@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> TLS certificate management and data encryption for Dell PowerScale.
+TLS certificate management and data encryption for Dell PowerScale.
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerScale — Encryption ─────────────────────────────────────┐

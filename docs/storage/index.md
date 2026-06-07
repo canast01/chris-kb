@@ -1,7 +1,7 @@
 # Storage
 
 <div class="kb-summary">
-Block, file, and object storage platforms used across enterprise infrastructure — Dell PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, and ECS; Pure Storage FlashArray and FlashBlade; and NetApp ONTAP. Coverage includes architecture, configuration, performance tuning, multipathing, and troubleshooting.
+Block, file, and object storage platforms used across enterprise infrastructure — Dell PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, and ECS; Pure Storage FlashArray and FlashBlade; NetApp ONTAP; and Ceph distributed storage. Coverage includes architecture, configuration, performance tuning, multipathing, and troubleshooting.
 </div>
 
 ```text
@@ -91,5 +91,10 @@ Block, file, and object storage platforms used across enterprise infrastructure 
 <a class="kb-card" href="netapp/">
   <strong>NetApp Storage</strong>
   <span>ONTAP, SnapMirror, SnapCenter, and Keystone.</span>
+</a>
+
+<a class="kb-card" href="ceph/">
+  <strong>Ceph</strong>
+  <span>Open-source distributed storage — RBD block, CephFS file, and RGW object via RADOS.</span>
 </a>
 </div>

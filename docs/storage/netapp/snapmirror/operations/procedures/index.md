@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SnapMirror Operations](../index.md) reference.
+Part of the [SnapMirror Operations](../index.md) reference.
 </div>
 ```text
 ┌───────────────────────────── NetApp SnapMirror — Operational Procedures ──────────────────────────────┐

@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Day-to-day operational tasks across compute, storage, and networking.
+Day-to-day operational tasks across compute, storage, and networking.
 </div>
 ```text
 ┌─────────────────────────── Cloud Azure Operations — Operational Procedures ───────────────────────────┐

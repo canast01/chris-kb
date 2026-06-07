@@ -5,7 +5,7 @@ title: AWS
 # AWS
 
 <div class="kb-summary">
-Amazon Web Services knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management. Includes architecture references, operational procedures, CLI commands, and troubleshooting guides.
+Amazon Web Services knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management — plus Amazon EVS (Elastic VMware Service) for running VCF workloads on bare-metal EC2. Includes architecture references, operational procedures, CLI commands, and troubleshooting guides.
 </div>
 
 ```text
@@ -102,6 +102,11 @@ Amazon Web Services knowledge base covering compute, storage, networking, identi
 <a class="kb-card" href="troubleshooting/">
   <strong>Troubleshooting</strong>
   <span>Common issues, diagnostics, and escalation.</span>
+</a>
+
+<a class="kb-card" href="evs/">
+  <strong>Amazon EVS</strong>
+  <span>Elastic VMware Service — VCF on bare-metal EC2, NSX-T overlay, HCX migration, and Direct Connect integration.</span>
 </a>
 
 </div>

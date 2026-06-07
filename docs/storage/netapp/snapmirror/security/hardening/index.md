@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SnapMirror Security](../index.md) reference.
+Part of the [SnapMirror Security](../index.md) reference.
 </div>
 ```text
 ┌─────────────────────────────── NetApp SnapMirror — Security Hardening ────────────────────────────────┐

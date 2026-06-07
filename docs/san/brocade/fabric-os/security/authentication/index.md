@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Security](../index.md) reference.
+Part of the [Security](../index.md) reference.
 </div>
 
 ---

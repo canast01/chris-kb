@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SRDF/S Troubleshooting](../index.md) reference. SRDF/S issues typically manifest as pair state transitions away from `Synchronized`, elevated host write latency, or unexpected failover splits.
+Part of the [SRDF/S Troubleshooting](../index.md) reference. SRDF/S issues typically manifest as pair state transitions away from `Synchronized`, elevated host write latency, or unexpected failover splits.
 </div>
 
 > Part of the [SRDF/S Troubleshooting](../index.md) reference.

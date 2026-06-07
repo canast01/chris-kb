@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Evergreen//One](../index.md) reference.
+Part of the [Evergreen//One](../index.md) reference.
 </div>
 
 ---

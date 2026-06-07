@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [SnapCenter Security](../index.md) reference.
+Part of the [SnapCenter Security](../index.md) reference.
 </div>
 ```text
 ┌───────────────────────────────── NetApp SnapCenter — Authentication ──────────────────────────────────┐

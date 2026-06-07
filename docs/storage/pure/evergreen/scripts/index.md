@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Pure Storage Evergreen](../index.md) reference.
+Part of the [Pure Storage Evergreen](../index.md) reference.
 </div>
 ```text
 ┌─────────────────────────── Storage Pure Evergreen — Scripts and Automation ───────────────────────────┐

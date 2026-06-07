@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Part of the [Inventory](../index.md) reference.
+Part of the [Inventory](../index.md) reference.
 </div>
 
 ---

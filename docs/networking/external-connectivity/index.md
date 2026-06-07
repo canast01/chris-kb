@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-> Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connections, and partner API connectivity.
+Covers infrastructure paths for internet egress, WAN/MPLS, cloud direct connections, and partner API connectivity.
 </div>
 
 ---
