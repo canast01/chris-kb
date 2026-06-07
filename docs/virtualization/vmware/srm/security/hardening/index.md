@@ -247,3 +247,14 @@ foreach ($pg in $pgs) {
 }
 # Cross-reference with current VM inventory — remove protection for decommissioned VMs
 ```
+
+## Audit Logging
+
+SRM logs all recovery plan events. Ensure logs are forwarded to SIEM:
+
+- SRM logs location: `C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\`
+- Forward using a log collector agent (Filebeat, Splunk UF) on the SRM server
+- SIEM alert rules:
+  - Recovery plan started outside business hours or without change ticket
+  - Recovery plan started on production (non-test) mode
+  - Failed recovery plan steps (suggests misconfiguration before actual DR event)

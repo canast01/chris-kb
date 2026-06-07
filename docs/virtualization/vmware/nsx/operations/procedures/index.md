@@ -702,3 +702,272 @@ Connectivity test from a workload VM:
 curl -v https://<dest-vm-ip>/
 # Or: telnet <dest-vm-ip> 443
 ```
+
+## Configure a Load Balancer
+
+NSX-T load balancer supports L4 (TCP/UDP) and L7 (HTTP/HTTPS) with virtual servers, server pools, and health monitors.
+
+```bash
+# 1. Create a server pool
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/loadbalancer/pools" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "web-pool",
+    "algorithm": "ROUND_ROBIN",
+    "members": [
+      {"ip_address": "<member-1-ip>", "port": "443", "weight": 1},
+      {"ip_address": "<member-2-ip>", "port": "443", "weight": 1}
+    ],
+    "active_monitor_ids": []
+  }'
+
+# 2. Create a virtual server
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/loadbalancer/virtual-servers" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "web-vs",
+    "ip_address": "<vip-ip>",
+    "port": "443",
+    "pool_id": "<pool-id>",
+    "application_profile_id": "<https-profile-id>",
+    "enabled": true
+  }'
+
+# 3. Attach LB service to a T1 gateway
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/loadbalancer/services" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "web-lb-service",
+    "attachment": {"target_id": "<t1-gateway-id>", "target_type": "LogicalRouter"},
+    "size": "SMALL",
+    "virtual_server_ids": ["<virtual-server-id>"]
+  }'
+
+# 4. Verify LB service status
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/loadbalancer/services/<lb-service-id>/status"
+# operational_status should be UP
+```
+
+Health monitor for HTTPS:
+
+```bash
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/loadbalancer/monitors" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "https-monitor",
+    "resource_type": "LbHttpsMonitor",
+    "interval": 5,
+    "timeout": 15,
+    "fall_count": 3,
+    "rise_count": 2,
+    "request_url": "/health",
+    "request_method": "GET",
+    "response_status_codes": [200]
+  }'
+```
+
+## Configure IPsec VPN
+
+Policy-based IPsec VPN between NSX T0 and a remote peer (on-prem firewall or cloud gateway).
+
+```bash
+# 1. Create IKE profile (IKEv2 recommended)
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/vpn/ipsec/ike-profiles" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "ike-profile-aes256",
+    "ike_version": "IKE_V2",
+    "encryption_algorithms": ["AES_256"],
+    "digest_algorithms": ["SHA2_256"],
+    "dh_groups": ["GROUP14"],
+    "sa_life_time": 86400
+  }'
+
+# 2. Create tunnel profile
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/vpn/ipsec/tunnel-profiles" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "tunnel-profile-aes256",
+    "encryption_algorithms": ["AES_256"],
+    "digest_algorithms": ["SHA2_256"],
+    "dh_groups": ["GROUP14"],
+    "sa_life_time": 3600,
+    "enable_perfect_forward_secrecy": true
+  }'
+
+# 3. Create local endpoint (T0 uplink IP)
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/vpn/ipsec/local-endpoints" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "local-endpoint",
+    "local_id": "<t0-uplink-ip>",
+    "local_address": "<t0-uplink-ip>",
+    "logical_router_id": "<t0-router-id>"
+  }'
+
+# 4. Create peer endpoint
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/vpn/ipsec/peer-endpoints" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "remote-peer",
+    "peer_id": "<remote-peer-ip>",
+    "peer_address": "<remote-peer-ip>",
+    "authentication_mode": "PSK",
+    "psk": "<pre-shared-key>",
+    "ike_profile_id": "<ike-profile-id>",
+    "tunnel_profile_id": "<tunnel-profile-id>"
+  }'
+
+# 5. Create IPsec session
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/vpn/ipsec/sessions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "vpn-to-onprem",
+    "resource_type": "PolicyBasedIPSecVpnSession",
+    "local_endpoint_id": "<local-endpoint-id>",
+    "peer_endpoint_id": "<peer-endpoint-id>",
+    "peer_subnets": ["<remote-cidr>"],
+    "local_subnets": ["<local-cidr>"],
+    "enabled": true
+  }'
+
+# 6. Verify tunnel status
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/vpn/ipsec/sessions/<session-id>/status"
+# ike_status.ike_session_state should be UP; tunnel_status.fail_count should be 0
+```
+
+## Add a Transport Zone
+
+Transport zones define the scope of logical switching and routing across NSX transport nodes.
+
+```bash
+# Create an overlay transport zone (for GENEVE-encapsulated segments)
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/transport-zones" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "tz-overlay-prod",
+    "description": "Production overlay transport zone",
+    "transport_type": "OVERLAY",
+    "host_switch_name": "nsxHostSwitch",
+    "is_default": false
+  }'
+
+# Create a VLAN transport zone (for uplinks to physical network)
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/transport-zones" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "display_name": "tz-vlan-uplink",
+    "transport_type": "VLAN",
+    "host_switch_name": "nsxHostSwitch"
+  }'
+
+# List all transport zones
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/transport-zones" | jq '.results[] | {name: .display_name, type: .transport_type, id: .id}'
+
+# Verify transport nodes are in the zone
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/transport-zones/<tz-id>/transport-zone-profiles"
+```
+
+After adding a transport zone, add it to the host switch profile of the transport node profile, then re-apply to affected clusters.
+
+## Put an Edge Node into Maintenance Mode
+
+Required before Edge Node hardware maintenance, upgrade, or redeployment. Drains traffic to peer Edge Nodes first.
+
+```bash
+# 1. Identify Edge Node IDs
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | \
+  jq '.results[] | {name: .display_name, id: .id}'
+
+# 2. Check Edge cluster membership and current active/standby state
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/edge-clusters" | \
+  jq '.results[] | {cluster: .display_name, members: [.members[].transport_node_id]}'
+
+# 3. Confirm peer Edge Node is healthy before draining
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/transport-nodes/<peer-edge-id>/status" | \
+  jq '.node_status'
+# Must be UP before proceeding
+
+# 4. Enter maintenance mode
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/transport-nodes/<edge-node-id>?action=enter_maintenance_mode"
+
+# 5. Monitor drain progress
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/transport-nodes/<edge-node-id>" | \
+  jq '.maintenance_mode'
+# Wait for: "ENTERING_MAINTENANCE_MODE" → "MAINTENANCE_MODE"
+
+# 6. Verify all gateways have failed over to peer
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/logical-routers" | \
+  jq '.results[] | select(.edge_cluster_member_indices != null) | {router: .display_name}'
+
+# Exit maintenance mode after work is complete
+curl -sk -u 'admin:password' -X POST \
+  "https://<nsx-manager>/api/v1/transport-nodes/<edge-node-id>?action=exit_maintenance_mode"
+```
+
+## NSX Manager Cluster Health and Pre-Upgrade Validation
+
+Run before any NSX upgrade or major change to confirm the cluster is in a clean state.
+
+```bash
+# 1. Cluster control plane status (all 3 managers must be STABLE)
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/cluster/status" | \
+  jq '{control_plane: .control_cluster_status.status, mgmt_cluster: .mgmt_cluster_status.status}'
+
+# 2. Individual node health
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/cluster/nodes" | \
+  jq '.results[] | {name: .display_name, role: .role, status: .manager_role.mgmt_plane_listen_addr}'
+
+# 3. All transport nodes connected and in-sync
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/transport-nodes/status" | \
+  jq '[.results[] | select(.status != "UP")] | length'
+# Must be 0 — no transport nodes degraded
+
+# 4. No critical alarms open
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/alarms?status=OPEN&severity=CRITICAL" | \
+  jq '.result_count'
+# Must be 0
+
+# 5. Backup exists and is recent
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/cluster/backups/history" | \
+  jq '.backup_list[0] | {timestamp: .end_time, status: .success}'
+
+# 6. Check upgrade coordinator pre-check (NSX 3.x+)
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/upgrade/pre-upgrade-checks" | \
+  jq '.checks[] | select(.status != "SUCCESS") | {check: .type, status: .status, detail: .issues}'
+# All checks must pass before proceeding with upgrade
+
+# 7. Verify NSX-T version across all components
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/node" | jq '.node_version'
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | \
+  jq '.results[] | {name: .display_name, version: .node_version}'
+```

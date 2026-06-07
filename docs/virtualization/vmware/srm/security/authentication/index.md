@@ -219,3 +219,18 @@ Recovery procedure: restore vCenter first, then SRM reconnects automatically. Th
 
 - [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
 - [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements
+
+## Certificate Management
+
+Replace default self-signed certificates in production deployments:
+
+1. Generate CSR on SRM server
+2. Sign with internal CA (or public CA for partner-site connections)
+3. Install certificate: SRM → vCenter → Site Recovery → Certificates → Replace
+
+Certificates used by SRM:
+- SRM ↔ vCenter: VMCA-issued or custom
+- SRM ↔ SRM (inter-site): Must be mutually trusted (both sites' CAs in trust stores)
+- SRM ↔ SRA: Inherits SRM trust store
+
+Track expiry dates in certificate inventory; SRM stops functioning if certificates expire.
