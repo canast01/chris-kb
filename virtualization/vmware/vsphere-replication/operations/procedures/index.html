@@ -4718,6 +4718,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#note-if-vms-have-significantly-different-storage-sizes-consider-staggering-their-initial-syncs-by-configuring-them-in-smaller-groups-to-avoid-saturating-the-replication-network-or-target-datastore-throughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note: If VMs have significantly different storage sizes, consider staggering their initial syncs by configuring them in smaller groups to avoid saturating the replication network or target datastore throughput.
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-rpo-for-an-existing-replication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5114,20 +5125,6 @@
 <li>Review the summary and click <strong>Finish</strong>.</li>
 <li>Monitor the initial sync under <strong>vCenter → Site Recovery → Replications</strong>. Status moves: <code>Syncing (initial)</code> → <code>OK</code>.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vCenter → [VM] → right-click → vSphere Replication → Configure
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Step 1: Target site      → amsterdam (recovery site)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Step 2: Target location  → vcenter-amsterdam.example.local
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                             Datastore: target-datastore-01
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Step 3: Settings         → RPO: 1 Hour
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                             Recovery point instances: 3
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>                             Quiesce: Yes
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                             Network compression: Yes
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                             Encryption: Yes
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Step 4: Seeds            → Use existing data at target (if applicable)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  → Finish
-</code></pre></div>
 <hr />
 <h2 id="configure-vsphere-replication-for-multiple-vms-bulk">Configure vSphere Replication for Multiple VMs (Bulk)<a class="headerlink" href="#configure-vsphere-replication-for-multiple-vms-bulk" title="Permanent link">&para;</a></h2>
 <p>Onboard a group of VMs at once when protecting an entire application tier or migrating a large workload set into DR coverage. Bulk configuration avoids navigating each VM individually.</p>
@@ -5143,19 +5140,7 @@
 <li>Click <strong>Finish</strong>. vSphere Replication queues an initial sync job for each VM.</li>
 <li>Monitor progress in <strong>Replications</strong> — each VM shows its sync percentage and estimated time to first <code>OK</code> status.</li>
 </ol>
-<p><strong>Note:</strong> If VMs have significantly different storage sizes, consider staggering their initial syncs by configuring them in smaller groups to avoid saturating the replication network or target datastore throughput.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Site Recovery → Replications → New
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Select VMs: [vm-app01, vm-app02, vm-db01]
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Target site:      amsterdam
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Target datastore: target-datastore-01
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  RPO:              1 Hour
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Instances:        3
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Quiesce:          Yes
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  → Finish (VR queues initial sync for each VM)
-</code></pre></div>
-<hr />
+<h2 id="note-if-vms-have-significantly-different-storage-sizes-consider-staggering-their-initial-syncs-by-configuring-them-in-smaller-groups-to-avoid-saturating-the-replication-network-or-target-datastore-throughput"><strong>Note:</strong> If VMs have significantly different storage sizes, consider staggering their initial syncs by configuring them in smaller groups to avoid saturating the replication network or target datastore throughput.<a class="headerlink" href="#note-if-vms-have-significantly-different-storage-sizes-consider-staggering-their-initial-syncs-by-configuring-them-in-smaller-groups-to-avoid-saturating-the-replication-network-or-target-datastore-throughput" title="Permanent link">&para;</a></h2>
 <h2 id="change-rpo-for-an-existing-replication">Change RPO for an Existing Replication<a class="headerlink" href="#change-rpo-for-an-existing-replication" title="Permanent link">&para;</a></h2>
 <p>Adjust the recovery point objective for a VM whose protection tier has changed — for example, a database that has been promoted from standard to critical, or a dev VM being wound down to a less frequent schedule.</p>
 <p><strong>Steps:</strong></p>
@@ -5166,13 +5151,9 @@
 <li>Minimum: 5 minutes (requires sufficient bandwidth and VRS capacity).</li>
 <li>Maximum: 24 hours.</li>
 <li>Click <strong>OK</strong>. The new RPO takes effect immediately for the next scheduled sync cycle.</li>
-<li>Verify the change: the <strong>RPO</strong> column in the Replications view updates within a few seconds.</li>
+<li>Verify the change: the <strong>RPO</strong> column in the Replications view updates within a few seconds.
+<strong>RPO violation:</strong> If the replication cannot meet the configured RPO (due to network congestion, large change rate, or VRS overload), vCenter raises an alert. Address by reducing change rate, increasing bandwidth, or raising the RPO to a achievable value.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Edit
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Replication settings → RPO: 15 minutes   ← change to new value
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  → OK → effective immediately
-</code></pre></div>
-<p><strong>RPO violation:</strong> If the replication cannot meet the configured RPO (due to network congestion, large change rate, or VRS overload), vCenter raises an alert. Address by reducing change rate, increasing bandwidth, or raising the RPO to a achievable value.</p>
 <hr />
 <h2 id="pause-and-resume-replication">Pause and Resume Replication<a class="headerlink" href="#pause-and-resume-replication" title="Permanent link">&para;</a></h2>
 <p>Temporarily suspends replication traffic for a VM without removing the replication configuration. Use during storage maintenance windows, network cut-overs, or when the target site is briefly unavailable.</p>
@@ -5186,15 +5167,9 @@
 <ol>
 <li>Navigate to <strong>vCenter → Site Recovery → Replications</strong>.</li>
 <li>Right-click the paused VM and select <strong>Resume</strong>.</li>
-<li>vSphere Replication performs a delta sync from the last successful sync point — only changed blocks since the pause are transferred. Full resync is not required.</li>
+<li>vSphere Replication performs a delta sync from the last successful sync point — only changed blocks since the pause are transferred. Full resync is not required.
+<strong>RPO impact:</strong> While paused, the VM accumulates RPO debt. If paused longer than the configured RPO window, an RPO violation alert fires. This is expected — clear the alert after resuming once the replication catches up.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Pause
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Status: Paused
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Resume
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  # VM resumes from last sync point — only delta changes replicated after resume
-</code></pre></div>
-<p><strong>RPO impact:</strong> While paused, the VM accumulates RPO debt. If paused longer than the configured RPO window, an RPO violation alert fires. This is expected — clear the alert after resuming once the replication catches up.</p>
 <hr />
 <h2 id="recover-or-remove-a-stuck-replication">Recover or Remove a Stuck Replication<a class="headerlink" href="#recover-or-remove-a-stuck-replication" title="Permanent link">&para;</a></h2>
 <p>A replication task can become stuck in states like <code>Syncing</code> indefinitely, <code>Error</code>, or <code>Not Active</code>. This typically happens after a VRS restart, network interruption, or vCenter database inconsistency.</p>
@@ -5214,12 +5189,12 @@
 <li><strong>Edit and re-save:</strong> Right-click → <strong>Edit</strong>, make no changes, click <strong>OK</strong>. Triggers re-registration of the replication task.</li>
 <li><strong>Remove and reconfigure:</strong> As a last resort, remove the replication (keeping replica files), then reconfigure using the existing replica as a seed. This avoids a full initial sync.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify network connectivity from source VRS to target VRS on port 31031</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>target-vrs.example.local<span class="w"> </span><span class="m">31031</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check VRA logs via VAMI (port 5480) on the VRS appliance:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Diagnostics → Log Bundle → Download</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Look for hbr_server.log entries matching the stuck VM&#39;s moref ID</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify network connectivity from source VRS to target VRS on port 31031</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>target-vrs.example.local<span class="w"> </span><span class="m">31031</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check VRA logs via VAMI (port 5480) on the VRS appliance:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Diagnostics → Log Bundle → Download</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Look for hbr_server.log entries matching the stuck VM&#39;s moref ID</span>
 </code></pre></div>
 <hr />
 <h2 id="move-a-replication-to-a-different-target-datastore">Move a Replication to a Different Target Datastore<a class="headerlink" href="#move-a-replication-to-a-different-target-datastore" title="Permanent link">&para;</a></h2>
@@ -5230,14 +5205,9 @@
 <li>Right-click the VM and select <strong>Edit</strong>.</li>
 <li>On the <strong>Target location</strong> screen, select the new target datastore.</li>
 <li>Click <strong>OK</strong>. vSphere Replication migrates the replica VMDK files to the new datastore during the next sync cycle (non-disruptively — replication continues while the move occurs).</li>
-<li>After the move completes, the <strong>Target location</strong> column in the Replications view reflects the new datastore.</li>
+<li>After the move completes, the <strong>Target location</strong> column in the Replications view reflects the new datastore.
+<strong>Note:</strong> The datastore move is online. The VM at the source site continues running, and replication continues during the migration. No RPO impact beyond the normal sync cycle.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Edit
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Target Location → Datastore: target-datastore-02   ← new datastore
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  → OK
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  # Replica files migrate during next sync; replication remains active
-</code></pre></div>
-<p><strong>Note:</strong> The datastore move is online. The VM at the source site continues running, and replication continues during the migration. No RPO impact beyond the normal sync cycle.</p>
 <hr />
 <h2 id="remove-replication-from-a-vm">Remove Replication from a VM<a class="headerlink" href="#remove-replication-from-a-vm" title="Permanent link">&para;</a></h2>
 <p>Permanently removes the replication configuration for a VM. Use when decommissioning a workload, removing a VM from the DR scope, or cleaning up after a migration.</p>
@@ -5249,14 +5219,9 @@
 <li><strong>Remove replica files:</strong> Deletes <code>.vrepl</code> and <code>.hbr</code> files from the target datastore. Use when you no longer need the replica.</li>
 <li><strong>Keep replica files:</strong> Retains the replica on the target datastore. Use if you plan to re-enable replication using these files as a seed, or if the files will serve as an ad-hoc backup copy.</li>
 <li>Click <strong>OK</strong>.</li>
-<li>Verify: the VM no longer appears in the <strong>Replications</strong> list.</li>
+<li>Verify: the VM no longer appears in the <strong>Replications</strong> list.
+<strong>Caution:</strong> Removing replication does not affect the source VM — it continues running normally. The replica at the target is a dependent copy; deleting it removes DR coverage immediately.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter → Site Recovery → Replications → [VM] → right-click → Remove Replication
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Remove replica files: Yes   ← clean up .vrepl/.hbr files from target (recommended)
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  OR:                    No   ← keep files for use as seed on re-configuration
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  → OK
-</code></pre></div>
-<p><strong>Caution:</strong> Removing replication does not affect the source VM — it continues running normally. The replica at the target is a dependent copy; deleting it removes DR coverage immediately.</p>
 <hr />
 <h2 id="test-a-replication-non-disruptive">Test a Replication (Non-Disruptive)<a class="headerlink" href="#test-a-replication-non-disruptive" title="Permanent link">&para;</a></h2>
 <p>Validates that the replica is bootable and application-consistent without affecting the source VM or ongoing replication. Required for DR testing and compliance audits.</p>
@@ -5274,14 +5239,6 @@
 <li>Validate the VM: log in, check application services, verify data integrity.</li>
 <li>Record results for DR test documentation.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Target vCenter → Site Recovery → Replications → [VM] → Recover
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Recovery type:   Test (non-destructive)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Recovery point:  Latest (or select specific instance)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Target host:     esxi-dr-01.amsterdam.example.local
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  Resource pool:   DR-Test-Pool
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  Network:         DR-Isolated-Test-Network (no uplink)
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  → Finish
-</code></pre></div>
 <hr />
 <h2 id="clean-up-after-a-replication-test">Clean Up After a Replication Test<a class="headerlink" href="#clean-up-after-a-replication-test" title="Permanent link">&para;</a></h2>
 <p>After a replication test is validated, the test VM must be removed. Leaving test VMs running causes resource contention and confuses monitoring.</p>
@@ -5292,13 +5249,9 @@
 <li>Right-click and select <strong>Clean Up</strong> (or <strong>Remove Test Recovery</strong>).</li>
 <li>Confirm. vSphere Replication powers off and deletes the test VM and any associated test snapshots.</li>
 <li>The original replication resumes its normal sync cycle — replication was never interrupted.</li>
-<li>Verify: the replication status returns to <code>OK</code> and the test VM is gone from the target inventory.</li>
+<li>Verify: the replication status returns to <code>OK</code> and the test VM is gone from the target inventory.
+<strong>Note:</strong> Always clean up test VMs promptly. Running test VMs consume datastore space (they are full snapshots of the replica), CPU, and memory at the recovery site.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Target vCenter → Site Recovery → Replications → [VM] (Testing) → right-click → Clean Up
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  Confirm: Yes
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  # Test VM powered off and deleted; replication resumes normal cycle
-</code></pre></div>
-<p><strong>Note:</strong> Always clean up test VMs promptly. Running test VMs consume datastore space (they are full snapshots of the replica), CPU, and memory at the recovery site.</p>
 <hr />
 <h2 id="register-vr-with-srm">Register VR with SRM<a class="headerlink" href="#register-vr-with-srm" title="Permanent link">&para;</a></h2>
 <p>Connects the vSphere Replication infrastructure to Site Recovery Manager so VR-replicated VMs can be added to SRM protection groups and recovery plans.</p>
@@ -5314,17 +5267,17 @@
 <li>Repeat on the target site's VRA if bidirectional protection is needed.</li>
 <li>Verify in <strong>SRM → Summary</strong>: the VR server should appear as a registered replication provider.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Access VRA VAMI</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>https://vra-source.example.local:5480
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>Configuration<span class="w"> </span>→<span class="w"> </span>Site<span class="w"> </span>Recovery<span class="w"> </span>Manager
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>SRM<span class="w"> </span>Server:<span class="w"> </span>srm-source.example.local
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>Port:<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span>Username:<span class="w"> </span>administrator@vsphere.local
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span>Password:<span class="w"> </span>••••••••
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span>→<span class="w"> </span>Register
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Verify via SRM UI:</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>SRM<span class="w"> </span>→<span class="w"> </span>Summary<span class="w"> </span>→<span class="w"> </span>Replication<span class="w"> </span>→<span class="w"> </span>vSphere<span class="w"> </span>Replication<span class="w"> </span>Servers:<span class="w"> </span><span class="o">[</span>listed<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Access VRA VAMI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>https://vra-source.example.local:5480
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>Configuration<span class="w"> </span>→<span class="w"> </span>Site<span class="w"> </span>Recovery<span class="w"> </span>Manager
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>SRM<span class="w"> </span>Server:<span class="w"> </span>srm-source.example.local
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span>Port:<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>Username:<span class="w"> </span>administrator@vsphere.local
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>Password:<span class="w"> </span>••••••••
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>→<span class="w"> </span>Register
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify via SRM UI:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>SRM<span class="w"> </span>→<span class="w"> </span>Summary<span class="w"> </span>→<span class="w"> </span>Replication<span class="w"> </span>→<span class="w"> </span>vSphere<span class="w"> </span>Replication<span class="w"> </span>Servers:<span class="w"> </span><span class="o">[</span>listed<span class="o">]</span>
 </code></pre></div>
 <hr />
 <h2 id="verify-vr-appliance-registration">Verify VR Appliance Registration<a class="headerlink" href="#verify-vr-appliance-registration" title="Permanent link">&para;</a></h2>
@@ -5338,13 +5291,6 @@
 <li>Check <strong>Configuration → Site Recovery Manager</strong> and confirm the SRM server is registered.</li>
 <li>Run a test replication configuration on a non-critical VM to confirm end-to-end connectivity.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vCenter → Site Recovery → vSphere Replication → Replication Servers
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  VRA: vra-source.example.local   Status: Connected   Version: 8.x.x
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>VRA VAMI (https://vra-source.example.local:5480)
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  Configuration → vCenter Server    → vcenter-source.example.local (Registered)
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Configuration → Site Recovery Mgr → srm-source.example.local    (Registered)
-</code></pre></div>
 <hr />
 <h2 id="check-srm-protection-group-sync-status">Check SRM Protection Group Sync Status<a class="headerlink" href="#check-srm-protection-group-sync-status" title="Permanent link">&para;</a></h2>
 <p>Verifies that VR-backed SRM protection groups reflect the current replication state of all member VMs. Run before DR tests or during monthly DR health reviews.</p>
@@ -5360,12 +5306,6 @@
 <li>For out-of-sync VMs: resolve the underlying VR issue (see "Recover or Remove a Stuck Replication"), then trigger a <strong>Sync</strong> on the protection group to refresh status.</li>
 <li>Review the <strong>Recovery Plans</strong> that reference this protection group and confirm they show <code>Ready</code>.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>SRM → Protection → Protection Groups → [VR-PG-Critical-Apps]
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  vm-app01    Protected     RPO: 15min   Last sync: 8 minutes ago
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  vm-app02    Protected     RPO: 15min   Last sync: 12 minutes ago
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  vm-db01     Not Protected              Error: VR_ERROR_NETWORK
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>  → Click vm-db01 → Details → resolve VR issue → PG Sync
-</code></pre></div>
 <hr />
 <h2 id="check-overall-replication-health">Check Overall Replication Health<a class="headerlink" href="#check-overall-replication-health" title="Permanent link">&para;</a></h2>
 <p>Gets a top-level view of all replications in the environment. Use during daily operational checks or before a DR exercise.</p>
@@ -5380,11 +5320,11 @@
 <li>Check the <strong>VRS health</strong> under <strong>vSphere Replication → Replication Servers</strong>: all appliances should show <code>Connected</code>.</li>
 <li>Export or screenshot the summary for DR health documentation.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Via vSphere API / PowerCLI — list replication status for all VMs</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Connect-VIServer<span class="w"> </span>vcenter-source.example.local
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nv">$vrService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span>-ViewType<span class="w"> </span>ServiceInstance
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Use Hbr API or SRM API for programmatic status — requires SRM PowerCLI module:</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Get-SRMProtectionGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SRMVM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>State,<span class="w"> </span>LastError
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Via vSphere API / PowerCLI — list replication status for all VMs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Connect-VIServer<span class="w"> </span>vcenter-source.example.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$vrService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span>-ViewType<span class="w"> </span>ServiceInstance
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Use Hbr API or SRM API for programmatic status — requires SRM PowerCLI module:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Get-SRMProtectionGroup<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-SRMVM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Name,<span class="w"> </span>State,<span class="w"> </span>LastError
 </code></pre></div>
 <hr />
 <h2 id="check-individual-vm-replication-status">Check Individual VM Replication Status<a class="headerlink" href="#check-individual-vm-replication-status" title="Permanent link">&para;</a></h2>
@@ -5402,15 +5342,6 @@
 <li>Click the <strong>Recovery points</strong> tab to review available restore points and their timestamps.</li>
 <li>For detailed error information, click <strong>Events</strong> or check the VRS VAMI log bundle.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vCenter → Site Recovery → Replications → [vm-db01]
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  Status:            OK
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  Configured RPO:    15 minutes
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  Current RPO:       8 minutes
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  Last sync:         2026-06-04 09:42:11 UTC
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  Replication server: vra-source.example.local
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  Target:            target-datastore-01 @ vcenter-amsterdam.example.local
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  Recovery points:   3 available (latest: 09:42, prev: 09:27, prev: 09:12)
-</code></pre></div>
 <hr />
 <h2 id="interpret-rpo-violation-alerts">Interpret RPO Violation Alerts<a class="headerlink" href="#interpret-rpo-violation-alerts" title="Permanent link">&para;</a></h2>
 <p>An RPO violation means the replication is running but cannot complete a sync cycle within the configured RPO window. The alert does not mean replication has stopped — it means the protection SLA is being missed.</p>
@@ -5461,11 +5392,11 @@
 <li>Check VRS resource usage in the VAMI (<code>https://&lt;vra-ip&gt;:5480 → Monitoring</code>).</li>
 <li>After remediation, monitor the replication through 2–3 consecutive sync cycles to confirm the violation clears.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Estimate required bandwidth for a given VM and RPO</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Formula: (Daily change rate GB × 8 bits) / (RPO seconds) = required Mbps</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Example: 50 GB/day change rate, 1-hour RPO</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;scale=2; (50 * 8 * 1024) / (3600)&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Result: ~113 Mbps minimum sustained bandwidth required</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Estimate required bandwidth for a given VM and RPO</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Formula: (Daily change rate GB × 8 bits) / (RPO seconds) = required Mbps</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Example: 50 GB/day change rate, 1-hour RPO</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;scale=2; (50 * 8 * 1024) / (3600)&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Result: ~113 Mbps minimum sustained bandwidth required</span>
 </code></pre></div>
 <hr />
 <h2 id="failback-a-replicated-vm-after-srm-recovery">Failback a Replicated VM (after SRM recovery)<a class="headerlink" href="#failback-a-replicated-vm-after-srm-recovery" title="Permanent link">&para;</a></h2>
@@ -5486,18 +5417,6 @@
 <li>Remove the reverse replication configuration now that the VM is back at the source.</li>
 <li>Reconfigure forward replication (source → recovery) to restore DR coverage.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Recovery site vCenter → [VM] → vSphere Replication → Configure
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  Target site:      source-site (original site)
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  Target datastore: original-datastore-01
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>  RPO:              15 minutes
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>  → Finish (initial reverse sync begins)
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>After validation window:
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>  Source site vCenter → Site Recovery → Replications → [VM] → Recover
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  Recovery type: Recovery
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  Recovery point: Latest
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>  → Finish → power on at source → validate → remove reverse replication
-</code></pre></div>
 <hr />
 <h2 id="re-protect-a-vm-reverse-replication-direction">Re-protect a VM (reverse replication direction)<a class="headerlink" href="#re-protect-a-vm-reverse-replication-direction" title="Permanent link">&para;</a></h2>
 <p>After a failover (planned or unplanned), re-protection reconfigures replication in the reverse direction so the recovery site becomes the new source and the original site becomes the new target. This restores DR coverage for the failed-over VM without a full failback.</p>
@@ -5512,19 +5431,9 @@
 <li>On the <strong>Seeds</strong> screen: if the original VMDK files still exist at the source site (they may, if the source failure was a vCenter/management-plane failure rather than a storage failure), use them as seeds to avoid a full resync.</li>
 <li>Click <strong>Finish</strong> and monitor the initial sync.</li>
 <li>Once status is <code>OK</code>, update SRM protection groups at the recovery site to include this VM in a protection group targeting the original site.</li>
-<li>Validate by running a replication test (see "Test a Replication").</li>
+<li>Validate by running a replication test (see "Test a Replication").
+<strong>Note:</strong> Re-protection does not move the VM back to the source — it keeps the VM at the recovery site and builds a new replication stream in the reverse direction. This is the correct approach when the source site is operational but you have not yet decided to fail back.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Recovery site vCenter → [failed-over VM] → vSphere Replication → Configure
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>  Target site:      original-source-site
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>  Target datastore: original-datastore-01 (use as seed if files exist)
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  RPO:              15 minutes
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>  Instances:        3
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  → Finish
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>SRM (recovery site) → Protection Groups → [Reverse-PG] → Add VM
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>  → [failed-over VM] → OK
-</code></pre></div>
-<p><strong>Note:</strong> Re-protection does not move the VM back to the source — it keeps the VM at the recovery site and builds a new replication stream in the reverse direction. This is the correct approach when the source site is operational but you have not yet decided to fail back.</p>
 
 
 

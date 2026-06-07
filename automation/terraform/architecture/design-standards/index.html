@@ -3731,7 +3731,7 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 <hr />
 <h2 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h2>
 <h3 id="root-module-single-environment">Root module (single environment)<a class="headerlink" href="#root-module-single-environment" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │   TF standards: consistent module structure, remote state, provider pinning, CI enforcement   │   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │ Directory layout: modules/ (reusable), environments/ (per-env root), shared/ (cross-env data) │   │
@@ -3754,52 +3754,6 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   │   TF standards: consistent module structure, remote state, provider pinning, CI enforcement   │   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │ Directory layout: modules/ (reusable), environments/ (per-env root), shared/ (cross-env data) │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │    CI: terraform fmt -check → validate → tflint → checkov → plan → manual approval → apply    │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │                File Structure                │  │                Quality Rules                │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │              main.tf: resources              │  │           terraform fmt -recursive          │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           variables.tf: all inputs           │  │              terraform validate             │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │           outputs.tf: all exports            │  │            tflint: provider rules           │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │       versions.tf: required_providers        │  │            checkov: security scan           │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │       backend.tf: remote state config        │  │           No hardcoded credentials          │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │   tflint      = Terraform linter; checks for unused vars, deprecated syntax, provider rules   │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │ checkov     = Bridgecrew IaC security scanner; checks for open SGs, unencrypted storage, etc. │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         terraform-docs = auto-generate module README from variables.tf and outputs.tf         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   │   TF standards: consistent module structure, remote state, provider pinning, CI enforcement   │   │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   │ Directory layout: modules/ (reusable), environments/ (per-env root), shared/ (cross-env data) │   │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   │    CI: terraform fmt -check → validate → tflint → checkov → plan → manual approval → apply    │   │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│                                                                                                       │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │                File Structure                │  │                Quality Rules                │   │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │              main.tf: resources              │  │           terraform fmt -recursive          │   │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │           variables.tf: all inputs           │  │              terraform validate             │   │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   │           outputs.tf: all exports            │  │            tflint: provider rules           │   │
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│   │       versions.tf: required_providers        │  │            checkov: security scan           │   │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│   │       backend.tf: remote state config        │  │           No hardcoded credentials          │   │
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                                                                                                       │
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   │   tflint      = Terraform linter; checks for unused vars, deprecated syntax, provider rules   │   │
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │ checkov     = Bridgecrew IaC security scanner; checks for open SGs, unencrypted storage, etc. │   │
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │         terraform-docs = auto-generate module README from variables.tf and outputs.tf         │   │
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <h3 id="module-versioning-policy">Module versioning policy<a class="headerlink" href="#module-versioning-policy" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3824,101 +3778,101 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 </tbody>
 </table>
 <p>Use <code>~&gt;</code> (pessimistic constraint) only when the module author follows semver strictly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.8&quot;</span><span class="c1">    # Allows 5.8.x, not 5.9 or 6.x</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.8.0&quot;</span><span class="c1">  # Allows 5.8.x only — stricter</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;5.8.0&quot;</span><span class="c1">     # Exact — safest for production</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.8&quot;</span><span class="c1">    # Allows 5.8.x, not 5.9 or 6.x</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.8.0&quot;</span><span class="c1">  # Allows 5.8.x only — stricter</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;5.8.0&quot;</span><span class="c1">     # Exact — safest for production</span>
 </code></pre></div>
 <hr />
 <h2 id="variable-and-output-standards">Variable and Output Standards<a class="headerlink" href="#variable-and-output-standards" title="Permanent link">&para;</a></h2>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># variables.tf</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deployment environment (dev, staging, prod)&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;prod&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;environment must be dev, staging, or prod&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">}</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;vpc_cidr_block&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block for the VPC&quot;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">can</span><span class="p">(</span><span class="nf">cidrnetmask</span><span class="p">(</span><span class="nv">var.vpc_cidr_block</span><span class="p">))</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc_cidr_block must be a valid CIDR block&quot;</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="p">}</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;enable_nat_gateway&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Create NAT gateways for private subnets&quot;</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="p">}</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;tags&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Additional tags to apply to all resources&quot;</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="p">}</span>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="c1"># Sensitive variables — never have defaults in code</span>
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Master password for RDS instance&quot;</span>
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># variables.tf</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;environment&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deployment environment (dev, staging, prod)&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">contains</span><span class="p">([</span><span class="s2">&quot;dev&quot;, &quot;staging&quot;, &quot;prod&quot;</span><span class="p">],</span><span class="w"> </span><span class="nv">var.environment</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;environment must be dev, staging, or prod&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">}</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;vpc_cidr_block&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CIDR block for the VPC&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="nb">validation</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="na">condition</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nf">can</span><span class="p">(</span><span class="nf">cidrnetmask</span><span class="p">(</span><span class="nv">var.vpc_cidr_block</span><span class="p">))</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="na">error_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc_cidr_block must be a valid CIDR block&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="p">}</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;enable_nat_gateway&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">bool</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Create NAT gateways for private subnets&quot;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="p">}</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;tags&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Additional tags to apply to all resources&quot;</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">  </span><span class="nb">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="p">}</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># Sensitive variables — never have defaults in code</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Master password for RDS instance&quot;</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># outputs.tf</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the created VPC&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;private_subnet_ids&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;List of IDs of private subnets&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.private</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;db_endpoint&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RDS instance endpoint&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_db_instance.main.endpoint</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">false</span><span class="c1">  # Endpoint is not a secret — make accessible</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">}</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RDS master password (sensitive)&quot;</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.db_password</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Prevents display in plan/apply output</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># outputs.tf</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;vpc_id&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ID of the created VPC&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;private_subnet_ids&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;List of IDs of private subnets&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.private</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;db_endpoint&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RDS instance endpoint&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_db_instance.main.endpoint</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">false</span><span class="c1">  # Endpoint is not a secret — make accessible</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;db_password&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;RDS master password (sensitive)&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="na">value</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.db_password</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span><span class="c1">  # Prevents display in plan/apply output</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="tfvars-management">tfvars Management<a class="headerlink" href="#tfvars-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># terraform.tfvars — default values (committed to Git — no secrets)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">environment</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">aws_region</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">vpc_cidr_block</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.10.0.0/16&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="na">enable_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="na">managed_by</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform&quot;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="na">team</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform&quot;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="na">cost_centre</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-engineering&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># terraform.tfvars — default values (committed to Git — no secrets)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="na">environment</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="na">aws_region</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="na">vpc_cidr_block</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.10.0.0/16&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="na">enable_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="na">managed_by</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="na">team</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform&quot;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="na">cost_centre</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-engineering&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># prod.tfvars — environment-specific overrides</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">environment</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="na">vpc_cidr_block</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="na">enable_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># prod.tfvars — environment-specific overrides</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">environment</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">vpc_cidr_block</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">enable_nat_gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Apply with environment-specific vars</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-var-file<span class="o">=</span><span class="s2">&quot;prod.tfvars&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Sensitive values via environment variables (never in .tfvars files)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_db_password</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>-field<span class="o">=</span>password<span class="w"> </span>secret/rds/prod<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-var-file<span class="o">=</span><span class="s2">&quot;prod.tfvars&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Apply with environment-specific vars</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-var-file<span class="o">=</span><span class="s2">&quot;prod.tfvars&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Sensitive values via environment variables (never in .tfvars files)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_VAR_db_password</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>-field<span class="o">=</span>password<span class="w"> </span>secret/rds/prod<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-var-file<span class="o">=</span><span class="s2">&quot;prod.tfvars&quot;</span>
 </code></pre></div>
 <h3 id="tfvars-file-rules"><code>.tfvars</code> file rules<a class="headerlink" href="#tfvars-file-rules" title="Permanent link">&para;</a></h3>
 <table>
@@ -3953,16 +3907,16 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 </tbody>
 </table>
 <p>Add to <code>.gitignore</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>*.tfvars.json
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>secrets.tfvars
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>override.tf
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>override.tf.json
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>*_override.tf
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>*_override.tf.json
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>.terraform/
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>terraform.tfstate
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>terraform.tfstate.backup
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>.terraform.lock.hcl   # EXCEPTION: DO commit this file
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>*.tfvars.json
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>secrets.tfvars
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>override.tf
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>override.tf.json
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>*_override.tf
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>*_override.tf.json
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>.terraform/
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>terraform.tfstate
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>terraform.tfstate.backup
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>.terraform.lock.hcl   # EXCEPTION: DO commit this file
 </code></pre></div>
 <blockquote>
 <p>The <code>.terraform.lock.hcl</code> file (provider lock file) must be committed to Git. It pins provider versions for reproducible runs.</p>
@@ -3970,32 +3924,32 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 <hr />
 <h2 id="tagging-standards">Tagging Standards<a class="headerlink" href="#tagging-standards" title="Permanent link">&para;</a></h2>
 <p>All resources that support tags must be tagged. Use a <code>locals</code> block for consistency.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># locals.tf</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nb">mandatory_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="na">managed_by</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="na">team</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-engineering&quot;</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="na">cost_centre</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cost_centre</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="na">repo</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;github.com/my-org/platform-infra&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="na">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.mandatory_tags</span><span class="p">,</span><span class="w"> </span><span class="nv">var.tags</span><span class="p">)</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="p">}</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Apply to resources</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr_block</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span><span class="na">tags</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-${var.environment}-euw1&quot;</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="p">}</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># AWS default tags (applies to all resources in the provider)</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
-<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">  </span><span class="nb">default_tags</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">    </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.mandatory_tags</span>
-<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># locals.tf</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">locals</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nb">mandatory_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.environment</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="na">managed_by</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="na">team</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;platform-engineering&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="na">cost_centre</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.cost_centre</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="na">repo</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;github.com/my-org/platform-infra&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="na">common_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.mandatory_tags</span><span class="p">,</span><span class="w"> </span><span class="nv">var.tags</span><span class="p">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">}</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Apply to resources</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="na">cidr_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.vpc_cidr_block</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="na">tags</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="nv">local.common_tags</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpc-${var.environment}-euw1&quot;</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="p">}</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># AWS default tags (applies to all resources in the provider)</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.aws_region</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="nb">default_tags</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span><span class="na">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">local.mandatory_tags</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="required-tags">Required tags<a class="headerlink" href="#required-tags" title="Permanent link">&para;</a></h3>
 <table>
@@ -4037,12 +3991,12 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 <hr />
 <h2 id="state-file-locking">State File Locking<a class="headerlink" href="#state-file-locking" title="Permanent link">&para;</a></h2>
 <p>State locking prevents concurrent operations from corrupting state. It is automatic with supported backends.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># If a lock is stuck (e.g. CI runner crashed mid-apply), force-unlock:</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Get the lock ID from the error message</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>LOCK-ID-HERE
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Verify lock state (S3 backend — check DynamoDB)</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--table-name<span class="w"> </span>terraform-state-lock<span class="w"> </span>--region<span class="w"> </span>eu-west-1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># If a lock is stuck (e.g. CI runner crashed mid-apply), force-unlock:</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Get the lock ID from the error message</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>LOCK-ID-HERE
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Verify lock state (S3 backend — check DynamoDB)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--table-name<span class="w"> </span>terraform-state-lock<span class="w"> </span>--region<span class="w"> </span>eu-west-1
 </code></pre></div>
 <p>Best practices:</p>
 <ul>
@@ -4092,14 +4046,14 @@ Consistent Terraform standards prevent state corruption, make code reviewable, a
 <li>[ ] All outputs have <code>description</code></li>
 <li>[ ] <code>terraform-docs</code> output in module README is up to date</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Run tfsec (security scanner)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>tfsec<span class="w"> </span>.
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Run checkov</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>checkov<span class="w"> </span>-d<span class="w"> </span>.<span class="w"> </span>--framework<span class="w"> </span>terraform
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Generate module documentation</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>terraform-docs<span class="w"> </span>markdown<span class="w"> </span>table<span class="w"> </span>--output-file<span class="w"> </span>README.md<span class="w"> </span>--output-mode<span class="w"> </span>inject<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run tfsec (security scanner)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tfsec<span class="w"> </span>.
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Run checkov</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>checkov<span class="w"> </span>-d<span class="w"> </span>.<span class="w"> </span>--framework<span class="w"> </span>terraform
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Generate module documentation</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>terraform-docs<span class="w"> </span>markdown<span class="w"> </span>table<span class="w"> </span>--output-file<span class="w"> </span>README.md<span class="w"> </span>--output-mode<span class="w"> </span>inject<span class="w"> </span>.
 </code></pre></div>
 
 

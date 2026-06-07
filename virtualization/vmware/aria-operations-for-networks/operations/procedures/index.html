@@ -5533,36 +5533,19 @@
 <ol>
 <li>Navigate to the <strong>Search</strong> bar at the top of the AON UI.</li>
 <li>Type a natural language query:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>show me flows between vm-web-01 and vm-db-01
-</code></pre></div>
-<ol>
 <li>AON resolves VM names to IPs and runs the equivalent structured query.</li>
 <li>Results show flow records with Source, Destination, Port, Protocol, Bytes, and Packets.</li>
 </ol>
-<p><strong>Equivalent structured query:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>flows where source vm.name = &#39;vm-web-01&#39; and destination vm.name = &#39;vm-db-01&#39;
-</code></pre></div>
-<ol>
-<li>Apply a time range filter using the <strong>Time Range</strong> selector (Last 1h, Last 24h, Custom).</li>
-<li>Click any flow row for per-flow detail including first-seen / last-seen timestamps.</li>
-</ol>
+<p><strong>Equivalent structured query:</strong>
+5. Apply a time range filter using the <strong>Time Range</strong> selector (Last 1h, Last 24h, Custom).
+6. Click any flow row for per-flow detail including first-seen / last-seen timestamps.</p>
 <hr />
 <h2 id="find-all-flows-to-a-specific-port-or-service">Find All Flows to a Specific Port or Service<a class="headerlink" href="#find-all-flows-to-a-specific-port-or-service" title="Permanent link">&para;</a></h2>
 <p>Identifies all source IPs communicating to a given destination port — useful for auditing service exposure or confirming segmentation.</p>
 <ol>
 <li>Navigate to the <strong>Search</strong> bar.</li>
 <li>Enter a port-based query:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>flows where destination port = 3306
-</code></pre></div>
-<ol>
 <li>To scope to a specific application:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>flows where destination application = &quot;CRM-App&quot; and destination port = 3306
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>flows where source application = &quot;CRM-App&quot; and destination = internet
-</code></pre></div>
-<ol>
 <li>Review results. Group by <strong>Source IP</strong> or <strong>Source Application</strong> to identify unexpected callers.</li>
 <li>To save the query for recurring use, click <strong>Save Search</strong> → enter a name (e.g., <code>MySQL-All-Sources</code>).</li>
 </ol>
@@ -5658,10 +5641,6 @@
 <li>Navigate to <strong>Settings → Alerts → Add Alert</strong>.</li>
 <li>Enter an <strong>Alert Name</strong> (e.g., <code>Lateral-Movement-SMB</code>).</li>
 <li>In the <strong>Condition</strong> field, enter a flow search query:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>flows where destination port = 445 and source application != destination application
-</code></pre></div>
-<ol>
 <li>Set the <strong>Threshold</strong>: Count &gt; 50 within 5 minutes.</li>
 <li>Set <strong>Severity</strong>: High.</li>
 <li>Set <strong>Notification</strong>: select an existing notification profile (email, webhook, or syslog) or click <strong>Add Notification</strong> to create one.</li>
@@ -5695,20 +5674,20 @@
 <li>Export the report: click <strong>Download PDF</strong> or <strong>Download CSV</strong>.</li>
 </ol>
 <p><strong>Via API:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/compliance/check&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="s1">    &quot;compliance_template&quot;: &quot;PCI_DSS&quot;,</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="s1">    &quot;scope&quot;: {&quot;application_id&quot;: &quot;application-12345&quot;}</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/compliance/check&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s1">    &quot;compliance_template&quot;: &quot;PCI_DSS&quot;,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s1">    &quot;scope&quot;: {&quot;application_id&quot;: &quot;application-12345&quot;}</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p>Expected response includes a <code>job_id</code>. Poll the job until <code>status = completed</code>, then retrieve the report:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nv">JOB_ID</span><span class="o">=</span><span class="s2">&quot;compliance-job-abc123&quot;</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/compliance/check/</span><span class="si">${</span><span class="nv">JOB_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">JOB_ID</span><span class="o">=</span><span class="s2">&quot;compliance-job-abc123&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/compliance/check/</span><span class="si">${</span><span class="nv">JOB_ID</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
 <h2 id="schedule-a-recurring-report">Schedule a Recurring Report<a class="headerlink" href="#schedule-a-recurring-report" title="Permanent link">&para;</a></h2>

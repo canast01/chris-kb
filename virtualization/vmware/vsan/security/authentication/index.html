@@ -4995,7 +4995,7 @@ vSAN does not have its own authentication system. All access to vSAN management 
 
 <hr />
 <h2 id="authentication-stack">Authentication Stack<a class="headerlink" href="#authentication-stack" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── vSAN — Authentication ────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── vSAN — Authentication ────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  vSAN cluster nodes authenticate each other using the ESXi host SSL certificates;                     │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  management authentication uses vCenter SSO.                                                          │
@@ -5041,52 +5041,6 @@ vSAN does not have its own authentication system. All access to vSAN management 
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── vSAN — Authentication ────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vSAN cluster nodes authenticate each other using the ESXi host SSL certificates;                     │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  management authentication uses vCenter SSO.                                                          │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              Cluster Node Auth               │  │               Management Auth               │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            ESXi SSL cert: node ID            │  │           vCenter SSO: all logins           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Cluster UUID: shared secret          │  │           SAML token for API calls          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Host join: vCenter issues UUID        │  │            AD groups: role-mapped           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │       RDT: Reliable Datagram Transport       │  │           MFA: per vCenter policy           │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Cluster node trust uses ESXi certs; management trust uses vCenter SSO tokens.                        │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              KMS Authentication              │  │           Certificate Requirements          │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          KMS: client cert per ESXi           │  │           Host cert: auto-renewed           │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │             KMIP mutual TLS auth             │  │            VMCA: signs host certs           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         KMS cluster: redundant pair          │  │           Custom CA: replace VMCA           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Key retrieval: power-on path         │  │           Expiry: monitor &gt;30 days          │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  KMS server must be reachable from each ESXi host on management network port 5696;                    │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  KMS cluster ensures HA key retrieval for encrypted vSAN.                                             │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Cluster UUID  = unique identifier shared across all vSAN cluster nodes                               │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  RDT           = Reliable Datagram Transport; vSAN inter-host protocol                                │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  KMIP          = Key Management Interoperability Protocol; port 5696                                  │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  KMS           = Key Management Server; holds encryption keys                                         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Mutual TLS    = both client and server present certs; bidirectional auth                             │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  VMCA          = vSphere Certificate Authority; signs host machine certs                              │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Host cert     = SSL cert on each ESXi host; auto-renewed by VMCA                                     │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Custom CA     = replace VMCA with enterprise PKI for compliance                                      │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SAML token    = SSO assertion; used for vCenter API auth                                             │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  KMS cluster   = HA pair of KMS nodes; both must be reachable                                         │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Key retrieval = power-on of encrypted VM triggers KMS request                                        │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  AD groups     = Active Directory groups mapped to vCenter RBAC roles                                 │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <h3 id="multi-factor-authentication">Multi-Factor Authentication<a class="headerlink" href="#multi-factor-authentication" title="Permanent link">&para;</a></h3>
 <p>vCenter SSO supports SAML-based MFA through external identity providers:</p>
 <ul>
@@ -5140,24 +5094,24 @@ vSAN does not have its own authentication system. All access to vSAN management 
 </tbody>
 </table>
 <h3 id="create-a-least-privilege-monitoring-account">Create a Least-Privilege Monitoring Account<a class="headerlink" href="#create-a-least-privilege-monitoring-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Create a read-only role with vSAN performance access</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">$permissions</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s2">&quot;System.Anonymous&quot;</span><span class="p">,</span> <span class="s2">&quot;System.Read&quot;</span><span class="p">,</span> <span class="s2">&quot;System.View&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">&quot;Global.VCServer&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s2">&quot;Performance.ModifyIntervals&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="s2">&quot;VirtualMachine.State.CreateSnapshot&quot;</span>  <span class="c"># required for Veeam-style tools</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$permissions</span><span class="p">)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># Assign the role to the monitoring service account on the cluster</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;EXAMPLE\svc-aria-vcenter&quot;</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">Set-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>                 <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="p">`</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>                 <span class="n">-Role</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>                 <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Create a read-only role with vSAN performance access</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">$permissions</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;System.Anonymous&quot;</span><span class="p">,</span> <span class="s2">&quot;System.Read&quot;</span><span class="p">,</span> <span class="s2">&quot;System.View&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;Global.VCServer&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;Performance.ModifyIntervals&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="s2">&quot;VirtualMachine.State.CreateSnapshot&quot;</span>  <span class="c"># required for Veeam-style tools</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$permissions</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Assign the role to the monitoring service account on the cluster</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;EXAMPLE\svc-aria-vcenter&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">Set-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>                 <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="p">`</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>                 <span class="n">-Role</span> <span class="s2">&quot;vSAN-Monitor-RO&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>                 <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <hr />
 <h2 id="session-and-token-management">Session and Token Management<a class="headerlink" href="#session-and-token-management" title="Permanent link">&para;</a></h2>
@@ -5215,40 +5169,40 @@ vSAN does not have its own authentication system. All access to vSAN management 
 </table>
 <h3 id="api-tokens-and-automation">API Tokens and Automation<a class="headerlink" href="#api-tokens-and-automation" title="Permanent link">&para;</a></h3>
 <p>For automation with PowerCLI or REST API, use session tokens rather than embedding credentials in scripts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Request a session token (avoids passing credentials in each call)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nv">$global:DefaultVIServer</span><span class="p">.</span><span class="n">SessionId</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Use the session token in API calls</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># PowerCLI maintains the session automatically during the script run</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Request a session token (avoids passing credentials in each call)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nv">$global:DefaultVIServer</span><span class="p">.</span><span class="n">SessionId</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Use the session token in API calls</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># PowerCLI maintains the session automatically during the script run</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>For REST API automation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate and get a session token</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:password&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vcenter/api/session&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Use the token in subsequent calls</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="s2">&quot;https://vcenter/api/vcenter/cluster&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Terminate the session when done</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="s2">&quot;https://vcenter/api/session&quot;</span><span class="w"> </span>-k
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate and get a session token</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:password&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vcenter/api/session&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Use the token in subsequent calls</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="s2">&quot;https://vcenter/api/vcenter/cluster&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Terminate the session when done</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="s2">&quot;https://vcenter/api/session&quot;</span><span class="w"> </span>-k
 </code></pre></div>
 <hr />
 <h2 id="esxi-host-authentication">ESXi Host Authentication<a class="headerlink" href="#esxi-host-authentication" title="Permanent link">&para;</a></h2>
 <h3 id="ssh-access">SSH Access<a class="headerlink" href="#ssh-access" title="Permanent link">&para;</a></h3>
 <p>SSH to ESXi hosts is disabled by default and should remain disabled in production. Enable only when required for maintenance, then disable again.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable SSH from ESXi shell (local console)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span><span class="w">  </span><span class="c1"># if host needs to be in MM first</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>vim-cmd<span class="w"> </span>hostsvc/enable_ssh
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>vim-cmd<span class="w"> </span>hostsvc/start_ssh
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Disable SSH after maintenance</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>vim-cmd<span class="w"> </span>hostsvc/stop_ssh
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable SSH from ESXi shell (local console)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span><span class="w">  </span><span class="c1"># if host needs to be in MM first</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vim-cmd<span class="w"> </span>hostsvc/enable_ssh
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>vim-cmd<span class="w"> </span>hostsvc/start_ssh
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Disable SSH after maintenance</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>vim-cmd<span class="w"> </span>hostsvc/stop_ssh
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
 </code></pre></div>
 <p><strong>Or from vCenter UI:</strong>
 Host → Configure → Services → SSH → Start / Stop</p>
@@ -5261,18 +5215,18 @@ Host → Configure → Services → SSH → Start / Stop</p>
 </ul>
 <h3 id="active-directory-for-esxi-host-access">Active Directory for ESXi Host Access<a class="headerlink" href="#active-directory-for-esxi-host-access" title="Permanent link">&para;</a></h3>
 <p>ESXi hosts can be joined to Active Directory, allowing domain users to authenticate to the ESXi shell and DCUI.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Join ESXi host to AD from ESXi shell</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroup<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>-s<span class="w"> </span><span class="s2">&quot;vSphere Admins&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Join host to domain via vCenter</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># vSphere Client → Host → Configure → System → Authentication Services → Join Domain</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Join ESXi host to AD from ESXi shell</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-o<span class="w"> </span>/Config/HostAgent/plugins/hostsvc/esxAdminsGroup<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>-s<span class="w"> </span><span class="s2">&quot;vSphere Admins&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Join host to domain via vCenter</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># vSphere Client → Host → Configure → System → Authentication Services → Join Domain</span>
 </code></pre></div>
 <p>When joined to AD, members of the <code>ESX Admins</code> group (or the configured group) receive Administrator access to the ESXi host.</p>
 <p><strong>Post-join verification:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/opt/likewise/bin/lwsm<span class="w"> </span>status
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># lsass service should be running</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/opt/likewise/bin/lwsm<span class="w"> </span>status
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># lsass service should be running</span>
 </code></pre></div>
 <p><strong>Add AD groups to vCenter permissions after joining:</strong></p>
 <p>vSphere Client → vCenter → Permissions → Add → select identity source → search AD group → assign role</p>
@@ -5281,19 +5235,19 @@ Host → Configure → Services → SSH → Start / Stop</p>
 <h3 id="vsan-and-vmca">vSAN and VMCA<a class="headerlink" href="#vsan-and-vmca" title="Permanent link">&para;</a></h3>
 <p>vCenter's VMware Certificate Authority (VMCA) issues certificates to all ESXi hosts during cluster onboarding. These certificates authenticate host-to-host vSAN communications (CMMDS cluster membership protocol).</p>
 <p>Verify certificate status:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check host certificate</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>certificate<span class="w"> </span>info<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check VMCA certificate chain</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/usr/lib/vmware/vmca/bin/certool<span class="w"> </span>--status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check host certificate</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>certificate<span class="w"> </span>info<span class="w"> </span>list
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check VMCA certificate chain</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>/usr/lib/vmware/vmca/bin/certool<span class="w"> </span>--status
 </code></pre></div>
 <p><strong>Custom CA certificates:</strong> Replace VMCA-issued certificates with certificates from an enterprise CA (Microsoft CA, HashiCorp Vault PKI) if your security policy requires it. vSAN continues to function after certificate replacement — vCenter orchestrates the replacement rolling.</p>
 <p>vSphere Client → vCenter → Administration → Certificate Management → Replace VMCA Root Certificate</p>
 <h3 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h3>
 <p>vSAN management traffic between vCenter and ESXi hosts uses TLS 1.2 minimum. TLS 1.0 and 1.1 are disabled by default from vSphere 7.0 onward.</p>
 <p>Verify TLS settings on VCSA:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On VCSA shell</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On VCSA shell</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT
 </code></pre></div>
 <p>Configure minimum TLS version in vCenter:
 vSphere Client → vCenter → Configure → Advanced Settings → <code>config.tls.minVersion</code> = <code>TLSv1.2</code></p>

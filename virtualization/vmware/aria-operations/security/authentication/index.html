@@ -4940,59 +4940,15 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Aria Operations Authentication ────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Local, AD/LDAP, vIDM SSO, and API token authentication for Aria Operations (vROps).                  │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Local Authentication             │  │           LDAP / AD Authentication          │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          admin@local: set at deploy          │  │            Admin &gt; Access Control           │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │             Break-glass use only             │  │              Add LDAP/AD source             │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Rotate password 90 days            │  │          Import AD groups to roles          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │             Keep creds in vault              │  │          LDAPS (port 636) required          │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Local is break-glass; LDAP/vIDM for all users; API token for automation.                             │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │           vIDM SSO Authentication            │  │                API Token Auth               │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Register vROps in vIDM            │  │        POST /suite-api/api/auth/token       │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           vIDM groups map to roles           │  │             Returns Bearer token            │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           SAML2 redirect on login            │  │         Use in Authorization header         │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │             MFA enforced at vIDM             │  │           Refresh on token expiry           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vROps cluster; AD/LDAP server; vIDM appliance for SSO; PKI for LDAPS certs                           │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  admin@local         = Built-in local admin; set during OVA wizard; break-glass only                  │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  LDAP Source         = Directory server added in vROps Access Control settings                        │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  LDAPS               = LDAP over TLS port 636; required for secure auth in vROps                      │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  AD Group Import     = Pull AD group into vROps to assign a role                                      │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  vIDM Registration   = Add vROps as an app in vIDM for SAML SSO                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  SAML2               = Authentication protocol for SSO between vIDM and vROps                         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  MFA                 = Multi-Factor Auth enforced at vIDM layer; not in vROps itself                  │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Bearer Token        = Temporary API credential; set in Authorization: Bearer header                  │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Token Expiry        = Default 24h; automate refresh in scripts on 401 response                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Break-glass         = Local admin used when AD/vIDM is unreachable                                   │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Password Vault      = Secrets manager storing local admin credential securely                        │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Bind Account        = Service account for LDAP queries; read-only, dedicated                         │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
-<p>Expected result: "Connection successful — X users found."</p>
+Expected result: "Connection successful — X users found."</p>
 <hr />
 <h2 id="ldap-group-import-and-role-assignment">LDAP Group Import and Role Assignment<a class="headerlink" href="#ldap-group-import-and-role-assignment" title="Permanent link">&para;</a></h2>
 <p>After adding the AD source, import groups to assign roles:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Access Control → User Groups → Import Groups from Source
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration → Access Control → User Groups → Import Groups from Source
 </code></pre></div>
 <p>Search for the group name (e.g., <code>GG-VROPS-Admins</code>) → select → Import.</p>
 <p>Assign a role to the imported group:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration → Access Control → User Groups → select group → Assign Role → select role
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Access Control → User Groups → select group → Assign Role → select role
 </code></pre></div>
 <table>
 <thead>
@@ -5023,7 +4979,7 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 <hr />
 <h2 id="workspace-one-access-vidm-saml-integration">Workspace ONE Access (VIDM) / SAML Integration<a class="headerlink" href="#workspace-one-access-vidm-saml-integration" title="Permanent link">&para;</a></h2>
 <p>When Aria Operations is deployed and managed by LCM, VIDM is automatically registered as the SSO provider. For standalone deployments:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Administration → Global Settings → Authentication → Enable SSO → Configure VIDM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration → Global Settings → Authentication → Enable SSO → Configure VIDM
 </code></pre></div>
 <p>Provide:
 - VIDM FQDN
@@ -5033,52 +4989,52 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 <h2 id="api-authentication">API Authentication<a class="headerlink" href="#api-authentication" title="Permanent link">&para;</a></h2>
 <p>The Aria Operations REST API supports two authentication methods:</p>
 <p><strong>Token-based (preferred):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Acquire a token — valid for 30 minutes</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Use token in subsequent API calls</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapterkinds&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Acquire a token — valid for 30 minutes</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Use token in subsequent API calls</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapterkinds&quot;</span>
 </code></pre></div>
 <p><strong>Basic authentication (scripts and monitoring):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alertdefinitions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alertdefinitions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 </code></pre></div>
 <p>For AD-authenticated API calls, include <code>authSource</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc.vrops@corp.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;corp.local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc.vrops@corp.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;corp.local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 </code></pre></div>
 <hr />
 <h2 id="token-expiry-and-rotation">Token Expiry and Rotation<a class="headerlink" href="#token-expiry-and-rotation" title="Permanent link">&para;</a></h2>
 <p>Tokens expire after 30 minutes. Scripts that run longer must re-authenticate or keep a token-renewal loop:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/usr/bin/env bash</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Re-authenticate function for long-running scripts</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>get_token<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$VROPS_USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$VROPS_PASS</span><span class="s2">\&quot;,\&quot;authSource\&quot;:\&quot;Local\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="o">}</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>get_token<span class="k">)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nv">TOKEN_AGE</span><span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">while</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>...<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="nv">TOKEN_AGE</span><span class="o">=</span><span class="k">$((</span><span class="nv">TOKEN_AGE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$TOKEN_AGE</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">25</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># renew before 30-minute expiry</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>get_token<span class="k">)</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="nv">TOKEN_AGE</span><span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="k">fi</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="c1"># ... script body using $TOKEN</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">60</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Re-authenticate function for long-running scripts</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>get_token<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;username\&quot;:\&quot;</span><span class="nv">$VROPS_USER</span><span class="s2">\&quot;,\&quot;password\&quot;:\&quot;</span><span class="nv">$VROPS_PASS</span><span class="s2">\&quot;,\&quot;authSource\&quot;:\&quot;Local\&quot;}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="o">}</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>get_token<span class="k">)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nv">TOKEN_AGE</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="k">while</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>...<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="nv">TOKEN_AGE</span><span class="o">=</span><span class="k">$((</span><span class="nv">TOKEN_AGE</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$TOKEN_AGE</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">25</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c1"># renew before 30-minute expiry</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>get_token<span class="k">)</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span><span class="nv">TOKEN_AGE</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="c1"># ... script body using $TOKEN</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">60</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="k">done</span>
 </code></pre></div>
 <hr />
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>

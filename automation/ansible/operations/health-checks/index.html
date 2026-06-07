@@ -3984,29 +3984,6 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 </table>
 <hr />
 <h2 id="ansible-health-check-flow">Ansible Health Check Flow<a class="headerlink" href="#ansible-health-check-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>┌─────────────────────────────────────── Ansible — Health Checks ───────────────────────────────────────┐
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>│   │ Ansible health checks: verify control node, AWX services, connectivity, and job success rates │   │
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>│   │     Control node: check ansible version, Python version, SSH connectivity to managed nodes    │   │
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>│   │         AWX: check service pods (Kubernetes), job queue depth, credential expiry dates        │   │
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│                                                                                                       │
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>│   │             Control Node Checks              │  │                  AWX Checks                 │   │
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>│   │              ansible --version               │  │           kubectl get pods -n awx           │   │
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>│   │       ansible all -m ping (all hosts)        │  │         AWX UI: Dashboard job stats         │   │
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>│   │       ansible-inventory --list --graph       │  │        awx jobs list --status failed        │   │
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>│   │       Check Vault password accessible        │  │        Check credential expiry dates        │   │
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>│   │         Verify EE images are current         │  │         AWX capacity: forks headroom        │   │
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>│                                                                                                       │
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>│   │     ansible all -m ping = fastest connectivity check; pong on success, unreachable on fail    │   │
-<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>│   │      Job success rate      = AWX dashboard; alert if &gt;5% failure rate over rolling 7 days     │   │
-<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>│   │      EE freshness          = execution environment images; rebuild if base OS CVEs exist      │   │
-<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <blockquote>
 <p>Part of the <a href="../">Ansible Operations</a> reference.</p>
 </blockquote>

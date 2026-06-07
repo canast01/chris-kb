@@ -4761,6 +4761,105 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#push-a-golden-image-update-to-an-instant-clone-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Push a Golden Image Update to an Instant Clone Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-new-connection-server-replica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a New Connection Server Replica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-uag-for-external-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure UAG for External Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-true-sso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable True SSO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-an-app-volumes-appstack-to-a-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add an App Volumes AppStack to a Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#handle-a-stuck-desktop-in-error-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle a Stuck Desktop in Error State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-dem-configuration-migration-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set DEM Configuration Migration Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommission-a-desktop-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission a Desktop Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-instant-clone-desktop-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an Instant Clone Desktop Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5001,179 +5100,444 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── VMware Horizon — Common Procedures ──────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Common Horizon procedures: update golden image, push to pool, manage sessions,                       │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  entitle users, and maintain certificates on Connection Servers.                                      │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │             Golden Image Update              │  │              Session Management             │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Power off, snapshot parent          │  │            Logoff: force if stuck           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │             Install patches/apps             │  │            Reset: restart desktop           │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Snapshot: new version             │  │             Send message to user            │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        Push scheduled via Horizon UI         │  │          Disable: maintenance mode          │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Golden image update is the most frequent Horizon maintenance task; schedule off-hours.               │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Entitlements &amp; Certs             │  │               Pool Maintenance              │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          Add entitlement: AD group           │  │          Pool in maintenance: drain         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Remove: revoke from pool           │  │            Delete stuck VM: force           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Cert: replace on CS via MMC          │  │         Add machines: increase pool         │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          vdmadmin: reset passwords           │  │         Disable provisioning: pause         │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Golden image updates temporarily reduce pool availability; schedule maintenance windows;             │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  certificate replacement requires IIS restart on Connection Server.                                   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Golden image  = parent VM for instant clone pools                                                    │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Push          = schedule pool to use new parent snapshot                                             │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Maintenance mode= pool unavailable; existing sessions continue                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Entitlement   = AD user or group assigned to a pool                                                  │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Revoke        = remove AD group/user entitlement from pool                                           │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  MMC           = Microsoft Management Console; cert store on Windows                                  │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  IIS restart   = required after cert replacement on CS                                                │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Force delete  = remove stuck VM from pool that failed to provision                                   │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Send message  = warn users before forced logoff/pool push                                            │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Pool size     = min/max/spare desktops; tuned for peak usage                                         │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Drain         = wait for sessions to end before pool action                                          │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Provisioning  = Horizon auto-creates VMs to fill pool spare count                                    │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 ool] → Entitlements → Add** — add AD groups</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify pool provisioning status via PowerCLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">AutomatedDesktopData</span> <span class="p">|</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="nb">Select-Object</span> <span class="n">MinimumCount</span><span class="p">,</span> <span class="n">MaximumCount</span><span class="p">,</span> <span class="n">SpareCount</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">State</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify pool provisioning status via PowerCLI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">AutomatedDesktopData</span> <span class="p">|</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="nb">Select-Object</span> <span class="n">MinimumCount</span><span class="p">,</span> <span class="n">MaximumCount</span><span class="p">,</span> <span class="n">SpareCount</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">State</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
 </code></pre></div>
 <h2 id="create-an-rds-farm-and-application-pool">Create an RDS Farm and Application Pool<a class="headerlink" href="#create-an-rds-farm-and-application-pool" title="Permanent link">&para;</a></h2>
 <p>RDS farms deliver published desktops and RemoteApp applications from Windows Server RDSH hosts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># 1. Verify Horizon Agent with RDS role is installed on RDSH hosts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-HVFarm</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;AUTOMATED&quot;</span> <span class="p">}</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># 2. Create a manual RDS farm (add existing RDSH servers)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Horizon Console → Farm → Add → Manual Farm</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Add RDSH hosts by FQDN — Horizon registers them as RDS hosts</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># 3. Create an Application Pool from the farm</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Horizon Console → Catalog → Application Pools → Add</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Select farm, browse installed applications, publish selected apps</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># 4. Verify farm health</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Get-HVFarm</span> <span class="n">-FarmName</span> <span class="s2">&quot;farm-rdsh-apps&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">RDSFarmSummaryData</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Get-HVFarmHealth</span> <span class="n">-FarmName</span> <span class="s2">&quot;farm-rdsh-apps&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># 1. Verify Horizon Agent with RDS role is installed on RDSH hosts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-HVFarm</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;AUTOMATED&quot;</span> <span class="p">}</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># 2. Create a manual RDS farm (add existing RDSH servers)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Horizon Console → Farm → Add → Manual Farm</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Add RDSH hosts by FQDN — Horizon registers them as RDS hosts</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># 3. Create an Application Pool from the farm</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Horizon Console → Catalog → Application Pools → Add</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Select farm, browse installed applications, publish selected apps</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># 4. Verify farm health</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">Get-HVFarm</span> <span class="n">-FarmName</span> <span class="s2">&quot;farm-rdsh-apps&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">RDSFarmSummaryData</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nb">Get-HVFarmHealth</span> <span class="n">-FarmName</span> <span class="s2">&quot;farm-rdsh-apps&quot;</span>
 </code></pre></div>
 <p>RDSH hosts must have at least 1 licensed RDS CAL per concurrent user. Check licensing via <code>licmgr.exe</code> on a host.</p>
 <h2 id="add-or-remove-user-entitlement-from-a-pool">Add or Remove User Entitlement from a Pool<a class="headerlink" href="#add-or-remove-user-entitlement-from-a-pool" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># Add an AD group entitlement to a pool</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">$pool</span> <span class="p">=</span> <span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$group</span> <span class="p">=</span> <span class="nb">Get-HVQueryResult</span> <span class="n">-EntityType</span> <span class="n">ADUserOrGroupSummaryView</span> <span class="p">|</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;VDI-Users&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">New-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-UserOrGroupId</span> <span class="nv">$group</span><span class="p">.</span><span class="n">Id</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Remove an entitlement</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">$entitlement</span> <span class="p">=</span> <span class="nb">Get-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UserOrGroupData</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;VDI-Users&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Remove-HVEntitlement</span> <span class="n">-Id</span> <span class="nv">$entitlement</span><span class="p">.</span><span class="n">Id</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># List all entitlements for a pool</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Get-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  <span class="nb">Select-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UserOrGroupData</span><span class="p">.</span><span class="n">Name</span> <span class="p">},</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UserOrGroupData</span><span class="p">.</span><span class="n">GroupMembershipCount</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Add an AD group entitlement to a pool</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$pool</span> <span class="p">=</span> <span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">$group</span> <span class="p">=</span> <span class="nb">Get-HVQueryResult</span> <span class="n">-EntityType</span> <span class="n">ADUserOrGroupSummaryView</span> <span class="p">|</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;VDI-Users&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">New-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-UserOrGroupId</span> <span class="nv">$group</span><span class="p">.</span><span class="n">Id</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Remove an entitlement</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nv">$entitlement</span> <span class="p">=</span> <span class="nb">Get-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UserOrGroupData</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;VDI-Users&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">Remove-HVEntitlement</span> <span class="n">-Id</span> <span class="nv">$entitlement</span><span class="p">.</span><span class="n">Id</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c"># List all entitlements for a pool</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">Get-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  <span class="nb">Select-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UserOrGroupData</span><span class="p">.</span><span class="n">Name</span> <span class="p">},</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UserOrGroupData</span><span class="p">.</span><span class="n">GroupMembershipCount</span> <span class="p">}</span>
 </code></pre></div>
 <h2 id="force-logoff-or-reset-a-user-session">Force Logoff or Reset a User Session<a class="headerlink" href="#force-logoff-or-reset-a-user-session" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># Find active sessions for a user</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">UserName</span> <span class="o">-eq</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  <span class="nb">Select-Object</span> <span class="n">Id</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Desktop&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">MachineOrRDSServerDNS</span><span class="p">}},</span> <span class="n">SessionState</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Force logoff a specific session</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">UserName</span> <span class="o">-eq</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  <span class="nb">Invoke-HVSessionLogoff</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Reset (hard reboot) a stuck desktop</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">Get-HVMachine</span> <span class="n">-MachineName</span> <span class="s2">&quot;ic-win11-0042&quot;</span> <span class="p">|</span> <span class="nb">Reset-HVMachine</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># Disconnect without logoff (session persists, user can reconnect)</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">UserName</span> <span class="o">-eq</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  <span class="nb">Invoke-HVSessionDisconnect</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># Find active sessions for a user</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">UserName</span> <span class="o">-eq</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  <span class="nb">Select-Object</span> <span class="n">Id</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Desktop&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">MachineOrRDSServerDNS</span><span class="p">}},</span> <span class="n">SessionState</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Force logoff a specific session</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">UserName</span> <span class="o">-eq</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="nb">Invoke-HVSessionLogoff</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Reset (hard reboot) a stuck desktop</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-HVMachine</span> <span class="n">-MachineName</span> <span class="s2">&quot;ic-win11-0042&quot;</span> <span class="p">|</span> <span class="nb">Reset-HVMachine</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c"># Disconnect without logoff (session persists, user can reconnect)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">UserName</span> <span class="o">-eq</span> <span class="s2">&quot;jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  <span class="nb">Invoke-HVSessionDisconnect</span>
 </code></pre></div>
 <h2 id="recompose-an-instant-clone-pool">Recompose an Instant Clone Pool<a class="headerlink" href="#recompose-an-instant-clone-pool" title="Permanent link">&para;</a></h2>
 <p>Recompose pushes a new golden image snapshot to all desktops in the pool. Sessions are terminated; desktops are rebuilt from the new parent.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># 1. Confirm new snapshot exists on the parent VM</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># 2. Initiate recompose (schedule for maintenance window)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">$pool</span> <span class="p">=</span> <span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nv">$snapshot</span> <span class="p">=</span> <span class="nb">Get-HVQueryResult</span> <span class="n">-EntityType</span> <span class="n">BaseImageSnapshotInfo</span> <span class="p">|</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Snap-2026-06-Win11-Patched&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># Recompose immediately (use -ScheduleTime for deferred)</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">Update-HVPool</span> <span class="n">-PoolId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-ParentVMPath</span> <span class="nv">$snapshot</span><span class="p">.</span><span class="n">Path</span> <span class="n">-SnapshotPath</span> <span class="nv">$snapshot</span><span class="p">.</span><span class="n">SnapshotPath</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># 3. Monitor progress</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">State</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c"># States cycle: Maintenance → Deleting → Provisioning → Available</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># 1. Confirm new snapshot exists on the parent VM</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># 2. Initiate recompose (schedule for maintenance window)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">$pool</span> <span class="p">=</span> <span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">$snapshot</span> <span class="p">=</span> <span class="nb">Get-HVQueryResult</span> <span class="n">-EntityType</span> <span class="n">BaseImageSnapshotInfo</span> <span class="p">|</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Snap-2026-06-Win11-Patched&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Recompose immediately (use -ScheduleTime for deferred)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">Update-HVPool</span> <span class="n">-PoolId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-ParentVMPath</span> <span class="nv">$snapshot</span><span class="p">.</span><span class="n">Path</span> <span class="n">-SnapshotPath</span> <span class="nv">$snapshot</span><span class="p">.</span><span class="n">SnapshotPath</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c"># 3. Monitor progress</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">State</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c"># States cycle: Maintenance → Deleting → Provisioning → Available</span>
 </code></pre></div>
 <h2 id="renew-certificate-on-connection-servers">Renew Certificate on Connection Servers<a class="headerlink" href="#renew-certificate-on-connection-servers" title="Permanent link">&para;</a></h2>
 <p>Horizon Connection Servers use TLS certificates for client connections and inter-component trust.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># 1. Import new certificate into the Windows certificate store on each CS</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># Run on each Connection Server:</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="s2">&quot;C:\certs\horizon-cs.pfx&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="n">-CertStoreLocation</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;pfx-password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># 2. Find the certificate thumbprint</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-match</span> <span class="s2">&quot;horizon-cs&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">Thumbprint</span><span class="p">,</span> <span class="n">NotAfter</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c"># 3. Set the Horizon vdm alias to use the new certificate</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c"># Run in elevated cmd on each CS:</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c"># certutil -repairstore My &quot;&lt;thumbprint&gt;&quot;</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c"># 4. Restart the VMware Horizon View Connection Server service</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;WSNM&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c"># Service name may also be &quot;wsbroker&quot; depending on Horizon version</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="c"># 5. Verify from a Horizon Client — confirm certificate CN and expiry match new cert</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c"># Horizon Console → Settings → Servers → Connection Servers → [server] → Certificate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># 1. Import new certificate into the Windows certificate store on each CS</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Run on each Connection Server:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="s2">&quot;C:\certs\horizon-cs.pfx&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="n">-CertStoreLocation</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;pfx-password&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># 2. Find the certificate thumbprint</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-ChildItem</span> <span class="s2">&quot;Cert:\LocalMachine\My&quot;</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-match</span> <span class="s2">&quot;horizon-cs&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>  <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">Thumbprint</span><span class="p">,</span> <span class="n">NotAfter</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># 3. Set the Horizon vdm alias to use the new certificate</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># Run in elevated cmd on each CS:</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># certutil -repairstore My &quot;&lt;thumbprint&gt;&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># 4. Restart the VMware Horizon View Connection Server service</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;WSNM&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c"># Service name may also be &quot;wsbroker&quot; depending on Horizon version</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c"># 5. Verify from a Horizon Client — confirm certificate CN and expiry match new cert</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c"># Horizon Console → Settings → Servers → Connection Servers → [server] → Certificate</span>
 </code></pre></div>
 <p>Repeat on all Connection Servers and Replica Servers before the old certificate expires.</p>
 <h2 id="configure-horizon-event-database">Configure Horizon Event Database<a class="headerlink" href="#configure-horizon-event-database" title="Permanent link">&para;</a></h2>
 <p>The event database records audit, session, and error events for reporting and compliance.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- Create a dedicated database on SQL Server or PostgreSQL</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">-- SQL Server:</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">HorizonEvents</span><span class="p">;</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;StrongP@ss1&#39;</span><span class="p">;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">USE</span><span class="w"> </span><span class="n">HorizonEvents</span><span class="p">;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="p">;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">db_owner</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">MEMBER</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Create a dedicated database on SQL Server or PostgreSQL</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">-- SQL Server:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">HorizonEvents</span><span class="p">;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;StrongP@ss1&#39;</span><span class="p">;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">USE</span><span class="w"> </span><span class="n">HorizonEvents</span><span class="p">;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="p">;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">db_owner</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">MEMBER</span><span class="w"> </span><span class="n">horizon_event_user</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Configure in Horizon Console:</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># Settings → Event Configuration → Event Database</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c"># Type: Microsoft SQL Server (or PostgreSQL)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Server: &lt;db-server-fqdn&gt;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Port: 1433</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># Database: HorizonEvents</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># User: horizon_event_user</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># Table prefix: hv_ (optional, allows sharing one DB for multiple pods)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c"># Verify events are flowing — check after any user session:</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c"># Reports → Events → Recent Events should show session events</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Configure in Horizon Console:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># Settings → Event Configuration → Event Database</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c"># Type: Microsoft SQL Server (or PostgreSQL)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Server: &lt;db-server-fqdn&gt;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Port: 1433</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c"># Database: HorizonEvents</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># User: horizon_event_user</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Table prefix: hv_ (optional, allows sharing one DB for multiple pods)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c"># Verify events are flowing — check after any user session:</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># Reports → Events → Recent Events should show session events</span>
 </code></pre></div>
 <p>Event data is retained per the configured purge schedule (default 30 days). Increase for compliance requirements.</p>
+<h2 id="push-a-golden-image-update-to-an-instant-clone-pool">Push a Golden Image Update to an Instant Clone Pool<a class="headerlink" href="#push-a-golden-image-update-to-an-instant-clone-pool" title="Permanent link">&para;</a></h2>
+<p>Update the parent VM with patches or application changes, take a new snapshot, then push it to all instant clone desktops in the pool. Existing sessions are terminated during the push.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c"># 1. Power on the parent (golden image) VM and apply changes</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nb">Start-VM</span> <span class="n">-Name</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># --- install patches / apps on VM via vCenter console, then shut down ---</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nb">Stop-VM</span> <span class="n">-Name</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># 2. Take a new snapshot (parent must be powered off for instant clones)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Snap-2026-06-Patched&quot;</span> <span class="n">-Description</span> <span class="s2">&quot;June patch cycle&quot;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c"># 3. Push the new snapshot via PowerCLI</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nv">$pool</span>     <span class="p">=</span> <span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nv">$snapshot</span> <span class="p">=</span> <span class="nb">Get-HVQueryResult</span> <span class="n">-EntityType</span> <span class="n">BaseImageSnapshotInfo</span> <span class="p">|</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>              <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Snap-2026-06-Patched&quot;</span> <span class="p">}</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="nb">Update-HVPool</span> <span class="n">-PoolId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-SnapshotPath</span> <span class="nv">$snapshot</span><span class="p">.</span><span class="n">SnapshotPath</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c"># Or via Horizon Console:</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c"># Catalog → Desktop Pools → [pool] → Maintenance → Push Image</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c"># Select new snapshot; set schedule (immediate or deferred maintenance window)</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c"># 4. Monitor progress — states cycle: Maintenance → Deleting → Provisioning → Available</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">State</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="c"># 5. Handle stuck VMs that do not leave Provisioning state</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span> <span class="o">-eq</span> <span class="s2">&quot;PROVISIONING_ERROR&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>  <span class="nb">Remove-HVMachine</span> <span class="n">-DeleteFromDisk</span> <span class="nv">$true</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="c"># Horizon re-provisions replacement VMs automatically to meet SpareCount</span>
+</code></pre></div>
+<p>After the push completes, log in to a new desktop and confirm the OS patch level and installed applications match the updated snapshot.</p>
+<h2 id="add-a-new-connection-server-replica">Add a New Connection Server Replica<a class="headerlink" href="#add-a-new-connection-server-replica" title="Permanent link">&para;</a></h2>
+<p>A replica Connection Server joins an existing pod to increase capacity and availability. All replicas share the same LDAP configuration database replicated from the primary.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Pre-checks on the new server (run as local Administrator on the new host)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Repair</span>           <span class="c"># confirm AD domain membership</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">nslookup</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>            <span class="c"># verify existing CS is DNS-resolvable</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">443</span>   <span class="c"># connectivity check</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c"># 1. Run the Horizon Connection Server installer on the new Windows Server host</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c">#    Installer wizard → select &quot;Add a Replica Server&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c">#    Primary Connection Server field: horizon-cs-01.corp.local</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c">#    Installer copies the LDAP config and registers the new replica automatically</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c"># 2. After installation — confirm the CS service is running</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;WSNM&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c"># Service name may be &quot;VMware Horizon View Connection Server&quot; on older versions</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c"># 3. Confirm pod membership in Horizon Console</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c">#    Settings → Servers → Connection Servers</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c">#    New server should appear with status &quot;OK&quot; and correct FQDN</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c"># 4. Verify LDAP replication from the primary CS via PowerCLI</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="nb">Get-HVConnectionServer</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;FQDN&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">General</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>                                       <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Status&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Health</span><span class="p">.</span><span class="n">Status</span><span class="p">}},</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>                                       <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Version&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">General</span><span class="p">.</span><span class="n">Version</span><span class="p">}}</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="c"># 5. Update load balancer (F5 / NSX / HAProxy) to include the new replica</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="c">#    Add new CS IP/FQDN to the VIP pool, port 443</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c">#    Health check: GET /broker/xml — expect HTTP 200 or 401</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="c">#    Test: curl -k https://&lt;lb-vip&gt;/broker/xml from outside the CS subnet</span>
+</code></pre></div>
+<p>The TLS certificate on the new replica must include the load balancer VIP hostname in its SAN, or import the same wildcard PFX used by the existing servers.</p>
+<h2 id="configure-uag-for-external-access">Configure UAG for External Access<a class="headerlink" href="#configure-uag-for-external-access" title="Permanent link">&para;</a></h2>
+<p>Unified Access Gateway (UAG) is deployed in the DMZ to proxy external Horizon connections without exposing Connection Servers to the internet.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># UAG is delivered as an OVA; deploy via vSphere Client</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c"># 1. Deploy UAG OVA</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c">#    File → Deploy OVF Template → select VMware-UAG-&lt;version&gt;.ova</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c">#    Configure networking:</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c">#      NIC0 (eth0) = internet-facing (public/DMZ IP, e.g., 203.0.113.10)</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c">#      NIC1 (eth1) = internal (CS-reachable, e.g., 10.10.50.20)</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c">#    Set admin password and optional TLS cert during the OVA wizard</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c"># 2. Open UAG Admin UI: https://&lt;uag-mgmt-ip&gt;:9443/admin</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c"># 3. Configure Edge Service — Horizon:</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c">#    Edge Service Settings → Horizon → Enable</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c">#    Connection Server URL: https://horizon-cs-01.corp.local</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c">#    Enable Blast (port 8443), PCoIP (port 4172), Tunnel as required</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c">#    Blast External URL: https://vdi.example.com:8443  (must match public DNS)</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c"># 4. Upload TLS certificate (PEM format):</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c">#    Advanced Settings → TLS Server Certificate → Upload</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c">#    Paste PEM chain (server cert + intermediates), then paste private key</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="c"># 5. Configure SAML / Identity Provider (if using IdP for True SSO):</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c">#    Identity Provider → Add → paste IdP metadata XML or enter metadata URL</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="c">#    Map SAML attribute: UPN → userPrincipalName</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="c"># 6. Test external connection from an off-network client:</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="c">#    Horizon Client → Server: vdi.example.com → authenticate → desktop should launch</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="c">#    Review UAG edge service logs for auth events:</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="c">#    /opt/vmware/gateway/logs/esmanager.log  (SSH to UAG management IP)</span>
+</code></pre></div>
+<p>UAG requires outbound ports 22443 (Blast) and 4172 (PCoIP UDP) open from the DMZ to internal Connection Server hosts. Confirm firewall rules before testing.</p>
+<h2 id="enable-true-sso">Enable True SSO<a class="headerlink" href="#enable-true-sso" title="Permanent link">&para;</a></h2>
+<p>True SSO issues short-lived certificates at login so users who authenticated via a SAML IdP are not prompted for a Windows password when connecting to desktops.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Prerequisites: AD CS running in the environment, Enrollment Server Windows host</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c"># joined to the domain, SAML IdP integrated with UAG</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># 1. Install the VMware Horizon Enrollment Server on a domain-joined Windows Server</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c">#    Horizon installer → select &quot;Enrollment Server&quot; role</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c">#    The Enrollment Server communicates with AD CS to issue short-lived certs</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c"># 2. Create an Enrollment Agent certificate template in AD CS (run on CA):</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c">#    Duplicate built-in &quot;Enrollment Agent&quot; template → name: HorizonEnrollmentAgent</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c">#    Permissions tab: grant the Enrollment Server computer account &quot;Enroll&quot; permission</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c">#    Publish template on the CA</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c"># 3. Register Enrollment Server in Horizon Console:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c">#    Settings → True SSO → Add Enrollment Server</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c">#    FQDN: enrollment-srv-01.corp.local</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c">#    Click Test Connection — status must show &quot;OK&quot; before proceeding</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c"># 4. Configure True SSO Domain:</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c">#    Settings → True SSO → Add Domain</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c">#    Domain: corp.local</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="c">#    Enrollment Server: enrollment-srv-01.corp.local</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c">#    Certificate template: HorizonEnrollmentAgent</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="c"># 5. Enable True SSO on each desktop pool:</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="c">#    Catalog → Desktop Pools → [pool] → Edit → Session → Single Sign-On → Enable True SSO</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="c"># 6. Verify via PowerCLI</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>  <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">AutomatedDesktopData</span> <span class="p">|</span>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>  <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;TrueSSO&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">CustomizationSettings</span><span class="p">.</span><span class="n">EnableTrueSSO</span><span class="p">}}</span>
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="c"># 7. Test: authenticate via Horizon Client using SAML IdP credentials through UAG</span>
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="c">#    Desktop should open without a secondary Windows password prompt</span>
+</code></pre></div>
+<p>If True SSO fails, check the Enrollment Server Application event log for certificate issuance errors and confirm the enrollment agent template has the correct Extended Key Usage (Certificate Request Agent OID).</p>
+<h2 id="add-an-app-volumes-appstack-to-a-pool">Add an App Volumes AppStack to a Pool<a class="headerlink" href="#add-an-app-volumes-appstack-to-a-pool" title="Permanent link">&para;</a></h2>
+<p>App Volumes AppStacks deliver applications as read-only VMDK packages attached at login, allowing apps to be updated independently of the golden image.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># App Volumes Manager Admin UI: https://appvolumes-mgr.corp.local</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c"># 1. Import AppStack into App Volumes Manager</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c">#    AppStacks → Import → browse datastore → select AppStack-Acrobat-2025.vmdk</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c">#    Enter display name (e.g., &quot;Adobe Acrobat 2025&quot;), description, and stage: Assignable</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c"># 2. Assign AppStack to an AD group</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c">#    AppStacks → [AppStack] → Assignments → Add Assignment</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c">#    Type: Group  |  AD Group: VDI-Acrobat-Users</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c">#    Members of this group receive the AppStack at every desktop login</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c"># 3. Verify assignment via App Volumes PowerShell module</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="nb">Import-Module</span> <span class="n">AppVolumes</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="nb">Connect-AppVolumesServer</span> <span class="n">-Server</span> <span class="n">appvolumes-mgr</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="nb">Get-AVAppStack</span> <span class="n">-Name</span> <span class="s2">&quot;Adobe Acrobat 2025&quot;</span> <span class="p">|</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">AssignmentCount</span><span class="p">,</span> <span class="n">AgentVersion</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="c"># 4. Confirm attachment on a live desktop session</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="c">#    Log in as a member of VDI-Acrobat-Users on the pool</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="c">#    Open Event Viewer on the desktop → Application log → filter Source: svservice</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c">#    Event ID 1001 = AppStack mounted; Event ID 1003 = mount complete</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="c"># 5. Update AppStack to a new version</span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="c">#    Capture new AppStack VMDK using App Volumes Capture VM workflow</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="c">#    Import new version in App Volumes Manager</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="c">#    Set old version to Disabled (prevents new assignments; existing sessions unaffected)</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="c">#    Re-assign new version to the same AD group</span>
+</code></pre></div>
+<p>AppStacks are read-only at runtime. User-installed applications or per-user data belong in Writable Volumes, which are separate per-user VMDKs assigned independently of the pool.</p>
+<h2 id="handle-a-stuck-desktop-in-error-state">Handle a Stuck Desktop in Error State<a class="headerlink" href="#handle-a-stuck-desktop-in-error-state" title="Permanent link">&para;</a></h2>
+<p>Desktops can become stuck in Provisioning Error, Customization Error, or Agent Unreachable states when instant clone creation or domain join fails.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c"># 1. Identify stuck desktops and capture the error detail</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span> <span class="n">-in</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span><span class="s2">&quot;PROVISIONING_ERROR&quot;</span><span class="p">,</span><span class="s2">&quot;CUSTOMIZATION_ERROR&quot;</span><span class="p">,</span><span class="s2">&quot;AGENT_UNREACHABLE&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Name&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>                <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;State&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span><span class="p">}},</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>                <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;OpState&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">OperationState</span><span class="p">}}</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c"># 2. Check the underlying VM state in vCenter</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;ic-win11-00&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-ne</span> <span class="s2">&quot;PoweredOn&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">Notes</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c"># 3. Attempt force-delete from Horizon (removes from pool and deletes VM in vCenter)</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="nb">Get-HVMachine</span> <span class="n">-MachineName</span> <span class="s2">&quot;ic-win11-0055&quot;</span> <span class="p">|</span> <span class="nb">Remove-HVMachine</span> <span class="n">-DeleteFromDisk</span> <span class="nv">$true</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c"># 4. If Remove-HVMachine fails (LDAP lock or API timeout):</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c">#    Horizon Console → Catalog → Desktop Pools → [pool] → Machines</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c">#    Select stuck machine → More Commands → Delete → check &quot;Delete from disk&quot;</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="c"># 5. Orphan cleanup in vCenter (if VM remains after Horizon delete)</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="nb">Get-VM</span> <span class="s2">&quot;ic-win11-0055&quot;</span> <span class="p">|</span> <span class="nb">Remove-VM</span> <span class="n">-DeletePermanently</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="c"># 6. Allow Horizon to re-provision — provisioning restarts automatically to meet SpareCount</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="c">#    Monitor until the replacement VM reaches Available state:</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11&quot;</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">State</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
+</code></pre></div>
+<p>Common root causes: domain join OU permission denied, SYSPREP timeout, or vCenter customization spec mismatch. Resolve the underlying issue before the pool re-provisions, otherwise the same error recurs on every new clone.</p>
+<h2 id="set-dem-configuration-migration-policy">Set DEM Configuration Migration Policy<a class="headerlink" href="#set-dem-configuration-migration-policy" title="Permanent link">&para;</a></h2>
+<p>Dynamic Environment Manager (DEM) migration policies carry user flex-config profile settings from one OS version to another, preserving personalisation across desktop upgrades.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># DEM migration policies are authored in the DEM Management Console (MMC snap-in)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c"># connected to the DEM configuration share</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c"># 1. Open DEM Management Console on the DEM admin workstation</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c">#    File → Connect → \\fileserver\DEM-Config  (your organisation&#39;s DEM config share)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c"># 2. Navigate to: User Environment → Application Migration → Add Migration Policy</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c"># 3. Configure source/target OS mapping:</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c">#    Source OS:  Windows 10  (build range 10.0.19041 – 19045)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c">#    Target OS:  Windows 11  (build 10.0.22621 and later)</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c">#    Migration scope: select the flex-config profiles to migrate</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c">#      e.g., Microsoft Office, Google Chrome, custom in-house apps</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c">#    Action: Copy  (retains source settings — safe for rollback)</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c">#             or Move  (removes source after migration)</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c"># 4. Set migration trigger:</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="c">#    Trigger: First login to target OS</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="c">#    DEM detects the OS version change and applies the selected profiles automatically</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="c">#    Optional: set an expiry date after which the migration policy no longer fires</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="c"># 5. Test with a pilot user:</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="c">#    Log the user into a Windows 11 desktop in the pool</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="c">#    Check DEM log on the desktop: %TEMP%\DEM_Log_&lt;username&gt;.log</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="c">#    Look for &quot;Migration applied&quot; entries for each migrated profile</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="c"># 6. Verify via DEM Helpdesk Console:</span>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="c">#    DEM Management Console → Support → Helpdesk → search by username</span>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="c">#    Profile Actions → Show imported flex configs</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="c">#    Migrated profiles appear with a source-OS tag confirming migration ran</span>
+</code></pre></div>
+<p>Migration policies are one-time per user per OS transition. The migration stamp is written to the user's profile store; to force a re-run, delete the stamp entry in the DEM profile store folder for that user.</p>
+<h2 id="decommission-a-desktop-pool">Decommission a Desktop Pool<a class="headerlink" href="#decommission-a-desktop-pool" title="Permanent link">&para;</a></h2>
+<p>Safely remove a pool from production by draining sessions, notifying users, removing entitlements, and deleting VMs in the correct order.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c"># 1. Disable provisioning to stop new VM creation immediately</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="nv">$pool</span> <span class="p">=</span> <span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11-old&quot;</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">Set-HVPool</span> <span class="n">-PoolId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-Disable</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c"># 2. Send advance warning to all active sessions (repeat daily during notice period)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">DesktopPoolCN</span> <span class="o">-eq</span> <span class="s2">&quot;pool-ic-win11-old&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>  <span class="nb">Send-HVSessionMessage</span> <span class="n">-MessageType</span> <span class="n">WARNING</span> <span class="p">`</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="n">-Message</span> <span class="s2">&quot;This pool is being decommissioned on 2026-07-01. Please save work and migrate to pool-ic-win11-v2.&quot;</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c"># 3. Monitor session drain</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">DesktopPoolCN</span> <span class="o">-eq</span> <span class="s2">&quot;pool-ic-win11-old&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>  <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;User&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">UserName</span><span class="p">}},</span> <span class="n">SessionState</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Idle&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">IdleDuration</span><span class="p">}}</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c"># 4. Force-logoff remaining sessions after the drain deadline</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="nb">Get-HVLocalSession</span> <span class="p">|</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NamesData</span><span class="p">.</span><span class="n">DesktopPoolCN</span> <span class="o">-eq</span> <span class="s2">&quot;pool-ic-win11-old&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>  <span class="nb">Invoke-HVSessionLogoff</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="c"># 5. Remove all entitlements from the pool</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="nb">Get-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceName</span> <span class="s2">&quot;pool-ic-win11-old&quot;</span> <span class="p">|</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nb">Remove-HVEntitlement</span> <span class="n">-Id</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="p">}</span>
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="c"># 6. Delete the pool and all VMs</span>
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="c">#    Horizon Console → Catalog → Desktop Pools → [pool] → Delete</span>
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="c">#    Check &quot;Delete all virtual machines from disk&quot; → confirm</span>
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="c">#    Or via PowerCLI:</span>
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a><span class="nb">Remove-HVPool</span> <span class="n">-PoolId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-DeleteFromDisk</span> <span class="nv">$true</span>
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a><span class="c"># 7. Verify no orphaned VMs remain in vCenter</span>
+<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;ic-win11-old&quot;</span> <span class="p">}</span>
+</code></pre></div>
+<p>Retain the parent VM and its snapshots for 30 days post-decommission before permanent deletion, in case a rollback or compliance audit is required.</p>
+<h2 id="create-an-instant-clone-desktop-pool">Create an Instant Clone Desktop Pool<a class="headerlink" href="#create-an-instant-clone-desktop-pool" title="Permanent link">&para;</a></h2>
+<p>Create a new instant clone pool from a prepared parent (golden image) VM. Instant clones are provisioned in seconds by forking a running parent VM.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">Connect-HVServer</span> <span class="n">-Server</span> <span class="n">horizon-cs</span><span class="p">-</span><span class="n">01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">Connect-VIServer</span>  <span class="n">-Server</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c"># 1. Prepare the golden image VM</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c">#    Install VMware Horizon Agent on the parent VM</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c">#      — select &quot;Instant Clone&quot; feature during agent install wizard</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c">#    Run VMware OS Optimization Tool (OSOT) to disable unnecessary services</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c">#    Shut down VM; take baseline snapshot:</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;GoldenImage-Win11-v2&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Snap-2026-06-Baseline&quot;</span> <span class="p">`</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>             <span class="n">-Description</span> <span class="s2">&quot;Initial pool creation baseline&quot;</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="nb">Stop-VM</span> <span class="n">-Name</span> <span class="s2">&quot;GoldenImage-Win11-v2&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>   <span class="c"># parent must be powered off</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c"># 2. Create the pool via Horizon Console:</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c">#    Catalog → Desktop Pools → Add</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="c">#    Type: Automated Desktop Pool</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="c">#    User assignment: Floating (or Dedicated for persistent desktops)</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="c">#    vCenter Server: vcenter.corp.local</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="c">#    Desktop type: Instant Clone</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="c">#    Parent VM:   GoldenImage-Win11-v2</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="c">#    Snapshot:    Snap-2026-06-Baseline</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="c">#    VM folder / cluster / datastore: target vSphere objects</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="c">#    Naming pattern:  ic-win11-{n:fixed=4}   → produces ic-win11-0001, ic-win11-0002 ...</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="c">#    Minimum machines: 10  |  Maximum: 50  |  Spare (headroom): 5</span>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="c">#    Domain join OU: OU=VDI-Desktops,OU=Computers,DC=corp,DC=local</span>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="c"># 3. Entitle an AD group to the new pool</span>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="nv">$pool</span>  <span class="p">=</span> <span class="nb">Get-HVPool</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11-v2&quot;</span>
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="nv">$group</span> <span class="p">=</span> <span class="nb">Get-HVQueryResult</span> <span class="n">-EntityType</span> <span class="n">ADUserOrGroupSummaryView</span> <span class="p">|</span>
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>           <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;VDI-Users&quot;</span> <span class="p">}</span>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a><span class="nb">New-HVEntitlement</span> <span class="n">-ResourceType</span> <span class="n">Desktop</span> <span class="n">-ResourceId</span> <span class="nv">$pool</span><span class="p">.</span><span class="n">Id</span> <span class="n">-UserOrGroupId</span> <span class="nv">$group</span><span class="p">.</span><span class="n">Id</span>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a><span class="c"># 4. Verify pool provisioning</span>
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a><span class="nb">Get-HVMachine</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-ic-win11-v2&quot;</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">State</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a><span class="c"># Expected progression: Provisioning → Customizing → Available</span>
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a><span class="c"># 5. Test: log in as a member of VDI-Users and confirm the desktop launches,</span>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a><span class="c">#    OS version is correct, and Horizon Agent shows Connected in the Console</span>
+</code></pre></div>
+<p>Set the minimum machine count to cover expected peak concurrency plus the spare headroom count. Provisioning 50 instant clones typically completes within 10-15 minutes on a well-resourced vSAN cluster.</p>
 
 
 

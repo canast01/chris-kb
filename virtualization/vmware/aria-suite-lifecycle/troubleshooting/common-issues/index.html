@@ -4814,141 +4814,53 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Aria Suite LCM Common Issues ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Common LCM issues: deployment failure, certificate mismatch, and disk full.                          │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              Deployment Failure              │  │             Certificate Mismatch            │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Check pre-check result            │  │           Verify SAN matches FQDN           │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            DNS: FQDN resolvable?             │  │            Re-import correct cert           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           vCenter: credentials OK?           │  │           LCM: replace cert action          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Disk: LCM VM not full?            │  │           Check product cert trust          │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Deployment failure and cert mismatch are most frequent; disk full causes both.                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │               Disk Full Issue                │  │              vIDM / SSO Failure             │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          df -h: find full partition          │  │            vIDM: service running?           │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │             Delete old PAK files             │  │           Check vIDM cert validity          │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Clean /tmp and log dirs            │  │           Test SSO login manually           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Expand disk if persistent           │  │           Re-register LCM in vIDM           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  LCM VM on vSphere; vCenter for deploy; vIDM for auth; NFS for depot and backup                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Deployment Failure  = LCM deploy action failed; check pre-check and installer.log                    │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Pre-check Result    = LCM validation output; shows root cause before deploy fails                    │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Cert Mismatch       = Product cert SAN does not match FQDN; causes TLS errors                        │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  SAN                 = Subject Alternative Name; must include product FQDN                            │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Replace Cert Action = LCM-orchestrated cert replacement; resolves mismatch                           │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Disk Full           = LCM VM /storage or / partition full; blocks all operations                     │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  PAK Cleanup         = Delete old PAK binaries from LCM depot to free disk                            │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  /tmp Cleanup        = Clear temp files accumulated during failed deployments                         │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  vIDM SSO Failure    = LCM cannot redirect auth; all users locked out                                 │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  vIDM Re-register    = Re-add LCM as vIDM app if SSO trust is broken                                  │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  installer.log       = Deployment log; shows exact step and error for failures                        │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  df -h               = Disk usage check; first step for any disk-related issue                        │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────────── Aria Suite LCM Common Issues ─────────────────────────────────────┐
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  Common LCM issues: deployment failure, certificate mismatch, and disk full.                          │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │              Deployment Failure              │  │             Certificate Mismatch            │   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │            Check pre-check result            │  │           Verify SAN matches FQDN           │   │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │            DNS: FQDN resolvable?             │  │            Re-import correct cert           │   │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │           vCenter: credentials OK?           │  │           LCM: replace cert action          │   │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │            Disk: LCM VM not full?            │  │           Check product cert trust          │   │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│                                                                                                       │
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│  Deployment failure and cert mismatch are most frequent; disk full causes both.                       │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│                                                                                                       │
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                                                                                                       │
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   │               Disk Full Issue                │  │              vIDM / SSO Failure             │   │
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │          df -h: find full partition          │  │            vIDM: service running?           │   │
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │             Delete old PAK files             │  │           Check vIDM cert validity          │   │
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │           Clean /tmp and log dirs            │  │           Test SSO login manually           │   │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │          Expand disk if persistent           │  │           Re-register LCM in vIDM           │   │
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│                                                                                                       │
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  LCM VM on vSphere; vCenter for deploy; vIDM for auth; NFS for depot and backup                       │
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│                                                                                                       │
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Deployment Failure  = LCM deploy action failed; check pre-check and installer.log                    │
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│  Pre-check Result    = LCM validation output; shows root cause before deploy fails                    │
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  Cert Mismatch       = Product cert SAN does not match FQDN; causes TLS errors                        │
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  SAN                 = Subject Alternative Name; must include product FQDN                            │
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  Replace Cert Action = LCM-orchestrated cert replacement; resolves mismatch                           │
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  Disk Full           = LCM VM /storage or / partition full; blocks all operations                     │
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  PAK Cleanup         = Delete old PAK binaries from LCM depot to free disk                            │
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  /tmp Cleanup        = Clear temp files accumulated during failed deployments                         │
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  vIDM SSO Failure    = LCM cannot redirect auth; all users locked out                                 │
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  vIDM Re-register    = Re-add LCM as vIDM app if SSO trust is broken                                  │
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  installer.log       = Deployment log; shows exact step and error for failures                        │
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  df -h               = Disk usage check; first step for any disk-related issue                        │
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│                                                                                                       │
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
-<p>If the upgrade is truly stuck (no log activity for 30+ minutes):
+If the upgrade is truly stuck (no log activity for 30+ minutes):
 1. Do NOT power off product VMs — this risks split-brain state
 2. Open a Broadcom SR with the LCM log bundle and the request ID
 3. LCM may offer a <strong>Retry</strong> option for some stuck states — use only if advised by support</p>
 <hr />
 <h2 id="nfs-mount-lost-during-operation">NFS Mount Lost During Operation<a class="headerlink" href="#nfs-mount-lost-during-operation" title="Permanent link">&para;</a></h2>
 <p>If the NFS share becomes unavailable while LCM is running:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check mount status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Attempt remount</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mount<span class="w"> </span>-a
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># or explicitly:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;nfs-server&gt;:/lcm-repo<span class="w"> </span>/data
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify write access</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>touch<span class="w"> </span>/data/.write-test<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/data/.write-test
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Check for NFS errors in syslog</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;nfs\|mount&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check mount status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>/data
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Attempt remount</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mount<span class="w"> </span>-a
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># or explicitly:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;nfs-server&gt;:/lcm-repo<span class="w"> </span>/data
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify write access</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>touch<span class="w"> </span>/data/.write-test<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/data/.write-test
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check for NFS errors in syslog</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;nfs\|mount&quot;</span><span class="w"> </span>/var/log/messages<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <p>After restoring the NFS mount, any in-progress upgrade will need to be resumed or retried via LCM. If the upgrade failed due to missing binaries, re-map the product binaries in <strong>Lifecycle Operations → Settings → Binary Mapping</strong> before retrying.</p>
 <hr />
 <h2 id="locker-certificate-import-fails">Locker Certificate Import Fails<a class="headerlink" href="#locker-certificate-import-fails" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify certificate chain validity before importing</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>leaf.pem
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected: leaf.pem: OK</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check that the private key matches the certificate</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Both MD5 hashes must match</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify SANs in the certificate</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Subject Alternative Name&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Confirm no passphrase on the private key (LCM requires unencrypted key)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span>-check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Must output: RSA key ok (not: Enter pass phrase)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify certificate chain validity before importing</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>chain.pem<span class="w"> </span>leaf.pem
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: leaf.pem: OK</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check that the private key matches the certificate</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>md5sum
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Both MD5 hashes must match</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify SANs in the certificate</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>leaf.pem<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Subject Alternative Name&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Confirm no passphrase on the private key (LCM requires unencrypted key)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>private.key<span class="w"> </span>-check<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Must output: RSA key ok (not: Enter pass phrase)</span>
 </code></pre></div>
 <hr />
 <h2 id="vidm-authentication-failure-after-password-change">VIDM Authentication Failure After Password Change<a class="headerlink" href="#vidm-authentication-failure-after-password-change" title="Permanent link">&para;</a></h2>
 <p>If the VIDM admin password is changed externally, LCM loses its registration credentials.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify VIDM health from LCM appliance</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># If health is UP but login fails, re-register VIDM:</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify VIDM health from LCM appliance</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># If health is UP but login fails, re-register VIDM:</span>
 </code></pre></div>
 <p>Re-register VIDM: <strong>LCM → Settings → Identity Manager → Edit → update credentials → Save</strong>.</p>
 <p>After re-registration, verify that all AD-backed users can still log into LCM via the VIDM login button.</p>
@@ -4958,10 +4870,10 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 <li>Click the red product card — LCM shows the specific component or service that is unhealthy</li>
 <li>SSH to the product appliance and check service status:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh<span class="w"> </span>admin@&lt;product-fqdn&gt;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vracli<span class="w"> </span>status
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;failing-service&gt;
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;failing-service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>admin@&lt;product-fqdn&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;failing-service&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;failing-service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
 </code></pre></div>
 <ol>
 <li>Common causes: disk full on the product appliance, internal service crash, or expired certificate</li>
@@ -4970,19 +4882,19 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 <hr />
 <h2 id="checking-request-history">Checking Request History<a class="headerlink" href="#checking-request-history" title="Permanent link">&para;</a></h2>
 <p>All LCM operations are tracked as requests with full audit logs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># List last 20 requests</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.state)\t\(.requestType)\t\(.requestId)\t\(.startTime)&quot;&#39;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Get detail of a failed request</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.tasks[] | {name: .taskName, state: .taskState, message: .message}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># List last 20 requests</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?size=20&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.state)\t\(.requestType)\t\(.requestId)\t\(.startTime)&quot;&#39;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Get detail of a failed request</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests/&lt;request-id&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.tasks[] | {name: .taskName, state: .taskState, message: .message}&#39;</span>
 </code></pre></div>
 
 

@@ -5032,197 +5032,65 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        POST /suite-api/api/auth/token        │  │             https://&lt;vrops&gt;:5480            │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          GET /suite-api/api/alerts           │  │           Cluster management page           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         GET /suite-api/api/resources         │  │             Backup / restore UI             │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        GET /suite-api/api/statistics         │  │            Certificate management           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  REST API for automation; VAMI for appliance config; SSH for service-level control.                   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             SSH Service Commands             │  │            Useful Admin Commands            │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         service vmware-vcops status          │  │           df -h: disk usage check           │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         service vmware-vcops restart         │  │            top: CPU/RAM real-time           │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         tail -f /var/log/vcops/*.log         │  │           vcops-support bundle gen          │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           cluster-mgmt-cli status            │  │           ntpq -p: NTP sync check           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vROps master/data nodes on vSphere; SSH via jump host; VAMI browser on port 5480                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  suite-api           = vROps REST API path prefix; all endpoints under /suite-api                     │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Auth Token          = Bearer token from POST /auth/token; required for API calls                     │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  GET /alerts         = Returns all active alerts with severity and resource context                   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  GET /resources      = Lists monitored objects with adapter kind and resource kind                    │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  GET /statistics     = Retrieves metric values for a resource over a time range                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  VAMI                = Virtual Appliance Mgmt Interface; port 5480 browser access                     │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  vmware-vcops        = Main vROps service name on the appliance OS                                    │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  cluster-mgmt-cli    = CLI tool for checking cluster node health and status                           │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  vcops-support       = CLI command to generate vROps support bundle                                   │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  vcops/*.log         = Log directory for analytics, collector, and UI logs                            │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  ntpq -p             = Verifies NTP peer sync; important for metric timestamps                        │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │        POST /suite-api/api/auth/token        │  │             https://&lt;vrops&gt;:5480            │   │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │          GET /suite-api/api/alerts           │  │           Cluster management page           │   │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │         GET /suite-api/api/resources         │  │             Backup / restore UI             │   │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │        GET /suite-api/api/statistics         │  │            Certificate management           │   │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│                                                                                                       │
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│  REST API for automation; VAMI for appliance config; SSH for service-level control.                   │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│                                                                                                       │
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                                                                                                       │
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   │             SSH Service Commands             │  │            Useful Admin Commands            │   │
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │         service vmware-vcops status          │  │           df -h: disk usage check           │   │
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │         service vmware-vcops restart         │  │            top: CPU/RAM real-time           │   │
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │         tail -f /var/log/vcops/*.log         │  │           vcops-support bundle gen          │   │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │           cluster-mgmt-cli status            │  │           ntpq -p: NTP sync check           │   │
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│                                                                                                       │
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  vROps master/data nodes on vSphere; SSH via jump host; VAMI browser on port 5480                     │
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│                                                                                                       │
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  suite-api           = vROps REST API path prefix; all endpoints under /suite-api                     │
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│  Auth Token          = Bearer token from POST /auth/token; required for API calls                     │
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  GET /alerts         = Returns all active alerts with severity and resource context                   │
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  GET /resources      = Lists monitored objects with adapter kind and resource kind                    │
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  GET /statistics     = Retrieves metric values for a resource over a time range                       │
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  VAMI                = Virtual Appliance Mgmt Interface; port 5480 browser access                     │
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  vmware-vcops        = Main vROps service name on the appliance OS                                    │
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  cluster-mgmt-cli    = CLI tool for checking cluster node health and status                           │
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  vcops-support       = CLI command to generate vROps support bundle                                   │
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  vcops/*.log         = Log directory for analytics, collector, and UI logs                            │
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  ntpq -p             = Verifies NTP peer sync; important for metric timestamps                        │
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│                                                                                                       │
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│  REST API  base: https://&lt;aria-ops&gt;/suite-api/api                                                     │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│  POST /api/auth/token/acquire   authenticate                                                          │
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│  GET  /api/resources            list objects                                                          │
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│  GET  /api/alerts?activeOnly=true  active alerts                                                      │
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│  GET  /api/cluster/nodes        node status                                                           │
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>└─────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│                                                                                                       │
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│                                                                                                       │
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│   │        POST /suite-api/api/auth/token        │  │             https://&lt;vrops&gt;:5480            │   │
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   │          GET /suite-api/api/alerts           │  │           Cluster management page           │   │
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   │         GET /suite-api/api/resources         │  │             Backup / restore UI             │   │
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   │        GET /suite-api/api/statistics         │  │            Certificate management           │   │
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│                                                                                                       │
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│  REST API for automation; VAMI for appliance config; SSH for service-level control.                   │
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│                                                                                                       │
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│                                                                                                       │
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│   │             SSH Service Commands             │  │            Useful Admin Commands            │   │
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│   │         service vmware-vcops status          │  │           df -h: disk usage check           │   │
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│   │         service vmware-vcops restart         │  │            top: CPU/RAM real-time           │   │
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│   │         tail -f /var/log/vcops/*.log         │  │           vcops-support bundle gen          │   │
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│   │           cluster-mgmt-cli status            │  │           ntpq -p: NTP sync check           │   │
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│                                                                                                       │
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│  vROps master/data nodes on vSphere; SSH via jump host; VAMI browser on port 5480                     │
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│                                                                                                       │
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>│                                                                                                       │
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>│  suite-api           = vROps REST API path prefix; all endpoints under /suite-api                     │
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>│  Auth Token          = Bearer token from POST /auth/token; required for API calls                     │
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>│  GET /alerts         = Returns all active alerts with severity and resource context                   │
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>│  GET /resources      = Lists monitored objects with adapter kind and resource kind                    │
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>│  GET /statistics     = Retrieves metric values for a resource over a time range                       │
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>│  VAMI                = Virtual Appliance Mgmt Interface; port 5480 browser access                     │
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>│  vmware-vcops        = Main vROps service name on the appliance OS                                    │
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>│  cluster-mgmt-cli    = CLI tool for checking cluster node health and status                           │
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>│  vcops-support       = CLI command to generate vROps support bundle                                   │
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>│  vcops/*.log         = Log directory for analytics, collector, and UI logs                            │
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>│  ntpq -p             = Verifies NTP peer sync; important for metric timestamps                        │
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>│  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>│                                                                                                       │
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  REST API  base: https://&lt;aria-ops&gt;/suite-api/api                                                     │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  POST /api/auth/token/acquire   authenticate                                                          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  GET  /api/resources            list objects                                                          │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  GET  /api/alerts?activeOnly=true  active alerts                                                      │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  GET  /api/cluster/nodes        node status                                                           │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <h3 id="adapter-management">Adapter Management<a class="headerlink" href="#adapter-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all adapters and collection status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List adapters with verbose output</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span>--verbose
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Restart a specific adapter (get ID from list output)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>restart<span class="w"> </span>--id<span class="w"> </span>&lt;adapter-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all adapters and collection status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List adapters with verbose output</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span>--verbose
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Restart a specific adapter (get ID from list output)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>restart<span class="w"> </span>--id<span class="w"> </span>&lt;adapter-id&gt;
 </code></pre></div>
 <h3 id="status-and-services">Status and Services<a class="headerlink" href="#status-and-services" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Overall service health summary</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vracli<span class="w"> </span>status
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check individual service</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-&lt;service-name&gt;
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># List all VMware services</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Overall service health summary</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check individual service</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-&lt;service-name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List all VMware services</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span>
 </code></pre></div>
 <h3 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View current certificate info</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>show
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Replace certificate (PEM format)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span>--cert<span class="w"> </span>/tmp/aria-ops.crt<span class="w"> </span>--key<span class="w"> </span>/tmp/aria-ops.key<span class="w"> </span>--ca<span class="w"> </span>/tmp/ca-chain.crt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View current certificate info</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Replace certificate (PEM format)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span>--cert<span class="w"> </span>/tmp/aria-ops.crt<span class="w"> </span>--key<span class="w"> </span>/tmp/aria-ops.key<span class="w"> </span>--ca<span class="w"> </span>/tmp/ca-chain.crt
 </code></pre></div>
 <h3 id="support">Support<a class="headerlink" href="#support" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate support bundle</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vracli<span class="w"> </span>support<span class="w"> </span>bundle<span class="w"> </span>generate
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List existing support bundles</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/storage/log/support-bundle/
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># View recent logs</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vracli<span class="w"> </span>log<span class="w"> </span>tail<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate support bundle</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vracli<span class="w"> </span>support<span class="w"> </span>bundle<span class="w"> </span>generate
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List existing support bundles</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/storage/log/support-bundle/
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># View recent logs</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vracli<span class="w"> </span>log<span class="w"> </span>tail<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
 </code></pre></div>
 <h3 id="authentication-and-users">Authentication and Users<a class="headerlink" href="#authentication-and-users" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List configured auth sources</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vracli<span class="w"> </span>auth<span class="w"> </span>list
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Test LDAP connectivity</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>vracli<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--source<span class="w"> </span>&lt;ldap-source-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List configured auth sources</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vracli<span class="w"> </span>auth<span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Test LDAP connectivity</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vracli<span class="w"> </span>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--source<span class="w"> </span>&lt;ldap-source-name&gt;
 </code></pre></div>
 <hr />
 <h2 id="chkconfig-legacy-service-enabledisable">chkconfig (Legacy / Service Enable/Disable)<a class="headerlink" href="#chkconfig-legacy-service-enabledisable" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List services and their runlevel status</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>chkconfig<span class="w"> </span>--list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmware
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Enable a service at boot</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>chkconfig<span class="w"> </span>vmware-vcops<span class="w"> </span>on
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List services and their runlevel status</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>chkconfig<span class="w"> </span>--list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmware
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Enable a service at boot</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>chkconfig<span class="w"> </span>vmware-vcops<span class="w"> </span>on
 </code></pre></div>
 <hr />
 <h2 id="useful-paths">Useful Paths<a class="headerlink" href="#useful-paths" title="Permanent link">&para;</a></h2>
@@ -5255,18 +5123,18 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 <hr />
 <h2 id="rest-api-quick-reference">REST API Quick Reference<a class="headerlink" href="#rest-api-quick-reference" title="Permanent link">&para;</a></h2>
 <p>Base URL: <code>https://&lt;aria-ops-fqdn&gt;/suite-api/api</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Authenticate and get token</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;authSource&quot;:&quot;LOCAL&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># List resources</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/resources&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Get all active alerts</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Authenticate and get token</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;authSource&quot;:&quot;LOCAL&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># List resources</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/resources&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Get all active alerts</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-ops&gt;/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <hr />
 <h2 id="related-sections">Related Sections<a class="headerlink" href="#related-sections" title="Permanent link">&para;</a></h2>

@@ -4696,6 +4696,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#planned-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Migration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Planned Migration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-migration-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Migration Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planned-migration-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planned Migration Procedure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reprotect" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4800,6 +4839,83 @@
     <span class="md-ellipsis">
       
         Upgrade SRM Appliance (8.x+)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-protection-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Protection Group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-recovery-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Recovery Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-test-failover-non-disruptive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Test Failover (Non-Disruptive)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-disaster-recovery-protected-site-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Disaster Recovery (Protected Site Down)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-vm-to-an-existing-protection-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a VM to an Existing Protection Group
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#change-rpo-on-a-vsphere-replication-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change RPO on a vSphere Replication VM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-vm-from-protection-decommission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove VM from Protection (Decommission)
       
     </span>
   </a>
@@ -5084,86 +5200,57 @@ Procedures ───────────────────────
 │  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Test Failover Procedure
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="planned-migration">Planned Migration<a class="headerlink" href="#planned-migration" title="Permanent link">&para;</a></h2>
+<p>A planned migration gracefully shuts down VMs at the protected site, performs a final replication sync, then powers them on at the recovery site. Both sites must be operational.</p>
+<h3 id="pre-migration-checklist">Pre-Migration Checklist<a class="headerlink" href="#pre-migration-checklist" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Both sites and SRM servers are reachable and healthy</li>
+<li>[ ] Replication is healthy with zero or acceptable backlog (RPO at target)</li>
+<li>[ ] Recovery plan has been tested successfully within the last quarter</li>
+<li>[ ] Change record approved; maintenance window scheduled</li>
+<li>[ ] Application owners notified; application shutdown pre-steps completed if required</li>
+<li>[ ] DNS/load balancer changes prepared (or scripted in recovery plan)</li>
+</ul>
+<h3 id="planned-migration-procedure">Planned Migration Procedure<a class="headerlink" href="#planned-migration-procedure" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>Recovery Plans</strong> &gt; select plan &gt; <strong>Run</strong> &gt; <strong>Planned Migration</strong>.</li>
+<li>SRM confirms both sites are connected — if the protected site is unreachable, it refuses to run Planned Migration (use Emergency Failover instead).</li>
+<li>SRM executes pre-power-off scripts (if configured).</li>
+<li>SRM quiesces and powers off protected-site VMs in reverse boot order (web → app → DB → infra).</li>
+<li>A final replication sync is triggered and completed — ensuring zero data loss.</li>
+<li>SRM presents replica datastores at the recovery site.</li>
+<li>VMs are registered and powered on at the recovery site in the defined boot sequence.</li>
+<li>Post-power-on scripts execute (DNS updates, load balancer re-point, etc.).</li>
+<li>Validate services, then close the change record.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">No Rollback After Planned Migration</p>
+<p>Once VMs are powered on at the recovery site, the original protected site is unpowered. To return to the original site, run <strong>Reprotect</strong> followed by a reverse failover.</p>
+</div>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Emergency Failover (Disaster Recovery)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1. Navigate to **Recovery Plans** &gt; select plan &gt; **Test**.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2. When prompted, choose whether to sync recent changes before test (recommended).
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>3. SRM creates isolated snapshot datastores at the recovery site.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>4. Monitor the recovery steps in the **Recovery Steps** tab — each step shows status, duration, and any errors.
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>5. Once all VMs are powered on, validate application functionality within the bubble network.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>6. Click **Cleanup** to tear down the test environment. Do not leave test environments running longer than needed — stale snapshots can fill journal/snapshot space.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>!!! tip &quot;RTO Measurement&quot;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    Record the elapsed time shown in the **Recovery Steps** pane at the point when the last application health check passes. This is your actual RTO — compare against the tier target RTO in the standards document.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>### Common Test Failover Issues
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Symptom | Likely Cause | Resolution |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|---|---|---|
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| VM fails to power on — datastore inaccessible | Snapshot not created by SRA | Check SRA logs; verify array replication is healthy |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| IP customisation not applied | Missing IP customisation rule for VM | Add rule in Recovery Plan &gt; IP Customisation |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Post-power-on script fails | Script path not accessible from SRM service account | Fix UNC path; verify service account permissions |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| VM registers on wrong datastore | Datastore mapping misconfigured | Update datastore mapping in Site Recovery &gt; Array Managers |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| Test cleanup hangs | Snapshot deletion failed at array | Manually delete snapshot at array; then retry cleanup |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>---
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>## Planned Migration
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>A planned migration gracefully shuts down VMs at the protected site, performs a final replication sync, then powers them on at the recovery site. Both sites must be operational.
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>### Pre-Migration Checklist
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>- [ ] Both sites and SRM servers are reachable and healthy
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>- [ ] Replication is healthy with zero or acceptable backlog (RPO at target)
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>- [ ] Recovery plan has been tested successfully within the last quarter
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>- [ ] Change record approved; maintenance window scheduled
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>- [ ] Application owners notified; application shutdown pre-steps completed if required
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>- [ ] DNS/load balancer changes prepared (or scripted in recovery plan)
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>### Planned Migration Procedure
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>1. Navigate to **Recovery Plans** &gt; select plan &gt; **Run** &gt; **Planned Migration**.
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>2. SRM confirms both sites are connected — if the protected site is unreachable, it refuses to run Planned Migration (use Emergency Failover instead).
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>3. SRM executes pre-power-off scripts (if configured).
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>4. SRM quiesces and powers off protected-site VMs in reverse boot order (web → app → DB → infra).
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>5. A final replication sync is triggered and completed — ensuring zero data loss.
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>6. SRM presents replica datastores at the recovery site.
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>7. VMs are registered and powered on at the recovery site in the defined boot sequence.
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>8. Post-power-on scripts execute (DNS updates, load balancer re-point, etc.).
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>9. Validate services, then close the change record.
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>!!! warning &quot;No Rollback After Planned Migration&quot;
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>    Once VMs are powered on at the recovery site, the original protected site is unpowered. To return to the original site, run **Reprotect** followed by a reverse failover.
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>---
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>## Emergency Failover (Disaster Recovery)
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>Used when the protected site is unavailable. VMs are powered on from the most recent replica image. Some data loss is expected depending on RPO at the time of failure.
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>### Emergency Failover Procedure
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>1. Declare disaster and invoke the DR change record.
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>2. Navigate to **Recovery Plans** &gt; select plan &gt; **Run** &gt; **Disaster Recovery**.
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>3. SRM will warn that the protected site is not reachable and that data loss may occur — confirm.
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>4. SRM presents the last-good replica datastores at the recovery site.
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>5. VMs are registered and powered on in the defined boot sequence.
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>6. No pre-power-off or final sync steps are performed (protected site is down).
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>7. Post-power-on scripts execute.
-<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>8. Validate services and notify stakeholders.
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>9. Document the actual RPO: check the replication lag or journal timestamp at the time of failure.
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>```bash
-<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a># After failover, check SRDF or RecoverPoint state for data loss assessment
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a># PowerMax SRDF example
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>symrdf -sid &lt;SYMID&gt; -rdfg &lt;RDFG&gt; query
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>
-<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a># RecoverPoint — check journal recovery point timestamp
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>boxmgmt cg check_all
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Used when the protected site is unavailable. VMs are powered on from the most recent replica image. Some data loss is expected depending on RPO at the time of failure.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Emergency Failover Procedure
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>1. Declare disaster and invoke the DR change record.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2. Navigate to **Recovery Plans** &gt; select plan &gt; **Run** &gt; **Disaster Recovery**.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>3. SRM will warn that the protected site is not reachable and that data loss may occur — confirm.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>4. SRM presents the last-good replica datastores at the recovery site.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>5. VMs are registered and powered on in the defined boot sequence.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>6. No pre-power-off or final sync steps are performed (protected site is down).
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>7. Post-power-on scripts execute.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>8. Validate services and notify stakeholders.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>9. Document the actual RPO: check the replication lag or journal timestamp at the time of failure.
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># After failover, check SRDF or RecoverPoint state for data loss assessment</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># PowerMax SRDF example</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SYMID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;RDFG&gt;<span class="w"> </span>query
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># RecoverPoint — check journal recovery point timestamp</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
 </code></pre></div></p>
 <hr />
 <h2 id="reprotect">Reprotect<a class="headerlink" href="#reprotect" title="Permanent link">&para;</a></h2>
@@ -5266,15 +5353,15 @@ Procedures ───────────────────────
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check SRM service status on Windows SRM server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">vmware-dr</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Restart SRM service if needed</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">vmware-dr</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Review SRM logs</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Default log path: C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmware-dr.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check SRM service status on Windows SRM server</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">vmware-dr</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Restart SRM service if needed</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">vmware-dr</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Review SRM logs</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Default log path: C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmware-dr.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
 </code></pre></div>
 <hr />
 <h2 id="quarterly-dr-drill-process">Quarterly DR Drill Process<a class="headerlink" href="#quarterly-dr-drill-process" title="Permanent link">&para;</a></h2>
@@ -5358,6 +5445,167 @@ Procedures ───────────────────────
 <li>After the upgrade completes, log back in to vCenter and confirm the SRM site pair reconnects and shows both protected and recovery sites as <strong>Connected</strong></li>
 <li>Run a recovery plan validation to confirm all protection groups and recovery plans are intact post-upgrade</li>
 </ol>
+<hr />
+<h2 id="create-a-protection-group">Create a Protection Group<a class="headerlink" href="#create-a-protection-group" title="Permanent link">&para;</a></h2>
+<p>A protection group is a logical collection of VMs that are replicated and failed over together. This procedure covers creating a vSphere Replication-based protection group.</p>
+<ol>
+<li>In vCenter, navigate to <strong>Site Recovery → Protection Groups → New Protection Group</strong>.</li>
+<li>Enter a name and select the <strong>Site Pair</strong> (protected site → recovery site).</li>
+<li>Select <strong>Protection group type: vSphere Replication</strong> (choose "Array Based Replication" if using SRA-managed replication).</li>
+<li>Select the VMs to include — only VMs with an active vSphere Replication session are listed. If a VM is not shown, configure replication on the VM first before adding it to the group.</li>
+<li>Set the <strong>RPO</strong> target (5 minutes to 24 hours) — this is the maximum acceptable data loss window for the group.</li>
+<li>Click <strong>Next</strong>, review the summary, then click <strong>Finish</strong>.</li>
+<li>Monitor the protection group status — it should transition to <strong>OK</strong> within one replication cycle.</li>
+<li>If any VM shows <strong>Not Configured</strong> or <strong>Error</strong> state, click the VM and review the replication health details to identify the blocking issue.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — list all protection groups and their status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nv">$global:DefaultSrmServers</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nv">$info</span> <span class="p">=</span> <span class="nv">$pg</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$info</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> — State: </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">GetProtectionState</span><span class="p">())</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="create-a-recovery-plan">Create a Recovery Plan<a class="headerlink" href="#create-a-recovery-plan" title="Permanent link">&para;</a></h2>
+<p>A recovery plan is an automated runbook that defines how VMs are brought online at the recovery site. It can span one or more protection groups.</p>
+<ol>
+<li>In vCenter, navigate to <strong>Site Recovery → Recovery Plans → New Recovery Plan</strong>.</li>
+<li>Enter a name and select the <strong>recovery site</strong> (the site where VMs will be powered on during failover).</li>
+<li>On the <strong>Protection Groups</strong> page, add one or more protection groups that this plan will recover.</li>
+<li>On the <strong>Test Networks</strong> page, assign bubble network port groups for test failover — these are isolated VLANs used only during test mode and must not route to production.</li>
+<li>On the <strong>Recovery Settings</strong> page:</li>
+<li>Configure <strong>Network Mappings</strong> to map source port groups to recovery-site port groups.</li>
+<li>Add <strong>IP Customisation</strong> rules for any VMs that require a different IP address at the recovery site.</li>
+<li>Set <strong>Startup Priority</strong> — Priority 1 VMs power on first (infrastructure/database tier); priority 3 last (web/application tier).</li>
+<li>Add any custom recovery steps (scripts, manual checkpoints) at the appropriate position in the plan.</li>
+<li>Click <strong>Next</strong>, review, then click <strong>Finish</strong>.</li>
+<li>Once created, click <strong>Validate</strong> to run the plan validation wizard — resolve all errors and warnings before the plan is used in a test or actual failover.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — list recovery plans and current state</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nv">$global:DefaultSrmServers</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$plan</span> <span class="k">in</span> <span class="nv">$plans</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="nv">$info</span> <span class="p">=</span> <span class="nv">$plan</span><span class="p">.</span><span class="n">GetInfo</span><span class="p">()</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$info</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> — State: </span><span class="p">$(</span><span class="nv">$info</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="run-a-test-failover-non-disruptive">Run a Test Failover (Non-Disruptive)<a class="headerlink" href="#run-a-test-failover-non-disruptive" title="Permanent link">&para;</a></h2>
+<p>A test failover validates a recovery plan using isolated bubble networks. Production VMs at the protected site remain fully operational throughout the test.</p>
+<ol>
+<li>In vCenter, navigate to <strong>Site Recovery → Recovery Plans → [plan name]</strong>.</li>
+<li>Click <strong>Test</strong> — do not click Run; Test mode is the non-disruptive option.</li>
+<li>When prompted, choose <strong>Synchronize recent changes before test</strong> (recommended) to use the most current replica point.</li>
+<li>SRM creates isolated snapshot datastores at the recovery site and registers test VMs on the assigned bubble networks.</li>
+<li>Monitor progress in the <strong>Recovery Steps</strong> tab — each step shows status (running / success / error), elapsed time, and any error messages.</li>
+<li>Once all VMs are powered on, validate within the bubble network:</li>
+<li>VMs boot successfully and guest OS is healthy.</li>
+<li>Application services start and respond on expected ports.</li>
+<li>Record the total elapsed time as your measured RTO for the plan.</li>
+<li>When validation is complete, click <strong>Cleanup</strong> — SRM powers off test VMs, deletes snapshot copies, and removes the temporary datastore mounts.</li>
+<li>Document results: RTO achieved, any failed steps, and remediation actions required before the next test.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Always Run Cleanup</p>
+<p>Never leave a test failover running longer than necessary. Stale test snapshots consume replication journal space and can cause RPO violations on production replication sessions.</p>
+</div>
+<hr />
+<h2 id="run-a-disaster-recovery-protected-site-down">Run a Disaster Recovery (Protected Site Down)<a class="headerlink" href="#run-a-disaster-recovery-protected-site-down" title="Permanent link">&para;</a></h2>
+<p>Use this procedure when the protected site is confirmed unreachable and a forced failover is required. Some data loss from the replication lag at the time of failure is expected.</p>
+<ol>
+<li>Confirm the protected site is unreachable via out-of-band means (DCIM console, physical access, ISP circuit status) — rule out a transient network issue before declaring a site failure.</li>
+<li>Invoke the DR change record and notify all stakeholders per the incident response process.</li>
+<li>At the recovery site vCenter, navigate to <strong>Site Recovery → Recovery Plans → [plan name]</strong>.</li>
+<li>Click <strong>Run</strong> → select <strong>Disaster Recovery</strong> mode.</li>
+<li>SRM warns that the protected site is unreachable and that data loss may occur — acknowledge and confirm to proceed.</li>
+<li>SRM begins the recovery sequence using the last available replica:</li>
+<li>No pre-power-off steps execute (protected site is unavailable).</li>
+<li>No final replication sync is possible — recovery uses the last committed replica point.</li>
+<li>VMs are registered and powered on in the defined startup priority order.</li>
+<li>Monitor recovery step progress in the <strong>Recovery Steps</strong> tab — resolve any per-VM errors manually if needed.</li>
+<li>Once VMs are online, validate applications and services at the recovery site and notify stakeholders of recovery status.</li>
+<li>Document the actual RPO: check the replication journal or array snapshot timestamp to determine the last successful replication point before the failure.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check last RecoverPoint journal timestamp (run on RecoverPoint appliance)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># PowerMax SRDF — query replication state and last sync time</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SYMID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;RDFG&gt;<span class="w"> </span>query
+</code></pre></div>
+<hr />
+<h2 id="add-a-vm-to-an-existing-protection-group">Add a VM to an Existing Protection Group<a class="headerlink" href="#add-a-vm-to-an-existing-protection-group" title="Permanent link">&para;</a></h2>
+<p>When a new VM requires DR coverage, add it to an existing vSphere Replication protection group. Replication must be fully configured and in an active replicating state before the VM can join a protection group.</p>
+<p><strong>Step 1 — Configure vSphere Replication on the VM</strong></p>
+<ol>
+<li>In vCenter, right-click the VM → <strong>All vSphere Replication Actions → Configure Replication</strong>.</li>
+<li>Select the target recovery site vCenter as the replication target.</li>
+<li>Select the target datastore at the recovery site for the replica files.</li>
+<li>Set the RPO to match or be lower than the protection group's RPO target.</li>
+<li>Click <strong>Finish</strong> and wait for the initial full sync to complete — the VM must show <strong>Replicating</strong> status (not <strong>Initial sync</strong>) before proceeding.</li>
+</ol>
+<p><strong>Step 2 — Add VM to the Protection Group</strong></p>
+<ol>
+<li>Navigate to <strong>Site Recovery → Protection Groups → [group name]</strong>.</li>
+<li>Click <strong>Edit</strong> on the protection group, then select <strong>Add VMs</strong>.</li>
+<li>Select the VM from the list of eligible replicated VMs — only VMs with active replication sessions appear.</li>
+<li>Click <strong>OK</strong> — SRM validates that replication is active and RPO is within the group's tolerance.</li>
+<li>Confirm the protection group status returns to <strong>OK</strong> and the new VM shows no errors in the VM list.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># PowerCLI — check vSphere Replication state for a specific VM</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;web-prod-01&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$hbr</span> <span class="p">=</span> <span class="nb">Get-SpbmReplicationGroup</span> <span class="n">-VM</span> <span class="nv">$vm</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$hbr</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Rpo</span><span class="p">,</span> <span class="n">LatestRpo</span>
+</code></pre></div>
+<hr />
+<h2 id="change-rpo-on-a-vsphere-replication-vm">Change RPO on a vSphere Replication VM<a class="headerlink" href="#change-rpo-on-a-vsphere-replication-vm" title="Permanent link">&para;</a></h2>
+<p>Adjust the recovery point objective for a VM already enrolled in vSphere Replication. The change is made at the vSphere Replication layer; SRM reflects the updated value automatically.</p>
+<ol>
+<li>In vCenter, navigate to the VM → <strong>Configure</strong> tab → <strong>vSphere Replication</strong> → <strong>Replication</strong> section.</li>
+<li>Click <strong>Edit</strong> (pencil icon) on the active replication session.</li>
+<li>On the <strong>Replication Settings</strong> page, adjust the <strong>RPO slider</strong> to the new target value (range: 5 minutes to 24 hours).</li>
+<li>Click <strong>Next</strong> through any remaining wizard pages without changing other settings, then click <strong>Finish</strong>.</li>
+<li>vSphere Replication applies the new RPO immediately; the replication schedule adjusts to meet the new interval.</li>
+<li>In SRM, navigate to <strong>Protection Groups → [group name]</strong> and confirm the VM now reflects the updated RPO value in the VM list.</li>
+<li>If the new RPO is tighter than the group's target, verify the VM is achieving it — check the <strong>Latest RPO</strong> column and ensure it is at or below the configured target after the next replication cycle completes.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — report configured and latest RPO for all replicated VMs</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vCenter-FQDN</span><span class="p">&gt;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="nv">$hbr</span> <span class="p">=</span> <span class="nb">Get-SpbmReplicationGroup</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$hbr</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> — Configured RPO: </span><span class="p">$(</span><span class="nv">$hbr</span><span class="p">.</span><span class="n">Rpo</span><span class="p">)</span><span class="s2"> min — Latest RPO: </span><span class="p">$(</span><span class="nv">$hbr</span><span class="p">.</span><span class="n">LatestRpo</span><span class="p">)</span><span class="s2"> min&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="p">}</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="remove-vm-from-protection-decommission">Remove VM from Protection (Decommission)<a class="headerlink" href="#remove-vm-from-protection-decommission" title="Permanent link">&para;</a></h2>
+<p>When a VM is decommissioned or no longer requires DR coverage, remove it cleanly from SRM to avoid orphaned replication jobs and replica files consuming storage at the recovery site.</p>
+<p><strong>Step 1 — Remove from SRM Protection Group</strong></p>
+<ol>
+<li>Navigate to <strong>Site Recovery → Protection Groups → [group name]</strong>.</li>
+<li>Select the VM in the group's VM list.</li>
+<li>Click <strong>Remove from Protection Group</strong> — SRM removes the VM from the group but does not stop the underlying replication session.</li>
+<li>Confirm the protection group status returns to <strong>OK</strong> with the remaining VMs intact.</li>
+</ol>
+<p><strong>Step 2 — Stop vSphere Replication on the VM</strong></p>
+<ol>
+<li>In vCenter, right-click the VM → <strong>All vSphere Replication Actions → Remove Replication</strong>.</li>
+<li>Confirm the removal — this stops the replication session and removes the replica VMDK files at the recovery site datastore.</li>
+</ol>
+<p><strong>Step 3 — Verify No Orphaned Replication Jobs</strong></p>
+<ol>
+<li>At the recovery site vCenter, navigate to <strong>vSphere Replication → Incoming Replications</strong>.</li>
+<li>Confirm no incoming replication entry exists for the decommissioned VM.</li>
+<li>Browse the recovery-site datastore to confirm no orphaned replica VMDK files remain from the removed VM.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># PowerCLI — list all incoming replication sessions at the recovery site</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># Run against the recovery site vCenter</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">recovery-vcenter-FQDN</span><span class="p">&gt;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">$incoming</span> <span class="p">=</span> <span class="nb">Get-SpbmReplicationGroup</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">$incoming</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-ne</span> <span class="s2">&quot;Replicating&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">LatestRpo</span>
+</code></pre></div>
 
 
 

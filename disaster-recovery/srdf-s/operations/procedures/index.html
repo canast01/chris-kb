@@ -4446,208 +4446,198 @@
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Confirm completion: all pairs Synchronized, 0 tracks</span>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query<span class="w"> </span>-detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Invalid Tracks&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Dev    Pair State    % Synced    Invalid Tracks
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>---    ----------    --------    --------------
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>0A1    SyncInProg    73%         2,450
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>0A2    SyncInProg    81%         1,102
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Step 1: Confirm R1 is the current active side and both arrays are accessible</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>symcfg<span class="w"> </span>list
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Step 2: Initiate resync (re-establish synchronous pairing from R1 to R2)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>establish
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Alternative if pairs are in Split state:</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Step 3: Monitor progress — pairs will show SyncInProg until dirty tracks are cleared</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt;&#39;</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Check the number of invalid tracks remaining (decreasing count = progress)</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;invalid\|track&quot;</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1"># Step 4: Confirm all pairs are Synchronized</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Step 5: Record resync completion time in the change ticket</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Resync completed at </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Dev    Pair State     % Synced    Invalid Tracks
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>---    ----------     --------    --------------
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>0A1    Synchronized   100%        0
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>0A2    Synchronized   100%        0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Step 1: Confirm all pairs are Synchronized before suspending</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Step 2: Suspend SRDF/S replication for the device group</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span><span class="nb">suspend</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Confirm pairs are now Suspended (R1 continues I/O; R2 is held)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># -- Perform maintenance --</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Step 3: Resume replication after maintenance</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># Step 4: Monitor resync — SyncInProg expected; watch until Synchronized</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt;&#39;</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># Step 5: Verify full synchronisation before closing the change ticket</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Step 1: Confirm R1 is the current active side and both arrays are accessible</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>symcfg<span class="w"> </span>list
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Step 2: Initiate resync (re-establish synchronous pairing from R1 to R2)</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>establish
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Alternative if pairs are in Split state:</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Step 3: Monitor progress — pairs will show SyncInProg until dirty tracks are cleared</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt;&#39;</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Check the number of invalid tracks remaining (decreasing count = progress)</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;invalid\|track&quot;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Step 4: Confirm all pairs are Synchronized</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># Step 5: Record resync completion time in the change ticket</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Resync completed at </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Step 1: Confirm current mode and capture baseline</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>-rdfgrp<span class="w"> </span>&lt;rdf_group_number&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Step 2: Suspend the SRDF group cleanly before mode change</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span><span class="nb">suspend</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Confirm pairs are Suspended</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Step 3: Set the RDF group mode to Asynchronous (SRDF/A)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Note: mode change is performed via Unisphere GUI or SE set command</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Via SYMCLI (SE 9.x+):</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mode<span class="w"> </span>async
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Step 4: Resume replication in async mode</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Confirm pairs are now replicating in Asynchronous mode</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>-rdfgrp<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>mode
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Step 1: Confirm all pairs are Synchronized before suspending</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Step 1: Suspend async replication cleanly</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span><span class="nb">suspend</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Step 2: Suspend SRDF/S replication for the device group</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span><span class="nb">suspend</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Step 2: Set mode back to Synchronous (SRDF/S)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mode<span class="w"> </span>sync
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Confirm pairs are now Suspended (R1 continues I/O; R2 is held)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Step 3: Resume — replication will resync and return to Synchronized state</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># -- Perform maintenance --</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Step 3: Resume replication after maintenance</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Step 4: Monitor resync — SyncInProg expected; watch until Synchronized</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt;&#39;</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># Step 5: Verify full synchronisation before closing the change ticket</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Step 4: Monitor resync progress (SyncInProg is expected until complete)</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt; | grep -v Synchronized&#39;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Step 5: Confirm all pairs are Synchronized before declaring maintenance complete</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Step 1: Confirm current mode and capture baseline</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>-rdfgrp<span class="w"> </span>&lt;rdf_group_number&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Step 1: Quiesce DR site applications</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># -- DR application team confirms quiesce --</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Step 2: Suspend the SRDF group cleanly before mode change</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span><span class="nb">suspend</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Step 2: From DR SE host — confirm current pair state (should be Failed Over)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Confirm pairs are Suspended</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Step 3: Initiate failback (resync R1 from R2, then restore original direction)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>failback
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Step 3: Set the RDF group mode to Asynchronous (SRDF/A)</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Note: mode change is performed via Unisphere GUI or SE set command</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Via SYMCLI (SE 9.x+):</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mode<span class="w"> </span>async
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Step 4: Resume replication in async mode</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># Confirm pairs are now replicating in Asynchronous mode</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>-rdfgrp<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>mode
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Step 4: Monitor until pairs reach Synchronized state in original direction</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt; -sid &lt;r1_sid&gt;&#39;</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Step 5: Confirm R1 is now the active R1 side (Synchronized, not Write Disabled)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Step 6: Re-present R1 volumes to primary site hosts and restart applications</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1"># -- Application team confirms production is running at primary site --</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="c1"># Step 7: Confirm R2 is again the synchronous DR target (Write Disabled on R2)</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Step 1: Suspend async replication cleanly</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span><span class="nb">suspend</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># After primary site recovery: restore R1 devices (accepts R2 data back)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>restore<span class="w"> </span>-noprompt
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Step 2: Set mode back to Synchronous (SRDF/S)</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mode<span class="w"> </span>sync
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Confirm Synchronized state restored</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Step 3: Resume — replication will resync and return to Synchronized state</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>resume
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Step 4: Monitor resync progress (SyncInProg is expected until complete)</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt; | grep -v Synchronized&#39;</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Step 5: Confirm all pairs are Synchronized before declaring maintenance complete</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Switch back to R1 (optional planned failback)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>failover<span class="w"> </span>-establish<span class="w"> </span>-noprompt
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Step 1: Quiesce DR site applications</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># -- DR application team confirms quiesce --</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># 1. Failover SRDF/S group</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>failover
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Step 2: From DR SE host — confirm current pair state (should be Failed Over)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># 2. Present R2 LUNs to ESXi hosts at DR site (zoning / masking)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># -- Storage team action --</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Step 3: Initiate failback (resync R1 from R2, then restore original direction)</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>failback
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Step 4: Monitor until pairs reach Synchronized state in original direction</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s1">&#39;symrdf query -g &lt;dgname&gt; -sid &lt;r1_sid&gt;&#39;</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># Step 5: Confirm R1 is now the active R1 side (Synchronized, not Write Disabled)</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="c1"># Step 6: Re-present R1 volumes to primary site hosts and restart applications</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># -- Application team confirms production is running at primary site --</span>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="c1"># Step 7: Confirm R2 is again the synchronous DR target (Write Disabled on R2)</span>
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># 3. Resignature VMFS datastores at DR site (if not SRM-managed)</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># esxcli storage vmfs snapshot list</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># esxcli storage vmfs snapshot resignature -l &lt;label&gt;</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># 4. Register and power on VMs manually in vCenter at DR site</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># -- VMware team action --</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># After primary site recovery: restore R1 devices (accepts R2 data back)</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>restore<span class="w"> </span>-noprompt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Step 1: Identify current pair states</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Confirm Synchronized state restored</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>query
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Step 2: Check SRDF group port and link state</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Switch back to R1 (optional planned failback)</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">10</span><span class="w"> </span>-type<span class="w"> </span>S<span class="w"> </span>failover<span class="w"> </span>-establish<span class="w"> </span>-noprompt
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Step 3: Check WAN RTT to DR site</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;dr_site_ip&gt;
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Step 4: Check for any pairs that are not Synchronized</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Synchronized
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Step 5: Pull write latency metrics from Unisphere for the past hour</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># (Unisphere GUI: Performance &gt; RDF Group &gt; select group &gt; Write Response Time)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Failover SRDF/S group</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>failover
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Confirm all pairs are Synchronized</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># 2. Present R2 LUNs to ESXi hosts at DR site (zoning / masking)</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># -- Storage team action --</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Confirm group port states are Online</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># 3. Resignature VMFS datastores at DR site (if not SRM-managed)</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># esxcli storage vmfs snapshot list</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c1"># esxcli storage vmfs snapshot resignature -l &lt;label&gt;</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="c1"># 4. Register and power on VMs manually in vCenter at DR site</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="c1"># -- VMware team action --</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Step 1: Identify current pair states</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Step 2: Check SRDF group port and link state</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Step 3: Check WAN RTT to DR site</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;dr_site_ip&gt;
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Step 4: Check for any pairs that are not Synchronized</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Synchronized
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># Step 5: Pull write latency metrics from Unisphere for the past hour</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c1"># (Unisphere GUI: Performance &gt; RDF Group &gt; select group &gt; Write Response Time)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Confirm all pairs are Synchronized</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>verify<span class="w"> </span>-synchronized
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Confirm group port states are Online</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Confirm WAN RTT is within baseline</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;dr_site_ip&gt;
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Capture post-change state for the change ticket</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_s_postchange_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Confirm WAN RTT is within baseline</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>&lt;dr_site_ip&gt;
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Capture post-change state for the change ticket</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>symrdf<span class="w"> </span>query<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>&gt;<span class="w"> </span>/tmp/srdf_s_postchange_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.txt
 </code></pre></div></p>
 <h2 id="query-srdfs-group-status">Query SRDF/S Group Status<a class="headerlink" href="#query-srdfs-group-status" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query</code> — shows all device pairs, RDF State (Synchronized/Failed Over/etc.), and track counts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
 </code></pre></div>
 <h2 id="verify-wan-latency-acceptability">Verify WAN Latency Acceptability<a class="headerlink" href="#verify-wan-latency-acceptability" title="Permanent link">&para;</a></h2>
 <p>Measure RTT between SRDF director ports; target &lt;10ms. <code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; verifylink</code> — all paths healthy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>verifylink
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>verifylink
 </code></pre></div>
 <h2 id="perform-a-planned-failover-failover">Perform a Planned Failover (Failover)<a class="headerlink" href="#perform-a-planned-failover-failover" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; failover</code> — suspends writes to R1, finalizes R2, makes R2 read-write. Used for planned maintenance.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover
 </code></pre></div>
 <h2 id="perform-a-disaster-recovery-failover-failover-force">Perform a Disaster Recovery Failover (Failover Force)<a class="headerlink" href="#perform-a-disaster-recovery-failover-failover-force" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; failover -force</code> — forces R2 to become R/W without R1 acknowledgement. Use when R1 is unavailable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover<span class="w"> </span>-force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover<span class="w"> </span>-force
 </code></pre></div>
 <h2 id="fail-back-after-recovery">Fail Back After Recovery<a class="headerlink" href="#fail-back-after-recovery" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; failback</code> — re-synchronizes from R2 back to R1 and resumes normal synchronous replication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failback
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failback
 </code></pre></div>
 <h2 id="suspend-replication-planned-maintenance">Suspend Replication (Planned Maintenance)<a class="headerlink" href="#suspend-replication-planned-maintenance" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; suspend</code> — temporarily halts replication while keeping pairs intact. Resume with <code>symrdf resume</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Suspend</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span><span class="nb">suspend</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Resume after maintenance</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>resume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Suspend</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span><span class="nb">suspend</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Resume after maintenance</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>resume
 </code></pre></div>
 <h2 id="check-bias-setting">Check Bias Setting<a class="headerlink" href="#check-bias-setting" title="Permanent link">&para;</a></h2>
 <p><code>symrdf -sid &lt;sid&gt; -rdfg &lt;group&gt; query | grep -i bias</code> — identifies which site has preferred access during a split-brain scenario.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>bias
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>bias
 </code></pre></div>
 <h2 id="add-devices-to-an-existing-srdfs-group">Add Devices to an Existing SRDF/S Group<a class="headerlink" href="#add-devices-to-an-existing-srdfs-group" title="Permanent link">&para;</a></h2>
 <p><code>symrdf addpair -sid &lt;source-sid&gt; -rdfg &lt;group&gt; -dev &lt;new-R1-devices&gt; -remote_dev &lt;new-R2-devices&gt;</code> then <code>symrdf establish</code> for the new pairs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>symrdf<span class="w"> </span>addpair<span class="w"> </span>-sid<span class="w"> </span>&lt;source-sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;new-R1-devices&gt;<span class="w"> </span>-remote_dev<span class="w"> </span>&lt;new-R2-devices&gt;
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;source-sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;new-R1-devices&gt;<span class="w"> </span>establish
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>symrdf<span class="w"> </span>addpair<span class="w"> </span>-sid<span class="w"> </span>&lt;source-sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;new-R1-devices&gt;<span class="w"> </span>-remote_dev<span class="w"> </span>&lt;new-R2-devices&gt;
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;source-sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;new-R1-devices&gt;<span class="w"> </span>establish
 </code></pre></div>
 <h2 id="remove-devices-from-srdfs-group">Remove Devices from SRDF/S Group<a class="headerlink" href="#remove-devices-from-srdfs-group" title="Permanent link">&para;</a></h2>
 <p><code>symrdf deletepair -sid &lt;sid&gt; -rdfg &lt;group&gt; -dev &lt;devices&gt;</code> — removes pair relationship. Data on R2 becomes independent.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>symrdf<span class="w"> </span>deletepair<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;devices&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>symrdf<span class="w"> </span>deletepair<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-dev<span class="w"> </span>&lt;devices&gt;
 </code></pre></div>
 <h2 id="collect-srdf-performance-metrics">Collect SRDF Performance Metrics<a class="headerlink" href="#collect-srdf-performance-metrics" title="Permanent link">&para;</a></h2>
 <p><code>symstat -sid &lt;sid&gt; -rdfg &lt;group&gt; -type rdf</code> — shows throughput, write pending count, and latency metrics for capacity planning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-type<span class="w"> </span>rdf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-type<span class="w"> </span>rdf
 </code></pre></div>
 
 
