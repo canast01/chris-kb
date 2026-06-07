@@ -3390,6 +3390,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#nfsv41-session-model-and-pnfs-data-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFSv4.1 Session Model and pNFS Data Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NFSv4.1 Session Model and pNFS Data Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mds-vs-ds-role-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MDS vs DS Role Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#version-comparison" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3657,6 +3685,126 @@ NFS Versions reference covering Version Comparison, Recommended Version, Checkin
 ├─────────────────────┼──────────────┼──────────────┼──────────────┤
 │ Recommended for     │ Legacy only  │ General use  │ Modern/perf                                       │
 └─────────────────────┴──────────────┴──────────────┴──────────────┘</code></p>
+<h2 id="nfsv41-session-model-and-pnfs-data-path">NFSv4.1 Session Model and pNFS Data Path<a class="headerlink" href="#nfsv41-session-model-and-pnfs-data-path" title="Permanent link">&para;</a></h2>
+<p>NFSv4.1 introduces a formal session abstraction (replacing the stateless NFSv3 model) and pNFS, which separates metadata operations from bulk data I/O. The Metadata Server (MDS) handles namespace, locking, and layout grants; Data Servers (DS) serve actual file data directly to the client.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    participant CLI as NFS Client&lt;br/&gt;(Linux kernel nfs module)
+    participant MDS as Metadata Server (MDS)&lt;br/&gt;(NFS server — port 2049)
+    participant DS1 as Data Server 1 (DS)&lt;br/&gt;(Storage node A)
+    participant DS2 as Data Server 2 (DS)&lt;br/&gt;(Storage node B)
+
+    Note over CLI,MDS: Phase 1 — NFSv4.1 Session Establishment
+    CLI-&gt;&gt;MDS: EXCHANGE_ID (client owner, flags: SUPP_MOVED_REFER | USE_PNFS_MDS)
+    MDS--&gt;&gt;CLI: EXCHANGE_ID response (clientid, server owner, sequence window)
+    CLI-&gt;&gt;MDS: CREATE_SESSION (clientid, sequence, channel attrs: max ops, slots)
+    MDS--&gt;&gt;CLI: CREATE_SESSION response (sessionid, slot table size, max request size)
+    Note over CLI,MDS: Slot-based session replaces RPC request-response&lt;br/&gt;Each slot tracks sequence — enables exactly-once semantics
+
+    Note over CLI,MDS: Phase 2 — NFSv4.1 Compound Operations (metadata)
+    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTROOTFH | LOOKUP "data" | GETATTR ]
+    MDS--&gt;&gt;CLI: COMPOUND response (fh, attrs: size, mtime, mode, ACL)
+    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | OPEN (file.vmdk, OPEN4_CREATE) | GETATTR ]
+    MDS--&gt;&gt;CLI: COMPOUND response (stateid, open delegation if granted)
+    Note over CLI: Client holds stateid — used for all lock/layout requests
+
+    Note over CLI,MDS: Phase 3 — pNFS Layout Grant (LAYOUTGET)
+    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | LAYOUTGET (type=FILE, offset=0, length=EOF) ]
+    MDS--&gt;&gt;CLI: COMPOUND response — layout: DS1 handles stripe 0..511MB, DS2 handles 512MB..EOF&lt;br/&gt;deviceid → DS1 addr (10.0.1.11:2049), DS2 addr (10.0.1.12:2049)
+    Note over CLI: Client now has full layout — MDS not in I/O path
+
+    Note over CLI,DS1,DS2: Phase 4 — Direct Client-to-DS I/O (pNFS data path)
+    CLI-&gt;&gt;DS1: COMPOUND [ SEQUENCE | PUTFH | READ offset=0 count=4MB ]
+    DS1--&gt;&gt;CLI: READ response (data, eof=false)
+    CLI-&gt;&gt;DS2: COMPOUND [ SEQUENCE | PUTFH | WRITE offset=512MB count=4MB ]
+    DS2--&gt;&gt;CLI: WRITE response (count, verifier)
+    Note over CLI,DS2: MDS receives NO data plane traffic&lt;br/&gt;Both DSes serve I/O in parallel → aggregate bandwidth
+
+    Note over CLI,MDS: Phase 5 — Layout Return and State Cleanup
+    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | LAYOUTRETURN (stateid, range) ]
+    MDS--&gt;&gt;CLI: COMPOUND response (layout returned)
+    CLI-&gt;&gt;MDS: COMPOUND [ SEQUENCE | PUTFH | CLOSE (stateid) ]
+    MDS--&gt;&gt;CLI: COMPOUND response (stateid invalidated)
+    CLI-&gt;&gt;MDS: DESTROY_SESSION (sessionid)
+    MDS--&gt;&gt;CLI: DESTROY_SESSION response</code></pre>
+<h3 id="mds-vs-ds-role-separation">MDS vs DS Role Separation<a class="headerlink" href="#mds-vs-ds-role-separation" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph LR
+    subgraph Client["NFS Client"]
+        APP["Application&lt;br/&gt;(read/write calls)"]
+        VFS["VFS Layer"]
+        NFS41["NFSv4.1 Module&lt;br/&gt;+ pNFS driver"]
+    end
+
+    subgraph Control["Control Plane"]
+        MDS["Metadata Server (MDS)&lt;br/&gt;── namespace / dentries&lt;br/&gt;── open / lock / delegation&lt;br/&gt;── layout grant (LAYOUTGET)&lt;br/&gt;── attribute updates&lt;br/&gt;── port 2049"]
+    end
+
+    subgraph Data["Data Plane (pNFS)"]
+        DS1["Data Server 1&lt;br/&gt;── file stripe 0 → 511 MB&lt;br/&gt;── direct TCP :2049&lt;br/&gt;── no MDS involvement"]
+        DS2["Data Server 2&lt;br/&gt;── file stripe 512 MB → EOF&lt;br/&gt;── direct TCP :2049&lt;br/&gt;── parallel to DS1"]
+    end
+
+    APP --&gt; VFS --&gt; NFS41
+    NFS41 --&gt;|"COMPOUND ops&lt;br/&gt;(metadata)"| MDS
+    MDS --&gt;|"layout + deviceid"| NFS41
+    NFS41 --&gt;|"READ / WRITE&lt;br/&gt;(data direct)"| DS1
+    NFS41 --&gt;|"READ / WRITE&lt;br/&gt;(data direct)"| DS2
+    DS1 &amp; DS2 -.-&gt;|"layout recall&lt;br/&gt;(CB_LAYOUTRECALL)"| NFS41
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef ds fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef cli fill:#15803d,stroke:#166534,color:#fff
+    class MDS ctrl
+    class DS1,DS2 ds
+    class APP,VFS,NFS41 cli</code></pre>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>NFSv3</th>
+<th>NFSv4.0</th>
+<th>NFSv4.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session</td>
+<td>None (stateless)</td>
+<td>None (pseudo-stateful)</td>
+<td>Formal session (sessionid + slot table)</td>
+</tr>
+<tr>
+<td>Exactly-once semantics</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (slot sequence numbers)</td>
+</tr>
+<tr>
+<td>pNFS</td>
+<td>No</td>
+<td>No</td>
+<td>Yes — FILE, BLOCK, OBJECT layouts</td>
+</tr>
+<tr>
+<td>Metadata server</td>
+<td>Combined</td>
+<td>Combined</td>
+<td>Dedicated MDS role</td>
+</tr>
+<tr>
+<td>Data path</td>
+<td>Always through server</td>
+<td>Always through server</td>
+<td>Direct client → DS (bypasses MDS)</td>
+</tr>
+<tr>
+<td>Callback channel</td>
+<td>Separate connection</td>
+<td>Single forward channel</td>
+<td>Backchannel on same session</td>
+</tr>
+</tbody>
+</table>
 <h2 id="version-comparison">Version Comparison<a class="headerlink" href="#version-comparison" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

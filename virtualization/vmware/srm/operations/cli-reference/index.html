@@ -1152,6 +1152,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2712,6 +2716,8 @@
       
         
           
+        
+      
         
       
         
@@ -4630,72 +4636,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#powercli-for-srm" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PowerCLI for SRM
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#get-protected-vm-list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Get Protected VM List
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#get-recovery-plan-history" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Get Recovery Plan History
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disconnect-srm-session" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disconnect SRM Session
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#srm-object-hierarchy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SRM Object Hierarchy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-failover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Failover
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#recovery-planned-migration-failover" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4957,284 +4897,82 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SRM is managed primarily via the vSphere Client plugin; srm-util.exe and the SRM                     │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  REST API provide CLI automation for plan management and testing.                                     │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              srm-util Commands               │  │                 SRM REST API                │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          srm-util srmcli list-plans          │  │             POST /api/rest/login            │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          srm-util srmcli test-plan           │  │             GET /api/rest/plans             │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           srm-util srmcli run-plan           │  │         POST /api/rest/plans/{}/run         │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │               srm-util showvms               │  │        GET /api/rest/plans/{}/status        │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  srm-util.exe runs on SRM Server; REST API is accessible from any host on port 443.                   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             PowerCLI SRM Module              │  │             Diagnostic Commands             │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │              Connect-SrmServer               │  │             Get-SrmRecoveryPlan             │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │            Get-SrmProtectionGroup            │  │               srm-util history              │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            Start-SrmRecoveryPlan             │  │                srm-util plans               │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │           Get-SrmReplicationGroup            │  │            Check replication lag            │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  srm-util.exe runs on Windows SRM Server; PowerCLI module connects from jump host;                    │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  REST API on port 443 of SRM Server FQDN.                                                             │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  srm-util      = SRM command-line utility on the SRM Server VM                                        │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  srmcli        = sub-command for recovery plan operations                                             │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  list-plans    = show all configured recovery plans                                                   │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  test-plan     = run plan in test mode (bubble network)                                               │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  run-plan      = trigger actual failover (use with caution)                                           │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  showvms       = list VMs in protection group with replication status                                 │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  history       = show previous plan run results and timestamps                                        │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Connect-SrmServer= PowerCLI; authenticate to SRM                                                     │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Start-SrmRecoveryPlan= PowerCLI; trigger plan test or failover                                       │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  GET /api/rest/plans= list all recovery plans via REST                                                │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  POST /api/rest/plans/{}/run= trigger plan execution via REST                                         │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Replication lag= time delta between protected and recovery replica                                   │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  SRM is managed primarily via the vSphere Client plugin; srm-util.exe and the SRM                     │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  REST API provide CLI automation for plan management and testing.                                     │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                                                                                                       │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │              srm-util Commands               │  │                 SRM REST API                │   │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │          srm-util srmcli list-plans          │  │             POST /api/rest/login            │   │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │          srm-util srmcli test-plan           │  │             GET /api/rest/plans             │   │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │           srm-util srmcli run-plan           │  │         POST /api/rest/plans/{}/run         │   │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │               srm-util showvms               │  │        GET /api/rest/plans/{}/status        │   │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│  srm-util.exe runs on SRM Server; REST API is accessible from any host on port 443.                   │
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │             PowerCLI SRM Module              │  │             Diagnostic Commands             │   │
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │              Connect-SrmServer               │  │             Get-SrmRecoveryPlan             │   │
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │            Get-SrmProtectionGroup            │  │               srm-util history              │   │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │            Start-SrmRecoveryPlan             │  │                srm-util plans               │   │
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │           Get-SrmReplicationGroup            │  │            Check replication lag            │   │
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│                                                                                                       │
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│  srm-util.exe runs on Windows SRM Server; PowerCLI module connects from jump host;                    │
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  REST API on port 443 of SRM Server FQDN.                                                             │
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  srm-util      = SRM command-line utility on the SRM Server VM                                        │
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  srmcli        = sub-command for recovery plan operations                                             │
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  list-plans    = show all configured recovery plans                                                   │
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  test-plan     = run plan in test mode (bubble network)                                               │
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  run-plan      = trigger actual failover (use with caution)                                           │
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  showvms       = list VMs in protection group with replication status                                 │
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  history       = show previous plan run results and timestamps                                        │
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  Connect-SrmServer= PowerCLI; authenticate to SRM                                                     │
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  Start-SrmRecoveryPlan= PowerCLI; trigger plan test or failover                                       │
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  GET /api/rest/plans= list all recovery plans via REST                                                │
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│  POST /api/rest/plans/{}/run= trigger plan execution via REST                                         │
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>│  Replication lag= time delta between protected and recovery replica                                   │
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>│                                                                                                       │
-<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                         │
+│    Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                                    │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Command Categories                                      │   │
+│   │                  Status / Query  — check current state, list jobs, show config                │   │
+│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
+│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
+│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
+│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>## Test Failover
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Test failover runs in an isolated network bubble and does not affect production. Always run a test before a real recovery.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>```powershell
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Start a test failover
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>$plan = Get-SRMRecoveryPlan -Name &lt;plan_name&gt;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>$plan.RecoveryPlanService.Start($plan.MoRef, (New-Object VMware.VimAutomation.Srm.Types.V1.RecoveryPlanRecoveryMode))
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Check test status
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Get-SRMRecoveryPlan -Name &lt;plan_name&gt; | Select State, ActiveHistoryTask
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Clean up (remove test snapshot, restore network)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>$plan.RecoveryPlanService.Cancel($plan.MoRef)
 </code></pre></div></p>
-<hr />
-<h2 id="powercli-for-srm">PowerCLI for SRM<a class="headerlink" href="#powercli-for-srm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Connect to vCenter (SRM operations run through vCenter)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># List all Recovery Plans</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">$plans</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">MoRef</span><span class="p">,</span> <span class="n">Name</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Get Recovery Plan details</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nv">$plan</span> <span class="p">=</span> <span class="nv">$plans</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;SQL-DR-Plan&quot;</span> <span class="p">}</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nv">$planDetails</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">GetPlan</span><span class="p">(</span><span class="nv">$plan</span><span class="p">)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c"># Get Protection Groups</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">$pgs</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">MoRef</span><span class="p">,</span> <span class="n">Name</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c"># Get VMs in a Protection Group</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nv">$pg</span> <span class="p">=</span> <span class="nv">$pgs</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;SQL-PG&quot;</span> <span class="p">}</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nv">$pgInfo</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">QueryReplicationState</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c"># Run a test recovery</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nv">$planRef</span> <span class="p">=</span> <span class="nv">$plan</span><span class="p">.</span><span class="n">MoRef</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="nv">$planRef</span><span class="p">,</span> <span class="s2">&quot;TEST&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="c"># Monitor recovery task status</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="nv">$history</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">GetHistory</span><span class="p">(</span><span class="nv">$planRef</span><span class="p">)</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="nv">$history</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">StartTime</span><span class="p">,</span> <span class="n">EndTime</span><span class="p">,</span> <span class="n">ResultState</span><span class="p">,</span> <span class="n">Percent</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="c"># Clean up after test</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="nv">$planRef</span><span class="p">,</span> <span class="s2">&quot;CLEANUP&quot;</span><span class="p">)</span>
-</code></pre></div>
-<hr />
-<h2 id="get-protected-vm-list">Get Protected VM List<a class="headerlink" href="#get-protected-vm-list" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># List all protected VMs and their replication state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nv">$pgInfo</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$pgInfo</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>            <span class="n">ProtectionGroup</span> <span class="p">=</span> <span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>            <span class="n">VM</span>              <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>            <span class="n">State</span>           <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">State</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>            <span class="n">ReplicationState</span> <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">ReplicationState</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="p">}</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="p">}</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-</code></pre></div>
-<hr />
-<h2 id="get-recovery-plan-history">Get Recovery Plan History<a class="headerlink" href="#get-recovery-plan-history" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$plan</span> <span class="k">in</span> <span class="nv">$plans</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nv">$history</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">GetHistory</span><span class="p">(</span><span class="nv">$plan</span><span class="p">)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$h</span> <span class="k">in</span> <span class="nv">$history</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>            <span class="n">Plan</span>        <span class="p">=</span> <span class="nv">$plan</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>            <span class="n">StartTime</span>   <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">StartTime</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>            <span class="n">EndTime</span>     <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">EndTime</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>            <span class="nb">Type </span>       <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">RecoveryType</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>            <span class="n">Result</span>      <span class="p">=</span> <span class="nv">$h</span><span class="p">.</span><span class="n">ResultState</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="p">}</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="p">}</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">StartTime</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-</code></pre></div>
-<hr />
-<h2 id="disconnect-srm-session">Disconnect SRM Session<a class="headerlink" href="#disconnect-srm-session" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Disconnect-SrmServer</span> <span class="n">-SrmServer</span> <span class="nv">$srm</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Server</span> <span class="p">*</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-</code></pre></div>
-<h2 id="srm-object-hierarchy">SRM Object Hierarchy<a class="headerlink" href="#srm-object-hierarchy" title="Permanent link">&para;</a></h2>
-<p>Protection Groups, Recovery Plans, and the steps that execute during failover form a strict containment hierarchy.</p>
-<p><pre class="mermaid"><code>flowchart TD
-    srmServer["SRM Server\n(site pair)"]
-    srmServer --&gt; pg1["Protection Group\nPG-DB-DC1DC2"]
-    srmServer --&gt; pg2["Protection Group\nPG-APP-DC1DC2"]
-
-    pg1 --&gt; vm1(["VM: db-01"])
-    pg1 --&gt; vm2(["VM: db-02"])
-    pg2 --&gt; vm3(["VM: app-01"])
-    pg2 --&gt; vm4(["VM: app-02"])
-
-    pg1 --&gt; rp["Recovery Plan\nRP-P1-DB-DC1DC2"]
-    pg2 --&gt; rp
-
-    rp --&gt; step1["Step 1: Storage presentation\n(SRA / vSphere Rep)"]
-    step1 --&gt; step2["Step 2: VM re-registration"]
-    step2 --&gt; step3["Step 3: Power on — Infra tier"]
-    step3 --&gt; step4["Step 4: Power on — DB tier"]
-    step4 --&gt; step5["Step 5: Power on — APP tier"]
-    step5 --&gt; step6["Step 6: IP customisation\n+ custom scripts"]
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef pg fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef vm fill:#15803d,stroke:#166534,color:#fff
-    classDef step fill:#b45309,stroke:#92400e,color:#fff
-    class srmServer ctrl
-    class pg1,pg2,rp pg
-    class vm1,vm2,vm3,vm4 vm
-    class step1,step2,step3,step4,step5,step6 step</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌───────────────────────────────────────── SRM — CLI Reference ─────────────────────────────────────────┐
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│                                                                                                       │
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│   │                                    SRM — Command Reference                                    │   │
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│   │                                         srm-cli vm list                                       │   │
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│   │                                       srm-cli recovery run                                    │   │
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│   │                                        srm-cli plan test                                      │   │
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│   │                                         srm-cli pg list                                       │   │
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│   │                                         srm-cli history                                       │   │
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│                                                                                                       │
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│    Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                                    │
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│                                                                                                       │
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│   │                                       Command Categories                                      │   │
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│   │                  Status / Query  — check current state, list jobs, show config                │   │
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│                                                                                                       │
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│                                                                                                       │
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
-<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
-<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
-<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
-<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
-<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
-<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
-<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
-<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
-<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
-<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
-<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
-<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
-<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>│                                                                                                       │
-<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
-<hr />
-<h2 id="test-failover">Test Failover<a class="headerlink" href="#test-failover" title="Permanent link">&para;</a></h2>
-<p>Test failover runs in an isolated network bubble and does not affect production. Always run a test before a real recovery.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Start a test failover</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$plan</span> <span class="p">=</span> <span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$plan</span><span class="p">.</span><span class="n">RecoveryPlanService</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="nv">$plan</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="p">(</span><span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">VimAutomation</span><span class="p">.</span><span class="n">Srm</span><span class="p">.</span><span class="n">Types</span><span class="p">.</span><span class="n">V1</span><span class="p">.</span><span class="n">RecoveryPlanRecoveryMode</span><span class="p">))</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Check test status</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">State</span><span class="p">,</span> <span class="n">ActiveHistoryTask</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Clean up (remove test snapshot, restore network)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nv">$plan</span><span class="p">.</span><span class="n">RecoveryPlanService</span><span class="p">.</span><span class="n">Cancel</span><span class="p">(</span><span class="nv">$plan</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span>
-</code></pre></div>
 <hr />
 <h2 id="recovery-planned-migration-failover">Recovery (Planned Migration / Failover)<a class="headerlink" href="#recovery-planned-migration-failover" title="Permanent link">&para;</a></h2>
 <p>Real recovery — run only during a DR event or planned migration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Execute planned migration (graceful, bidirectional)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Start-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span> <span class="n">-RecoveryMode</span> <span class="n">Planned</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Execute emergency failover (one-way, no replication cleanup)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Start-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span> <span class="n">-RecoveryMode</span> <span class="n">Failover</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Stop an in-progress plan</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Stop-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Execute planned migration (graceful, bidirectional)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Start-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span> <span class="n">-RecoveryMode</span> <span class="n">Planned</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Execute emergency failover (one-way, no replication cleanup)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Start-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span> <span class="n">-RecoveryMode</span> <span class="n">Failover</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Stop an in-progress plan</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Stop-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span>
 </code></pre></div>
 <hr />
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>SRM 8.3+ exposes a REST API at <code>https://&lt;srm_fqdn&gt;/api</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/sessions<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># List protection groups</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/groups<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># List recovery plans</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/plans<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Trigger test failover</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;srm_fqdn&gt;/api/plans/&lt;plan_id&gt;/actions/test&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/sessions<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List protection groups</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/groups<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List recovery plans</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/plans<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Trigger test failover</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;srm_fqdn&gt;/api/plans/&lt;plan_id&gt;/actions/test&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
 </code></pre></div>
 
 
