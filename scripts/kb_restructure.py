@@ -8,16 +8,17 @@ Same strategy used for Track 2 (products) and Track 4 (process/ops content).
 Phases:
   0  Precheck   — validate sources, detect conflicts, flag stale diagrams
   1  Build      — create new product section stubs (MySQL, PostgreSQL, SQL Server)
-  2  Move DR    — disaster-recovery residual → backup/
-  3  Move Perf  — performance/ → monitoring-standards/
-  4  Move HC    — project-management/health-checks → monitoring-standards/
-  5  Move CM    — change-management/ → tools/servicenow/change-management/
-  6  Move Inv   — inventory/ + pm/asset-inventory/ → tools/servicenow/asset-inventory/
-  7  Move LC    — lifecycle/ → tools/servicenow/lifecycle/
-  8  Move PM    — remaining project-management/ → tools/servicenow/
-  9  Seed DB    — extract engine sections from database/ → product sections
-  10 Fix Diags  — remap @kb_diagram path strings, remove deleted entries
-  11 Postcheck  — verify destinations, fence integrity, diagram sync
+  2  Rename     — tools/ → itsm/  +  tools/git/ → automation/git/
+  3  Move DR    — disaster-recovery residual → backup/
+  4  Move Perf  — performance/ → monitoring-standards/
+  5  Move HC    — project-management/health-checks → monitoring-standards/
+  6  Move CM    — change-management/ → itsm/servicenow/change-management/
+  7  Move Inv   — inventory/ + pm/asset-inventory/ → itsm/servicenow/asset-inventory/
+  8  Move LC    — lifecycle/ → itsm/servicenow/lifecycle/
+  9  Move PM    — remaining project-management/ → itsm/servicenow/
+  10 Seed DB    — extract engine sections from database/ → product sections
+  11 Fix Diags  — remap @kb_diagram path strings, remove deleted entries
+  12 Postcheck  — verify destinations, fence integrity, diagram sync
 
 Usage:
   python3 scripts/kb_restructure.py --dry-run          # simulate all phases
@@ -280,9 +281,29 @@ if phase(1, "Build DB product sections (MySQL, PostgreSQL, SQL Server)"):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Phase 2: Disaster-recovery residual → backup/
+# Phase 2: Rename tools/ → itsm/  +  tools/git/ → automation/git/
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(2, "Move disaster-recovery residual → backup/"):
+if phase(2, "Rename tools/ → itsm/ and move git to automation/"):
+    # Move git to automation first (before renaming the parent)
+    git_mv("tools/git", "automation/git")
+    # Rename remaining tools/ → itsm/
+    # tools/ now has: confluence/, jira/, servicenow/, index.md
+    for product in ["confluence", "jira", "servicenow"]:
+        git_mv(f"tools/{product}", f"itsm/{product}")
+    # Move tools/index.md → itsm/index.md
+    src_idx = DOCS / "tools/index.md"
+    dst_idx = DOCS / "itsm/index.md"
+    if src_idx.exists() and not dst_idx.exists():
+        if not DRY:
+            dst_idx.parent.mkdir(parents=True, exist_ok=True)
+            run(["git", "mv", str(src_idx), str(dst_idx)])
+        ok("git mv tools/index.md → itsm/index.md")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Phase 3: Disaster-recovery residual → backup/
+# ─────────────────────────────────────────────────────────────────────────────
+if phase(3, "Move disaster-recovery residual → backup/"):
     for src, dst in [
         ("disaster-recovery/isolated-recovery-environment-ire", "backup/ire"),
         ("disaster-recovery/failover-procedure",                "backup/runbooks/failover"),
@@ -296,7 +317,7 @@ if phase(2, "Move disaster-recovery residual → backup/"):
 # ─────────────────────────────────────────────────────────────────────────────
 # Phase 3: Performance → monitoring-standards/
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(3, "Move performance/ → monitoring-standards/"):
+if phase(4, "Move performance/ → monitoring-standards/"):
     for p in ["capacity-forecasting","failure-testing","performance-baselining",
               "reliability-engineering","resource-optimization",
               "service-availability","service-level-objectives"]:
@@ -306,67 +327,69 @@ if phase(3, "Move performance/ → monitoring-standards/"):
 # ─────────────────────────────────────────────────────────────────────────────
 # Phase 4: project-management/health-checks → monitoring-standards/
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(4, "Move project-management/health-checks → monitoring-standards/"):
+if phase(5, "Move project-management/health-checks → monitoring-standards/"):
     git_mv("project-management/health-checks", "monitoring-standards/health-checks")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Phase 5: change-management → tools/servicenow/change-management/
+# Phase 5: change-management → itsm/servicenow/change-management/
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(5, "Move/merge change-management → tools/servicenow/change-management/"):
+if phase(6, "Move/merge change-management → itsm/servicenow/change-management/"):
+    # Direct moves from top-level change-management/
     for p in ["change-approval","change-communication","change-request","change-validation",
               "deployment-procedure","emergency-change","release-management"]:
-        git_mv(f"change-management/{p}", f"tools/servicenow/change-management/{p}")
+        git_mv(f"change-management/{p}", f"itsm/servicenow/change-management/{p}")
 
-    PM_CM = [("approval","change-approval"),("backout-plan","backout-plan"),
-             ("closeout","closeout"),("risk","risk"),("validation","change-validation")]
-    for pm_sub, sn_sub in PM_CM:
+    # pm/change-management: non-overlapping sub-pages → git mv directly
+    for pm_sub in ["backout-plan", "closeout", "risk"]:
+        git_mv(f"project-management/change-management/{pm_sub}",
+               f"itsm/servicenow/change-management/{pm_sub}")
+
+    # pm/change-management: overlapping sub-pages → merge content only, source stays
+    # (approval overlaps with change-approval, validation overlaps with change-validation)
+    for pm_sub, sn_sub in [("approval","change-approval"), ("validation","change-validation")]:
         merge_file(f"project-management/change-management/{pm_sub}/index.md",
-                   f"tools/servicenow/change-management/{sn_sub}/index.md")
-        src_dir = f"project-management/change-management/{pm_sub}"
-        dst_dir = f"tools/servicenow/change-management/{sn_sub}"
-        if exists(src_dir) and not exists(dst_dir):
-            git_mv(src_dir, dst_dir)
+                   f"itsm/servicenow/change-management/{sn_sub}/index.md")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Phase 6: inventory + pm/asset-inventory → tools/servicenow/asset-inventory/
+# Phase 6: inventory + pm/asset-inventory → itsm/servicenow/asset-inventory/
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(6, "Move/merge inventory → tools/servicenow/asset-inventory/"):
+if phase(7, "Move/merge inventory → itsm/servicenow/asset-inventory/"):
     for p in ["asset-lifecycle","asset-tracking","audit","cleanup","cmdb",
               "configuration-management","environment-mapping","hardware-lifecycle",
               "license-management","ownership","support-contracts","system-inventory"]:
-        git_mv(f"inventory/{p}", f"tools/servicenow/asset-inventory/{p}")
+        git_mv(f"inventory/{p}", f"itsm/servicenow/asset-inventory/{p}")
 
     for pm_sub, sn_sub in [("audit","audit"),("cleanup","cleanup"),("cmdb","cmdb"),
                             ("lifecycle","asset-lifecycle"),("ownership","ownership")]:
         merge_file(f"project-management/asset-inventory/{pm_sub}/index.md",
-                   f"tools/servicenow/asset-inventory/{sn_sub}/index.md")
+                   f"itsm/servicenow/asset-inventory/{sn_sub}/index.md")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Phase 7: lifecycle → tools/servicenow/lifecycle/
+# Phase 7: lifecycle → itsm/servicenow/lifecycle/
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(7, "Move lifecycle/ → tools/servicenow/lifecycle/"):
+if phase(8, "Move lifecycle/ → itsm/servicenow/lifecycle/"):
     for p in ["environment-readiness","migration-procedure","post-upgrade-validation",
               "rollback-procedure","system-decommission","system-onboarding","upgrade-readiness"]:
-        git_mv(f"lifecycle/{p}", f"tools/servicenow/lifecycle/{p}")
+        git_mv(f"lifecycle/{p}", f"itsm/servicenow/lifecycle/{p}")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Phase 8: Remaining project-management → tools/servicenow/
+# Phase 8: Remaining project-management → itsm/servicenow/
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(8, "Move remaining project-management → tools/servicenow/"):
-    git_mv("project-management/incident-management",  "tools/servicenow/incident-management")
-    git_mv("project-management/maintenance-windows",  "tools/servicenow/maintenance-windows")
-    git_mv("project-management/rca-template",         "tools/servicenow/templates/rca-template")
-    git_mv("project-management/change-plan-template", "tools/servicenow/templates/change-plan-template")
+if phase(9, "Move remaining project-management → itsm/servicenow/"):
+    git_mv("project-management/incident-management",  "itsm/servicenow/incident-management")
+    git_mv("project-management/maintenance-windows",  "itsm/servicenow/maintenance-windows")
+    git_mv("project-management/rca-template",         "itsm/servicenow/templates/rca-template")
+    git_mv("project-management/change-plan-template", "itsm/servicenow/templates/change-plan-template")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Phase 9: Seed DB sections from database/ multi-engine pages
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(9, "Seed DB product sections from database/ pages"):
+if phase(10, "Seed DB product sections from database/ pages"):
     SEEDS = []
     for db_page, title_prefix, kws, dst_base, ops_page in [
         ("database-health-check",               "Health Checks",              ["mysql","mariadb"],            "compute/linux/mysql",              "operations/health-checks"),
@@ -411,7 +434,7 @@ if phase(9, "Seed DB product sections from database/ pages"):
 # ─────────────────────────────────────────────────────────────────────────────
 # Phase 10: Fix diagram path registrations
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(10, "Fix diagram path registrations"):
+if phase(11, "Fix diagram path registrations"):
     DIAG_DIR = REPO / "scripts" / "diagrams"
 
     REMAPS = [
@@ -428,21 +451,26 @@ if phase(10, "Fix diagram path registrations"):
         ("docs/performance/service-availability/",      "docs/monitoring-standards/service-availability/"),
         ("docs/performance/service-level-objectives/",  "docs/monitoring-standards/service-level-objectives/"),
         ("docs/project-management/health-checks/",      "docs/monitoring-standards/health-checks/"),
-        ("docs/change-management/change-approval/",     "docs/tools/servicenow/change-management/change-approval/"),
-        ("docs/change-management/change-communication/","docs/tools/servicenow/change-management/change-communication/"),
-        ("docs/change-management/change-request/",      "docs/tools/servicenow/change-management/change-request/"),
-        ("docs/change-management/change-validation/",   "docs/tools/servicenow/change-management/change-validation/"),
-        ("docs/change-management/deployment-procedure/","docs/tools/servicenow/change-management/deployment-procedure/"),
-        ("docs/change-management/emergency-change/",    "docs/tools/servicenow/change-management/emergency-change/"),
-        ("docs/change-management/release-management/",  "docs/tools/servicenow/change-management/release-management/"),
-        ("docs/project-management/change-management/",  "docs/tools/servicenow/change-management/"),
-        ("docs/inventory/",                             "docs/tools/servicenow/asset-inventory/"),
-        ("docs/project-management/asset-inventory/",    "docs/tools/servicenow/asset-inventory/"),
-        ("docs/lifecycle/",                             "docs/tools/servicenow/lifecycle/"),
-        ("docs/project-management/incident-management/","docs/tools/servicenow/incident-management/"),
-        ("docs/project-management/maintenance-windows/","docs/tools/servicenow/maintenance-windows/"),
-        ("docs/project-management/rca-template/",       "docs/tools/servicenow/templates/rca-template/"),
-        ("docs/project-management/change-plan-template/","docs/tools/servicenow/templates/change-plan-template/"),
+        ("docs/change-management/change-approval/",     "docs/itsm/servicenow/change-management/change-approval/"),
+        ("docs/change-management/change-communication/","docs/itsm/servicenow/change-management/change-communication/"),
+        ("docs/change-management/change-request/",      "docs/itsm/servicenow/change-management/change-request/"),
+        ("docs/change-management/change-validation/",   "docs/itsm/servicenow/change-management/change-validation/"),
+        ("docs/change-management/deployment-procedure/","docs/itsm/servicenow/change-management/deployment-procedure/"),
+        ("docs/change-management/emergency-change/",    "docs/itsm/servicenow/change-management/emergency-change/"),
+        ("docs/change-management/release-management/",  "docs/itsm/servicenow/change-management/release-management/"),
+        ("docs/project-management/change-management/",  "docs/itsm/servicenow/change-management/"),
+        ("docs/inventory/",                             "docs/itsm/servicenow/asset-inventory/"),
+        ("docs/project-management/asset-inventory/",    "docs/itsm/servicenow/asset-inventory/"),
+        ("docs/lifecycle/",                             "docs/itsm/servicenow/lifecycle/"),
+        ("docs/project-management/incident-management/","docs/itsm/servicenow/incident-management/"),
+        ("docs/project-management/maintenance-windows/","docs/itsm/servicenow/maintenance-windows/"),
+        ("docs/project-management/rca-template/",       "docs/itsm/servicenow/templates/rca-template/"),
+        ("docs/project-management/change-plan-template/","docs/itsm/servicenow/templates/change-plan-template/"),
+        # tools/ → itsm/ rename + git to automation
+        ("docs/tools/git/",        "docs/automation/git/"),
+        ("docs/tools/confluence/", "docs/itsm/confluence/"),
+        ("docs/tools/jira/",       "docs/itsm/jira/"),
+        ("docs/tools/servicenow/", "docs/itsm/servicenow/"),
     ]
     DEAD = ["docs/backup/dell-cyber-recovery/","docs/database/","docs/disaster-recovery/index",
             "docs/performance/index","docs/change-management/index","docs/inventory/index",
@@ -479,7 +507,7 @@ if phase(10, "Fix diagram path registrations"):
 # ─────────────────────────────────────────────────────────────────────────────
 # Phase 11: Postcheck
 # ─────────────────────────────────────────────────────────────────────────────
-if phase(11, "Postcheck — verify moves complete"):
+if phase(12, "Postcheck — verify moves complete"):
 
     print("\n  [Old sections gone]")
     GONE = [
@@ -502,17 +530,26 @@ if phase(11, "Postcheck — verify moves complete"):
         "project-management/maintenance-windows","project-management/rca-template",
         "project-management/change-plan-template","project-management/asset-inventory",
         "project-management/change-management",
+        "tools/git","tools/confluence","tools/jira","tools/servicenow",
     ]
     for p in GONE: (err if exists(p) else ok)(f"{'STILL EXISTS' if exists(p) else 'Gone'}: {p}")
+
+    print("\n  [tools/ renamed, git moved]")
+    (err if exists("tools/git")       else ok)(f"{'tools/git still exists' if exists('tools/git') else 'Gone: tools/git'}")
+    (err if exists("tools/servicenow") else ok)(f"{'tools/servicenow still exists' if exists('tools/servicenow') else 'Gone: tools/servicenow'}")
+    (ok  if exists("automation/git")  else err)(f"{'EXISTS: automation/git' if exists('automation/git') else 'MISSING: automation/git'}")
+    (ok  if exists("itsm/servicenow") else err)(f"{'EXISTS: itsm/servicenow' if exists('itsm/servicenow') else 'MISSING: itsm/servicenow'}")
+    (ok  if exists("itsm/confluence") else err)(f"{'EXISTS: itsm/confluence' if exists('itsm/confluence') else 'MISSING: itsm/confluence'}")
+    (ok  if exists("itsm/jira")       else err)(f"{'EXISTS: itsm/jira' if exists('itsm/jira') else 'MISSING: itsm/jira'}")
 
     print("\n  [New destinations exist]")
     NEW = [
         ("backup/ire",4), ("backup/runbooks/failover",1), ("backup/runbooks/failback",1),
         ("backup/dr-design",1), ("backup/runbooks/dr-runbook",1),
         ("monitoring-standards/capacity-forecasting",1), ("monitoring-standards/health-checks",5),
-        ("tools/servicenow/change-management",7), ("tools/servicenow/asset-inventory",10),
-        ("tools/servicenow/lifecycle",7), ("tools/servicenow/incident-management",5),
-        ("tools/servicenow/maintenance-windows",5), ("tools/servicenow/templates",2),
+        ("itsm/servicenow/change-management",7), ("itsm/servicenow/asset-inventory",10),
+        ("itsm/servicenow/lifecycle",7), ("itsm/servicenow/incident-management",5),
+        ("itsm/servicenow/maintenance-windows",5), ("itsm/servicenow/templates",2),
         ("compute/linux/mysql",15), ("compute/linux/postgresql",15),
         ("compute/windows-server/sql-server",15),
     ]
@@ -524,7 +561,7 @@ if phase(11, "Postcheck — verify moves complete"):
 
     print("\n  [Section shells pending manual cleanup]")
     for d in ["disaster-recovery","performance","change-management","inventory",
-              "lifecycle","project-management","database"]:
+              "lifecycle","project-management","database","tools"]:
         pages = list((DOCS/d).rglob("*.md")) if exists(d) else []
         if not exists(d): ok(f"Fully gone: {d}")
         elif len(pages) <= 1: warn(f"Shell only (safe to delete): {d}/")
@@ -538,26 +575,27 @@ if phase(11, "Postcheck — verify moves complete"):
 
     print("\n  [Manual deletes still needed]")
     for d in ["backup/dell-cyber-recovery","disaster-recovery","performance",
-              "change-management","inventory","lifecycle","project-management","database"]:
+              "change-management","inventory","lifecycle","project-management","database","tools"]:
         if exists(d):
             pages = page_count(d)
             warn(f"Pending delete (confirm with user): {d}/ ({pages} pages)")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Commit (runs when no --phase filter or when phase 11 included)
+# Commit (runs when no --phase filter or when phase 12 included)
 # ─────────────────────────────────────────────────────────────────────────────
-if not ONLY or 11 in ONLY:
+if not ONLY or 12 in ONLY:
     if not DRY and not ERRORS:
         run(["git", "add", "-A"])
         run(["git", "commit", "-m",
              "Dissolve cross-cutting sections into platform homes\n\n"
+             "- tools/ → itsm/ (rename), tools/git/ → automation/git/\n"
              "- disaster-recovery/ residual → backup/\n"
              "- performance/ → monitoring-standards/\n"
-             "- change-management/ → tools/servicenow/change-management/\n"
-             "- inventory/ → tools/servicenow/asset-inventory/\n"
-             "- lifecycle/ → tools/servicenow/lifecycle/\n"
-             "- project-management/ → monitoring-standards/ + tools/servicenow/\n"
+             "- change-management/ → itsm/servicenow/change-management/\n"
+             "- inventory/ → itsm/servicenow/asset-inventory/\n"
+             "- lifecycle/ → itsm/servicenow/lifecycle/\n"
+             "- project-management/ → monitoring-standards/ + itsm/servicenow/\n"
              "- database/ → compute/linux/mysql|postgresql, windows-server/sql-server\n\n"
              "Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"])
         ok("Committed")
