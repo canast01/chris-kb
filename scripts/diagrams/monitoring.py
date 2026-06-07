@@ -691,7 +691,7 @@ def monitoring_syslog():
 
 @kb_diagram(
     'monitoring-aria-ops',
-    'docs/monitoring/aria-operations/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/index.md',
     'Aria Operations overview — VMware Aria Ops (vROps) platform summary',
 )
 def monitoring_aria_ops():
@@ -774,7 +774,7 @@ def monitoring_aria_ops():
 
 @kb_diagram(
     'monitoring-aria-ops-arch',
-    'docs/monitoring/aria-operations/architecture/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/architecture/index.md',
     'Aria Operations architecture — cluster topology and data flow',
 )
 def monitoring_aria_ops_arch():
@@ -857,7 +857,7 @@ def monitoring_aria_ops_arch():
 
 @kb_diagram(
     'monitoring-aria-ops-arch-how-it-works',
-    'docs/monitoring/aria-operations/architecture/how-it-works/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/architecture/how-it-works/index.md',
     'Aria Operations — how data collection and analytics work',
 )
 def monitoring_aria_ops_arch_how_it_works():
@@ -940,7 +940,7 @@ def monitoring_aria_ops_arch_how_it_works():
 
 @kb_diagram(
     'monitoring-aria-ops-arch-design',
-    'docs/monitoring/aria-operations/architecture/design-standards/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/architecture/design-standards/index.md',
     'Aria Operations architecture design standards',
 )
 def monitoring_aria_ops_arch_design():
@@ -1023,7 +1023,7 @@ def monitoring_aria_ops_arch_design():
 
 @kb_diagram(
     'monitoring-aria-ops-arch-integrations',
-    'docs/monitoring/aria-operations/architecture/integrations/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/architecture/integrations/index.md',
     'Aria Operations architecture integrations — adapters and plugins',
 )
 def monitoring_aria_ops_arch_integrations():
@@ -1106,7 +1106,7 @@ def monitoring_aria_ops_arch_integrations():
 
 @kb_diagram(
     'monitoring-aria-ops-ops',
-    'docs/monitoring/aria-operations/operations/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/operations/index.md',
     'Aria Operations daily operations — health checks and maintenance tasks',
 )
 def monitoring_aria_ops_ops():
@@ -1189,7 +1189,7 @@ def monitoring_aria_ops_ops():
 
 @kb_diagram(
     'monitoring-aria-ops-alerts',
-    'docs/monitoring/aria-operations/alerts/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/alerts/index.md',
     'Aria Operations alerts — symptom-based alert definitions and policies',
 )
 def monitoring_aria_ops_alerts():
@@ -1272,7 +1272,7 @@ def monitoring_aria_ops_alerts():
 
 @kb_diagram(
     'monitoring-aria-ops-capacity',
-    'docs/monitoring/aria-operations/capacity/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/capacity/index.md',
     'Aria Operations capacity — forecasting and right-sizing',
 )
 def monitoring_aria_ops_capacity():
@@ -1355,7 +1355,7 @@ def monitoring_aria_ops_capacity():
 
 @kb_diagram(
     'monitoring-aria-ops-cli',
-    'docs/monitoring/aria-operations/cli-reference/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/cli-reference/index.md',
     'Aria Operations CLI reference — vracli and vami_config commands',
 )
 def monitoring_aria_ops_cli():
@@ -1438,7 +1438,7 @@ def monitoring_aria_ops_cli():
 
 @kb_diagram(
     'monitoring-aria-ops-dashboards',
-    'docs/monitoring/aria-operations/dashboards/index.md',
+    'docs/virtualization/vmware/aria-operations-monitoring/dashboards/index.md',
     'Aria Operations dashboards — built-in and custom dashboard design',
 )
 def monitoring_aria_ops_dashboards():
@@ -1523,7 +1523,7 @@ def monitoring_aria_ops_dashboards():
 
 W2 = 103
 
-@kb_diagram('monitoring-aria-ops-design', 'docs/monitoring/aria-operations/design-standards/index.md', 'Aria Operations design standards')
+@kb_diagram('monitoring-aria-ops-design', 'docs/virtualization/vmware/aria-operations-monitoring/design-standards/index.md', 'Aria Operations design standards')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -1576,7 +1576,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-aria-ops-integration', 'docs/monitoring/aria-operations/integration/index.md', 'Aria Operations integrations')
+@kb_diagram('monitoring-aria-ops-integration', 'docs/virtualization/vmware/aria-operations-monitoring/integration/index.md', 'Aria Operations integrations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1629,7 +1629,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-aria-ops-lifecycle', 'docs/monitoring/aria-operations/lifecycle/index.md', 'Aria Operations lifecycle management')
+@kb_diagram('monitoring-aria-ops-lifecycle', 'docs/virtualization/vmware/aria-operations-monitoring/lifecycle/index.md', 'Aria Operations lifecycle management')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1682,7 +1682,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-aria-ops-reports', 'docs/monitoring/aria-operations/reports/index.md', 'Aria Operations reports')
+@kb_diagram('monitoring-aria-ops-reports', 'docs/virtualization/vmware/aria-operations-monitoring/reports/index.md', 'Aria Operations reports')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -1722,7 +1722,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-aria-ops-scripts', 'docs/monitoring/aria-operations/scripts/index.md', 'Aria Operations scripts reference')
+@kb_diagram('monitoring-aria-ops-scripts', 'docs/virtualization/vmware/aria-operations-monitoring/scripts/index.md', 'Aria Operations scripts reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1773,7 +1773,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-aria-ops-security', 'docs/monitoring/aria-operations/security/index.md', 'Aria Operations security')
+@kb_diagram('monitoring-aria-ops-security', 'docs/virtualization/vmware/aria-operations-monitoring/security/index.md', 'Aria Operations security')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1826,7 +1826,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-aria-ops-troubleshooting', 'docs/monitoring/aria-operations/troubleshooting/index.md', 'Aria Operations troubleshooting')
+@kb_diagram('monitoring-aria-ops-troubleshooting', 'docs/virtualization/vmware/aria-operations-monitoring/troubleshooting/index.md', 'Aria Operations troubleshooting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1879,7 +1879,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-aria-ops-vendor-support', 'docs/monitoring/aria-operations/vendor-support/index.md', 'Aria Operations vendor support')
+@kb_diagram('monitoring-aria-ops-vendor-support', 'docs/virtualization/vmware/aria-operations-monitoring/vendor-support/index.md', 'Aria Operations vendor support')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1932,7 +1932,7 @@ def _():
 
 # ── CloudIQ diagrams ──────────────────────────────────────────────────────────
 
-@kb_diagram('monitoring-cloudiq', 'docs/monitoring/cloudiq/index.md', 'CloudIQ — Dell cloud-based AI/ML storage monitoring')
+@kb_diagram('monitoring-cloudiq', 'docs/storage/dell/cloudiq-monitoring/index.md', 'CloudIQ — Dell cloud-based AI/ML storage monitoring')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1985,7 +1985,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-arch', 'docs/monitoring/cloudiq/architecture/index.md', 'CloudIQ architecture overview')
+@kb_diagram('monitoring-cloudiq-arch', 'docs/storage/dell/cloudiq-monitoring/architecture/index.md', 'CloudIQ architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2035,7 +2035,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-arch-how', 'docs/monitoring/cloudiq/architecture/how-it-works/index.md', 'CloudIQ how it works')
+@kb_diagram('monitoring-cloudiq-arch-how', 'docs/storage/dell/cloudiq-monitoring/architecture/how-it-works/index.md', 'CloudIQ how it works')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2073,7 +2073,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-arch-design', 'docs/monitoring/cloudiq/architecture/design-standards/index.md', 'CloudIQ design standards')
+@kb_diagram('monitoring-cloudiq-arch-design', 'docs/storage/dell/cloudiq-monitoring/architecture/design-standards/index.md', 'CloudIQ design standards')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2108,7 +2108,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-arch-int', 'docs/monitoring/cloudiq/architecture/integrations/index.md', 'CloudIQ integrations')
+@kb_diagram('monitoring-cloudiq-arch-int', 'docs/storage/dell/cloudiq-monitoring/architecture/integrations/index.md', 'CloudIQ integrations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2142,7 +2142,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-capacity', 'docs/monitoring/cloudiq/capacity/index.md', 'CloudIQ capacity management')
+@kb_diagram('monitoring-cloudiq-capacity', 'docs/storage/dell/cloudiq-monitoring/capacity/index.md', 'CloudIQ capacity management')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2180,7 +2180,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-alerts', 'docs/monitoring/cloudiq/alerts/index.md', 'CloudIQ alerts')
+@kb_diagram('monitoring-cloudiq-alerts', 'docs/storage/dell/cloudiq-monitoring/alerts/index.md', 'CloudIQ alerts')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2218,7 +2218,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-cli', 'docs/monitoring/cloudiq/cli-reference/index.md', 'CloudIQ CLI and API reference')
+@kb_diagram('monitoring-cloudiq-cli', 'docs/storage/dell/cloudiq-monitoring/cli-reference/index.md', 'CloudIQ CLI and API reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2256,7 +2256,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-design', 'docs/monitoring/cloudiq/design-standards/index.md', 'CloudIQ design standards top-level')
+@kb_diagram('monitoring-cloudiq-design', 'docs/storage/dell/cloudiq-monitoring/design-standards/index.md', 'CloudIQ design standards top-level')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2291,7 +2291,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-health', 'docs/monitoring/cloudiq/health/index.md', 'CloudIQ health monitoring')
+@kb_diagram('monitoring-cloudiq-health', 'docs/storage/dell/cloudiq-monitoring/health/index.md', 'CloudIQ health monitoring')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2329,7 +2329,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-integration', 'docs/monitoring/cloudiq/integration/index.md', 'CloudIQ integration guide')
+@kb_diagram('monitoring-cloudiq-integration', 'docs/storage/dell/cloudiq-monitoring/integration/index.md', 'CloudIQ integration guide')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2366,7 +2366,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-lifecycle', 'docs/monitoring/cloudiq/lifecycle/index.md', 'CloudIQ lifecycle management')
+@kb_diagram('monitoring-cloudiq-lifecycle', 'docs/storage/dell/cloudiq-monitoring/lifecycle/index.md', 'CloudIQ lifecycle management')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2400,7 +2400,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-ops', 'docs/monitoring/cloudiq/operations/index.md', 'CloudIQ operations')
+@kb_diagram('monitoring-cloudiq-ops', 'docs/storage/dell/cloudiq-monitoring/operations/index.md', 'CloudIQ operations')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2440,7 +2440,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-recommendations', 'docs/monitoring/cloudiq/recommendations/index.md', 'CloudIQ AI recommendations')
+@kb_diagram('monitoring-cloudiq-recommendations', 'docs/storage/dell/cloudiq-monitoring/recommendations/index.md', 'CloudIQ AI recommendations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2478,7 +2478,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-reporting', 'docs/monitoring/cloudiq/reporting/index.md', 'CloudIQ reporting')
+@kb_diagram('monitoring-cloudiq-reporting', 'docs/storage/dell/cloudiq-monitoring/reporting/index.md', 'CloudIQ reporting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2516,7 +2516,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-scripts', 'docs/monitoring/cloudiq/scripts/index.md', 'CloudIQ scripts reference')
+@kb_diagram('monitoring-cloudiq-scripts', 'docs/storage/dell/cloudiq-monitoring/scripts/index.md', 'CloudIQ scripts reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2554,7 +2554,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-security', 'docs/monitoring/cloudiq/security/index.md', 'CloudIQ security')
+@kb_diagram('monitoring-cloudiq-security', 'docs/storage/dell/cloudiq-monitoring/security/index.md', 'CloudIQ security')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2593,7 +2593,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-troubleshooting', 'docs/monitoring/cloudiq/troubleshooting/index.md', 'CloudIQ troubleshooting')
+@kb_diagram('monitoring-cloudiq-troubleshooting', 'docs/storage/dell/cloudiq-monitoring/troubleshooting/index.md', 'CloudIQ troubleshooting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2633,7 +2633,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-cloudiq-vendor', 'docs/monitoring/cloudiq/vendor-support/index.md', 'CloudIQ vendor support')
+@kb_diagram('monitoring-cloudiq-vendor', 'docs/storage/dell/cloudiq-monitoring/vendor-support/index.md', 'CloudIQ vendor support')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2673,7 +2673,7 @@ def _():
 
 # ── Dell AIOps diagrams ───────────────────────────────────────────────────────
 
-@kb_diagram('monitoring-dell-aiops', 'docs/monitoring/dell-aiops/index.md', 'Dell AIOps — AI-driven infrastructure observability')
+@kb_diagram('monitoring-dell-aiops', 'docs/storage/dell/dell-aiops/index.md', 'Dell AIOps — AI-driven infrastructure observability')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2725,7 +2725,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-arch', 'docs/monitoring/dell-aiops/architecture/index.md', 'Dell AIOps architecture')
+@kb_diagram('monitoring-dell-aiops-arch', 'docs/storage/dell/dell-aiops/architecture/index.md', 'Dell AIOps architecture')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2776,7 +2776,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-arch-how', 'docs/monitoring/dell-aiops/architecture/how-it-works/index.md', 'Dell AIOps how it works')
+@kb_diagram('monitoring-dell-aiops-arch-how', 'docs/storage/dell/dell-aiops/architecture/how-it-works/index.md', 'Dell AIOps how it works')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2814,7 +2814,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-arch-design', 'docs/monitoring/dell-aiops/architecture/design-standards/index.md', 'Dell AIOps design standards')
+@kb_diagram('monitoring-dell-aiops-arch-design', 'docs/storage/dell/dell-aiops/architecture/design-standards/index.md', 'Dell AIOps design standards')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2849,7 +2849,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-arch-int', 'docs/monitoring/dell-aiops/architecture/integrations/index.md', 'Dell AIOps integrations')
+@kb_diagram('monitoring-dell-aiops-arch-int', 'docs/storage/dell/dell-aiops/architecture/integrations/index.md', 'Dell AIOps integrations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2885,7 +2885,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-alerts', 'docs/monitoring/dell-aiops/alerts/index.md', 'Dell AIOps alerts')
+@kb_diagram('monitoring-dell-aiops-alerts', 'docs/storage/dell/dell-aiops/alerts/index.md', 'Dell AIOps alerts')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2923,7 +2923,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-cli', 'docs/monitoring/dell-aiops/cli-reference/index.md', 'Dell AIOps CLI and API reference')
+@kb_diagram('monitoring-dell-aiops-cli', 'docs/storage/dell/dell-aiops/cli-reference/index.md', 'Dell AIOps CLI and API reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2961,7 +2961,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-design', 'docs/monitoring/dell-aiops/design-standards/index.md', 'Dell AIOps design standards top-level')
+@kb_diagram('monitoring-dell-aiops-design', 'docs/storage/dell/dell-aiops/design-standards/index.md', 'Dell AIOps design standards top-level')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2996,7 +2996,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-insights', 'docs/monitoring/dell-aiops/insights/index.md', 'Dell AIOps insights')
+@kb_diagram('monitoring-dell-aiops-insights', 'docs/storage/dell/dell-aiops/insights/index.md', 'Dell AIOps insights')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3034,7 +3034,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-integration', 'docs/monitoring/dell-aiops/integration/index.md', 'Dell AIOps integration guide')
+@kb_diagram('monitoring-dell-aiops-integration', 'docs/storage/dell/dell-aiops/integration/index.md', 'Dell AIOps integration guide')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3071,7 +3071,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-lifecycle', 'docs/monitoring/dell-aiops/lifecycle/index.md', 'Dell AIOps lifecycle')
+@kb_diagram('monitoring-dell-aiops-lifecycle', 'docs/storage/dell/dell-aiops/lifecycle/index.md', 'Dell AIOps lifecycle')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3107,7 +3107,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-ops', 'docs/monitoring/dell-aiops/operations/index.md', 'Dell AIOps operations')
+@kb_diagram('monitoring-dell-aiops-ops', 'docs/storage/dell/dell-aiops/operations/index.md', 'Dell AIOps operations')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -3145,7 +3145,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-recommendations', 'docs/monitoring/dell-aiops/recommendations/index.md', 'Dell AIOps recommendations')
+@kb_diagram('monitoring-dell-aiops-recommendations', 'docs/storage/dell/dell-aiops/recommendations/index.md', 'Dell AIOps recommendations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3182,7 +3182,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-reporting', 'docs/monitoring/dell-aiops/reporting/index.md', 'Dell AIOps reporting')
+@kb_diagram('monitoring-dell-aiops-reporting', 'docs/storage/dell/dell-aiops/reporting/index.md', 'Dell AIOps reporting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3220,7 +3220,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-scripts', 'docs/monitoring/dell-aiops/scripts/index.md', 'Dell AIOps scripts reference')
+@kb_diagram('monitoring-dell-aiops-scripts', 'docs/storage/dell/dell-aiops/scripts/index.md', 'Dell AIOps scripts reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3258,7 +3258,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-security', 'docs/monitoring/dell-aiops/security/index.md', 'Dell AIOps security')
+@kb_diagram('monitoring-dell-aiops-security', 'docs/storage/dell/dell-aiops/security/index.md', 'Dell AIOps security')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3297,7 +3297,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-troubleshooting', 'docs/monitoring/dell-aiops/troubleshooting/index.md', 'Dell AIOps troubleshooting')
+@kb_diagram('monitoring-dell-aiops-troubleshooting', 'docs/storage/dell/dell-aiops/troubleshooting/index.md', 'Dell AIOps troubleshooting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3336,7 +3336,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-vendor', 'docs/monitoring/dell-aiops/vendor-support/index.md', 'Dell AIOps vendor support')
+@kb_diagram('monitoring-dell-aiops-vendor', 'docs/storage/dell/dell-aiops/vendor-support/index.md', 'Dell AIOps vendor support')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3376,7 +3376,7 @@ def _():
 
 # ── InsightIQ diagrams ────────────────────────────────────────────────────────
 
-@kb_diagram('monitoring-insightiq', 'docs/monitoring/insightiq/index.md', 'InsightIQ — PowerScale performance reporting')
+@kb_diagram('monitoring-insightiq', 'docs/storage/netapp/insightiq/index.md', 'InsightIQ — PowerScale performance reporting')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3429,7 +3429,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-arch', 'docs/monitoring/insightiq/architecture/index.md', 'InsightIQ architecture')
+@kb_diagram('monitoring-insightiq-arch', 'docs/storage/netapp/insightiq/architecture/index.md', 'InsightIQ architecture')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3478,7 +3478,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-arch-how', 'docs/monitoring/insightiq/architecture/how-it-works/index.md', 'InsightIQ how it works')
+@kb_diagram('monitoring-insightiq-arch-how', 'docs/storage/netapp/insightiq/architecture/how-it-works/index.md', 'InsightIQ how it works')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3516,7 +3516,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-arch-design', 'docs/monitoring/insightiq/architecture/design-standards/index.md', 'InsightIQ design standards')
+@kb_diagram('monitoring-insightiq-arch-design', 'docs/storage/netapp/insightiq/architecture/design-standards/index.md', 'InsightIQ design standards')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3551,7 +3551,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-arch-int', 'docs/monitoring/insightiq/architecture/integrations/index.md', 'InsightIQ integrations')
+@kb_diagram('monitoring-insightiq-arch-int', 'docs/storage/netapp/insightiq/architecture/integrations/index.md', 'InsightIQ integrations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3585,7 +3585,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-capacity', 'docs/monitoring/insightiq/capacity/index.md', 'InsightIQ capacity management')
+@kb_diagram('monitoring-insightiq-capacity', 'docs/storage/netapp/insightiq/capacity/index.md', 'InsightIQ capacity management')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3622,7 +3622,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-cli', 'docs/monitoring/insightiq/cli-reference/index.md', 'InsightIQ CLI reference')
+@kb_diagram('monitoring-insightiq-cli', 'docs/storage/netapp/insightiq/cli-reference/index.md', 'InsightIQ CLI reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3660,7 +3660,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-design', 'docs/monitoring/insightiq/design-standards/index.md', 'InsightIQ design standards top-level')
+@kb_diagram('monitoring-insightiq-design', 'docs/storage/netapp/insightiq/design-standards/index.md', 'InsightIQ design standards top-level')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3695,7 +3695,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-integration', 'docs/monitoring/insightiq/integration/index.md', 'InsightIQ integration guide')
+@kb_diagram('monitoring-insightiq-integration', 'docs/storage/netapp/insightiq/integration/index.md', 'InsightIQ integration guide')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3732,7 +3732,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-lifecycle', 'docs/monitoring/insightiq/lifecycle/index.md', 'InsightIQ lifecycle management')
+@kb_diagram('monitoring-insightiq-lifecycle', 'docs/storage/netapp/insightiq/lifecycle/index.md', 'InsightIQ lifecycle management')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3769,7 +3769,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-ops', 'docs/monitoring/insightiq/operations/index.md', 'InsightIQ operations')
+@kb_diagram('monitoring-insightiq-ops', 'docs/storage/netapp/insightiq/operations/index.md', 'InsightIQ operations')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -3808,7 +3808,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-performance', 'docs/monitoring/insightiq/performance/index.md', 'InsightIQ performance analysis')
+@kb_diagram('monitoring-insightiq-performance', 'docs/storage/netapp/insightiq/performance/index.md', 'InsightIQ performance analysis')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -3847,7 +3847,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-reports', 'docs/monitoring/insightiq/reports/index.md', 'InsightIQ reports')
+@kb_diagram('monitoring-insightiq-reports', 'docs/storage/netapp/insightiq/reports/index.md', 'InsightIQ reports')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3885,7 +3885,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-scripts', 'docs/monitoring/insightiq/scripts/index.md', 'InsightIQ scripts reference')
+@kb_diagram('monitoring-insightiq-scripts', 'docs/storage/netapp/insightiq/scripts/index.md', 'InsightIQ scripts reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -3923,7 +3923,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-security', 'docs/monitoring/insightiq/security/index.md', 'InsightIQ security')
+@kb_diagram('monitoring-insightiq-security', 'docs/storage/netapp/insightiq/security/index.md', 'InsightIQ security')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3960,7 +3960,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-troubleshooting', 'docs/monitoring/insightiq/troubleshooting/index.md', 'InsightIQ troubleshooting')
+@kb_diagram('monitoring-insightiq-troubleshooting', 'docs/storage/netapp/insightiq/troubleshooting/index.md', 'InsightIQ troubleshooting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3998,7 +3998,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-vendor', 'docs/monitoring/insightiq/vendor-support/index.md', 'InsightIQ vendor support')
+@kb_diagram('monitoring-insightiq-vendor', 'docs/storage/netapp/insightiq/vendor-support/index.md', 'InsightIQ vendor support')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4036,7 +4036,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-workloads', 'docs/monitoring/insightiq/workloads/index.md', 'InsightIQ workload analysis')
+@kb_diagram('monitoring-insightiq-workloads', 'docs/storage/netapp/insightiq/workloads/index.md', 'InsightIQ workload analysis')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4077,7 +4077,7 @@ def _():
 
 # ── Nexus Dashboard monitoring diagrams ───────────────────────────────────────
 
-@kb_diagram('monitoring-nexus-dashboard', 'docs/monitoring/nexus-dashboard/index.md', 'Nexus Dashboard monitoring overview')
+@kb_diagram('monitoring-nexus-dashboard', 'docs/san/cisco/nexus-dashboard-monitoring/index.md', 'Nexus Dashboard monitoring overview')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4129,7 +4129,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-arch', 'docs/monitoring/nexus-dashboard/architecture/index.md', 'Nexus Dashboard architecture')
+@kb_diagram('monitoring-nexus-arch', 'docs/san/cisco/nexus-dashboard-monitoring/architecture/index.md', 'Nexus Dashboard architecture')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4179,7 +4179,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-arch-how', 'docs/monitoring/nexus-dashboard/architecture/how-it-works/index.md', 'Nexus Dashboard how it works')
+@kb_diagram('monitoring-nexus-arch-how', 'docs/san/cisco/nexus-dashboard-monitoring/architecture/how-it-works/index.md', 'Nexus Dashboard how it works')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4217,7 +4217,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-arch-design', 'docs/monitoring/nexus-dashboard/architecture/design-standards/index.md', 'Nexus Dashboard design standards')
+@kb_diagram('monitoring-nexus-arch-design', 'docs/san/cisco/nexus-dashboard-monitoring/architecture/design-standards/index.md', 'Nexus Dashboard design standards')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4254,7 +4254,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-arch-int', 'docs/monitoring/nexus-dashboard/architecture/integrations/index.md', 'Nexus Dashboard integrations')
+@kb_diagram('monitoring-nexus-arch-int', 'docs/san/cisco/nexus-dashboard-monitoring/architecture/integrations/index.md', 'Nexus Dashboard integrations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4292,7 +4292,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-alerts', 'docs/monitoring/nexus-dashboard/alerts/index.md', 'Nexus Dashboard alerts')
+@kb_diagram('monitoring-nexus-alerts', 'docs/san/cisco/nexus-dashboard-monitoring/alerts/index.md', 'Nexus Dashboard alerts')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4330,7 +4330,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-cli', 'docs/monitoring/nexus-dashboard/cli-reference/index.md', 'Nexus Dashboard CLI reference')
+@kb_diagram('monitoring-nexus-cli', 'docs/san/cisco/nexus-dashboard-monitoring/cli-reference/index.md', 'Nexus Dashboard CLI reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4368,7 +4368,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-design', 'docs/monitoring/nexus-dashboard/design-standards/index.md', 'Nexus Dashboard design standards top-level')
+@kb_diagram('monitoring-nexus-design', 'docs/san/cisco/nexus-dashboard-monitoring/design-standards/index.md', 'Nexus Dashboard design standards top-level')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4404,7 +4404,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-fabric-health', 'docs/monitoring/nexus-dashboard/fabric-health/index.md', 'Nexus Dashboard fabric health')
+@kb_diagram('monitoring-nexus-fabric-health', 'docs/san/cisco/nexus-dashboard-monitoring/fabric-health/index.md', 'Nexus Dashboard fabric health')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4442,7 +4442,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-integration', 'docs/monitoring/nexus-dashboard/integration/index.md', 'Nexus Dashboard integration guide')
+@kb_diagram('monitoring-nexus-integration', 'docs/san/cisco/nexus-dashboard-monitoring/integration/index.md', 'Nexus Dashboard integration guide')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4479,7 +4479,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-integrations', 'docs/monitoring/nexus-dashboard/integrations/index.md', 'Nexus Dashboard integrations list')
+@kb_diagram('monitoring-nexus-integrations', 'docs/san/cisco/nexus-dashboard-monitoring/integrations/index.md', 'Nexus Dashboard integrations list')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4515,7 +4515,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-lifecycle', 'docs/monitoring/nexus-dashboard/lifecycle/index.md', 'Nexus Dashboard lifecycle')
+@kb_diagram('monitoring-nexus-lifecycle', 'docs/san/cisco/nexus-dashboard-monitoring/lifecycle/index.md', 'Nexus Dashboard lifecycle')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4553,7 +4553,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-ops', 'docs/monitoring/nexus-dashboard/operations/index.md', 'Nexus Dashboard operations')
+@kb_diagram('monitoring-nexus-ops', 'docs/san/cisco/nexus-dashboard-monitoring/operations/index.md', 'Nexus Dashboard operations')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -4591,7 +4591,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-scripts', 'docs/monitoring/nexus-dashboard/scripts/index.md', 'Nexus Dashboard scripts reference')
+@kb_diagram('monitoring-nexus-scripts', 'docs/san/cisco/nexus-dashboard-monitoring/scripts/index.md', 'Nexus Dashboard scripts reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4629,7 +4629,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-security', 'docs/monitoring/nexus-dashboard/security/index.md', 'Nexus Dashboard security')
+@kb_diagram('monitoring-nexus-security', 'docs/san/cisco/nexus-dashboard-monitoring/security/index.md', 'Nexus Dashboard security')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4668,7 +4668,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-troubleshooting', 'docs/monitoring/nexus-dashboard/troubleshooting/index.md', 'Nexus Dashboard troubleshooting')
+@kb_diagram('monitoring-nexus-troubleshooting', 'docs/san/cisco/nexus-dashboard-monitoring/troubleshooting/index.md', 'Nexus Dashboard troubleshooting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4707,7 +4707,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-vendor', 'docs/monitoring/nexus-dashboard/vendor-support/index.md', 'Nexus Dashboard vendor support')
+@kb_diagram('monitoring-nexus-vendor', 'docs/san/cisco/nexus-dashboard-monitoring/vendor-support/index.md', 'Nexus Dashboard vendor support')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4745,7 +4745,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-nexus-visibility', 'docs/monitoring/nexus-dashboard/visibility/index.md', 'Nexus Dashboard visibility')
+@kb_diagram('monitoring-nexus-visibility', 'docs/san/cisco/nexus-dashboard-monitoring/visibility/index.md', 'Nexus Dashboard visibility')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4785,7 +4785,7 @@ def _():
 
 # ── Pure1 diagrams ────────────────────────────────────────────────────────────
 
-@kb_diagram('monitoring-pure1', 'docs/monitoring/pure1/index.md', 'Pure1 — Pure Storage cloud management and analytics')
+@kb_diagram('monitoring-pure1', 'docs/storage/pure/pure1/index.md', 'Pure1 — Pure Storage cloud management and analytics')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4837,7 +4837,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-arch', 'docs/monitoring/pure1/architecture/index.md', 'Pure1 architecture overview')
+@kb_diagram('monitoring-pure1-arch', 'docs/storage/pure/pure1/architecture/index.md', 'Pure1 architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4886,7 +4886,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-arch-how', 'docs/monitoring/pure1/architecture/how-it-works/index.md', 'Pure1 how it works')
+@kb_diagram('monitoring-pure1-arch-how', 'docs/storage/pure/pure1/architecture/how-it-works/index.md', 'Pure1 how it works')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4924,7 +4924,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-arch-design', 'docs/monitoring/pure1/architecture/design-standards/index.md', 'Pure1 design standards')
+@kb_diagram('monitoring-pure1-arch-design', 'docs/storage/pure/pure1/architecture/design-standards/index.md', 'Pure1 design standards')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -4961,7 +4961,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-arch-int', 'docs/monitoring/pure1/architecture/integrations/index.md', 'Pure1 integrations')
+@kb_diagram('monitoring-pure1-arch-int', 'docs/storage/pure/pure1/architecture/integrations/index.md', 'Pure1 integrations')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -4996,7 +4996,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-alerts', 'docs/monitoring/pure1/alerts/index.md', 'Pure1 alerts')
+@kb_diagram('monitoring-pure1-alerts', 'docs/storage/pure/pure1/alerts/index.md', 'Pure1 alerts')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -5034,7 +5034,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-capacity', 'docs/monitoring/pure1/capacity/index.md', 'Pure1 capacity management')
+@kb_diagram('monitoring-pure1-capacity', 'docs/storage/pure/pure1/capacity/index.md', 'Pure1 capacity management')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -5071,7 +5071,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-cli', 'docs/monitoring/pure1/cli-reference/index.md', 'Pure1 CLI and API reference')
+@kb_diagram('monitoring-pure1-cli', 'docs/storage/pure/pure1/cli-reference/index.md', 'Pure1 CLI and API reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -5109,7 +5109,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-design', 'docs/monitoring/pure1/design-standards/index.md', 'Pure1 design standards')
+@kb_diagram('monitoring-pure1-design', 'docs/storage/pure/pure1/design-standards/index.md', 'Pure1 design standards')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -5144,7 +5144,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-health', 'docs/monitoring/pure1/health/index.md', 'Pure1 health monitoring')
+@kb_diagram('monitoring-pure1-health', 'docs/storage/pure/pure1/health/index.md', 'Pure1 health monitoring')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -5182,7 +5182,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-integration', 'docs/monitoring/pure1/integration/index.md', 'Pure1 integration guide')
+@kb_diagram('monitoring-pure1-integration', 'docs/storage/pure/pure1/integration/index.md', 'Pure1 integration guide')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -5219,7 +5219,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-lifecycle', 'docs/monitoring/pure1/lifecycle/index.md', 'Pure1 lifecycle management')
+@kb_diagram('monitoring-pure1-lifecycle', 'docs/storage/pure/pure1/lifecycle/index.md', 'Pure1 lifecycle management')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -5256,7 +5256,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-ops', 'docs/monitoring/pure1/operations/index.md', 'Pure1 operations')
+@kb_diagram('monitoring-pure1-ops', 'docs/storage/pure/pure1/operations/index.md', 'Pure1 operations')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -5294,7 +5294,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-performance', 'docs/monitoring/pure1/performance/index.md', 'Pure1 performance analysis')
+@kb_diagram('monitoring-pure1-performance', 'docs/storage/pure/pure1/performance/index.md', 'Pure1 performance analysis')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -5333,7 +5333,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-scripts', 'docs/monitoring/pure1/scripts/index.md', 'Pure1 scripts reference')
+@kb_diagram('monitoring-pure1-scripts', 'docs/storage/pure/pure1/scripts/index.md', 'Pure1 scripts reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -5371,7 +5371,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-security', 'docs/monitoring/pure1/security/index.md', 'Pure1 security')
+@kb_diagram('monitoring-pure1-security', 'docs/storage/pure/pure1/security/index.md', 'Pure1 security')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -5410,7 +5410,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-support', 'docs/monitoring/pure1/support/index.md', 'Pure1 support integration')
+@kb_diagram('monitoring-pure1-support', 'docs/storage/pure/pure1/support/index.md', 'Pure1 support integration')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -5448,7 +5448,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-troubleshooting', 'docs/monitoring/pure1/troubleshooting/index.md', 'Pure1 troubleshooting')
+@kb_diagram('monitoring-pure1-troubleshooting', 'docs/storage/pure/pure1/troubleshooting/index.md', 'Pure1 troubleshooting')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -5487,7 +5487,7 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-vendor', 'docs/monitoring/pure1/vendor-support/index.md', 'Pure1 vendor support')
+@kb_diagram('monitoring-pure1-vendor', 'docs/storage/pure/pure1/vendor-support/index.md', 'Pure1 vendor support')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99

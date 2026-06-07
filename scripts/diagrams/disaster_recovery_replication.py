@@ -12,7 +12,7 @@ from ._core import (
 
 @kb_diagram(
     'dr-recoverpoint',
-    'docs/disaster-recovery/recoverpoint/index.md',
+    'docs/storage/dell/recoverpoint/index.md',
     'Dell RecoverPoint for VMs — continuous data protection overview',
 )
 def dr_recoverpoint():
@@ -73,7 +73,7 @@ def dr_recoverpoint():
 
 @kb_diagram(
     'dr-recoverpoint-architecture',
-    'docs/disaster-recovery/recoverpoint/architecture/index.md',
+    'docs/storage/dell/recoverpoint/architecture/index.md',
     'RecoverPoint Architecture — RPA cluster, splitter, journals, replication topology',
 )
 def dr_recoverpoint_architecture():
@@ -131,7 +131,7 @@ def dr_recoverpoint_architecture():
 
 @kb_diagram(
     'dr-recoverpoint-arch-how-it-works',
-    'docs/disaster-recovery/recoverpoint/architecture/how-it-works/index.md',
+    'docs/storage/dell/recoverpoint/architecture/how-it-works/index.md',
     'RecoverPoint How It Works — write splitting, journal mechanics, replication flow',
 )
 def dr_recoverpoint_arch_how_it_works():
@@ -190,7 +190,7 @@ def dr_recoverpoint_arch_how_it_works():
 
 @kb_diagram(
     'dr-recoverpoint-arch-design',
-    'docs/disaster-recovery/recoverpoint/architecture/design-standards/index.md',
+    'docs/storage/dell/recoverpoint/architecture/design-standards/index.md',
     'RecoverPoint Design Standards — sizing, journal, network, consistency group design',
 )
 def dr_recoverpoint_arch_design():
@@ -248,7 +248,7 @@ def dr_recoverpoint_arch_design():
 
 @kb_diagram(
     'dr-recoverpoint-arch-integrations',
-    'docs/disaster-recovery/recoverpoint/architecture/integrations/index.md',
+    'docs/storage/dell/recoverpoint/architecture/integrations/index.md',
     'RecoverPoint Integrations — vCenter, array SRAs, VPLEX, PowerMax',
 )
 def dr_recoverpoint_arch_integrations():
@@ -307,7 +307,7 @@ def dr_recoverpoint_arch_integrations():
 
 @kb_diagram(
     'dr-recoverpoint-operations',
-    'docs/disaster-recovery/recoverpoint/operations/index.md',
+    'docs/storage/dell/recoverpoint/operations/index.md',
     'RecoverPoint Operations — daily tasks, monitoring, CG management',
 )
 def dr_recoverpoint_operations():
@@ -365,7 +365,7 @@ def dr_recoverpoint_operations():
 
 @kb_diagram(
     'dr-recoverpoint-ops-backup',
-    'docs/disaster-recovery/recoverpoint/operations/backup-restore/index.md',
+    'docs/storage/dell/recoverpoint/operations/backup-restore/index.md',
     'RecoverPoint Backup & Restore — image access, failover, test copy procedures',
 )
 def dr_recoverpoint_ops_backup():
@@ -424,7 +424,7 @@ def dr_recoverpoint_ops_backup():
 
 @kb_diagram(
     'dr-recoverpoint-ops-cli',
-    'docs/disaster-recovery/recoverpoint/operations/cli-reference/index.md',
+    'docs/storage/dell/recoverpoint/operations/cli-reference/index.md',
     'RecoverPoint CLI Reference — boxmgmt, get all cgs, set group, failover commands',
 )
 def dr_recoverpoint_ops_cli():
@@ -483,7 +483,7 @@ def dr_recoverpoint_ops_cli():
 
 @kb_diagram(
     'dr-recoverpoint-ops-health',
-    'docs/disaster-recovery/recoverpoint/operations/health-checks/index.md',
+    'docs/storage/dell/recoverpoint/operations/health-checks/index.md',
     'RecoverPoint Health Checks — RPA status, CG lag, journal fill, splitter state',
 )
 def dr_recoverpoint_ops_health():
@@ -541,7 +541,7 @@ def dr_recoverpoint_ops_health():
 
 @kb_diagram(
     'dr-recoverpoint-ops-install',
-    'docs/disaster-recovery/recoverpoint/operations/install-upgrade/index.md',
+    'docs/storage/dell/recoverpoint/operations/install-upgrade/index.md',
     'RecoverPoint Install & Upgrade — RPA deployment, splitter install, version upgrade',
 )
 def dr_recoverpoint_ops_install():
@@ -600,7 +600,7 @@ def dr_recoverpoint_ops_install():
 
 @kb_diagram(
     'dr-recoverpoint-ops-procedures',
-    'docs/disaster-recovery/recoverpoint/operations/procedures/index.md',
+    'docs/storage/dell/recoverpoint/operations/procedures/index.md',
     'RecoverPoint Procedures — failover, failback, test copy, image access step-by-step',
 )
 def dr_recoverpoint_ops_procedures():
@@ -658,7 +658,7 @@ def dr_recoverpoint_ops_procedures():
 
 @kb_diagram(
     'dr-recoverpoint-ops-scripts',
-    'docs/disaster-recovery/recoverpoint/operations/scripts/index.md',
+    'docs/storage/dell/recoverpoint/operations/scripts/index.md',
     'RecoverPoint Scripts — automation via REST API, health check scripts, CG reporting',
 )
 def dr_recoverpoint_ops_scripts():
@@ -717,7 +717,7 @@ def dr_recoverpoint_ops_scripts():
 
 @kb_diagram(
     'dr-recoverpoint-security',
-    'docs/disaster-recovery/recoverpoint/security/index.md',
+    'docs/storage/dell/recoverpoint/security/index.md',
     'RecoverPoint — security overview, controls, compliance posture',
 )
 def _dr_recoverpoint_security():
@@ -769,7 +769,7 @@ def _dr_recoverpoint_security():
 
 @kb_diagram(
     'dr-recoverpoint-sec-access',
-    'docs/disaster-recovery/recoverpoint/security/access-control/index.md',
+    'docs/storage/dell/recoverpoint/security/access-control/index.md',
     'RecoverPoint — RBAC, permissions, service accounts',
 )
 def _dr_recoverpoint_sec_access():
@@ -822,7 +822,7 @@ def _dr_recoverpoint_sec_access():
 
 @kb_diagram(
     'dr-recoverpoint-sec-auth',
-    'docs/disaster-recovery/recoverpoint/security/authentication/index.md',
+    'docs/storage/dell/recoverpoint/security/authentication/index.md',
     'RecoverPoint — authentication methods, certificate management',
 )
 def _dr_recoverpoint_sec_auth():
@@ -872,7 +872,7 @@ def _dr_recoverpoint_sec_auth():
 
 @kb_diagram(
     'dr-recoverpoint-sec-enc',
-    'docs/disaster-recovery/recoverpoint/security/encryption/index.md',
+    'docs/storage/dell/recoverpoint/security/encryption/index.md',
     'RecoverPoint — encryption at rest and in transit',
 )
 def _dr_recoverpoint_sec_enc():
@@ -922,7 +922,7 @@ def _dr_recoverpoint_sec_enc():
 
 @kb_diagram(
     'dr-recoverpoint-sec-hardening',
-    'docs/disaster-recovery/recoverpoint/security/hardening/index.md',
+    'docs/storage/dell/recoverpoint/security/hardening/index.md',
     'RecoverPoint — hardening guide, CIS controls, secure configuration',
 )
 def _dr_recoverpoint_sec_hardening():
@@ -973,7 +973,7 @@ def _dr_recoverpoint_sec_hardening():
 
 @kb_diagram(
     'dr-recoverpoint-troubleshooting',
-    'docs/disaster-recovery/recoverpoint/troubleshooting/index.md',
+    'docs/storage/dell/recoverpoint/troubleshooting/index.md',
     'RecoverPoint — troubleshooting overview and triage approach',
 )
 def _dr_recoverpoint_troubleshooting():
@@ -1026,7 +1026,7 @@ def _dr_recoverpoint_troubleshooting():
 
 @kb_diagram(
     'dr-recoverpoint-ts-issues',
-    'docs/disaster-recovery/recoverpoint/troubleshooting/common-issues/index.md',
+    'docs/storage/dell/recoverpoint/troubleshooting/common-issues/index.md',
     'RecoverPoint — common issues, root causes, and fixes',
 )
 def _dr_recoverpoint_ts_issues():
@@ -1079,7 +1079,7 @@ def _dr_recoverpoint_ts_issues():
 
 @kb_diagram(
     'dr-recoverpoint-ts-diag',
-    'docs/disaster-recovery/recoverpoint/troubleshooting/diagnostics/index.md',
+    'docs/storage/dell/recoverpoint/troubleshooting/diagnostics/index.md',
     'RecoverPoint — diagnostic commands and log collection',
 )
 def _dr_recoverpoint_ts_diag():
@@ -1129,7 +1129,7 @@ def _dr_recoverpoint_ts_diag():
 
 @kb_diagram(
     'dr-recoverpoint-ts-escalation',
-    'docs/disaster-recovery/recoverpoint/troubleshooting/escalation/index.md',
+    'docs/storage/dell/recoverpoint/troubleshooting/escalation/index.md',
     'RecoverPoint — escalation path, vendor support, and SLA',
 )
 def _dr_recoverpoint_ts_escalation():
@@ -1180,7 +1180,7 @@ def _dr_recoverpoint_ts_escalation():
 
 @kb_diagram(
     'dr-srdf-a',
-    'docs/disaster-recovery/srdf-a/index.md',
+    'docs/storage/dell/srdf-a/index.md',
     'Asynchronous replication for PowerMax/VMAX — delta-set cycle-based RPO in seconds',
 )
 def _dr_srdf_a_overview():
@@ -1235,7 +1235,7 @@ def _dr_srdf_a_overview():
 
 @kb_diagram(
     'dr-srdf-a-architecture',
-    'docs/disaster-recovery/srdf-a/architecture/index.md',
+    'docs/storage/dell/srdf-a/architecture/index.md',
     'SRDF/A — architecture overview, components, data flow',
 )
 def _dr_srdf_a_architecture():
@@ -1289,7 +1289,7 @@ def _dr_srdf_a_architecture():
 
 @kb_diagram(
     'dr-srdf-a-arch-how-it-works',
-    'docs/disaster-recovery/srdf-a/architecture/how-it-works/index.md',
+    'docs/storage/dell/srdf-a/architecture/how-it-works/index.md',
     'SRDF/A — how replication or backup data flows step by step',
 )
 def _dr_srdf_a_arch_how():
@@ -1354,7 +1354,7 @@ def _dr_srdf_a_arch_how():
 
 @kb_diagram(
     'dr-srdf-a-arch-design',
-    'docs/disaster-recovery/srdf-a/architecture/design-standards/index.md',
+    'docs/storage/dell/srdf-a/architecture/design-standards/index.md',
     'SRDF/A — sizing, design rules, capacity, HA guidelines',
 )
 def _dr_srdf_a_arch_design():
@@ -1407,7 +1407,7 @@ def _dr_srdf_a_arch_design():
 
 @kb_diagram(
     'dr-srdf-a-arch-integrations',
-    'docs/disaster-recovery/srdf-a/architecture/integrations/index.md',
+    'docs/storage/dell/srdf-a/architecture/integrations/index.md',
     'SRDF/A — integration points with external systems and APIs',
 )
 def _dr_srdf_a_arch_integrations():
@@ -1459,7 +1459,7 @@ def _dr_srdf_a_arch_integrations():
 
 @kb_diagram(
     'dr-srdf-a-operations',
-    'docs/disaster-recovery/srdf-a/operations/index.md',
+    'docs/storage/dell/srdf-a/operations/index.md',
     'SRDF/A — operations overview, key tasks, day-to-day procedures',
 )
 def _dr_srdf_a_operations():
@@ -1511,7 +1511,7 @@ def _dr_srdf_a_operations():
 
 @kb_diagram(
     'dr-srdf-a-ops-backup',
-    'docs/disaster-recovery/srdf-a/operations/backup-restore/index.md',
+    'docs/storage/dell/srdf-a/operations/backup-restore/index.md',
     'SRDF/A — backup and restore procedures',
 )
 def _dr_srdf_a_ops_backup():
@@ -1563,7 +1563,7 @@ def _dr_srdf_a_ops_backup():
 
 @kb_diagram(
     'dr-srdf-a-ops-cli',
-    'docs/disaster-recovery/srdf-a/operations/cli-reference/index.md',
+    'docs/storage/dell/srdf-a/operations/cli-reference/index.md',
     'SRDF/A — CLI commands reference',
 )
 def _dr_srdf_a_ops_cli():
@@ -1617,7 +1617,7 @@ def _dr_srdf_a_ops_cli():
 
 @kb_diagram(
     'dr-srdf-a-ops-health',
-    'docs/disaster-recovery/srdf-a/operations/health-checks/index.md',
+    'docs/storage/dell/srdf-a/operations/health-checks/index.md',
     'SRDF/A — health check procedures and monitoring commands',
 )
 def _dr_srdf_a_ops_health():
@@ -1670,7 +1670,7 @@ def _dr_srdf_a_ops_health():
 
 @kb_diagram(
     'dr-srdf-a-ops-install',
-    'docs/disaster-recovery/srdf-a/operations/install-upgrade/index.md',
+    'docs/storage/dell/srdf-a/operations/install-upgrade/index.md',
     'SRDF/A — install and upgrade procedures',
 )
 def _dr_srdf_a_ops_install():
@@ -1731,7 +1731,7 @@ def _dr_srdf_a_ops_install():
 
 @kb_diagram(
     'dr-srdf-a-ops-procedures',
-    'docs/disaster-recovery/srdf-a/operations/procedures/index.md',
+    'docs/storage/dell/srdf-a/operations/procedures/index.md',
     'SRDF/A — operational procedures and runbooks',
 )
 def _dr_srdf_a_ops_procedures():
@@ -1781,7 +1781,7 @@ def _dr_srdf_a_ops_procedures():
 
 @kb_diagram(
     'dr-srdf-a-ops-scripts',
-    'docs/disaster-recovery/srdf-a/operations/scripts/index.md',
+    'docs/storage/dell/srdf-a/operations/scripts/index.md',
     'SRDF/A — automation scripts and examples',
 )
 def _dr_srdf_a_ops_scripts():
@@ -1831,7 +1831,7 @@ def _dr_srdf_a_ops_scripts():
 
 @kb_diagram(
     'dr-srdf-a-security',
-    'docs/disaster-recovery/srdf-a/security/index.md',
+    'docs/storage/dell/srdf-a/security/index.md',
     'SRDF/A — security overview, controls, compliance posture',
 )
 def _dr_srdf_a_security():
@@ -1883,7 +1883,7 @@ def _dr_srdf_a_security():
 
 @kb_diagram(
     'dr-srdf-a-sec-access',
-    'docs/disaster-recovery/srdf-a/security/access-control/index.md',
+    'docs/storage/dell/srdf-a/security/access-control/index.md',
     'SRDF/A — RBAC, permissions, service accounts',
 )
 def _dr_srdf_a_sec_access():
@@ -1936,7 +1936,7 @@ def _dr_srdf_a_sec_access():
 
 @kb_diagram(
     'dr-srdf-a-sec-auth',
-    'docs/disaster-recovery/srdf-a/security/authentication/index.md',
+    'docs/storage/dell/srdf-a/security/authentication/index.md',
     'SRDF/A — authentication methods, certificate management',
 )
 def _dr_srdf_a_sec_auth():
@@ -1986,7 +1986,7 @@ def _dr_srdf_a_sec_auth():
 
 @kb_diagram(
     'dr-srdf-a-sec-enc',
-    'docs/disaster-recovery/srdf-a/security/encryption/index.md',
+    'docs/storage/dell/srdf-a/security/encryption/index.md',
     'SRDF/A — encryption at rest and in transit',
 )
 def _dr_srdf_a_sec_enc():
@@ -2036,7 +2036,7 @@ def _dr_srdf_a_sec_enc():
 
 @kb_diagram(
     'dr-srdf-a-sec-hardening',
-    'docs/disaster-recovery/srdf-a/security/hardening/index.md',
+    'docs/storage/dell/srdf-a/security/hardening/index.md',
     'SRDF/A — hardening guide, CIS controls, secure configuration',
 )
 def _dr_srdf_a_sec_hardening():
@@ -2087,7 +2087,7 @@ def _dr_srdf_a_sec_hardening():
 
 @kb_diagram(
     'dr-srdf-a-troubleshooting',
-    'docs/disaster-recovery/srdf-a/troubleshooting/index.md',
+    'docs/storage/dell/srdf-a/troubleshooting/index.md',
     'SRDF/A — troubleshooting overview and triage approach',
 )
 def _dr_srdf_a_troubleshooting():
@@ -2140,7 +2140,7 @@ def _dr_srdf_a_troubleshooting():
 
 @kb_diagram(
     'dr-srdf-a-ts-issues',
-    'docs/disaster-recovery/srdf-a/troubleshooting/common-issues/index.md',
+    'docs/storage/dell/srdf-a/troubleshooting/common-issues/index.md',
     'SRDF/A — common issues, root causes, and fixes',
 )
 def _dr_srdf_a_ts_issues():
@@ -2193,7 +2193,7 @@ def _dr_srdf_a_ts_issues():
 
 @kb_diagram(
     'dr-srdf-a-ts-diag',
-    'docs/disaster-recovery/srdf-a/troubleshooting/diagnostics/index.md',
+    'docs/storage/dell/srdf-a/troubleshooting/diagnostics/index.md',
     'SRDF/A — diagnostic commands and log collection',
 )
 def _dr_srdf_a_ts_diag():
@@ -2243,7 +2243,7 @@ def _dr_srdf_a_ts_diag():
 
 @kb_diagram(
     'dr-srdf-a-ts-escalation',
-    'docs/disaster-recovery/srdf-a/troubleshooting/escalation/index.md',
+    'docs/storage/dell/srdf-a/troubleshooting/escalation/index.md',
     'SRDF/A — escalation path, vendor support, and SLA',
 )
 def _dr_srdf_a_ts_escalation():
@@ -2294,7 +2294,7 @@ def _dr_srdf_a_ts_escalation():
 
 @kb_diagram(
     'dr-srdf-s',
-    'docs/disaster-recovery/srdf-s/index.md',
+    'docs/storage/dell/srdf-s/index.md',
     'Synchronous replication for PowerMax/VMAX — RPO=0, write not acknowledged until R2 confirms',
 )
 def _dr_srdf_s_overview():
@@ -2349,7 +2349,7 @@ def _dr_srdf_s_overview():
 
 @kb_diagram(
     'dr-srdf-s-architecture',
-    'docs/disaster-recovery/srdf-s/architecture/index.md',
+    'docs/storage/dell/srdf-s/architecture/index.md',
     'SRDF/S — architecture overview, components, data flow',
 )
 def _dr_srdf_s_architecture():
@@ -2403,7 +2403,7 @@ def _dr_srdf_s_architecture():
 
 @kb_diagram(
     'dr-srdf-s-arch-how-it-works',
-    'docs/disaster-recovery/srdf-s/architecture/how-it-works/index.md',
+    'docs/storage/dell/srdf-s/architecture/how-it-works/index.md',
     'SRDF/S — how replication or backup data flows step by step',
 )
 def _dr_srdf_s_arch_how():
@@ -2468,7 +2468,7 @@ def _dr_srdf_s_arch_how():
 
 @kb_diagram(
     'dr-srdf-s-arch-design',
-    'docs/disaster-recovery/srdf-s/architecture/design-standards/index.md',
+    'docs/storage/dell/srdf-s/architecture/design-standards/index.md',
     'SRDF/S — sizing, design rules, capacity, HA guidelines',
 )
 def _dr_srdf_s_arch_design():
@@ -2521,7 +2521,7 @@ def _dr_srdf_s_arch_design():
 
 @kb_diagram(
     'dr-srdf-s-arch-integrations',
-    'docs/disaster-recovery/srdf-s/architecture/integrations/index.md',
+    'docs/storage/dell/srdf-s/architecture/integrations/index.md',
     'SRDF/S — integration points with external systems and APIs',
 )
 def _dr_srdf_s_arch_integrations():
@@ -2573,7 +2573,7 @@ def _dr_srdf_s_arch_integrations():
 
 @kb_diagram(
     'dr-srdf-s-operations',
-    'docs/disaster-recovery/srdf-s/operations/index.md',
+    'docs/storage/dell/srdf-s/operations/index.md',
     'SRDF/S — operations overview, key tasks, day-to-day procedures',
 )
 def _dr_srdf_s_operations():
@@ -2625,7 +2625,7 @@ def _dr_srdf_s_operations():
 
 @kb_diagram(
     'dr-srdf-s-ops-backup',
-    'docs/disaster-recovery/srdf-s/operations/backup-restore/index.md',
+    'docs/storage/dell/srdf-s/operations/backup-restore/index.md',
     'SRDF/S — backup and restore procedures',
 )
 def _dr_srdf_s_ops_backup():
@@ -2677,7 +2677,7 @@ def _dr_srdf_s_ops_backup():
 
 @kb_diagram(
     'dr-srdf-s-ops-cli',
-    'docs/disaster-recovery/srdf-s/operations/cli-reference/index.md',
+    'docs/storage/dell/srdf-s/operations/cli-reference/index.md',
     'SRDF/S — CLI commands reference',
 )
 def _dr_srdf_s_ops_cli():
@@ -2731,7 +2731,7 @@ def _dr_srdf_s_ops_cli():
 
 @kb_diagram(
     'dr-srdf-s-ops-health',
-    'docs/disaster-recovery/srdf-s/operations/health-checks/index.md',
+    'docs/storage/dell/srdf-s/operations/health-checks/index.md',
     'SRDF/S — health check procedures and monitoring commands',
 )
 def _dr_srdf_s_ops_health():
@@ -2784,7 +2784,7 @@ def _dr_srdf_s_ops_health():
 
 @kb_diagram(
     'dr-srdf-s-ops-install',
-    'docs/disaster-recovery/srdf-s/operations/install-upgrade/index.md',
+    'docs/storage/dell/srdf-s/operations/install-upgrade/index.md',
     'SRDF/S — install and upgrade procedures',
 )
 def _dr_srdf_s_ops_install():
@@ -2845,7 +2845,7 @@ def _dr_srdf_s_ops_install():
 
 @kb_diagram(
     'dr-srdf-s-ops-procedures',
-    'docs/disaster-recovery/srdf-s/operations/procedures/index.md',
+    'docs/storage/dell/srdf-s/operations/procedures/index.md',
     'SRDF/S — operational procedures and runbooks',
 )
 def _dr_srdf_s_ops_procedures():
@@ -2895,7 +2895,7 @@ def _dr_srdf_s_ops_procedures():
 
 @kb_diagram(
     'dr-srdf-s-ops-scripts',
-    'docs/disaster-recovery/srdf-s/operations/scripts/index.md',
+    'docs/storage/dell/srdf-s/operations/scripts/index.md',
     'SRDF/S — automation scripts and examples',
 )
 def _dr_srdf_s_ops_scripts():
@@ -2945,7 +2945,7 @@ def _dr_srdf_s_ops_scripts():
 
 @kb_diagram(
     'dr-srdf-s-security',
-    'docs/disaster-recovery/srdf-s/security/index.md',
+    'docs/storage/dell/srdf-s/security/index.md',
     'SRDF/S — security overview, controls, compliance posture',
 )
 def _dr_srdf_s_security():
@@ -2997,7 +2997,7 @@ def _dr_srdf_s_security():
 
 @kb_diagram(
     'dr-srdf-s-sec-access',
-    'docs/disaster-recovery/srdf-s/security/access-control/index.md',
+    'docs/storage/dell/srdf-s/security/access-control/index.md',
     'SRDF/S — RBAC, permissions, service accounts',
 )
 def _dr_srdf_s_sec_access():
@@ -3050,7 +3050,7 @@ def _dr_srdf_s_sec_access():
 
 @kb_diagram(
     'dr-srdf-s-sec-auth',
-    'docs/disaster-recovery/srdf-s/security/authentication/index.md',
+    'docs/storage/dell/srdf-s/security/authentication/index.md',
     'SRDF/S — authentication methods, certificate management',
 )
 def _dr_srdf_s_sec_auth():
@@ -3100,7 +3100,7 @@ def _dr_srdf_s_sec_auth():
 
 @kb_diagram(
     'dr-srdf-s-sec-enc',
-    'docs/disaster-recovery/srdf-s/security/encryption/index.md',
+    'docs/storage/dell/srdf-s/security/encryption/index.md',
     'SRDF/S — encryption at rest and in transit',
 )
 def _dr_srdf_s_sec_enc():
@@ -3150,7 +3150,7 @@ def _dr_srdf_s_sec_enc():
 
 @kb_diagram(
     'dr-srdf-s-sec-hardening',
-    'docs/disaster-recovery/srdf-s/security/hardening/index.md',
+    'docs/storage/dell/srdf-s/security/hardening/index.md',
     'SRDF/S — hardening guide, CIS controls, secure configuration',
 )
 def _dr_srdf_s_sec_hardening():
@@ -3201,7 +3201,7 @@ def _dr_srdf_s_sec_hardening():
 
 @kb_diagram(
     'dr-srdf-s-troubleshooting',
-    'docs/disaster-recovery/srdf-s/troubleshooting/index.md',
+    'docs/storage/dell/srdf-s/troubleshooting/index.md',
     'SRDF/S — troubleshooting overview and triage approach',
 )
 def _dr_srdf_s_troubleshooting():
@@ -3254,7 +3254,7 @@ def _dr_srdf_s_troubleshooting():
 
 @kb_diagram(
     'dr-srdf-s-ts-issues',
-    'docs/disaster-recovery/srdf-s/troubleshooting/common-issues/index.md',
+    'docs/storage/dell/srdf-s/troubleshooting/common-issues/index.md',
     'SRDF/S — common issues, root causes, and fixes',
 )
 def _dr_srdf_s_ts_issues():
@@ -3307,7 +3307,7 @@ def _dr_srdf_s_ts_issues():
 
 @kb_diagram(
     'dr-srdf-s-ts-diag',
-    'docs/disaster-recovery/srdf-s/troubleshooting/diagnostics/index.md',
+    'docs/storage/dell/srdf-s/troubleshooting/diagnostics/index.md',
     'SRDF/S — diagnostic commands and log collection',
 )
 def _dr_srdf_s_ts_diag():
@@ -3357,7 +3357,7 @@ def _dr_srdf_s_ts_diag():
 
 @kb_diagram(
     'dr-srdf-s-ts-escalation',
-    'docs/disaster-recovery/srdf-s/troubleshooting/escalation/index.md',
+    'docs/storage/dell/srdf-s/troubleshooting/escalation/index.md',
     'SRDF/S — escalation path, vendor support, and SLA',
 )
 def _dr_srdf_s_ts_escalation():
@@ -3407,1122 +3407,8 @@ def _dr_srdf_s_ts_escalation():
 
 
 @kb_diagram(
-    'dr-srm',
-    'docs/disaster-recovery/srm/index.md',
-    'VMware DR orchestration — protection groups, recovery plans, automated failover/failback',
-)
-def _dr_srm_overview():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Overview'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM')))
-    lines.append(R(bMid(3, 99, 'VMware DR orchestration — protection groups, recovery plans, automated failover/failback')))
-    lines.append(R(bMid(3, 99, 'SRM Server (Protected) — vCenter plugin at production site; manages protection groups')))
-    lines.append(R(bMid(3, 99, 'SRM Server (Recovery)  — vCenter plugin at DR site; runs recovery plans')))
-    lines.append(R(bMid(3, 99, 'SRA (Storage Replication Adapter) — translates SRM calls to array replication commands')))
-    lines.append(R(bMid(3, 99, 'Management: 443 (SRM HTTPS) · Auth: vCenter SSO / AD integration; SRM admin role; site')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Architecture: components work together to deliver SRM capabilities'))
-    lines.append(txt_row())
-    lines.append(R(arrow([26, 76])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'Architecture'), bMid(53, 99, 'Operations'))))
-    lines.append(R(merge(bMid(3, 50, 'SRM Server (Protected) — vCenter plugin at '), bMid(53, 99, 'srm-cli vm list'))))
-    lines.append(R(merge(bMid(3, 50, 'SRM Server (Recovery)  — vCenter plugin at '), bMid(53, 99, 'srm-cli recovery run'))))
-    lines.append(R(merge(bMid(3, 50, 'SRA (Storage Replication Adapter) — transla'), bMid(53, 99, 'srm-cli plan test'))))
-    lines.append(R(merge(bMid(3, 50, 'Protection Group      — set of VMs protecte'), bMid(53, 99, 'srm-cli pg list'))))
-    lines.append(R(merge(bMid(3, 50, 'Recovery Plan         — ordered steps: pre-'), bMid(53, 99, 'srm-cli history'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-architecture',
-    'docs/disaster-recovery/srm/architecture/index.md',
-    'SRM — architecture overview, components, data flow',
-)
-def _dr_srm_architecture():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Architecture'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Component Architecture')))
-    lines.append(R(bMid(3, 99, 'SRM Server (Protected) — vCenter plugin at production site; manages protection groups')))
-    lines.append(R(bMid(3, 99, 'SRM Server (Recovery)  — vCenter plugin at DR site; runs recovery plans')))
-    lines.append(R(bMid(3, 99, 'SRA (Storage Replication Adapter) — translates SRM calls to array replication commands')))
-    lines.append(R(bMid(3, 99, 'Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Three-tier component model — control plane, data plane, and management'))
-    lines.append(txt_row())
-    lines.append(R(arrow([26, 51, 76])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 33), bTop(36, 66), bTop(69, 99))))
-    lines.append(R(merge(bMid(3, 33, 'Control Plane'), bMid(36, 66, 'Data Plane'), bMid(69, 99, 'Management'))))
-    lines.append(R(merge(bMid(3, 33, 'SRM Server (Protected) — vCe'), bMid(36, 66, 'SRM Server (Recovery)  — vCe'), bMid(69, 99, 'Protection Group      — set '))))
-    lines.append(R(merge(bMid(3, 33, 'Scheduling'), bMid(36, 66, 'Replication/Backup'), bMid(69, 99, '443 (SRM HTTPS)'))))
-    lines.append(R(merge(bMid(3, 33, 'Policy mgmt'), bMid(36, 66, 'Data movement'), bMid(69, 99, 'REST API'))))
-    lines.append(R(merge(bMid(3, 33, 'Catalog/DB'), bMid(36, 66, 'Dedup/compress'), bMid(69, 99, 'RBAC'))))
-    lines.append(R(merge(bMid(3, 33, 'Job engine'), bMid(36, 66, '9086 (SRM-SRM pairing)'), bMid(69, 99, 'Alerting'))))
-    lines.append(R(merge(bBot(3, 33), bBot(36, 66), bBot(69, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-arch-how-it-works',
-    'docs/disaster-recovery/srm/architecture/how-it-works/index.md',
-    'SRM — how replication or backup data flows step by step',
-)
-def _dr_srm_arch_how():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — How It Works'))
-    lines.append(txt_row())
-    lines.append(txt_row('  SRM data flow — from source to target through the protection pipeline:'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, '1  Source / Production System')))
-    lines.append(R(bMid(3, 99, '   SRM Server (Protected) — vCenter plugin at production site; manages protection groups')))
-    lines.append(R(bMid(3, 99, '   Host writes are intercepted or snapshotted by the SRM agent/proxy')))
-    lines.append(R(bMid(3, 99, '   Changed blocks tracked via CBT / journal / delta-set mechanism')))
-    lines.append(R(bMid(3, 99, '   Consistency ensured at quiesce point before data transfer begins')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Changed data forwarded to the SRM engine — compression and encryption applied in transit'))
-    lines.append(txt_row())
-    lines.append(R(arrow([51])))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, '2  SRM Engine')))
-    lines.append(R(bMid(3, 99, '   SRM Server (Recovery)  — vCenter plugin at DR site; runs recovery plans')))
-    lines.append(R(bMid(3, 99, '   Data compressed, deduplicated, and encrypted before storage')))
-    lines.append(R(bMid(3, 99, '   Metadata catalog updated; job status reported to control plane')))
-    lines.append(R(bMid(3, 99, '   srm-cli vm list')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(arrow([51])))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, '3  Target / Repository')))
-    lines.append(R(bMid(3, 99, '   SRA (Storage Replication Adapter) — translates SRM calls to array replication commands')))
-    lines.append(R(bMid(3, 99, '   Recovery point written; retention policy applied automatically')))
-    lines.append(R(bMid(3, 99, '   Restore: srm-cli recovery run')))
-    lines.append(R(bMid(3, 99, '   RTO driven by target storage performance and data volume')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-arch-design',
-    'docs/disaster-recovery/srm/architecture/design-standards/index.md',
-    'SRM — sizing, design rules, capacity, HA guidelines',
-)
-def _dr_srm_arch_design():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Design Standards'))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'Sizing Guidelines'), bMid(53, 99, 'HA Requirements'))))
-    lines.append(R(merge(bMid(3, 50, 'Deduplicate where supported'), bMid(53, 99, 'N+1 component redundancy'))))
-    lines.append(R(merge(bMid(3, 50, 'Bandwidth: 10 GbE minimum'), bMid(53, 99, 'Heartbeat / health monitor'))))
-    lines.append(R(merge(bMid(3, 50, 'Storage: 130% of raw data'), bMid(53, 99, 'Separate mgmt / data VLANs'))))
-    lines.append(R(merge(bMid(3, 50, 'Latency: < 10 ms to storage'), bMid(53, 99, 'Out-of-band access (IPMI)'))))
-    lines.append(R(merge(bMid(3, 50, 'CPU: 8+ vCPU for engine'), bMid(53, 99, 'Anti-affinity VM placement'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Standard SRM Design Rules')))
-    lines.append(R(bMid(3, 99, 'RPO target drives snapshot/cycle frequency — document in service design')))
-    lines.append(R(bMid(3, 99, 'RTO target drives recovery tier: instant, warm standby, or cold restore')))
-    lines.append(R(bMid(3, 99, 'Dedicated backup network VLAN — no shared production traffic')))
-    lines.append(R(bMid(3, 99, 'Encryption: SRM management TLS; replication encryption controlled by array/SRA layer')))
-    lines.append(R(bMid(3, 99, 'Service accounts: minimum privilege; rotate credentials quarterly')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-arch-integrations',
-    'docs/disaster-recovery/srm/architecture/integrations/index.md',
-    'SRM — integration points with external systems and APIs',
-)
-def _dr_srm_arch_integrations():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Architecture Integrations'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — External Integration Points')))
-    lines.append(R(bMid(3, 99, 'Auth: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange')))
-    lines.append(R(bMid(3, 99, 'Storage: connected via 443 (SRM HTTPS) · 9086 (SRM-SRM pairing)')))
-    lines.append(R(bMid(3, 99, 'Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems')))
-    lines.append(R(bMid(3, 99, 'Encryption: SRM management TLS; replication encryption controlled by array/SRA layer')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(arrow([26, 51, 76])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 33), bTop(36, 66), bTop(69, 99))))
-    lines.append(R(merge(bMid(3, 33, 'Identity'), bMid(36, 66, 'Storage'), bMid(69, 99, 'Monitoring'))))
-    lines.append(R(merge(bMid(3, 33, 'AD / LDAP'), bMid(36, 66, '443 (SRM HTTPS)'), bMid(69, 99, 'SNMP / syslog'))))
-    lines.append(R(merge(bMid(3, 33, 'SAML SSO'), bMid(36, 66, '9086 (SRM-SRM pairing)'), bMid(69, 99, 'REST webhook'))))
-    lines.append(R(merge(bMid(3, 33, 'RBAC roles'), bMid(36, 66, 'NFS / iSCSI / FC'), bMid(69, 99, 'Email alerts'))))
-    lines.append(R(merge(bMid(3, 33, 'MFA optional'), bMid(36, 66, 'Dedup appliance'), bMid(69, 99, 'ServiceNow'))))
-    lines.append(R(merge(bMid(3, 33, 'Cert auth'), bMid(36, 66, 'Object storage'), bMid(69, 99, 'Prometheus'))))
-    lines.append(R(merge(bBot(3, 33), bBot(36, 66), bBot(69, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-operations',
-    'docs/disaster-recovery/srm/operations/index.md',
-    'SRM — operations overview, key tasks, day-to-day procedures',
-)
-def _dr_srm_operations():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Operations'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Day-to-Day Operations')))
-    lines.append(R(bMid(3, 99, 'Daily: review job status · check health alerts · verify last backup/replica')))
-    lines.append(R(bMid(3, 99, 'Weekly: review capacity trends · test restore sample · review error logs')))
-    lines.append(R(bMid(3, 99, 'Monthly: full restore test · review retention · audit service accounts')))
-    lines.append(R(bMid(3, 99, 'Quarterly: DR failover test · firmware review · update documentation')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(arrow([26, 51, 76])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 33), bTop(36, 66), bTop(69, 99))))
-    lines.append(R(merge(bMid(3, 33, 'Backup/Replicate'), bMid(36, 66, 'Monitor'), bMid(69, 99, 'Recover'))))
-    lines.append(R(merge(bMid(3, 33, 'srm-cli vm list'), bMid(36, 66, 'srm-cli plan test'), bMid(69, 99, 'srm-cli recovery run'))))
-    lines.append(R(merge(bMid(3, 33, 'Schedule jobs'), bMid(36, 66, 'Health checks'), bMid(69, 99, 'Instant restore'))))
-    lines.append(R(merge(bMid(3, 33, 'Retention mgmt'), bMid(36, 66, 'Capacity alerts'), bMid(69, 99, 'Failover test'))))
-    lines.append(R(merge(bMid(3, 33, 'Consistency grp'), bMid(36, 66, 'Log review'), bMid(69, 99, 'DR runbook'))))
-    lines.append(R(merge(bMid(3, 33, 'Policy updates'), bMid(36, 66, 'SLA tracking'), bMid(69, 99, 'Validate RTO'))))
-    lines.append(R(merge(bBot(3, 33), bBot(36, 66), bBot(69, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ops-backup',
-    'docs/disaster-recovery/srm/operations/backup-restore/index.md',
-    'SRM — backup and restore procedures',
-)
-def _dr_srm_ops_backup():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Backup & Restore'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog'))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'Backup (Protection)'), bMid(53, 99, 'Restore (Recovery)'))))
-    lines.append(R(merge(bMid(3, 50, 'srm-cli vm list'), bMid(53, 99, 'srm-cli recovery run'))))
-    lines.append(R(merge(bMid(3, 50, 'Quiesce source I/O'), bMid(53, 99, 'Select recovery point'))))
-    lines.append(R(merge(bMid(3, 50, 'Take snapshot / CBT'), bMid(53, 99, 'Mount or copy to target'))))
-    lines.append(R(merge(bMid(3, 50, 'Transfer changed blocks'), bMid(53, 99, 'Validate integrity'))))
-    lines.append(R(merge(bMid(3, 50, 'Commit to repository'), bMid(53, 99, 'Restart application'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Key SRM Commands')))
-    lines.append(R(bMid(3, 99, '  Backup trigger  : srm-cli vm list')))
-    lines.append(R(bMid(3, 99, '  List points     : srm-cli recovery run')))
-    lines.append(R(bMid(3, 99, '  Health status   : srm-cli plan test')))
-    lines.append(R(bMid(3, 99, '  Retention mgmt  : srm-cli history')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ops-cli',
-    'docs/disaster-recovery/srm/operations/cli-reference/index.md',
-    'SRM — CLI commands reference',
-)
-def _dr_srm_ops_cli():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — CLI Reference'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Command Reference')))
-    lines.append(R(bMid(3, 99, 'Use these commands for routine operations, scripting, and troubleshooting')))
-    lines.append(R(bMid(3, 99, '  srm-cli vm list')))
-    lines.append(R(bMid(3, 99, '  srm-cli recovery run')))
-    lines.append(R(bMid(3, 99, '  srm-cli plan test')))
-    lines.append(R(bMid(3, 99, '  srm-cli pg list')))
-    lines.append(R(bMid(3, 99, '  srm-cli history')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Command Categories')))
-    lines.append(R(bMid(3, 99, '  Status / Query  — check current state, list jobs, show config')))
-    lines.append(R(bMid(3, 99, '  Operations      — start, stop, failover, restore, sync, expire')))
-    lines.append(R(bMid(3, 99, '  Configuration   — add/modify policies, schedules, storage targets')))
-    lines.append(R(bMid(3, 99, '  Diagnostics     — collect logs, run health checks, test connectivity')))
-    lines.append(R(bMid(3, 99, '  Scripting       — REST API or CLI for automation and reporting')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ops-health',
-    'docs/disaster-recovery/srm/operations/health-checks/index.md',
-    'SRM — health check procedures and monitoring commands',
-)
-def _dr_srm_ops_health():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Health Checks'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Health Check Procedures')))
-    lines.append(R(bMid(3, 99, 'Run these checks daily/weekly to confirm protection is working')))
-    lines.append(R(bMid(3, 99, '  srm-cli plan test')))
-    lines.append(R(bMid(3, 99, '  Review job completion rate — target 100%; investigate failures')))
-    lines.append(R(bMid(3, 99, '  Check replication/backup lag against RPO target')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Check', 'What to verify', 'Expected', 'Frequency', 'Action if bad'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Job status', 'All jobs complete', '100% success', 'Daily', 'Triage failures'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Lag / RPO', 'Replication lag', '< RPO target', 'Daily', 'Tune bandwidth'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Capacity', 'Repo space used', '< 80% full', 'Weekly', 'Expand or expire'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Restore test', 'Random restore', 'Data intact', 'Monthly', 'Fix backup chain'])))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ops-install',
-    'docs/disaster-recovery/srm/operations/install-upgrade/index.md',
-    'SRM — install and upgrade procedures',
-)
-def _dr_srm_ops_install():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Install & Upgrade'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Installation Prerequisites')))
-    lines.append(R(bMid(3, 99, '  OS: supported Linux or Windows Server (see vendor compatibility matrix)')))
-    lines.append(R(bMid(3, 99, '  Network: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) — ensure firewall allows these')))
-    lines.append(R(bMid(3, 99, '  Auth: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange')))
-    lines.append(R(bMid(3, 99, '  Storage: Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(arrow([51])))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Install Sequence')))
-    lines.append(R(bMid(3, 99, '  1  Deploy control plane component and configure network access')))
-    lines.append(R(bMid(3, 99, '  2  Configure storage and network connectivity')))
-    lines.append(R(bMid(3, 99, '  3  Install agent/proxy/splitter on protected hosts')))
-    lines.append(R(bMid(3, 99, '  4  Register sources and configure protection policies')))
-    lines.append(R(bMid(3, 99, '  5  Run first job; verify completion; test restore')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Upgrade Sequence')))
-    lines.append(R(bMid(3, 99, '  1  Review release notes and compatibility matrix before upgrade')))
-    lines.append(R(bMid(3, 99, '  2  Snapshot or backup the control plane VM before upgrading')))
-    lines.append(R(bMid(3, 99, '  3  Upgrade control plane first, then proxies/agents/appliances')))
-    lines.append(R(bMid(3, 99, '  4  Validate jobs resume automatically after upgrade')))
-    lines.append(R(bMid(3, 99, '  5  Document version change and update CMDB record')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ops-procedures',
-    'docs/disaster-recovery/srm/operations/procedures/index.md',
-    'SRM — operational procedures and runbooks',
-)
-def _dr_srm_ops_procedures():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Procedures'))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'Routine Procedures'), bMid(53, 99, 'DR Procedures'))))
-    lines.append(R(merge(bMid(3, 50, 'Add new protection source'), bMid(53, 99, 'Initiate failover'))))
-    lines.append(R(merge(bMid(3, 50, 'Modify retention policy'), bMid(53, 99, 'Validate replica'))))
-    lines.append(R(merge(bMid(3, 50, 'Expire old recover points'), bMid(53, 99, 'Redirect host I/O'))))
-    lines.append(R(merge(bMid(3, 50, 'Add storage capacity'), bMid(53, 99, 'Test failover (non-disrupt)'))))
-    lines.append(R(merge(bMid(3, 50, 'Service account rotation'), bMid(53, 99, 'Failback to production'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Change Control Requirements for SRM')))
-    lines.append(R(bMid(3, 99, '  All changes to protection policies require change ticket with rollback plan')))
-    lines.append(R(bMid(3, 99, '  Failover tests must be scheduled in maintenance window')))
-    lines.append(R(bMid(3, 99, '  Firmware/software upgrades need 48 h pre-approval and backup snapshot')))
-    lines.append(R(bMid(3, 99, '  Post-change: verify jobs run successfully for 2 backup cycles')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ops-scripts',
-    'docs/disaster-recovery/srm/operations/scripts/index.md',
-    'SRM — automation scripts and examples',
-)
-def _dr_srm_ops_scripts():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Scripts'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Automation Scripts')))
-    lines.append(R(bMid(3, 99, 'Scripts automate routine SRM operations — run via cron or CI/CD')))
-    lines.append(R(bMid(3, 99, 'Always store credentials in vault (not in script); log all output')))
-    lines.append(R(bMid(3, 99, 'Test scripts in non-production before scheduling in production')))
-    lines.append(R(bMid(3, 99, 'Scope scripts to least-privilege service account')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'Status / Reporting Scripts'), bMid(53, 99, 'Automation Scripts'))))
-    lines.append(R(merge(bMid(3, 50, 'Job success rate report'), bMid(53, 99, 'Auto-expire old points'))))
-    lines.append(R(merge(bMid(3, 50, 'Capacity trending'), bMid(53, 99, 'Auto-add new VMs to policy'))))
-    lines.append(R(merge(bMid(3, 50, 'SLA compliance report'), bMid(53, 99, 'Nightly DR test validation'))))
-    lines.append(R(merge(bMid(3, 50, 'RPO / RTO dashboard'), bMid(53, 99, 'Alert on job failure'))))
-    lines.append(R(merge(bMid(3, 50, 'srm-cli plan test'), bMid(53, 99, 'srm-cli pg list'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-security',
-    'docs/disaster-recovery/srm/security/index.md',
-    'SRM — security overview, controls, compliance posture',
-)
-def _dr_srm_security():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Security'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Security Posture')))
-    lines.append(R(bMid(3, 99, 'Authentication: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange')))
-    lines.append(R(bMid(3, 99, 'Encryption: SRM management TLS; replication encryption controlled by array/SRA layer')))
-    lines.append(R(bMid(3, 99, 'Network: management VLAN separated; 443 (vCenter) management port')))
-    lines.append(R(bMid(3, 99, 'Audit: all admin actions logged; log retention minimum 1 year')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(arrow([26, 51, 76])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 33), bTop(36, 66), bTop(69, 99))))
-    lines.append(R(merge(bMid(3, 33, 'Access Control'), bMid(36, 66, 'Encryption'), bMid(69, 99, 'Audit'))))
-    lines.append(R(merge(bMid(3, 33, 'RBAC roles'), bMid(36, 66, 'AES-256 at rest'), bMid(69, 99, 'Admin actions'))))
-    lines.append(R(merge(bMid(3, 33, 'Least privilege'), bMid(36, 66, 'TLS in transit'), bMid(69, 99, 'Login events'))))
-    lines.append(R(merge(bMid(3, 33, 'MFA optional'), bMid(36, 66, 'Key rotation'), bMid(69, 99, 'Syslog export'))))
-    lines.append(R(merge(bMid(3, 33, 'SVC acct rotate'), bMid(36, 66, 'WORM / immutable'), bMid(69, 99, 'SIEM forward'))))
-    lines.append(R(merge(bMid(3, 33, 'Just-In-Time'), bMid(36, 66, 'KMS managed'), bMid(69, 99, 'Quarterly review'))))
-    lines.append(R(merge(bBot(3, 33), bBot(36, 66), bBot(69, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-sec-access',
-    'docs/disaster-recovery/srm/security/access-control/index.md',
-    'SRM — RBAC, permissions, service accounts',
-)
-def _dr_srm_sec_access():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Access Control'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — RBAC and Access Control')))
-    lines.append(R(bMid(3, 99, 'Auth: vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange')))
-    lines.append(R(bMid(3, 99, 'Principle of least privilege: each role gets only required permissions')))
-    lines.append(R(bMid(3, 99, 'Service accounts: dedicated, non-interactive; rotation every 90 days')))
-    lines.append(R(bMid(3, 99, 'Emergency break-glass: documented, monitored, time-limited access')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Role', 'Access Level', 'Typical User', 'Review Freq', 'Granted By'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Admin', 'Full config/ops', 'Sr Backup Eng', 'Quarterly', 'Security team'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Operator', 'Start/stop jobs', 'Backup Eng', 'Quarterly', 'Team lead'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Monitor', 'Read-only view', 'NOC / L1', 'Quarterly', 'Team lead'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Service Acct', 'API / headless', 'Automation', 'Per rotation', 'Security team'])))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-sec-auth',
-    'docs/disaster-recovery/srm/security/authentication/index.md',
-    'SRM — authentication methods, certificate management',
-)
-def _dr_srm_sec_auth():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Authentication'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Authentication Methods')))
-    lines.append(R(bMid(3, 99, 'vCenter SSO / AD integration; SRM admin role; site-pairing certificate exchange')))
-    lines.append(R(bMid(3, 99, 'Management UI: HTTPS on 443 (SRM HTTPS) — browser-based login')))
-    lines.append(R(bMid(3, 99, 'API: bearer token or service account; rotate credentials quarterly')))
-    lines.append(R(bMid(3, 99, 'Inter-component: certificate-based mutual TLS between engines')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'Human Access'), bMid(53, 99, 'Machine Access'))))
-    lines.append(R(merge(bMid(3, 50, 'AD / LDAP integration'), bMid(53, 99, 'Service account'))))
-    lines.append(R(merge(bMid(3, 50, 'SAML SSO optional'), bMid(53, 99, 'API key / token'))))
-    lines.append(R(merge(bMid(3, 50, 'MFA via IdP'), bMid(53, 99, 'Certificate auth'))))
-    lines.append(R(merge(bMid(3, 50, 'Session timeout 15 min'), bMid(53, 99, 'Rotate every 90 d'))))
-    lines.append(R(merge(bMid(3, 50, 'Audit login events'), bMid(53, 99, 'Vault-stored secrets'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-sec-enc',
-    'docs/disaster-recovery/srm/security/encryption/index.md',
-    'SRM — encryption at rest and in transit',
-)
-def _dr_srm_sec_enc():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Encryption'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Encryption Configuration')))
-    lines.append(R(bMid(3, 99, 'SRM management TLS; replication encryption controlled by array/SRA layer')))
-    lines.append(R(bMid(3, 99, 'In-transit: TLS 1.2+ for all management; data channel also encrypted')))
-    lines.append(R(bMid(3, 99, 'At-rest: AES-256 on repository or vault storage; key managed by KMS')))
-    lines.append(R(bMid(3, 99, 'Key lifecycle: generate → use → rotate (annual) → retire → destroy')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'In-Transit'), bMid(53, 99, 'At-Rest'))))
-    lines.append(R(merge(bMid(3, 50, 'TLS 1.2+ (minimum)'), bMid(53, 99, 'AES-256 encryption'))))
-    lines.append(R(merge(bMid(3, 50, '443 (SRM HTTPS) HTTPS'), bMid(53, 99, 'KMS key management'))))
-    lines.append(R(merge(bMid(3, 50, 'Mutual TLS internal'), bMid(53, 99, 'WORM / immutable'))))
-    lines.append(R(merge(bMid(3, 50, 'Cert rotation annual'), bMid(53, 99, 'Key rotation annual'))))
-    lines.append(R(merge(bMid(3, 50, 'No plain-text admin'), bMid(53, 99, 'Audit key access'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-sec-hardening',
-    'docs/disaster-recovery/srm/security/hardening/index.md',
-    'SRM — hardening guide, CIS controls, secure configuration',
-)
-def _dr_srm_sec_hardening():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Hardening'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Hardening Checklist')))
-    lines.append(R(bMid(3, 99, '  [ ] Disable default/admin accounts; create named admin accounts only')))
-    lines.append(R(bMid(3, 99, '  [ ] Enable MFA for all interactive logins via IdP / SAML SSO')))
-    lines.append(R(bMid(3, 99, '  [ ] Restrict management port (443 (SRM HTTPS)) to jump host / management VLAN')))
-    lines.append(R(bMid(3, 99, '  [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)')))
-    lines.append(R(bMid(3, 99, '  [ ] Apply all security patches within 30 days of vendor release')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Network Hardening')))
-    lines.append(R(bMid(3, 99, '  [ ] Separate backup VLAN — no direct production host access to repo')))
-    lines.append(R(bMid(3, 99, '  [ ] Firewall: allow only 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)')))
-    lines.append(R(bMid(3, 99, '  [ ] Disable unused ports and protocols on management interface')))
-    lines.append(R(bMid(3, 99, '  [ ] Immutable repository: enable WORM or object lock on backup target')))
-    lines.append(R(bMid(3, 99, '  [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-troubleshooting',
-    'docs/disaster-recovery/srm/troubleshooting/index.md',
-    'SRM — troubleshooting overview and triage approach',
-)
-def _dr_srm_troubleshooting():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Troubleshooting'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Troubleshooting Approach')))
-    lines.append(R(bMid(3, 99, '1  Identify: which job, component, or resource is failing')))
-    lines.append(R(bMid(3, 99, '2  Scope: single job vs all jobs; one source vs all sources')))
-    lines.append(R(bMid(3, 99, '3  Collect: logs and run status command; review recent change history')))
-    lines.append(R(bMid(3, 99, '4  Diagnose: match symptoms to known issues; check error codes')))
-    lines.append(R(bMid(3, 99, '5  Fix: apply resolution; verify fix; monitor next run')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(arrow([26, 51, 76])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 33), bTop(36, 66), bTop(69, 99))))
-    lines.append(R(merge(bMid(3, 33, 'Infrastructure'), bMid(36, 66, 'Application'), bMid(69, 99, 'Data'))))
-    lines.append(R(merge(bMid(3, 33, 'Network checks'), bMid(36, 66, 'Log analysis'), bMid(69, 99, 'Catalog check'))))
-    lines.append(R(merge(bMid(3, 33, 'Storage space'), bMid(36, 66, 'Job error codes'), bMid(69, 99, 'Consistency'))))
-    lines.append(R(merge(bMid(3, 33, 'Process health'), bMid(36, 66, 'Auth failures'), bMid(69, 99, 'Corruption scan'))))
-    lines.append(R(merge(bMid(3, 33, '443 (SRM HTTPS)'), bMid(36, 66, 'Timeout errors'), bMid(69, 99, 'Restore test'))))
-    lines.append(R(merge(bMid(3, 33, 'Firewall rules'), bMid(36, 66, 'Version compat'), bMid(69, 99, 'RPO drift'))))
-    lines.append(R(merge(bBot(3, 33), bBot(36, 66), bBot(69, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ts-issues',
-    'docs/disaster-recovery/srm/troubleshooting/common-issues/index.md',
-    'SRM — common issues, root causes, and fixes',
-)
-def _dr_srm_ts_issues():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Common Issues'))
-    lines.append(txt_row())
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Symptom', 'Likely Cause', 'First Check', 'Fix', 'Verify'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Plan fails', 'SRA timeout', 'check array repli', 're-run or fix SRA', 'srm-cli histor'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['VM no IP', 'customization err', 'check IP customiz', 'fix NIC mapping', 'vmware.log'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Test stuck', 'snapshot not rele', 'srm cleanup', 'force cleanup', 'srm-cli cleanu'])))
-    lines.append(R(sections(3, 99, [22, 41, 61, 80],
-        ['Pair broken', 'cert mismatch', 'check SRM pairing', 're-pair sites', 'srm-cli site i'])))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'General Triage Pattern')))
-    lines.append(R(bMid(3, 99, '  Is the issue new or recurring? New = recent change; Recurring = config problem')))
-    lines.append(R(bMid(3, 99, '  Is it isolated to one source or all? Isolated = agent; All = server/repo')))
-    lines.append(R(bMid(3, 99, '  Check logs first: srm-cli plan test')))
-    lines.append(R(bMid(3, 99, '  If unresolved in 2h: open vendor case with full log bundle')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ts-diag',
-    'docs/disaster-recovery/srm/troubleshooting/diagnostics/index.md',
-    'SRM — diagnostic commands and log collection',
-)
-def _dr_srm_ts_diag():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Diagnostics'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Diagnostic Commands')))
-    lines.append(R(bMid(3, 99, 'Collect these before opening a vendor support case')))
-    lines.append(R(bMid(3, 99, '  srm-cli plan test')))
-    lines.append(R(bMid(3, 99, '  srm-cli pg list')))
-    lines.append(R(bMid(3, 99, '  Check system logs: /var/log/ or Windows Event Viewer')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(3, 50), bTop(53, 99))))
-    lines.append(R(merge(bMid(3, 50, 'Log Collection'), bMid(53, 99, 'Live Diagnostics'))))
-    lines.append(R(merge(bMid(3, 50, 'Application log bundle'), bMid(53, 99, 'Network connectivity'))))
-    lines.append(R(merge(bMid(3, 50, 'OS syslog (journalctl)'), bMid(53, 99, 'Storage path check'))))
-    lines.append(R(merge(bMid(3, 50, 'Core dump if crashed'), bMid(53, 99, 'Process list check'))))
-    lines.append(R(merge(bMid(3, 50, 'Config export/backup'), bMid(53, 99, 'Port reachability'))))
-    lines.append(R(merge(bMid(3, 50, 'srm-cli plan test'), bMid(53, 99, 'srm-cli pg list'))))
-    lines.append(R(merge(bBot(3, 50), bBot(53, 99))))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-@kb_diagram(
-    'dr-srm-ts-escalation',
-    'docs/disaster-recovery/srm/troubleshooting/escalation/index.md',
-    'SRM — escalation path, vendor support, and SLA',
-)
-def _dr_srm_ts_escalation():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'SRM — Escalation'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'SRM — Escalation Path')))
-    lines.append(R(bMid(3, 99, 'L1 Triage: review logs, match to known issues in runbook (0–30 min)')))
-    lines.append(R(bMid(3, 99, 'L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)')))
-    lines.append(R(bMid(3, 99, 'Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)')))
-    lines.append(R(bMid(3, 99, 'Sev1 (data loss / production impact): page on-call + open critical case')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Information to Collect Before Escalating')))
-    lines.append(R(bMid(3, 99, '  Product version: SRM version string from About / version command')))
-    lines.append(R(bMid(3, 99, '  Full log bundle: srm-cli plan test')))
-    lines.append(R(bMid(3, 99, '  Symptom timeline: when first occurred; any changes made')))
-    lines.append(R(bMid(3, 99, '  Scope: single job / all jobs / all components — narrows root cause')))
-    lines.append(R(bMid(3, 99, '  Error codes: exact error messages and exit codes from logs')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link'))
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('SRM           = Site Recovery Manager; VMware product for DR orchestration and testing'))
-    lines.append(txt_row('SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication'))
-    lines.append(txt_row('Protection Group= logical grouping of VMs covered by a single replication consistency group'))
-    lines.append(txt_row('Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization'))
-    lines.append(txt_row('IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)'))
-    lines.append(txt_row('Test Failover = non-disruptive plan validation using snapshot; production unaffected'))
-    lines.append(txt_row('Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery'))
-    lines.append(txt_row('Emergency Failover= disaster scenario; VMs powered on from latest available replica'))
-    lines.append(txt_row('Failback      = after recovery, re-protect VMs and migrate back to production site'))
-    lines.append(txt_row('Re-protect    = reverses replication direction; DR site becomes new protected site'))
-    lines.append(txt_row('Recovery Point= specific replication snapshot used for VM recovery; RPO = interval'))
-    lines.append(txt_row('vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration'))
-    lines.append(txt_row('Startup Priority= ordering within recovery plan; lower number = powers on first'))
-    lines.append(txt_row('Site Pair     = trust relationship between protected and recovery SRM servers'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
-
-
-@kb_diagram(
     'dr-superna',
-    'docs/disaster-recovery/superna-eyeglass/index.md',
+    'docs/storage/netapp/superna-eyeglass/index.md',
     'NAS DR and ransomware protection for Dell PowerScale — SyncIQ integration and failover automation',
 )
 def _dr_superna_overview():
@@ -4577,7 +3463,7 @@ def _dr_superna_overview():
 
 @kb_diagram(
     'dr-superna-architecture',
-    'docs/disaster-recovery/superna-eyeglass/architecture/index.md',
+    'docs/storage/netapp/superna-eyeglass/architecture/index.md',
     'Superna Eyeglass — architecture overview, components, data flow',
 )
 def _dr_superna_architecture():
@@ -4631,7 +3517,7 @@ def _dr_superna_architecture():
 
 @kb_diagram(
     'dr-superna-arch-how-it-works',
-    'docs/disaster-recovery/superna-eyeglass/architecture/how-it-works/index.md',
+    'docs/storage/netapp/superna-eyeglass/architecture/how-it-works/index.md',
     'Superna Eyeglass — how replication or backup data flows step by step',
 )
 def _dr_superna_arch_how():
@@ -4696,7 +3582,7 @@ def _dr_superna_arch_how():
 
 @kb_diagram(
     'dr-superna-arch-design',
-    'docs/disaster-recovery/superna-eyeglass/architecture/design-standards/index.md',
+    'docs/storage/netapp/superna-eyeglass/architecture/design-standards/index.md',
     'Superna Eyeglass — sizing, design rules, capacity, HA guidelines',
 )
 def _dr_superna_arch_design():
@@ -4749,7 +3635,7 @@ def _dr_superna_arch_design():
 
 @kb_diagram(
     'dr-superna-arch-integrations',
-    'docs/disaster-recovery/superna-eyeglass/architecture/integrations/index.md',
+    'docs/storage/netapp/superna-eyeglass/architecture/integrations/index.md',
     'Superna Eyeglass — integration points with external systems and APIs',
 )
 def _dr_superna_arch_integrations():
@@ -4801,7 +3687,7 @@ def _dr_superna_arch_integrations():
 
 @kb_diagram(
     'dr-superna-operations',
-    'docs/disaster-recovery/superna-eyeglass/operations/index.md',
+    'docs/storage/netapp/superna-eyeglass/operations/index.md',
     'Superna Eyeglass — operations overview, key tasks, day-to-day procedures',
 )
 def _dr_superna_operations():
@@ -4853,7 +3739,7 @@ def _dr_superna_operations():
 
 @kb_diagram(
     'dr-superna-ops-backup',
-    'docs/disaster-recovery/superna-eyeglass/operations/backup-restore/index.md',
+    'docs/storage/netapp/superna-eyeglass/operations/backup-restore/index.md',
     'Superna Eyeglass — backup and restore procedures',
 )
 def _dr_superna_ops_backup():
@@ -4905,7 +3791,7 @@ def _dr_superna_ops_backup():
 
 @kb_diagram(
     'dr-superna-ops-cli',
-    'docs/disaster-recovery/superna-eyeglass/operations/cli-reference/index.md',
+    'docs/storage/netapp/superna-eyeglass/operations/cli-reference/index.md',
     'Superna Eyeglass — CLI commands reference',
 )
 def _dr_superna_ops_cli():
@@ -4959,7 +3845,7 @@ def _dr_superna_ops_cli():
 
 @kb_diagram(
     'dr-superna-ops-health',
-    'docs/disaster-recovery/superna-eyeglass/operations/health-checks/index.md',
+    'docs/storage/netapp/superna-eyeglass/operations/health-checks/index.md',
     'Superna Eyeglass — health check procedures and monitoring commands',
 )
 def _dr_superna_ops_health():
@@ -5012,7 +3898,7 @@ def _dr_superna_ops_health():
 
 @kb_diagram(
     'dr-superna-ops-install',
-    'docs/disaster-recovery/superna-eyeglass/operations/install-upgrade/index.md',
+    'docs/storage/netapp/superna-eyeglass/operations/install-upgrade/index.md',
     'Superna Eyeglass — install and upgrade procedures',
 )
 def _dr_superna_ops_install():
@@ -5073,7 +3959,7 @@ def _dr_superna_ops_install():
 
 @kb_diagram(
     'dr-superna-ops-procedures',
-    'docs/disaster-recovery/superna-eyeglass/operations/procedures/index.md',
+    'docs/storage/netapp/superna-eyeglass/operations/procedures/index.md',
     'Superna Eyeglass — operational procedures and runbooks',
 )
 def _dr_superna_ops_procedures():
@@ -5123,7 +4009,7 @@ def _dr_superna_ops_procedures():
 
 @kb_diagram(
     'dr-superna-ops-scripts',
-    'docs/disaster-recovery/superna-eyeglass/operations/scripts/index.md',
+    'docs/storage/netapp/superna-eyeglass/operations/scripts/index.md',
     'Superna Eyeglass — automation scripts and examples',
 )
 def _dr_superna_ops_scripts():
@@ -5173,7 +4059,7 @@ def _dr_superna_ops_scripts():
 
 @kb_diagram(
     'dr-superna-security',
-    'docs/disaster-recovery/superna-eyeglass/security/index.md',
+    'docs/storage/netapp/superna-eyeglass/security/index.md',
     'Superna Eyeglass — security overview, controls, compliance posture',
 )
 def _dr_superna_security():
@@ -5225,7 +4111,7 @@ def _dr_superna_security():
 
 @kb_diagram(
     'dr-superna-sec-access',
-    'docs/disaster-recovery/superna-eyeglass/security/access-control/index.md',
+    'docs/storage/netapp/superna-eyeglass/security/access-control/index.md',
     'Superna Eyeglass — RBAC, permissions, service accounts',
 )
 def _dr_superna_sec_access():
@@ -5278,7 +4164,7 @@ def _dr_superna_sec_access():
 
 @kb_diagram(
     'dr-superna-sec-auth',
-    'docs/disaster-recovery/superna-eyeglass/security/authentication/index.md',
+    'docs/storage/netapp/superna-eyeglass/security/authentication/index.md',
     'Superna Eyeglass — authentication methods, certificate management',
 )
 def _dr_superna_sec_auth():
@@ -5328,7 +4214,7 @@ def _dr_superna_sec_auth():
 
 @kb_diagram(
     'dr-superna-sec-enc',
-    'docs/disaster-recovery/superna-eyeglass/security/encryption/index.md',
+    'docs/storage/netapp/superna-eyeglass/security/encryption/index.md',
     'Superna Eyeglass — encryption at rest and in transit',
 )
 def _dr_superna_sec_enc():
@@ -5378,7 +4264,7 @@ def _dr_superna_sec_enc():
 
 @kb_diagram(
     'dr-superna-sec-hardening',
-    'docs/disaster-recovery/superna-eyeglass/security/hardening/index.md',
+    'docs/storage/netapp/superna-eyeglass/security/hardening/index.md',
     'Superna Eyeglass — hardening guide, CIS controls, secure configuration',
 )
 def _dr_superna_sec_hardening():
@@ -5429,7 +4315,7 @@ def _dr_superna_sec_hardening():
 
 @kb_diagram(
     'dr-superna-troubleshooting',
-    'docs/disaster-recovery/superna-eyeglass/troubleshooting/index.md',
+    'docs/storage/netapp/superna-eyeglass/troubleshooting/index.md',
     'Superna Eyeglass — troubleshooting overview and triage approach',
 )
 def _dr_superna_troubleshooting():
@@ -5482,7 +4368,7 @@ def _dr_superna_troubleshooting():
 
 @kb_diagram(
     'dr-superna-ts-issues',
-    'docs/disaster-recovery/superna-eyeglass/troubleshooting/common-issues/index.md',
+    'docs/storage/netapp/superna-eyeglass/troubleshooting/common-issues/index.md',
     'Superna Eyeglass — common issues, root causes, and fixes',
 )
 def _dr_superna_ts_issues():
@@ -5535,7 +4421,7 @@ def _dr_superna_ts_issues():
 
 @kb_diagram(
     'dr-superna-ts-diag',
-    'docs/disaster-recovery/superna-eyeglass/troubleshooting/diagnostics/index.md',
+    'docs/storage/netapp/superna-eyeglass/troubleshooting/diagnostics/index.md',
     'Superna Eyeglass — diagnostic commands and log collection',
 )
 def _dr_superna_ts_diag():
@@ -5585,7 +4471,7 @@ def _dr_superna_ts_diag():
 
 @kb_diagram(
     'dr-superna-ts-escalation',
-    'docs/disaster-recovery/superna-eyeglass/troubleshooting/escalation/index.md',
+    'docs/storage/netapp/superna-eyeglass/troubleshooting/escalation/index.md',
     'Superna Eyeglass — escalation path, vendor support, and SLA',
 )
 def _dr_superna_ts_escalation():
@@ -5636,7 +4522,7 @@ def _dr_superna_ts_escalation():
 
 @kb_diagram(
     'dr-veeam',
-    'docs/disaster-recovery/veeam/index.md',
+    'docs/backup/veeam/index.md',
     'VM backup and DR — agentless VMware/Hyper-V backup with instant recovery and replication',
 )
 def _dr_veeam_overview():
@@ -5691,7 +4577,7 @@ def _dr_veeam_overview():
 
 @kb_diagram(
     'dr-veeam-architecture',
-    'docs/disaster-recovery/veeam/architecture/index.md',
+    'docs/backup/veeam/architecture/index.md',
     'Veeam — architecture overview, components, data flow',
 )
 def _dr_veeam_architecture():
@@ -5745,7 +4631,7 @@ def _dr_veeam_architecture():
 
 @kb_diagram(
     'dr-veeam-arch-how-it-works',
-    'docs/disaster-recovery/veeam/architecture/how-it-works/index.md',
+    'docs/backup/veeam/architecture/how-it-works/index.md',
     'Veeam — how replication or backup data flows step by step',
 )
 def _dr_veeam_arch_how():
@@ -5810,7 +4696,7 @@ def _dr_veeam_arch_how():
 
 @kb_diagram(
     'dr-veeam-arch-design',
-    'docs/disaster-recovery/veeam/architecture/design-standards/index.md',
+    'docs/backup/veeam/architecture/design-standards/index.md',
     'Veeam — sizing, design rules, capacity, HA guidelines',
 )
 def _dr_veeam_arch_design():
@@ -5863,7 +4749,7 @@ def _dr_veeam_arch_design():
 
 @kb_diagram(
     'dr-veeam-arch-integrations',
-    'docs/disaster-recovery/veeam/architecture/integrations/index.md',
+    'docs/backup/veeam/architecture/integrations/index.md',
     'Veeam — integration points with external systems and APIs',
 )
 def _dr_veeam_arch_integrations():
@@ -5915,7 +4801,7 @@ def _dr_veeam_arch_integrations():
 
 @kb_diagram(
     'dr-veeam-operations',
-    'docs/disaster-recovery/veeam/operations/index.md',
+    'docs/backup/veeam/operations/index.md',
     'Veeam — operations overview, key tasks, day-to-day procedures',
 )
 def _dr_veeam_operations():
@@ -5967,7 +4853,7 @@ def _dr_veeam_operations():
 
 @kb_diagram(
     'dr-veeam-ops-backup',
-    'docs/disaster-recovery/veeam/operations/backup-restore/index.md',
+    'docs/backup/veeam/operations/backup-restore/index.md',
     'Veeam — backup and restore procedures',
 )
 def _dr_veeam_ops_backup():
@@ -6019,7 +4905,7 @@ def _dr_veeam_ops_backup():
 
 @kb_diagram(
     'dr-veeam-ops-cli',
-    'docs/disaster-recovery/veeam/operations/cli-reference/index.md',
+    'docs/backup/veeam/operations/cli-reference/index.md',
     'Veeam — CLI commands reference',
 )
 def _dr_veeam_ops_cli():
@@ -6073,7 +4959,7 @@ def _dr_veeam_ops_cli():
 
 @kb_diagram(
     'dr-veeam-ops-health',
-    'docs/disaster-recovery/veeam/operations/health-checks/index.md',
+    'docs/backup/veeam/operations/health-checks/index.md',
     'Veeam — health check procedures and monitoring commands',
 )
 def _dr_veeam_ops_health():
@@ -6126,7 +5012,7 @@ def _dr_veeam_ops_health():
 
 @kb_diagram(
     'dr-veeam-ops-install',
-    'docs/disaster-recovery/veeam/operations/install-upgrade/index.md',
+    'docs/backup/veeam/operations/install-upgrade/index.md',
     'Veeam — install and upgrade procedures',
 )
 def _dr_veeam_ops_install():
@@ -6187,7 +5073,7 @@ def _dr_veeam_ops_install():
 
 @kb_diagram(
     'dr-veeam-ops-procedures',
-    'docs/disaster-recovery/veeam/operations/procedures/index.md',
+    'docs/backup/veeam/operations/procedures/index.md',
     'Veeam — operational procedures and runbooks',
 )
 def _dr_veeam_ops_procedures():
@@ -6237,7 +5123,7 @@ def _dr_veeam_ops_procedures():
 
 @kb_diagram(
     'dr-veeam-ops-scripts',
-    'docs/disaster-recovery/veeam/operations/scripts/index.md',
+    'docs/backup/veeam/operations/scripts/index.md',
     'Veeam — automation scripts and examples',
 )
 def _dr_veeam_ops_scripts():
@@ -6287,7 +5173,7 @@ def _dr_veeam_ops_scripts():
 
 @kb_diagram(
     'dr-veeam-security',
-    'docs/disaster-recovery/veeam/security/index.md',
+    'docs/backup/veeam/security/index.md',
     'Veeam — security overview, controls, compliance posture',
 )
 def _dr_veeam_security():
@@ -6339,7 +5225,7 @@ def _dr_veeam_security():
 
 @kb_diagram(
     'dr-veeam-sec-access',
-    'docs/disaster-recovery/veeam/security/access-control/index.md',
+    'docs/backup/veeam/security/access-control/index.md',
     'Veeam — RBAC, permissions, service accounts',
 )
 def _dr_veeam_sec_access():
@@ -6392,7 +5278,7 @@ def _dr_veeam_sec_access():
 
 @kb_diagram(
     'dr-veeam-sec-auth',
-    'docs/disaster-recovery/veeam/security/authentication/index.md',
+    'docs/backup/veeam/security/authentication/index.md',
     'Veeam — authentication methods, certificate management',
 )
 def _dr_veeam_sec_auth():
@@ -6442,7 +5328,7 @@ def _dr_veeam_sec_auth():
 
 @kb_diagram(
     'dr-veeam-sec-enc',
-    'docs/disaster-recovery/veeam/security/encryption/index.md',
+    'docs/backup/veeam/security/encryption/index.md',
     'Veeam — encryption at rest and in transit',
 )
 def _dr_veeam_sec_enc():
@@ -6492,7 +5378,7 @@ def _dr_veeam_sec_enc():
 
 @kb_diagram(
     'dr-veeam-sec-hardening',
-    'docs/disaster-recovery/veeam/security/hardening/index.md',
+    'docs/backup/veeam/security/hardening/index.md',
     'Veeam — hardening guide, CIS controls, secure configuration',
 )
 def _dr_veeam_sec_hardening():
@@ -6543,7 +5429,7 @@ def _dr_veeam_sec_hardening():
 
 @kb_diagram(
     'dr-veeam-troubleshooting',
-    'docs/disaster-recovery/veeam/troubleshooting/index.md',
+    'docs/backup/veeam/troubleshooting/index.md',
     'Veeam — troubleshooting overview and triage approach',
 )
 def _dr_veeam_troubleshooting():
@@ -6596,7 +5482,7 @@ def _dr_veeam_troubleshooting():
 
 @kb_diagram(
     'dr-veeam-ts-issues',
-    'docs/disaster-recovery/veeam/troubleshooting/common-issues/index.md',
+    'docs/backup/veeam/troubleshooting/common-issues/index.md',
     'Veeam — common issues, root causes, and fixes',
 )
 def _dr_veeam_ts_issues():
@@ -6649,7 +5535,7 @@ def _dr_veeam_ts_issues():
 
 @kb_diagram(
     'dr-veeam-ts-diag',
-    'docs/disaster-recovery/veeam/troubleshooting/diagnostics/index.md',
+    'docs/backup/veeam/troubleshooting/diagnostics/index.md',
     'Veeam — diagnostic commands and log collection',
 )
 def _dr_veeam_ts_diag():
@@ -6699,7 +5585,7 @@ def _dr_veeam_ts_diag():
 
 @kb_diagram(
     'dr-veeam-ts-escalation',
-    'docs/disaster-recovery/veeam/troubleshooting/escalation/index.md',
+    'docs/backup/veeam/troubleshooting/escalation/index.md',
     'Veeam — escalation path, vendor support, and SLA',
 )
 def _dr_veeam_ts_escalation():

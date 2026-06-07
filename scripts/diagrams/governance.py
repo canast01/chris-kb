@@ -63,7 +63,7 @@ def data_protection_index():
 
 @kb_diagram(
     'dp-backup-validation',
-    'docs/data-protection/backup-validation/index.md',
+    'docs/backup/backup-validation/index.md',
     'Backup validation — verify job completion, restore testing, retention compliance',
 )
 def dp_backup_validation():
@@ -116,7 +116,7 @@ def dp_backup_validation():
 
 @kb_diagram(
     'dp-data-classification',
-    'docs/data-protection/data-classification/index.md',
+    'docs/security/data-classification/index.md',
     'Data classification — tiers, labelling requirements, handling rules per sensitivity level',
 )
 def dp_data_classification():
@@ -171,7 +171,7 @@ def dp_data_classification():
 
 @kb_diagram(
     'dp-data-encryption',
-    'docs/data-protection/data-encryption/index.md',
+    'docs/security/data-encryption/index.md',
     'Data encryption — at rest and in transit, standards, key management and compliance',
 )
 def dp_data_encryption():
@@ -219,7 +219,7 @@ def dp_data_encryption():
 
 @kb_diagram(
     'dp-data-governance',
-    'docs/data-protection/data-governance/index.md',
+    'docs/security/data-governance/index.md',
     'Data governance — ownership, access controls, audit requirements, regulatory alignment',
 )
 def dp_data_governance():
@@ -268,7 +268,7 @@ def dp_data_governance():
 
 @kb_diagram(
     'dp-retention-policy',
-    'docs/data-protection/data-retention-policy/index.md',
+    'docs/security/data-retention-policy/index.md',
     'Data retention policy — schedules by data type, legal holds, deletion verification',
 )
 def dp_retention_policy():
@@ -322,7 +322,7 @@ def dp_retention_policy():
 
 @kb_diagram(
     'dp-key-management',
-    'docs/data-protection/key-management/index.md',
+    'docs/security/key-management/index.md',
     'Key management — KMS architecture, key rotation, HSM integration references',
 )
 def dp_key_management():
@@ -370,7 +370,7 @@ def dp_key_management():
 
 @kb_diagram(
     'dp-recovery-testing',
-    'docs/data-protection/recovery-testing/index.md',
+    'docs/backup/recovery-testing/index.md',
     'Recovery testing — restore test procedures, DR test schedules, test result documentation',
 )
 def dp_recovery_testing():
@@ -874,7 +874,7 @@ def integration_index():
 
 @kb_diagram(
     'int-api-connectivity',
-    'docs/integration/api-connectivity/index.md',
+    'docs/protocols/api-connectivity/index.md',
     'API connectivity — testing REST API endpoints, authentication, TLS certificate validation',
 )
 def int_api_connectivity():
@@ -921,7 +921,7 @@ def int_api_connectivity():
 
 @kb_diagram(
     'int-cert-trust',
-    'docs/integration/certificate-trust/index.md',
+    'docs/security/certificate-trust/index.md',
     'Certificate trust — adding CA certificates to trust stores on Linux, Windows, appliances',
 )
 def int_cert_trust():
@@ -974,7 +974,7 @@ def int_cert_trust():
 
 @kb_diagram(
     'int-directory-integration',
-    'docs/integration/directory-integration/index.md',
+    'docs/compute/linux/directory-integration/index.md',
     'Directory integration — LDAP/LDAPS with Active Directory for auth and group membership',
 )
 def int_directory_integration():
@@ -1020,7 +1020,7 @@ def int_directory_integration():
 
 @kb_diagram(
     'int-email-relay',
-    'docs/integration/email-relay/index.md',
+    'docs/protocols/email-relay/index.md',
     'Email relay — SMTP relay config for infrastructure alerts, monitoring notifications, appliances',
 )
 def int_email_relay():
@@ -1066,7 +1066,7 @@ def int_email_relay():
 
 @kb_diagram(
     'int-external-connectivity',
-    'docs/integration/external-connectivity/index.md',
+    'docs/networking/external-connectivity/index.md',
     'External connectivity — outbound internet access, proxy config, firewall rule documentation',
 )
 def int_external_connectivity():
@@ -1111,7 +1111,7 @@ def int_external_connectivity():
 
 @kb_diagram(
     'int-service-integrations',
-    'docs/integration/service-integrations/index.md',
+    'docs/protocols/service-integrations/index.md',
     'Service integrations — ServiceNow, monitoring, backup, SIEM integration patterns',
 )
 def int_service_integrations():
@@ -2009,7 +2009,7 @@ def architecture_index():
 
 @kb_diagram(
     'arch-dr-design',
-    'docs/architecture/disaster-recovery-design/index.md',
+    'docs/disaster-recovery/disaster-recovery-design/index.md',
     'DR design — RPO/RTO targets, site topology, failover patterns, DR architecture decisions',
 )
 def arch_dr_design():
@@ -2062,7 +2062,7 @@ def arch_dr_design():
 
 @kb_diagram(
     'arch-ha',
-    'docs/architecture/high-availability/index.md',
+    'docs/virtualization/high-availability/index.md',
     'High availability design — HA patterns, redundancy, automatic failover, cluster design',
 )
 def arch_ha():
@@ -2108,7 +2108,7 @@ def arch_ha():
 
 @kb_diagram(
     'arch-network-design',
-    'docs/architecture/network-design/index.md',
+    'docs/networking/network-design/index.md',
     'Network design — topology, segmentation, routing, BGP peering, security zones',
 )
 def arch_network_design():
@@ -2154,7 +2154,7 @@ def arch_network_design():
 
 @kb_diagram(
     'arch-storage-design',
-    'docs/architecture/storage-design/index.md',
+    'docs/storage/storage-design/index.md',
     'Storage design — tiering, protocols, redundancy, performance, and capacity planning',
 )
 def arch_storage_design():

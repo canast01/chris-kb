@@ -11,7 +11,7 @@ from ._core import (
 
 @kb_diagram(
     'dr-commvault',
-    'docs/disaster-recovery/commvault/index.md',
+    'docs/backup/commvault/index.md',
     'Commvault — Enterprise backup and data management platform overview',
 )
 def dr_commvault():
@@ -91,7 +91,7 @@ def dr_commvault():
 
 @kb_diagram(
     'dr-commvault-architecture',
-    'docs/disaster-recovery/commvault/architecture/index.md',
+    'docs/backup/commvault/architecture/index.md',
     'Commvault Architecture — Component topology and data flows',
 )
 def dr_commvault_architecture():
@@ -173,7 +173,7 @@ def dr_commvault_architecture():
 
 @kb_diagram(
     'dr-commvault-arch-how-it-works',
-    'docs/disaster-recovery/commvault/architecture/how-it-works/index.md',
+    'docs/backup/commvault/architecture/how-it-works/index.md',
     'Commvault How It Works — Backup job lifecycle and data pipeline',
 )
 def dr_commvault_arch_how_it_works():
@@ -267,7 +267,7 @@ def dr_commvault_arch_how_it_works():
 
 @kb_diagram(
     'dr-commvault-arch-design',
-    'docs/disaster-recovery/commvault/architecture/design-standards/index.md',
+    'docs/backup/commvault/architecture/design-standards/index.md',
     'Commvault Design Standards — Sizing, topology, and best practices',
 )
 def dr_commvault_arch_design():
@@ -348,7 +348,7 @@ def dr_commvault_arch_design():
 
 @kb_diagram(
     'dr-commvault-arch-integrations',
-    'docs/disaster-recovery/commvault/architecture/integrations/index.md',
+    'docs/backup/commvault/architecture/integrations/index.md',
     'Commvault Integrations — Supported platforms, arrays, and cloud connectors',
 )
 def dr_commvault_arch_integrations():
@@ -431,7 +431,7 @@ def dr_commvault_arch_integrations():
 
 @kb_diagram(
     'dr-commvault-operations',
-    'docs/disaster-recovery/commvault/operations/index.md',
+    'docs/backup/commvault/operations/index.md',
     'Commvault Operations — Day-to-day operational tasks overview',
 )
 def dr_commvault_operations():
@@ -495,7 +495,7 @@ def dr_commvault_operations():
 
 @kb_diagram(
     'dr-commvault-ops-backup',
-    'docs/disaster-recovery/commvault/operations/backup-restore/index.md',
+    'docs/backup/commvault/operations/backup-restore/index.md',
     'Commvault Backup and Restore — Job types, procedures, and restore options',
 )
 def dr_commvault_ops_backup():
@@ -575,7 +575,7 @@ def dr_commvault_ops_backup():
 
 @kb_diagram(
     'dr-commvault-ops-cli',
-    'docs/disaster-recovery/commvault/operations/cli-reference/index.md',
+    'docs/backup/commvault/operations/cli-reference/index.md',
     'Commvault CLI Reference — qoperation, qlist, qmodify, and REST API',
 )
 def dr_commvault_ops_cli():
@@ -646,7 +646,7 @@ def dr_commvault_ops_cli():
 
 @kb_diagram(
     'dr-commvault-ops-health',
-    'docs/disaster-recovery/commvault/operations/health-checks/index.md',
+    'docs/backup/commvault/operations/health-checks/index.md',
     'Commvault Health Checks — Daily and weekly verification procedures',
 )
 def dr_commvault_ops_health():
@@ -726,7 +726,7 @@ def dr_commvault_ops_health():
 
 @kb_diagram(
     'dr-commvault-ops-install',
-    'docs/disaster-recovery/commvault/operations/install-upgrade/index.md',
+    'docs/backup/commvault/operations/install-upgrade/index.md',
     'Commvault Install and Upgrade — Procedures, service packs, and rollback',
 )
 def dr_commvault_ops_install():
@@ -792,7 +792,7 @@ def dr_commvault_ops_install():
 
 @kb_diagram(
     'dr-commvault-ops-procedures',
-    'docs/disaster-recovery/commvault/operations/procedures/index.md',
+    'docs/backup/commvault/operations/procedures/index.md',
     'Commvault Procedures — Standard operational runbooks',
 )
 def dr_commvault_ops_procedures():
@@ -863,7 +863,7 @@ def dr_commvault_ops_procedures():
 
 @kb_diagram(
     'dr-commvault-ops-scripts',
-    'docs/disaster-recovery/commvault/operations/scripts/index.md',
+    'docs/backup/commvault/operations/scripts/index.md',
     'Commvault Scripts — Automation and reporting scripts',
 )
 def dr_commvault_ops_scripts():
@@ -930,7 +930,7 @@ def dr_commvault_ops_scripts():
 
 @kb_diagram(
     'dr-commvault-security',
-    'docs/disaster-recovery/commvault/security/index.md',
+    'docs/backup/commvault/security/index.md',
     'Commvault Security — Access control, auth, encryption, and hardening overview',
 )
 def dr_commvault_security():
@@ -994,7 +994,7 @@ def dr_commvault_security():
 
 @kb_diagram(
     'dr-commvault-sec-access',
-    'docs/disaster-recovery/commvault/security/access-control/index.md',
+    'docs/backup/commvault/security/access-control/index.md',
     'Commvault Access Control — RBAC roles, users, and permissions',
 )
 def dr_commvault_sec_access():
@@ -1059,7 +1059,7 @@ def dr_commvault_sec_access():
 
 @kb_diagram(
     'dr-commvault-sec-auth',
-    'docs/disaster-recovery/commvault/security/authentication/index.md',
+    'docs/backup/commvault/security/authentication/index.md',
     'Commvault Authentication — Local, AD, SAML, MFA, and certificate auth',
 )
 def dr_commvault_sec_auth():
@@ -1124,7 +1124,7 @@ def dr_commvault_sec_auth():
 
 @kb_diagram(
     'dr-commvault-sec-encryption',
-    'docs/disaster-recovery/commvault/security/encryption/index.md',
+    'docs/backup/commvault/security/encryption/index.md',
     'Commvault Encryption — Data at rest, in transit, and key management',
 )
 def dr_commvault_sec_encryption():
@@ -1190,7 +1190,7 @@ def dr_commvault_sec_encryption():
 
 @kb_diagram(
     'dr-commvault-sec-hardening',
-    'docs/disaster-recovery/commvault/security/hardening/index.md',
+    'docs/backup/commvault/security/hardening/index.md',
     'Commvault Security Hardening — OS, network, and application hardening',
 )
 def dr_commvault_sec_hardening():
@@ -1257,7 +1257,7 @@ def dr_commvault_sec_hardening():
 
 @kb_diagram(
     'dr-commvault-troubleshooting',
-    'docs/disaster-recovery/commvault/troubleshooting/index.md',
+    'docs/backup/commvault/troubleshooting/index.md',
     'Commvault Troubleshooting — Overview and decision tree',
 )
 def dr_commvault_troubleshooting():
@@ -1336,7 +1336,7 @@ def dr_commvault_troubleshooting():
 
 @kb_diagram(
     'dr-commvault-ts-issues',
-    'docs/disaster-recovery/commvault/troubleshooting/common-issues/index.md',
+    'docs/backup/commvault/troubleshooting/common-issues/index.md',
     'Commvault Common Issues — Symptoms, causes, and fixes',
 )
 def dr_commvault_ts_issues():
@@ -1410,7 +1410,7 @@ def dr_commvault_ts_issues():
 
 @kb_diagram(
     'dr-commvault-ts-diagnostics',
-    'docs/disaster-recovery/commvault/troubleshooting/diagnostics/index.md',
+    'docs/backup/commvault/troubleshooting/diagnostics/index.md',
     'Commvault Diagnostics — Log locations, diagnostic tools, and commands',
 )
 def dr_commvault_ts_diagnostics():
@@ -1475,7 +1475,7 @@ def dr_commvault_ts_diagnostics():
 
 @kb_diagram(
     'dr-commvault-ts-escalation',
-    'docs/disaster-recovery/commvault/troubleshooting/escalation/index.md',
+    'docs/backup/commvault/troubleshooting/escalation/index.md',
     'Commvault Escalation — Support tiers, case handling, and vendor escalation',
 )
 def dr_commvault_ts_escalation():
@@ -1540,7 +1540,7 @@ def dr_commvault_ts_escalation():
 
 @kb_diagram(
     'dr-netbackup',
-    'docs/disaster-recovery/netbackup/index.md',
+    'docs/backup/netbackup/index.md',
     'Enterprise backup and recovery — master/media/client architecture with deduplication',
 )
 def _dr_netbackup_overview():
@@ -1595,7 +1595,7 @@ def _dr_netbackup_overview():
 
 @kb_diagram(
     'dr-netbackup-architecture',
-    'docs/disaster-recovery/netbackup/architecture/index.md',
+    'docs/backup/netbackup/architecture/index.md',
     'NetBackup — architecture overview, components, data flow',
 )
 def _dr_netbackup_architecture():
@@ -1649,7 +1649,7 @@ def _dr_netbackup_architecture():
 
 @kb_diagram(
     'dr-netbackup-arch-how-it-works',
-    'docs/disaster-recovery/netbackup/architecture/how-it-works/index.md',
+    'docs/backup/netbackup/architecture/how-it-works/index.md',
     'NetBackup — how replication or backup data flows step by step',
 )
 def _dr_netbackup_arch_how():
@@ -1714,7 +1714,7 @@ def _dr_netbackup_arch_how():
 
 @kb_diagram(
     'dr-netbackup-arch-design',
-    'docs/disaster-recovery/netbackup/architecture/design-standards/index.md',
+    'docs/backup/netbackup/architecture/design-standards/index.md',
     'NetBackup — sizing, design rules, capacity, HA guidelines',
 )
 def _dr_netbackup_arch_design():
@@ -1767,7 +1767,7 @@ def _dr_netbackup_arch_design():
 
 @kb_diagram(
     'dr-netbackup-arch-integrations',
-    'docs/disaster-recovery/netbackup/architecture/integrations/index.md',
+    'docs/backup/netbackup/architecture/integrations/index.md',
     'NetBackup — integration points with external systems and APIs',
 )
 def _dr_netbackup_arch_integrations():
@@ -1819,7 +1819,7 @@ def _dr_netbackup_arch_integrations():
 
 @kb_diagram(
     'dr-netbackup-operations',
-    'docs/disaster-recovery/netbackup/operations/index.md',
+    'docs/backup/netbackup/operations/index.md',
     'NetBackup — operations overview, key tasks, day-to-day procedures',
 )
 def _dr_netbackup_operations():
@@ -1871,7 +1871,7 @@ def _dr_netbackup_operations():
 
 @kb_diagram(
     'dr-netbackup-ops-backup',
-    'docs/disaster-recovery/netbackup/operations/backup-restore/index.md',
+    'docs/backup/netbackup/operations/backup-restore/index.md',
     'NetBackup — backup and restore procedures',
 )
 def _dr_netbackup_ops_backup():
@@ -1923,7 +1923,7 @@ def _dr_netbackup_ops_backup():
 
 @kb_diagram(
     'dr-netbackup-ops-cli',
-    'docs/disaster-recovery/netbackup/operations/cli-reference/index.md',
+    'docs/backup/netbackup/operations/cli-reference/index.md',
     'NetBackup — CLI commands reference',
 )
 def _dr_netbackup_ops_cli():
@@ -1977,7 +1977,7 @@ def _dr_netbackup_ops_cli():
 
 @kb_diagram(
     'dr-netbackup-ops-health',
-    'docs/disaster-recovery/netbackup/operations/health-checks/index.md',
+    'docs/backup/netbackup/operations/health-checks/index.md',
     'NetBackup — health check procedures and monitoring commands',
 )
 def _dr_netbackup_ops_health():
@@ -2030,7 +2030,7 @@ def _dr_netbackup_ops_health():
 
 @kb_diagram(
     'dr-netbackup-ops-install',
-    'docs/disaster-recovery/netbackup/operations/install-upgrade/index.md',
+    'docs/backup/netbackup/operations/install-upgrade/index.md',
     'NetBackup — install and upgrade procedures',
 )
 def _dr_netbackup_ops_install():
@@ -2091,7 +2091,7 @@ def _dr_netbackup_ops_install():
 
 @kb_diagram(
     'dr-netbackup-ops-procedures',
-    'docs/disaster-recovery/netbackup/operations/procedures/index.md',
+    'docs/backup/netbackup/operations/procedures/index.md',
     'NetBackup — operational procedures and runbooks',
 )
 def _dr_netbackup_ops_procedures():
@@ -2141,7 +2141,7 @@ def _dr_netbackup_ops_procedures():
 
 @kb_diagram(
     'dr-netbackup-ops-scripts',
-    'docs/disaster-recovery/netbackup/operations/scripts/index.md',
+    'docs/backup/netbackup/operations/scripts/index.md',
     'NetBackup — automation scripts and examples',
 )
 def _dr_netbackup_ops_scripts():
@@ -2191,7 +2191,7 @@ def _dr_netbackup_ops_scripts():
 
 @kb_diagram(
     'dr-netbackup-security',
-    'docs/disaster-recovery/netbackup/security/index.md',
+    'docs/backup/netbackup/security/index.md',
     'NetBackup — security overview, controls, compliance posture',
 )
 def _dr_netbackup_security():
@@ -2243,7 +2243,7 @@ def _dr_netbackup_security():
 
 @kb_diagram(
     'dr-netbackup-sec-access',
-    'docs/disaster-recovery/netbackup/security/access-control/index.md',
+    'docs/backup/netbackup/security/access-control/index.md',
     'NetBackup — RBAC, permissions, service accounts',
 )
 def _dr_netbackup_sec_access():
@@ -2296,7 +2296,7 @@ def _dr_netbackup_sec_access():
 
 @kb_diagram(
     'dr-netbackup-sec-auth',
-    'docs/disaster-recovery/netbackup/security/authentication/index.md',
+    'docs/backup/netbackup/security/authentication/index.md',
     'NetBackup — authentication methods, certificate management',
 )
 def _dr_netbackup_sec_auth():
@@ -2346,7 +2346,7 @@ def _dr_netbackup_sec_auth():
 
 @kb_diagram(
     'dr-netbackup-sec-enc',
-    'docs/disaster-recovery/netbackup/security/encryption/index.md',
+    'docs/backup/netbackup/security/encryption/index.md',
     'NetBackup — encryption at rest and in transit',
 )
 def _dr_netbackup_sec_enc():
@@ -2396,7 +2396,7 @@ def _dr_netbackup_sec_enc():
 
 @kb_diagram(
     'dr-netbackup-sec-hardening',
-    'docs/disaster-recovery/netbackup/security/hardening/index.md',
+    'docs/backup/netbackup/security/hardening/index.md',
     'NetBackup — hardening guide, CIS controls, secure configuration',
 )
 def _dr_netbackup_sec_hardening():
@@ -2447,7 +2447,7 @@ def _dr_netbackup_sec_hardening():
 
 @kb_diagram(
     'dr-netbackup-troubleshooting',
-    'docs/disaster-recovery/netbackup/troubleshooting/index.md',
+    'docs/backup/netbackup/troubleshooting/index.md',
     'NetBackup — troubleshooting overview and triage approach',
 )
 def _dr_netbackup_troubleshooting():
@@ -2500,7 +2500,7 @@ def _dr_netbackup_troubleshooting():
 
 @kb_diagram(
     'dr-netbackup-ts-issues',
-    'docs/disaster-recovery/netbackup/troubleshooting/common-issues/index.md',
+    'docs/backup/netbackup/troubleshooting/common-issues/index.md',
     'NetBackup — common issues, root causes, and fixes',
 )
 def _dr_netbackup_ts_issues():
@@ -2553,7 +2553,7 @@ def _dr_netbackup_ts_issues():
 
 @kb_diagram(
     'dr-netbackup-ts-diag',
-    'docs/disaster-recovery/netbackup/troubleshooting/diagnostics/index.md',
+    'docs/backup/netbackup/troubleshooting/diagnostics/index.md',
     'NetBackup — diagnostic commands and log collection',
 )
 def _dr_netbackup_ts_diag():
@@ -2603,7 +2603,7 @@ def _dr_netbackup_ts_diag():
 
 @kb_diagram(
     'dr-netbackup-ts-escalation',
-    'docs/disaster-recovery/netbackup/troubleshooting/escalation/index.md',
+    'docs/backup/netbackup/troubleshooting/escalation/index.md',
     'NetBackup — escalation path, vendor support, and SLA',
 )
 def _dr_netbackup_ts_escalation():
@@ -2654,7 +2654,7 @@ def _dr_netbackup_ts_escalation():
 
 @kb_diagram(
     'dr-rasr',
-    'docs/disaster-recovery/rasr/index.md',
+    'docs/backup/dell-cyber-recovery/index.md',
     'Ransomware Air-gap Secure Recovery — isolated vault with CyberSense analytics',
 )
 def _dr_rasr_overview():
@@ -2709,7 +2709,7 @@ def _dr_rasr_overview():
 
 @kb_diagram(
     'dr-rasr-architecture',
-    'docs/disaster-recovery/rasr/architecture/index.md',
+    'docs/backup/dell-cyber-recovery/architecture/index.md',
     'RASR — architecture overview, components, data flow',
 )
 def _dr_rasr_architecture():
@@ -2763,7 +2763,7 @@ def _dr_rasr_architecture():
 
 @kb_diagram(
     'dr-rasr-arch-how-it-works',
-    'docs/disaster-recovery/rasr/architecture/how-it-works/index.md',
+    'docs/backup/dell-cyber-recovery/architecture/how-it-works/index.md',
     'RASR — how replication or backup data flows step by step',
 )
 def _dr_rasr_arch_how():
@@ -2828,7 +2828,7 @@ def _dr_rasr_arch_how():
 
 @kb_diagram(
     'dr-rasr-arch-design',
-    'docs/disaster-recovery/rasr/architecture/design-standards/index.md',
+    'docs/backup/dell-cyber-recovery/architecture/design-standards/index.md',
     'RASR — sizing, design rules, capacity, HA guidelines',
 )
 def _dr_rasr_arch_design():
@@ -2881,7 +2881,7 @@ def _dr_rasr_arch_design():
 
 @kb_diagram(
     'dr-rasr-arch-integrations',
-    'docs/disaster-recovery/rasr/architecture/integrations/index.md',
+    'docs/backup/dell-cyber-recovery/architecture/integrations/index.md',
     'RASR — integration points with external systems and APIs',
 )
 def _dr_rasr_arch_integrations():
@@ -2933,7 +2933,7 @@ def _dr_rasr_arch_integrations():
 
 @kb_diagram(
     'dr-rasr-operations',
-    'docs/disaster-recovery/rasr/operations/index.md',
+    'docs/backup/dell-cyber-recovery/operations/index.md',
     'RASR — operations overview, key tasks, day-to-day procedures',
 )
 def _dr_rasr_operations():
@@ -2985,7 +2985,7 @@ def _dr_rasr_operations():
 
 @kb_diagram(
     'dr-rasr-ops-backup',
-    'docs/disaster-recovery/rasr/operations/backup-restore/index.md',
+    'docs/backup/dell-cyber-recovery/operations/backup-restore/index.md',
     'RASR — backup and restore procedures',
 )
 def _dr_rasr_ops_backup():
@@ -3037,7 +3037,7 @@ def _dr_rasr_ops_backup():
 
 @kb_diagram(
     'dr-rasr-ops-cli',
-    'docs/disaster-recovery/rasr/operations/cli-reference/index.md',
+    'docs/backup/dell-cyber-recovery/operations/cli-reference/index.md',
     'RASR — CLI commands reference',
 )
 def _dr_rasr_ops_cli():
@@ -3091,7 +3091,7 @@ def _dr_rasr_ops_cli():
 
 @kb_diagram(
     'dr-rasr-ops-health',
-    'docs/disaster-recovery/rasr/operations/health-checks/index.md',
+    'docs/backup/dell-cyber-recovery/operations/health-checks/index.md',
     'RASR — health check procedures and monitoring commands',
 )
 def _dr_rasr_ops_health():
@@ -3144,7 +3144,7 @@ def _dr_rasr_ops_health():
 
 @kb_diagram(
     'dr-rasr-ops-install',
-    'docs/disaster-recovery/rasr/operations/install-upgrade/index.md',
+    'docs/backup/dell-cyber-recovery/operations/install-upgrade/index.md',
     'RASR — install and upgrade procedures',
 )
 def _dr_rasr_ops_install():
@@ -3205,7 +3205,7 @@ def _dr_rasr_ops_install():
 
 @kb_diagram(
     'dr-rasr-ops-procedures',
-    'docs/disaster-recovery/rasr/operations/procedures/index.md',
+    'docs/backup/dell-cyber-recovery/operations/procedures/index.md',
     'RASR — operational procedures and runbooks',
 )
 def _dr_rasr_ops_procedures():
@@ -3255,7 +3255,7 @@ def _dr_rasr_ops_procedures():
 
 @kb_diagram(
     'dr-rasr-ops-scripts',
-    'docs/disaster-recovery/rasr/operations/scripts/index.md',
+    'docs/backup/dell-cyber-recovery/operations/scripts/index.md',
     'RASR — automation scripts and examples',
 )
 def _dr_rasr_ops_scripts():
@@ -3305,7 +3305,7 @@ def _dr_rasr_ops_scripts():
 
 @kb_diagram(
     'dr-rasr-security',
-    'docs/disaster-recovery/rasr/security/index.md',
+    'docs/backup/dell-cyber-recovery/security/index.md',
     'RASR — security overview, controls, compliance posture',
 )
 def _dr_rasr_security():
@@ -3357,7 +3357,7 @@ def _dr_rasr_security():
 
 @kb_diagram(
     'dr-rasr-sec-access',
-    'docs/disaster-recovery/rasr/security/access-control/index.md',
+    'docs/backup/dell-cyber-recovery/security/access-control/index.md',
     'RASR — RBAC, permissions, service accounts',
 )
 def _dr_rasr_sec_access():
@@ -3410,7 +3410,7 @@ def _dr_rasr_sec_access():
 
 @kb_diagram(
     'dr-rasr-sec-auth',
-    'docs/disaster-recovery/rasr/security/authentication/index.md',
+    'docs/backup/dell-cyber-recovery/security/authentication/index.md',
     'RASR — authentication methods, certificate management',
 )
 def _dr_rasr_sec_auth():
@@ -3460,7 +3460,7 @@ def _dr_rasr_sec_auth():
 
 @kb_diagram(
     'dr-rasr-sec-enc',
-    'docs/disaster-recovery/rasr/security/encryption/index.md',
+    'docs/backup/dell-cyber-recovery/security/encryption/index.md',
     'RASR — encryption at rest and in transit',
 )
 def _dr_rasr_sec_enc():
@@ -3510,7 +3510,7 @@ def _dr_rasr_sec_enc():
 
 @kb_diagram(
     'dr-rasr-sec-hardening',
-    'docs/disaster-recovery/rasr/security/hardening/index.md',
+    'docs/backup/dell-cyber-recovery/security/hardening/index.md',
     'RASR — hardening guide, CIS controls, secure configuration',
 )
 def _dr_rasr_sec_hardening():
@@ -3561,7 +3561,7 @@ def _dr_rasr_sec_hardening():
 
 @kb_diagram(
     'dr-rasr-troubleshooting',
-    'docs/disaster-recovery/rasr/troubleshooting/index.md',
+    'docs/backup/dell-cyber-recovery/troubleshooting/index.md',
     'RASR — troubleshooting overview and triage approach',
 )
 def _dr_rasr_troubleshooting():
@@ -3614,7 +3614,7 @@ def _dr_rasr_troubleshooting():
 
 @kb_diagram(
     'dr-rasr-ts-issues',
-    'docs/disaster-recovery/rasr/troubleshooting/common-issues/index.md',
+    'docs/backup/dell-cyber-recovery/troubleshooting/common-issues/index.md',
     'RASR — common issues, root causes, and fixes',
 )
 def _dr_rasr_ts_issues():
@@ -3667,7 +3667,7 @@ def _dr_rasr_ts_issues():
 
 @kb_diagram(
     'dr-rasr-ts-diag',
-    'docs/disaster-recovery/rasr/troubleshooting/diagnostics/index.md',
+    'docs/backup/dell-cyber-recovery/troubleshooting/diagnostics/index.md',
     'RASR — diagnostic commands and log collection',
 )
 def _dr_rasr_ts_diag():
@@ -3717,7 +3717,7 @@ def _dr_rasr_ts_diag():
 
 @kb_diagram(
     'dr-rasr-ts-escalation',
-    'docs/disaster-recovery/rasr/troubleshooting/escalation/index.md',
+    'docs/backup/dell-cyber-recovery/troubleshooting/escalation/index.md',
     'RASR — escalation path, vendor support, and SLA',
 )
 def _dr_rasr_ts_escalation():

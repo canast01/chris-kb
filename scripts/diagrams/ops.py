@@ -58,7 +58,7 @@ def runbooks_index():
 
 @kb_diagram(
     'rb-account-unlock',
-    'docs/runbooks/account-unlock/index.md',
+    'docs/security/operations/runbooks/account-unlock/index.md',
     'Account unlock runbook — AD lockout, password reset, lockout source investigation',
 )
 def rb_account_unlock():
@@ -119,7 +119,7 @@ def rb_account_unlock():
 
 @kb_diagram(
     'rb-cert-renewal',
-    'docs/runbooks/certificate-renewal/index.md',
+    'docs/security/operations/runbooks/certificate-renewal/index.md',
     'Certificate renewal runbook — SSL/TLS expiry, CSR, CA sign, deploy, verify',
 )
 def rb_cert_renewal():
@@ -171,7 +171,7 @@ def rb_cert_renewal():
 
 @kb_diagram(
     'rb-disk-cleanup',
-    'docs/runbooks/disk-space-cleanup/index.md',
+    'docs/compute/linux/operations/runbooks/disk-space-cleanup/index.md',
     'Disk space cleanup runbook — identify large files, logs, snapshots, temp cleanup',
 )
 def rb_disk_cleanup():
@@ -226,7 +226,7 @@ def rb_disk_cleanup():
 
 @kb_diagram(
     'rb-server-reboot',
-    'docs/runbooks/server-reboot/index.md',
+    'docs/compute/linux/operations/runbooks/server-reboot/index.md',
     'Server reboot runbook — pre-checks, graceful shutdown, post-reboot validation',
 )
 def rb_server_reboot():
@@ -279,7 +279,7 @@ def rb_server_reboot():
 
 @kb_diagram(
     'rb-service-restart',
-    'docs/runbooks/service-restart/index.md',
+    'docs/compute/linux/operations/runbooks/service-restart/index.md',
     'Service restart runbook — dependency order, graceful restart, post-restart validation',
 )
 def rb_service_restart():
@@ -331,7 +331,7 @@ def rb_service_restart():
 
 @kb_diagram(
     'rb-vol-expand',
-    'docs/runbooks/storage-volume-expansion/index.md',
+    'docs/storage/operations/runbooks/storage-volume-expansion/index.md',
     'Storage volume expansion runbook — LUN expand, filesystem grow, no downtime',
 )
 def rb_vol_expand():
@@ -385,7 +385,7 @@ def rb_vol_expand():
 
 @kb_diagram(
     'rb-vm-snapshot',
-    'docs/runbooks/vm-snapshot/index.md',
+    'docs/virtualization/vmware/operations/runbooks/vm-snapshot/index.md',
     'VM snapshot runbook — create, manage, delete, snapshot best practices',
 )
 def rb_vm_snapshot():
@@ -1348,7 +1348,7 @@ def troubleshooting_index():
 
 @kb_diagram(
     'ts-auth-failures',
-    'docs/troubleshooting/authentication-failures/index.md',
+    'docs/security/troubleshooting/authentication-failures/index.md',
     'Auth failures — AD/LDAP lockout, Kerberos, SSO/SAML, certificate trust',
 )
 def ts_auth_failures():
@@ -1403,7 +1403,7 @@ def ts_auth_failures():
 
 @kb_diagram(
     'ts-backup-failures',
-    'docs/troubleshooting/backup-failures/index.md',
+    'docs/backup/troubleshooting/backup-failures/index.md',
     'Backup failures — Veeam/NBU/Commvault job errors, proxy, repo, snapshot issues',
 )
 def ts_backup_failures():
@@ -1457,7 +1457,7 @@ def ts_backup_failures():
 
 @kb_diagram(
     'ts-dns',
-    'docs/troubleshooting/dns-resolution/index.md',
+    'docs/protocols/troubleshooting/dns-resolution/index.md',
     'DNS resolution — forward/reverse failure, forwarder issues, cache flush, split-brain',
 )
 def ts_dns():
@@ -1510,7 +1510,7 @@ def ts_dns():
 
 @kb_diagram(
     'ts-high-cpu',
-    'docs/troubleshooting/high-cpu/index.md',
+    'docs/compute/troubleshooting/high-cpu/index.md',
     'High CPU — identify top processes on Linux, Windows, ESXi; vCPU contention',
 )
 def ts_high_cpu():
@@ -1564,7 +1564,7 @@ def ts_high_cpu():
 
 @kb_diagram(
     'ts-network-conn',
-    'docs/troubleshooting/network-connectivity/index.md',
+    'docs/networking/troubleshooting/network-connectivity/index.md',
     'Network connectivity — ping, trace, MTU, VLAN, firewall, path isolation',
 )
 def ts_network_conn():
@@ -1618,7 +1618,7 @@ def ts_network_conn():
 
 @kb_diagram(
     'ts-rep-failures',
-    'docs/troubleshooting/replication-failures/index.md',
+    'docs/storage/troubleshooting/replication-failures/index.md',
     'Replication failures — SRDF, SnapMirror, vSphere Replication link/lag/state errors',
 )
 def ts_rep_failures():
@@ -1672,7 +1672,7 @@ def ts_rep_failures():
 
 @kb_diagram(
     'ts-storage-latency',
-    'docs/troubleshooting/storage-latency/index.md',
+    'docs/storage/troubleshooting/storage-latency/index.md',
     'Storage latency — queue depth, path health, array performance, I/O contention',
 )
 def ts_storage_latency():
@@ -1727,7 +1727,7 @@ def ts_storage_latency():
 
 @kb_diagram(
     'ts-vm-perf',
-    'docs/troubleshooting/vm-performance/index.md',
+    'docs/virtualization/troubleshooting/vm-performance/index.md',
     'VM performance — CPU ready, memory balloon, disk latency, network drops',
 )
 def ts_vm_perf():
