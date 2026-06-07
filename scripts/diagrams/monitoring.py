@@ -21,92 +21,8 @@ PD1, PD2, PD3, PD4 = 22, 41, 61, 80
 # ═══════════════════════════════════════════════════════════════════════════════
 
 @kb_diagram(
-    'monitoring-root',
-    'docs/monitoring/index.md',
-    'Monitoring overview — all products and shared services',
-)
-def monitoring_root():
-    R, txt_row = make_helpers(W2)
-    lines = []
-
-    lines.append(title_border(W2, 'Monitoring — Platform Overview'))
-    lines.append(txt_row())
-
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Monitoring Platform — Observability for Virtualisation, Storage, Network, and Compute')))
-    lines.append(R(bMid(IV_L, IV_R, 'Products: Aria Operations · CloudIQ · Dell AIOps · InsightIQ · Nexus Dashboard · Pure1')))
-    lines.append(R(bMid(IV_L, IV_R, 'Capabilities: metrics collection · alert routing · capacity forecasting · anomaly detection')))
-    lines.append(R(bMid(IV_L, IV_R, 'Shared services: syslog · log retention · metrics baseline · event correlation · health')))
-    lines.append(R(bMid(IV_L, IV_R, 'Targets: vSphere · NSX · PowerStore · PowerScale · ACI fabric · FlashArray · FlashBlade')))
-    lines.append(R(bBot(IV_L, IV_R)))
-
-    lines.append(txt_row())
-    lines.append(txt_row('  Each monitoring tool serves a distinct domain — together they form a unified observability layer'))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(
-        bMid(B1_L, B1_R, 'VMware Domain'),
-        bMid(B2_L, B2_R, 'Dell Domain'),
-        bMid(B3_L, B3_R, 'Network/Storage'),
-    )))
-    lines.append(R(merge(
-        bMid(B1_L, B1_R, 'Aria Operations'),
-        bMid(B2_L, B2_R, 'CloudIQ (SaaS)'),
-        bMid(B3_L, B3_R, 'Nexus Dashboard'),
-    )))
-    lines.append(R(merge(
-        bMid(B1_L, B1_R, 'vCenter/NSX targets'),
-        bMid(B2_L, B2_R, 'Dell AIOps (SaaS)'),
-        bMid(B3_L, B3_R, 'Pure1 (SaaS)'),
-    )))
-    lines.append(R(merge(
-        bMid(B1_L, B1_R, 'Capacity forecasting'),
-        bMid(B2_L, B2_R, 'PowerStore/PowerMax'),
-        bMid(B3_L, B3_R, 'FlashArray/Blade'),
-    )))
-    lines.append(R(merge(
-        bMid(B1_L, B1_R, 'Anomaly detection'),
-        bMid(B2_L, B2_R, 'InsightIQ (VM app)'),
-        bMid(B3_L, B3_R, 'ACI fabric health'),
-    )))
-    lines.append(R(merge(
-        bMid(B1_L, B1_R, 'Compliance packs'),
-        bMid(B2_L, B2_R, 'PowerScale perf'),
-        bMid(B3_L, B3_R, 'Flow analytics'),
-    )))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('On-prem: Aria Ops cluster on vSphere · InsightIQ VM on PowerScale · Nexus Dashboard cluster'))
-    lines.append(txt_row('SaaS: CloudIQ · Dell AIOps · Pure1 — phone-home telemetry, no local server required'))
-    lines.append(txt_row())
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('Aria Operations  = On-prem analytics for vSphere, NSX, storage; collector + analytics nodes'))
-    lines.append(txt_row('CloudIQ          = Dell SaaS platform; health scores and capacity forecasts for Dell arrays'))
-    lines.append(txt_row('Dell AIOps       = AI-driven insight layer; anomaly correlation and root-cause suggestions'))
-    lines.append(txt_row('InsightIQ        = VM appliance for PowerScale/Isilon performance analytics'))
-    lines.append(txt_row('Nexus Dashboard  = Cisco fabric visibility; NDI app for ACI/NX-OS health and assurance'))
-    lines.append(txt_row('Pure1            = Pure Storage SaaS; health, capacity, and performance for FlashArray/Blade'))
-    lines.append(txt_row('Syslog           = RFC-5424 event stream; aggregated to a central syslog server (e.g. rsyslog)'))
-    lines.append(txt_row('Metrics baseline = Documented normal operating ranges; used to tune alert thresholds'))
-    lines.append(txt_row('Event correlation= Linking related alerts to a single root cause to reduce alert noise'))
-    lines.append(txt_row('Alert management = Policy-driven routing of alerts to teams, tickets, and paging systems'))
-    lines.append(txt_row('Log retention    = Policy governing how long logs are stored on-prem or in cloud storage'))
-    lines.append(txt_row('Health score     = Composite 0-100 score aggregating component health indicators'))
-    lines.append(txt_row())
-
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
-
-
-@kb_diagram(
     'monitoring-alert-management',
-    'docs/monitoring/alert-management/index.md',
+    'docs/monitoring-standards/alert-management/index.md',
     'Alert management — routing, suppression, escalation policies',
 )
 def monitoring_alert_management():
@@ -189,7 +105,7 @@ def monitoring_alert_management():
 
 @kb_diagram(
     'monitoring-dashboard-standards',
-    'docs/monitoring/dashboard-standards/index.md',
+    'docs/monitoring-standards/dashboard-standards/index.md',
     'Dashboard standards — naming, layout, and visualisation conventions',
 )
 def monitoring_dashboard_standards():
@@ -272,7 +188,7 @@ def monitoring_dashboard_standards():
 
 @kb_diagram(
     'monitoring-event-correlation',
-    'docs/monitoring/event-correlation/index.md',
+    'docs/monitoring-standards/event-correlation/index.md',
     'Event correlation — linking alerts to root causes across domains',
 )
 def monitoring_event_correlation():
@@ -355,7 +271,7 @@ def monitoring_event_correlation():
 
 @kb_diagram(
     'monitoring-health-monitoring',
-    'docs/monitoring/health-monitoring/index.md',
+    'docs/monitoring-standards/health-monitoring/index.md',
     'Health monitoring — platform-wide health checks and scoring',
 )
 def monitoring_health_monitoring():
@@ -438,7 +354,7 @@ def monitoring_health_monitoring():
 
 @kb_diagram(
     'monitoring-log-retention',
-    'docs/monitoring/log-retention/index.md',
+    'docs/monitoring-standards/log-retention/index.md',
     'Log retention — policies for on-prem and cloud log storage',
 )
 def monitoring_log_retention():
@@ -521,7 +437,7 @@ def monitoring_log_retention():
 
 @kb_diagram(
     'monitoring-metrics-baseline',
-    'docs/monitoring/metrics-baseline/index.md',
+    'docs/monitoring-standards/metrics-baseline/index.md',
     'Metrics baseline — defining normal operating ranges for threshold tuning',
 )
 def monitoring_metrics_baseline():
@@ -604,7 +520,7 @@ def monitoring_metrics_baseline():
 
 @kb_diagram(
     'monitoring-syslog',
-    'docs/monitoring/syslog/index.md',
+    'docs/monitoring-standards/syslog/index.md',
     'Syslog — centralised syslog collection and forwarding architecture',
 )
 def monitoring_syslog():
