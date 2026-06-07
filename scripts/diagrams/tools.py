@@ -11,8 +11,8 @@ from ._core import (
 
 @kb_diagram(
     'tools-root',
-    'docs/tools/index.md',
-    'Tools Platform Overview — Confluence, Git, Jira, ServiceNow',
+    'docs/itsm/index.md',
+    'ITSM Platform Overview — Confluence, Git, Jira, ServiceNow',
 )
 def tools_root():
     """Tools Platform Overview — W=103."""
@@ -132,7 +132,7 @@ def tools_root():
 
 @kb_diagram(
     'tools-confluence',
-    'docs/tools/confluence/index.md',
+    'docs/itsm/confluence/index.md',
     'Confluence Overview — wiki platform, Data Center components, auth, backup',
 )
 def tools_confluence():
@@ -226,7 +226,7 @@ def tools_confluence():
 
 @kb_diagram(
     'tools-confluence-architecture',
-    'docs/tools/confluence/architecture/index.md',
+    'docs/itsm/confluence/architecture/index.md',
     'Confluence Architecture Overview — tiers, clustering, data flow',
 )
 def tools_confluence_architecture():
@@ -335,7 +335,7 @@ def tools_confluence_architecture():
 
 @kb_diagram(
     'tools-confluence-arch-how-it-works',
-    'docs/tools/confluence/architecture/how-it-works/index.md',
+    'docs/itsm/confluence/architecture/how-it-works/index.md',
     'Confluence How It Works — request lifecycle, search, collaborative editing',
 )
 def tools_confluence_arch_how_it_works():
@@ -436,7 +436,7 @@ def tools_confluence_arch_how_it_works():
 
 @kb_diagram(
     'tools-confluence-arch-design',
-    'docs/tools/confluence/architecture/design-standards/index.md',
+    'docs/itsm/confluence/architecture/design-standards/index.md',
     'Confluence Design Standards — sizing, HA topology, naming, retention',
 )
 def tools_confluence_arch_design():
@@ -526,7 +526,7 @@ def tools_confluence_arch_design():
 
 @kb_diagram(
     'tools-confluence-arch-integrations',
-    'docs/tools/confluence/architecture/integrations/index.md',
+    'docs/itsm/confluence/architecture/integrations/index.md',
     'Confluence Integrations — Jira app links, LDAP, SAML, REST API, webhooks',
 )
 def tools_confluence_arch_integrations():
@@ -621,7 +621,7 @@ def tools_confluence_arch_integrations():
 
 W2 = 103
 
-@kb_diagram('tools-confluence-ops', 'docs/tools/confluence/operations/index.md', 'Confluence operations overview')
+@kb_diagram('tools-confluence-ops', 'docs/itsm/confluence/operations/index.md', 'Confluence operations overview')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -660,7 +660,7 @@ def _():
     return lines
 
 
-@kb_diagram('tools-confluence-ops-backup', 'docs/tools/confluence/operations/backup-restore/index.md', 'Confluence backup and restore')
+@kb_diagram('tools-confluence-ops-backup', 'docs/itsm/confluence/operations/backup-restore/index.md', 'Confluence backup and restore')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -697,7 +697,7 @@ def _():
     return lines
 
 
-@kb_diagram('tools-confluence-ops-cli', 'docs/tools/confluence/operations/cli-reference/index.md', 'Confluence CLI reference')
+@kb_diagram('tools-confluence-ops-cli', 'docs/itsm/confluence/operations/cli-reference/index.md', 'Confluence CLI reference')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -735,7 +735,7 @@ def _():
     return lines
 
 
-@kb_diagram('tools-confluence-ops-health', 'docs/tools/confluence/operations/health-checks/index.md', 'Confluence health checks')
+@kb_diagram('tools-confluence-ops-health', 'docs/itsm/confluence/operations/health-checks/index.md', 'Confluence health checks')
 def _():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -774,7 +774,7 @@ def _():
 
 # ── Confluence Security ───────────────────────────────────────────────────────
 
-@kb_diagram('tools-confluence-sec', 'docs/tools/confluence/security/index.md', 'Confluence security overview')
+@kb_diagram('tools-confluence-sec', 'docs/itsm/confluence/security/index.md', 'Confluence security overview')
 def tools_confluence_sec():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -829,7 +829,7 @@ def tools_confluence_sec():
     return lines
 
 
-@kb_diagram('tools-confluence-sec-enc', 'docs/tools/confluence/security/encryption/index.md', 'Confluence encryption')
+@kb_diagram('tools-confluence-sec-enc', 'docs/itsm/confluence/security/encryption/index.md', 'Confluence encryption')
 def tools_confluence_sec_enc():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -883,7 +883,7 @@ def tools_confluence_sec_enc():
     return lines
 
 
-@kb_diagram('tools-confluence-sec-hard', 'docs/tools/confluence/security/hardening/index.md', 'Confluence hardening')
+@kb_diagram('tools-confluence-sec-hard', 'docs/itsm/confluence/security/hardening/index.md', 'Confluence hardening')
 def tools_confluence_sec_hard():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -938,7 +938,7 @@ def tools_confluence_sec_hard():
     return lines
 
 
-@kb_diagram('tools-confluence-sec-access', 'docs/tools/confluence/security/access-control/index.md', 'Confluence access control')
+@kb_diagram('tools-confluence-sec-access', 'docs/itsm/confluence/security/access-control/index.md', 'Confluence access control')
 def tools_confluence_sec_access():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -993,7 +993,7 @@ def tools_confluence_sec_access():
     return lines
 
 
-@kb_diagram('tools-confluence-sec-auth', 'docs/tools/confluence/security/authentication/index.md', 'Confluence authentication')
+@kb_diagram('tools-confluence-sec-auth', 'docs/itsm/confluence/security/authentication/index.md', 'Confluence authentication')
 def tools_confluence_sec_auth():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1049,7 +1049,7 @@ def tools_confluence_sec_auth():
 
 # ── Confluence Troubleshooting ────────────────────────────────────────────────
 
-@kb_diagram('tools-confluence-trouble', 'docs/tools/confluence/troubleshooting/index.md', 'Confluence troubleshooting overview')
+@kb_diagram('tools-confluence-trouble', 'docs/itsm/confluence/troubleshooting/index.md', 'Confluence troubleshooting overview')
 def tools_confluence_trouble():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -1104,7 +1104,7 @@ def tools_confluence_trouble():
     return lines
 
 
-@kb_diagram('tools-confluence-trouble-diag', 'docs/tools/confluence/troubleshooting/diagnostics/index.md', 'Confluence diagnostics')
+@kb_diagram('tools-confluence-trouble-diag', 'docs/itsm/confluence/troubleshooting/diagnostics/index.md', 'Confluence diagnostics')
 def tools_confluence_trouble_diag():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1159,7 +1159,7 @@ def tools_confluence_trouble_diag():
     return lines
 
 
-@kb_diagram('tools-confluence-trouble-esc', 'docs/tools/confluence/troubleshooting/escalation/index.md', 'Confluence escalation')
+@kb_diagram('tools-confluence-trouble-esc', 'docs/itsm/confluence/troubleshooting/escalation/index.md', 'Confluence escalation')
 def tools_confluence_trouble_esc():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1213,7 +1213,7 @@ def tools_confluence_trouble_esc():
     return lines
 
 
-@kb_diagram('tools-confluence-trouble-common', 'docs/tools/confluence/troubleshooting/common-issues/index.md', 'Confluence common issues')
+@kb_diagram('tools-confluence-trouble-common', 'docs/itsm/confluence/troubleshooting/common-issues/index.md', 'Confluence common issues')
 def tools_confluence_trouble_common():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1269,7 +1269,7 @@ def tools_confluence_trouble_common():
 
 # ── Confluence Operations (remaining) ─────────────────────────────────────────
 
-@kb_diagram('tools-confluence-ops-procedures', 'docs/tools/confluence/operations/procedures/index.md', 'Confluence operations procedures')
+@kb_diagram('tools-confluence-ops-procedures', 'docs/itsm/confluence/operations/procedures/index.md', 'Confluence operations procedures')
 def tools_confluence_ops_procedures():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1323,7 +1323,7 @@ def tools_confluence_ops_procedures():
     return lines
 
 
-@kb_diagram('tools-confluence-ops-install', 'docs/tools/confluence/operations/install-upgrade/index.md', 'Confluence install and upgrade')
+@kb_diagram('tools-confluence-ops-install', 'docs/itsm/confluence/operations/install-upgrade/index.md', 'Confluence install and upgrade')
 def tools_confluence_ops_install():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1377,7 +1377,7 @@ def tools_confluence_ops_install():
     return lines
 
 
-@kb_diagram('tools-confluence-ops-scripts', 'docs/tools/confluence/operations/scripts/index.md', 'Confluence operations scripts')
+@kb_diagram('tools-confluence-ops-scripts', 'docs/itsm/confluence/operations/scripts/index.md', 'Confluence operations scripts')
 def tools_confluence_ops_scripts():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1416,7 +1416,7 @@ def tools_confluence_ops_scripts():
 
 # ── Jira ─────────────────────────────────────────────────────────────────────
 
-@kb_diagram('tools-jira', 'docs/tools/jira/index.md', 'Jira platform overview')
+@kb_diagram('tools-jira', 'docs/itsm/jira/index.md', 'Jira platform overview')
 def tools_jira():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -1471,7 +1471,7 @@ def tools_jira():
     return lines
 
 
-@kb_diagram('tools-jira-arch', 'docs/tools/jira/architecture/index.md', 'Jira architecture overview')
+@kb_diagram('tools-jira-arch', 'docs/itsm/jira/architecture/index.md', 'Jira architecture overview')
 def tools_jira_arch():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1525,7 +1525,7 @@ def tools_jira_arch():
     return lines
 
 
-@kb_diagram('tools-jira-arch-how', 'docs/tools/jira/architecture/how-it-works/index.md', 'Jira how it works')
+@kb_diagram('tools-jira-arch-how', 'docs/itsm/jira/architecture/how-it-works/index.md', 'Jira how it works')
 def tools_jira_arch_how():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -1581,7 +1581,7 @@ def tools_jira_arch_how():
     return lines
 
 
-@kb_diagram('tools-jira-arch-int', 'docs/tools/jira/architecture/integrations/index.md', 'Jira integrations')
+@kb_diagram('tools-jira-arch-int', 'docs/itsm/jira/architecture/integrations/index.md', 'Jira integrations')
 def tools_jira_arch_int():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -1636,7 +1636,7 @@ def tools_jira_arch_int():
     return lines
 
 
-@kb_diagram('tools-jira-arch-design', 'docs/tools/jira/architecture/design-standards/index.md', 'Jira design standards')
+@kb_diagram('tools-jira-arch-design', 'docs/itsm/jira/architecture/design-standards/index.md', 'Jira design standards')
 def tools_jira_arch_design():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1690,7 +1690,7 @@ def tools_jira_arch_design():
     return lines
 
 
-@kb_diagram('tools-jira-ops', 'docs/tools/jira/operations/index.md', 'Jira operations overview')
+@kb_diagram('tools-jira-ops', 'docs/itsm/jira/operations/index.md', 'Jira operations overview')
 def tools_jira_ops():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -1732,7 +1732,7 @@ def tools_jira_ops():
     return lines
 
 
-@kb_diagram('tools-jira-ops-procedures', 'docs/tools/jira/operations/procedures/index.md', 'Jira operations procedures')
+@kb_diagram('tools-jira-ops-procedures', 'docs/itsm/jira/operations/procedures/index.md', 'Jira operations procedures')
 def tools_jira_ops_procedures():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1786,7 +1786,7 @@ def tools_jira_ops_procedures():
     return lines
 
 
-@kb_diagram('tools-jira-ops-backup', 'docs/tools/jira/operations/backup-restore/index.md', 'Jira backup and restore')
+@kb_diagram('tools-jira-ops-backup', 'docs/itsm/jira/operations/backup-restore/index.md', 'Jira backup and restore')
 def tools_jira_ops_backup():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1840,7 +1840,7 @@ def tools_jira_ops_backup():
     return lines
 
 
-@kb_diagram('tools-jira-ops-health', 'docs/tools/jira/operations/health-checks/index.md', 'Jira health checks')
+@kb_diagram('tools-jira-ops-health', 'docs/itsm/jira/operations/health-checks/index.md', 'Jira health checks')
 def tools_jira_ops_health():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1881,7 +1881,7 @@ def tools_jira_ops_health():
     return lines
 
 
-@kb_diagram('tools-jira-ops-install', 'docs/tools/jira/operations/install-upgrade/index.md', 'Jira install and upgrade')
+@kb_diagram('tools-jira-ops-install', 'docs/itsm/jira/operations/install-upgrade/index.md', 'Jira install and upgrade')
 def tools_jira_ops_install():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -1935,7 +1935,7 @@ def tools_jira_ops_install():
     return lines
 
 
-@kb_diagram('tools-jira-ops-scripts', 'docs/tools/jira/operations/scripts/index.md', 'Jira operations scripts')
+@kb_diagram('tools-jira-ops-scripts', 'docs/itsm/jira/operations/scripts/index.md', 'Jira operations scripts')
 def tools_jira_ops_scripts():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1972,7 +1972,7 @@ def tools_jira_ops_scripts():
     return lines
 
 
-@kb_diagram('tools-jira-ops-cli', 'docs/tools/jira/operations/cli-reference/index.md', 'Jira CLI reference')
+@kb_diagram('tools-jira-ops-cli', 'docs/itsm/jira/operations/cli-reference/index.md', 'Jira CLI reference')
 def tools_jira_ops_cli():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2009,7 +2009,7 @@ def tools_jira_ops_cli():
     return lines
 
 
-@kb_diagram('tools-jira-sec', 'docs/tools/jira/security/index.md', 'Jira security overview')
+@kb_diagram('tools-jira-sec', 'docs/itsm/jira/security/index.md', 'Jira security overview')
 def tools_jira_sec():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2064,7 +2064,7 @@ def tools_jira_sec():
     return lines
 
 
-@kb_diagram('tools-jira-sec-enc', 'docs/tools/jira/security/encryption/index.md', 'Jira encryption')
+@kb_diagram('tools-jira-sec-enc', 'docs/itsm/jira/security/encryption/index.md', 'Jira encryption')
 def tools_jira_sec_enc():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2118,7 +2118,7 @@ def tools_jira_sec_enc():
     return lines
 
 
-@kb_diagram('tools-jira-sec-hard', 'docs/tools/jira/security/hardening/index.md', 'Jira hardening')
+@kb_diagram('tools-jira-sec-hard', 'docs/itsm/jira/security/hardening/index.md', 'Jira hardening')
 def tools_jira_sec_hard():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2172,7 +2172,7 @@ def tools_jira_sec_hard():
     return lines
 
 
-@kb_diagram('tools-jira-sec-access', 'docs/tools/jira/security/access-control/index.md', 'Jira access control')
+@kb_diagram('tools-jira-sec-access', 'docs/itsm/jira/security/access-control/index.md', 'Jira access control')
 def tools_jira_sec_access():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2227,7 +2227,7 @@ def tools_jira_sec_access():
     return lines
 
 
-@kb_diagram('tools-jira-sec-auth', 'docs/tools/jira/security/authentication/index.md', 'Jira authentication')
+@kb_diagram('tools-jira-sec-auth', 'docs/itsm/jira/security/authentication/index.md', 'Jira authentication')
 def tools_jira_sec_auth():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2283,7 +2283,7 @@ def tools_jira_sec_auth():
 
 # ── Jira Troubleshooting ─────────────────────────────────────────────────────
 
-@kb_diagram('tools-jira-trouble', 'docs/tools/jira/troubleshooting/index.md', 'Jira troubleshooting overview')
+@kb_diagram('tools-jira-trouble', 'docs/itsm/jira/troubleshooting/index.md', 'Jira troubleshooting overview')
 def tools_jira_trouble():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2338,7 +2338,7 @@ def tools_jira_trouble():
     return lines
 
 
-@kb_diagram('tools-jira-trouble-diag', 'docs/tools/jira/troubleshooting/diagnostics/index.md', 'Jira diagnostics')
+@kb_diagram('tools-jira-trouble-diag', 'docs/itsm/jira/troubleshooting/diagnostics/index.md', 'Jira diagnostics')
 def tools_jira_trouble_diag():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2393,7 +2393,7 @@ def tools_jira_trouble_diag():
     return lines
 
 
-@kb_diagram('tools-jira-trouble-esc', 'docs/tools/jira/troubleshooting/escalation/index.md', 'Jira escalation')
+@kb_diagram('tools-jira-trouble-esc', 'docs/itsm/jira/troubleshooting/escalation/index.md', 'Jira escalation')
 def tools_jira_trouble_esc():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2447,7 +2447,7 @@ def tools_jira_trouble_esc():
     return lines
 
 
-@kb_diagram('tools-jira-trouble-common', 'docs/tools/jira/troubleshooting/common-issues/index.md', 'Jira common issues')
+@kb_diagram('tools-jira-trouble-common', 'docs/itsm/jira/troubleshooting/common-issues/index.md', 'Jira common issues')
 def tools_jira_trouble_common():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2503,7 +2503,7 @@ def tools_jira_trouble_common():
 
 # ── ServiceNow ────────────────────────────────────────────────────────────────
 
-@kb_diagram('tools-snow', 'docs/tools/servicenow/index.md', 'ServiceNow platform overview')
+@kb_diagram('tools-snow', 'docs/itsm/servicenow/index.md', 'ServiceNow platform overview')
 def tools_snow():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2558,7 +2558,7 @@ def tools_snow():
     return lines
 
 
-@kb_diagram('tools-snow-arch', 'docs/tools/servicenow/architecture/index.md', 'ServiceNow architecture overview')
+@kb_diagram('tools-snow-arch', 'docs/itsm/servicenow/architecture/index.md', 'ServiceNow architecture overview')
 def tools_snow_arch():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2612,7 +2612,7 @@ def tools_snow_arch():
     return lines
 
 
-@kb_diagram('tools-snow-arch-how', 'docs/tools/servicenow/architecture/how-it-works/index.md', 'ServiceNow how it works')
+@kb_diagram('tools-snow-arch-how', 'docs/itsm/servicenow/architecture/how-it-works/index.md', 'ServiceNow how it works')
 def tools_snow_arch_how():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2668,7 +2668,7 @@ def tools_snow_arch_how():
     return lines
 
 
-@kb_diagram('tools-snow-arch-int', 'docs/tools/servicenow/architecture/integrations/index.md', 'ServiceNow integrations')
+@kb_diagram('tools-snow-arch-int', 'docs/itsm/servicenow/architecture/integrations/index.md', 'ServiceNow integrations')
 def tools_snow_arch_int():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2723,7 +2723,7 @@ def tools_snow_arch_int():
     return lines
 
 
-@kb_diagram('tools-snow-arch-design', 'docs/tools/servicenow/architecture/design-standards/index.md', 'ServiceNow design standards')
+@kb_diagram('tools-snow-arch-design', 'docs/itsm/servicenow/architecture/design-standards/index.md', 'ServiceNow design standards')
 def tools_snow_arch_design():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2777,7 +2777,7 @@ def tools_snow_arch_design():
     return lines
 
 
-@kb_diagram('tools-snow-ops', 'docs/tools/servicenow/operations/index.md', 'ServiceNow operations overview')
+@kb_diagram('tools-snow-ops', 'docs/itsm/servicenow/operations/index.md', 'ServiceNow operations overview')
 def tools_snow_ops():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 33
@@ -2816,7 +2816,7 @@ def tools_snow_ops():
     return lines
 
 
-@kb_diagram('tools-snow-sec', 'docs/tools/servicenow/security/index.md', 'ServiceNow security overview')
+@kb_diagram('tools-snow-sec', 'docs/itsm/servicenow/security/index.md', 'ServiceNow security overview')
 def tools_snow_security():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -2881,7 +2881,7 @@ def tools_snow_security():
     return lines
 
 
-@kb_diagram('tools-snow-sec-enc', 'docs/tools/servicenow/security/encryption/index.md', 'ServiceNow encryption')
+@kb_diagram('tools-snow-sec-enc', 'docs/itsm/servicenow/security/encryption/index.md', 'ServiceNow encryption')
 def tools_snow_sec_encryption():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -2939,7 +2939,7 @@ def tools_snow_sec_encryption():
     return lines
 
 
-@kb_diagram('tools-snow-sec-hard', 'docs/tools/servicenow/security/hardening/index.md', 'ServiceNow hardening')
+@kb_diagram('tools-snow-sec-hard', 'docs/itsm/servicenow/security/hardening/index.md', 'ServiceNow hardening')
 def tools_snow_sec_hardening():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3000,7 +3000,7 @@ def tools_snow_sec_hardening():
     return lines
 
 
-@kb_diagram('tools-snow-sec-access', 'docs/tools/servicenow/security/access-control/index.md', 'ServiceNow access control')
+@kb_diagram('tools-snow-sec-access', 'docs/itsm/servicenow/security/access-control/index.md', 'ServiceNow access control')
 def tools_snow_sec_access():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3053,7 +3053,7 @@ def tools_snow_sec_access():
     return lines
 
 
-@kb_diagram('tools-snow-sec-auth', 'docs/tools/servicenow/security/authentication/index.md', 'ServiceNow authentication')
+@kb_diagram('tools-snow-sec-auth', 'docs/itsm/servicenow/security/authentication/index.md', 'ServiceNow authentication')
 def tools_snow_sec_auth():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3106,7 +3106,7 @@ def tools_snow_sec_auth():
     return lines
 
 
-@kb_diagram('tools-snow-trouble', 'docs/tools/servicenow/troubleshooting/index.md', 'ServiceNow troubleshooting overview')
+@kb_diagram('tools-snow-trouble', 'docs/itsm/servicenow/troubleshooting/index.md', 'ServiceNow troubleshooting overview')
 def tools_snow_trouble():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3167,7 +3167,7 @@ def tools_snow_trouble():
     return lines
 
 
-@kb_diagram('tools-snow-trouble-diag', 'docs/tools/servicenow/troubleshooting/diagnostics/index.md', 'ServiceNow diagnostics')
+@kb_diagram('tools-snow-trouble-diag', 'docs/itsm/servicenow/troubleshooting/diagnostics/index.md', 'ServiceNow diagnostics')
 def tools_snow_trouble_diag():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3221,7 +3221,7 @@ def tools_snow_trouble_diag():
     return lines
 
 
-@kb_diagram('tools-snow-trouble-esc', 'docs/tools/servicenow/troubleshooting/escalation/index.md', 'ServiceNow escalation')
+@kb_diagram('tools-snow-trouble-esc', 'docs/itsm/servicenow/troubleshooting/escalation/index.md', 'ServiceNow escalation')
 def tools_snow_trouble_esc():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3274,7 +3274,7 @@ def tools_snow_trouble_esc():
     return lines
 
 
-@kb_diagram('tools-snow-trouble-common', 'docs/tools/servicenow/troubleshooting/common-issues/index.md', 'ServiceNow common issues')
+@kb_diagram('tools-snow-trouble-common', 'docs/itsm/servicenow/troubleshooting/common-issues/index.md', 'ServiceNow common issues')
 def tools_snow_trouble_common():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3335,7 +3335,7 @@ def tools_snow_trouble_common():
     return lines
 
 
-@kb_diagram('tools-snow-ops-procedures', 'docs/tools/servicenow/operations/procedures/index.md', 'ServiceNow Ops Procedures')
+@kb_diagram('tools-snow-ops-procedures', 'docs/itsm/servicenow/operations/procedures/index.md', 'ServiceNow Ops Procedures')
 def _snow_ops_procedures():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3387,7 +3387,7 @@ def _snow_ops_procedures():
     return lines
 
 
-@kb_diagram('tools-snow-ops-backup', 'docs/tools/servicenow/operations/backup-restore/index.md', 'ServiceNow Backup and Restore')
+@kb_diagram('tools-snow-ops-backup', 'docs/itsm/servicenow/operations/backup-restore/index.md', 'ServiceNow Backup and Restore')
 def _snow_ops_backup():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3439,7 +3439,7 @@ def _snow_ops_backup():
     return lines
 
 
-@kb_diagram('tools-snow-ops-health', 'docs/tools/servicenow/operations/health-checks/index.md', 'ServiceNow Health Checks')
+@kb_diagram('tools-snow-ops-health', 'docs/itsm/servicenow/operations/health-checks/index.md', 'ServiceNow Health Checks')
 def _snow_ops_health():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3491,7 +3491,7 @@ def _snow_ops_health():
     return lines
 
 
-@kb_diagram('tools-snow-ops-install', 'docs/tools/servicenow/operations/install-upgrade/index.md', 'ServiceNow Install and Upgrade')
+@kb_diagram('tools-snow-ops-install', 'docs/itsm/servicenow/operations/install-upgrade/index.md', 'ServiceNow Install and Upgrade')
 def _snow_ops_install():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3543,7 +3543,7 @@ def _snow_ops_install():
     return lines
 
 
-@kb_diagram('tools-snow-ops-scripts', 'docs/tools/servicenow/operations/scripts/index.md', 'ServiceNow Operations Scripts')
+@kb_diagram('tools-snow-ops-scripts', 'docs/itsm/servicenow/operations/scripts/index.md', 'ServiceNow Operations Scripts')
 def _snow_ops_scripts():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3595,7 +3595,7 @@ def _snow_ops_scripts():
     return lines
 
 
-@kb_diagram('tools-snow-ops-cli', 'docs/tools/servicenow/operations/cli-reference/index.md', 'ServiceNow CLI Reference')
+@kb_diagram('tools-snow-ops-cli', 'docs/itsm/servicenow/operations/cli-reference/index.md', 'ServiceNow CLI Reference')
 def _snow_ops_cli():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3647,7 +3647,7 @@ def _snow_ops_cli():
     return lines
 
 
-@kb_diagram('tools-git', 'docs/tools/git/index.md', 'Git Overview')
+@kb_diagram('tools-git', 'docs/automation/git/index.md', 'Git Overview')
 def _git_index():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3687,7 +3687,7 @@ def _git_index():
     return lines
 
 
-@kb_diagram('tools-git-arch', 'docs/tools/git/architecture/index.md', 'Git Architecture Overview')
+@kb_diagram('tools-git-arch', 'docs/automation/git/architecture/index.md', 'Git Architecture Overview')
 def _git_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3739,7 +3739,7 @@ def _git_arch():
     return lines
 
 
-@kb_diagram('tools-git-arch-how', 'docs/tools/git/architecture/how-it-works/index.md', 'Git How It Works')
+@kb_diagram('tools-git-arch-how', 'docs/automation/git/architecture/how-it-works/index.md', 'Git How It Works')
 def _git_arch_how():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3791,7 +3791,7 @@ def _git_arch_how():
     return lines
 
 
-@kb_diagram('tools-git-arch-int', 'docs/tools/git/architecture/integrations/index.md', 'Git Integrations')
+@kb_diagram('tools-git-arch-int', 'docs/automation/git/architecture/integrations/index.md', 'Git Integrations')
 def _git_arch_int():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3843,7 +3843,7 @@ def _git_arch_int():
     return lines
 
 
-@kb_diagram('tools-git-arch-design', 'docs/tools/git/architecture/design-standards/index.md', 'Git Design Standards')
+@kb_diagram('tools-git-arch-design', 'docs/automation/git/architecture/design-standards/index.md', 'Git Design Standards')
 def _git_arch_design():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3895,7 +3895,7 @@ def _git_arch_design():
     return lines
 
 
-@kb_diagram('tools-git-ops', 'docs/tools/git/operations/index.md', 'Git Operations Overview')
+@kb_diagram('tools-git-ops', 'docs/automation/git/operations/index.md', 'Git Operations Overview')
 def _git_ops():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3935,7 +3935,7 @@ def _git_ops():
     return lines
 
 
-@kb_diagram('tools-git-ops-procedures', 'docs/tools/git/operations/procedures/index.md', 'Git Ops Procedures')
+@kb_diagram('tools-git-ops-procedures', 'docs/automation/git/operations/procedures/index.md', 'Git Ops Procedures')
 def _git_ops_procedures():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3987,7 +3987,7 @@ def _git_ops_procedures():
     return lines
 
 
-@kb_diagram('tools-git-ops-backup', 'docs/tools/git/operations/backup-restore/index.md', 'Git Backup and Restore')
+@kb_diagram('tools-git-ops-backup', 'docs/automation/git/operations/backup-restore/index.md', 'Git Backup and Restore')
 def _git_ops_backup():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4039,7 +4039,7 @@ def _git_ops_backup():
     return lines
 
 
-@kb_diagram('tools-git-ops-health', 'docs/tools/git/operations/health-checks/index.md', 'Git Health Checks')
+@kb_diagram('tools-git-ops-health', 'docs/automation/git/operations/health-checks/index.md', 'Git Health Checks')
 def _git_ops_health():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4091,7 +4091,7 @@ def _git_ops_health():
     return lines
 
 
-@kb_diagram('tools-git-ops-install', 'docs/tools/git/operations/install-upgrade/index.md', 'Git Install and Upgrade')
+@kb_diagram('tools-git-ops-install', 'docs/automation/git/operations/install-upgrade/index.md', 'Git Install and Upgrade')
 def _git_ops_install():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4143,7 +4143,7 @@ def _git_ops_install():
     return lines
 
 
-@kb_diagram('tools-git-ops-scripts', 'docs/tools/git/operations/scripts/index.md', 'Git Operations Scripts')
+@kb_diagram('tools-git-ops-scripts', 'docs/automation/git/operations/scripts/index.md', 'Git Operations Scripts')
 def _git_ops_scripts():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4195,7 +4195,7 @@ def _git_ops_scripts():
     return lines
 
 
-@kb_diagram('tools-git-ops-cli', 'docs/tools/git/operations/cli-reference/index.md', 'Git CLI Reference')
+@kb_diagram('tools-git-ops-cli', 'docs/automation/git/operations/cli-reference/index.md', 'Git CLI Reference')
 def _git_ops_cli():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4247,7 +4247,7 @@ def _git_ops_cli():
     return lines
 
 
-@kb_diagram('tools-git-sec', 'docs/tools/git/security/index.md', 'Git Security Overview')
+@kb_diagram('tools-git-sec', 'docs/automation/git/security/index.md', 'Git Security Overview')
 def _git_sec():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4287,7 +4287,7 @@ def _git_sec():
     return lines
 
 
-@kb_diagram('tools-git-sec-access', 'docs/tools/git/security/access-control/index.md', 'Git Access Control')
+@kb_diagram('tools-git-sec-access', 'docs/automation/git/security/access-control/index.md', 'Git Access Control')
 def _git_sec_access():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4339,7 +4339,7 @@ def _git_sec_access():
     return lines
 
 
-@kb_diagram('tools-git-sec-auth', 'docs/tools/git/security/authentication/index.md', 'Git Authentication')
+@kb_diagram('tools-git-sec-auth', 'docs/automation/git/security/authentication/index.md', 'Git Authentication')
 def _git_sec_auth():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4391,7 +4391,7 @@ def _git_sec_auth():
     return lines
 
 
-@kb_diagram('tools-git-sec-enc', 'docs/tools/git/security/encryption/index.md', 'Git Encryption')
+@kb_diagram('tools-git-sec-enc', 'docs/automation/git/security/encryption/index.md', 'Git Encryption')
 def _git_sec_enc():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4443,7 +4443,7 @@ def _git_sec_enc():
     return lines
 
 
-@kb_diagram('tools-git-sec-hard', 'docs/tools/git/security/hardening/index.md', 'Git Hardening')
+@kb_diagram('tools-git-sec-hard', 'docs/automation/git/security/hardening/index.md', 'Git Hardening')
 def _git_sec_hard():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4495,7 +4495,7 @@ def _git_sec_hard():
     return lines
 
 
-@kb_diagram('tools-git-trouble', 'docs/tools/git/troubleshooting/index.md', 'Git Troubleshooting Overview')
+@kb_diagram('tools-git-trouble', 'docs/automation/git/troubleshooting/index.md', 'Git Troubleshooting Overview')
 def _git_trouble():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4535,7 +4535,7 @@ def _git_trouble():
     return lines
 
 
-@kb_diagram('tools-git-trouble-common', 'docs/tools/git/troubleshooting/common-issues/index.md', 'Git Common Issues')
+@kb_diagram('tools-git-trouble-common', 'docs/automation/git/troubleshooting/common-issues/index.md', 'Git Common Issues')
 def _git_trouble_common():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4587,7 +4587,7 @@ def _git_trouble_common():
     return lines
 
 
-@kb_diagram('tools-git-trouble-diag', 'docs/tools/git/troubleshooting/diagnostics/index.md', 'Git Diagnostics')
+@kb_diagram('tools-git-trouble-diag', 'docs/automation/git/troubleshooting/diagnostics/index.md', 'Git Diagnostics')
 def _git_trouble_diag():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4639,7 +4639,7 @@ def _git_trouble_diag():
     return lines
 
 
-@kb_diagram('tools-git-trouble-esc', 'docs/tools/git/troubleshooting/escalation/index.md', 'Git Escalation')
+@kb_diagram('tools-git-trouble-esc', 'docs/automation/git/troubleshooting/escalation/index.md', 'Git Escalation')
 def _git_trouble_esc():
     W2 = 103
     R, txt_row = make_helpers(W2)

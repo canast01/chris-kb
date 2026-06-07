@@ -388,21 +388,6 @@ def rb_vm_snapshot():
 
 # ── Change Management ─────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'change-management',
-    'docs/change-management/index.md',
-    'Change management landing — ITIL change process, CAB, types, workflow',
-)
-def change_management_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
-    lines = []
 
     lines.append(title_border(W2, 'Change Management'))
     lines.append(txt_row())
@@ -448,7 +433,7 @@ def change_management_index():
 
 @kb_diagram(
     'cm-approval',
-    'docs/change-management/change-approval/index.md',
+    'docs/itsm/servicenow/change-management/change-approval/index.md',
     'Change approval — CAB submission, risk matrix, approval workflow, sign-off',
 )
 def cm_approval():
@@ -502,7 +487,7 @@ def cm_approval():
 
 @kb_diagram(
     'cm-communication',
-    'docs/change-management/change-communication/index.md',
+    'docs/itsm/servicenow/change-management/change-communication/index.md',
     'Change communication — stakeholder notify, downtime notice, post-change update',
 )
 def cm_communication():
@@ -556,7 +541,7 @@ def cm_communication():
 
 @kb_diagram(
     'cm-request',
-    'docs/change-management/change-request/index.md',
+    'docs/itsm/servicenow/change-management/change-request/index.md',
     'Change request form — RFC fields, categorisation, submission checklist',
 )
 def cm_request():
@@ -611,7 +596,7 @@ def cm_request():
 
 @kb_diagram(
     'cm-validation',
-    'docs/change-management/change-validation/index.md',
+    'docs/itsm/servicenow/change-management/change-validation/index.md',
     'Change validation — pre-change checks, success criteria, rollback triggers',
 )
 def cm_validation():
@@ -665,7 +650,7 @@ def cm_validation():
 
 @kb_diagram(
     'cm-deployment',
-    'docs/change-management/deployment-procedure/index.md',
+    'docs/itsm/servicenow/change-management/deployment-procedure/index.md',
     'Deployment procedure — execution steps, checkpoints, sequencing, sign-off',
 )
 def cm_deployment():
@@ -718,7 +703,7 @@ def cm_deployment():
 
 @kb_diagram(
     'cm-emergency',
-    'docs/change-management/emergency-change/index.md',
+    'docs/itsm/servicenow/change-management/emergency-change/index.md',
     'Emergency change — ECAB authorisation, expedited approval, retrospective',
 )
 def cm_emergency():
@@ -772,7 +757,7 @@ def cm_emergency():
 
 @kb_diagram(
     'cm-release',
-    'docs/change-management/release-management/index.md',
+    'docs/itsm/servicenow/change-management/release-management/index.md',
     'Release management — packaging, scheduling, dependency mapping, go/no-go',
 )
 def cm_release():
@@ -828,7 +813,7 @@ def cm_release():
 
 @kb_diagram(
     'lifecycle',
-    'docs/lifecycle/index.md',
+    'docs/itsm/servicenow/lifecycle/index.md',
     'Lifecycle landing — onboarding, upgrade, migration, decommission procedures',
 )
 def lifecycle_index():
@@ -876,7 +861,7 @@ def lifecycle_index():
 
 @kb_diagram(
     'lc-onboarding',
-    'docs/lifecycle/system-onboarding/index.md',
+    'docs/itsm/servicenow/lifecycle/system-onboarding/index.md',
     'System onboarding — new system intake, CMDB, monitoring, runbooks, handover',
 )
 def lc_onboarding():
@@ -928,7 +913,7 @@ def lc_onboarding():
 
 @kb_diagram(
     'lc-upgrade-readiness',
-    'docs/lifecycle/upgrade-readiness/index.md',
+    'docs/itsm/servicenow/lifecycle/upgrade-readiness/index.md',
     'Upgrade readiness — pre-upgrade checklist, compatibility, backout, test plan',
 )
 def lc_upgrade_readiness():
@@ -980,7 +965,7 @@ def lc_upgrade_readiness():
 
 @kb_diagram(
     'lc-post-upgrade',
-    'docs/lifecycle/post-upgrade-validation/index.md',
+    'docs/itsm/servicenow/lifecycle/post-upgrade-validation/index.md',
     'Post-upgrade validation — service health, performance, monitoring, sign-off',
 )
 def lc_post_upgrade():
@@ -1032,7 +1017,7 @@ def lc_post_upgrade():
 
 @kb_diagram(
     'lc-rollback',
-    'docs/lifecycle/rollback-procedure/index.md',
+    'docs/itsm/servicenow/lifecycle/rollback-procedure/index.md',
     'Rollback procedure — trigger criteria, steps, validation, incident escalation',
 )
 def lc_rollback():
@@ -1086,7 +1071,7 @@ def lc_rollback():
 
 @kb_diagram(
     'lc-migration',
-    'docs/lifecycle/migration-procedure/index.md',
+    'docs/itsm/servicenow/lifecycle/migration-procedure/index.md',
     'Migration procedure — plan, data migration, cutover, validation, rollback',
 )
 def lc_migration():
@@ -1142,7 +1127,7 @@ def lc_migration():
 
 @kb_diagram(
     'lc-env-readiness',
-    'docs/lifecycle/environment-readiness/index.md',
+    'docs/itsm/servicenow/lifecycle/environment-readiness/index.md',
     'Environment readiness — pre-deployment environment checks, capacity, dependencies',
 )
 def lc_env_readiness():
@@ -1194,7 +1179,7 @@ def lc_env_readiness():
 
 @kb_diagram(
     'lc-decommission',
-    'docs/lifecycle/system-decommission/index.md',
+    'docs/itsm/servicenow/lifecycle/system-decommission/index.md',
     'System decommission — data migration, backup, asset recovery, CMDB retire',
 )
 def lc_decommission():

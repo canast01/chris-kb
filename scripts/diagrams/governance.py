@@ -368,403 +368,20 @@ def dp_recovery_testing():
 
 # ── Database ──────────────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'database',
-    'docs/database/index.md',
-    'Database landing — health checks, backup validation, failover, maintenance and performance',
-)
-def database_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-    lines.append(title_border(W2, 'Database — Health, Backup, Failover & Performance'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Database operational references: PostgreSQL, MySQL/MariaDB, and SQL Server procedures')))
-    lines.append(R(bMid(IV_L, IV_R, 'Covers: daily health checks, backup validation, planned/unplanned failover, maintenance')))
-    lines.append(R(bMid(IV_L, IV_R, 'Performance: slow query diagnosis, blocking chains, lock contention, I/O bottlenecks')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Monitor → Backup → Maintain → Capacity plan → Troubleshoot → Failover'))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Health & Monitoring'), bMid(B2_L, B2_R, 'Backup & Recovery'), bMid(B3_L, B3_R, 'Performance'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Connection counts'), bMid(B2_L, B2_R, 'Job completion check'), bMid(B3_L, B3_R, 'Slow query log'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Blocking/deadlocks'), bMid(B2_L, B2_R, 'Restore verification'), bMid(B3_L, B3_R, 'EXPLAIN / AWR'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Long-running txns'), bMid(B2_L, B2_R, 'Replication lag'), bMid(B3_L, B3_R, 'Lock contention'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Error log review'), bMid(B2_L, B2_R, 'Failover procedure'), bMid(B3_L, B3_R, 'I/O bottlenecks'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Capacity alerts'), bMid(B2_L, B2_R, 'Maintenance windows'), bMid(B3_L, B3_R, 'Index rebuild'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  WAL          = Write-Ahead Log (PostgreSQL); transaction log; used for replication and PITR'))
-    lines.append(txt_row('  Always On AG = SQL Server availability group; synchronous replica; automatic failover capable'))
-    lines.append(txt_row('  RMAN         = Oracle Recovery Manager; backup and restore tool for Oracle databases'))
-    lines.append(txt_row('  pgBackRest   = PostgreSQL backup tool; supports full/diff/incr; WAL archiving and PITR'))
-    lines.append(txt_row('  AWR          = Automatic Workload Repository (Oracle); performance snapshot repository'))
-    lines.append(txt_row('  PITR         = Point-In-Time Recovery; restore DB to a specific moment using WAL/log replay'))
-    lines.append(txt_row('  Blocking     = Query holding locks that other queries are waiting on; degrades throughput'))
-    lines.append(txt_row('  TDE          = Transparent Data Encryption; encrypts DB files at rest; transparent to app'))
-    lines.append(txt_row('  Deadlock     = Two transactions each waiting for the other to release locks; DB auto-kills one'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
-@kb_diagram(
-    'db-backup-validation',
-    'docs/database/database-backup-validation/index.md',
-    'Database backup validation — job status, integrity checks, restore verification',
-)
-def db_backup_validation():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 50
-    B2_L, B2_R = 53, 99
-    M1, M2 = 26, 76
-    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
-    lines = []
-    lines.append(title_border(W2, 'Database — Backup Validation'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Confirm database backups are completing successfully and restores work before needed')))
-    lines.append(R(bMid(IV_L, IV_R, 'PostgreSQL: pgBackRest info + WAL archiving; MySQL: mysqldump + binary logs')))
-    lines.append(R(bMid(IV_L, IV_R, 'SQL Server: RESTORE VERIFYONLY; Oracle: RMAN validate; check agent job history')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Backup Status Checks'), bMid(B2_L, B2_R, 'Restore Verification'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'pgBackRest: stanza info'), bMid(B2_L, B2_R, 'Restore to test instance'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Check last backup timestamp'), bMid(B2_L, B2_R, 'Run row count + key queries'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Verify WAL archiving current'), bMid(B2_L, B2_R, 'RESTORE VERIFYONLY (MSSQL)'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'SQL Agent job history'), bMid(B2_L, B2_R, 'RMAN validate backupset'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Alert on missed jobs'), bMid(B2_L, B2_R, 'Document test result'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
-    lines.append(txt_row())
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Platform', 'Check command', 'Restore verify', 'Frequency', 'Alert on'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['PostgreSQL', 'pgbackrest info', 'pg_restore test', 'Daily', 'WAL gap'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SQL Server', 'Agent job history', 'VERIFY ONLY', 'Daily', 'Job failure'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['MySQL', 'mysqlcheck', 'Restore + query', 'Daily', 'Binlog gap'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Oracle', 'RMAN list', 'RMAN validate', 'Daily', 'RMAN failure'])))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  pgBackRest   = PostgreSQL backup tool; stanza = named backup config for a cluster'))
-    lines.append(txt_row('  WAL archiving= PostgreSQL ships WAL segments to archive; gap = missing logs; PITR broken'))
-    lines.append(txt_row('  VERIFY ONLY  = SQL Server command; reads backup and validates checksums without restoring'))
-    lines.append(txt_row('  RMAN validate= Oracle checks backup set integrity; reports any corrupt blocks found'))
-    lines.append(txt_row('  Binary log   = MySQL changelog of every committed transaction; needed for PITR'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
-@kb_diagram(
-    'db-capacity-monitoring',
-    'docs/database/database-capacity-monitoring/index.md',
-    'Database capacity monitoring — tablespace, log space, growth forecasting',
-)
-def db_capacity_monitoring():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 50
-    B2_L, B2_R = 53, 99
-    M1, M2 = 26, 76
-    lines = []
-    lines.append(title_border(W2, 'Database — Capacity Monitoring'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Track database growth, tablespace usage, log space, and forecast expansion needs')))
-    lines.append(R(bMid(IV_L, IV_R, 'Alert at 75% usage; plan expansion at 85%; emergency at 90%; autogrow is a safety net')))
-    lines.append(R(bMid(IV_L, IV_R, 'Monitor: data files, log files, temp/undo space, index fragmentation, row growth rate')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Current Capacity'), bMid(B2_L, B2_R, 'Growth Forecasting'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'PG: pg_database_size()'), bMid(B2_L, B2_R, 'Trend: 30/60/90 day growth'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'MSSQL: sys.dm_db_file_space'), bMid(B2_L, B2_R, 'Forecast to 90% threshold'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'MySQL: information_schema'), bMid(B2_L, B2_R, 'Alert: % full + growth rate'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Log space: VLF / undo seg'), bMid(B2_L, B2_R, 'Capacity request lead time'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Temp: active session usage'), bMid(B2_L, B2_R, 'Archive + partition old data'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Tablespace   = Named storage container for database objects; monitored per datafile'))
-    lines.append(txt_row('  VLF          = Virtual Log File (SQL Server); fragmented log slows backup and recovery'))
-    lines.append(txt_row('  Autogrow     = Auto-expand datafile; emergency safety net — not a capacity management plan'))
-    lines.append(txt_row('  Undo segment = Oracle/MySQL space for rolled-back transactions; ORA-01555 on shortage'))
-    lines.append(txt_row('  pg_database_size= PostgreSQL function returning total size of named database in bytes'))
-    lines.append(txt_row('  Partitioning = Split large tables by range/list/hash; move old partitions to cheaper storage'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
-@kb_diagram(
-    'db-failover',
-    'docs/database/database-failover/index.md',
-    'Database failover — planned and unplanned failover for PostgreSQL, SQL Server, MySQL',
-)
-def db_failover():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
-    lines = []
-    lines.append(title_border(W2, 'Database — Failover Procedure'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Promote standby to primary when primary becomes unavailable or for planned maintenance')))
-    lines.append(R(bMid(IV_L, IV_R, 'Pre-check: confirm failure (not network partition); check replication lag; notify teams')))
-    lines.append(R(bMid(IV_L, IV_R, 'Post-failover: update DNS/VIP; rebuild old primary as new standby; monitor replication')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Pre-Failover'), bMid(B2_L, B2_R, 'Promote Standby'), bMid(B3_L, B3_R, 'Post-Failover'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm primary down'), bMid(B2_L, B2_R, 'PG: pg_ctl promote'), bMid(B3_L, B3_R, 'Update DNS / VIP'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Check repl lag/RPO'), bMid(B2_L, B2_R, 'MSSQL: AG failover'), bMid(B3_L, B3_R, 'Notify app teams'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Notify: DBA + app'), bMid(B2_L, B2_R, 'MySQL: STOP REPLICA'), bMid(B3_L, B3_R, 'Validate app login'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Identify failover method'), bMid(B2_L, B2_R, 'CHANGE REPL SOURCE'), bMid(B3_L, B3_R, 'Rebuild as standby'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Open change ticket'), bMid(B2_L, B2_R, 'Oracle: DG switchover'), bMid(B3_L, B3_R, 'Monitor replication'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Platform', 'Promote cmd', 'DNS update', 'Rebuild cmd', 'RTO estimate'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['PostgreSQL', 'pg_ctl promote', 'pg_hba + reload', 'pg_rewind', '5-15 min'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SQL Server', 'AG failover wiz', 'Listener auto', 'Resync replica', '< 30s auto AG'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['MySQL', 'STOP REPLICA', 'Update app DSN', 'CHANGE SOURCE', '5-30 min'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Oracle', 'DG switchover', 'TNS alias update', 'reinstate', 'DG: < 1 min'])))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  pg_ctl promote = Promotes PostgreSQL standby to primary; creates recovery.signal removal'))
-    lines.append(txt_row('  pg_rewind      = Resync old primary to new primary using WAL; avoids full re-base copy'))
-    lines.append(txt_row('  Always On AG   = SQL Server availability group; listener DNS auto-redirects after failover'))
-    lines.append(txt_row('  GTID           = MySQL Global Transaction Identifier; simplifies replica reconnect after failover'))
-    lines.append(txt_row('  Data Guard     = Oracle HA/DR product; synchronous/async standby; switchover/failover modes'))
-    lines.append(txt_row('  Split-brain    = Two nodes both believe they are primary; never promote without fencing'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
-@kb_diagram(
-    'db-health-check',
-    'docs/database/database-health-check/index.md',
-    'Database health check — connections, blocking, long-running queries, error logs',
-)
-def db_health_check():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 50
-    B2_L, B2_R = 53, 99
-    M1, M2 = 26, 76
-    lines = []
-    lines.append(title_border(W2, 'Database — Daily Health Check'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Daily DB health: connections, blocking queries, long-running txns, replication, logs')))
-    lines.append(R(bMid(IV_L, IV_R, 'Run each morning; alert on blocking > 5 min, connections > 80%, error log entries')))
-    lines.append(R(bMid(IV_L, IV_R, 'Document anomalies; escalate blocking chains that cannot be cleared within threshold')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Health Check Items'), bMid(B2_L, B2_R, 'Alert Thresholds'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Active connections vs max'), bMid(B2_L, B2_R, '>80% connection pool = alert'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Blocking chains (head/waiters)'), bMid(B2_L, B2_R, '>5 min block = page DBA'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Long-running transactions'), bMid(B2_L, B2_R, '>30 min txn = investigate'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Error log: ORA-/FATAL/ERROR'), bMid(B2_L, B2_R, 'Any ORA-600/4031 = P1'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Replication lag check'), bMid(B2_L, B2_R, '>30s lag = investigate'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Blocking chain  = Series of queries waiting on each other; head blocker holds the lock'))
-    lines.append(txt_row('  pg_stat_activity= PostgreSQL view; shows all active connections, state, and wait events'))
-    lines.append(txt_row('  sys.dm_exec_reqs= SQL Server DMV; lists active requests with wait type and blocking session'))
-    lines.append(txt_row('  INFORMATION_SCHEMA= Standard SQL views for connection and schema metadata'))
-    lines.append(txt_row('  ORA-600         = Oracle internal error; always escalate; indicates potential corruption'))
-    lines.append(txt_row('  Wait event      = Reason a session is not running; categorised by type (I/O, lock, CPU, etc.)'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
-@kb_diagram(
-    'db-maintenance',
-    'docs/database/database-maintenance/index.md',
-    'Database maintenance — index rebuilds, statistics updates, log truncation, scheduled tasks',
-)
-def db_maintenance():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-    lines.append(title_border(W2, 'Database — Maintenance Procedures'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Scheduled DB maintenance keeps performance stable and prevents space exhaustion')))
-    lines.append(R(bMid(IV_L, IV_R, 'Index maintenance: rebuild (>30% fragmentation) or reorganise (10-30% fragmentation)')))
-    lines.append(R(bMid(IV_L, IV_R, 'Run during low-traffic maintenance windows; monitor impact on production workloads')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Index Maintenance'), bMid(B2_L, B2_R, 'Statistics Update'), bMid(B3_L, B3_R, 'Log Management'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'PG: REINDEX TABLE'), bMid(B2_L, B2_R, 'PG: ANALYZE / auto'), bMid(B3_L, B3_R, 'PG: WAL truncation'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'PG: VACUUM FULL'), bMid(B2_L, B2_R, 'MSSQL: UPDATE STATS'), bMid(B3_L, B3_R, 'MSSQL: DBCC SHRINK'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'MSSQL: ALTER INDEX'), bMid(B2_L, B2_R, 'MySQL: ANALYZE TABLE'), bMid(B3_L, B3_R, 'MySQL: PURGE BINARY'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Check fragmentation'), bMid(B2_L, B2_R, 'Stale stats = bad plan'), bMid(B3_L, B3_R, 'Log backup first'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Online vs offline'), bMid(B2_L, B2_R, 'Trigger after bulk load'), bMid(B3_L, B3_R, 'Monitor VLF count'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  VACUUM        = PostgreSQL process; reclaims dead row space; VACUUM FULL rewrites table'))
-    lines.append(txt_row('  autovacuum    = PostgreSQL background process; runs VACUUM/ANALYZE automatically'))
-    lines.append(txt_row('  Fragmentation = Index leaf pages out of order; > 30% triggers REBUILD (full rewrite)'))
-    lines.append(txt_row('  REORGANIZE    = Online defrag (SQL Server); moves leaf pages in-place; low-impact'))
-    lines.append(txt_row('  Statistics    = Histogram of data distribution; query planner uses them for plan selection'))
-    lines.append(txt_row('  VLF           = Virtual Log File (SQL Server); many small VLFs slow log operations'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
-@kb_diagram(
-    'db-perf-ts',
-    'docs/database/database-performance-troubleshooting/index.md',
-    'Database performance troubleshooting — slow queries, blocking, lock contention, I/O bottlenecks',
-)
-def db_perf_ts():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 50
-    B2_L, B2_R = 53, 99
-    M1, M2 = 26, 76
-    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
-    lines = []
-    lines.append(title_border(W2, 'Database — Performance Troubleshooting'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Diagnose DB performance: slow queries, blocking chains, lock contention, I/O saturation')))
-    lines.append(R(bMid(IV_L, IV_R, 'Start with wait events to identify bottleneck type before looking at individual queries')))
-    lines.append(R(bMid(IV_L, IV_R, 'Use EXPLAIN ANALYZE to confirm query plan; index changes need testing before production')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Diagnose'), bMid(B2_L, B2_R, 'Resolve'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Identify wait event type'), bMid(B2_L, B2_R, 'Kill blocking head query'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Find top CPU/IO queries'), bMid(B2_L, B2_R, 'Add/rebuild missing index'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'EXPLAIN ANALYZE slow query'), bMid(B2_L, B2_R, 'Rewrite query (avoid N+1)'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Check index usage/missing'), bMid(B2_L, B2_R, 'Increase work_mem / buffer'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Review I/O wait on storage'), bMid(B2_L, B2_R, 'Partition or archive data'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
-    lines.append(txt_row())
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Symptom', 'Likely cause', 'Diagnose with', 'Resolution', 'Validate'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Slow SELECT', 'Missing index', 'EXPLAIN ANALYZE', 'CREATE INDEX', 'Query time drop'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['High wait', 'Lock contention', 'pg_locks/DMV', 'Kill blocker', 'Wait clears'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['I/O spike', 'Full table scan', 'iostat + EXPLAIN', 'Index + partition', 'I/O normalises'])))
-    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CPU spike', 'Bad query plan', 'AWR / top SQLs', 'Stats update', 'CPU drops'])))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Wait event    = Reason a DB session is idle; lock/IO/CPU waits indicate bottleneck type'))
-    lines.append(txt_row('  EXPLAIN ANALYZE= PostgreSQL; shows actual execution plan with row counts and timings'))
-    lines.append(txt_row('  N+1 problem   = Loop issuing one query per item instead of one bulk query; kills DB'))
-    lines.append(txt_row('  work_mem      = PostgreSQL per-sort memory; increase to avoid temp file disk spills'))
-    lines.append(txt_row('  DMV           = SQL Server Dynamic Management View; real-time query and session stats'))
-    lines.append(txt_row('  Seq scan      = Full table scan; normal for small tables; bad for large + OLTP queries'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
-@kb_diagram(
-    'db-replication-check',
-    'docs/database/database-replication-check/index.md',
-    'Database replication check — lag, sync state, replica health for HA configurations',
-)
-def db_replication_check():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 50
-    B2_L, B2_R = 53, 99
-    M1, M2 = 26, 76
-    lines = []
-    lines.append(title_border(W2, 'Database — Replication Check'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Verify replication lag, sync state, and replica health for all HA database pairs')))
-    lines.append(R(bMid(IV_L, IV_R, 'PostgreSQL: pg_stat_replication + replication slots; MySQL: SHOW REPLICA STATUS')))
-    lines.append(R(bMid(IV_L, IV_R, 'Alert: lag > 30s; replica stopped; WAL slot bloat; disconnected replica')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Replication Status'), bMid(B2_L, B2_R, 'Lag Investigation'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'PG: pg_stat_replication'), bMid(B2_L, B2_R, 'Check replica I/O load'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'PG: pg_replication_slots'), bMid(B2_L, B2_R, 'WAL slot size growing?'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'MySQL: SHOW REPLICA STATUS'), bMid(B2_L, B2_R, 'Seconds_Behind_Source'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'MSSQL: AG sync state DMV'), bMid(B2_L, B2_R, 'Log send/redo queue size'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Oracle: V$DATAGUARD_STATS'), bMid(B2_L, B2_R, 'DG apply lag metric'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Replication slot  = PostgreSQL object that tracks WAL position for a replica; prevents WAL purge'))
-    lines.append(txt_row('  Slot bloat        = Inactive replication slot retaining WAL; can fill disk; drop if unused'))
-    lines.append(txt_row('  Seconds_Behind_Source= MySQL metric; seconds replica is behind primary; 0 = caught up'))
-    lines.append(txt_row('  Log send queue    = SQL Server AG: bytes of log not yet sent to replica; measures send lag'))
-    lines.append(txt_row('  Redo queue        = SQL Server AG: bytes received but not yet applied; measures apply lag'))
-    lines.append(txt_row('  Synchronous rep   = Primary waits for replica ACK before committing; zero data loss; slower'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 # ── Integration ───────────────────────────────────────────────────────────────
 
@@ -1055,7 +672,7 @@ def int_service_integrations():
 
 @kb_diagram(
     'inventory',
-    'docs/inventory/index.md',
+    'docs/itsm/servicenow/asset-inventory/index.md',
     'Inventory landing — asset tracking, CMDB, environment mapping, lifecycle, licenses',
 )
 def inventory_index():
@@ -1103,7 +720,7 @@ def inventory_index():
 
 @kb_diagram(
     'inv-asset-tracking',
-    'docs/inventory/asset-tracking/index.md',
+    'docs/itsm/servicenow/asset-inventory/asset-tracking/index.md',
     'Asset tracking — hardware register, serial numbers, rack locations, owners, lifecycle state',
 )
 def inv_asset_tracking():
@@ -1155,7 +772,7 @@ def inv_asset_tracking():
 
 @kb_diagram(
     'inv-config-management',
-    'docs/inventory/configuration-management/index.md',
+    'docs/itsm/servicenow/asset-inventory/configuration-management/index.md',
     'Configuration management — CMDB structure, CI relationships, lifecycle, change linkage',
 )
 def inv_config_management():
@@ -1201,7 +818,7 @@ def inv_config_management():
 
 @kb_diagram(
     'inv-environment-mapping',
-    'docs/inventory/environment-mapping/index.md',
+    'docs/itsm/servicenow/asset-inventory/environment-mapping/index.md',
     'Environment mapping — prod/non-prod/DR environment dependencies and data flow',
 )
 def inv_environment_mapping():
@@ -1247,7 +864,7 @@ def inv_environment_mapping():
 
 @kb_diagram(
     'inv-hardware-lifecycle',
-    'docs/inventory/hardware-lifecycle/index.md',
+    'docs/itsm/servicenow/asset-inventory/hardware-lifecycle/index.md',
     'Hardware lifecycle — EOL tracking, refresh planning, decommission, vendor support timelines',
 )
 def inv_hardware_lifecycle():
@@ -1292,7 +909,7 @@ def inv_hardware_lifecycle():
 
 @kb_diagram(
     'inv-license-management',
-    'docs/inventory/license-management/index.md',
+    'docs/itsm/servicenow/asset-inventory/license-management/index.md',
     'License management — software inventory, compliance tracking, renewals, consumption monitoring',
 )
 def inv_license_management():
@@ -1338,7 +955,7 @@ def inv_license_management():
 
 @kb_diagram(
     'inv-support-contracts',
-    'docs/inventory/support-contracts/index.md',
+    'docs/itsm/servicenow/asset-inventory/support-contracts/index.md',
     'Support contracts — coverage levels, expiry dates, escalation contacts, vendor SLAs',
 )
 def inv_support_contracts():
@@ -1390,7 +1007,7 @@ def inv_support_contracts():
 
 @kb_diagram(
     'inv-system-inventory',
-    'docs/inventory/system-inventory/index.md',
+    'docs/itsm/servicenow/asset-inventory/system-inventory/index.md',
     'System inventory — server, VM, appliance inventory with hostname, IP, OS version, function',
 )
 def inv_system_inventory():
@@ -1434,58 +1051,11 @@ def inv_system_inventory():
 
 # ── Performance ───────────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'performance',
-    'docs/performance/index.md',
-    'Performance landing — capacity planning, baselining, reliability engineering, SLOs',
-)
-def performance_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-    lines.append(title_border(W2, 'Performance — Capacity, Baselining, Reliability & SLOs'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Performance management: baseline current state → monitor trends → plan capacity →')))
-    lines.append(R(bMid(IV_L, IV_R, 'optimise resource usage → test failure modes → measure availability against SLOs')))
-    lines.append(R(bMid(IV_L, IV_R, 'SLOs translate business expectations into measurable infra targets with error budgets')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Capacity & Baseline'), bMid(B2_L, B2_R, 'Optimisation'), bMid(B3_L, B3_R, 'SLO & Reliability'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Performance baseline'), bMid(B2_L, B2_R, 'Right-size VMs'), bMid(B3_L, B3_R, 'SLO definition'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Capacity forecasting'), bMid(B2_L, B2_R, 'Reclaim idle storage'), bMid(B3_L, B3_R, 'Error budget'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Trend analysis'), bMid(B2_L, B2_R, 'Network QoS'), bMid(B3_L, B3_R, 'MTTR / MTBF'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Alerting on growth'), bMid(B2_L, B2_R, 'Storage tiering'), bMid(B3_L, B3_R, 'Availability calc'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Resource headroom'), bMid(B2_L, B2_R, 'Failure testing'), bMid(B3_L, B3_R, 'SLA reporting'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  SLO          = Service Level Objective; target for availability/latency/error rate'))
-    lines.append(txt_row('  SLA          = Service Level Agreement; contractual commitment, usually above SLOs'))
-    lines.append(txt_row('  SLI          = Service Level Indicator; the metric measured (e.g. request success rate)'))
-    lines.append(txt_row('  Error budget  = Allowable downtime before SLO is breached; consumed by incidents'))
-    lines.append(txt_row('  MTTR         = Mean Time To Recover; average incident duration; lower is better'))
-    lines.append(txt_row('  MTBF         = Mean Time Between Failures; average uptime between incidents'))
-    lines.append(txt_row('  Baseline     = Normal performance values for a system; deviations trigger investigation'))
-    lines.append(txt_row('  Right-sizing = Match VM/instance resources to actual usage; remove over-provisioning'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
 @kb_diagram(
     'perf-capacity-forecasting',
-    'docs/performance/capacity-forecasting/index.md',
+    'docs/monitoring-standards/capacity-forecasting/index.md',
     'Capacity forecasting — projecting compute, storage, network from trend data',
 )
 def perf_capacity_forecasting():
@@ -1530,7 +1100,7 @@ def perf_capacity_forecasting():
 
 @kb_diagram(
     'perf-failure-testing',
-    'docs/performance/failure-testing/index.md',
+    'docs/monitoring-standards/failure-testing/index.md',
     'Failure testing — chaos engineering and fault injection for validating HA and DR',
 )
 def perf_failure_testing():
@@ -1575,7 +1145,7 @@ def perf_failure_testing():
 
 @kb_diagram(
     'perf-baselining',
-    'docs/performance/performance-baselining/index.md',
+    'docs/monitoring-standards/performance-baselining/index.md',
     'Performance baselining — establishing compute, storage, network baselines before changes',
 )
 def perf_baselining():
@@ -1620,7 +1190,7 @@ def perf_baselining():
 
 @kb_diagram(
     'perf-reliability-engineering',
-    'docs/performance/reliability-engineering/index.md',
+    'docs/monitoring-standards/reliability-engineering/index.md',
     'Reliability engineering — MTTR/MTBF tracking, failure mode analysis, reliability improvement',
 )
 def perf_reliability_engineering():
@@ -1666,7 +1236,7 @@ def perf_reliability_engineering():
 
 @kb_diagram(
     'perf-resource-optimization',
-    'docs/performance/resource-optimization/index.md',
+    'docs/monitoring-standards/resource-optimization/index.md',
     'Resource optimization — right-sizing VMs, reclaiming storage, reducing idle resource consumption',
 )
 def perf_resource_optimization():
@@ -1711,7 +1281,7 @@ def perf_resource_optimization():
 
 @kb_diagram(
     'perf-service-availability',
-    'docs/performance/service-availability/index.md',
+    'docs/monitoring-standards/service-availability/index.md',
     'Service availability — measurement, downtime tracking, reporting against SLA targets',
 )
 def perf_service_availability():
@@ -1763,7 +1333,7 @@ def perf_service_availability():
 
 @kb_diagram(
     'perf-slo',
-    'docs/performance/service-level-objectives/index.md',
+    'docs/monitoring-standards/service-level-objectives/index.md',
     'Service level objectives — defining, measuring, reporting SLOs for infrastructure services',
 )
 def perf_slo():
@@ -1811,7 +1381,7 @@ def perf_slo():
 
 @kb_diagram(
     'arch-dr-design',
-    'docs/disaster-recovery/disaster-recovery-design/index.md',
+    'docs/backup/dr-design/index.md',
     'DR design — RPO/RTO targets, site topology, failover patterns, DR architecture decisions',
 )
 def arch_dr_design():

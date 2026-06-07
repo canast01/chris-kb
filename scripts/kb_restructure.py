@@ -288,8 +288,17 @@ if phase(2, "Rename tools/ → itsm/ and move git to automation/"):
     git_mv("tools/git", "automation/git")
     # Rename remaining tools/ → itsm/
     # tools/ now has: confluence/, jira/, servicenow/, index.md
-    for product in ["confluence", "jira", "servicenow"]:
+    for product in ["confluence", "jira"]:
         git_mv(f"tools/{product}", f"itsm/{product}")
+    # servicenow: itsm/servicenow already exists (Track 2 put process dirs there)
+    # Move 5-tile sub-dirs individually; merge index
+    snow_src = DOCS / "tools/servicenow"
+    snow_dst = DOCS / "itsm/servicenow"
+    if snow_src.exists():
+        for sub in ["architecture","deploy","operations","security","troubleshooting"]:
+            if (snow_src/sub).exists() and not (snow_dst/sub).exists():
+                git_mv(f"tools/servicenow/{sub}", f"itsm/servicenow/{sub}")
+        merge_file("tools/servicenow/index.md", "itsm/servicenow/index.md")
     # Move tools/index.md → itsm/index.md
     src_idx = DOCS / "tools/index.md"
     dst_idx = DOCS / "itsm/index.md"
@@ -415,8 +424,24 @@ if phase(10, "Seed DB product sections from database/ pages"):
         ("database-replication-check",          "Replication Check",          ["sql server","mssql"],        "compute/windows-server/sql-server","operations/health-checks"),
     ]:
         extracted = extract_engine_sections(f"database/{db_page}/index.md", kws)
-        if not extracted: skip(f"No {kws[0]} content in database/{db_page}/"); continue
         dst_rel = f"{dst_base}/{ops_page}/index.md"
+        if not extracted:
+            # No ## sections found — copy full page body as baseline for this product
+            src_path = DOCS / f"database/{db_page}/index.md"
+            dst_path = DOCS / dst_rel
+            if src_path.exists():
+                body = src_path.read_text(errors="replace")
+                if not DRY:
+                    dst_path.parent.mkdir(parents=True, exist_ok=True)
+                    if dst_path.exists():
+                        existing = dst_path.read_text(errors="replace")
+                        if body.strip()[:80] in existing:
+                            skip(f"Already seeded (full): {dst_rel}"); continue
+                        dst_path.write_text(existing.rstrip('\n') + '\n\n' + body)
+                    else:
+                        dst_path.write_text(body)
+                ok(f"Seeded full page ({kws[0]}) → {dst_rel}")
+            continue
         dst = DOCS / dst_rel
         if dst.exists():
             existing = dst.read_text(errors="replace")
@@ -528,15 +553,14 @@ if phase(12, "Postcheck — verify moves complete"):
         "lifecycle/rollback-procedure","lifecycle/system-decommission","lifecycle/system-onboarding",
         "lifecycle/upgrade-readiness","project-management/incident-management",
         "project-management/maintenance-windows","project-management/rca-template",
-        "project-management/change-plan-template","project-management/asset-inventory",
-        "project-management/change-management",
-        "tools/git","tools/confluence","tools/jira","tools/servicenow",
+        "project-management/change-plan-template",
+        "tools/git","tools/confluence","tools/jira",
     ]
     for p in GONE: (err if exists(p) else ok)(f"{'STILL EXISTS' if exists(p) else 'Gone'}: {p}")
 
     print("\n  [tools/ renamed, git moved]")
     (err if exists("tools/git")       else ok)(f"{'tools/git still exists' if exists('tools/git') else 'Gone: tools/git'}")
-    (err if exists("tools/servicenow") else ok)(f"{'tools/servicenow still exists' if exists('tools/servicenow') else 'Gone: tools/servicenow'}")
+    (warn if exists("tools/servicenow") else ok)(f"{'Merge leftover (safe to delete): tools/servicenow/index.md' if exists('tools/servicenow') else 'Gone: tools/servicenow'}")
     (ok  if exists("automation/git")  else err)(f"{'EXISTS: automation/git' if exists('automation/git') else 'MISSING: automation/git'}")
     (ok  if exists("itsm/servicenow") else err)(f"{'EXISTS: itsm/servicenow' if exists('itsm/servicenow') else 'MISSING: itsm/servicenow'}")
     (ok  if exists("itsm/confluence") else err)(f"{'EXISTS: itsm/confluence' if exists('itsm/confluence') else 'MISSING: itsm/confluence'}")

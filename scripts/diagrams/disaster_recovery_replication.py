@@ -5633,49 +5633,10 @@ def _dr_veeam_ts_escalation():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-root',
-    'docs/disaster-recovery/index.md',
-    'Disaster Recovery — overview of all DR tools, replication methods, and recovery procedures',
-)
-def _dr_root():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    lines = []
-    lines.append(title_border(W2, 'Disaster Recovery'))
-    lines.append(txt_row())
-    lines.append(R(bTop(3, 99)))
-    lines.append(R(bMid(3, 99, 'Disaster Recovery — overview of all DR tools, replication methods, and recovery procedures')))
-    lines.append(R(bMid(3, 99, 'See product-specific sub-sections for detailed procedures')))
-    lines.append(R(bMid(3, 99, 'DR success depends on: documented runbooks · tested failover · validated RTO')))
-    lines.append(R(bMid(3, 99, 'Minimum DR posture: defined RPO/RTO · tested backups · known escalation path')))
-    lines.append(R(bMid(3, 99, 'Test DR procedures quarterly; document results; update runbooks after each test')))
-    lines.append(R(bBot(3, 99)))
-    lines.append(txt_row())
-    lines.append(txt_row('Physical Infrastructure:'))
-    lines.append(txt_row('Production site · DR site · Replication link · Management network · Vault network'))
-    lines.append(txt_row())
-    lines.append(txt_row('Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('RPO           = Recovery Point Objective; max acceptable data loss window'))
-    lines.append(txt_row('RTO           = Recovery Time Objective; max acceptable downtime before restore'))
-    lines.append(txt_row('Failover      = activating the DR site; redirecting hosts to replica resources'))
-    lines.append(txt_row('Failback      = returning operations to production site after DR resolved'))
-    lines.append(txt_row('Runbook       = step-by-step documented procedure for a specific DR scenario'))
-    lines.append(txt_row('IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery'))
-    lines.append(txt_row('Clean Room    = isolated vCenter + workstations for cyber recovery validation'))
-    lines.append(txt_row('Air Gap       = network isolation preventing attacker lateral movement to vault'))
-    lines.append(txt_row('DR Test       = planned failover test; validates RTO without real disaster'))
-    lines.append(txt_row('Replication   = continuous or periodic data copy to secondary site or vault'))
-    lines.append(txt_row('Recovery Tier = classification: hot/warm/cold based on RTO requirement'))
-    lines.append(txt_row('BIA           = Business Impact Analysis; drives RPO/RTO targets per system'))
-    lines.append(txt_row())
-    lines.append('\u2514' + '\u2500' * W2 + '\u2518')
-    return lines
 
 @kb_diagram(
     'dr-failover',
-    'docs/disaster-recovery/failover-procedure/index.md',
+    'docs/backup/runbooks/failover/index.md',
     'DR Failover Procedure — declare disaster, activate DR site, redirect hosts, validate',
 )
 def _dr_failover():
@@ -5715,7 +5676,7 @@ def _dr_failover():
 
 @kb_diagram(
     'dr-failback',
-    'docs/disaster-recovery/failback-procedure/index.md',
+    'docs/backup/runbooks/failback/index.md',
     'DR Failback Procedure — reverse replicate, re-sync, validate, cut back to production',
 )
 def _dr_failback():
@@ -5755,7 +5716,7 @@ def _dr_failback():
 
 @kb_diagram(
     'dr-runbook',
-    'docs/disaster-recovery/runbook/index.md',
+    'docs/backup/runbooks/dr-runbook/index.md',
     'DR Runbook — pre-defined response steps for declared disaster across all DR tools',
 )
 def _dr_runbook():
@@ -5795,7 +5756,7 @@ def _dr_runbook():
 
 @kb_diagram(
     'dr-ire',
-    'docs/disaster-recovery/isolated-recovery-environment-ire/index.md',
+    'docs/backup/ire/index.md',
     'Isolated Recovery Environment — air-gapped clean-room for ransomware recovery',
 )
 def _dr_ire():
@@ -5835,7 +5796,7 @@ def _dr_ire():
 
 @kb_diagram(
     'dr-ire-cleanroom',
-    'docs/disaster-recovery/isolated-recovery-environment-ire/clean-room/index.md',
+    'docs/backup/ire/clean-room/index.md',
     'IRE Clean Room — isolated ESXi + vCenter + workstations for validated recovery',
 )
 def _dr_ire_cleanroom():
@@ -5875,7 +5836,7 @@ def _dr_ire_cleanroom():
 
 @kb_diagram(
     'dr-ire-isolation',
-    'docs/disaster-recovery/isolated-recovery-environment-ire/isolation/index.md',
+    'docs/backup/ire/isolation/index.md',
     'IRE Network Isolation — air-gap switch config, VLAN separation, no production routes',
 )
 def _dr_ire_isolation():
@@ -5915,7 +5876,7 @@ def _dr_ire_isolation():
 
 @kb_diagram(
     'dr-ire-restore',
-    'docs/disaster-recovery/isolated-recovery-environment-ire/restore/index.md',
+    'docs/backup/ire/restore/index.md',
     'IRE Restore — step-by-step clean restore from vault to clean-room environment',
 )
 def _dr_ire_restore():
@@ -5955,7 +5916,7 @@ def _dr_ire_restore():
 
 @kb_diagram(
     'dr-ire-security',
-    'docs/disaster-recovery/isolated-recovery-environment-ire/security/index.md',
+    'docs/backup/ire/security/index.md',
     'IRE Security — access control, two-person integrity, audit logging in the vault',
 )
 def _dr_ire_security():
@@ -5995,7 +5956,7 @@ def _dr_ire_security():
 
 @kb_diagram(
     'dr-ire-validation',
-    'docs/disaster-recovery/isolated-recovery-environment-ire/validation/index.md',
+    'docs/backup/ire/validation/index.md',
     'IRE Validation — application testing, data integrity checks, sign-off before cutback',
 )
 def _dr_ire_validation():
