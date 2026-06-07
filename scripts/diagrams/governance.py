@@ -7,61 +7,6 @@ from ._core import kb_diagram, make_helpers, bTop, bMid, bBot, sections, arrow, 
 # ── Data Protection ───────────────────────────────────────────────────────────
 
 @kb_diagram(
-    'data-protection',
-    'docs/data-protection/index.md',
-    'Data Protection landing — classification, encryption, retention, key management and recovery',
-)
-def data_protection_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-    lines.append(title_border(W2, 'Data Protection — Classification, Encryption, Retention & Recovery'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Data protection: classify data by sensitivity → encrypt at rest and in transit →')))
-    lines.append(R(bMid(IV_L, IV_R, 'enforce retention schedules → manage encryption keys → test recovery procedures')))
-    lines.append(R(bMid(IV_L, IV_R, 'Foundation: know what data exists, where it lives, who owns it, and for how long')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Classify → Encrypt → Retain → Test recovery → Govern access → Audit'))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Classification'), bMid(B2_L, B2_R, 'Encryption'), bMid(B3_L, B3_R, 'Retention & Keys'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Public / Internal'), bMid(B2_L, B2_R, 'AES-256 at rest'), bMid(B3_L, B3_R, 'Schedules by type'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Confidential'), bMid(B2_L, B2_R, 'TLS 1.2/1.3 transit'), bMid(B3_L, B3_R, 'Legal hold process'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Restricted / PII'), bMid(B2_L, B2_R, 'KMS key management'), bMid(B3_L, B3_R, 'Deletion verified'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'MIP sensitivity lbls'), bMid(B2_L, B2_R, 'Key rotation sched'), bMid(B3_L, B3_R, 'Restore testing'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Handling controls'), bMid(B2_L, B2_R, 'BYOK for compliance'), bMid(B3_L, B3_R, 'Compliance reports'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  PII        = Personally Identifiable Information; highest classification; GDPR/CCPA applies'))
-    lines.append(txt_row('  PHI        = Protected Health Information; HIPAA regulated; strict access and audit logging'))
-    lines.append(txt_row('  PCI        = Payment Card Industry; cardholder data subject to PCI DSS controls'))
-    lines.append(txt_row('  AES-256    = Advanced Encryption Standard 256-bit; standard for encryption at rest'))
-    lines.append(txt_row('  KMS        = Key Management Service; manages encryption key lifecycle and access policies'))
-    lines.append(txt_row('  HSM        = Hardware Security Module; tamper-resistant device for key storage'))
-    lines.append(txt_row('  Legal hold = Suspend deletion of data pending litigation or regulatory investigation'))
-    lines.append(txt_row('  DLP        = Data Loss Prevention; prevents unauthorised data exfiltration'))
-    lines.append(txt_row('  BYOK       = Bring Your Own Key; customer-managed keys in cloud KMS for compliance'))
-    lines.append(txt_row('  MIP        = Microsoft Information Protection; sensitivity labels on Office content'))
-    lines.append(txt_row('  DEK        = Data Encryption Key; key that directly encrypts a data object'))
-    lines.append(txt_row('  KEK        = Key Encryption Key; wraps and protects data encryption keys'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
-
-
-@kb_diagram(
     'dp-backup-validation',
     'docs/backup/backup-validation/index.md',
     'Backup validation — verify job completion, restore testing, retention compliance',
@@ -824,55 +769,6 @@ def db_replication_check():
 # ── Integration ───────────────────────────────────────────────────────────────
 
 @kb_diagram(
-    'integration',
-    'docs/integration/index.md',
-    'Integration landing — API connectivity, certificate trust, directory, email, NTP, SMTP',
-)
-def integration_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-    lines.append(title_border(W2, 'Integration — API, Certificate, Directory, Email & NTP'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Integration references: patterns for connecting infrastructure to shared services')))
-    lines.append(R(bMid(IV_L, IV_R, 'Covers: REST API auth, CA trust store setup, LDAP/AD directory, SMTP relay, NTP')))
-    lines.append(R(bMid(IV_L, IV_R, 'External connectivity: outbound proxy config, firewall rules, service integration patterns')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Identity & Certs'), bMid(B2_L, B2_R, 'Network Services'), bMid(B3_L, B3_R, 'App Integrations'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'LDAP/AD directory'), bMid(B2_L, B2_R, 'NTP hierarchy'), bMid(B3_L, B3_R, 'ServiceNow CMDB'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'CA trust stores'), bMid(B2_L, B2_R, 'SMTP relay config'), bMid(B3_L, B3_R, 'Monitoring agents'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'API auth patterns'), bMid(B2_L, B2_R, 'DNS resolution'), bMid(B3_L, B3_R, 'SIEM log forwarding'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'TLS cert install'), bMid(B2_L, B2_R, 'Proxy config'), bMid(B3_L, B3_R, 'Backup agent reg'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'SAML/SSO patterns'), bMid(B2_L, B2_R, 'Firewall rules'), bMid(B3_L, B3_R, 'Ticketing webhooks'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  LDAP         = Lightweight Directory Access Protocol; query AD for user/group membership'))
-    lines.append(txt_row('  LDAPS        = LDAP over TLS; use port 636; never send credentials over plain LDAP'))
-    lines.append(txt_row('  Trust store  = OS/app certificate store; CA cert must be here for TLS validation to succeed'))
-    lines.append(txt_row('  NTP stratum  = Distance from reference clock; stratum 0 = atomic; infra uses stratum 2-3'))
-    lines.append(txt_row('  SMTP relay   = Mail server that forwards alerts; authenticated relay prevents open relay abuse'))
-    lines.append(txt_row('  mTLS         = Mutual TLS; both sides present certificates; service-to-service auth'))
-    lines.append(txt_row('  Proxy        = Outbound HTTP/HTTPS forwarder; set http_proxy env var for CLI tools'))
-    lines.append(txt_row('  SAML         = Federated SSO standard; IdP issues assertions; SP trusts them'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
-
-
-@kb_diagram(
     'int-api-connectivity',
     'docs/protocols/api-connectivity/index.md',
     'API connectivity — testing REST API endpoints, authentication, TLS certificate validation',
@@ -1154,53 +1050,6 @@ def int_service_integrations():
     lines.append(txt_row())
     lines.append('└' + '─' * W2 + '┘')
     return lines
-
-
-@kb_diagram(
-    'int-time-sync',
-    'docs/integration/time-synchronization/index.md',
-    'Time synchronization — NTP hierarchy, stratum config, drift troubleshooting across platforms',
-)
-def int_time_sync():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 50
-    B2_L, B2_R = 53, 99
-    M1, M2 = 26, 76
-    lines = []
-    lines.append(title_border(W2, 'Integration — Time Synchronization (NTP)'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Accurate time is critical: Kerberos (5 min skew max), TLS certs, log correlation')))
-    lines.append(R(bMid(IV_L, IV_R, 'Hierarchy: external NTP (stratum 1/2) → internal NTP servers → all infra clients')))
-    lines.append(R(bMid(IV_L, IV_R, 'Alert: offset > 100ms; drift > 50ms/s; stratum 16 = unsynchronised = investigate')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'NTP Config'), bMid(B2_L, B2_R, 'Troubleshooting'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Linux: /etc/chrony.conf'), bMid(B2_L, B2_R, 'chronyc tracking (offset)'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Windows: w32tm /config'), bMid(B2_L, B2_R, 'timedatectl status'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'ESXi: host NTP config'), bMid(B2_L, B2_R, 'w32tm /query /status'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Appliance: NTP server in UI'), bMid(B2_L, B2_R, 'Stratum 16 = no sync'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Firewall: UDP 123 to NTP'), bMid(B2_L, B2_R, 'Check FW UDP 123 open'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Stratum      = Distance from reference clock; 0 = atomic; infra uses stratum 2-3'))
-    lines.append(txt_row('  Offset       = Difference between client time and server time; < 100ms is normal'))
-    lines.append(txt_row('  Drift        = Rate at which clock gains/loses time; chrony compensates automatically'))
-    lines.append(txt_row('  Stratum 16   = NTP "not synchronised" state; Kerberos will fail within 5 min'))
-    lines.append(txt_row('  chronyc      = Chrony client tool; tracking, sources, makestep commands'))
-    lines.append(txt_row('  w32tm        = Windows NTP tool; /query /status shows source, stratum, offset'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
-
 
 # ── Inventory ─────────────────────────────────────────────────────────────────
 
@@ -1959,53 +1808,6 @@ def perf_slo():
 
 
 # ── Architecture ──────────────────────────────────────────────────────────────
-
-@kb_diagram(
-    'architecture',
-    'docs/architecture/index.md',
-    'Architecture landing — HA, storage design, network topology, DR design principles',
-)
-def architecture_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-    lines.append(title_border(W2, 'Architecture — HA Design, Storage, Networking & Disaster Recovery'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Architecture design guides for enterprise infrastructure: HA, storage, network, DR')))
-    lines.append(R(bMid(IV_L, IV_R, 'Design principles: eliminate single points of failure; automate failover; test recovery')))
-    lines.append(R(bMid(IV_L, IV_R, 'All designs must state: RPO/RTO targets, failure domain boundaries, and recovery path')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Compute & HA'), bMid(B2_L, B2_R, 'Storage & Network'), bMid(B3_L, B3_R, 'DR & Recovery'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'N+1 host capacity'), bMid(B2_L, B2_R, 'Storage tiering'), bMid(B3_L, B3_R, 'RPO / RTO targets'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'DRS + vSphere HA'), bMid(B2_L, B2_R, 'Redundant paths'), bMid(B3_L, B3_R, 'Active-passive DR'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Failure domain plan'), bMid(B2_L, B2_R, 'L3 segmentation'), bMid(B3_L, B3_R, 'Replication design'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Anti-affinity rules'), bMid(B2_L, B2_R, 'Spine-leaf topology'), bMid(B3_L, B3_R, 'Failover runbook'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Resource pools'), bMid(B2_L, B2_R, 'BGP peering design'), bMid(B3_L, B3_R, 'Recovery testing'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  N+1          = One more host than minimum required; one failure without service impact'))
-    lines.append(txt_row('  Failure domain= Boundary within which a single failure has impact; AZ / rack / PDU'))
-    lines.append(txt_row('  Anti-affinity = Rule keeping workloads on different hosts for HA; opposite of affinity'))
-    lines.append(txt_row('  Spine-leaf   = Data centre switching topology; spine = core, leaf = ToR; no STP needed'))
-    lines.append(txt_row('  Active-passive= Primary handles all traffic; standby takes over on failure (vs active-active)'))
-    lines.append(txt_row('  RPO/RTO      = Recovery Point/Time Objectives; quantify acceptable data loss and downtime'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
-
 
 @kb_diagram(
     'arch-dr-design',

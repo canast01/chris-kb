@@ -7,56 +7,6 @@ from ._core import kb_diagram, make_helpers, bTop, bMid, bBot, sections, arrow, 
 # ── Runbooks ──────────────────────────────────────────────────────────────────
 
 @kb_diagram(
-    'runbooks',
-    'docs/runbooks/index.md',
-    'Runbooks landing — operational procedures for infrastructure tasks',
-)
-def runbooks_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-
-    lines.append(title_border(W2, 'Runbooks — Operational Procedures'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Runbooks: step-by-step operational procedures for common infrastructure tasks')))
-    lines.append(R(bMid(IV_L, IV_R, 'Each runbook: pre-checks → steps → validation → rollback path → close-out')))
-    lines.append(R(bMid(IV_L, IV_R, 'Run all runbooks under a change ticket; document start/end time and outcome')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Request arrives → identify runbook → raise change ticket → execute → validate → close'))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Access / Identity'), bMid(B2_L, B2_R, 'Infrastructure'), bMid(B3_L, B3_R, 'Storage / VMs'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Account unlock'), bMid(B2_L, B2_R, 'Server reboot'), bMid(B3_L, B3_R, 'Volume expansion'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Certificate renewal'), bMid(B2_L, B2_R, 'Service restart'), bMid(B3_L, B3_R, 'VM snapshot'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Password reset'), bMid(B2_L, B2_R, 'Disk cleanup'), bMid(B3_L, B3_R, 'Snapshot delete'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Group membership'), bMid(B2_L, B2_R, 'Log rotation'), bMid(B3_L, B3_R, 'LUN expansion'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'SSO token reset'), bMid(B2_L, B2_R, 'NTP fix'), bMid(B3_L, B3_R, 'Datastore extend'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Runbook     = Documented procedure with explicit steps; reduces error rate in ops tasks'))
-    lines.append(txt_row('  Pre-checks  = Verify system state is safe to proceed before any change'))
-    lines.append(txt_row('  Validation  = Post-execution verification that the task succeeded as expected'))
-    lines.append(txt_row('  Rollback    = Steps to undo the change if validation fails; always plan before executing'))
-    lines.append(txt_row('  Change ticket= Every runbook execution linked to a change request for auditability'))
-    lines.append(txt_row())
-
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
-
-
-@kb_diagram(
     'rb-account-unlock',
     'docs/security/operations/runbooks/account-unlock/index.md',
     'Account unlock runbook — AD lockout, password reset, lockout source investigation',
@@ -1297,54 +1247,6 @@ def lc_decommission():
 
 
 # ── Cross-Platform Troubleshooting ────────────────────────────────────────────
-
-@kb_diagram(
-    'troubleshooting',
-    'docs/troubleshooting/index.md',
-    'Troubleshooting landing — cross-platform issue triage index',
-)
-def troubleshooting_index():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-
-    lines.append(title_border(W2, 'Cross-Platform Troubleshooting'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Common infrastructure issues across platforms: methodology + platform-specific paths')))
-    lines.append(R(bMid(IV_L, IV_R, 'Universal triage: define symptom → collect data → isolate → test fix → confirm')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(txt_row('  Alert fires → triage symptom → narrow scope → isolate component → fix → verify → close'))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Compute / OS'), bMid(B2_L, B2_R, 'Storage / Network'), bMid(B3_L, B3_R, 'Services / Auth'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'High CPU'), bMid(B2_L, B2_R, 'Storage latency'), bMid(B3_L, B3_R, 'Auth failures'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'VM performance'), bMid(B2_L, B2_R, 'Replication fail'), bMid(B3_L, B3_R, 'DNS resolution'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Memory pressure'), bMid(B2_L, B2_R, 'Network connectivity'), bMid(B3_L, B3_R, 'Backup failures'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Disk full'), bMid(B2_L, B2_R, 'Path failures'), bMid(B3_L, B3_R, 'Service down'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Kernel panic'), bMid(B2_L, B2_R, 'Packet loss'), bMid(B3_L, B3_R, 'SSO failures'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  Triage    = Rapid initial assessment to determine urgency, scope, and next diagnostic step'))
-    lines.append(txt_row('  Isolate   = Narrow the problem to a specific component, host, or path'))
-    lines.append(txt_row('  RCA       = Root Cause Analysis; document underlying cause after resolution'))
-    lines.append(txt_row('  P1/P2/P3  = Priority levels; P1 = service down, P2 = degraded, P3 = no user impact'))
-    lines.append(txt_row())
-
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
-
 
 @kb_diagram(
     'ts-auth-failures',
