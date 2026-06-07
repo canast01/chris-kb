@@ -82,3 +82,15 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 | Remote Collector | Lightweight proxy for remote sites/DMZs; forwards to cluster without joining it |
 | Cloud Proxy | SaaS-hosted proxy for VMware Cloud on AWS integrations |
 
+## Deployment Sizing
+
+| Deployment Size | Nodes | Use Case |
+|---|---|---|
+| Small (xSmall) | 1 node | Lab / proof-of-concept |
+| Medium | Primary + Replica | Up to ~3,000 VMs |
+| Large | Primary + Replica + 2–4 Data Nodes | Up to ~10,000 VMs |
+| Extra Large | Primary + Replica + 4+ Data Nodes | Enterprise fleet |
+
+---
+
+## Analytics Cluster Topology

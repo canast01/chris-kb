@@ -20,9 +20,9 @@ ERRORS = []
 WARNINGS = []
 INFO = []
 
-def err(msg): ERRORS.append(f"  ERROR: {msg}")
-def warn(msg): WARNINGS.append(f"  WARN:  {msg}")
-def ok(msg): INFO.append(f"  OK:    {msg}")
+def err(msg): ERRORS.append(f"  ERROR: {msg}"); print(f"  ERROR: {msg}")
+def warn(msg): WARNINGS.append(f"  WARN:  {msg}"); print(f"  WARN:  {msg}")
+def ok(msg): INFO.append(f"  OK:    {msg}"); print(f"  OK:    {msg}")
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -160,13 +160,17 @@ for src, dst in moves:
 # ── CHECK 3: Destination conflicts ───────────────────────────────────────────
 print("\n── Destination Conflicts ──")
 for src, dst in moves:
-    # A conflict = dst already exists AND has content (would need merge not move)
-    if exists(dst) and exists(src):
+    src_name = Path(src).name
+    dst_exact = Path(dst) / src_name if not dst.endswith(src_name) else Path(dst)
+    # Real conflict = the exact destination sub-path already exists
+    if exists(str(dst_exact)) and exists(src):
         src_pages = page_count(src)
-        dst_pages = page_count(dst)
-        warn(f"DEST EXISTS: {dst} ({dst_pages}p) ← merging {src} ({src_pages}p)")
+        dst_pages = page_count(str(dst_exact))
+        warn(f"MERGE NEEDED: {dst_exact} ({dst_pages}p) already exists — check content vs {src} ({src_pages}p)")
+    elif exists(dst) and not exists(str(dst_exact)):
+        ok(f"Parent exists, sub-path free: {dst}/{src_name}")
     elif not exists(dst):
-        ok(f"Clean destination: {dst}")
+        ok(f"Clean new destination: {dst}")
 
 # ── CHECK 4: Unique content that would be lost ───────────────────────────────
 print("\n── Content Loss Check (merge targets) ──")
