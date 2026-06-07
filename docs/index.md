@@ -2,7 +2,7 @@
   <div class="hero-body">
     <p class="section-kicker">Infrastructure Engineering · Technical Reference</p>
     <h1>Knowledge Base</h1>
-    <p>Detailed technical notes and references across VMware virtualization, enterprise storage, cloud, SAN, backup, ITSM, and automation. Browse by topic above or start with the <a href="site-map/" style="color:#7dd3fc;">Site Map</a>.</p>
+    <p>Detailed technical notes and references across VMware and OpenShift virtualization, enterprise storage (Dell, Pure, NetApp, Ceph), cloud (AWS/Azure), SAN, backup, disaster recovery, security, ITSM, and automation. Browse by topic above or start with the <a href="site-map/" style="color:#7dd3fc;">Site Map</a>.</p>
   </div>
 
   <div class="hero-name">
@@ -48,8 +48,18 @@
 </a>
 
 <a class="kb-card" href="backup/">
-  <strong>Backup & Recovery</strong>
-  <span>Veeam, Commvault, NetBackup, IRE, runbooks, and DR design.</span>
+  <strong>Backup</strong>
+  <span>Veeam, Commvault, and NetBackup — enterprise backup products.</span>
+</a>
+
+<a class="kb-card" href="dr/">
+  <strong>Disaster Recovery</strong>
+  <span>DR design, runbooks, recovery testing, IRE (Isolated Recovery Environment), and backup validation.</span>
+</a>
+
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>CyberArk, Venafi, PKI, LDAP/SAML, MFA, access review, and vulnerability management.</span>
 </a>
 
 <a class="kb-card" href="itsm/">

@@ -68,7 +68,6 @@ Security reference: Standard LDAP Integration, Standard SAML Configuration, Acti
 ## Platforms
 
 <div class="kb-grid kb-grid-3">
-<a class="kb-card" href="active-directory/"><strong>Active Directory</strong><span>AD architecture, standards, lifecycle, operations, CLI, scripts, troubleshooting, and security.</span></a>
 <a class="kb-card" href="cyberark/"><strong>CyberArk</strong><span>PAM platform — vault, safes, CPM rotation, PSM session recording, architecture, and operations.</span></a>
 <a class="kb-card" href="venafi/"><strong>Venafi</strong><span>Machine identity management — certificate lifecycle, policy, automation, and CA integration.</span></a>
 <a class="kb-card" href="certificates/"><strong>Certificates</strong><span>PKI architecture, certificate standards, lifecycle, renewal, chain management, and troubleshooting.</span></a>

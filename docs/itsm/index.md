@@ -75,8 +75,4 @@ Operational tooling reference covering version control, project tracking, docume
   <strong>Confluence</strong>
   <span>Spaces, pages, templates, search, and cleanup.</span>
 </a>
-<a class="kb-card" href="git/">
-  <strong>Git</strong>
-  <span>Repos, branches, commits, tags, and recovery.</span>
-</a>
 </div>

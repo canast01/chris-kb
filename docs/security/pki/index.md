@@ -120,6 +120,11 @@ Public Key Infrastructure (PKI) reference covering PKI Architecture (Typical Ent
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 <div class="kb-grid">
+  <a class="kb-card" href="deploy/">
+    <div class="kb-card-icon">🚀</div>
+    <div class="kb-card-title">Deploy</div>
+    <div class="kb-card-desc">CA hierarchy deployment: Root CA, Issuing CA, CRL/OCSP, and auto-enrollment</div>
+  </a>
   <a class="kb-card" href="operations/">
     <div class="kb-card-icon">⚙️</div>
     <div class="kb-card-title">Operations</div>
