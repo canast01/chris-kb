@@ -28,6 +28,39 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
 └────────────────────┘       └──────────────────┘       └──────────────────┘
 ```
 
+## iSCSI Session Establishment
+
+The sequence below traces a complete iSCSI session from TCP connection through discovery, CHAP authentication, operational parameter negotiation, and SCSI command flow.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant I as Initiator<br/>(Host IQN)
+    participant T as Target<br/>(Array port 3260)
+
+    Note over I,T: Discovery Phase
+    I->>T: TCP connect to port 3260
+    I->>T: Text Request — SendTargets=All
+    T-->>I: Text Response — TargetName + TargetAddress list
+    Note over I: Initiator selects target IQN and portal IP for login
+
+    Note over I,T: Login Phase — Security Negotiation
+    I->>T: LoginRequest (CSG=SecurityNeg) — InitiatorName IQN, ISID, TSIH=0
+    T-->>I: LoginResponse — AuthMethod=CHAP, CHAP_A=5 (MD5), CHAP_I, CHAP_C (challenge)
+    I->>T: LoginRequest — CHAP_N=username, CHAP_R=MD5(CHAP_I+secret+CHAP_C)
+    T-->>I: LoginResponse (NSG=OpNeg) — CHAP verified, TSIH assigned, transit approved
+
+    Note over I,T: Login Phase — Operational Parameter Negotiation
+    I->>T: LoginRequest (CSG=OpNeg) — MaxRecvDataSegmentLength, ImmediateData, InitialR2T
+    T-->>I: LoginResponse (NSG=FullFeature) — agreed parameters, Login Final=Yes
+
+    Note over I,T: Full Feature Phase — SCSI I/O
+    I->>T: SCSI CMD PDU (CmdSN=1, opcode=READ, LUN=0, ExpDataTransferLength=512K)
+    T-->>I: Data-In PDU (DataSN=0..N — multiple 65 kB segments until Final flag set)
+    T-->>I: SCSI Response PDU (Status=Good, ExpCmdSN=2, ResidualCount=0)
+    Note over I,T: Second TCP session on separate NIC+portal = second path<br/>dm-multipath (Linux) / MPIO (Windows) selects or balances across paths
+```
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="initiators/">

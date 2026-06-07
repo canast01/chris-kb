@@ -28,6 +28,50 @@ Network File System (NFS) allows hosts to mount remote directories over TCP. Cov
 └─────────────────┘                        └──────────────────────┘
 ```
 
+## NFSv4.1 Session and pNFS Data Path
+
+NFSv4.1 introduces explicit sessions (slot tables replacing per-RPC XIDs) and pNFS, which allows clients to perform I/O directly to data servers without routing data through the metadata server.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as NFS Client
+    participant MS as Metadata Server<br/>(MDS, port 2049)
+    participant DS1 as Data Server 1<br/>(pNFS DS)
+    participant DS2 as Data Server 2<br/>(pNFS DS)
+
+    Note over C,MS: NFSv4.1 — Session Establishment
+    C->>MS: EXCHANGE_ID (client_owner verifier)
+    MS-->>C: clientid (64-bit), server_owner, server_scope
+    C->>MS: CREATE_SESSION (clientid, fore/back channel attrs, slot table size)
+    MS-->>C: sessionid (128-bit), negotiated slot table depth
+
+    Note over C,MS: File Open — Compound Procedure (single RTT)
+    C->>MS: COMPOUND [SEQUENCE + PUTROOTFH + LOOKUP("path/file") + OPEN(RW) + GETFH]
+    MS-->>C: filehandle, open_stateid, change_info, caching delegation
+
+    Note over C,MS: pNFS — Layout Acquisition
+    C->>MS: LAYOUTGET (filehandle, iomode=RW, offset=0, length=EOF, layout_type=files)
+    MS-->>C: layout (stripe_unit=1 MiB, DS1 → stripes 0,2,4…  DS2 → stripes 1,3,5…)
+
+    Note over C,DS2: pNFS — Parallel Direct I/O to Data Servers (MDS not in data path)
+    C->>DS1: WRITE stripe 0 direct to DS1
+    C->>DS2: WRITE stripe 1 direct to DS2 (parallel)
+    DS1-->>C: Write response
+    DS2-->>C: Write response
+
+    Note over C,MS: Close — Layout Return
+    C->>MS: LAYOUTRETURN (filehandle, range, layout stateid)
+    C->>MS: CLOSE (open_stateid)
+    MS-->>C: new_stateid, layout committed to stable storage
+```
+
+| Version | Ports Required | Session Model | Locking | Parallel I/O |
+|---|---|---|---|---|
+| NFSv3 | 2049 + rpcbind/111 + mountd + NLM | Stateless per RPC | External (NLM daemon) | No |
+| NFSv4 | 2049 only | Stateful (lease-based) | Built-in | No |
+| NFSv4.1 | 2049 only | Stateful + explicit sessions (slot table) | Built-in | Yes (pNFS) |
+
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="exports/">
