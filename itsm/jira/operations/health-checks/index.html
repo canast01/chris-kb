@@ -1,0 +1,3793 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+      
+      
+      
+      
+        <link rel="prev" href="../cli-reference/">
+      
+      
+        <link rel="next" href="../install-upgrade/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Jira — Health Checks - Chris KB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui%2Csans-serif' font-size='13' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3ECA%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chris KB">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <meta property="og:site_name" content="Chris KB">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Jira — Health Checks · Chris KB">
+  <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Jira — Health Checks · Chris KB">
+  <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#jira-health-checks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chris KB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Jira — Health Checks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../../virtualization/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Platforms
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../site-map/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Site Map
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Chris KB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platforms
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Platforms
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../virtualization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtualization
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../cloud/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../storage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../san/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAN
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../compute/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compute
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../networking/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../backup/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../protocols/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocols
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../certifications/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Certifications
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../ai/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../start-here/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_14" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Itsm
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_14" id="__nav_2_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_14_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Itsm
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../confluence/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Confluence
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_14_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jira
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_14_3" id="__nav_2_14_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_14_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_14_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Jira
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../deploy/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_14_3_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_14_3_4" id="__nav_2_14_3_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_14_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_14_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../backup-restore/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup Restore
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../cli-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_14_3_4_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Health Checks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_14_3_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_14_3_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Health Checks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../install-upgrade/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../procedures/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Procedures
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../scripts/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../troubleshooting/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../servicenow/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ServiceNow
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../monitoring-standards/alert-management/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring Standards
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../site-map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-log-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Log Review
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Log Review">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-review-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Review Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-error-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Error Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-disk-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Disk Space
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Disk Space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disk-usage-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Usage Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-database-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Database Connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Database Connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-pool-health-via-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Pool Health (via REST)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-search-index-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Search Index Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cluster-node-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Cluster Node Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-key-metrics-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Key Metrics Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-automated-health-check-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Automated Health Check Script
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../../../virtualization/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Itsm
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Jira
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Operations
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Health Checks
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  <div class="kb-progress" id="kb-progress"></div>
+
+  
+  <nav class="kb-topnav" aria-label="Page navigation">
+    
+    <a href="../cli-reference/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">Jira — CLI Reference</span>
+    </a>
+    
+
+    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../install-upgrade/" class="kb-topnav__link kb-topnav__link--next" id="kb-next-link">
+      <span class="kb-topnav__title">Jira — Install and Upgrade</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+                  
+
+
+
+<h1 id="jira-health-checks">Jira — Health Checks<a class="headerlink" href="#jira-health-checks" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk Space, 4. Database Connectivity, 5. Search Index Status and 3 more sections.
+</div>
+
+<h2 id="health-check-overview">Health Check Overview<a class="headerlink" href="#health-check-overview" title="Permanent link">&para;</a></h2>
+<p><pre class="mermaid"><code>flowchart TD
+    START([Start Daily Health Check]) --&gt; SVC[Check Service Status]
+
+    SVC --&gt; SVC_OK{All nodes\nrunning?}
+    SVC_OK -- No --&gt; RESTART[Investigate &amp; restart\nfailed node]
+    RESTART --&gt; ALERT_NODE[Alert: Node down]
+    SVC_OK -- Yes --&gt; LOGS[Review Application Logs]
+
+    LOGS --&gt; LOG_ERR{Errors or\nOOM in logs?}
+    LOG_ERR -- Yes --&gt; INVESTIGATE[Investigate stack traces\ncheck heap usage]
+    INVESTIGATE --&gt; ALERT_LOG[Alert: Log anomalies]
+    LOG_ERR -- No --&gt; DISK[Check Disk Space]
+
+    DISK --&gt; DISK_OK{Shared home &amp;\nDB &lt; 80% full?}
+    DISK_OK -- No --&gt; ALERT_DISK[Alert: Disk capacity]
+    DISK_OK -- Yes --&gt; DB[Check DB Connectivity]
+
+    DB --&gt; DB_OK{DB reachable\n&amp; responsive?}
+    DB_OK -- No --&gt; ALERT_DB[Alert: DB issue]
+    DB_OK -- Yes --&gt; SEARCH[Check Search Index]
+
+    SEARCH --&gt; SEARCH_OK{Index\ncurrent?}
+    SEARCH_OK -- No --&gt; REINDEX[Trigger reindex]
+    SEARCH_OK -- Yes --&gt; CLUSTER[Check Cluster Nodes]
+
+    CLUSTER --&gt; CLUSTER_OK{All nodes\nregistered?}
+    CLUSTER_OK -- No --&gt; ALERT_CLUSTER[Alert: Node missing\nfrom cluster]
+    CLUSTER_OK -- Yes --&gt; PERF[Check Response Time]
+
+    PERF --&gt; PERF_OK{P95 &lt; 3s?}
+    PERF_OK -- No --&gt; ALERT_PERF[Alert: Performance\ndegradation]
+    PERF_OK -- Yes --&gt; DONE([Health Check Passed])
+
+    style DONE fill:#2d8a4e,color:#fff
+    style ALERT_NODE fill:#c0392b,color:#fff
+    style ALERT_LOG fill:#c0392b,color:#fff
+    style ALERT_DISK fill:#e67e22,color:#fff
+    style ALERT_DB fill:#c0392b,color:#fff
+    style ALERT_CLUSTER fill:#c0392b,color:#fff
+    style ALERT_PERF fill:#e67e22,color:#fff</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Jira — Health Checks ─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              Application Health              │  │            Infrastructure Health            │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │            GET /status → RUNNING             │  │               DB connectivity               │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Heap usage &lt; 80%               │  │                  Disk &lt; 80%                 │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                No OOM in logs                │  │               NFS mount active              │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │               Lucene index OK                │  │               Backup completed              │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │              Background jobs OK              │  │                SMTP reachable               │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Jira app VMs · PostgreSQL DB · NFS shared home · SMTP relay                                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  GET /status    = curl http://localhost:8080/status; returns RUNNING or error                         │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Heap check     = Admin &gt; System Info &gt; JVM Memory Usage; alert if &gt;80%                               │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Lucene index   = Admin &gt; System &gt; Indexing; shows index size and last update time                    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Background jobs = Admin &gt; Scheduled Jobs; verify last-run time and error count                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  DB check       = psql -U jira -c &quot;SELECT 1;&quot; to confirm connectivity                                 │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Disk check     = df -h JIRA_HOME; alert at 80%; attachments fill disk gradually                      │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  NFS check      = mount | grep nfs; ls JIRA_HOME/data/attachments                                     │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  SMTP check     = Admin &gt; Outgoing Mail &gt; Send Test Email                                             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Backup check   = verify pg_dump file timestamp and non-zero size                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  OOM check      = grep OutOfMemoryError catalina.out; OOM indicates heap too small                    │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Scheduled jobs = Jira runs DB clean-up, indexing, and mail jobs on schedule                          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Jira service status</strong> — Run <code>systemctl status jira</code> on the app server; confirm the service is <code>active (running)</code>; if not, check the process list with <code>ps aux | grep jira</code> and review <code>catalina.out</code> for the last recorded error before attempting a restart.</li>
+<li><strong>Jira URL health</strong> — Run <code>curl -sk https://&lt;jira-url&gt;/status</code>; the response must contain <code>{"state":"RUNNING"}</code>; any other state (<code>STARTING</code>, <code>ERROR</code>, <code>STOPPING</code>) indicates Jira is not ready to serve users and requires immediate investigation.</li>
+<li><strong>Database connection</strong> — Navigate to <strong>Jira Admin → System → Database → Connection Pool Monitoring</strong>; confirm active connections are below 80% of the pool maximum and the wait count is zero; elevated wait counts indicate connection starvation which causes request queuing and slow page loads.</li>
+<li><strong>Index integrity</strong> — Navigate to <strong>Jira Admin → System → Indexing</strong>; confirm no reindex is currently in progress and the last reindex completed successfully; a stale index causes JQL searches to return incorrect or missing results.</li>
+<li><strong>Disk space</strong> — Run <code>df -h /var/atlassian/application-data/jira</code>; alert if the shared home volume exceeds 80%; also check the app node OS disk and log directory with <code>du -sh /opt/atlassian/jira/logs/</code>; attachments accumulate silently and are the most common cause of disk fills.</li>
+<li><strong>Mail server</strong> — Navigate to <strong>Jira Admin → System → Outgoing Mail</strong> and use the <strong>Send a Test Email</strong> function; confirm delivery; a failed outgoing mail server means all issue notification emails (assignments, comments, transitions) are queued but not delivered.</li>
+<li><strong>Application log errors</strong> — Run <code>tail -100 /var/atlassian/application-data/jira/log/atlassian-jira.log | grep -iE "error|exception" | tail -20</code>; review the output for patterns such as <code>OutOfMemoryError</code>, <code>Could not get JDBC Connection</code>, or <code>Index is corrupted</code>; each unique error pattern should be triaged and tracked.</li>
+</ol>
+<p>Expected: All nodes show <code>healthy</code> / <code>UP</code>.</p>
+<hr />
+<h2 id="2-log-review">2. Log Review<a class="headerlink" href="#2-log-review" title="Permanent link">&para;</a></h2>
+<h3 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Log File</th>
+<th>Location</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application log</td>
+<td><code>/opt/atlassian/jira/logs/atlassian-jira.log</code></td>
+<td>Main Jira application events</td>
+</tr>
+<tr>
+<td>Catalina log</td>
+<td><code>/opt/atlassian/jira/logs/catalina.out</code></td>
+<td>JVM / Tomcat stdout</td>
+</tr>
+<tr>
+<td>GC log</td>
+<td><code>/opt/atlassian/jira/logs/gc.log</code></td>
+<td>Garbage collection events</td>
+</tr>
+<tr>
+<td>Access log</td>
+<td><code>/opt/atlassian/jira/logs/localhost_access_log.*.txt</code></td>
+<td>HTTP request log</td>
+</tr>
+<tr>
+<td>Audit log</td>
+<td>Jira Admin → Audit Log</td>
+<td>Admin-action audit trail</td>
+</tr>
+</tbody>
+</table>
+<h3 id="log-review-commands">Log Review Commands<a class="headerlink" href="#log-review-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check for ERROR/WARN in last hour</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[0-9]{4}-[0-9]{2}-[0-9]{2} </span><span class="k">$(</span>date<span class="w"> </span>+%H<span class="k">)</span><span class="s2">:&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|WARN&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check for OutOfMemoryError</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;OutOfMemoryError\|Java heap space\|GC overhead&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>/opt/atlassian/jira/logs/catalina.out<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check for slow queries</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;slow query\|query took&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Count errors in last 24h</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span>
+</code></pre></div>
+<h3 id="key-error-patterns">Key Error Patterns<a class="headerlink" href="#key-error-patterns" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Severity</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OutOfMemoryError: Java heap space</code></td>
+<td>Critical</td>
+<td>JVM heap exhausted — increase Xmx or investigate leak</td>
+</tr>
+<tr>
+<td><code>OutOfMemoryError: Metaspace</code></td>
+<td>Critical</td>
+<td>Metaspace exhausted — increase MaxMetaspaceSize</td>
+</tr>
+<tr>
+<td><code>Unable to acquire lock</code></td>
+<td>High</td>
+<td>Distributed lock contention — check cluster health</td>
+</tr>
+<tr>
+<td><code>Could not get JDBC Connection</code></td>
+<td>High</td>
+<td>DB connection pool exhausted</td>
+</tr>
+<tr>
+<td><code>Index is corrupted</code></td>
+<td>High</td>
+<td>Lucene index corruption — reindex required</td>
+</tr>
+<tr>
+<td><code>LDAP: error code 49</code></td>
+<td>Medium</td>
+<td>LDAP bind failure — check service account credentials</td>
+</tr>
+<tr>
+<td><code>SocketTimeoutException</code></td>
+<td>Medium</td>
+<td>Network timeout — check external service connectivity</td>
+</tr>
+<tr>
+<td><code>com.hazelcast.*Exception</code></td>
+<td>Medium</td>
+<td>Cluster communication issue</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-disk-space">3. Disk Space<a class="headerlink" href="#3-disk-space" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all relevant mount points</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>df<span class="w"> </span>-hT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Filesystem|/var/atlassian|/opt/atlassian|/backup&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Shared home breakdown</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/shared/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-hr<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Find large files</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>find<span class="w"> </span>/var/atlassian/application-data/jira/shared<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-size<span class="w"> </span>+100M<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t/<span class="w"> </span>-k1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Log directory size</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/opt/atlassian/jira/logs/
+</code></pre></div>
+<h3 id="disk-usage-thresholds">Disk Usage Thresholds<a class="headerlink" href="#disk-usage-thresholds" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mount Point</th>
+<th>Warning</th>
+<th>Critical</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shared home</td>
+<td>70%</td>
+<td>85%</td>
+<td>Archive old exports, purge temp files</td>
+</tr>
+<tr>
+<td>App node OS disk</td>
+<td>75%</td>
+<td>90%</td>
+<td>Rotate logs, clear temp</td>
+</tr>
+<tr>
+<td>Database volume</td>
+<td>70%</td>
+<td>85%</td>
+<td>Archive old audit data, extend volume</td>
+</tr>
+<tr>
+<td>Backup storage</td>
+<td>80%</td>
+<td>90%</td>
+<td>Delete old backups per retention policy</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-database-connectivity">4. Database Connectivity<a class="headerlink" href="#4-database-connectivity" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test connection from app node</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;\conninfo&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check active connections</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*), state FROM pg_stat_activity WHERE datname=&#39;jiradb&#39; GROUP BY state;&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check for long-running queries (&gt; 30 seconds)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">SELECT pid, now() - query_start AS duration, state, query</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">FROM pg_stat_activity</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">WHERE datname = &#39;jiradb&#39;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">  AND state != &#39;idle&#39;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">  AND query_start &lt; now() - interval &#39;30 seconds&#39;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">ORDER BY duration DESC;&quot;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Check replication lag (if using replica)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>psql<span class="w"> </span>-h<span class="w"> </span>db-replica.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;</span>
+</code></pre></div>
+<h3 id="connection-pool-health-via-rest">Connection Pool Health (via REST)<a class="headerlink" href="#connection-pool-health-via-rest" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Via UI: <code>Admin → System → Database → Connection Pool Monitoring</code></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active connections</td>
+<td>&gt; 80% of pool max</td>
+<td>&gt; 95% of pool max</td>
+</tr>
+<tr>
+<td>Wait count</td>
+<td>&gt; 0 persistent</td>
+<td>&gt; 5 for &gt; 30s</td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>&gt; 30s</td>
+<td>&gt; 5 min</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-search-index-status">5. Search Index Status<a class="headerlink" href="#5-search-index-status" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check index age via REST</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Expected response when healthy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;progressUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/rest/api/2/reindex/progress&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BACKGROUND_PREFERRED&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;submittedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:00:00.000+0000&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:00:05.000+0000&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">&quot;finishTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T01:23:45.000+0000&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">&quot;currentSubTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Completed&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
+</code></pre></div>
+<p>Check index size on disk:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/
+</code></pre></div>
+<p>Signs of index problems:</p>
+<ul>
+<li>JQL searches returning 0 results for known issues</li>
+<li><code>Index is corrupted</code> in logs</li>
+<li>Reindex progress stuck at same percentage for &gt; 30 minutes</li>
+</ul>
+<hr />
+<h2 id="6-cluster-node-status">6. Cluster Node Status<a class="headerlink" href="#6-cluster-node-status" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Database-level cluster check</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="s2">SELECT node_id, node_name, status, ip, last_heartbeat,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s2">       EXTRACT(EPOCH FROM (now() - last_heartbeat)) AS seconds_since_heartbeat</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s2">FROM clusternodeinfo</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s2">ORDER BY last_heartbeat DESC;&quot;</span>
+</code></pre></div>
+<p>Via UI: <code>Admin → System → Clustering</code></p>
+<p>All expected nodes should appear with:
+- Status: <code>ACTIVE</code>
+- Last heartbeat: &lt; 60 seconds ago</p>
+<p>Via REST:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<hr />
+<h2 id="7-key-metrics-reference">7. Key Metrics Reference<a class="headerlink" href="#7-key-metrics-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Healthy</th>
+<th>Warning</th>
+<th>Critical</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP response time (P95)</td>
+<td>&lt; 1s</td>
+<td>1–3s</td>
+<td>&gt; 3s</td>
+<td>LB metrics / APM</td>
+</tr>
+<tr>
+<td>JVM heap usage</td>
+<td>&lt; 70%</td>
+<td>70–85%</td>
+<td>&gt; 85%</td>
+<td>JMX / <code>jstat</code></td>
+</tr>
+<tr>
+<td>JVM GC pause (P99)</td>
+<td>&lt; 200ms</td>
+<td>200–500ms</td>
+<td>&gt; 500ms</td>
+<td>GC log</td>
+</tr>
+<tr>
+<td>DB connection pool used</td>
+<td>&lt; 70%</td>
+<td>70–90%</td>
+<td>&gt; 90%</td>
+<td>Jira admin</td>
+</tr>
+<tr>
+<td>DB query time (P95)</td>
+<td>&lt; 100ms</td>
+<td>100–500ms</td>
+<td>&gt; 500ms</td>
+<td>pg_stat_statements</td>
+</tr>
+<tr>
+<td>Disk usage (shared home)</td>
+<td>&lt; 70%</td>
+<td>70–85%</td>
+<td>&gt; 85%</td>
+<td><code>df</code></td>
+</tr>
+<tr>
+<td>Cluster heartbeat age</td>
+<td>&lt; 30s</td>
+<td>30–60s</td>
+<td>&gt; 60s</td>
+<td>DB clusternodeinfo</td>
+</tr>
+<tr>
+<td>Replication lag</td>
+<td>&lt; 5s</td>
+<td>5–30s</td>
+<td>&gt; 30s</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td>Active Jira threads</td>
+<td>&lt; 100</td>
+<td>100–200</td>
+<td>&gt; 200</td>
+<td>Thread dump / JMX</td>
+</tr>
+<tr>
+<td>Error log rate (/hour)</td>
+<td>&lt; 10</td>
+<td>10–100</td>
+<td>&gt; 100</td>
+<td>Log grep</td>
+</tr>
+<tr>
+<td>Failed logins (/hour)</td>
+<td>&lt; 5</td>
+<td>5–50</td>
+<td>&gt; 50</td>
+<td>Audit log</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-automated-health-check-script">8. Automated Health Check Script<a class="headerlink" href="#8-automated-health-check-script" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># jira-health-check.sh — Run daily via cron</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">JIRA_URL</span><span class="o">=</span><span class="s2">&quot;https://jira.example.com&quot;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">JIRA_USER</span><span class="o">=</span><span class="s2">&quot;health-check-svc&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">JIRA_TOKEN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_HEALTH_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nv">ALERT_EMAIL</span><span class="o">=</span><span class="s2">&quot;ops-team@example.com&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">FAILURES</span><span class="o">=()</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># --- 1. HTTP health endpoint ---</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nv">STATUS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/status&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;200&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Jira health endpoint returned HTTP </span><span class="si">${</span><span class="nv">STATUS</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="k">fi</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># --- 2. Disk space ---</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="nv">DISK_PCT</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>/var/atlassian/application-data/jira/shared<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="k">)</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">85</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Shared home disk usage at </span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">% — CRITICAL&quot;</span><span class="o">)</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">70</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;Shared home disk usage at </span><span class="si">${</span><span class="nv">DISK_PCT</span><span class="si">}</span><span class="s2">% — WARNING&quot;</span><span class="o">)</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="k">fi</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="c1"># --- 3. DB connectivity ---</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="k">if</span><span class="w"> </span>!<span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1&quot;</span><span class="w"> </span>-q<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;PostgreSQL connection failed&quot;</span><span class="o">)</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="k">fi</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="c1"># --- 4. Error log check ---</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="nv">ERROR_COUNT</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span><span class="k">)</span>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ERROR_COUNT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;High error rate: </span><span class="si">${</span><span class="nv">ERROR_COUNT</span><span class="si">}</span><span class="s2"> errors today&quot;</span><span class="o">)</span>
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="k">fi</span>
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="c1"># --- 5. Cluster node heartbeat ---</span>
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="nv">STALE_NODES</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-tAc<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a><span class="s2">  SELECT count(*) FROM clusternodeinfo</span>
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="s2">  WHERE status = &#39;ACTIVE&#39;</span>
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a><span class="s2">    AND last_heartbeat &lt; now() - interval &#39;2 minutes&#39;&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STALE_NODES</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a><span class="w">  </span><span class="nv">FAILURES</span><span class="o">+=(</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STALE_NODES</span><span class="si">}</span><span class="s2"> cluster node(s) have stale heartbeat&quot;</span><span class="o">)</span>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="k">fi</span>
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a><span class="c1"># --- Report ---</span>
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="si">${#</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a><span class="w">  </span><span class="nv">BODY</span><span class="o">=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BODY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;[JIRA HEALTH] </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> — </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ALERT_EMAIL</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;HEALTH CHECK FAILED:&quot;</span>
+<a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;  - %s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FAILURES</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a><span class="k">else</span>
+<a id="__codelineno-10-55" name="__codelineno-10-55" href="#__codelineno-10-55"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Health check passed: </span><span class="k">$(</span>date<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-56" name="__codelineno-10-56" href="#__codelineno-10-56"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-10-57" name="__codelineno-10-57" href="#__codelineno-10-57"></a><span class="k">fi</span>
+</code></pre></div>
+<p>Schedule:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>*/15 * * * * jira /opt/scripts/jira-health-check.sh &gt;&gt; /var/log/jira-health.log 2&gt;&amp;1
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+  
+  <nav class="kb-topnav kb-bottomnav" aria-label="Page navigation (bottom)">
+    
+    <a href="../cli-reference/" class="kb-topnav__link kb-topnav__link--prev">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">Jira — CLI Reference</span>
+    </a>
+    
+
+    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../install-upgrade/" class="kb-topnav__link kb-topnav__link--next">
+      <span class="kb-topnav__title">Jira — Install and Upgrade</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+  <nav class="kb-mobile-nav" aria-label="Mobile navigation">
+    
+    <a href="../cli-reference/" class="kb-mobile-nav__btn" title="Previous: Jira — CLI Reference">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    
+
+    <a href="../../../.." class="kb-mobile-nav__btn kb-mobile-nav__btn--home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+
+    
+    <a href="../install-upgrade/" class="kb-mobile-nav__btn" title="Next: Jira — Install and Upgrade">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
+    </a>
+    
+  </nav>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Christos Anastasiadis
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+  
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  <script>
+    // Reading progress bar
+    (function () {
+      var bar = document.getElementById('kb-progress');
+      if (!bar) return;
+      function update() {
+        var scroll = window.scrollY;
+        var total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scroll / total * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Code block language badge
+    (function () {
+      document.querySelectorAll('code[class*="language-"]').forEach(function (code) {
+        var match = Array.from(code.classList).find(function (c) { return c.startsWith('language-'); });
+        if (!match) return;
+        var lang = match.replace('language-', '');
+        if (['text', 'plaintext', 'none', 'shell-session'].includes(lang)) return;
+        var block = code.closest('.highlight');
+        if (!block || block.querySelector('.kb-lang-badge')) return;
+        var badge = document.createElement('span');
+        badge.className = 'kb-lang-badge';
+        badge.textContent = lang;
+        block.style.position = 'relative';
+        block.appendChild(badge);
+      });
+    })();
+
+    // Ambient mouse glow
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var glow = document.createElement('div');
+      glow.style.cssText = 'position:fixed;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,0.07) 0%,transparent 65%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);left:50%;top:50%;';
+      document.body.appendChild(glow);
+      var tx = window.innerWidth / 2, ty = window.innerHeight / 2, cx = tx, cy = ty;
+      document.addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+      (function tick() {
+        cx += (tx - cx) * 0.05;
+        cy += (ty - cy) * 0.05;
+        glow.style.left = cx + 'px';
+        glow.style.top = cy + 'px';
+        requestAnimationFrame(tick);
+      })();
+    })();
+
+    // Konami code — ↑↑↓↓←→←→BA → confetti burst
+    (function () {
+      var seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+      var pos = 0;
+      document.addEventListener('keydown', function (e) {
+        pos = (e.code === seq[pos]) ? pos + 1 : (e.code === seq[0] ? 1 : 0);
+        if (pos === seq.length) {
+          pos = 0;
+          var colors = ['#38bdf8','#818cf8','#34d399','#f59e0b','#f43f5e','#a78bfa','#7dd3fc'];
+          for (var i = 0; i < 80; i++) {
+            (function (i) {
+              setTimeout(function () {
+                var el = document.createElement('div');
+                var size = 6 + Math.random() * 9;
+                var angle = Math.random() * Math.PI * 2;
+                var dist = 180 + Math.random() * 320;
+                var tx = Math.cos(angle) * dist, ty = Math.sin(angle) * dist;
+                el.style.cssText = 'position:fixed;width:'+size+'px;height:'+size+'px;border-radius:'+(Math.random()>0.5?'50%':'3px')+';background:'+colors[i%colors.length]+';pointer-events:none;z-index:99998;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform 0.9s ease-out,opacity 0.9s ease-out;opacity:1;';
+                document.body.appendChild(el);
+                requestAnimationFrame(function () { requestAnimationFrame(function () {
+                  el.style.transform = 'translate(calc(-50% + '+tx+'px),calc(-50% + '+ty+'px)) rotate('+Math.random()*720+'deg)';
+                  el.style.opacity = '0';
+                }); });
+                setTimeout(function () { el.remove(); }, 1000);
+              }, i * 12);
+            })(i);
+          }
+        }
+      });
+    })();
+
+    // Hero h1 typing animation
+    (function () {
+      var h1 = document.querySelector('.hero-body h1');
+      if (!h1) return;
+      var text = h1.textContent.trim();
+      h1.textContent = '';
+      var cursor = document.createElement('span');
+      cursor.style.cssText = '-webkit-text-fill-color:#38bdf8;animation:kb-blink 0.75s step-end infinite;';
+      cursor.textContent = '|';
+      h1.appendChild(cursor);
+      var i = 0;
+      var timer = setInterval(function () {
+        if (i < text.length) {
+          h1.insertBefore(document.createTextNode(text[i]), cursor);
+          i++;
+        } else {
+          clearInterval(timer);
+          setTimeout(function () { cursor.remove(); }, 700);
+        }
+      }, 75);
+    })();
+
+    // Time-of-day hero greeting
+    (function () {
+      var hero = document.querySelector('.hero-body');
+      if (!hero) return;
+      var h = new Date().getHours();
+      var greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      var el = document.createElement('p');
+      el.textContent = greeting + '.';
+      el.style.cssText = 'color:rgba(255,255,255,0.5);font-size:0.82rem;margin-bottom:0.2rem;font-style:italic;margin-top:0;';
+      var h1 = hero.querySelector('h1');
+      if (h1) hero.insertBefore(el, h1);
+    })();
+
+    // Image lightbox
+    (function () {
+      document.querySelectorAll('.md-typeset img').forEach(function (img) {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', function () {
+          var overlay = document.createElement('div');
+          overlay.className = 'kb-lightbox-overlay';
+          var clone = new Image();
+          clone.src = img.src;
+          clone.alt = img.alt;
+          overlay.appendChild(clone);
+          overlay.addEventListener('click', function () { overlay.remove(); });
+          document.addEventListener('keydown', function esc(e) {
+            if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', esc); }
+          });
+          document.body.appendChild(overlay);
+        });
+      });
+    })();
+
+    // Scroll-reveal — animate content sections as they enter viewport
+    (function () {
+      var targets = document.querySelectorAll('.md-typeset h2, .md-typeset h3, .md-typeset table, .md-typeset .admonition, .kb-grid');
+      if (!('IntersectionObserver' in window)) return;
+      targets.forEach(function (el) { el.classList.add('kb-reveal'); });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('kb-visible'); io.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      targets.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Floating TOC dot
+    (function () {
+      var links = document.querySelectorAll('.md-nav--secondary .md-nav__link');
+      if (links.length < 2) return;
+      var dot = document.createElement('div');
+      dot.className = 'kb-toc-dot';
+      document.body.appendChild(dot);
+      function update() {
+        var active = document.querySelector('.md-nav--secondary .md-nav__link--active');
+        if (!active) return;
+        var r = active.getBoundingClientRect();
+        dot.style.top = (r.top + r.height / 2 - 4) + 'px';
+        dot.style.opacity = '1';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Back to top pill
+    (function () {
+      var btn = document.createElement('a');
+      btn.className = 'kb-back-top';
+      btn.href = '#';
+      btn.textContent = '↑ Top';
+      btn.addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      document.body.appendChild(btn);
+      window.addEventListener('scroll', function () {
+        btn.classList.toggle('kb-back-top--visible', window.scrollY > 400);
+      }, { passive: true });
+    })();
+
+    // Live clock in footer
+    (function () {
+      function pad(n) { return n < 10 ? '0' + n : n; }
+      function tick(el) {
+        var d = new Date();
+        el.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      }
+      var footer = document.querySelector('.md-footer-meta__inner');
+      if (!footer) return;
+      var clock = document.createElement('div');
+      clock.className = 'kb-footer-clock';
+      footer.appendChild(clock);
+      tick(clock);
+      setInterval(function () { tick(clock); }, 1000);
+    })();
+
+    // Smooth page transitions
+    (function () {
+      var content = document.querySelector('.md-content__inner');
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link || !link.href || link.target === '_blank') return;
+        try { if (new URL(link.href).hostname !== window.location.hostname) return; } catch(e) { return; }
+        if (link.href.includes('#')) return;
+        e.preventDefault();
+        var href = link.href;
+        if (content) content.classList.add('kb-fade-out');
+        setTimeout(function () { window.location.href = href; }, 190);
+      });
+    })();
+
+    // Spotlight effect — toggle with L
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var spotlight = document.createElement('div');
+      spotlight.className = 'kb-spotlight';
+      document.body.appendChild(spotlight);
+      var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      var active = false;
+      function update() {
+        spotlight.style.background = 'radial-gradient(circle 200px at ' + mx + 'px ' + my + 'px, transparent 0%, rgba(2,6,23,0.72) 100%)';
+      }
+      document.addEventListener('mousemove', function (e) {
+        mx = e.clientX; my = e.clientY;
+        if (active) update();
+      }, { passive: true });
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === 'l' || e.key === 'L') {
+          active = !active;
+          update();
+          spotlight.classList.toggle('kb-spotlight--on', active);
+        }
+      });
+    })();
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+
+    // Keyboard shortcut overlay — press ?
+    (function () {
+      var shortcuts = [
+        ['/', 'Focus search'],
+        ['S', 'Focus search'],
+        ['F', 'Find on page'],
+        ['L', 'Toggle spotlight'],
+        ['?', 'Show shortcuts'],
+        ['Esc', 'Close / dismiss'],
+        ['↑ ↑ ↓ ↓ ← → ← → B A', '🎉'],
+      ];
+      var overlay = null;
+      function show() {
+        if (overlay) return;
+        overlay = document.createElement('div');
+        overlay.className = 'kb-shortcuts-overlay';
+        var box = document.createElement('div');
+        box.className = 'kb-shortcuts-box';
+        var title = document.createElement('h3');
+        title.textContent = 'Keyboard shortcuts';
+        box.appendChild(title);
+        var tbl = document.createElement('table');
+        shortcuts.forEach(function (s) {
+          var tr = document.createElement('tr');
+          var td1 = document.createElement('td');
+          td1.textContent = s[1];
+          var td2 = document.createElement('td');
+          s[0].split(' ').forEach(function (k) {
+            var kbd = document.createElement('kbd');
+            kbd.textContent = k;
+            td2.appendChild(kbd);
+            td2.appendChild(document.createTextNode(' '));
+          });
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tbl.appendChild(tr);
+        });
+        box.appendChild(tbl);
+        overlay.appendChild(box);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
+        document.body.appendChild(overlay);
+      }
+      function hide() { if (overlay) { overlay.remove(); overlay = null; } }
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === '?') { overlay ? hide() : show(); }
+        if (e.key === 'Escape') hide();
+      });
+    })();
+  </script>
+
+  </body>
+</html>
