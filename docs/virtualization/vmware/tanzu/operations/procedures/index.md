@@ -280,3 +280,189 @@ kubectl vsphere login --server https://supervisor.example.local \
 ```
 
 Kubeconfigs embed a token with a limited TTL — users need to re-login after expiry.
+
+## Upgrade a TKG Workload Cluster
+
+Upgrading a TKG cluster updates the Kubernetes version on control plane and worker nodes.
+
+```bash
+# 1. List available Kubernetes versions in the Supervisor
+kubectl get tanzukubernetesrelease
+
+# 2. Check current cluster version
+kubectl get tkc my-cluster -n my-namespace -o jsonpath='{.spec.distribution.version}'
+
+# 3. Edit the TKC to the new version
+kubectl edit tkc my-cluster -n my-namespace
+# Change: spec.distribution.version: v1.27.x+vmware.y-tkg.z
+
+# 4. Monitor the upgrade — control plane upgrades first, then workers
+kubectl get tkc my-cluster -n my-namespace -w
+# Phase progresses: updating → running
+
+# 5. Verify all nodes are upgraded and Ready
+kubectl --kubeconfig <cluster-kubeconfig> get nodes -o wide
+# All nodes should show the new Kubernetes version
+
+# 6. Verify system workloads are healthy
+kubectl --kubeconfig <cluster-kubeconfig> get pods -n kube-system
+kubectl --kubeconfig <cluster-kubeconfig> get pods -n vmware-system-csi
+```
+
+One minor version at a time — do not skip versions (e.g., 1.26 → 1.27, not 1.26 → 1.28).
+
+## Delete a TKG Workload Cluster
+
+```bash
+# 1. Drain workloads off the cluster first — notify application teams
+# 2. Delete the TanzuKubernetesCluster object
+kubectl delete tkc my-cluster -n my-namespace
+
+# 3. Monitor deletion — Supervisor removes VMs from vCenter
+kubectl get tkc -n my-namespace -w
+# Cluster moves to Deleting phase; VMs removed from vCenter inventory
+
+# 4. Confirm namespace storage claims are released
+kubectl get pvc -n my-namespace
+# All PVCs should be gone; verify no orphaned volumes in vSAN
+
+# 5. Clean up namespace if no longer needed
+kubectl delete namespace my-namespace
+```
+
+Deletion is irreversible — confirm data backup and workload migration before deleting.
+
+## Configure Resource Quotas on a Namespace
+
+vSphere Namespaces support CPU, memory, and storage quotas enforced by the Supervisor.
+
+```bash
+# Set resource quotas via kubectl (requires Supervisor admin)
+kubectl edit namespace my-namespace
+# Or apply a patch:
+kubectl patch namespace my-namespace --type merge -p '{
+  "spec": {
+    "resourceQuotas": [
+      {
+        "requests": {"memory": "64Gi", "cpu": "16"},
+        "limits": {"memory": "128Gi", "cpu": "32"}
+      }
+    ],
+    "storagePolicies": [
+      {"policy": "vSAN Default Storage Policy", "limit": "2Ti"}
+    ]
+  }
+}'
+
+# View current quota usage
+kubectl describe namespace my-namespace
+# ResourceQuotaStatus shows used vs hard limits
+
+# Grant namespace-scoped storage quota override (vSphere UI)
+# Workload Management → Namespaces → [namespace] → Storage → Edit Limits
+```
+
+## Backup and Restore a TKG Cluster with Velero
+
+Velero backs up Kubernetes resources and persistent volumes to object storage.
+
+```bash
+# 1. Install Velero with vSphere plugin (run once per cluster)
+velero install \
+  --provider aws \
+  --plugins velero/velero-plugin-for-aws:v1.8.0,vspheresaas/velero-plugin-for-vsphere:v1.5.0 \
+  --bucket velero-backups \
+  --secret-file ./credentials-velero \
+  --backup-location-config region=minio,s3ForcePathStyle=true,s3Url=http://minio.example.local:9000 \
+  --use-volume-snapshots=true \
+  --features=EnableCSIVolumeSnapshots
+
+# 2. Create a backup
+velero backup create my-cluster-backup \
+  --include-namespaces app-namespace \
+  --wait
+
+# 3. Verify backup status
+velero backup describe my-cluster-backup
+velero backup logs my-cluster-backup
+
+# 4. Restore to same or new cluster
+velero restore create --from-backup my-cluster-backup \
+  --include-namespaces app-namespace \
+  --wait
+
+# 5. Verify restore
+velero restore describe <restore-name>
+kubectl get pods -n app-namespace
+kubectl get pvc -n app-namespace
+```
+
+## Troubleshoot Node NotReady
+
+```bash
+# 1. Identify NotReady node
+kubectl get nodes
+kubectl describe node <node-name>
+# Look for: conditions, events, kubelet status
+
+# 2. SSH to the node (via jumpbox or kubectl debug)
+kubectl debug node/<node-name> -it --image=busybox
+
+# On node:
+# Check kubelet service
+systemctl status kubelet
+journalctl -u kubelet -n 100 --no-pager
+
+# Check container runtime
+systemctl status containerd
+crictl ps
+
+# Check disk pressure (common cause)
+df -h
+# If disk pressure: remove unused images
+crictl rmi --prune
+
+# 3. Check vSphere — confirm VM is powered on and has network
+# Supervisor: kubectl get virtualmachine -n my-namespace
+
+# 4. Force node drain and delete if unrecoverable
+kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data --force
+kubectl delete node <node-name>
+# TKC controller will provision a replacement node automatically
+```
+
+## Configure Persistent Storage (vSAN CNS/CSI)
+
+TKG uses the vSphere CSI driver to provision persistent volumes backed by vSAN datastores.
+
+```bash
+# 1. Verify CSI driver is running
+kubectl get pods -n vmware-system-csi
+# All pods should be Running
+
+# 2. List available storage classes
+kubectl get storageclass
+# vSAN storage classes are provisioned by Supervisor automatically
+
+# 3. Create a PVC using a vSAN storage class
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data
+  namespace: app-namespace
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: wcpglobal-storage-profile
+EOF
+
+# 4. Verify PVC is bound
+kubectl get pvc app-data -n app-namespace
+# STATUS should be Bound; VOLUME shows the CNS volume ID
+
+# 5. Check volume in vSAN (vCenter UI)
+# vSAN → Container Volumes → confirm CNS volume listed with correct size and policy
+```

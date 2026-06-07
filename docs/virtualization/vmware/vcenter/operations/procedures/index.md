@@ -52,54 +52,6 @@ Procedures reference covering Pre-Maintenance Steps, Restarting Services Safely,
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────── vCenter Server — Common Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│  Routine vCenter procedures: certificate renewal, host add/remove, cluster                            │
-│  configuration, permissions management, and licence assignment.                                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Certificate Procedures            │  │               Host Procedures               │   │
-│   │           Renew machine cert: VAMI           │  │          Add host: Hosts & Clusters         │   │
-│   │          Replace cert: certmgr CLI           │  │            Enter maintenance mode           │   │
-│   │          STS cert: scripted renewal          │  │           Remove host: disconnect           │   │
-│   │        Renew all: certificate-manager        │  │          Reconnect: fix vpxa creds          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Certificate procedures require SSO admin; host procedures require host permissions.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Permissions & Licences            │  │              Cluster Procedures             │   │
-│   │         Assign role at object level          │  │           Enable DRS: auto/manual           │   │
-│   │            SSO groups: AD mapped             │  │          Enable HA: configure slots         │   │
-│   │         Licence: Administration tab          │  │           vSAN: create diskgroups           │   │
-│   │         Global perm: cross-DC roles          │  │            EVC: set CPU baseline            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  All procedures run over vCenter management network; certificate operations                           │
-│  cause brief service interruption (~2 min) during VCSA service restart.                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  certificate-manager = VCSA interactive script; renews/replaces all certs                             │
-│  certmgr       = low-level cert tool; used for individual cert replacement                            │
-│  STS cert      = Security Token Service cert; 2-year validity; manual renew                           │
-│  VAMI          = Appliance Management; port 5480; auto-renew machine cert                             │
-│  Maintenance mode= drain host of VMs before patching or removal                                       │
-│  vpxa creds    = host agent credentials; reconnect if changed via VC UI                               │
-│  EVC           = Enhanced vMotion Compatibility; CPU instruction masking                              │
-│  DRS slots     = admission control slots; HA reserves resources per policy                            │
-│  Global perm   = permission applies to all objects in all datacentres                                 │
-│  Role          = named permission set; e.g., Administrator, ReadOnly                                  │
-│  Licence key   = applied per product; vSAN, DRS, HA all need VC licence                               │
-│  Diskgroup     = vSAN storage unit; one cache tier + capacity tier per host                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
 Service restart order for manual recovery:
 1. `vmware-vpostgres` — database must be running before vpxd
 2. `vmware-stsd` — SSO token service
@@ -345,3 +297,74 @@ Best practices:
 - Publish a single library from a central vCenter; subscribe from spoke vCenters (Linked Mode or subscribed library)
 - Keep templates on a dedicated datastore separate from production VM storage
 - Update templates monthly — patch, update VMware Tools, then convert back to template
+
+## Replace vCenter Certificates (VMCA)
+
+vCenter certificate replacement is required when certificates expire, are compromised, or when moving to a custom CA.
+
+```bash
+# Method 1: Auto-renew machine SSL cert via VAMI (for VMCA-signed certs)
+# https://<vcenter-fqdn>:5480 → Certificate Management → Machine SSL Certificate → Renew
+
+# Method 2: Replace with custom CA cert using certificate-manager
+ssh root@<vcenter-fqdn>
+/usr/lib/vmware-vmca/bin/certificate-manager
+# Option 1: Replace Machine SSL certificate with custom certificate
+# Option 6: Replace Solution User certificates with custom certificate
+# Provide: root CA cert, signed machine cert, private key
+
+# Method 3: STS certificate renewal (required every 2 years for VMCA-signed)
+# STS certs do not auto-renew — check expiry:
+python /usr/lib/vmware-vmafd/bin/lstool.py list --url http://localhost:7080/lookupservice/sdk 2>/dev/null | grep -i expire
+
+# Renew STS cert (vSphere 7+):
+/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store TRUSTED_ROOTS
+# Use certificate-manager → Option 8: Reset all certificates
+```
+
+Post-replacement validation:
+
+```bash
+# Verify new cert is active
+echo | openssl s_client -connect <vcenter-fqdn>:443 2>/dev/null | openssl x509 -noout -dates -subject
+# Confirm NotAfter shows new expiry
+
+# Verify services are healthy after restart
+vmon-cli --status | grep -E "RUNNING|STOPPED"
+# All critical services should be RUNNING
+
+# Verify vCenter is accessible from vSphere Client
+# Verify ESXi hosts still show Connected
+```
+
+## vCenter File-Based Backup
+
+vCenter supports scheduled file-based backups to NFS, SFTP, FTPS, HTTP, or HTTPS locations.
+
+```bash
+# Configure backup via VAMI: https://<vcenter-fqdn>:5480
+# Backup → Configure → set protocol, location, credentials, schedule, retention
+
+# Trigger manual backup via API
+curl -sk -X POST "https://<vcenter-fqdn>/api/vcenter/deployment/backup/schedules?vmw-task=true" \
+  -H "vmware-api-session-id: <session-id>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "location_type": "SFTP",
+    "location": "sftp://backup-srv/vcenter-backups",
+    "location_user": "vcbackup",
+    "location_password": "<password>",
+    "parts": ["SEAT"]
+  }'
+
+# SEAT = Statistics, Events, Alarms, Tasks (recommended addition to core backup)
+```
+
+```powershell
+# Monitor backup job status
+$headers = @{ "vmware-api-session-id" = $sessionId }
+Invoke-RestMethod "https://<vcenter-fqdn>/api/vcenter/deployment/backup/job" -Headers $headers |
+  Select-Object id, state, end_time, messages
+```
+
+Backup includes: vCenter database, configuration, inventory, and optionally historical data (SEAT). Restore requires the vCenter ISO and backup archive.

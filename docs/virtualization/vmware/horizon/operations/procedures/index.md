@@ -100,190 +100,159 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────── VMware Horizon — Common Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│  Common Horizon procedures: update golden image, push to pool, manage sessions,                       │
-│  entitle users, and maintain certificates on Connection Servers.                                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Golden Image Update              │  │              Session Management             │   │
-│   │          Power off, snapshot parent          │  │            Logoff: force if stuck           │   │
-│   │             Install patches/apps             │  │            Reset: restart desktop           │   │
-│   │            Snapshot: new version             │  │             Send message to user            │   │
-│   │        Push scheduled via Horizon UI         │  │          Disable: maintenance mode          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Golden image update is the most frequent Horizon maintenance task; schedule off-hours.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Entitlements & Certs             │  │               Pool Maintenance              │   │
-│   │          Add entitlement: AD group           │  │          Pool in maintenance: drain         │   │
-│   │           Remove: revoke from pool           │  │            Delete stuck VM: force           │   │
-│   │         Cert: replace on CS via MMC          │  │         Add machines: increase pool         │   │
-│   │          vdmadmin: reset passwords           │  │         Disable provisioning: pause         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Golden image updates temporarily reduce pool availability; schedule maintenance windows;             │
-│  certificate replacement requires IIS restart on Connection Server.                                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Golden image  = parent VM for instant clone pools                                                    │
-│  Push          = schedule pool to use new parent snapshot                                             │
-│  Maintenance mode= pool unavailable; existing sessions continue                                       │
-│  Entitlement   = AD user or group assigned to a pool                                                  │
-│  Revoke        = remove AD group/user entitlement from pool                                           │
-│  MMC           = Microsoft Management Console; cert store on Windows                                  │
-│  IIS restart   = required after cert replacement on CS                                                │
-│  Force delete  = remove stuck VM from pool that failed to provision                                   │
-│  Send message  = warn users before forced logoff/pool push                                            │
-│  Pool size     = min/max/spare desktops; tuned for peak usage                                         │
-│  Drain         = wait for sessions to end before pool action                                          │
-│  Provisioning  = Horizon auto-creates VMs to fill pool spare count                                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Users in the group can now connect to the pool from Horizon Client or HTML access.
-
----
-
-## Push a Golden Image Update to an Instant Clone Pool
-
-```yaml
-Horizon Console → Inventory → Desktops → [pool name] → Edit
-  Advanced Storage → Change Parent VM or Snapshot
-  Select: new parent snapshot
-  Schedule: immediate or scheduled maintenance window
-  Mode: Rolling restart (users get new image on next login)
-  OR: Force restart (immediately recycles all desktops — causes session disruption)
-```
-
----
-
-## Add a New Connection Server Replica
+ool] → Entitlements → Add** — add AD groups
 
 ```powershell
-# On new Windows Server:
-VMware-Horizon-Connection-Server-x86_64-<version>.exe /silent /norestart `
-  /v"VDM_SERVER_INSTANCE_TYPE=2 `
-  VDM_INITIAL_ADMIN_SID=<domain-admin-SID> `
-  VDM_INITIAL_ADMIN_PASSWORD=<first-CS-admin-password>"
+# Verify pool provisioning status via PowerCLI
+Connect-HVServer -Server horizon-cs-01.corp.local -Credential (Get-Credential)
+Get-HVPool -PoolName "pool-ic-win11" | Select-Object -ExpandProperty AutomatedDesktopData |
+  Select-Object MinimumCount, MaximumCount, SpareCount
+Get-HVMachine -PoolName "pool-ic-win11" | Group-Object State | Select-Object Name, Count
 ```
 
-After install:
-```text
-Horizon Console → Settings → Servers → Connection Servers
-  New server should appear — verify green status
-  Install/replace SSL certificate to match other Connection Servers
-```
+## Create an RDS Farm and Application Pool
 
----
-
-## Configure UAG for External Access
-
-UAG Admin UI (https://uag.example.local:9443):
-
-```text
-Configure Manually
-  Network Settings: set IPs for each NIC (Internet, Management, Backend)
-  Edge Service Settings → Horizon → Enable
-    Connection Server URL: https://horizon-cs01.example.local:443
-    Connection Server thumbprint: sha1:<thumbprint>
-    Blast port: 8443
-    PCoIP port: 4172
-    Tunnel: Enabled
-```
-
-```bash
-# Get Connection Server certificate thumbprint:
-echo | openssl s_client -connect horizon-cs01.example.local:443 2>/dev/null \
-  | openssl x509 -fingerprint -sha1 -noout
-```
-
----
-
-## Enable True SSO
-
-True SSO allows users to authenticate once at UAG (via SAML/AD) and get a short-lived certificate for desktop login — no password re-entry.
-
-```yaml
-Requirements:
-  - VMware Identity Manager (vIDM) or Workspace ONE
-  - Microsoft CA (Enterprise CA) for certificate template
-  - Enrollment Server role installed on Connection Server
-
-Horizon Console → Settings → True SSO
-  Enable True SSO
-  Add Enrollment Server
-  Configure Certificate Template (must match template on CA)
-```
-
----
-
-## Add an App Volumes AppStack to a Pool
-
-```text
-App Volumes Manager → AppStacks → [AppStack name] → Assign
-  Assignment type: Group
-  AD Group: CORP\AppStack-AdobeReader
-  Delivery: On Login (attach when user logs into desktop)
-```
-
-The AppStack VMDK will mount at the next user login for members of that group.
-
----
-
-## Handle a Stuck Desktop in Error State
+RDS farms deliver published desktops and RemoteApp applications from Windows Server RDSH hosts.
 
 ```powershell
-Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
+# 1. Verify Horizon Agent with RDS role is installed on RDSH hosts
+Get-HVFarm | Where-Object { $_.Type -eq "AUTOMATED" }
 
-# List desktops in error state
-Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |
-  Select-Object -ExpandProperty Base | Select Name, BasicState
+# 2. Create a manual RDS farm (add existing RDSH servers)
+# Horizon Console → Farm → Add → Manual Farm
+# Add RDSH hosts by FQDN — Horizon registers them as RDS hosts
 
-# Reset a specific desktop (reboots the VM)
-Reset-HVMachine -HVMachineName "win10-042"
+# 3. Create an Application Pool from the farm
+# Horizon Console → Catalog → Application Pools → Add
+# Select farm, browse installed applications, publish selected apps
 
-# Delete an error-state desktop (Instant Clone pools reprovision automatically)
-Remove-HVDesktop -VMName "win10-042" -Confirm:$false
+# 4. Verify farm health
+Get-HVFarm -FarmName "farm-rdsh-apps" | Select-Object -ExpandProperty RDSFarmSummaryData
+Get-HVFarmHealth -FarmName "farm-rdsh-apps"
 ```
 
----
+RDSH hosts must have at least 1 licensed RDS CAL per concurrent user. Check licensing via `licmgr.exe` on a host.
 
-## Set DEM Configuration Migration Policy
-
-DEM manages user profile and environment settings. Configure import/export policies:
-
-```bash
-DEM Management Console → User Environment → [configuration] → Condition
-  Set condition to: always apply (or per AD group membership)
-  Import on login: Yes
-  Export on logout: Yes
-```
-
-For roaming profile migration from legacy profiles, configure DEM import from the old profile path.
-
----
-
-## Decommission a Desktop Pool
+## Add or Remove User Entitlement from a Pool
 
 ```powershell
-Horizon Console → Inventory → Desktops → [pool] → Disable
-  Disable provisioning: prevent new desktops from being created
-  Remove entitlements: prevent new sessions
-  Wait for all sessions to end (or force-logoff)
+Connect-HVServer -Server horizon-cs-01.corp.local -Credential (Get-Credential)
 
-# Force logoff all sessions in the pool:
-Get-HVLocalSession | Where-Object { $_.NamesData.DesktopPoolCN -eq "pool-win10-float" } |
+# Add an AD group entitlement to a pool
+$pool = Get-HVPool -PoolName "pool-ic-win11"
+$group = Get-HVQueryResult -EntityType ADUserOrGroupSummaryView |
+  Where-Object { $_.Base.Name -eq "VDI-Users" }
+New-HVEntitlement -ResourceType Desktop -ResourceId $pool.Id -UserOrGroupId $group.Id
+
+# Remove an entitlement
+$entitlement = Get-HVEntitlement -ResourceType Desktop -ResourceName "pool-ic-win11" |
+  Where-Object { $_.UserOrGroupData.Name -eq "VDI-Users" }
+Remove-HVEntitlement -Id $entitlement.Id
+
+# List all entitlements for a pool
+Get-HVEntitlement -ResourceType Desktop -ResourceName "pool-ic-win11" |
+  Select-Object { $_.UserOrGroupData.Name }, { $_.UserOrGroupData.GroupMembershipCount }
+```
+
+## Force Logoff or Reset a User Session
+
+```powershell
+Connect-HVServer -Server horizon-cs-01.corp.local -Credential (Get-Credential)
+
+# Find active sessions for a user
+Get-HVLocalSession | Where-Object { $_.NamesData.UserName -eq "jsmith" } |
+  Select-Object Id, @{N='Desktop';E={$_.NamesData.MachineOrRDSServerDNS}}, SessionState
+
+# Force logoff a specific session
+Get-HVLocalSession | Where-Object { $_.NamesData.UserName -eq "jsmith" } |
   Invoke-HVSessionLogoff
 
-# Once sessions are zero:
-Horizon Console → Inventory → Desktops → [pool] → Delete
-  Option: Delete VMs from vCenter (recommended)
+# Reset (hard reboot) a stuck desktop
+Get-HVMachine -MachineName "ic-win11-0042" | Reset-HVMachine
+
+# Disconnect without logoff (session persists, user can reconnect)
+Get-HVLocalSession | Where-Object { $_.NamesData.UserName -eq "jsmith" } |
+  Invoke-HVSessionDisconnect
 ```
+
+## Recompose an Instant Clone Pool
+
+Recompose pushes a new golden image snapshot to all desktops in the pool. Sessions are terminated; desktops are rebuilt from the new parent.
+
+```powershell
+Connect-HVServer -Server horizon-cs-01.corp.local -Credential (Get-Credential)
+
+# 1. Confirm new snapshot exists on the parent VM
+Get-VM "GoldenImage-Win11" | Get-Snapshot | Select-Object Name, Created
+
+# 2. Initiate recompose (schedule for maintenance window)
+$pool = Get-HVPool -PoolName "pool-ic-win11"
+$snapshot = Get-HVQueryResult -EntityType BaseImageSnapshotInfo |
+  Where-Object { $_.Name -eq "Snap-2026-06-Win11-Patched" }
+
+# Recompose immediately (use -ScheduleTime for deferred)
+Update-HVPool -PoolId $pool.Id -ParentVMPath $snapshot.Path -SnapshotPath $snapshot.SnapshotPath
+
+# 3. Monitor progress
+Get-HVMachine -PoolName "pool-ic-win11" | Group-Object State | Select-Object Name, Count
+# States cycle: Maintenance → Deleting → Provisioning → Available
+```
+
+## Renew Certificate on Connection Servers
+
+Horizon Connection Servers use TLS certificates for client connections and inter-component trust.
+
+```powershell
+# 1. Import new certificate into the Windows certificate store on each CS
+# Run on each Connection Server:
+Import-PfxCertificate -FilePath "C:\certs\horizon-cs.pfx" `
+  -CertStoreLocation "Cert:\LocalMachine\My" `
+  -Password (ConvertTo-SecureString "pfx-password" -AsPlainText -Force)
+
+# 2. Find the certificate thumbprint
+Get-ChildItem "Cert:\LocalMachine\My" | Where-Object { $_.Subject -match "horizon-cs" } |
+  Select-Object Subject, Thumbprint, NotAfter
+
+# 3. Set the Horizon vdm alias to use the new certificate
+# Run in elevated cmd on each CS:
+# certutil -repairstore My "<thumbprint>"
+
+# 4. Restart the VMware Horizon View Connection Server service
+Restart-Service -Name "WSNM" -Force
+# Service name may also be "wsbroker" depending on Horizon version
+
+# 5. Verify from a Horizon Client — confirm certificate CN and expiry match new cert
+# Horizon Console → Settings → Servers → Connection Servers → [server] → Certificate
+```
+
+Repeat on all Connection Servers and Replica Servers before the old certificate expires.
+
+## Configure Horizon Event Database
+
+The event database records audit, session, and error events for reporting and compliance.
+
+```sql
+-- Create a dedicated database on SQL Server or PostgreSQL
+-- SQL Server:
+CREATE DATABASE HorizonEvents;
+CREATE LOGIN horizon_event_user WITH PASSWORD = 'StrongP@ss1';
+USE HorizonEvents;
+CREATE USER horizon_event_user FOR LOGIN horizon_event_user;
+ALTER ROLE db_owner ADD MEMBER horizon_event_user;
+```
+
+```powershell
+# Configure in Horizon Console:
+# Settings → Event Configuration → Event Database
+# Type: Microsoft SQL Server (or PostgreSQL)
+# Server: <db-server-fqdn>
+# Port: 1433
+# Database: HorizonEvents
+# User: horizon_event_user
+# Table prefix: hv_ (optional, allows sharing one DB for multiple pods)
+
+# Verify events are flowing — check after any user session:
+# Reports → Events → Recent Events should show session events
+```
+
+Event data is retained per the configured purge schedule (default 30 days). Increase for compliance requirements.
