@@ -19,5 +19,6 @@ from . import ops
 from . import governance
 from . import virtualization_ops
 from . import openshift
+from . import evs
 
 from ._core import DIAGRAMS
