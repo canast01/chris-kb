@@ -5,9 +5,8 @@
 DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdiag /test:dns, Cache Poisoning Checks, Replication Issues and 2 more sections.
 </div>
 
-        TRIAGE: NSLOOKUP FAILS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  1. nslookup host.example.local ── no answer ──► continue                                             │
 │          │                                                                                            │
 │          ▼                                                                                            │
@@ -28,7 +27,7 @@ DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdi
 │          ▼                                                                                            │
 │  6. Flush client cache: ipconfig /flushdns (Windows)                                                  │
 │                         resolvectl flush-caches (Linux)                                               │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

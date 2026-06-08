@@ -7,7 +7,7 @@ DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerSh
 
         FORWARD vs REVERSE LOOKUPS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  FORWARD LOOKUP (name → IP)                                                                           │
 │  dig A web01.example.local @10.0.0.53                                                                 │
 │  → ANSWER: web01.example.local. 3600 IN A 192.168.10.100                                              │
@@ -26,7 +26,7 @@ DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerSh
 │  TTL: time-to-live in seconds; cached until expired                                                   │
 │  dig output: web01.example.local.  3600  IN  A  192.168.10.100                                        │
 │              name               TTL  class type  value                                                │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

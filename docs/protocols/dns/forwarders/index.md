@@ -5,9 +5,8 @@
 DNS Forwarders reference covering Overview, Configuring Global Forwarders, Conditional Forwarders, Root Hints vs Forwarders, Split-Brain DNS and 2 more sections.
 </div>
 
-        FORWARDER RESOLUTION FLOW
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Internal DNS (DC)            External / Upstream                                                     │
 │  ┌──────────────────┐         ┌──────────────────────────┐                                            │
 │  │ corp.local zone  │         │  Forwarder: 8.8.8.8      │                                            │
@@ -25,7 +24,7 @@ DNS Forwarders reference covering Overview, Configuring Global Forwarders, Condi
 │                                                                                                       │
 │  Forwarder unreachable? ──► fallback to root hints                                                    │
 │  (if UseRootHint = $true — recommended for resilience)                                                │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

@@ -5,9 +5,8 @@
 DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zone Transfer, Zone Delegation and 2 more sections.
 </div>
 
-        ZONE STRUCTURE
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Forward zone: corp.local  (primary / AD-integrated)                                                  │
 │  ┌──────────────────────────────────────────────────────┐                                             │
 │  │  SOA   dc01.example.local (serial 2026051801)           │                                          │
@@ -26,7 +25,7 @@ DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zon
 │  │  PTR   100  →  web01.example.local                      │                                          │
 │  │  PTR   101  →  web02.example.local                      │                                          │
 │  └──────────────────────────────────────────────────────┘                                             │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

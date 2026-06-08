@@ -8,9 +8,8 @@ title: DNS
 Domain Name System (DNS) is the foundational naming protocol of IP networks, resolving hostnames to addresses (and vice versa) over UDP and TCP port 53. It is a critical dependency for authentication (Kerberos, LDAP), certificate validation, cloud services, monitoring, and automation — meaning DNS failures cascade across the entire environment. Key operational concerns are zone hygiene, forwarder reliability, recursive vs authoritative role separation, and TTL management.
 </div>
 
-        DNS RESOLUTION PATH
 ```text
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                                                                                       │
 │  ┌────────┐  ┌──────────────┐  ┌────────────────────────────┐                                         │
 │  │ Client │  │ Recursive    │  │   Authoritative DNS        │                                         │
@@ -28,7 +27,7 @@ Domain Name System (DNS) is the foundational naming protocol of IP networks, res
 │              │ client gets  │  TTL controls how long it's cached                                      │
 │              │ A record     │                                                                         │
 │              └──────────────┘                                                                         │
-└─────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-5">

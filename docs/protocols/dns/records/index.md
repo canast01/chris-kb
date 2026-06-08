@@ -5,9 +5,8 @@
 DNS Records reference covering Overview, Common Record Types, Managing Records with PowerShell, Scavenging and Aging, Dynamic DNS and 1 more sections.
 </div>
 
-        COMMON RECORD TYPES
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Forward zone: corp.local                                                                             │
 │  ┌────┬─────────────────────────────────────────────────┐                                             │
 │  │ A  │ web01  →  192.168.10.100  (IPv4 address)        │                                             │
@@ -25,7 +24,7 @@ DNS Records reference covering Overview, Common Record Types, Managing Records w
 │  └─────┴────────────────────────────────────────────────┘                                             │
 │                                                                                                       │
 │  SOA record: serial + refresh + retry + expire + min-TTL                                              │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview
