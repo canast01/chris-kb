@@ -25,7 +25,7 @@
     
     
       
-        <title>SQL Server — Install Upgrade - Chris KB</title>
+        <title>SQL Server — Install & Upgrade - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SQL Server — Install Upgrade · Chris KB">
+  <meta property="og:title" content="SQL Server — Install &amp; Upgrade · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="SQL Server — Install Upgrade · Chris KB">
+  <meta name="twitter:title" content="SQL Server — Install &amp; Upgrade · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -128,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SQL Server — Install Upgrade
+              SQL Server — Install &amp; Upgrade
             
           </span>
         </div>
@@ -2947,6 +2947,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-place-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Place Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-upgrade-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Upgrade Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-level-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility Level Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3133,10 +3196,60 @@
 
 
 
-<h1 id="sql-server-install-upgrade">SQL Server — Install Upgrade<a class="headerlink" href="#sql-server-install-upgrade" title="Permanent link">&para;</a></h1>
+<h1 id="sql-server-install-upgrade">SQL Server — Install &amp; Upgrade<a class="headerlink" href="#sql-server-install-upgrade" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-SQL Server install upgrade reference.
+SQL Server upgrade procedures — in-place upgrade, side-by-side upgrade, compatibility level, upgrade advisor, and post-upgrade validation.
 </div>
+
+<h2 id="upgrade-path">Upgrade Path<a class="headerlink" href="#upgrade-path" title="Permanent link">&para;</a></h2>
+<p>SQL Server supports in-place upgrade from two prior major versions:
+- <code>SQL 2016 → 2019</code>, <code>SQL 2017 → 2019</code>, <code>SQL 2019 → 2022</code>
+- Cannot skip more than one major version</p>
+<h2 id="pre-upgrade-steps">Pre-Upgrade Steps<a class="headerlink" href="#pre-upgrade-steps" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- 1. Check current version and compatibility level</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">@@</span><span class="k">VERSION</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">compatibility_level</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">databases</span><span class="p">;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">-- 2. Run Upgrade Advisor / Database Experimentation Assistant (DEA)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">-- Download from Microsoft; analyse compatibility issues</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1">-- 3. Check deprecated features in use</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_os_performance_counters</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">counter_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Deprecated features&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1">-- 4. Backup all databases</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">BACKUP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">master</span><span class="p">]</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;D:\Backup\master.bak&#39;</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">COMPRESSION</span><span class="p">;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">BACKUP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">msdb</span><span class="p">]</span><span class="w">   </span><span class="k">TO</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;D:\Backup\msdb.bak&#39;</span><span class="w">   </span><span class="k">WITH</span><span class="w"> </span><span class="n">COMPRESSION</span><span class="p">;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">BACKUP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">MyDB</span><span class="p">]</span><span class="w">   </span><span class="k">TO</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;D:\Backup\MyDB.bak&#39;</span><span class="w">   </span><span class="k">WITH</span><span class="w"> </span><span class="n">COMPRESSION</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="in-place-upgrade">In-Place Upgrade<a class="headerlink" href="#in-place-upgrade" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Mount SQL Server installation media</li>
+<li>Run <code>setup.exe</code> → <strong>Maintenance</strong> → <strong>Edition Upgrade</strong> or directly <strong>Installation</strong> → <strong>Upgrade</strong></li>
+<li>Select features to upgrade; point to existing instance</li>
+<li>SQL Setup upgrades system databases and restarts service</li>
+</ol>
+<h2 id="post-upgrade-steps">Post-Upgrade Steps<a class="headerlink" href="#post-upgrade-steps" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- 1. Update compatibility level to new version (after testing)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">MyDB</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">COMPATIBILITY_LEVEL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">160</span><span class="p">;</span><span class="w">   </span><span class="c1">-- SQL 2022</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- 2. Update statistics</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_updatestats</span><span class="p">;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">-- 3. Rebuild system indexes</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">DBCC</span><span class="w"> </span><span class="n">UPDATEUSAGE</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">-- 4. Verify SQL Agent jobs running</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">enabled</span><span class="p">,</span><span class="w"> </span><span class="n">date_modified</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">msdb</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">sysjobs</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">-- 5. Verify AG health (if applicable)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">role_desc</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="compatibility-level-strategy">Compatibility Level Strategy<a class="headerlink" href="#compatibility-level-strategy" title="Permanent link">&para;</a></h2>
+<p>Keep databases on previous compatibility level immediately after upgrade. Test application, then raise level. This allows rollback of query plan regression without downgrading SQL Server.</p>
 
 
 

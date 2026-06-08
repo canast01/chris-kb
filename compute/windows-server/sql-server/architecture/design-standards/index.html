@@ -2773,6 +2773,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability-topologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Availability Topologies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edition-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edition Selection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tempdb-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tempdb Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2961,8 +3035,91 @@
 
 <h1 id="sql-server-design-standards">SQL Server — Design Standards<a class="headerlink" href="#sql-server-design-standards" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-SQL Server design standards reference.
+SQL Server design standards — HA topology (Always On AG, FCI), edition selection, disk layout, memory sizing, tempdb configuration, and naming conventions.
 </div>
+
+<h2 id="high-availability-topologies">High-Availability Topologies<a class="headerlink" href="#high-availability-topologies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Description</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Always On AG</td>
+<td>Log-based replication; automatic failover; readable secondaries</td>
+<td>Primary HA for production workloads</td>
+</tr>
+<tr>
+<td>Failover Cluster Instance (FCI)</td>
+<td>Shared storage; single database instance; cluster failover</td>
+<td>Legacy HA; SAN-based environments</td>
+</tr>
+<tr>
+<td>Log Shipping</td>
+<td>Manual failover; warm standby; async</td>
+<td>DR / reporting copies</td>
+</tr>
+<tr>
+<td>Database Mirroring</td>
+<td>Deprecated in SQL 2016; use AG instead</td>
+<td>Legacy only</td>
+</tr>
+</tbody>
+</table>
+<h2 id="edition-selection">Edition Selection<a class="headerlink" href="#edition-selection" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Edition</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enterprise</td>
+<td>Always On AG, partitioning, online operations, advanced analytics</td>
+</tr>
+<tr>
+<td>Standard</td>
+<td>Limited AG (2 replicas); no online index rebuild on most operations</td>
+</tr>
+<tr>
+<td>Developer</td>
+<td>Full Enterprise features; free; non-production only</td>
+</tr>
+<tr>
+<td>Express</td>
+<td>Free; 10 GB limit; no SQL Agent</td>
+</tr>
+</tbody>
+</table>
+<h2 id="disk-layout">Disk Layout<a class="headerlink" href="#disk-layout" title="Permanent link">&para;</a></h2>
+<p>Separate volumes for:
+- <strong>Data files</strong> (<code>.mdf</code>, <code>.ndf</code>) — RAID 10 / SSD
+- <strong>Transaction log</strong> (<code>.ldf</code>) — sequential writes; dedicated SSD spindles
+- <strong>tempdb</strong> — local NVMe preferred; one file per CPU core (up to 8)
+- <strong>Backups</strong> — separate volume or off-host</p>
+<h2 id="memory-sizing">Memory Sizing<a class="headerlink" href="#memory-sizing" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Set max server memory (leave 10 GB for OS)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_configure</span><span class="w"> </span><span class="s1">&#39;max server memory (MB)&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">51200</span><span class="p">;</span><span class="w">   </span><span class="c1">-- 50 GB for SQL</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">RECONFIGURE</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">OVERRIDE</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="tempdb-best-practices">tempdb Best Practices<a class="headerlink" href="#tempdb-best-practices" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Equal-sized files: one per logical CPU core (cap at 8)</li>
+<li>Pre-sized to expected workload</li>
+<li>Trace flag 1118 / 1117 built-in from SQL 2016+</li>
+</ul>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Databases: <code>AppName_Env</code> — <code>CRM_Prod</code>, <code>ERP_Dev</code></li>
+<li>Logins/users: <code>app_&lt;name&gt;_&lt;rw|ro&gt;</code>, <code>svc_&lt;servicename&gt;</code></li>
+<li>AG names: <code>AG_&lt;DatabaseName&gt;</code> — <code>AG_CRM</code></li>
+</ul>
 
 
 

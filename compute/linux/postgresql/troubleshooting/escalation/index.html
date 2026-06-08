@@ -2833,6 +2833,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Thresholds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evidence-to-collect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence to Collect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wraparound-emergency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wraparound Emergency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-for-vendor-dba-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information for Vendor / DBA Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3021,8 +3073,91 @@
 
 <h1 id="postgresql-escalation">PostgreSQL — Escalation<a class="headerlink" href="#postgresql-escalation" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-PostgreSQL escalation reference.
+PostgreSQL escalation criteria — P1/P2 indicators, evidence bundle to collect before engaging DBA support, and crash recovery guidance.
 </div>
+
+<h2 id="escalation-thresholds">Escalation Thresholds<a class="headerlink" href="#escalation-thresholds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Severity</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database unreachable / postmaster down</td>
+<td>P1</td>
+<td>Page DBA on-call immediately</td>
+</tr>
+<tr>
+<td>Replica SQL stopped / replication broken</td>
+<td>P2</td>
+<td>Alert DBA; begin lag triage</td>
+</tr>
+<tr>
+<td>Lock wait chain &gt; 10 min with app impact</td>
+<td>P1</td>
+<td>Cancel blockers; page DBA</td>
+</tr>
+<tr>
+<td>Disk &gt; 90% on data dir or WAL</td>
+<td>P1</td>
+<td>Emergency cleanup; page DBA</td>
+</tr>
+<tr>
+<td>Corruption detected (PANIC in log)</td>
+<td>P1</td>
+<td>Stop writes; do not restart; page DBA</td>
+</tr>
+<tr>
+<td>Autovacuum wraparound warning</td>
+<td>P2</td>
+<td>Alert DBA; schedule emergency vacuum</td>
+</tr>
+<tr>
+<td>Connection exhaustion (<code>FATAL: connection limit exceeded</code>)</td>
+<td>P1</td>
+<td>Kill idle sessions; page DBA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evidence-to-collect">Evidence to Collect<a class="headerlink" href="#evidence-to-collect" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Last 200 lines of error log</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/postgresql/postgresql-*.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-error.log
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Active queries</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pid, state, wait_event_type, now()-query_start AS dur, left(query,80) FROM pg_stat_activity WHERE state != &#39;idle&#39; ORDER BY dur DESC;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-activity.txt
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Lock contention</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM pg_locks WHERE NOT granted;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-locks.txt
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Replication status</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM pg_stat_replication;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-replication.txt
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 5. Disk usage</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/postgresql<span class="w"> </span>&gt;<span class="w"> </span>/tmp/disk.txt
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/postgresql/*/data/pg_wal/<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/disk.txt
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># 6. Autovacuum status</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT relname, n_dead_tup, last_autovacuum FROM pg_stat_user_tables ORDER BY n_dead_tup DESC LIMIT 20;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-vacuum.txt
+</code></pre></div>
+<h2 id="wraparound-emergency">Wraparound Emergency<a class="headerlink" href="#wraparound-emergency" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># If VACUUM FREEZE needed urgently to prevent transaction ID wraparound</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>vacuumdb<span class="w"> </span>--all<span class="w"> </span>--freeze<span class="w"> </span>--analyze
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Or on specific database</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;VACUUM FREEZE ANALYZE;&quot;</span><span class="w"> </span>app_prod
+</code></pre></div>
+<h2 id="information-for-vendor-dba-support">Information for Vendor / DBA Support<a class="headerlink" href="#information-for-vendor-dba-support" title="Permanent link">&para;</a></h2>
+<ul>
+<li>PostgreSQL version (<code>SELECT version()</code>)</li>
+<li>OS version (<code>uname -a</code>)</li>
+<li>Replication topology</li>
+<li>Timeline: when did the issue start?</li>
+<li>Recent changes: upgrades, schema changes, load spikes</li>
+<li>WAL archive status and last successful archive</li>
+</ul>
 
 
 

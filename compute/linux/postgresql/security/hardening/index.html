@@ -2891,6 +2891,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#restrict-superuser-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrict Superuser Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pg_hbaconf-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pg_hba.conf Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#os-level-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OS-Level Permissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disable-unnecessary-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable Unnecessary Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cis-benchmark-key-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIS Benchmark Key Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3079,8 +3153,78 @@
 
 <h1 id="postgresql-hardening">PostgreSQL — Hardening<a class="headerlink" href="#postgresql-hardening" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-PostgreSQL hardening reference.
+PostgreSQL hardening — disabling superuser remote login, SSL enforcement, restricting pg_hba.conf, file permissions, and CIS benchmark key controls.
 </div>
+
+<h2 id="restrict-superuser-access">Restrict Superuser Access<a class="headerlink" href="#restrict-superuser-access" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- postgres superuser should only connect via local socket</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">-- pg_hba.conf:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">-- local  all  postgres  peer</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">-- host   all  postgres  127.0.0.1/32  reject  ← explicitly reject remote postgres login</span>
+</code></pre></div>
+<h2 id="configuration-hardening">Configuration Hardening<a class="headerlink" href="#configuration-hardening" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># postgresql.conf</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="na">listen_addresses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;specific-ip&#39;</span><span class="w">    </span><span class="c1"># never &#39;*&#39; without firewall</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="na">ssl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="na">ssl_min_protocol_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;TLSv1.2&#39;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="na">log_connections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="na">log_disconnections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="na">log_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">off</span><span class="w">                   </span><span class="c1"># avoid logging query durations in production (noise)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="na">log_min_duration_statement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2000</span><span class="w">    </span><span class="c1"># log slow queries (&gt; 2s) only</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="na">log_line_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h &#39;</span>
+</code></pre></div>
+<h2 id="pg_hbaconf-hardening">pg_hba.conf Hardening<a class="headerlink" href="#pg_hbaconf-hardening" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Deny all by default; allow only known sources
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>host    all  all  0.0.0.0/0  reject
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>hostssl app_prod  appuser  10.0.1.0/24  scram-sha-256
+</code></pre></div>
+<h2 id="os-level-permissions">OS-Level Permissions<a class="headerlink" href="#os-level-permissions" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Data directory must be owned by postgres, mode 700</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/var/lib/pgsql/16/data
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># drwx------ 19 postgres postgres 4096 ...</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Config files: readable by postgres only</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/var/lib/pgsql/16/data/postgresql.conf
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/var/lib/pgsql/16/data/pg_hba.conf
+</code></pre></div>
+<h2 id="disable-unnecessary-features">Disable Unnecessary Features<a class="headerlink" href="#disable-unnecessary-features" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Check if file_fdw or dblink are installed (potential data exfiltration vectors)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_extension</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">extname</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;file_fdw&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dblink&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;postgres_fdw&#39;</span><span class="p">);</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">-- Remove if not needed</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">DROP</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">file_fdw</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="cis-benchmark-key-controls">CIS Benchmark Key Controls<a class="headerlink" href="#cis-benchmark-key-controls" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No remote superuser</td>
+<td><code>SELECT * FROM pg_hba_file_rules WHERE username='{postgres}' AND type='host'</code> → 0 rows</td>
+</tr>
+<tr>
+<td>SSL enforced</td>
+<td><code>SHOW ssl</code> → on</td>
+</tr>
+<tr>
+<td><code>log_connections = on</code></td>
+<td><code>SHOW log_connections</code> → on</td>
+</tr>
+<tr>
+<td>Strong auth method</td>
+<td>All <code>host</code> lines in pg_hba.conf use <code>scram-sha-256</code></td>
+</tr>
+<tr>
+<td>Data dir mode 700</td>
+<td><code>stat /var/lib/pgsql/16/data</code> → permissions 700</td>
+</tr>
+</tbody>
+</table>
 
 
 

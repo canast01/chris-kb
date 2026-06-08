@@ -3064,6 +3064,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-renewal-runbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Renewal Runbook
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cyberark-password-rotation-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CyberArk Password Rotation Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monthly-access-recertification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monthly Access Recertification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weekly-firewall-rule-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weekly Firewall Rule Review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardening-check-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardening Check Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3216,8 +3279,90 @@
 
 <h1 id="security-operational-runbooks">Security — Operational Runbooks<a class="headerlink" href="#security-operational-runbooks" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Runbooks for security operational procedures — certificate renewals, PAM rotations, and hardening checks.
+Security operational runbooks — certificate renewal, PAM credential rotation, firewall rule review, access recertification, and hardening check schedule.
 </div>
+
+<h2 id="certificate-renewal-runbook">Certificate Renewal Runbook<a class="headerlink" href="#certificate-renewal-runbook" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Check expiry of all monitored certs (30-day advance warning)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>host1.corp<span class="w"> </span>host2.corp<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">: &quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$host</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">done</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 2. Generate new CSR</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>/etc/ssl/private/server.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-out<span class="w"> </span>/etc/ssl/certs/server.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=host.corp.local/O=Corp/C=AU&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 3. Submit to CA (internal PKI or public CA)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 4. Install new cert</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>cp<span class="w"> </span>new-cert.crt<span class="w"> </span>/etc/ssl/certs/server.crt
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx<span class="w">   </span><span class="c1"># or haproxy, apache</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># 5. Verify</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host.corp.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate
+</code></pre></div>
+<h2 id="cyberark-password-rotation-check">CyberArk Password Rotation Check<a class="headerlink" href="#cyberark-password-rotation-check" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify CPM rotation completed successfully</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># In CyberArk PVWA: Policies → Safe Management → select safe</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check Last Modified date for each account matches expected rotation interval</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Test that rotated credential works</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mysql<span class="w"> </span>-u<span class="w"> </span>app_user<span class="w"> </span>-p<span class="k">$(</span>cyberark-cli<span class="w"> </span>get-password<span class="w"> </span>--safe<span class="w"> </span>AppSafe<span class="w"> </span>--account<span class="w"> </span>AppDB<span class="k">)</span>
+</code></pre></div>
+<h2 id="monthly-access-recertification">Monthly Access Recertification<a class="headerlink" href="#monthly-access-recertification" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Export user list from AD: <code>Get-ADGroupMember -Identity "SQL_DBA" | Select Name, SamAccountName</code></li>
+<li>Cross-reference against HR offboarding list</li>
+<li>Identify accounts not logged in for 90 days: <code>Search-ADAccount -AccountInactive -TimeSpan 90</code></li>
+<li>Disable dormant accounts; schedule for removal after 30 days</li>
+</ol>
+<h2 id="weekly-firewall-rule-review">Weekly Firewall Rule Review<a class="headerlink" href="#weekly-firewall-rule-review" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Review recently added rules (last 7 days from change log)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Check for any &quot;any any&quot; or overly broad rules</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;state RELATED,ESTABLISHED&quot;</span><span class="w">  </span><span class="c1"># Linux</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Get-NetFirewallRule<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Enabled<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;True&#39;</span><span class="w"> </span>-and<span class="w"> </span><span class="nv">$_</span>.Direction<span class="w"> </span>-eq<span class="w"> </span><span class="s1">&#39;Inbound&#39;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Format-Table
+</code></pre></div>
+<h2 id="hardening-check-schedule">Hardening Check Schedule<a class="headerlink" href="#hardening-check-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Frequency</th>
+<th>Check</th>
+<th>Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daily</td>
+<td>Privileged account login review</td>
+<td>SIEM/CyberArk audit</td>
+</tr>
+<tr>
+<td>Weekly</td>
+<td>Failed auth events &gt; threshold</td>
+<td>SIEM alert</td>
+</tr>
+<tr>
+<td>Monthly</td>
+<td>CIS benchmark scan</td>
+<td>Lynis / CIS-CAT</td>
+</tr>
+<tr>
+<td>Quarterly</td>
+<td>Penetration test (internal)</td>
+<td>Internal red team</td>
+</tr>
+<tr>
+<td>Annually</td>
+<td>Full security audit</td>
+<td>External assessor</td>
+</tr>
+</tbody>
+</table>
 
 
 

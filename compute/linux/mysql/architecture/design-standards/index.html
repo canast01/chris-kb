@@ -2833,6 +2833,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability-topologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Availability Topologies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sizing-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-strategy-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Strategy Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema Design Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3021,8 +3084,119 @@
 
 <h1 id="mysql-mariadb-design-standards">MySQL / MariaDB — Design Standards<a class="headerlink" href="#mysql-mariadb-design-standards" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-MySQL / MariaDB design standards reference.
+MySQL design standards — HA topology choices, replication sizing, InnoDB tuning baselines, naming conventions, and backup strategy requirements.
 </div>
+
+<h2 id="high-availability-topologies">High-Availability Topologies<a class="headerlink" href="#high-availability-topologies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Description</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Async replication (1+1)</td>
+<td>Primary + 1 replica; manual failover</td>
+<td>Dev/test; low RPO tolerance</td>
+</tr>
+<tr>
+<td>Semi-sync (1+1)</td>
+<td>Primary ACKs replica before commit</td>
+<td>Production where data loss is unacceptable</td>
+</tr>
+<tr>
+<td>Group Replication</td>
+<td>Multi-primary or single-primary cluster; auto-failover</td>
+<td>High write availability</td>
+</tr>
+<tr>
+<td>InnoDB Cluster</td>
+<td>Group Replication + MySQL Router + MySQL Shell</td>
+<td>Fully managed HA with automatic routing</td>
+</tr>
+<tr>
+<td>ProxySQL</td>
+<td>Connection proxy; routes read/write split automatically</td>
+<td>Any topology where app must not change on failover</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Baseline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>innodb_buffer_pool_size</code></td>
+<td>70–80% of dedicated DB server RAM</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>4+ cores; InnoDB scales well to 16 cores</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>IOPS-optimised disk; SSD required for production</td>
+</tr>
+<tr>
+<td>Log volume</td>
+<td>Separate mount for <code>/var/lib/mysql</code>; avoid sharing with OS</td>
+</tr>
+</tbody>
+</table>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Schema names: lowercase, underscores — <code>app_prod</code>, <code>reporting_dw</code></li>
+<li>Tables: lowercase singular nouns — <code>user</code>, <code>order_line</code></li>
+<li>Indexes: <code>idx_&lt;table&gt;_&lt;columns&gt;</code> — <code>idx_user_email</code></li>
+<li>Users: <code>&lt;app&gt;_rw</code> (read-write), <code>&lt;app&gt;_ro</code> (read-only), <code>&lt;app&gt;_admin</code></li>
+</ul>
+<h2 id="backup-strategy-requirements">Backup Strategy Requirements<a class="headerlink" href="#backup-strategy-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Method</th>
+<th>RTO</th>
+<th>RPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daily full</td>
+<td><code>mysqldump</code> or Percona XtraBackup</td>
+<td>Hours</td>
+<td>24 h</td>
+</tr>
+<tr>
+<td>Hourly logical</td>
+<td>Binlog backup</td>
+<td>Minutes</td>
+<td>1 h</td>
+</tr>
+<tr>
+<td>Point-in-time</td>
+<td>Binlog + full restore</td>
+<td>Variable</td>
+<td>Seconds</td>
+</tr>
+</tbody>
+</table>
+<p>Always test restores quarterly. Store backups off the DB host.</p>
+<h2 id="schema-design-rules">Schema Design Rules<a class="headerlink" href="#schema-design-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Every table must have a primary key (use <code>AUTO_INCREMENT BIGINT UNSIGNED</code>)</li>
+<li>Avoid <code>TEXT</code>/<code>BLOB</code> in frequently joined tables; store in separate table or object storage</li>
+<li>Use <code>DATETIME</code> not <code>TIMESTAMP</code> for dates beyond 2038</li>
+<li>Enable <code>innodb_strict_mode</code> to catch row size violations at DDL time</li>
+</ul>
 
 
 

@@ -2773,6 +2773,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#application-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Drivers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linked-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linked Servers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssis-ssrs-ssas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSIS / SSRS / SSAS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2961,8 +3013,115 @@
 
 <h1 id="sql-server-integrations">SQL Server — Integrations<a class="headerlink" href="#sql-server-integrations" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-SQL Server integrations reference.
+SQL Server integration points — application drivers (JDBC, ODBC, ADO.NET, pyodbc), linked servers, SSRS/SSIS/SSAS, monitoring via DMVs and third-party tools.
 </div>
+
+<h2 id="application-drivers">Application Drivers<a class="headerlink" href="#application-drivers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Driver</th>
+<th>Connection string</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.NET</td>
+<td><code>Microsoft.Data.SqlClient</code></td>
+<td><code>Server=host;Database=db;User Id=u;Password=p;</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code>mssql-jdbc</code></td>
+<td><code>jdbc:sqlserver://host:1433;databaseName=db</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>pyodbc</code> + ODBC Driver 18</td>
+<td><code>mssql+pyodbc://user:pass@host/db?driver=ODBC+Driver+18+for+SQL+Server</code></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td><code>mssql</code> / <code>tedious</code></td>
+<td>Use <code>mssql</code> npm package with pool configuration</td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>go-mssqldb</code></td>
+<td><code>sqlserver://user:pass@host?database=db</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="linked-servers">Linked Servers<a class="headerlink" href="#linked-servers" title="Permanent link">&para;</a></h2>
+<p>Linked servers allow T-SQL queries across instances:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Create a linked server</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_addlinkedserver</span><span class="w"> </span><span class="o">@</span><span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;REMOTE_SERVER&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">srvproduct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SQL Server&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_addlinkedsrvlogin</span><span class="w"> </span><span class="o">@</span><span class="n">rmtsrvname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;REMOTE_SERVER&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">useself</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">     </span><span class="o">@</span><span class="n">rmtuser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;remote_user&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">rmtpassword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pass&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">-- Query via linked server</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">[</span><span class="n">REMOTE_SERVER</span><span class="p">].[</span><span class="k">database</span><span class="p">].[</span><span class="k">schema</span><span class="p">].[</span><span class="k">table</span><span class="p">];</span>
+</code></pre></div>
+<h2 id="ssis-ssrs-ssas">SSIS / SSRS / SSAS<a class="headerlink" href="#ssis-ssrs-ssas" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>Integration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSIS</td>
+<td>ETL / data integration</td>
+<td>Packages deployed to SSISDB; scheduled via SQL Agent</td>
+</tr>
+<tr>
+<td>SSRS</td>
+<td>Reporting server</td>
+<td>Connects to SQL Server data sources; REST API for embedding</td>
+</tr>
+<tr>
+<td>SSAS</td>
+<td>Analytical / OLAP</td>
+<td>Tabular or multidimensional model; Power BI can connect directly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQL Server Management Studio</td>
+<td>DMV queries; Activity Monitor; Query Store</td>
+</tr>
+<tr>
+<td>Prometheus</td>
+<td><code>sql_exporter</code> or <code>mssql_exporter</code> — exposes DMV metrics</td>
+</tr>
+<tr>
+<td>Datadog</td>
+<td>SQL Server integration; collects DMV and WMI metrics</td>
+</tr>
+<tr>
+<td>SolarWinds DPA</td>
+<td>Deep query analysis; execution plan history</td>
+</tr>
+<tr>
+<td>Redgate SQL Monitor</td>
+<td>Instance/AG health; performance baselines</td>
+</tr>
+</tbody>
+</table>
+<p>Key DMVs for monitoring: <code>sys.dm_os_wait_stats</code>, <code>sys.dm_exec_query_stats</code>, <code>sys.dm_os_performance_counters</code></p>
 
 
 

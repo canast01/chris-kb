@@ -2453,6 +2453,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#protocol-symptom-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Symptom Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ntp-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fibre-channel-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fibre Channel Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2587,8 +2661,95 @@
 
 <h1 id="protocols-troubleshooting">Protocols — Troubleshooting<a class="headerlink" href="#protocols-troubleshooting" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Diagnosing protocol-level issues — FC fabric errors, TLS handshake failures, LDAP connectivity, and DNS/NTP problems.
+Protocol troubleshooting — FC fabric errors, TLS handshake failures, LDAP connectivity, DNS resolution failures, NTP drift, and HTTP/HTTPS diagnosis.
 </div>
+
+<h2 id="protocol-symptom-index">Protocol Symptom Index<a class="headerlink" href="#protocol-symptom-index" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Protocol</th>
+<th>First command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name resolution fails</td>
+<td>DNS</td>
+<td><code>dig @&lt;server&gt; A hostname</code></td>
+</tr>
+<tr>
+<td>Kerberos auth fails</td>
+<td>DNS / Kerberos</td>
+<td><code>dcdiag /test:dns</code>, check NTP sync</td>
+</tr>
+<tr>
+<td>TLS handshake fails</td>
+<td>TLS</td>
+<td><code>openssl s_client -connect host:443</code></td>
+</tr>
+<tr>
+<td>Certificate not trusted</td>
+<td>TLS/PKI</td>
+<td><code>openssl verify -CAfile ca.crt cert.crt</code></td>
+</tr>
+<tr>
+<td>LDAP bind fails</td>
+<td>LDAP</td>
+<td><code>ldapsearch -H ldap://dc -x -b "dc=corp,dc=local"</code></td>
+</tr>
+<tr>
+<td>FC port not online</td>
+<td>Fibre Channel</td>
+<td><code>fcinfo hba-port</code>, <code>show interface fc</code></td>
+</tr>
+<tr>
+<td>iSCSI target unreachable</td>
+<td>iSCSI</td>
+<td><code>iscsiadm -m discovery</code>, check port 3260</td>
+</tr>
+<tr>
+<td>NTP time drift</td>
+<td>NTP</td>
+<td><code>timedatectl status</code>, <code>ntpq -pn</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="dns-troubleshooting">DNS Troubleshooting<a class="headerlink" href="#dns-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>dig<span class="w"> </span>@&lt;authoritative-server&gt;<span class="w"> </span>A<span class="w"> </span>hostname<span class="w">      </span><span class="c1"># query specific server</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>+trace<span class="w"> </span>hostname<span class="w">                          </span><span class="c1"># trace from root</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>nslookup<span class="w"> </span>hostname<span class="w"> </span>&lt;server&gt;<span class="w">                   </span><span class="c1"># Windows/Linux</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>dig<span class="w"> </span>-x<span class="w"> </span>&lt;IP&gt;<span class="w">                                  </span><span class="c1"># reverse lookup</span>
+</code></pre></div>
+<p>Common problems: wrong resolver, stale TTL, split-horizon misconfiguration. See <a href="../dns/troubleshooting/">DNS Troubleshooting</a>.</p>
+<h2 id="tls-troubleshooting">TLS Troubleshooting<a class="headerlink" href="#tls-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>host:443<span class="w"> </span>-servername<span class="w"> </span>host.example.com
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Look for: Verify return code: 0 (ok)</span>
+</code></pre></div>
+<p>See <a href="../tls/troubleshooting/">TLS Troubleshooting</a>.</p>
+<h2 id="ldap-troubleshooting">LDAP Troubleshooting<a class="headerlink" href="#ldap-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Anonymous bind test</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.local<span class="w"> </span>-x<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span><span class="w"> </span><span class="s2">&quot;(objectClass=*)&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Authenticated bind</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.local<span class="w"> </span>-D<span class="w"> </span><span class="s2">&quot;CORP\svc_app&quot;</span><span class="w"> </span>-W<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;OU=Users,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span>
+</code></pre></div>
+<p>Common errors: <code>LDAP_INVALID_CREDENTIALS</code> (wrong bind DN), <code>LDAP_UNWILLING_TO_PERFORM</code> (anonymous bind disabled), port 389/636 blocked.</p>
+<h2 id="ntp-troubleshooting">NTP Troubleshooting<a class="headerlink" href="#ntp-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>timedatectl<span class="w"> </span>status<span class="w">                  </span><span class="c1"># Linux: show time source and sync status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ntpq<span class="w"> </span>-pn<span class="w">                            </span><span class="c1"># show NTP peer status (reach &gt; 0 = receiving)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>chronyc<span class="w"> </span>tracking<span class="w">                    </span><span class="c1"># if using chrony: offset and stratum</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>w32tm<span class="w"> </span>/query<span class="w"> </span>/status<span class="w">                </span><span class="c1"># Windows: time service status</span>
+</code></pre></div>
+<p>Alert threshold: offset &gt; 5 minutes breaks Kerberos authentication.</p>
+<h2 id="fibre-channel-troubleshooting">Fibre Channel Troubleshooting<a class="headerlink" href="#fibre-channel-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>fcinfo<span class="w"> </span>hba-port<span class="w">                     </span><span class="c1"># Linux: show HBA ports and WWPNs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cat<span class="w"> </span>/sys/class/fc_host/host*/port_state<span class="w">   </span><span class="c1"># port online/offline</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w">               </span><span class="c1"># detailed HBA info</span>
+</code></pre></div>
+<p>See <a href="../fibre-channel/">Fibre Channel</a> for zoning and fabric troubleshooting.</p>
 
 
 

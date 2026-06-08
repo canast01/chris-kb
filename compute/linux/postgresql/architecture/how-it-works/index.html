@@ -2833,6 +2833,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#process-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shared-buffer-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Buffer Cache
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wal-write-ahead-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAL (Write-Ahead Log)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mvcc-and-autovacuum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MVCC and Autovacuum
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-configuration-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Configuration Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3021,8 +3084,111 @@
 
 <h1 id="postgresql-how-it-works">PostgreSQL — How It Works<a class="headerlink" href="#postgresql-how-it-works" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-PostgreSQL how it works reference.
+PostgreSQL architecture — process model, shared buffer cache, WAL, MVCC, autovacuum, streaming replication, and query planner internals.
 </div>
+
+<h2 id="process-model">Process Model<a class="headerlink" href="#process-model" title="Permanent link">&para;</a></h2>
+<p>PostgreSQL uses a multi-process model (not multi-threaded):</p>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>postgres</code> (postmaster)</td>
+<td>Listener; spawns backend for each connection</td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>One per client connection; handles queries</td>
+</tr>
+<tr>
+<td><code>autovacuum</code></td>
+<td>Cleans dead tuples; updates stats; runs on schedule</td>
+</tr>
+<tr>
+<td><code>walwriter</code></td>
+<td>Flushes WAL buffers to disk</td>
+</tr>
+<tr>
+<td><code>bgwriter</code></td>
+<td>Writes dirty shared buffer pages to disk</td>
+</tr>
+<tr>
+<td><code>checkpointer</code></td>
+<td>Periodic checkpoint: flush all dirty pages, advance WAL recovery point</td>
+</tr>
+<tr>
+<td><code>wal sender</code></td>
+<td>Sends WAL to streaming replicas</td>
+</tr>
+<tr>
+<td><code>wal receiver</code></td>
+<td>Receives WAL on replica</td>
+</tr>
+</tbody>
+</table>
+<h2 id="shared-buffer-cache">Shared Buffer Cache<a class="headerlink" href="#shared-buffer-cache" title="Permanent link">&para;</a></h2>
+<p><code>shared_buffers</code> is the in-memory page cache. Set to 25% of RAM (OS page cache handles the rest via <code>effective_cache_size</code>). Access path:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Query → shared_buffers (hit?) → OS page cache → disk
+</code></pre></div>
+<h2 id="wal-write-ahead-log">WAL (Write-Ahead Log)<a class="headerlink" href="#wal-write-ahead-log" title="Permanent link">&para;</a></h2>
+<p>All changes are written to WAL before data files:
+- WAL files in <code>pg_wal/</code> — each 16 MB by default
+- <code>wal_level</code>: <code>minimal</code> / <code>replica</code> / <code>logical</code> — must be <code>replica</code> for streaming
+- <code>archive_mode=on</code> + <code>archive_command</code> → PITR</p>
+<h2 id="mvcc-and-autovacuum">MVCC and Autovacuum<a class="headerlink" href="#mvcc-and-autovacuum" title="Permanent link">&para;</a></h2>
+<p>PostgreSQL uses MVCC: old row versions remain until vacuumed. Dead tuples accumulate and cause table bloat. <code>autovacuum</code> reclaims space and updates planner statistics.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Check table bloat / dead tuples</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">relname</span><span class="p">,</span><span class="w"> </span><span class="n">n_dead_tup</span><span class="p">,</span><span class="w"> </span><span class="n">n_live_tup</span><span class="p">,</span><span class="w"> </span><span class="n">last_autovacuum</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_user_tables</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">n_dead_tup</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="key-configuration-parameters">Key Configuration Parameters<a class="headerlink" href="#key-configuration-parameters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shared_buffers</code></td>
+<td>128MB</td>
+<td>Set to 25% of RAM</td>
+</tr>
+<tr>
+<td><code>effective_cache_size</code></td>
+<td>4GB</td>
+<td>Hint to planner; set to 75% of RAM</td>
+</tr>
+<tr>
+<td><code>work_mem</code></td>
+<td>4MB</td>
+<td>Per-sort/hash; multiply by max_connections for total</td>
+</tr>
+<tr>
+<td><code>maintenance_work_mem</code></td>
+<td>64MB</td>
+<td>For VACUUM, CREATE INDEX; set to 1–2 GB</td>
+</tr>
+<tr>
+<td><code>max_connections</code></td>
+<td>100</td>
+<td>Each connection ~5–10 MB RAM</td>
+</tr>
+<tr>
+<td><code>wal_level</code></td>
+<td>replica</td>
+<td>Must be <code>replica</code> for streaming replication</td>
+</tr>
+</tbody>
+</table>
 
 
 

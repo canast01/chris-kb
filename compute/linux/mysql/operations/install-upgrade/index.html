@@ -25,7 +25,7 @@
     
     
       
-        <title>MySQL / MariaDB — Install Upgrade - Chris KB</title>
+        <title>MySQL / MariaDB — Install & Upgrade - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="MySQL / MariaDB — Install Upgrade · Chris KB">
+  <meta property="og:title" content="MySQL / MariaDB — Install &amp; Upgrade · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="MySQL / MariaDB — Install Upgrade · Chris KB">
+  <meta name="twitter:title" content="MySQL / MariaDB — Install &amp; Upgrade · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -128,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              MySQL / MariaDB — Install Upgrade
+              MySQL / MariaDB — Install &amp; Upgrade
             
           </span>
         </div>
@@ -3007,6 +3007,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-upgrade-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Upgrade Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-upgrade-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-place-upgrade-rhel-rocky" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Place Upgrade (RHEL / Rocky)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-place-upgrade-ubuntu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Place Upgrade (Ubuntu)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-upgrade-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Upgrade Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rolling-upgrade-replicated-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rolling Upgrade (Replicated Setup)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3193,10 +3267,63 @@
 
 
 
-<h1 id="mysql-mariadb-install-upgrade">MySQL / MariaDB — Install Upgrade<a class="headerlink" href="#mysql-mariadb-install-upgrade" title="Permanent link">&para;</a></h1>
+<h1 id="mysql-mariadb-install-upgrade">MySQL / MariaDB — Install &amp; Upgrade<a class="headerlink" href="#mysql-mariadb-install-upgrade" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-MySQL / MariaDB install upgrade reference.
+MySQL install and upgrade procedures — major version upgrade path, in-place upgrade steps, upgrade checker tool, and post-upgrade validation.
 </div>
+
+<h2 id="version-upgrade-path">Version Upgrade Path<a class="headerlink" href="#version-upgrade-path" title="Permanent link">&para;</a></h2>
+<p>Always upgrade one major version at a time: <code>5.7 → 8.0 → 8.4</code></p>
+<p>Never skip major versions. Minor versions (8.0.x → 8.0.y) are in-place.</p>
+<h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Run upgrade compatibility check (MySQL 8.0+)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mysqlcheck<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--all-databases<span class="w"> </span>--check-upgrade
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># MySQL Shell upgrade checker (8.0 → 8.4)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mysqlsh<span class="w"> </span>--<span class="w"> </span>util<span class="w"> </span>checkForServerUpgrade<span class="w"> </span>root@localhost:3306
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Backup before any upgrade</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mysqldump<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>--single-transaction<span class="w"> </span>--all-databases<span class="w"> </span>&gt;<span class="w"> </span>pre-upgrade-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.sql
+</code></pre></div>
+<h2 id="in-place-upgrade-rhel-rocky">In-Place Upgrade (RHEL / Rocky)<a class="headerlink" href="#in-place-upgrade-rhel-rocky" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Stop MySQL</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>mysqld
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Upgrade package</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>upgrade<span class="w"> </span>mysql-community-server
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Start and run upgrade</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>mysqld
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sudo<span class="w"> </span>mysql_upgrade<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w">     </span><span class="c1"># MySQL 5.7 only; 8.0+ auto-upgrades</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Verify</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span>
+</code></pre></div>
+<h2 id="in-place-upgrade-ubuntu">In-Place Upgrade (Ubuntu)<a class="headerlink" href="#in-place-upgrade-ubuntu" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>mysql
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mysql-server<span class="w">   </span><span class="c1"># upgrades to latest in configured repo</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>mysql
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>sudo<span class="w"> </span>mysql_upgrade<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w">          </span><span class="c1"># if 5.7 → 8.0</span>
+</code></pre></div>
+<h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check error log for upgrade warnings</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/mysqld.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;error\|warn&#39;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify replication still running</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW REPLICA STATUS\G&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;Running|Error|Lag&#39;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check slow query log still active</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW VARIABLES LIKE &#39;slow_query%&#39;;&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Run a representative query plan and compare EXPLAIN output</span>
+</code></pre></div>
+<h2 id="rolling-upgrade-replicated-setup">Rolling Upgrade (Replicated Setup)<a class="headerlink" href="#rolling-upgrade-replicated-setup" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Upgrade replica(s) first; validate replication resumes</li>
+<li>Promote a replica to primary (failover)</li>
+<li>Upgrade former primary (now replica)</li>
+<li>Failover back if needed</li>
+</ol>
 
 
 

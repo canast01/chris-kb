@@ -2833,6 +2833,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability-topologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Availability Topologies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-pooling-required-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Pooling (Required in Production)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sizing-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sizing Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3021,8 +3084,108 @@
 
 <h1 id="postgresql-design-standards">PostgreSQL — Design Standards<a class="headerlink" href="#postgresql-design-standards" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-PostgreSQL design standards reference.
+PostgreSQL design standards — HA patterns (streaming + Patroni), connection pooling, sizing guidelines, schema conventions, and backup requirements.
 </div>
+
+<h2 id="high-availability-topologies">High-Availability Topologies<a class="headerlink" href="#high-availability-topologies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Description</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Streaming replication (1+1)</td>
+<td>Primary + hot standby; manual failover with <code>pg_promote</code></td>
+<td>Simple HA; minimal tooling</td>
+</tr>
+<tr>
+<td>Patroni</td>
+<td>Streaming + etcd/ZooKeeper; automatic failover; leader election</td>
+<td>Production HA; cloud-native</td>
+</tr>
+<tr>
+<td>Pgpool-II</td>
+<td>Connection proxy; read splitting; failover</td>
+<td>Simpler proxy; less common now</td>
+</tr>
+<tr>
+<td>Citus</td>
+<td>Distributed PostgreSQL; sharding</td>
+<td>Large-scale analytics</td>
+</tr>
+</tbody>
+</table>
+<h2 id="connection-pooling-required-in-production">Connection Pooling (Required in Production)<a class="headerlink" href="#connection-pooling-required-in-production" title="Permanent link">&para;</a></h2>
+<p>PgBouncer between app and PostgreSQL:
+- <code>transaction</code> mode: best performance; connection returned after each transaction
+- <code>session</code> mode: safer; connection held for full client session
+- Typical: 20–100 PgBouncer connections per PostgreSQL max_connections</p>
+<h2 id="sizing-guidelines">Sizing Guidelines<a class="headerlink" href="#sizing-guidelines" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Baseline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shared_buffers</code></td>
+<td>25% of RAM</td>
+</tr>
+<tr>
+<td><code>effective_cache_size</code></td>
+<td>75% of RAM</td>
+</tr>
+<tr>
+<td><code>work_mem</code></td>
+<td>RAM × 0.25 ÷ max_connections</td>
+</tr>
+<tr>
+<td><code>max_connections</code></td>
+<td>100–200; use PgBouncer to serve more app threads</td>
+</tr>
+</tbody>
+</table>
+<h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Databases: lowercase, underscores — <code>app_prod</code>, <code>reporting</code></li>
+<li>Schemas: separate per app — <code>app</code>, <code>audit</code>, <code>reporting</code></li>
+<li>Tables: lowercase plural — <code>users</code>, <code>order_lines</code></li>
+<li>Indexes: <code>ix_&lt;table&gt;_&lt;columns&gt;</code> — <code>ix_users_email</code></li>
+</ul>
+<h2 id="backup-requirements">Backup Requirements<a class="headerlink" href="#backup-requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Method</th>
+<th>RPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Continuous WAL archiving</td>
+<td><code>archive_command</code> → S3/NFS</td>
+<td>Seconds</td>
+</tr>
+<tr>
+<td>Daily base backup</td>
+<td><code>pg_basebackup</code></td>
+<td>24 h</td>
+</tr>
+<tr>
+<td>PITR capability</td>
+<td>WAL + base backup together</td>
+<td>Any point</td>
+</tr>
+</tbody>
+</table>
+<p>Test restore to separate instance monthly. <code>pg_restore</code> time must be &lt; RTO.</p>
 
 
 

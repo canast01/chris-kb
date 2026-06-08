@@ -1823,6 +1823,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#symptom-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Symptom Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-linux-diagnostic-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Linux Diagnostic Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-windows-diagnostic-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Windows Diagnostic Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-escalate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Escalate
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1957,8 +2009,121 @@
 
 <h1 id="compute-troubleshooting">Compute — Troubleshooting<a class="headerlink" href="#compute-troubleshooting" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Cross-platform compute troubleshooting — Linux, Windows Server, Active Directory, and database failures.
+Cross-platform compute troubleshooting — Linux, Windows Server, Active Directory, and database failures; symptom-to-section reference.
 </div>
+
+<h2 id="symptom-index">Symptom Index<a class="headerlink" href="#symptom-index" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Platform</th>
+<th>Where to look</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High CPU / load</td>
+<td>Linux</td>
+<td><code>top</code>, <code>perf top</code>, <code>ps aux --sort=-%cpu</code></td>
+</tr>
+<tr>
+<td>High CPU</td>
+<td>Windows</td>
+<td>Task Manager → Resource Monitor → CPU tab</td>
+</tr>
+<tr>
+<td>Memory exhaustion / OOM</td>
+<td>Linux</td>
+<td><code>dmesg | grep oom</code>, <code>/var/log/messages</code></td>
+</tr>
+<tr>
+<td>Service won't start</td>
+<td>Linux</td>
+<td><code>journalctl -u &lt;svc&gt; -n 50</code>, <code>systemctl status</code></td>
+</tr>
+<tr>
+<td>Service won't start</td>
+<td>Windows</td>
+<td>Event Viewer → Windows Logs → System/Application</td>
+</tr>
+<tr>
+<td>Disk full</td>
+<td>Linux</td>
+<td><code>df -h</code>, <code>du -sh /*</code></td>
+</tr>
+<tr>
+<td>Disk I/O bottleneck</td>
+<td>Linux</td>
+<td><code>iostat -xz 1 5</code>, <code>iotop</code></td>
+</tr>
+<tr>
+<td>Network unreachable</td>
+<td>Both</td>
+<td><code>ping</code>, <code>traceroute</code>/<code>tracert</code>, <code>ss -tnp</code>/<code>netstat -an</code></td>
+</tr>
+<tr>
+<td>DNS failure</td>
+<td>Both</td>
+<td><code>dig @&lt;server&gt;</code>, <code>nslookup</code>, <code>Resolve-DnsName</code></td>
+</tr>
+<tr>
+<td>DB connection refused</td>
+<td>MySQL/PG/MSSQL</td>
+<td>Check service running, port open, firewall, pg_hba/login</td>
+</tr>
+<tr>
+<td>Replication broken</td>
+<td>MySQL/PG/MSSQL</td>
+<td><code>SHOW REPLICA STATUS</code> / <code>pg_stat_replication</code> / AG DMVs</td>
+</tr>
+<tr>
+<td>AD login failures</td>
+<td>Windows</td>
+<td><code>dcdiag /test:dns</code>, Event ID 4625 in Security log</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-linux-diagnostic-commands">Common Linux Diagnostic Commands<a class="headerlink" href="#common-linux-diagnostic-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># System load and CPU</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uptime<span class="p">;</span><span class="w"> </span>top<span class="w"> </span>-bn1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Memory</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>free<span class="w"> </span>-h<span class="p">;</span><span class="w"> </span>cat<span class="w"> </span>/proc/meminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;MemFree|Cached|SwapFree&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Disk</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>df<span class="w"> </span>-h<span class="p">;</span><span class="w"> </span>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Network</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ss<span class="w"> </span>-tnp<span class="p">;</span><span class="w"> </span>ip<span class="w"> </span>route<span class="p">;</span><span class="w"> </span>ip<span class="w"> </span>addr
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Processes</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%mem<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-15
+</code></pre></div>
+<h2 id="common-windows-diagnostic-commands">Common Windows Diagnostic Commands<a class="headerlink" href="#common-windows-diagnostic-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># System resources</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">15</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">2</span> <span class="n">-MaxSamples</span> <span class="n">5</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Disk</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Get-Counter</span> <span class="s1">&#39;\PhysicalDisk(*)\% Disk Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">2</span> <span class="n">-MaxSamples</span> <span class="n">5</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Network</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">netstat</span> <span class="n">-an</span> <span class="p">|</span> <span class="n">findstr</span> <span class="n">ESTABLISHED</span> <span class="p">|</span> <span class="n">wc</span> <span class="n">-l</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="p">&lt;</span><span class="n">port</span><span class="p">&gt;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Event log</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">20</span>
+</code></pre></div>
+<h2 id="when-to-escalate">When to Escalate<a class="headerlink" href="#when-to-escalate" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Load average sustained &gt; 4× CPU count for &gt; 10 minutes</li>
+<li>Available memory &lt; 100 MB (Linux) or paging file usage &gt; 80% (Windows)</li>
+<li>Disk &lt; 5% free on any production volume</li>
+<li>Database replication lag &gt; 5 minutes or replication stopped</li>
+<li>AD domain controller unreachable or SYSVOL not shared</li>
+</ul>
 
 
 

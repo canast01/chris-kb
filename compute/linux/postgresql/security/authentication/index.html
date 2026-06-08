@@ -2891,6 +2891,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Methods
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pg_hbaconf-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pg_hba.conf Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssl-client-certificate-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSL Client Certificate Auth
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ldap-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3079,8 +3142,90 @@
 
 <h1 id="postgresql-authentication">PostgreSQL — Authentication<a class="headerlink" href="#postgresql-authentication" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-PostgreSQL authentication reference.
+PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, ldap, cert), password management, and SSL client certificate auth.
 </div>
+
+<h2 id="authentication-methods">Authentication Methods<a class="headerlink" href="#authentication-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scram-sha-256</code></td>
+<td>Modern standard; use this for all remote connections (PostgreSQL 10+)</td>
+</tr>
+<tr>
+<td><code>md5</code></td>
+<td>Legacy; weaker; avoid on new deployments</td>
+</tr>
+<tr>
+<td><code>peer</code></td>
+<td>Unix socket only; authenticates by OS username; use for <code>postgres</code> superuser</td>
+</tr>
+<tr>
+<td><code>ident</code></td>
+<td>Like peer but for TCP; requires ident server; rarely used</td>
+</tr>
+<tr>
+<td><code>ldap</code></td>
+<td>Delegates to LDAP/AD; password checked against directory</td>
+</tr>
+<tr>
+<td><code>cert</code></td>
+<td>Client presents TLS certificate; <code>CN</code> must match role name</td>
+</tr>
+<tr>
+<td><code>trust</code></td>
+<td>No password — only for local development; never production</td>
+</tr>
+<tr>
+<td><code>reject</code></td>
+<td>Explicit deny</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pg_hbaconf-configuration">pg_hba.conf Configuration<a class="headerlink" href="#pg_hbaconf-configuration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># /etc/postgresql/16/main/pg_hba.conf
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a># Local (socket): postgres via peer; all others via scram
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>local   all   postgres                   peer
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>local   all   all                        scram-sha-256
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Remote: scram for app subnet; reject everything else
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>host    app_prod   appuser   10.0.1.0/24   scram-sha-256
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>host    all        all       0.0.0.0/0     reject
+</code></pre></div>
+<p>After editing: <code>sudo systemctl reload postgresql-16</code>
+Or from psql: <code>SELECT pg_reload_conf();</code></p>
+<h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Set / change password</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">ENCRYPTED</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;NewPass1!&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- Expire password (force reset on next login)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">VALID</span><span class="w"> </span><span class="k">UNTIL</span><span class="w"> </span><span class="s1">&#39;2026-12-31&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">-- Check password expiry</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">usename</span><span class="p">,</span><span class="w"> </span><span class="n">valuntil</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_user</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="ssl-client-certificate-auth">SSL Client Certificate Auth<a class="headerlink" href="#ssl-client-certificate-auth" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># pg_hba.conf
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>hostssl  app_prod  certuser  10.0.1.0/24  cert  clientcert=verify-full
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect with client cert</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span><span class="s2">&quot;host=db.example.com dbname=app_prod user=certuser \</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">  sslcert=/etc/ssl/client.crt \</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">  sslkey=/etc/ssl/client.key \</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">  sslrootcert=/etc/ssl/ca.crt \</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">  sslmode=verify-full&quot;</span>
+</code></pre></div>
+<h2 id="ldap-authentication">LDAP Authentication<a class="headerlink" href="#ldap-authentication" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># pg_hba.conf
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>host  all  all  10.0.1.0/24  ldap  ldapserver=ldap.example.com  ldapbasedn=&quot;dc=example,dc=com&quot;  ldapsearchattribute=sAMAccountName
+</code></pre></div>
 
 
 

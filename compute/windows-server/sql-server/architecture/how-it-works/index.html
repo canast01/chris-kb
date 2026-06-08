@@ -2773,6 +2773,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#database-engine-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Engine Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buffer-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffer Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transaction-log-and-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transaction Log and Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#always-on-availability-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Always On Availability Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Processing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2961,8 +3024,68 @@
 
 <h1 id="sql-server-how-it-works">SQL Server — How It Works<a class="headerlink" href="#sql-server-how-it-works" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-SQL Server how it works reference.
+SQL Server architecture — database engine, buffer pool, transaction log, WAL-based crash recovery, Always On AG replication, and query processing pipeline.
 </div>
+
+<h2 id="database-engine-components">Database Engine Components<a class="headerlink" href="#database-engine-components" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buffer Manager</td>
+<td>In-memory page cache (buffer pool); target 80–90% of available RAM</td>
+</tr>
+<tr>
+<td>Transaction Log</td>
+<td>Sequential WAL; all changes logged before data pages written</td>
+</tr>
+<tr>
+<td>Lock Manager</td>
+<td>Row/page/table locking; escalation to table lock at threshold</td>
+</tr>
+<tr>
+<td>Query Processor</td>
+<td>Parser → Algebrizer → Optimizer → Executor</td>
+</tr>
+<tr>
+<td>SQL OS</td>
+<td>Scheduler; worker threads; memory manager</td>
+</tr>
+</tbody>
+</table>
+<h2 id="buffer-pool">Buffer Pool<a class="headerlink" href="#buffer-pool" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Pages (8 KB) loaded from disk into buffer pool on first access</li>
+<li>Dirty pages written by background <code>LazyWriter</code>; <code>CHECKPOINT</code> flushes all dirty pages</li>
+<li><code>max server memory</code> — set to leave ~10 GB for OS; rest to SQL Server</li>
+</ul>
+<h2 id="transaction-log-and-recovery">Transaction Log and Recovery<a class="headerlink" href="#transaction-log-and-recovery" title="Permanent link">&para;</a></h2>
+<p>SQL Server uses Write-Ahead Logging (WAL):
+1. Log record written to transaction log buffer
+2. Log buffer flushed to disk on <code>COMMIT</code>
+3. Data page written to disk asynchronously (lazy)
+4. On crash: redo committed txns, undo uncommitted from log</p>
+<p>Log files are reused in circular fashion after <code>CHECKPOINT</code> advances the log sequence number (LSN).</p>
+<h2 id="always-on-availability-groups">Always On Availability Groups<a class="headerlink" href="#always-on-availability-groups" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Primary → synchronous/asynchronous log shipping → Secondary (readable replica)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>          ↓
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>     Listener (VIP) — routes app connections to current primary
+</code></pre></div>
+<ul>
+<li><strong>Synchronous</strong>: primary waits for secondary ACK — zero data loss; lower throughput</li>
+<li><strong>Asynchronous</strong>: no wait — DR sites; potential data loss on failover</li>
+</ul>
+<h2 id="query-processing">Query Processing<a class="headerlink" href="#query-processing" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>T-SQL Query → Parse → Bind (object resolution) → Optimize (execution plan) → Execute
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                                                    ↓
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                                            Plan Cache (reuse)
+</code></pre></div>
+<p><code>sys.dm_exec_cached_plans</code> — view cached plans; <code>DBCC FREEPROCCACHE</code> — clear plan cache.</p>
 
 
 

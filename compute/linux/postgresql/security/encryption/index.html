@@ -2891,6 +2891,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ssltls-for-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSL/TLS for Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#require-ssl-for-all-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Require SSL for All Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pgcrypto-column-level-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pgcrypto — Column-Level Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wal-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAL Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transparent-data-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transparent Data Encryption
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3079,8 +3142,51 @@
 
 <h1 id="postgresql-encryption">PostgreSQL — Encryption<a class="headerlink" href="#postgresql-encryption" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-PostgreSQL encryption reference.
+PostgreSQL encryption — SSL/TLS for connections, pgcrypto for column-level encryption, transparent data encryption options, and WAL/backup encryption.
 </div>
+
+<h2 id="ssltls-for-connections">SSL/TLS for Connections<a class="headerlink" href="#ssltls-for-connections" title="Permanent link">&para;</a></h2>
+<p>PostgreSQL uses OpenSSL for SSL. Generated automatically during <code>initdb</code> on most distributions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># postgresql.conf</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">ssl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">on</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="na">ssl_cert_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;server.crt&#39;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="na">ssl_key_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;server.key&#39;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="na">ssl_ca_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;root.crt&#39;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="na">ssl_min_protocol_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;TLSv1.2&#39;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify SSL is active</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW ssl;&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Confirm connection is encrypted</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>psql<span class="w"> </span>-U<span class="w"> </span>appuser<span class="w"> </span>-h<span class="w"> </span>db.example.com<span class="w"> </span>-d<span class="w"> </span>app_prod<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT ssl, version, cipher FROM pg_stat_ssl WHERE pid = pg_backend_pid();&quot;</span>
+</code></pre></div>
+<h2 id="require-ssl-for-all-connections">Require SSL for All Connections<a class="headerlink" href="#require-ssl-for-all-connections" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># pg_hba.conf — use hostssl instead of host
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>hostssl  all  all  0.0.0.0/0  scram-sha-256
+</code></pre></div>
+<h2 id="pgcrypto-column-level-encryption">pgcrypto — Column-Level Encryption<a class="headerlink" href="#pgcrypto-column-level-encryption" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Enable extension</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">pgcrypto</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">-- Encrypt at insert</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">sensitive</span><span class="w"> </span><span class="p">(</span><span class="k">data</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">pgp_sym_encrypt</span><span class="p">(</span><span class="s1">&#39;secret&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;key&#39;</span><span class="p">));</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">-- Decrypt at query</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pgp_sym_decrypt</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;key&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">sensitive</span><span class="p">;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">-- Hash (one-way, for passwords)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">password_hash</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">crypt</span><span class="p">(</span><span class="s1">&#39;userpassword&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">gen_salt</span><span class="p">(</span><span class="s1">&#39;bf&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">)));</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">-- Verify</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">password_hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crypt</span><span class="p">(</span><span class="s1">&#39;userpassword&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">password_hash</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="wal-encryption">WAL Encryption<a class="headerlink" href="#wal-encryption" title="Permanent link">&para;</a></h2>
+<p>PostgreSQL does not have native WAL encryption. Options:
+- <strong>pgBackRest</strong>: supports <code>--cipher-type=aes-256-cbc</code> for backup and WAL archive encryption
+- <strong>OS-level</strong>: encrypt the WAL archive destination (encrypted filesystem or S3 SSE)
+- <strong>Transparent Filesystem Encryption</strong>: LUKS on the PostgreSQL data partition</p>
+<h2 id="transparent-data-encryption">Transparent Data Encryption<a class="headerlink" href="#transparent-data-encryption" title="Permanent link">&para;</a></h2>
+<p>Native TDE is available in PostgreSQL 17+ and commercial forks (Percona, EnterpriseDB). For PostgreSQL 16 and earlier:
+- Use OS-level disk encryption (LUKS/BitLocker)
+- Store data on encrypted cloud volumes (AWS EBS, Azure Managed Disk)</p>
 
 
 

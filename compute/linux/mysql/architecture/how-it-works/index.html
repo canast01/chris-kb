@@ -2833,6 +2833,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#storage-engine-innodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Engine: InnoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-execution-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Execution Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-configuration-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Configuration Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transaction-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transaction Isolation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3021,8 +3084,100 @@
 
 <h1 id="mysql-mariadb-how-it-works">MySQL / MariaDB — How It Works<a class="headerlink" href="#mysql-mariadb-how-it-works" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-MySQL / MariaDB how it works reference.
+MySQL architecture — InnoDB storage engine, buffer pool, query execution pipeline, redo/undo logs, replication binlog, and connection threading model.
 </div>
+
+<h2 id="storage-engine-innodb">Storage Engine: InnoDB<a class="headerlink" href="#storage-engine-innodb" title="Permanent link">&para;</a></h2>
+<p>InnoDB is the default storage engine. Key components:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Buffer pool</td>
+<td>In-memory cache of data and index pages; target 70–80% of available RAM</td>
+</tr>
+<tr>
+<td>Redo log (iblogfile)</td>
+<td>Write-ahead log for crash recovery; circular; controlled by <code>innodb_log_file_size</code></td>
+</tr>
+<tr>
+<td>Undo log</td>
+<td>Stores old row versions for MVCC and rollback</td>
+</tr>
+<tr>
+<td>Change buffer</td>
+<td>Caches secondary index changes when the index page is not in buffer pool</td>
+</tr>
+<tr>
+<td>Doublewrite buffer</td>
+<td>Prevents partial-page writes on crash; enabled by default</td>
+</tr>
+</tbody>
+</table>
+<h2 id="query-execution-pipeline">Query Execution Pipeline<a class="headerlink" href="#query-execution-pipeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Client → Connection thread → Parser → Optimizer → Storage engine
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         (thread cache)       (SQL)    (query plan)  (InnoDB/MyISAM)
+</code></pre></div>
+<ol>
+<li><strong>Parse</strong> — SQL tokenised, syntax validated</li>
+<li><strong>Optimise</strong> — cost-based query planner selects index access path</li>
+<li><strong>Execute</strong> — storage engine reads/writes pages via buffer pool</li>
+<li><strong>Return</strong> — result set sent to client; connection returned to thread cache</li>
+</ol>
+<h2 id="replication-architecture">Replication Architecture<a class="headerlink" href="#replication-architecture" title="Permanent link">&para;</a></h2>
+<p>MySQL replication is asynchronous by default:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Primary: writes → binary log (binlog) → replica I/O thread reads binlog
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Replica: relay log → SQL thread applies → committed to replica data files
+</code></pre></div>
+<ul>
+<li><strong>GTID mode</strong> (<code>gtid_mode=ON</code>) identifies transactions globally; simplifies failover</li>
+<li><strong>Semi-sync replication</strong> (<code>rpl_semi_sync_master_enabled</code>) waits for at least one replica ACK before commit — reduces data loss on failover</li>
+<li><strong>Binlog format</strong>: <code>ROW</code> preferred (deterministic); <code>STATEMENT</code> smaller but can diverge</li>
+</ul>
+<h2 id="key-configuration-parameters">Key Configuration Parameters<a class="headerlink" href="#key-configuration-parameters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>innodb_buffer_pool_size</code></td>
+<td>128M</td>
+<td>Set to 70–80% of RAM</td>
+</tr>
+<tr>
+<td><code>innodb_log_file_size</code></td>
+<td>48M</td>
+<td>Larger = faster writes, slower recovery; 1–4 GB typical</td>
+</tr>
+<tr>
+<td><code>max_connections</code></td>
+<td>151</td>
+<td>Each connection uses ~1 MB RAM</td>
+</tr>
+<tr>
+<td><code>innodb_flush_log_at_trx_commit</code></td>
+<td>1</td>
+<td><code>1</code> = full ACID; <code>2</code> = risk 1 sec data loss on crash</td>
+</tr>
+<tr>
+<td><code>sync_binlog</code></td>
+<td>1</td>
+<td><code>1</code> = binlog flushed per commit; safest</td>
+</tr>
+</tbody>
+</table>
+<h2 id="transaction-isolation">Transaction Isolation<a class="headerlink" href="#transaction-isolation" title="Permanent link">&para;</a></h2>
+<p>InnoDB defaults to <code>REPEATABLE READ</code>. MVCC provides non-blocking reads by keeping old row versions in the undo log. Long-running transactions hold undo log space — watch <code>innodb_history_list_length</code>.</p>
 
 
 

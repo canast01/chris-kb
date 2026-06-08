@@ -2833,6 +2833,58 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#application-connectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Connectors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proxysql-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ProxySQL Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-tool-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Tool Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3021,8 +3073,115 @@
 
 <h1 id="mysql-mariadb-integrations">MySQL / MariaDB — Integrations<a class="headerlink" href="#mysql-mariadb-integrations" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-MySQL / MariaDB integrations reference.
+MySQL integration points — application connectors (JDBC, ODBC, Python, PHP), ProxySQL, Percona Monitoring, replication to replica sets, and backup tool integration.
 </div>
+
+<h2 id="application-connectors">Application Connectors<a class="headerlink" href="#application-connectors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Connector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td><code>mysql-connector-j</code></td>
+<td>Use <code>autoReconnect=false</code>; handle <code>SQLTransientConnectionException</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>mysql-connector-python</code> or <code>PyMySQL</code></td>
+<td>Use connection pooling; <code>mysql.connector.pooling.MySQLConnectionPool</code></td>
+</tr>
+<tr>
+<td>PHP</td>
+<td><code>mysqli</code> or PDO with <code>pdo_mysql</code></td>
+<td>Prefer PDO for portability</td>
+</tr>
+<tr>
+<td>.NET</td>
+<td><code>MySql.Data</code> (Oracle) or <code>MySqlConnector</code></td>
+<td>Use <code>MySqlConnector</code> for async support</td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code>go-sql-driver/mysql</code></td>
+<td>Set <code>parseTime=true</code> in DSN</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Connection string pattern:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mysql://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;database&gt;?charset=utf8mb4
+</code></pre></div></p>
+<h2 id="proxysql-integration">ProxySQL Integration<a class="headerlink" href="#proxysql-integration" title="Permanent link">&para;</a></h2>
+<p>ProxySQL sits between application and MySQL:
+- Routes <code>SELECT</code> to read replicas, <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> to primary
+- Handles failover transparently without app changes
+- Connection multiplexing reduces per-connection overhead</p>
+<p>Key tables: <code>mysql_servers</code>, <code>mysql_replication_hostgroups</code>, <code>mysql_query_rules</code></p>
+<h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Integration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prometheus</td>
+<td><code>mysqld_exporter</code> — exposes <code>/metrics</code>; scrape port 9104</td>
+</tr>
+<tr>
+<td>Percona PMM</td>
+<td>Agent installed on DB host; connects to PMM Server</td>
+</tr>
+<tr>
+<td>Nagios/Icinga</td>
+<td><code>check_mysql</code> / <code>check_mysql_query</code> plugins</td>
+</tr>
+<tr>
+<td>Datadog</td>
+<td>MySQL integration via DD agent; auto-discovers metrics</td>
+</tr>
+</tbody>
+</table>
+<p>Key metrics to export: <code>Threads_connected</code>, <code>Queries</code>, <code>Innodb_buffer_pool_read_requests</code>, <code>Slave_SQL_Running_State</code></p>
+<h2 id="backup-tool-integration">Backup Tool Integration<a class="headerlink" href="#backup-tool-integration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mysqldump</code></td>
+<td>Logical</td>
+<td>Portable; slow for large DBs; use <code>--single-transaction</code> for InnoDB</td>
+</tr>
+<tr>
+<td>Percona XtraBackup</td>
+<td>Physical hot backup</td>
+<td>No table locks; incremental supported; faster restore</td>
+</tr>
+<tr>
+<td>MySQL Enterprise Backup</td>
+<td>Physical</td>
+<td>Oracle commercial; streaming to S3 supported</td>
+</tr>
+<tr>
+<td><code>mysqlbinlog</code></td>
+<td>Binlog backup</td>
+<td>Used for PITR; replicate binlogs to backup host continuously</td>
+</tr>
+</tbody>
+</table>
 
 
 
