@@ -47,13 +47,8 @@
 </a>
 
 <a class="kb-card" href="backup/">
-  <strong>Backup</strong>
-  <span>Veeam, Commvault, and NetBackup — enterprise backup products.</span>
-</a>
-
-<a class="kb-card" href="dr/">
-  <strong>Disaster Recovery</strong>
-  <span>DR design, runbooks, recovery testing, IRE (Isolated Recovery Environment), and backup validation.</span>
+  <strong>Backup & DR</strong>
+  <span>Veeam, Commvault, NetBackup — backup products, DR design, runbooks, recovery testing, and IRE.</span>
 </a>
 
 <a class="kb-card" href="security/">

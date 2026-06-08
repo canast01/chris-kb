@@ -257,7 +257,6 @@ def on_nav(nav, **kwargs):
             "networking",
             # ── Data protection & recovery ─────────────────────────────────
             "backup",
-            "disaster-recovery",
             # ── Security & observability ───────────────────────────────────
             "security",
             "monitoring",          # lean standards section post-Track-2
