@@ -1,5 +1,9 @@
 # Fibre Channel
 
+<div class="kb-summary">
+Fibre Channel reference — WWPN/WWNN addressing, zoning, fabric login (FLOGI), multipathing, and SAN fabric health.
+</div>
+
 ```text
 ┌────────┐    ┌─────┐    ┌──────────────┐    ┌─────┐    ┌─────────┐    ┌─────┐
 │  Host  │    │ HBA │    │  FC Switch A │    │ ISL │    │FC Switch│    │Array                           │

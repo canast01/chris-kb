@@ -17,7 +17,6 @@ Post-Upgrade Validation Sequence
 │ all hosts  │     │ FW matches │     │ backups    │     │ versions                                     │
 │ Connected  │     │ baseline   │     │ working    │     │ recorded                                     │
 └────────────┘     └────────────┘     └────────────┘     └────────────┘
-```
        │                 │                  │                   │
        └─────────────────┴──────────────────┴───────────────────┘
                                     │
@@ -26,6 +25,7 @@ Post-Upgrade Validation Sequence
                          │  YES → close change │
                          │  NO  → investigate  │
                          └─────────────────────┘
+```
 
 ## Overview
 

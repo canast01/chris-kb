@@ -17,8 +17,8 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 │  │ Connected? │  │    │  └────────────┘  │    │  │ Red: RPO   │                                       │
 │  └────────────┘  │    └──────────────────┘    │  │  VIOLATION │                                       │
 └──────────────────┘                            │  └────────────┘  │
-```
                                                 └──────────────────┘
+```
 
 ## Run This Routine
 

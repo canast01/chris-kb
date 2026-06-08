@@ -128,6 +128,7 @@ Aria Operations ingests telemetry from VMware infrastructure and third-party pla
 
 The vCenter adapter is the primary collection source and is configured during initial deployment.
 
+```text
 ┌─────────────────────────────────── Aria Operations — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -172,6 +173,7 @@ The vCenter adapter is the primary collection source and is configured during in
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 Separate plugins are recommended per team channel for targeted routing.
+```
 
 ## Aria Logs Integration
 

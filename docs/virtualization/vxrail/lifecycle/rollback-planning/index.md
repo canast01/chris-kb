@@ -10,7 +10,6 @@ Rollback Decision Tree
 ┌──────────────────────────────────────────────────────────────┐
 │  LCM upgrade started                                                                                  │
 └──────────────────────────────┬───────────────────────────────┘
-```
                                │
                     ┌──────────▼──────────┐
                     │  Upgrade completes  │
@@ -35,6 +34,7 @@ Rollback Decision Tree
                                    │  vCenter snapshot (if   │
                                    │  taken pre-upgrade)     │
                                    └─────────────────────────┘
+```
 
 ## Confirm the Issue
 

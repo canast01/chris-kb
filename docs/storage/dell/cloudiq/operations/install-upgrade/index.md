@@ -140,6 +140,7 @@ The SCG has its own version lifecycle and must be kept current for compatibility
 
 ### SCG Version Check
 
+```text
 ┌─────────────────────────────────── CloudIQ — Lifecycle Management ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -166,6 +167,7 @@ The SCG has its own version lifecycle and must be kept current for compatibility
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
+```
 ## API Token Lifecycle
 
 CloudIQ REST API tokens use OAuth2 client credentials. Tokens should be rotated annually.

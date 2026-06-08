@@ -93,8 +93,7 @@ nc -zv <db-host> 3306    # MySQL
 nc -zv <db-host> 1433    # SQL Server
 ```
 
-```bash
-# Database — Capacity Monitoring
+Database — Capacity Monitoring
 
 ```sql
 -- Database sizes
@@ -190,8 +189,7 @@ USE mydb;
 DBCC SHRINKFILE (mydb_log, 1024);  -- 1024 MB target
 ```
 
-```bash
-# Database — Replication Check
+Database — Replication Check
 
 ```sql
 -- On PRIMARY: show connected replicas and lag

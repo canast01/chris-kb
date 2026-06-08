@@ -53,6 +53,7 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+```text
 Procedures ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -93,6 +94,7 @@ Procedures ───────────────────────
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ## Planned Migration
+```
 
 A planned migration gracefully shuts down VMs at the protected site, performs a final replication sync, then powers them on at the recovery site. Both sites must be operational.
 

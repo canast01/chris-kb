@@ -1,5 +1,9 @@
 # Networking — Troubleshooting
 
+<div class="kb-summary">
+Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing issues, VLAN misconfigurations, and connectivity tools.
+</div>
+
 ```bash
 nslookup <hostname>
 dig <hostname>

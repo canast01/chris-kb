@@ -91,6 +91,7 @@ tail -50 /var/log/syslog.log | grep -iE "error|critical|warning"
 esxcli software vib list | wc -l
 ```
 
+```text
 ESXi Health Check — Decision Flow
                            │
            ┌───────────────▼───────────────┐
@@ -123,6 +124,7 @@ ESXi Health Check — Decision Flow
            ┌──────▼──────────────┐
            │  PASS — host healthy │
            └─────────────────────┘
+```
 ```text
 
 ## Health Checklist

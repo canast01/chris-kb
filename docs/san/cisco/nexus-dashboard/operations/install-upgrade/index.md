@@ -96,6 +96,7 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 
 ## Pre-Upgrade Checklist
 
+```text
 ┌─────────────────────────────── Nexus Dashboard — Lifecycle Management ────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -126,6 +127,7 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ### Replacing a Failed Node
+```
 
 1. Remove the failed node: Admin > Cluster Configuration > [Node] > Delete
 2. Deploy a new ND node (OVA or physical) with identical network configuration

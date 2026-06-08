@@ -5,6 +5,7 @@
 Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
 </div>
 
+```text
 FlashArray Integration Map
         │             │             │
         ▼             ├──► Pure1 (phone-home HTTPS)
@@ -16,6 +17,7 @@ FlashArray Integration Map
                       │
                       └──────────────► Remote FlashArray
                                        (ActiveDR / ActiveCluster)
+```
 ```text
 ┌──────────────────────────────────── Pure FlashArray Integrations ─────────────────────────────────────┐
 │                                                                                                       │

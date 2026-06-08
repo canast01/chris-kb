@@ -16,7 +16,6 @@ Maintenance Window Flow
 │ rollback ready   │   │ follow runbook   │   │ VMs running?                                            │
 │ change ticket    │   │ do not extend    │   │ update ticket                                           │
 └──────────────────┘   └──────────────────┘   └──────────────────┘
-```
          │                      │                      │
          └──────────────────────┴──────────────────────┘
                                 │
@@ -26,6 +25,7 @@ Maintenance Window Flow
                    │  → escalate with logs   │
                    │  → contact Dell support │
                    └─────────────────────────┘
+```
 
 ## Overview
 

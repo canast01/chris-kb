@@ -5,6 +5,7 @@
 Integrations reference covering Storage Replication Adapter (SRA) Integration, vSphere Replication Integration, NSX-T Integration for Network Mapping, Active Directory / Identity Integration, Identity Federation with vIDM / Workspace ONE Access and 1 more sections.
 </div>
 
+```text
   SRM Integration Points
         │                                    │
         └─────────────────┬──────────────────┘
@@ -13,6 +14,7 @@ Integrations reference covering Storage Replication Adapter (SRA) Integration, v
                  │  SRM Server     │
                  │  (site pair)    │
                  └─────────────────┘
+```
 ```text
 ┌────────────────────────────────────── VMware SRM — Integrations ──────────────────────────────────────┐
 │                                                                                                       │

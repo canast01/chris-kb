@@ -12,7 +12,6 @@ Add Node Flow
 │  same SKU as cluster · compatible firmware · IP/DNS ready                                             │
 │  network cabling plan · iDRAC IP assigned                                                             │
 └──────────────────────────────┬───────────────────────────────┘
-```
                                │
               ┌────────────────▼────────────────┐
               │  Physical Installation           │
@@ -38,6 +37,7 @@ Add Node Flow
               │  node Connected · vSAN rebalance │
               │  health green · capacity updated │
               └─────────────────────────────────┘
+```
 
 ## Overview
 

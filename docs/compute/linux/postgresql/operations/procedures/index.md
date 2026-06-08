@@ -108,6 +108,7 @@ DBCC CHECKDB ('<dbname>') WITH PHYSICAL_ONLY, NO_INFOMSGS;
 ```bash
 # Database — Failover Procedure
 
+```
 ```bash
 # On STANDBY — check replication lag before promoting
 psql -U postgres -c "SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;"

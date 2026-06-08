@@ -53,6 +53,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+```text
                          │
 │    Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                                    │
 │                                                                                                       │
@@ -85,8 +86,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```text
-
+```
 ---
 
 

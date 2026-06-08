@@ -1,5 +1,9 @@
 # VxRail — Architecture
 
+<div class="kb-summary">
+VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk groups, and management stack integration.
+</div>
+
 ```text
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Node (PowerEdge)                                                                              │

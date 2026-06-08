@@ -11,7 +11,6 @@ Node Maintenance Mode Lifecycle
 │  Pre-check: cluster health green · vSAN resync acceptable                                             │
 │  capacity to absorb workload from this node                                                           │
 └──────────────────────────────┬───────────────────────────────┘
-```
                                │
                     ┌──────────▼──────────┐
                     │  Enter Maintenance  │
@@ -40,6 +39,7 @@ Node Maintenance Mode Lifecycle
                     │  Connected · no     │
                     │  alerts · vSAN OK   │
                     └─────────────────────┘
+```
 
 ## Before Starting
 

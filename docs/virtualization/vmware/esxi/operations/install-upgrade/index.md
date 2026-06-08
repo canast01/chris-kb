@@ -5,6 +5,7 @@
 ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legacy, Host Upgrade Procedure, ESXi Patch Application (Manual / Standalone), Upgrade and Patching Readiness Checklist, Driver and Firmware Lifecycle and 1 more sections.
 </div>
 
+```text
 ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
                            │
               ┌────────────▼────────────┐
@@ -32,6 +33,7 @@ ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
               │  target version         │
               │  All vSAN health green  │
               └─────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────── ESXi — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

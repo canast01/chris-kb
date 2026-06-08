@@ -66,6 +66,7 @@ Nexus Dashboard integrates with Cisco ACI and NX-OS fabric infrastructure as its
 
 The ACI APIC cluster is the primary integration for ACI-based fabrics. NDFC and NDI use the APIC REST API for policy management, fabric visibility, and health data.
 
+```text
 ┌───────────────────────────────── Nexus Dashboard — Integration Guide ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -95,6 +96,7 @@ The ACI APIC cluster is the primary integration for ACI-based fabrics. NDFC and 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
+```
 ## ServiceNow ITSM Integration
 
 P1/P2 fabric faults auto-create incidents in ServiceNow via the ND alert notification webhook.
