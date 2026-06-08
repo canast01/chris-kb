@@ -81,4 +81,29 @@ Disaster recovery knowledge base covering DR design, runbooks, recovery testing,
   <span>Common DR failures — backup job errors, replication lag, failover issues, and IRE connectivity.</span>
 </a>
 
+<a class="kb-card" href="service-level-objectives/">
+  <strong>Service Level Objectives</strong>
+  <span>Defining SLOs and SLIs for infrastructure services — availability, latency, and error rate targets.</span>
+</a>
+
+<a class="kb-card" href="service-availability/">
+  <strong>Service Availability</strong>
+  <span>Measuring and reporting service availability — uptime tracking, incident impact, and reporting cadence.</span>
+</a>
+
+<a class="kb-card" href="failure-testing/">
+  <strong>Failure Testing</strong>
+  <span>Planned failure injection, chaos testing, and resilience validation procedures.</span>
+</a>
+
+<a class="kb-card" href="reliability-engineering/">
+  <strong>Reliability Engineering</strong>
+  <span>SRE principles for infrastructure — error budgets, toil reduction, and chaos engineering.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Pre-change, post-change, and DR-readiness health checks across platform layers.</span>
+</a>
+
 </div>

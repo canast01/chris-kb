@@ -93,6 +93,41 @@ Aria Operations — Operations reference.
   <span>Automation scripts and reusable code.</span>
 </a>
 
+<a class="kb-card" href="alert-management/">
+  <strong>Alert Management</strong>
+  <span>Alert design, severity classification, threshold tuning, noise reduction, and on-call routing.</span>
+</a>
+
+<a class="kb-card" href="dashboard-standards/">
+  <strong>Dashboard Standards</strong>
+  <span>Dashboard structure, metric selection, audience-based layouts, and naming conventions.</span>
+</a>
+
+<a class="kb-card" href="health-monitoring/">
+  <strong>Health Monitoring</strong>
+  <span>Infrastructure health monitoring standards — what to monitor, check cadence, and threshold references.</span>
+</a>
+
+<a class="kb-card" href="metrics-baseline/">
+  <strong>Metrics Baseline</strong>
+  <span>Establishing and maintaining performance baselines for CPU, memory, storage I/O, and network.</span>
+</a>
+
+<a class="kb-card" href="performance-baselining/">
+  <strong>Performance Baselining</strong>
+  <span>Methodology for capturing, storing, and comparing performance baselines across environments.</span>
+</a>
+
+<a class="kb-card" href="capacity-forecasting/">
+  <strong>Capacity Forecasting</strong>
+  <span>Capacity trend analysis, forecasting models, and runway calculations for compute and storage.</span>
+</a>
+
+<a class="kb-card" href="resource-optimization/">
+  <strong>Resource Optimisation</strong>
+  <span>Right-sizing VMs and clusters, reclaiming unused resources, and cost/performance optimisation.</span>
+</a>
+
 </div>
 
 ## Daily Checklist

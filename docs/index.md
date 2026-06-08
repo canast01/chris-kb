@@ -71,11 +71,6 @@
   <span>PowerShell, Python, Ansible, Terraform, GitHub Actions, and Git.</span>
 </a>
 
-<a class="kb-card" href="monitoring-standards/">
-  <strong>Monitoring Standards</strong>
-  <span>Alert design, dashboard standards, SLOs, capacity forecasting, log retention, and reliability engineering.</span>
-</a>
-
 <a class="kb-card" href="ai/">
   <strong>AI</strong>
   <span>AWS Bedrock, Azure OpenAI, local AI (Ollama), OpenAI API, and GPU workloads.</span>

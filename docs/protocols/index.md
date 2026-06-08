@@ -75,4 +75,9 @@ Reference coverage for the networking and storage protocols used in enterprise i
   <strong>TLS</strong>
   <span>TLS 1.2/1.3 handshake, certificate chain validation, cipher suite review, and expiry monitoring.</span>
 </a>
+
+<a class="kb-card" href="syslog/">
+  <strong>Syslog</strong>
+  <span>Centralised logging architecture, syslog forwarding configuration, filtering, and SIEM integration.</span>
+</a>
 </div>

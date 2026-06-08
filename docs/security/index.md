@@ -85,4 +85,6 @@ Security reference: Standard LDAP Integration, Standard SAML Configuration, Acti
 <a class="kb-card" href="security-audit/"><strong>Security Audit</strong><span>Security posture audit covering accounts, configurations, patching, and access controls.</span></a>
 <a class="kb-card" href="security-monitoring/"><strong>Security Monitoring</strong><span>SIEM, log analysis, threat detection, and alert triage for security events.</span></a>
 <a class="kb-card" href="vulnerability-management/"><strong>Vulnerability Management</strong><span>Scan scheduling, CVSS-based prioritization, remediation tracking, and exception handling.</span></a>
+<a class="kb-card" href="log-retention/"><strong>Log Retention</strong><span>Log retention policies, storage sizing, archiving strategy, and compliance requirements.</span></a>
+<a class="kb-card" href="event-correlation/"><strong>Event Correlation</strong><span>Correlating events across layers — log, metric, and topology-based root cause identification.</span></a>
 </div>
