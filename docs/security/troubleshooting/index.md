@@ -4,6 +4,10 @@
 Security platform troubleshooting — certificate validation failures, CyberArk vault connectivity, Venafi policy errors, MFA authentication issues, and SIEM connectivity problems.
 </div>
 
+<div class="kb-grid kb-grid-1">
+<a class="kb-card" href="authentication-failures/"><strong>Authentication Failures</strong><span>AD, Kerberos, LDAP, certificate, and MFA authentication failure diagnosis and resolution.</span></a>
+</div>
+
 ## Symptom Index
 
 | Symptom | Component | First steps |

@@ -4,6 +4,11 @@
 Storage troubleshooting — APD/PDL conditions, multipath failures, replication lag, snapshot failures, host I/O errors, and array health alerts.
 </div>
 
+<div class="kb-grid kb-grid-2">
+<a class="kb-card" href="replication-failures/"><strong>Replication Failures</strong><span>Storage replication failure diagnosis — lag thresholds, link state, and consistency group checks.</span></a>
+<a class="kb-card" href="storage-latency/"><strong>Storage Latency</strong><span>Storage latency troubleshooting — array queue depth, fabric congestion, and host-side I/O analysis.</span></a>
+</div>
+
 ## Symptom Index
 
 | Symptom | Likely Cause | First Command |

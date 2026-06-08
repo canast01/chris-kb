@@ -4,6 +4,10 @@
 Protocol troubleshooting — FC fabric errors, TLS handshake failures, LDAP connectivity, DNS resolution failures, NTP drift, and HTTP/HTTPS diagnosis.
 </div>
 
+<div class="kb-grid kb-grid-1">
+<a class="kb-card" href="dns-resolution/"><strong>DNS Resolution Failures</strong><span>DNS resolution failure diagnosis — resolver, zone, and client-side troubleshooting steps.</span></a>
+</div>
+
 ## Protocol Symptom Index
 
 | Symptom | Protocol | First command |

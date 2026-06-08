@@ -4,6 +4,10 @@
 Virtualization troubleshooting — vSphere host failures, vSAN issues, Horizon connection failures, Tanzu cluster problems, VxRail update errors, and SRM replication issues.
 </div>
 
+<div class="kb-grid kb-grid-1">
+<a class="kb-card" href="vm-performance/"><strong>VM Performance</strong><span>CPU ready, memory balloon, storage latency, and network drop diagnosis for VMs.</span></a>
+</div>
+
 ## Symptom Index
 
 | Symptom | Component | First steps |

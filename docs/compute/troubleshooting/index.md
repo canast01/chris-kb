@@ -4,6 +4,10 @@
 Cross-platform compute troubleshooting — Linux, Windows Server, Active Directory, and database failures; symptom-to-section reference.
 </div>
 
+<div class="kb-grid kb-grid-1">
+<a class="kb-card" href="high-cpu/"><strong>High CPU</strong><span>High CPU diagnosis — process-level analysis, run queues, and remediation on Linux and Windows.</span></a>
+</div>
+
 ## Symptom Index
 
 | Symptom | Platform | Where to look |

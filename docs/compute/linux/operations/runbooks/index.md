@@ -4,6 +4,12 @@
 Linux operational runbooks — routine maintenance, service recovery, backup validation, and performance checks.
 </div>
 
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="service-restart/"><strong>Service Restart</strong><span>Safe service restart runbook — pre-checks, restart sequence, and post-restart validation.</span></a>
+<a class="kb-card" href="disk-space-cleanup/"><strong>Disk Space Cleanup</strong><span>Disk space reclamation runbook — log rotation, temp file cleanup, and LVM expansion steps.</span></a>
+<a class="kb-card" href="server-reboot/"><strong>Server Reboot</strong><span>Planned server reboot runbook — service shutdown order, post-reboot checks, and sign-off.</span></a>
+</div>
+
 ## Routine Daily Checks
 
 | Check | Command | Pass Criteria |

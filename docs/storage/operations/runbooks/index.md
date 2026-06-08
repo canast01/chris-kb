@@ -4,6 +4,10 @@
 Storage operational runbooks — LUN provisioning, replication failover, capacity expansion, snapshot management, and host connectivity validation.
 </div>
 
+<div class="kb-grid kb-grid-1">
+<a class="kb-card" href="storage-volume-expansion/"><strong>Storage Volume Expansion</strong><span>Volume expansion runbook — thin pool extension, host rescan, partition resize, and filesystem grow.</span></a>
+</div>
+
 ## LUN Provisioning Runbook
 
 ```text
