@@ -7,7 +7,7 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 
         LDAP BIND TYPES
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  ANONYMOUS BIND                                                                                       │
 │  ldapsearch -x -H ldap://dc01 -b "DC=corp,DC=local" ...                                               │
 │  No credentials — limited or no access in AD (blocked default)                                        │
@@ -27,7 +27,7 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 │  Port requirements:                                                                                   │
 │  Simple bind ──► must use LDAPS (636) or StartTLS                                                     │
 │  SASL GSSAPI ──► plain 389 ok (Kerberos handles security)                                             │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

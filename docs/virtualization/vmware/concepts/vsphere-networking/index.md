@@ -9,7 +9,7 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 </div>
 
 ```text
-┌─────────────────────── ESXi Host — Networking Stack ───────────────────────┐
+┌─────────────────────── ESXi Host — Networking Stack ──────────────────────────────────────────────────┐
 │                                                                                                       │
 │   VMkernel Ports (vmk0 … vmkN)                                                                        │
 │   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                    │
@@ -26,7 +26,7 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 │   │           Physical Uplinks — vmnic0, vmnic1, vmnic2, vmnic3        │                              │
 │   │      Active/Active or Active/Standby teaming · 10/25/100 GbE       │                              │
 │   └────────────────────────────────────────────────────────────────────┘                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

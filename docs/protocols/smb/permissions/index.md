@@ -7,7 +7,7 @@ SMB Share Permissions reference covering Overview, Viewing and Setting Share Per
 
         TWO-LAYER PERMISSION MODEL
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Network client accesses \\server\Finance                                                             │
 │                    │                                                                                  │
 │                    ▼ Layer 1                                                                          │
@@ -28,7 +28,7 @@ SMB Share Permissions reference covering Overview, Viewing and Setting Share Per
 │   Effective = most restrictive of share AND NTFS perms                                                │
 │   Share:Full + NTFS:Read = Read                                                                       │
 │   Share:Read + NTFS:Full = Read                                                                       │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

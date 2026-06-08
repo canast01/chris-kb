@@ -7,7 +7,7 @@ Diagnostics reference covering VRA Log Locations, Collect VRA Support Bundle, Ch
 
   VR Diagnostic Data Sources
 ```text
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  VRA Appliance (both sites)    ESXi Source Host                                                       │
 │  ┌───────────────────────┐     ┌─────────────────────────┐                                            │
 │  │ VAMI → Support Bundle │     │ /var/log/hbr.log        │                                            │
@@ -25,7 +25,7 @@ Diagnostics reference covering VRA Log Locations, Collect VRA Support Bundle, Ch
 │  │ REST /api/rest/vr/    │     └─────────────────────────┘                                            │
 │  │   health (no auth)    │                                                                            │
 │  └───────────────────────┘                                                                            │
-└─────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

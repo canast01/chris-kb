@@ -110,7 +110,7 @@ Storage Policy-Based Management (SPBM) is a framework that decouples storage cap
 ### How SPBM Works
 
 ```text
-┌───────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                  SPBM Architecture                                                                    │
 │                                                                                                       │
 │  1. Array/vSAN advertises capabilities via VASA                                                       │
@@ -124,7 +124,7 @@ Storage Policy-Based Management (SPBM) is a framework that decouples storage cap
 │                                                                                                       │
 │  4. vCenter continuously checks compliance                                                            │
 │     Non-compliant VMs flagged in vCenter UI                                                           │
-└───────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Policy Components
@@ -367,7 +367,7 @@ ESXi 7.0+ supports NVMe/FC and NVMe/TCP. NVMe/TCP requires no special hardware b
 ## Storage Architecture Decision Reference
 
 ```text
-┌──────────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │               Storage Architecture Selection Guide                                                    │
 │                                                                                                       │
 │  New deployment with no existing SAN?                                                                 │
@@ -390,7 +390,7 @@ ESXi 7.0+ supports NVMe/FC and NVMe/TCP. NVMe/TCP requires no special hardware b
 │                                                                                                       │
 │  Need raw LUN access for guest clustering?                                                            │
 │    └── Physical RDM (pRDM) on FC or iSCSI                                                             │
-└──────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

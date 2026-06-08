@@ -7,7 +7,7 @@ Escalation reference covering Before Opening a Support Case, Severity Definition
 
   VR Escalation Path
 ```text
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Step 1: Collect (both sites)                                                                         │
 │  ┌─────────────────────────────────────────────────────────┐                                          │
 │  │ VRA support bundle (VAMI) │ ESXi hbr.log / hostd.log    │                                          │
@@ -30,7 +30,7 @@ Escalation reference covering Before Opening a Support Case, Severity Definition
 │  │ Recurring / SLA breach → TAM engagement              │                                             │
 │  │ Suspected defect      → VR Engineering via SR        │                                             │
 │  └──────────────────────────────────────────────────────┘                                             │
-└─────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

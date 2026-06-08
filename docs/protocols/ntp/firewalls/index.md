@@ -7,7 +7,7 @@ NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewal
 
         NTP FIREWALL REQUIREMENTS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  NTP CLIENT (server/device)                                                                           │
 │  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐                                          │
 │  │  Client host │ ─────────────────────►│  NTP Server      │                                          │
@@ -27,7 +27,7 @@ NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewal
 │                                                                                                       │
 │  Rule summary:  permit udp any → ntpserver port 123                                                   │
 │                 permit udp ntpserver port 123 → any                                                   │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 NTP uses **UDP port 123** for all client-server and peer communication. If this port is blocked between a host and its NTP server, the clock will not synchronise.

@@ -7,7 +7,7 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 </div>
 
 ```text
-┌─────────────────────────────────────── vMotion Failing — Investigation Flow ──────────────────────────────┐
+┌─────────────────────────────────────── vMotion Failing — Investigation Flow ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: vCenter Recent Tasks — vMotion task Failed; note the exact error message                  ││
@@ -32,7 +32,7 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  NSX segment check: segment available on destination host transport node?                         ││
 │   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

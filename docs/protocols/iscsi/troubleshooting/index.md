@@ -7,7 +7,7 @@ iSCSI Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Com
 
         TRIAGE: HOST CANNOT SEE iSCSI LUN
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  1. Ping target IP ───── fail ──► check VLAN, routing, NIC                                            │
 │          │ ok                                                                                         │
 │          ▼                                                                                            │
@@ -27,7 +27,7 @@ iSCSI Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Com
 │          │ yes                                                                                        │
 │          ▼                                                                                            │
 │  7. Check filesystem / volume manager layer                                                           │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Diagnostic Flow

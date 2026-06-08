@@ -7,7 +7,7 @@ NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options
 
         SERVER-SIDE EXPORT CONFIGURATION
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  /etc/exports                                                                                         │
 │  ┌────────────────────────────────────────────────────────┐                                           │
 │  │ /data/shared  192.168.10.0/24(rw,sync,no_subtree_check)│                                           │
@@ -23,7 +23,7 @@ NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options
 │                         │ TCP 2049                                                                    │
 │                         ▼                                                                             │
 │                    NFS clients mount                                                                  │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

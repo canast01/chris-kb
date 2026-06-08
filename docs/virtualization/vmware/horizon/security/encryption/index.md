@@ -52,7 +52,7 @@
 │  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐
 │  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM                                   │
 │  (Blast)     │             └───────────┘              │  (Blast agent)                                │
-└──────────────┘                                        └──────────────────┘
+└──────────────┘                                        └───────────────────────────────────────────────┘
 ```
 ```bash
 ## Option 1: Via UAG Admin UI (port 9443) → SSL Server Certificate → Upload

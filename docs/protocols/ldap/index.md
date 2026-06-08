@@ -11,7 +11,7 @@ Lightweight Directory Access Protocol — directory service query and authentica
 
         LDAP DIRECTORY INFORMATION TREE (DIT)
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  dc=company,dc=com           (domain root)                                                            │
 │  │                                                                                                    │
 │  ├── ou=Users                                                                                         │
@@ -31,7 +31,7 @@ Lightweight Directory Access Protocol — directory service query and authentica
 │      └── cn=WS-001                                                                                    │
 │                                                                                                       │
 │  LDAP query: base DN + scope + filter → matching entries                                              │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 

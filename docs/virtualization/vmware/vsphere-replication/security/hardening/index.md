@@ -7,7 +7,7 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 
   VR Hardening Controls
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Credentials                 Network Restrictions                                                     │
 │  ┌──────────────────────┐    ┌──────────────────────────┐                                             │
 │  │ Change admin / root  │    │ Port 5480 (VAMI):        │                                             │
@@ -24,7 +24,7 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 │  │ Renew 30 days before │    │  all WAN replications    │                                             │
 │  │  expiry              │    └──────────────────────────┘                                             │
 │  └──────────────────────┘                                                                             │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -9,7 +9,7 @@ large VMDKs and always verify destination capacity and storage policy before sta
 </div>
 
 ```text
-┌──────────────────────────── Storage vMotion / Datastore Migration — Procedure Flow ───────────────────────────────┐
+┌──────────────────────────── Storage vMotion / Datastore Migration — Procedure Flow ───────────────────┐
 │                                                                                                       │
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  START: Identify VMs to migrate — capacity rebalance, datastore decommission, or SAN-to-vSAN migration    ││
@@ -41,7 +41,7 @@ large VMDKs and always verify destination capacity and storage policy before sta
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  Step 4 — Post-migration: verify VM on new datastore, policy compliant, old datastore empty               ││
 │  └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

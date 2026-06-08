@@ -54,7 +54,7 @@ ESXi Authentication Paths
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
-┌──────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  /Security/PasswordQualityControl                                                                     │
 │  ├── Minimum length: 12 chars                                                                         │
 │  ├── Complexity: upper + lower + digit + special                                                      │
@@ -62,7 +62,7 @@ ESXi Authentication Paths
 │  /Security/AccountLockFailures = 5 attempts                                                           │
 │  /Security/AccountUnlockTime   = 900 seconds                                                          │
 │  /Config/Etc/issue             = login banner text                                                    │
-└──────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ### List and Remove Unused Local Accounts
 

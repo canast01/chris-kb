@@ -4,7 +4,7 @@
 SQL Server health checks reference.
 </div>
 
-# Database — Daily Health Check
+## Database — Daily Health Check
 
 ```bash
 # PostgreSQL

@@ -9,7 +9,7 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 </div>
 
 ```text
-┌─────────────────────────── vCenter Upgrade Failure — Investigation Flow ────────────────────────────────┐
+┌─────────────────────────── vCenter Upgrade Failure — Investigation Flow ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: VCSA upgrade fails — installer error / appliance won't boot / UI unreachable post-upgrade ││
@@ -34,7 +34,7 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  CLOSE: vCenter accessible · All hosts connected · Services healthy · Upgrade log clean            ││
 │   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

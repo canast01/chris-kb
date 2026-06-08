@@ -10,7 +10,7 @@ Network File System (NFS) allows hosts to mount remote directories over TCP. Cov
 
         NFS ARCHITECTURE
 ```text
-┌─────────────────┐        TCP 2049        ┌──────────────────────┐
+┌─────────────────┐        TCP 2049        ┌────────────────────────────────────────────────────────────┐
 │   NFS CLIENT    │                        │    NFS SERVER                                              │
 │                 │                        │                                                            │
 │  mount -t nfs   │  ─────────────────────►│  /etc/exports                                              │
@@ -25,7 +25,7 @@ Network File System (NFS) allows hosts to mount remote directories over TCP. Cov
 │                 │                        │                                                            │
 │  UID/GID check  │  NFSv3: stateless      │  exportfs -ra                                              │
 │  (POSIX perms)  │  NFSv4: stateful/Krb5  │  applies changes                                           │
-└─────────────────┘                        └──────────────────────┘
+└─────────────────┘                        └────────────────────────────────────────────────────────────┘
 ```
 
 ## NFSv4.1 Session and pNFS Data Path

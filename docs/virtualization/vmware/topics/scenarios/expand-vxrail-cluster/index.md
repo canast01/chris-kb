@@ -9,7 +9,7 @@ LCM upgrades and voids the support configuration.
 </div>
 
 ```text
-┌──────────────────────────── Expand VxRail Cluster (Add Node) — Procedure Flow ────────────────────────────────────┐
+┌──────────────────────────── Expand VxRail Cluster (Add Node) — Procedure Flow ────────────────────────┐
 │                                                                                                       │
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  START: Rack and cable new node — assign iDRAC IP via DCUI, confirm iDRAC reachable on mgmt network       ││
@@ -41,7 +41,7 @@ LCM upgrades and voids the support configuration.
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  Step 4 — vSAN rebalance: monitor resyncing objects until 0 bytes remain; validate in OMIVV               ││
 │  └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

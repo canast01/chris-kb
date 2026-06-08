@@ -7,7 +7,7 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 </div>
 
 ```text
-┌─────────────────────────────── VM Performance Degraded — Investigation Flow ──────────────────────────────┐
+┌─────────────────────────────── VM Performance Degraded — Investigation Flow ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Alert in Aria Operations — VM latency / CPU ready / dropped packets anomaly detected      ││
@@ -32,7 +32,7 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  Network issue? → NSX DFW: Aria Networks path trace → DFW rule hit count → reduce rule count      ││
 │   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

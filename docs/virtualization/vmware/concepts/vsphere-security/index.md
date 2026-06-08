@@ -11,7 +11,7 @@ vSphere VM Encryption (introduced in vSphere 6.5) encrypts VM data at rest — v
 ### How VM Encryption Works
 
 ```text
-┌───────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                    vSphere VM Encryption Flow                                                         │
 │                                                                                                       │
 │  ┌──────────┐   1. Request DEK     ┌───────────────────────────┐                                      │
@@ -28,7 +28,7 @@ vSphere VM Encryption (introduced in vSphere 6.5) encrypts VM data at rest — v
 │  │  [VM]    │  5. Data written to VMDK is always encrypted                                            │
 │  │  VMDK    │     at the disk layer — transparent to guest OS                                         │
 │  └──────────┘                                                                                         │
-└───────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 KEK = Key Encrypting Key (managed by KMS, never stored on ESXi)
 DEK = Data Encrypting Key (generated per VM, encrypted by KEK)
@@ -82,7 +82,7 @@ vSphere Trust Authority (introduced in vSphere 7.0) provides a way to attest the
 vTA uses two separate clusters:
 
 ```text
-┌─────────────────────────┐      ┌─────────────────────────────────┐
+┌─────────────────────────┐      ┌──────────────────────────────────────────────────────────────────────┐
 │  Trust Authority Cluster│      │      Trusted Cluster                                                 │
 │  (TA hosts)             │      │  (workload hosts)                                                    │
 │                         │      │                                                                      │
@@ -95,7 +95,7 @@ vTA uses two separate clusters:
 │  - Approved ESXi images │      │                                                                      │
 │  - Approved TPM certs   │      │  TA verifies against inventory                                       │
 │                         │      │  and releases keys if trusted                                        │
-└─────────────────────────┘      └─────────────────────────────────┘
+└─────────────────────────┘      └──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### When to Use vTA
@@ -405,7 +405,7 @@ esxcli software vib list --rebooting-image | awk '{print $1, $5}'
 ## Security Architecture Summary
 
 ```text
-┌──────────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                  vSphere Security Layers                                                              │
 │                                                                                                       │
 │  Layer 1: Infrastructure Access Control                                                               │
@@ -426,7 +426,7 @@ esxcli software vib list --rebooting-image | awk '{print $1, $5}'
 │    VBS → Credential Guard, HVCI inside Windows guests                                                 │
 │    VM Secure Boot → UEFI + vTPM enforces signed guest bootchain                                       │
 │    VMXNET3 + pvSCSI → paravirtual drivers (smaller attack surface)                                    │
-└──────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

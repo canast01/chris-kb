@@ -8,7 +8,7 @@ and identifying driver/firmware mismatch as the most common production cause.
 </div>
 
 ```text
-┌───────────────────────────── ESXi PSOD — Response and Diagnosis Flow ───────────────────────────────────┐
+┌───────────────────────────── ESXi PSOD — Response and Diagnosis Flow ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  START: Host goes offline; vCenter shows "Not Responding"; VMs show "Disconnected"              │ │
@@ -35,7 +35,7 @@ and identifying driver/firmware mismatch as the most common production cause.
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  Match module name to VMware KB → check HCL for driver+firmware combination → LCM if VxRail    │  │
 │   └─────────────────────────────────────────────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

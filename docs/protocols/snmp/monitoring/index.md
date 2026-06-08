@@ -7,7 +7,7 @@ SNMP is the primary protocol for collecting metrics from network devices, storag
 
         SNMP MONITORING INTEGRATION
 ```text
-┌───────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Infrastructure                                                                                       │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                                  │
 │  │ Switches │ │ Routers  │ │ Storage  │ │   UPS    │                                                  │
@@ -28,7 +28,7 @@ SNMP is the primary protocol for collecting metrics from network devices, storag
 │             ┌──────────────▼──────────────────┐                                                       │
 │             │  Grafana dashboards + Alertmanager│                                                     │
 │             └─────────────────────────────────┘                                                       │
-└───────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Architecture

@@ -9,7 +9,7 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </div>
 
 ```text
-┌──────────────────────── vSphere Monitoring Stack ──────────────────────────────┐
+┌──────────────────────── vSphere Monitoring Stack ─────────────────────────────────────────────────────┐
 │                                                                                                       │
 │  ┌──────────────────────────────────────────────────────────────────────────┐                         │
 │  │  Skyline / Aria Operations (external telemetry → proactive advisories)  │                          │
@@ -25,7 +25,7 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 │  │  ESXi Host: ESXTOP / RESXTOP (real-time)  │  /var/log/* (persistent) │                             │
 │  │  vmkernel.log · vobd.log · fdm.log         │  storagerm.log           │                            │
 │  └──────────────────────────────────────────────────────────────────────┘                             │
-└────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

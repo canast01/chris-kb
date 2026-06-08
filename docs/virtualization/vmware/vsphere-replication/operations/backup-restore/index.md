@@ -7,7 +7,7 @@ Backup and Restore reference covering What to Back Up, VRA Pre-Upgrade Snapshot,
 
   VR Backup Strategy
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  VRA Appliance                                                                                        │
 │  ┌──────────────────────────────────────────────────────┐                                             │
 │  │ Config lives in vCenter DB ──► covered by VCSA backup│                                             │
@@ -24,7 +24,7 @@ Backup and Restore reference covering What to Back Up, VRA Pre-Upgrade Snapshot,
 │  └──────────────────────────────────────────────────────┘                                             │
 │                                                                                                       │
 │  Recovery: vCenter → Site Recovery → Replications → Recover                                           │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

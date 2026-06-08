@@ -9,7 +9,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 </div>
 
 ```text
-┌──────────────── VM Snapshot Consolidation Required — Investigation Flow ────────────────────────────────┐
+┌──────────────── VM Snapshot Consolidation Required — Investigation Flow ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: vCenter warning "Virtual machine disks consolidation is needed" on one or more VMs        ││
@@ -50,7 +50,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  CLOSE: Warning cleared · vmx log shows flat disk chain · No orphaned -delta.vmdk files           ││
 │   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

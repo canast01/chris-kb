@@ -6,7 +6,7 @@ Server Message Block (SMB) is a network file sharing protocol running over TCP p
 
         SMB ARCHITECTURE
 ```text
-┌──────────────────┐     TCP 445      ┌──────────────────────────┐
+┌──────────────────┐     TCP 445      ┌─────────────────────────────────────────────────────────────────┐
 │  Windows/Linux   │                  │   SMB SERVER (Windows)                                          │
 │  Client          │                  │                                                                 │
 │                  │  1. Negotiate    │  \\server\Finance                                               │
@@ -24,7 +24,7 @@ Server Message Block (SMB) is a network file sharing protocol running over TCP p
 │                  │                  │  │  (user:Modify)   │                                           │
 │                  │                  │  └──────────────────┘                                           │
 │                  │                  │  Effective = most restrict                                      │
-└──────────────────┘                  └──────────────────────────┘
+└──────────────────┘                  └─────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-5">

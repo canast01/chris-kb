@@ -7,7 +7,7 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 
         TRAP FLOW (device-initiated, async)
 ```text
-┌─────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Device (switch/router/server)         NMS / trap receiver                                            │
 │  ┌─────────────────────────────┐       ┌──────────────────┐                                           │
 │  │ Event: link down on eth0/1  │       │ snmptrapd        │                                           │
@@ -24,7 +24,7 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 │  └─────────────────────────────┘       └──────────────────┘                                           │
 │                                                                                                       │
 │  INFORM = trap with ACK; device retries until NMS replies                                             │
-└─────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.
 

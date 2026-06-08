@@ -7,7 +7,7 @@ Zoning restricts which initiators (HBAs) can communicate with which targets (sto
 
         ZONING: INITIATOR + TARGET → ZONE → ZONE SET → FABRIC
 ```text
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Zone: esxi01_pure01_ctA1                                                                             │
 │  ┌───────────────────────┐    ┌───────────────────────────────┐                                       │
 │  │ Initiator             │    │ Target                        │                                       │
@@ -25,7 +25,7 @@ Zoning restricts which initiators (HBAs) can communicate with which targets (sto
 │                      │   FABRIC    │  enforces zone membership                                        │
 │                      │  (switches) │  blocks unlisted WWPNs                                           │
 │                      └─────────────┘                                                                  │
-└─────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 Every production fabric must have active zoning; unzoned fabrics allow all nodes to see each other.
 

@@ -96,14 +96,14 @@ Test failover runs in an isolated network bubble and does not affect production.
 
 ```
 ```powershell
-# Start a test failover
+## Start a test failover
 $plan = Get-SRMRecoveryPlan -Name <plan_name>
 $plan.RecoveryPlanService.Start($plan.MoRef, (New-Object VMware.VimAutomation.Srm.Types.V1.RecoveryPlanRecoveryMode))
 
-# Check test status
+## Check test status
 Get-SRMRecoveryPlan -Name <plan_name> | Select State, ActiveHistoryTask
 
-# Clean up (remove test snapshot, restore network)
+## Clean up (remove test snapshot, restore network)
 $plan.RecoveryPlanService.Cancel($plan.MoRef)
 ```
 
@@ -115,13 +115,13 @@ $plan.RecoveryPlanService.Cancel($plan.MoRef)
 Real recovery — run only during a DR event or planned migration.
 
 ```powershell
-# Execute planned migration (graceful, bidirectional)
+## Execute planned migration (graceful, bidirectional)
 Start-SRMRecoveryPlan -RecoveryPlan (Get-SRMRecoveryPlan -Name <plan_name>) -RecoveryMode Planned
 
-# Execute emergency failover (one-way, no replication cleanup)
+## Execute emergency failover (one-way, no replication cleanup)
 Start-SRMRecoveryPlan -RecoveryPlan (Get-SRMRecoveryPlan -Name <plan_name>) -RecoveryMode Failover
 
-# Stop an in-progress plan
+## Stop an in-progress plan
 Stop-SRMRecoveryPlan -RecoveryPlan (Get-SRMRecoveryPlan -Name <plan_name>)
 ```
 
@@ -133,15 +133,15 @@ Stop-SRMRecoveryPlan -RecoveryPlan (Get-SRMRecoveryPlan -Name <plan_name>)
 SRM 8.3+ exposes a REST API at `https://<srm_fqdn>/api`.
 
 ```bash
-# Authenticate
+## Authenticate
 curl -k -X POST https://<srm_fqdn>/api/sessions   -H "Content-Type: application/json"   -d '{"username":"administrator@vsphere.local","password":"<pass>"}'
 
-# List protection groups
+## List protection groups
 curl -k -X GET https://<srm_fqdn>/api/groups   -H "Authorization: <token>"
 
-# List recovery plans
+## List recovery plans
 curl -k -X GET https://<srm_fqdn>/api/plans   -H "Authorization: <token>"
 
-# Trigger test failover
+## Trigger test failover
 curl -k -X POST "https://<srm_fqdn>/api/plans/<plan_id>/actions/test"   -H "Authorization: <token>"
 ```

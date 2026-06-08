@@ -6,7 +6,7 @@ Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using
 
         DORA HANDSHAKE
 ```text
-┌────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Client (new device)              DHCP Server                                                         │
 │  ┌───────────────────┐            ┌────────────────────────┐                                          │
 │  │  No IP yet        │            │  Scope: 192.168.1.0/24 │                                          │
@@ -24,7 +24,7 @@ Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using
 │  │  DNS: 10.0.0.53   │            └────────────────────────┘                                          │
 │  └───────────────────┘                                                                                │
 │  Renewal at 50% of lease time (T1); rebind at 87.5% (T2)                                              │
-└────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-5">

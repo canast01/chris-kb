@@ -7,7 +7,7 @@ A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every
 
         WWNN vs WWPN STRUCTURE
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  HBA Card (Node)                                                                                      │
 │  ┌──────────────────────────────────────────────────────┐                                             │
 │  │  WWNN (Node Name) — identifies the HBA card itself   │                                             │
@@ -23,7 +23,7 @@ A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every
 │  │  └─────────────────┘  └─────────────────┘            │                                             │
 │  └──────────────────────────────────────────────────────┘                                             │
 │   NAA(5) + OUI + vendor-assigned bits = 64-bit unique ID                                              │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 WWNs are used for zoning, host masking, and fabric registration.
 

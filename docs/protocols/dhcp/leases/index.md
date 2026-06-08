@@ -7,7 +7,7 @@ DHCP Leases reference covering Overview, Viewing Leases, Finding IP from MAC, Le
 
         LEASE LIFECYCLE AND RENEWAL TIMERS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Lease duration: 8 days (example)                                                                     │
 │                                                                                                       │
 │  │◄──────────────── 8 days ─────────────────────────────►│                                            │
@@ -24,7 +24,7 @@ DHCP Leases reference covering Overview, Viewing Leases, Finding IP from MAC, Le
 │  T3 = lease expires → client must start DORA again                                                    │
 │                                                                                                       │
 │  Lease states: Active | Expired | Declined | ActiveReservation                                        │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

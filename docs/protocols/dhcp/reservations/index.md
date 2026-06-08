@@ -7,7 +7,7 @@ DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Rese
 
         RESERVATION: MAC → FIXED IP
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  DHCP Scope: 192.168.10.0/24                                                                          │
 │  ┌──────────────────────────────────────────────────────┐                                             │
 │  │  Dynamic pool:  .100 – .254                          │                                             │
@@ -27,7 +27,7 @@ DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Rese
 │                │ OFFER + ACK 192.168.10.200                                                           │
 │                ▼                                                                                      │
 │  Printer gets same IP on every boot                                                                   │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

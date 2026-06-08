@@ -7,7 +7,7 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 </div>
 
 ```text
-┌──────────────────────────── ESXi Host Disconnected — Investigation Flow ────────────────────────────────┐
+┌──────────────────────────── ESXi Host Disconnected — Investigation Flow ──────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  START: vCenter shows host as "Disconnected" or "Not Responding"                                │ │
@@ -38,7 +38,7 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 │    │ SSH → check vpxa/hostd → check NTP → check DNS      │                                            │
 │    │ Read /var/log/vpxa.log + /var/log/hostd.log          │                                           │
 │    └─────────────────────────────────────────────────────┘                                            │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

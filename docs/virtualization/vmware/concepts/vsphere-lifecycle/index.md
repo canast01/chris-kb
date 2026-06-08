@@ -9,7 +9,7 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </div>
 
 ```text
-┌──────────────────────── vSphere Lifecycle Manager — Desired State ─────────────────────────────┐
+┌──────────────────────── vSphere Lifecycle Manager — Desired State ────────────────────────────────────┐
 │                                                                                                       │
 │  ┌──────────────────────────────────────────────────────────────────────────────────────────┐         │
 │  │  Cluster Image (Desired State)                                                           │         │
@@ -25,7 +25,7 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 │                                                                                                       │
 │  vLCM pulls updates from VMware Depot or custom depot (HTTPS/local)                                   │
 │  Remediation: Enter maintenance mode → update → Quick Boot (if eligible) → exit maintenance           │
-└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

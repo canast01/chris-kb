@@ -4,7 +4,7 @@
 MySQL / MariaDB common issues reference.
 </div>
 
-# Database — Performance Troubleshooting
+## Database — Performance Troubleshooting
 
 ```bash
 # OS resource view

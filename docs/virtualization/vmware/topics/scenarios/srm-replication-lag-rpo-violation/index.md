@@ -9,7 +9,7 @@ replication to within RPO before verifying with an SRM test recovery.
 </div>
 
 ```text
-┌─────────────────────────── SRM Replication Lag / RPO Violation — Investigation Flow ───────────────────────┐
+┌─────────────────────────── SRM Replication Lag / RPO Violation — Investigation Flow ──────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: SRM alert — RPO Exceeded on one or more VMs, or Aria Operations fires RPO warning alert     ││
@@ -36,7 +36,7 @@ replication to within RPO before verifying with an SRM test recovery.
 │   │  → redeploy or restart    │   │  → throttle, compress,    │  │  → enable compression,   │         │
 │   │    vSR appliance          │   │    or expand link         │  │    or increase RPO target │        │
 │   └───────────────────────────┘   └───────────────────────────┘  └───────────────────────────┘        │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

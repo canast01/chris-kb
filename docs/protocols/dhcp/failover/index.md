@@ -7,7 +7,7 @@ DHCP Failover reference covering Overview, Configuring Failover, Checking Failov
 
         DHCP FAILOVER MODES
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  LOAD BALANCE (50/50 split):                                                                          │
 │  ┌─────────────────────┐    ┌─────────────────────────────┐                                           │
 │  │   DHCP Primary      │    │   DHCP Secondary            │                                           │
@@ -26,7 +26,7 @@ DHCP Failover reference covering Overview, Configuring Failover, Checking Failov
 │  └─────────────────────┘    └─────────────────────────────┘                                           │
 │                                                                                                       │
 │  Both modes: TCP 647 must be open between DHCP servers                                                │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

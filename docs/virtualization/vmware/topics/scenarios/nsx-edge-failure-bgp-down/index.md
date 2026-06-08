@@ -8,7 +8,7 @@ the physical network — and restoring connectivity with minimal downtime.
 </div>
 
 ```text
-┌───────────────────────────── NSX Edge Failure / BGP Down — Investigation Flow ─────────────────────────────┐
+┌───────────────────────────── NSX Edge Failure / BGP Down — Investigation Flow ────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: External connectivity lost for VMs — north-south traffic not reaching upstream network      ││
@@ -35,7 +35,7 @@ the physical network — and restoring connectivity with minimal downtime.
 │   │  → check edge VM in       │   │  → check TEP tunnels and  │  │  → problem is upstream    │        │
 │   │    vCenter, power state   │   │    upstream switch config │  │    switch or routing      │        │
 │   └───────────────────────────┘   └───────────────────────────┘  └───────────────────────────┘        │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

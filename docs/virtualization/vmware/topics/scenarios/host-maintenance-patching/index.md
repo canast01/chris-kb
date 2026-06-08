@@ -8,7 +8,7 @@ scenario covers the full procedure from pre-flight checks through post-patch val
 </div>
 
 ```text
-┌──────────────────────────────── Host Maintenance and Patching — Procedure Flow ─────────────────────────────────┐
+┌──────────────────────────────── Host Maintenance and Patching — Procedure Flow ───────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Host requires patching — ESXi update, firmware, driver, or hardware maintenance                  ││
@@ -45,7 +45,7 @@ scenario covers the full procedure from pre-flight checks through post-patch val
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  Step 5 — Post-patch validation: version confirmed, vSAN resync = 0, HA agent running                   ││
 │   └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

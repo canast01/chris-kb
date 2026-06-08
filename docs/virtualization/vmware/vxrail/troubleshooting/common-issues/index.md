@@ -5,7 +5,7 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </div>
 
 ```text
-┌──────────────────────────────── VxRail — Common Issues ───────────────────────────────────────────┐
+┌──────────────────────────────── VxRail — Common Issues ───────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────┐       │
 │   │  Symptom categories and first triage step for each                                        │       │
@@ -33,7 +33,7 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 │   MTU mismatch     = Physical switch port and vmkernel MTU must both be 9000 for jumbo frames         │
 │   iDRAC SEL        = System Event Log on iDRAC; records hardware faults chronologically               │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

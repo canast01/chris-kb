@@ -7,7 +7,7 @@ Pure Storage Evergreen Security reference covering Hardening Checklist, RBAC, En
 
 Evergreen Security Controls
 ```text
-┌──────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Same FlashArray/FlashBlade security model applies                                                    │
 │  ├── AES-256 encryption at rest (always-on SEDs)                                                      │
 │  ├── TLS for all management + replication traffic                                                     │
@@ -19,7 +19,7 @@ Evergreen Security Controls
 │  ├── Rotate API tokens every 90 days                                                                  │
 │  ├── Phone-home always active (contractual)                                                           │
 │  └── Controller refresh: drives sanitised before return                                               │
-└──────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ## Hardening Checklist
 

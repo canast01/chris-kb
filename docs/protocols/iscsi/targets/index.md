@@ -7,7 +7,7 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 
         iSCSI TARGET STRUCTURE
 ```text
-┌──────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Storage Array / Target                                                                               │
 │                                                                                                       │
 │  Target IQN: iqn.2020-01.com.purestorage:flasharray-ct0                                               │
@@ -28,7 +28,7 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 │  │  iqn.2024-01.com.example:server01 ──► LUN 0 (50G) │                                                │
 │  │  iqn.2024-01.com.example:server02 ──► LUN 1 (100G)│                                                │
 │  └───────────────────────────────────────────────────┘                                                │
-└──────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Target Address Format

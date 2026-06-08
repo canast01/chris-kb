@@ -7,7 +7,7 @@ FlashBlade — Security reference: Authentication, Access Control, Encryption, H
 
 FlashBlade Security Layers
 ```text
-┌──────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Identity & Auth                                                                                      │
 │  ├── SAML SSO for GUI                                                                                 │
 │  ├── AD for SMB authentication + NFS Kerberos                                                         │
@@ -23,7 +23,7 @@ FlashBlade Security Layers
 ├──────────────────────────────────────────────────────────┤
 │  Data at Rest                                                                                         │
 │  └── XTS-AES-256 (always-on, cannot be disabled)                                                      │
-└──────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

@@ -7,7 +7,7 @@ Authentication reference covering VRA Registered with vCenter SSO, Site Pairing 
 
   VR Authentication Architecture
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  User / Script            vCenter SSO           VRA                                                   │
 │  ┌──────────────┐         ┌──────────────┐      ┌─────────┐                                           │
 │  │ vCenter UI / │────────►│  SSO session │─────►│ VR feat.│                                           │
@@ -24,7 +24,7 @@ Authentication reference covering VRA Registered with vCenter SSO, Site Pairing 
 │                                                                                                       │
 │  REST API: POST /api/rest/vr/authentication/token                                                     │
 │  Token TTL: 300 seconds                                                                               │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

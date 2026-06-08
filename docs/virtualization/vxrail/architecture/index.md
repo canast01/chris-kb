@@ -5,7 +5,7 @@ VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk 
 </div>
 
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  VxRail Node (PowerEdge)                                                                              │
 │  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐                                           │
 │  │  CPU(s)  │ │  RAM     │ │  NVMe Cache + Capacity Disks │                                           │
@@ -16,7 +16,7 @@ VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk 
 │  │  Dual-port 25/100GbE │   │  iDRAC (OOB management)       │                                         │
 │  │  mgmt · vSAN · vMtn  │   │  hardware health · RACADM     │                                         │
 │  └──────────┬───────────┘   └───────────────────────────────┘                                         │
-└─────────────┼────────────────────────────────────────────────┘
+└─────────────┼─────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```python
 

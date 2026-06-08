@@ -7,7 +7,7 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
 
         CLIENT-SIDE MOUNT PROCESS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  mount -t nfs -o vers=4.1,hard,rsize=1048576 \                                                        │
 │         server:/export /mnt/data                                                                      │
 │                    │                                                                                  │
@@ -24,7 +24,7 @@ NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount
 │  rsize=  ──► read buffer size (tune for throughput)                                                   │
 │  _netdev ──► wait for network at boot (required in fstab)                                             │
 │  vers=   ──► force NFS version (4.1 preferred)                                                        │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

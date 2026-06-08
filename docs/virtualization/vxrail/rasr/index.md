@@ -7,7 +7,7 @@ unrecoverable by normal means and must be rebuilt from scratch before rejoining 
 </div>
 
 ```text
-┌──────────────────────────────── VxRail — RASR (Rapid Appliance Self Recovery) ────────────────────────────────┐
+┌──────────────────────────────── VxRail — RASR (Rapid Appliance Self Recovery) ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │                     RASR rebuilds a VxRail node that is unrecoverable by normal means                 ││
@@ -45,7 +45,7 @@ unrecoverable by normal means and must be rebuilt from scratch before rejoining 
 │  vMedia           = iDRAC feature to mount a remote ISO as a virtual USB device without physical media│
 │  LCM baseline     = The exact ESXi + VxRail Manager build version the RASR ISO must match             │
 │  Object rebuild   = vSAN re-replicates data components onto the returned node after it rejoins        │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

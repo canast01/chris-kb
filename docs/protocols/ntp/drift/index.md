@@ -7,7 +7,7 @@ NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, I
 
         CLOCK DRIFT AND NTP CORRECTION
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Without NTP:                                                                                         │
 │  Real time  ─────────────────────────────────────────────►                                            │
 │  System clk ──────────────────────────────────────────────►                                           │
@@ -26,7 +26,7 @@ NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, I
 │  Drift file (/var/lib/chrony/drift):                                                                  │
 │  Stores frequency correction so daemon starts pre-calibrated                                          │
 │  Content: single float, e.g.  12.345678  (ppm)                                                        │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Clock drift is the natural tendency of a system clock to run fast or slow relative to real time. NTP continuously corrects drift by applying small frequency adjustments (slewing) to keep the clock accurate.

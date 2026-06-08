@@ -7,24 +7,24 @@ VxRail Pre-Change Health Validation reference covering VxRail Manager, vCenter H
 
 Pre-Upgrade Checklist Flow
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  VxRail Manager         vCenter               vSAN                                                    │
 │  ─────────────          ───────────────        ─────                                                  │
 │  UI reachable?    →     hosts Connected?  →   Skyline green?                                          │
 │  services healthy?      no critical alarms    no resync?                                              │
 │  no pending jobs?       DRS/HA healthy        capacity OK?                                            │
 │  cert valid?            recent tasks clean    disk groups OK?                                         │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
                                │
 ```
 ```text
                                │
-┌──────────────────────────────▼──────────────────────────────┐
+┌──────────────────────────────▼────────────────────────────────────────────────────────────────────────┐
 │  Infrastructure + Backup                                                                              │
 │  DNS forward/reverse working for all nodes and vCenter                                                │
 │  NTP synchronized · vCenter backup current                                                            │
 │  critical VM backups done · rollback plan documented                                                  │
-└─────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## VxRail Manager

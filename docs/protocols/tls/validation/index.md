@@ -7,7 +7,7 @@ Use these commands to verify TLS configuration on servers, check certificate val
 
         OPENSSL VALIDATION CHECKLIST
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  openssl s_client -connect <host>:443 -servername <host>                                              │
 │                                                                                                       │
 │  Check output fields:                                                                                 │
@@ -23,7 +23,7 @@ Use these commands to verify TLS configuration on servers, check certificate val
 │  openssl x509 -noout -ext subjectAltName ► hostname in SAN                                            │
 │  openssl x509 -modulus | md5sum       ┐                                                               │
 │  openssl rsa  -modulus | md5sum       ┘ ► must match                                                  │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Quick Validation — Live Endpoint

@@ -7,7 +7,7 @@ An iSCSI initiator is the client-side component — typically software on a serv
 
         INITIATOR TYPES
 ```text
-┌──────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  SOFTWARE INITIATOR (OS built-in)                                                                     │
 │  ┌──────────────────────────────────────────┐                                                         │
 │  │  OS (Linux open-iscsi / Windows MSiSCSI) │                                                         │
@@ -29,7 +29,7 @@ An iSCSI initiator is the client-side component — typically software on a serv
 │  │  │  iSCSI HBA (TOE) │  ◄─ hardware CPU  │                                                          │
 │  │  └──────────────────┘                   │                                                          │
 │  └──────────────────────────────────────────┘                                                         │
-└──────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## IQN Format

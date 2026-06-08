@@ -7,7 +7,7 @@ LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Cert
 
         TRIAGE: LDAP BIND FAILS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  1. Resolve DC name                                                                                   │
 │     nslookup dc01.example.local ─── fail ──► fix DNS                                                  │
 │          │ ok                                                                                         │
@@ -29,7 +29,7 @@ LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Cert
 │          │ ok                                                                                         │
 │          ▼                                                                                            │
 │  6. Query returns no results? ──► check base DN, filter                                               │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

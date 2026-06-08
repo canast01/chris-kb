@@ -7,7 +7,7 @@ Encryption reference covering Data in Transit, Replication Data Encryption (Per-
 
   VR Encryption Coverage
 ```text
-┌───────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Traffic Path                       Encryption                                                        │
 │  ┌───────────────────────────────────────────────────────┐                                            │
 │  │ Source ESXi → Target VRA (TCP 31031)  Optional AES-256│                                            │
@@ -25,7 +25,7 @@ Encryption reference covering Data in Transit, Replication Data Encryption (Per-
 │                                                                                                       │
 │  Replica at-rest: vSAN/VM encryption on target datastore                                              │
 │  KMS must be reachable from target site for encrypted VMs                                             │
-└───────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

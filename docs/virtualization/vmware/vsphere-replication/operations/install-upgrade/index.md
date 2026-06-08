@@ -7,7 +7,7 @@ Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Regist
 
   VR Deployment and Upgrade Workflow
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Deploy VRA OVA ──► Register with vCenter ──► Pair sites                                              │
 │  (both sites)        (VAMI port 5480)         (accept certs)                                          │
 │       │                                            │                                                  │
@@ -24,7 +24,7 @@ Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Regist
 │  │ Snapshot ──► redeploy ──► re-register ──► verify     │                                             │
 │  │ Replications resume from last sync — no data loss    │                                             │
 │  └──────────────────────────────────────────────────────┘                                             │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

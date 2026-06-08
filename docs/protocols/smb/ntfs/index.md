@@ -7,7 +7,7 @@ NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Refe
 
         NTFS ACL STRUCTURE
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  C:\Shares\Finance  (folder object)                                                                   │
 │  ┌──────────────────────────────────────────────────────┐                                             │
 │  │  Security Descriptor                                 │                                             │
@@ -27,7 +27,7 @@ NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Refe
 │  │  └────────────────┘                                  │                                             │
 │  └──────────────────────────────────────────────────────┘                                             │
 │  (I) = inherited from parent   explicit = set directly here                                           │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

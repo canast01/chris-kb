@@ -7,7 +7,7 @@ NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Commo
 
         TRIAGE: STALE NFS HANDLE / MOUNT FAILURE
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  1. nc -zv <server> 2049 ── fail ──► firewall / routing                                               │
 │          │ ok                                                                                         │
 │          ▼                                                                                            │
@@ -24,7 +24,7 @@ NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Commo
 │          │ no                        check root_squash                                                │
 │          ▼                                                                                            │
 │  6. Check server exports & network (nfsstat -c for retrans)                                           │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Diagnostic Flow

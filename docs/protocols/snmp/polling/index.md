@@ -7,7 +7,7 @@ SNMP polling is the process of an NMS periodically querying devices to collect m
 
         SNMP POLLING CYCLE
 ```text
-┌─────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  NMS (every 60s)              Device agent                                                            │
 │  ┌─────────────────┐          ┌──────────────────────────┐                                            │
 │  │ Schedule: 60s   │          │                          │                                            │
@@ -24,7 +24,7 @@ SNMP polling is the process of an NMS periodically querying devices to collect m
 │                        GETNEXT = next OID in tree                                                     │
 │                        GETBULK = multiple OIDs (efficient)                                            │
 │                        SET     = write value (RW only)                                                │
-└─────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 Unlike traps, polling is initiated by the manager on a schedule.
 

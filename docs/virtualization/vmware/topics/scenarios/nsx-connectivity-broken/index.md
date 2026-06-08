@@ -8,7 +8,7 @@ exact commands and UI paths to isolate and resolve each layer.
 </div>
 
 ```text
-┌──────────────────────────────────── NSX Connectivity Broken — Investigation Flow ─────────────────────────┐
+┌──────────────────────────────────── NSX Connectivity Broken — Investigation Flow ─────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Connectivity complaint — determine scope before touching any config                        ││
@@ -34,7 +34,7 @@ exact commands and UI paths to isolate and resolve each layer.
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  CLOSE: Aria Networks path trace shows clean path · DFW shows Allow · BGP established            ││
 │   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

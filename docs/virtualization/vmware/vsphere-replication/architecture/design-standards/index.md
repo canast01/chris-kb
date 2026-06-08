@@ -7,7 +7,7 @@ Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation
 
   Sizing and Bandwidth Design
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  VRA sizing                                                                                           │
 │  ┌─────────────────────────────────────────────────────┐                                              │
 │  │ ≤200 VMs: Small (2 vCPU / 8 GB)                     │                                              │
@@ -25,7 +25,7 @@ Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation
 │  └─────────────────────────────────────────────────────┘                                              │
 │                                                                                                       │
 │  Target datastore = source disk + (N points × avg delta)                                              │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

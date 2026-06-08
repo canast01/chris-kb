@@ -7,7 +7,7 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 
 Evergreen — What's Included vs. Customer-Managed
 ```text
-┌────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Included in Evergreen subscription                                                                   │
 │  ├── Purity software upgrades (non-disruptive NDU)                                                    │
 │  ├── Ever Modern controller refresh every ~3 years                                                    │
@@ -19,7 +19,7 @@ Evergreen — What's Included vs. Customer-Managed
 │  ├── Volume / protection group configuration                                                          │
 │  ├── Replication targets (ActiveDR / ActiveCluster)                                                   │
 │  └── Capacity growth (True Forward annual reconciliation)                                             │
-└────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

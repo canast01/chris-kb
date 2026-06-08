@@ -7,7 +7,7 @@ VxRail Post-Upgrade Validation reference covering Overview, Where It Fits, Daily
 
 Post-Upgrade Validation Sequence
 ```text
-┌────────────┐     ┌────────────┐     ┌────────────┐     ┌────────────┐
+┌────────────┐     ┌────────────┐     ┌────────────┐     ┌──────────────────────────────────────────────┐
 │  Services  │     │   Health   │     │    VMs     │     │    Docs                                      │
 │            │     │            │     │            │     │                                              │
 │ VxRail Mgr │ →   │ vSAN Sky-  │ →   │ DRS / HA   │ →   │ Change                                       │
@@ -16,7 +16,7 @@ Post-Upgrade Validation Sequence
 │            │     │            │     │            │     │                                              │
 │ all hosts  │     │ FW matches │     │ backups    │     │ versions                                     │
 │ Connected  │     │ baseline   │     │ working    │     │ recorded                                     │
-└────────────┘     └────────────┘     └────────────┘     └────────────┘
+└────────────┘     └────────────┘     └────────────┘     └──────────────────────────────────────────────┘
        │                 │                  │                   │
        └─────────────────┴──────────────────┴───────────────────┘
                                     │

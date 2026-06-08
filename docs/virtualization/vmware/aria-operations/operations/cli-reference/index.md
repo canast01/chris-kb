@@ -52,13 +52,13 @@ Aria Operations — CLI Command Reference Map
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
-┌─────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  REST API  base: https://<aria-ops>/suite-api/api                                                     │
 │  POST /api/auth/token/acquire   authenticate                                                          │
 │  GET  /api/resources            list objects                                                          │
 │  GET  /api/alerts?activeOnly=true  active alerts                                                      │
 │  GET  /api/cluster/nodes        node status                                                           │
-└─────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ### Adapter Management
 

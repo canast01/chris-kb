@@ -7,20 +7,20 @@ FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, I
 
 FlashArray Day-to-Day Operations Flow
 ```text
-┌───────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Pure1 Cloud                                                                                          │
 │  ├── Fleet health dashboard + AI anomaly alerts                                                       │
 │  └── Capacity forecasting + upgrade scheduling                                                        │
-└───────────────────────┬───────────────────────────────┘
+└───────────────────────┬───────────────────────────────────────────────────────────────────────────────┘
                         │  phone-home telemetry
-┌───────────────────────▼───────────────────────────────┐
+┌───────────────────────▼───────────────────────────────────────────────────────────────────────────────┐
 │  FlashArray (Purity GUI / CLI / REST)                                                                 │
 │  ├── purealert list  ─── active alerts                                                                │
 │  ├── puredrive list  ─── drive health                                                                 │
 │  ├── purearray monitor── latency / IOPS / bandwidth                                                   │
 │  ├── purepod list    ─── ActiveCluster pod status                                                     │
 │  └── purepgroup list ─── snapshot + replication sched                                                 │
-└───────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

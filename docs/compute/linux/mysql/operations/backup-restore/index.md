@@ -4,7 +4,7 @@
 MySQL / MariaDB backup restore reference.
 </div>
 
-# Database — Backup Validation
+## Database — Backup Validation
 
 ```bash
 # pgBackRest — check latest backup info

@@ -9,7 +9,7 @@ procurement decision.
 </div>
 
 ```text
-┌──────────────────────────────── Capacity Planning — Review Workflow ────────────────────────────────────────────┐
+┌──────────────────────────────── Capacity Planning — Review Workflow ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Scheduled capacity review, or approaching threshold alert from Aria Operations                   ││
@@ -34,7 +34,7 @@ procurement decision.
 │   │  Waste reclaimed — headroom        │        │  Waste already optimised — headroom │               │
 │   │  restored, no hardware needed yet  │        │  still insufficient: order node     │               │
 │   └────────────────────────────────────┘        └─────────────────────────────────────┘               │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

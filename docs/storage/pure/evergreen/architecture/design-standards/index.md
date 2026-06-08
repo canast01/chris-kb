@@ -7,7 +7,7 @@ Design Standards reference covering Naming Conventions, Build Baseline, Subscrip
 
 Evergreen Subscription Design Checklist
 ```text
-┌──────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Tier selection   │  //X / //C / //E — match workload                                                 │
 ├──────────────────────────────────────────────────────────┤
 │  Capacity sizing  │  committed TiB + True Forward headroom                                            │
@@ -19,7 +19,7 @@ Evergreen Subscription Design Checklist
 │  Refresh schedule │  ~3 yr Ever Modern, plan 90 days ahead                                            │
 ├──────────────────────────────────────────────────────────┤
 │  Pure1 phone-home │  always active — required for support                                             │
-└──────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Naming Conventions

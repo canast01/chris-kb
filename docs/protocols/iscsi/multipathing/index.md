@@ -7,7 +7,7 @@ iSCSI multipathing uses multiple network paths between initiator and target for 
 
         iSCSI MULTIPATH TOPOLOGY
 ```text
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │   HOST                                                                                                │
 │   ┌──────────┐   path 1    ┌──────────┐        ┌─────────────┐                                        │
 │   │  NIC 0   ├────────────►│ Switch A ├───────►│ Portal A    │                                        │
@@ -21,7 +21,7 @@ iSCSI multipathing uses multiple network paths between initiator and target for 
 │                                                └─────────────┘                                        │
 │   MPIO (dm-multipath / Windows MPIO / ESXi NMP)                                                       │
 │   distributes I/O across path 1 and path 2                                                            │
-└─────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 On Linux, DM-Multipath handles this; on Windows, MPIO; on ESXi, NMP with PSP.
 

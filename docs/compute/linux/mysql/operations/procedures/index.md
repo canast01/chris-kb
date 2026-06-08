@@ -4,7 +4,7 @@
 MySQL / MariaDB procedures reference.
 </div>
 
-# Database — Maintenance Procedures
+## Database — Maintenance Procedures
 
 ```sql
 -- Update statistics (safe at any time)

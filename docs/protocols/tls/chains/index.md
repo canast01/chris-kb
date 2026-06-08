@@ -7,7 +7,7 @@ A certificate chain (or chain of trust) links a server certificate back to a tru
 
         CHAIN OF TRUST
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  depth=2  Root CA (self-signed)                                                                       │
 │           ┌─────────────────────────────────────────────┐                                             │
 │           │ CN=Example Root CA                          │                                             │
@@ -31,7 +31,7 @@ A certificate chain (or chain of trust) links a server certificate back to a tru
 │                                                                                                       │
 │  Chain breaks if: intermediate missing, wrong order,                                                  │
 │  or root not in client trust store                                                                    │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 If the chain is broken or incomplete, clients will reject the certificate.
 

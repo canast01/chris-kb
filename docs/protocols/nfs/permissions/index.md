@@ -7,7 +7,7 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 
         NFS PERMISSION LAYERS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Layer 1 — EXPORT OPTIONS (server /etc/exports)                                                       │
 │  ┌────────────────────────────────────────────────────────┐                                           │
 │  │  IP restriction: only 192.168.10.0/24 can mount        │                                           │
@@ -24,7 +24,7 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 │  └────────────────────────────────────────────────────────┘                                           │
 │                         │                                                                             │
 │  Effective access = export options AND POSIX permissions                                              │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

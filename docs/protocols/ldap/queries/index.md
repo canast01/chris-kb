@@ -7,7 +7,7 @@ LDAP Queries reference covering Overview, Filter Syntax, Common AD Attributes, P
 
         LDAP QUERY STRUCTURE
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  ldapsearch -H ldap://dc01 -D "svc@corp.local" -w "pass"                                              │
 │             -b "DC=corp,DC=local"                                                                     │
 │             -s sub                                                                                    │
@@ -27,7 +27,7 @@ LDAP Queries reference covering Overview, Filter Syntax, Common AD Attributes, P
 │  (&(objectClass=user)(mail=*)) users with email                                                       │
 │  (|(cn=Finance)(cn=IT))       Finance OR IT groups                                                    │
 │  (!(userAccountControl:...=2)) not disabled                                                           │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

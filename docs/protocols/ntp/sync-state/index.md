@@ -7,7 +7,7 @@ NTP Sync State reference covering Reading `chronyc tracking` (Linux), Reading `t
 
         SYNC STATE METRICS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  chronyc tracking output                                                                              │
 │                                                                                                       │
 │  Reference ID : C0A80001 (ntp1.example.com)                                                           │
@@ -26,7 +26,7 @@ NTP Sync State reference covering Reading `chronyc tracking` (Linux), Reading `t
 │  ^* ntp1.example.com  2  6  377  ◄── reach=377 = all polls OK                                         │
 │  ^+ ntp2.example.com  2  6  377                                                                       │
 │  ^? ntp3.example.com  3  6   17  ◄── reach<377 = packet loss                                          │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 The sync state tells you whether a system's clock is actively tracking an NTP source and how closely. A drifting or unsynchronised clock causes authentication failures, log correlation errors, and Kerberos breakage.

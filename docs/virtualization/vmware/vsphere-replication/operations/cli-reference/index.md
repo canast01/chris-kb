@@ -7,7 +7,7 @@ CLI Reference reference covering VRA Appliance SSH Access, VRA REST API Authenti
 
   VR CLI and API Access
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  VRA Appliance SSH                                                                                    │
 │  ┌──────────────────────────────────────────────────────┐                                             │
 │  │ systemctl status hms vrms nginx                      │                                             │
@@ -27,7 +27,7 @@ CLI Reference reference covering VRA Appliance SSH Access, VRA REST API Authenti
 │  │ nc -vz <target-VRA> 31031   (replication data port)  │                                             │
 │  │ vmkping -I vmk0 <target-VRA-IP>                      │                                             │
 │  └──────────────────────────────────────────────────────┘                                             │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

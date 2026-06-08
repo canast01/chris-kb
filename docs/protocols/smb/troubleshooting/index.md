@@ -7,7 +7,7 @@ SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1
 
         TRIAGE: CANNOT ACCESS SMB SHARE
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall                                           │
 │          │ ok                                                                                         │
 │          ▼                                                                                            │
@@ -25,7 +25,7 @@ SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1
 │          ▼                                                                                            │
 │  6. SMB dialect (Get-SmbSession | Select Dialect)                                                     │
 │     SMB1 negotiated ──────────────────────────► disable SMB1                                          │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

@@ -11,7 +11,7 @@ SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext commu
 
         SNMPv3 authPriv SECURITY MODEL (USM)
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  NMS                              Device agent                                                        │
 │  ┌────────────────────┐           ┌──────────────────────┐                                            │
 │  │ SNMPv3 GET request │           │ USM validation       │                                            │
@@ -29,7 +29,7 @@ SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext commu
 │  noAuthNoPriv ─ no auth, no encryption (avoid)                                                        │
 │  authNoPriv   ─ SHA auth, no encryption (metrics only)                                                │
 │  authPriv     ─ SHA auth + AES encryption  ◄── use this                                               │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 It is the required version for any environment with compliance requirements.
 

@@ -7,7 +7,7 @@ FlashArray — Security reference: Authentication, Access Control, Encryption, H
 
 FlashArray Security Layers
 ```text
-┌──────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Identity & Auth                                                                                      │
 │  ├── SAML SSO (Okta / Azure AD) → MFA enforced                                                        │
 │  ├── AD/LDAP group → role mapping                                                                     │
@@ -25,7 +25,7 @@ FlashArray Security Layers
 ├──────────────────────────────────────────────────────────┤
 │  Immutability                                                                                         │
 │  └── SafeMode — Pure Support required to destroy snaps                                                │
-└──────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

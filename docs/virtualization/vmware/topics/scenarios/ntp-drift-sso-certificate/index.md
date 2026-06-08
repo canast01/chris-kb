@@ -8,7 +8,7 @@ and recovering SSO and certificate services after time is fixed.
 </div>
 
 ```text
-┌──────────────────────────── NTP Drift — Investigation and Remediation Flow ─────────────────────────────┐
+┌──────────────────────────── NTP Drift — Investigation and Remediation Flow ───────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  SYMPTOM: SSO login fails / "token expired" / SSL error / host "Not Responding" / vSAN skew    │  │

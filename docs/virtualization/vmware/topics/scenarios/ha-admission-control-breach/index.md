@@ -9,7 +9,7 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 </div>
 
 ```text
-┌────────────────────── HA Admission Control Breach — Investigation Flow ─────────────────────────────────┐
+┌────────────────────── HA Admission Control Breach — Investigation Flow ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Multiple VMs powered off · HA restart status "Insufficient resources" · Cluster red       ││
@@ -34,7 +34,7 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  CLOSE: All priority VMs running · Cluster capacity ≥ N+1 · Admission control policy corrected    ││
 │   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

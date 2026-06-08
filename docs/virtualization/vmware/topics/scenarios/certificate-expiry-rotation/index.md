@@ -9,7 +9,7 @@ again. This scenario covers identification, rotation order, and validation acros
 </div>
 
 ```text
-┌──────────────────────────────── Certificate Expiry and Rotation — Order of Operations ─────────────────────────┐
+┌──────────────────────────────── Certificate Expiry and Rotation — Order of Operations ────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Certificate expiry detected — Aria SuiteLC alert, browser warning, or scheduled audit            ││
@@ -43,7 +43,7 @@ again. This scenario covers identification, rotation order, and validation acros
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  Step 3 — Post-rotation: run openssl against all products to confirm notAfter dates updated              ││
 │   └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

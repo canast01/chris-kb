@@ -7,7 +7,7 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 
         VALIDATION CHECKLIST
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  chronyc tracking                                                                                     │
 │  ├── Leap status: Normal            ✓ (not synchronised = ✗)                                          │
 │  ├── Stratum: 2–4                   ✓ (16 = no source = ✗)                                            │
@@ -23,7 +23,7 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 │                                                                                                       │
 │  PASS criteria:                                                                                       │
 │  offset < 128ms, stratum ≤ 3, reach = 377, Leap = Normal                                              │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Use these checks after configuring NTP on a new system, after a maintenance window, or when time-sensitive services (Kerberos, TLS, log correlation) report failures.

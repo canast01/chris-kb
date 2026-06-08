@@ -10,7 +10,7 @@ Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a
 
         NTP STRATUM HIERARCHY
 ```text
-┌─────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Stratum 0  ┌──────────────────────────────────┐                                                      │
 │             │ GPS receiver / Atomic clock       │                                                     │
 │             │ (not on network — hardware ref)   │                                                     │
@@ -30,7 +30,7 @@ Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a
 │             │ Your servers, switches, VMs       │                                                     │
 │             │ (clients syncing from stratum 2)  │                                                     │
 │             └──────────────────────────────────┘                                                      │
-└─────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-5">

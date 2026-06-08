@@ -10,7 +10,7 @@ Simple Network Management Protocol (SNMP) polls device metrics and receives asyn
 
         SNMP ARCHITECTURE
 ```text
-┌─────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────┐          ┌────────────────────────┐                                             │
 │   │   NMS (Manager) │          │  Device (Agent)        │                                             │
@@ -28,7 +28,7 @@ Simple Network Management Protocol (SNMP) polls device metrics and receives asyn
 │                                                                                                       │
 │   v1/v2c: community string (plaintext)                                                                │
 │   v3:     USM user + SHA auth + AES encryption                                                        │
-└─────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-5">

@@ -7,7 +7,7 @@ Expired certificates cause immediate outages — services reject connections wit
 
         EXPIRY ALERT THRESHOLDS AND ACTIONS
 ```text
-┌──────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Days remaining    Alert level     Action                                                             │
 │  ─────────────     ───────────     ──────                                                             │
 │  90 days           Info            Begin renewal planning                                             │
@@ -26,7 +26,7 @@ Expired certificates cause immediate outages — services reject connections wit
 │  │ probe_ssl_earliest_cert_expiry - time() < 30*86400   │                                             │
 │  │ → fires CertExpiryWarning alert                      │                                             │
 │  └──────────────────────────────────────────────────────┘                                             │
-└──────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 Expiration monitoring and automated renewal must be in place for every certificate in production.
 

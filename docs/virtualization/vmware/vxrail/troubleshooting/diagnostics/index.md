@@ -5,7 +5,7 @@ Diagnostic data collection for VxRail clusters: VxRail Manager log paths, ESXi h
 </div>
 
 ```text
-┌──────────────────────────────── VxRail — Diagnostics ─────────────────────────────────────────────┐
+┌──────────────────────────────── VxRail — Diagnostics ─────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────┐       │
 │   │  Four diagnostic data sources — choose based on symptom type                             │        │
@@ -32,7 +32,7 @@ Diagnostic data collection for VxRail clusters: VxRail Manager log paths, ESXi h
 │   vm-support       = ESXi built-in command that collects a full diagnostic bundle                     │
 │   Support bundle   = Dell/VxRail compressed archive of all logs for a case submission                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

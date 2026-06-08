@@ -9,7 +9,7 @@ ensure the cluster has at least 30% free space before enabling.
 </div>
 
 ```text
-┌────────────────────────────────── Enable vSAN Encryption — Procedure Flow ────────────────────────────────────────┐
+┌────────────────────────────────── Enable vSAN Encryption — Procedure Flow ────────────────────────────┐
 │                                                                                                       │
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  START: Choose key provider — Native Key Provider (NKP) for simplicity, external KMS for compliance       ││
@@ -37,7 +37,7 @@ ensure the cluster has at least 30% free space before enabling.
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  Rebuild complete: verify encryption status, re-export NKP backup, validate vSAN health all green         ││
 │  └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

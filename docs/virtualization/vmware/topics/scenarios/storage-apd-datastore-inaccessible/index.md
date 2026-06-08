@@ -8,7 +8,7 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 </div>
 
 ```text
-┌────────────────────────────── Storage APD — Investigation Flow ─────────────────────────────────────────┐
+┌────────────────────────────── Storage APD — Investigation Flow ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Datastore shows grey/unavailable in vCenter · VMs freeze · Aria Ops storage alert         ││
@@ -40,7 +40,7 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  CLOSE: Paths restored · All VMs running · Datastore green · VMCP policy reviewed                 ││
 │   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Products Involved

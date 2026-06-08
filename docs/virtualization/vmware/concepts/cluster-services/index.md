@@ -7,7 +7,7 @@ vSphere cluster services are the group of features that collectively make a clus
 ## Overview — How the Services Relate
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                        vSphere Cluster Services                                                       │
 │                                                                                                       │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────┐                                  │
@@ -21,7 +21,7 @@ vSphere cluster services are the group of features that collectively make a clus
 │         └─────────────────┴──────────────────┴────────────────┘                                       │
 │                        All require vCenter for config                                                 │
 │                   vCLS keeps HA/DRS running if vCenter fails                                          │
-└────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 | Feature | What it solves | Recovery time | Workload impact |
@@ -206,14 +206,14 @@ FT provides zero-downtime protection for individual VMs by running a live shadow
 
 ```text
 Primary Host                          Secondary Host
-┌───────────────────┐                 ┌───────────────────┐
+┌───────────────────┐                 ┌─────────────────────────────────────────────────────────────────┐
 │  Primary VM       │  FT Logging NIC │  Secondary VM                                                   │
 │  (runs normally)  │ ─────────────── │  (mirrors primary)                                              │
 │                   │ All CPU instr.  │                                                                 │
 │  Executes + logs  │ + I/O + DMA     │  Replays log;                                                   │
 │  all non-determ.  │ ──────────────► │  stays in sync                                                  │
 │  events           │                 │                                                                 │
-└───────────────────┘                 └───────────────────┘
+└───────────────────┘                 └─────────────────────────────────────────────────────────────────┘
         │                                      │
         │  Primary host fails                  │
         ▼                                      ▼
