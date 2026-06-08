@@ -3753,6 +3753,63 @@
 
 
 <h1 id="dell-powerscale-initial-deployment">Dell PowerScale — Initial Deployment<a class="headerlink" href="#dell-powerscale-initial-deployment" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── Dell PowerScale — Deployment Sequence ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Step 1 · Prerequisites                                                                               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Hardware: Minimum 3 nodes (OneFS quorum); InfiniBand or 100GbE internal backend switches             │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  Front-end: 10GbE/25GbE switches for client data access; OOB management network for node Eth0         │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  IP plan: node management (Eth0 per node), SmartConnect VIP, NFS/SMB data range, backend (factory)    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  Licenses: OneFS capacity licence; SmartConnect Advanced if zone-based DNS failover is needed         │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  SyncIQ licence required for replication; confirm NTP and DNS server details                          │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                        │  rack and cable nodes                                        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                        ▼                                                              │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Step 2 · Rack, Cable, and Boot Nodes                                                                 │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Rack nodes per Dell cabling guide; connect InfiniBand/100GbE backend switch per node                 │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Connect front-end data ports to client access switches; connect Eth0 management to OOB switch        │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Power on nodes in order; monitor serial console; each node enters OneFS boot sequence                │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  First node starts cluster; remaining nodes join — cluster forms when all nodes show Healthy          │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                        │  form cluster and set IPs                                    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                        ▼                                                              │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Step 3 · Cluster Initialisation via Console                                                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Console wizard on first node: set cluster name, encoding, date/time, admin password                  │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Assign static IPs to Eth0 on each node (management network); confirm all nodes reachable             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Access OneFS WebUI (HTTPS on any node management IP) or SSH as admin                                 │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Join cluster: Cluster → Add Node → enter node serial; repeat for all remaining nodes                 │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                        │  configure network and access                                │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│                                        ▼                                                              │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Step 4 · Network Pools, SmartConnect, and Access Zones                                               │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Create network pool for client access: assign data IPs to pool; set SmartConnect zone name           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Configure DNS delegation: client DNS must resolve SmartConnect zone name to data VIP range           │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Create access zones for isolation (optional): separate NFS vs SMB or team namespaces                 │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Join Active Directory: AD Providers → Join; enables SMB Kerberos and NFS ID mapping                  │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│                                                                                                       │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                        │  create storage and share                                    │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                        ▼                                                              │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Step 5 · File System, Shares, and Quota                                                              │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Create directories on /ifs: mkdir /ifs/&lt;project&gt;; set ownership and permissions                      │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Create SMB share: isi smb shares create --name &lt;share&gt; --path /ifs/&lt;project&gt;                         │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  Create NFS export: isi nfs exports create --paths /ifs/&lt;project&gt; --clients &lt;subnet&gt;                  │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│  Set quotas: isi quota quotas create --path /ifs/&lt;project&gt; --type directory --hard-threshold          │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│                                                                                                       │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│                                        │  validate and baseline                                       │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│                                        ▼                                                              │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│  Step 6 · Validation and Baseline                                                                     │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│  Run isi status: all nodes green, no degraded drives, no active events                                │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  Test NFS mount from a Linux client; test SMB map from a Windows client; verify throughput            │
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│  Record: cluster GUID, node serials, network pool IPs, SmartConnect zone, share/export list           │
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│  Register with SupportAssist; enable CloudIQ telemetry; schedule capacity and job alerts              │
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│                                                                                                       │
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>This guide covers deploying a Dell PowerScale (formerly Isilon) cluster from physical node installation through validated NFS and SMB access. Applies to PowerScale F600, H700, and H7000 nodes running OneFS 9.x.</p>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
@@ -3824,7 +3881,7 @@
 <li>Log in as <code>root</code> using the default password printed on the node's service tag.</li>
 <li>Launch the cluster creation wizard:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>isi_setup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>isi_setup
 </code></pre></div>
 <ol>
 <li>When prompted:</li>
@@ -3857,8 +3914,8 @@
 <li>Clients resolve <code>pscale.example.com</code> and SmartConnect returns the IP of the least-loaded node.</li>
 </ol>
 <p><strong>Verify interface status via CLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="add-nodes-to-cluster">Add Nodes to Cluster<a class="headerlink" href="#add-nodes-to-cluster" title="Permanent link">&para;</a></h2>
@@ -3868,7 +3925,7 @@
 <li>Connect to its serial console and log in as <code>root</code>.</li>
 <li>Run the setup wizard on the new node:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>isi_setup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>isi_setup
 </code></pre></div>
 <ol>
 <li>At the join prompt, select <strong>Join existing cluster</strong>.</li>
@@ -3878,8 +3935,8 @@
 <li>Monitor join progress from the WebUI under <strong>Cluster Management &gt; Cluster Overview</strong>. The new node appears with status <strong>Joining</strong> and transitions to <strong>Healthy</strong>.</li>
 </ol>
 <p>Verify node count:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>isi<span class="w"> </span>status<span class="w"> </span>-q
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Should show all nodes as healthy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>isi<span class="w"> </span>status<span class="w"> </span>-q
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Should show all nodes as healthy</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-nfs-and-smb">Configure NFS and SMB<a class="headerlink" href="#configure-nfs-and-smb" title="Permanent link">&para;</a></h2>
@@ -3894,19 +3951,19 @@
 <li>Click <strong>Add Export</strong>.</li>
 <li>From a Linux client:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>pscale.example.com:/ifs/data/nfs_share01<span class="w"> </span>/mnt/pscale_nfs
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/pscale_nfs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>pscale.example.com:/ifs/data/nfs_share01<span class="w"> </span>/mnt/pscale_nfs
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/mnt/pscale_nfs
 </code></pre></div>
 <p><strong>SMB share (Active Directory integration):</strong></p>
 <ol>
 <li>Join the cluster to Active Directory:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--user<span class="w"> </span>Administrator<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>CORP.EXAMPLE.COM<span class="w"> </span>--user<span class="w"> </span>Administrator<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
 </code></pre></div>
 <ol>
 <li>Verify AD join:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>isi<span class="w"> </span>auth<span class="w"> </span>ads<span class="w"> </span>list
 </code></pre></div>
 <ol>
 <li>Navigate to <strong>Protocols &gt; Windows Sharing (SMB) &gt; SMB Shares &gt; Create Share</strong>.</li>
@@ -3916,7 +3973,7 @@
 <li>Permissions: add AD groups with appropriate read/write access</li>
 <li>From a Windows client:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>net use Z: \\pscale.example.com\data01 /persistent:yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>net use Z: \\pscale.example.com\data01 /persistent:yes
 </code></pre></div>
 <hr />
 <h2 id="configure-synciq-for-replication">Configure SyncIQ for Replication<a class="headerlink" href="#configure-synciq-for-replication" title="Permanent link">&para;</a></h2>
@@ -3934,34 +3991,34 @@
 <li>Click <strong>Create Policy</strong>.</li>
 </ol>
 <p><strong>Run the first sync manually:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>run<span class="w"> </span>replicate_data01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>run<span class="w"> </span>replicate_data01
 </code></pre></div>
 <p><strong>Monitor sync progress:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Shows the running job, bytes transferred, ETA</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Shows the running job, bytes transferred, ETA</span>
 </code></pre></div>
 <p><strong>On the target cluster</strong>, verify the directory is populated:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ls<span class="w"> </span>/ifs/replica/data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ls<span class="w"> </span>/ifs/replica/data
 </code></pre></div>
 <hr />
 <h2 id="validate">Validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Confirm all nodes are healthy:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>isi<span class="w"> </span>status
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># All nodes should show &quot;Healthy&quot; — no errors or warnings</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>isi<span class="w"> </span>status
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># All nodes should show &quot;Healthy&quot; — no errors or warnings</span>
 </code></pre></div>
 <ol>
 <li>Check the cluster's drive health:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>isi<span class="w"> </span>devices<span class="w"> </span>drive<span class="w"> </span>list
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># All drives should show status &quot;HEALTHY&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>isi<span class="w"> </span>devices<span class="w"> </span>drive<span class="w"> </span>list
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># All drives should show status &quot;HEALTHY&quot;</span>
 </code></pre></div>
 <ol>
 <li>Verify NFS mounts from multiple clients to confirm SmartConnect is distributing connections across nodes.</li>
 <li>Run a write test to confirm throughput meets expectations:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mnt/pscale_nfs/test.bin<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">10240</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mnt/pscale_nfs/test.bin<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">10240</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
 </code></pre></div>
 <ol>
 <li>Confirm SyncIQ policy ran successfully and shows <strong>Finished</strong> status under <strong>Data Protection &gt; SyncIQ &gt; Reports</strong>.</li>

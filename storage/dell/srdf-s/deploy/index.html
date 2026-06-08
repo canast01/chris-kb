@@ -3753,6 +3753,33 @@
 
 
 <h1 id="srdfs-initial-deployment">SRDF/S — Initial Deployment<a class="headerlink" href="#srdfs-initial-deployment" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────── Dell SRDF/S — Deployment Sequence ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Step 1 · Prerequisites                                                                               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Two PowerMax/VMAX arrays within low-latency WAN (&lt;10ms RTT between SRDF director ports)              │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  FC or IP SRDF links between sites; SRDF synchronous licence on both arrays                           │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  R2 (target) must have capacity equal to all R1 devices planned for SRDF/S protection                 │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                        │  zone ports and create group                                 │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                        ▼                                                              │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Step 2 · Zone Ports and Create SRDF/S Group                                                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  FC zoning between R1 SRDF director ports and corresponding R2 ports (one-to-one per director)        │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Create group: symrdf createpair -sid &lt;source-sid&gt; -rdfg &lt;n&gt; -rdfgtype synchronous -remote_sid &lt;t&gt;    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Add devices: symrdf addpair -sid &lt;source&gt; -rdfg &lt;n&gt; -dev &lt;R1-devs&gt; -remote_dev &lt;R2-devs&gt;             │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                        │  establish and validate                                      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                        ▼                                                              │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Step 3 · Establish and Validate                                                                      │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Start sync: symrdf -sid &lt;source&gt; -rdfg &lt;n&gt; establish — all host writes held until R2 acknowledges    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Monitor: symrdf query — all pairs must reach Synchronized state before declaring production-ready    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Measure host write latency before/after; confirm RTT stable &lt;10ms; verify no SLA breach              │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Test failover on non-production pair; record RTO achieved; document in DR runbook                    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Two PowerMax/VMAX arrays within low-latency WAN (&lt;10ms RTT between SRDF ports), Fibre Channel or IP SRDF links, SRDF synchronous licence on both arrays, capacity on R2 equal to R1 devices being protected.</p>
 <h2 id="zone-srdf-director-ports">Zone SRDF Director Ports<a class="headerlink" href="#zone-srdf-director-ports" title="Permanent link">&para;</a></h2>

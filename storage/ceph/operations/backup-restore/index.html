@@ -2899,85 +2899,122 @@
 
 
 <h1 id="ceph-backup-restore">Ceph — Backup &amp; Restore<a class="headerlink" href="#ceph-backup-restore" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── Ceph — Backup &amp; Restore Overview ─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Ceph Backup Strategies                                                                               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  RBD Snapshot Export    │  │  RBD Mirroring (DR)     │  │  Config Backup          │                │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  rbd snap create        │  │  rbd mirror pool enable │  │  ceph config-key export │                │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  rbd export (full)      │  │  async replication      │  │  ceph auth export       │                │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  rbd export-diff (incr) │  │  rbd mirror pool status │  │  crush map export       │                │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  rbd import to restore  │  │  failover: rbd promote  │  │  pool + pg config dump  │                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Restore Flow — RBD Image                                                                             │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  1. Snapshot created before operation: rbd snap create rbd/&lt;vol&gt;@backup-&lt;date&gt;                        │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  2. Export to file for off-cluster backup: rbd export rbd/&lt;vol&gt;@snap /backup/&lt;vol&gt;.img                │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  3. Incremental export (faster): rbd export-diff ... /backup/&lt;vol&gt;-incr.img                           │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  4. Restore: rbd import /backup/&lt;vol&gt;.img rbd/&lt;new-vol&gt;  ·  rbd snap rollback for in-place            │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  RBD Mirroring (Cross-Site DR)                                                                        │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Primary site: rbd mirror pool enable &lt;pool&gt; image  ·  mark images for mirroring                      │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Secondary site: bootstrap token exchange  ·  rbd mirror pool peer add &lt;pool&gt; ...                     │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Mirroring daemon (rbd-mirror) handles async replication between sites                                │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Failover: rbd mirror image promote &lt;pool&gt;/&lt;image&gt; on secondary site                                  │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Failback: demote on secondary  ·  resync  ·  promote on primary                                      │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  GLOSSARY                                                                                             │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  RBD          — RADOS Block Device; Ceph&#39;s block storage interface for VM disks and containers        │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  rbd snap      — RBD snapshot; point-in-time consistent copy of an image (copy-on-write)              │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  rbd mirror    — asynchronous image replication between two Ceph clusters                             │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  rbd-mirror    — daemon that handles mirroring replication between peer clusters                      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  CRUSH         — Ceph&#39;s data placement algorithm; config backed up separately from cluster data       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  ceph auth     — Ceph authentication keyring; exported to preserve access credentials                 │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-summary">
 Ceph backup: RBD snapshot export for VM disks, RBD mirroring for DR, cluster configuration backup, and crash dump collection. Note: Ceph itself is a redundant store — backup focus is on configuration and RBD images.
 </div>
 
 <h2 id="rbd-snapshot-and-export">RBD Snapshot and Export<a class="headerlink" href="#rbd-snapshot-and-export" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create snapshot before changes</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>rbd<span class="w"> </span>snap<span class="w"> </span>create<span class="w"> </span>rbd/my-volume@backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>rbd<span class="w"> </span>snap<span class="w"> </span>ls<span class="w"> </span>rbd/my-volume
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Export snapshot to file (for off-cluster backup)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>rbd<span class="w"> </span><span class="nb">export</span><span class="w"> </span>rbd/my-volume@backup-2026-06-07<span class="w"> </span>/backup/my-volume-2026-06-07.img
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Export incremental (since last snapshot) — more efficient</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>rbd<span class="w"> </span>export-diff<span class="w"> </span>rbd/my-volume@snap-old<span class="w"> </span>rbd/my-volume@snap-new<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>/backup/my-volume-incremental.img
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Import and restore</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>rbd<span class="w"> </span>import<span class="w"> </span>/backup/my-volume-2026-06-07.img<span class="w"> </span>rbd/my-volume-restored
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Import incremental diff</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>rbd<span class="w"> </span>import-diff<span class="w"> </span>/backup/my-volume-incremental.img<span class="w"> </span>rbd/my-volume
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create snapshot before changes</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>rbd<span class="w"> </span>snap<span class="w"> </span>create<span class="w"> </span>rbd/my-volume@backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>rbd<span class="w"> </span>snap<span class="w"> </span>ls<span class="w"> </span>rbd/my-volume
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Export snapshot to file (for off-cluster backup)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>rbd<span class="w"> </span><span class="nb">export</span><span class="w"> </span>rbd/my-volume@backup-2026-06-07<span class="w"> </span>/backup/my-volume-2026-06-07.img
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Export incremental (since last snapshot) — more efficient</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>rbd<span class="w"> </span>export-diff<span class="w"> </span>rbd/my-volume@snap-old<span class="w"> </span>rbd/my-volume@snap-new<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>/backup/my-volume-incremental.img
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Import and restore</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>rbd<span class="w"> </span>import<span class="w"> </span>/backup/my-volume-2026-06-07.img<span class="w"> </span>rbd/my-volume-restored
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Import incremental diff</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>rbd<span class="w"> </span>import-diff<span class="w"> </span>/backup/my-volume-incremental.img<span class="w"> </span>rbd/my-volume
 </code></pre></div>
 <h2 id="rbd-mirroring-dr-async-replication">RBD Mirroring (DR / Async Replication)<a class="headerlink" href="#rbd-mirroring-dr-async-replication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># RBD mirroring replicates RBD images between two Ceph clusters asynchronously.</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Use case: DR site; RPO = configurable (journal-based or snapshot-based)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Enable mirroring on pool</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>image<span class="w">    </span><span class="c1"># image mode (per-image enable)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># or:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>pool<span class="w">     </span><span class="c1"># pool mode (all images mirrored)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Enable mirroring on specific image</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd/my-volume<span class="w"> </span>journaling<span class="w">   </span><span class="c1"># requires journaling feature</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># On secondary cluster: create peer</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>peer<span class="w"> </span>bootstrap<span class="w"> </span>import<span class="w"> </span>rbd<span class="w"> </span>bootstrap-token
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Check mirror status</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>status<span class="w"> </span>rbd<span class="w">          </span><span class="c1"># pool-level status</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>status<span class="w"> </span>rbd/my-volume<span class="w">  </span><span class="c1"># per-image sync status</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Failover: promote secondary image</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>promote<span class="w"> </span>rbd/my-volume<span class="w">  </span><span class="c1"># on DR site</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>demote<span class="w"> </span>rbd/my-volume<span class="w">   </span><span class="c1"># on primary (if accessible)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># RBD mirroring replicates RBD images between two Ceph clusters asynchronously.</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Use case: DR site; RPO = configurable (journal-based or snapshot-based)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable mirroring on pool</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>image<span class="w">    </span><span class="c1"># image mode (per-image enable)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># or:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>pool<span class="w">     </span><span class="c1"># pool mode (all images mirrored)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Enable mirroring on specific image</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd/my-volume<span class="w"> </span>journaling<span class="w">   </span><span class="c1"># requires journaling feature</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># On secondary cluster: create peer</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>peer<span class="w"> </span>bootstrap<span class="w"> </span>import<span class="w"> </span>rbd<span class="w"> </span>bootstrap-token
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Check mirror status</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>pool<span class="w"> </span>status<span class="w"> </span>rbd<span class="w">          </span><span class="c1"># pool-level status</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>status<span class="w"> </span>rbd/my-volume<span class="w">  </span><span class="c1"># per-image sync status</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Failover: promote secondary image</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>promote<span class="w"> </span>rbd/my-volume<span class="w">  </span><span class="c1"># on DR site</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>rbd<span class="w"> </span>mirror<span class="w"> </span>image<span class="w"> </span>demote<span class="w"> </span>rbd/my-volume<span class="w">   </span><span class="c1"># on primary (if accessible)</span>
 </code></pre></div>
 <h2 id="cluster-configuration-backup">Cluster Configuration Backup<a class="headerlink" href="#cluster-configuration-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Back up all configuration keys</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-configkeys-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Back up auth keys (all users and capabilities)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.keyring
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Back up CRUSH map</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>getcrushmap<span class="w"> </span>-o<span class="w"> </span>/backup/crush-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.bin
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>/backup/crush-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.bin<span class="w"> </span>-o<span class="w"> </span>/backup/crush-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Back up ceph.conf (on admin node)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>cp<span class="w"> </span>/etc/ceph/ceph.conf<span class="w"> </span>/backup/ceph.conf.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># OSD map</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/backup/osd-dump-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Back up all configuration keys</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>config-key<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-configkeys-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Back up auth keys (all users and capabilities)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>list<span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>/backup/ceph-auth-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.keyring
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Back up CRUSH map</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>getcrushmap<span class="w"> </span>-o<span class="w"> </span>/backup/crush-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.bin
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>crushtool<span class="w"> </span>-d<span class="w"> </span>/backup/crush-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.bin<span class="w"> </span>-o<span class="w"> </span>/backup/crush-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Back up ceph.conf (on admin node)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>cp<span class="w"> </span>/etc/ceph/ceph.conf<span class="w"> </span>/backup/ceph.conf.<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># OSD map</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/backup/osd-dump-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
 </code></pre></div>
 <h2 id="restore-from-backup">Restore from Backup<a class="headerlink" href="#restore-from-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restore CRUSH map</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>setcrushmap<span class="w"> </span>-i<span class="w"> </span>/backup/crush-2026-06-07.bin
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Restore auth key for a specific user</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>import<span class="w"> </span>-i<span class="w"> </span>/backup/ceph-auth-2026-06-07.keyring
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Restore RBD image from exported file</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>rbd<span class="w"> </span>import<span class="w"> </span>/backup/my-volume-2026-06-07.img<span class="w"> </span>rbd/my-volume-restored
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># For full cluster recovery from scratch:</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># 1. Deploy new cluster with cephadm bootstrap (same cluster FSID required)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># 2. Import auth keys</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 3. Re-add OSDs (existing data may be recoverable if disks intact)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 4. Restore CRUSH map</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># 5. Run: ceph osd repair; ceph pg repair</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore CRUSH map</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>setcrushmap<span class="w"> </span>-i<span class="w"> </span>/backup/crush-2026-06-07.bin
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restore auth key for a specific user</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>import<span class="w"> </span>-i<span class="w"> </span>/backup/ceph-auth-2026-06-07.keyring
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Restore RBD image from exported file</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>rbd<span class="w"> </span>import<span class="w"> </span>/backup/my-volume-2026-06-07.img<span class="w"> </span>rbd/my-volume-restored
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># For full cluster recovery from scratch:</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># 1. Deploy new cluster with cephadm bootstrap (same cluster FSID required)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># 2. Import auth keys</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># 3. Re-add OSDs (existing data may be recoverable if disks intact)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># 4. Restore CRUSH map</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># 5. Run: ceph osd repair; ceph pg repair</span>
 </code></pre></div>
 
 

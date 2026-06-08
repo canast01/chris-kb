@@ -2736,111 +2736,148 @@
 
 
 <h1 id="ceph-diagnostics">Ceph — Diagnostics<a class="headerlink" href="#ceph-diagnostics" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── Ceph — Diagnostic Overview ───────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Diagnostic Layers                                                                                    │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  Health Codes           │  │  OSD / PG Analysis      │  │  Network &amp; Latency      │                │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  ceph health detail     │  │  ceph osd tree          │  │  ceph osd perf          │                │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  OSD_DOWN, PG_DEGRADED  │  │  ceph pg dump           │  │  iperf3 between nodes   │                │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  SLOW_OPS, NEARFULL     │  │  osd log analysis       │  │  messenger v2 stats     │                │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Diagnostic Sequence — Cluster Unhealthy                                                              │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  1. ceph -s — get top-level health, OSD count, PG summary, active I/O rate                            │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  2. ceph health detail — enumerate all active health codes with explanations                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  3. ceph osd tree — identify which OSDs are down/out; cross-reference to host names                   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  4. ceph pg dump_stuck — list inactive/degraded/unclean PGs with primary OSD                          │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  5. journalctl -u ceph-osd@&lt;id&gt; — last 100 lines of OSD log for crash or error context                │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  6. ceph osd perf — per-OSD commit/apply latency; outliers indicate disk I/O issues                   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Crash Dump and Support Data Collection                                                               │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  ceph crash ls — list recent daemon crashes                                                           │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  ceph crash info &lt;crash-id&gt; — full crash report with traceback                                        │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  ceph crash archive &lt;crash-id&gt; — acknowledge and archive crash after review                           │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Support bundle: sosreport + ceph report &gt; ceph-report.json — attach to vendor support case           │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  GLOSSARY                                                                                             │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  OSD_DOWN      — OSD not responding; check disk status and OSD daemon journal                         │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  PG_DEGRADED   — PG has fewer replicas than desired; data still available but unprotected             │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  PG_INACTIVE   — PG cannot serve I/O; primary OSD is down; check OSD and network                      │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  SLOW_OPS      — Operations queued &gt; 30s; indicates disk or network saturation                        │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  OSD_NEARFULL  — OSD disk usage exceeds nearfull ratio; add capacity before OSD_FULL                  │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  ceph report   — full cluster state snapshot for support analysis and case submission                 │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-summary">
 Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump review, network and latency diagnostics, and gathering data for support cases.
 </div>
 
 <h2 id="health-code-reference">Health Code Reference<a class="headerlink" href="#health-code-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Get full health detail with error codes</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Common health codes and meanings:</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># OSD_DOWN           = OSD not responding; check disk and daemon log</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># OSD_OUT            = OSD marked out manually; data migrating</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># OSD_NEARFULL       = OSD disk &gt; nearfull ratio (per-OSD)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># PG_DEGRADED        = PG has fewer than desired replicas</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># PG_INACTIVE        = PG can&#39;t serve I/O; check which OSD primary is down</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># PG_BACKFILL_TOOFULL= OSD too full to receive backfill; add capacity</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># SLOW_OPS           = Ops queued &gt; 30s; check disk I/O or network</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># CLOCK_SKEW         = MON node NTP drift; fix NTP</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># MON_DOWN           = MON daemon down; quorum may be at risk</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># POOL_NEAR_FULL     = Pool quota nearly exceeded</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># AUTH_INSECURE_GLOBAL_ID_RECLAIM = msgr2 security issue; patch required</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get full health detail with error codes</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Common health codes and meanings:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># OSD_DOWN           = OSD not responding; check disk and daemon log</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># OSD_OUT            = OSD marked out manually; data migrating</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># OSD_NEARFULL       = OSD disk &gt; nearfull ratio (per-OSD)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># PG_DEGRADED        = PG has fewer than desired replicas</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># PG_INACTIVE        = PG can&#39;t serve I/O; check which OSD primary is down</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># PG_BACKFILL_TOOFULL= OSD too full to receive backfill; add capacity</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># SLOW_OPS           = Ops queued &gt; 30s; check disk I/O or network</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># CLOCK_SKEW         = MON node NTP drift; fix NTP</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># MON_DOWN           = MON daemon down; quorum may be at risk</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># POOL_NEAR_FULL     = Pool quota nearly exceeded</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># AUTH_INSECURE_GLOBAL_ID_RECLAIM = msgr2 security issue; patch required</span>
 </code></pre></div>
 <h2 id="osd-log-analysis">OSD Log Analysis<a class="headerlink" href="#osd-log-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Ceph OSD logs (cephadm-managed clusters use container logs)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w">            </span><span class="c1"># recent container logs</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w"> </span>--follow<span class="w">   </span><span class="c1"># live tail</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># On OSD node directly</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ceph-osd@5<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span>--no-pager
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Common OSD log messages:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># &quot;slow request&quot; → latency issue (disk or network)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># &quot;wrongly marked me down&quot; → network partition between OSD and MON</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># &quot;bluestore osd ... fsck failed&quot; → disk corruption; run: ceph-osd --osd-id 5 --repair</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># &quot;FAILED assert&quot; followed by crash → OSD bug or disk error</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># &quot;heartbeat_check: no reply from osd.X&quot; → OSD-to-OSD network issue</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Get OSD perf dump (runtime metrics)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.5<span class="w"> </span>perf<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;commit_latency\|apply_latency&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ceph OSD logs (cephadm-managed clusters use container logs)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w">            </span><span class="c1"># recent container logs</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w"> </span>--follow<span class="w">   </span><span class="c1"># live tail</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># On OSD node directly</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>ceph-osd@5<span class="w"> </span>-n<span class="w"> </span><span class="m">200</span><span class="w"> </span>--no-pager
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Common OSD log messages:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># &quot;slow request&quot; → latency issue (disk or network)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># &quot;wrongly marked me down&quot; → network partition between OSD and MON</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># &quot;bluestore osd ... fsck failed&quot; → disk corruption; run: ceph-osd --osd-id 5 --repair</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># &quot;FAILED assert&quot; followed by crash → OSD bug or disk error</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># &quot;heartbeat_check: no reply from osd.X&quot; → OSD-to-OSD network issue</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Get OSD perf dump (runtime metrics)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.5<span class="w"> </span>perf<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;commit_latency\|apply_latency&quot;</span>
 </code></pre></div>
 <h2 id="crash-dump-analysis">Crash Dump Analysis<a class="headerlink" href="#crash-dump-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ceph saves crash dumps when daemons crash unexpectedly</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>crash<span class="w"> </span>ls<span class="w">               </span><span class="c1"># list all crash dumps</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ceph<span class="w"> </span>crash<span class="w"> </span>stat<span class="w">             </span><span class="c1"># summary of crash counts</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># View specific crash</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>crash<span class="w"> </span>info<span class="w"> </span>&lt;crash-id&gt;<span class="w">   </span><span class="c1"># shows backtrace, OSD version, message</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Archive crash (acknowledge it)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ceph<span class="w"> </span>crash<span class="w"> </span>archive<span class="w"> </span>&lt;crash-id&gt;
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ceph<span class="w"> </span>crash<span class="w"> </span>archive-all<span class="w">       </span><span class="c1"># archive all</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Crash logs on disk</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ls<span class="w"> </span>/var/lib/ceph/crash/
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Each crash has a directory with: metadata, backtrace, and log</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ceph saves crash dumps when daemons crash unexpectedly</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>crash<span class="w"> </span>ls<span class="w">               </span><span class="c1"># list all crash dumps</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ceph<span class="w"> </span>crash<span class="w"> </span>stat<span class="w">             </span><span class="c1"># summary of crash counts</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># View specific crash</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>crash<span class="w"> </span>info<span class="w"> </span>&lt;crash-id&gt;<span class="w">   </span><span class="c1"># shows backtrace, OSD version, message</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Archive crash (acknowledge it)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ceph<span class="w"> </span>crash<span class="w"> </span>archive<span class="w"> </span>&lt;crash-id&gt;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>crash<span class="w"> </span>archive-all<span class="w">       </span><span class="c1"># archive all</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Crash logs on disk</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ls<span class="w"> </span>/var/lib/ceph/crash/
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Each crash has a directory with: metadata, backtrace, and log</span>
 </code></pre></div>
 <h2 id="network-diagnostics">Network Diagnostics<a class="headerlink" href="#network-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test cluster network bandwidth between OSD nodes</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Run on both endpoints simultaneously:</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Node 1 (receiver):</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>iperf3<span class="w"> </span>-s
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Node 2 (sender):</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>iperf3<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span>.0.2.11<span class="w"> </span>-t<span class="w"> </span><span class="m">30</span><span class="w"> </span>-P<span class="w"> </span><span class="m">4</span><span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Expected: near line rate (9+ Gbps for 10G, 23+ Gbps for 25G)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check OSD heartbeat timeouts (indicates network issues)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>config<span class="w"> </span>show-with-defaults<span class="w"> </span>osd.0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;heartbeat|timeout&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Measure round-trip latency between OSD nodes</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">10</span>.0.2.11<span class="w">   </span><span class="c1"># cluster network</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Expected: &lt; 0.5 ms on local network</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Check for packet loss (can cause OSD down events)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="m">10</span>.0.2.11
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test cluster network bandwidth between OSD nodes</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Run on both endpoints simultaneously:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Node 1 (receiver):</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>iperf3<span class="w"> </span>-s
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Node 2 (sender):</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>iperf3<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span>.0.2.11<span class="w"> </span>-t<span class="w"> </span><span class="m">30</span><span class="w"> </span>-P<span class="w"> </span><span class="m">4</span><span class="w"> </span>-i<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Expected: near line rate (9+ Gbps for 10G, 23+ Gbps for 25G)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check OSD heartbeat timeouts (indicates network issues)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ceph<span class="w"> </span>config<span class="w"> </span>show-with-defaults<span class="w"> </span>osd.0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;heartbeat|timeout&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Measure round-trip latency between OSD nodes</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">10</span>.0.2.11<span class="w">   </span><span class="c1"># cluster network</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Expected: &lt; 0.5 ms on local network</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Check for packet loss (can cause OSD down events)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="m">10</span>.0.2.11
 </code></pre></div>
 <h2 id="gather-support-data">Gather Support Data<a class="headerlink" href="#gather-support-data" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># For support cases, collect:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># 1. Full cluster status</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ceph<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-health-detail.txt
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>-s<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 2. OSD map and tree</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd-dump.txt
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd-tree.txt
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd-df.txt
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># 3. PG dump</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-dump.txt
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-stuck.txt
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># 4. Config</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>ceph<span class="w"> </span>config<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-config.txt
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># 5. MON log (last 1000 lines per MON)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="k">for</span><span class="w"> </span>mon<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ceph<span class="w"> </span>mon<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/^[0-9]/{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d:<span class="w"> </span>-f1<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span>ssh<span class="w"> </span><span class="nv">$mon</span><span class="w"> </span><span class="s2">&quot;journalctl -u ceph-mon@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> -n 1000 --no-pager&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/mon-<span class="si">${</span><span class="nv">mon</span><span class="si">}</span>.log
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="k">done</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># 6. OSD logs from affected OSDs</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd5.log
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># Compress all</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>tar<span class="w"> </span>czf<span class="w"> </span>ceph-support-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz<span class="w"> </span>/tmp/ceph-*.txt<span class="w"> </span>/tmp/osd*.log<span class="w"> </span>/tmp/mon-*.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># For support cases, collect:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># 1. Full cluster status</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>ceph<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-health-detail.txt
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ceph<span class="w"> </span>-s<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/ceph-status.txt
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 2. OSD map and tree</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd-dump.txt
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd-tree.txt
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd-df.txt
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 3. PG dump</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-dump.txt
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump_stuck<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pg-stuck.txt
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># 4. Config</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>ceph<span class="w"> </span>config<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-config.txt
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># 5. MON log (last 1000 lines per MON)</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="k">for</span><span class="w"> </span>mon<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ceph<span class="w"> </span>mon<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/^[0-9]/{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d:<span class="w"> </span>-f1<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span>ssh<span class="w"> </span><span class="nv">$mon</span><span class="w"> </span><span class="s2">&quot;journalctl -u ceph-mon@</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2"> -n 1000 --no-pager&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/mon-<span class="si">${</span><span class="nv">mon</span><span class="si">}</span>.log
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="k">done</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># 6. OSD logs from affected OSDs</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>logs<span class="w"> </span>osd.5<span class="w"> </span>&gt;<span class="w"> </span>/tmp/osd5.log
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="c1"># Compress all</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>tar<span class="w"> </span>czf<span class="w"> </span>ceph-support-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz<span class="w"> </span>/tmp/ceph-*.txt<span class="w"> </span>/tmp/osd*.log<span class="w"> </span>/tmp/mon-*.log
 </code></pre></div>
 
 

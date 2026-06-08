@@ -2783,81 +2783,116 @@
 
 
 <h1 id="ceph-encryption">Ceph — Encryption<a class="headerlink" href="#ceph-encryption" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── Ceph — Encryption Overview ───────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Encryption Layers                                                                                    │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  OSD at-rest (dmcrypt)  │  │  RBD per-image encrypt  │  │  RGW SSE (S3-compat)    │                │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  block device level     │  │  client-side key mgmt   │  │  SSE-KMS or SSE-S3      │                │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  configured at OSD      │  │  LUKS key in keyring    │  │  Vault or local KMS     │                │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  creation time only     │  │  transparent to client  │  │  per-object or per-bkt  │                │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  In-Transit Encryption                                                                                │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Messenger v2 (msgr2): default in Octopus+; encrypts all OSD-to-OSD and client-to-OSD traffic         │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Enable: ceph config set global ms_encrypt_dispatch true (or set in ceph.conf)                        │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Verify: ceph config get osd ms_client_mode — should show secure (not legacy)                         │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  OSD dmcrypt — Key Points                                                                             │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Encryption must be set at OSD creation time — cannot encrypt an existing OSD without rebuild         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  cephadm: ceph orch apply osd --all-available-devices --encrypt                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Keys stored in Ceph monitor key-value store; no external KMS required for OSD encryption             │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Performance impact: modern CPUs with AES-NI hardware acceleration ~1–3% overhead typical             │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  GLOSSARY                                                                                             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  dmcrypt    — Linux kernel dm-crypt: transparent block device encryption layer                        │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  LUKS       — Linux Unified Key Setup: key management standard used by dm-crypt                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  RBD encrypt— per-image client-side encryption; key managed via LUKS passphrase in keyring            │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  SSE-KMS   — Server-Side Encryption with Key Management Service (external Vault integration)          │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  SSE-S3    — Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)          │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  msgr2     — Ceph messenger protocol v2; supports secure mode (encrypted) and crc mode                │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  AES-NI    — Intel/AMD hardware instruction set for accelerated AES encryption operations             │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-summary">
 Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-image, RGW server-side encryption with KMS, and in-transit encryption via messenger v2.
 </div>
 
 <h2 id="osd-encryption-at-rest-dmcrypt">OSD Encryption at Rest (dmcrypt)<a class="headerlink" href="#osd-encryption-at-rest-dmcrypt" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># OSD encryption uses dm-crypt (Linux kernel) to encrypt the block device.</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Must be configured at OSD creation time — cannot encrypt existing OSDs.</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Enable encryption for new OSDs via cephadm</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices<span class="w"> </span>--method<span class="w"> </span>raw<span class="w"> </span>--encrypt
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Or for specific device:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node1:/dev/sdb<span class="w"> </span>--encrypted
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Verify encryption status</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ceph<span class="w"> </span>device<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>encrypted
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Encrypted OSDs show &quot;encrypted&quot; in their OSD spec</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Note: encryption keys are stored in the MON keystore.</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># If all MONs are lost, encrypted OSDs cannot be recovered.</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Always maintain a MON quorum and backup MON keyrings.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># OSD encryption uses dm-crypt (Linux kernel) to encrypt the block device.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Must be configured at OSD creation time — cannot encrypt existing OSDs.</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Enable encryption for new OSDs via cephadm</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices<span class="w"> </span>--method<span class="w"> </span>raw<span class="w"> </span>--encrypt
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Or for specific device:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node1:/dev/sdb<span class="w"> </span>--encrypted
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify encryption status</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ceph<span class="w"> </span>device<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>encrypted
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Encrypted OSDs show &quot;encrypted&quot; in their OSD spec</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Note: encryption keys are stored in the MON keystore.</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># If all MONs are lost, encrypted OSDs cannot be recovered.</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Always maintain a MON quorum and backup MON keyrings.</span>
 </code></pre></div>
 <h2 id="rbd-image-encryption">RBD Image Encryption<a class="headerlink" href="#rbd-image-encryption" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Per-image encryption (Quincy+) — encrypt specific RBD images</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Useful when you need client-managed keys (not cluster-managed)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create a passphrase-based encrypted image</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>rbd<span class="w"> </span>create<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--size<span class="w"> </span>100G
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>format<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>luks2<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Open encrypted image for use</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>open<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Map the opened image as a block device</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>rbd<span class="w"> </span>map<span class="w"> </span>rbd/encrypted-vol
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Note: encryption metadata is stored in the image itself.</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># The Ceph cluster is unaware of the encryption key.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Per-image encryption (Quincy+) — encrypt specific RBD images</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Useful when you need client-managed keys (not cluster-managed)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create a passphrase-based encrypted image</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>rbd<span class="w"> </span>create<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--size<span class="w"> </span>100G
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>format<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>luks2<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Open encrypted image for use</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>rbd<span class="w"> </span>encryption<span class="w"> </span>open<span class="w"> </span>rbd/encrypted-vol<span class="w"> </span>--passphrase-file<span class="w"> </span>/root/secret.key
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Map the opened image as a block device</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>rbd<span class="w"> </span>map<span class="w"> </span>rbd/encrypted-vol
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Note: encryption metadata is stored in the image itself.</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># The Ceph cluster is unaware of the encryption key.</span>
 </code></pre></div>
 <h2 id="rgw-server-side-encryption-s3-sse">RGW Server-Side Encryption (S3-SSE)<a class="headerlink" href="#rgw-server-side-encryption-s3-sse" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># RGW supports SSE-S3 (cluster-managed keys) and SSE-KMS (external KMS).</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Configure SSE-KMS with HashiCorp Vault or AWS KMS.</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable SSE-S3 (Ceph manages the keys)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># /etc/ceph/ceph.conf or via config:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_require_ssl<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_s3_kms_backend<span class="w"> </span>secrettable
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Upload object with SSE-S3</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>http://rgw.ceph.local:7480<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--sse<span class="w"> </span>AES256
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Upload with SSE-KMS (requires Vault integration)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>http://rgw.ceph.local:7480<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--sse<span class="w"> </span>aws:kms<span class="w"> </span>--sse-kms-key-id<span class="w"> </span>vault-key-id
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># RGW supports SSE-S3 (cluster-managed keys) and SSE-KMS (external KMS).</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Configure SSE-KMS with HashiCorp Vault or AWS KMS.</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable SSE-S3 (Ceph manages the keys)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># /etc/ceph/ceph.conf or via config:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_require_ssl<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>client.rgw.myorg<span class="w"> </span>rgw_crypt_s3_kms_backend<span class="w"> </span>secrettable
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Upload object with SSE-S3</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>http://rgw.ceph.local:7480<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--sse<span class="w"> </span>AES256
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Upload with SSE-KMS (requires Vault integration)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>myfile.dat<span class="w"> </span>s3://mybucket/myfile.dat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--endpoint-url<span class="w"> </span>http://rgw.ceph.local:7480<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--sse<span class="w"> </span>aws:kms<span class="w"> </span>--sse-kms-key-id<span class="w"> </span>vault-key-id
 </code></pre></div>
 <h2 id="messenger-v2-in-transit-encryption">Messenger v2 (In-Transit Encryption)<a class="headerlink" href="#messenger-v2-in-transit-encryption" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># msgr2 protocol (Nautilus+) supports optional encryption for daemon-to-daemon</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># and client-to-daemon communication.</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable encryption for all connections</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_cluster_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># OSD-to-OSD (cluster network)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_service_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># client-to-OSD</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_mon_cluster_mode<span class="w"> </span>secure<span class="w">  </span><span class="c1"># MON-to-MON</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify connections use secure mode</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>-s
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Look for: &quot;mon: ... using msgr2&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Note: &quot;secure&quot; mode adds AES-GCM overhead (~5-10% throughput reduction).</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># &quot;crc&quot; mode (default) provides integrity only, no confidentiality.</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_cluster_mode<span class="w"> </span>crc<span class="w">     </span><span class="c1"># back to integrity-only if needed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># msgr2 protocol (Nautilus+) supports optional encryption for daemon-to-daemon</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># and client-to-daemon communication.</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Enable encryption for all connections</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_cluster_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># OSD-to-OSD (cluster network)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_service_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># client-to-OSD</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_mon_cluster_mode<span class="w"> </span>secure<span class="w">  </span><span class="c1"># MON-to-MON</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Verify connections use secure mode</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>-s
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Look for: &quot;mon: ... using msgr2&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Note: &quot;secure&quot; mode adds AES-GCM overhead (~5-10% throughput reduction).</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># &quot;crc&quot; mode (default) provides integrity only, no confidentiality.</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_cluster_mode<span class="w"> </span>crc<span class="w">     </span><span class="c1"># back to integrity-only if needed</span>
 </code></pre></div>
 
 

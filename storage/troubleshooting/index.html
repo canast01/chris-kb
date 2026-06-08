@@ -2287,6 +2287,42 @@
 
 
 <h1 id="storage-troubleshooting">Storage — Troubleshooting<a class="headerlink" href="#storage-troubleshooting" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── Storage — Troubleshooting Decision Tree ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Problem Classification                                                                               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  Host I/O Errors        │  │  Replication Problems   │  │  Array Health Alerts    │                │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  APD / PDL in vCenter   │  │  lag growing, link down │  │  capacity, disk faults  │                │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  multipath path loss     │  │  consistency group err  │  │  controller, fan, PSU   │               │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  read-only filesystem    │  │  bandwidth saturation   │  │  IOPS or latency alarm  │               │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Host I/O Diagnostic Sequence                                                                         │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  1. Check physical path: multipath -ll (Linux) or esxcli storage core path list (ESXi)                │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  2. Check kernel log: dmesg | grep -i &#39;scsi\|mpath\|error&#39; — I/O timeouts, SCSI resets                │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  3. Check I/O wait: iostat -xz 1 5 — await &gt; 20ms on SSD is abnormal                                  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  4. Check array side: array event log, queue depth, per-LUN IOPS and latency dashboard                │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  5. APD in vCenter: rescan after fabric restored; if persists → maintenance mode → re-add adapter     │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Replication Lag Diagnostic Sequence                                                                  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  1. Check WAN bandwidth: iperf3 -c &lt;target-site-ip&gt; -t 10 — compare to replication throughput         │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  2. Check source I/O rate: if source write rate &gt; WAN capacity, lag will grow                         │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  3. Pure: purepod show replication --pod &lt;pod&gt;  ·  Dell: symrdf -g &lt;dg&gt; query                         │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  4. NetApp: snapmirror show -destination-path &lt;svm&gt;:&lt;vol&gt; — check Lag Time field                      │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  GLOSSARY                                                                                             │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  APD        — All Paths Down: ESXi cannot reach LUN on any path; storage I/O suspended                │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  PDL        — Permanent Device Loss: array reports LUN is gone; ESXi marks device failed              │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  multipath  — Linux kernel DM-multipath: aggregates multiple HBA paths to one device                  │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  IOPS       — Input/Output Operations Per Second; primary storage performance metric                  │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  await      — average I/O wait time (iostat); time between request issue and completion               │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  lag time   — SnapMirror: delta between source snapshot and destination last-replicated snapshot      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-summary">
 Storage troubleshooting — APD/PDL conditions, multipath failures, replication lag, snapshot failures, host I/O errors, and array health alerts.
 </div>
@@ -2344,53 +2380,53 @@ Storage troubleshooting — APD/PDL conditions, multipath failures, replication 
 </tbody>
 </table>
 <h2 id="linux-host-io-diagnostics">Linux Host I/O Diagnostics<a class="headerlink" href="#linux-host-io-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check for multipath failures</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;scsi\|sd[a-z]\|mpath\|failed&#39;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># I/O error log</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>journalctl<span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;error\|i/o error\|EXT4\|XFS&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Check disk queue depth and wait</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># await &gt; 20ms on SSD is abnormal</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Check LUN presence</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>lsblk<span class="p">;</span><span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/dev/mapper/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check for multipath failures</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;scsi\|sd[a-z]\|mpath\|failed&#39;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># I/O error log</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>journalctl<span class="w"> </span>-k<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;error\|i/o error\|EXT4\|XFS&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check disk queue depth and wait</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># await &gt; 20ms on SSD is abnormal</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Check LUN presence</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>lsblk<span class="p">;</span><span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/dev/mapper/
 </code></pre></div>
 <h2 id="vmware-apd-recovery">VMware APD Recovery<a class="headerlink" href="#vmware-apd-recovery" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Rescan datastores after fabric restoration</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;State:|Device:|Adapter:&#39;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># If APD persists after fabric is restored:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 1. Put host in maintenance mode</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 2. Remove and re-add storage adapter in vCenter</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 3. Rescan</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Rescan datastores after fabric restoration</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;State:|Device:|Adapter:&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If APD persists after fabric is restored:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># 1. Put host in maintenance mode</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 2. Remove and re-add storage adapter in vCenter</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 3. Rescan</span>
 </code></pre></div>
 <h2 id="replication-lag-diagnosis">Replication Lag Diagnosis<a class="headerlink" href="#replication-lag-diagnosis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pure FlashArray — check active replication</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>purepod<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>purepod<span class="w"> </span>show<span class="w"> </span>replication<span class="w"> </span>--pod<span class="w"> </span>&lt;pod_name&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Dell PowerMax SRDF — check link state</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dg_name&gt;<span class="w"> </span>query
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Generic: check WAN utilisation</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>iperf3<span class="w"> </span>-c<span class="w"> </span>&lt;target-site-ip&gt;<span class="w"> </span>-t<span class="w"> </span><span class="m">10</span><span class="w">   </span><span class="c1"># bandwidth test between sites</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Pure FlashArray — check active replication</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purepod<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>purepod<span class="w"> </span>show<span class="w"> </span>replication<span class="w"> </span>--pod<span class="w"> </span>&lt;pod_name&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Dell PowerMax SRDF — check link state</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dg_name&gt;<span class="w"> </span>query
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Generic: check WAN utilisation</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>iperf3<span class="w"> </span>-c<span class="w"> </span>&lt;target-site-ip&gt;<span class="w"> </span>-t<span class="w"> </span><span class="m">10</span><span class="w">   </span><span class="c1"># bandwidth test between sites</span>
 </code></pre></div>
 <h2 id="array-health-check-commands">Array Health Check Commands<a class="headerlink" href="#array-health-check-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Pure FlashArray</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purearray<span class="w"> </span>monitor<span class="w">             </span><span class="c1"># latency, IOPS, bandwidth</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>purevolume<span class="w"> </span>monitor<span class="w"> </span>&lt;volume&gt;<span class="w">   </span><span class="c1"># per-volume stats</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Dell PowerMax</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symcfg<span class="w"> </span>show<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w">        </span><span class="c1"># array health summary</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w">        </span><span class="c1"># device list</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># NetApp ONTAP</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online<span class="w">   </span><span class="c1"># degraded aggregates</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Pure FlashArray</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purearray<span class="w"> </span>monitor<span class="w">             </span><span class="c1"># latency, IOPS, bandwidth</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>purevolume<span class="w"> </span>monitor<span class="w"> </span>&lt;volume&gt;<span class="w">   </span><span class="c1"># per-volume stats</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Dell PowerMax</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>symcfg<span class="w"> </span>show<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w">        </span><span class="c1"># array health summary</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w">        </span><span class="c1"># device list</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># NetApp ONTAP</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online<span class="w">   </span><span class="c1"># degraded aggregates</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
 </code></pre></div>
 
 

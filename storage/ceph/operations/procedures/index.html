@@ -2910,110 +2910,147 @@
 
 
 <h1 id="ceph-procedures">Ceph — Procedures<a class="headerlink" href="#ceph-procedures" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── Ceph — Operational Procedures Overview ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Procedure Categories                                                                                 │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  OSD Replacement        │  │  Cluster Expansion      │  │  Maintenance &amp; Tuning   │                │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  osd out → wait PG heal │  │  ceph orch apply osd    │  │  scrub scheduling       │                │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  purge → physical swap  │  │  add nodes via cephadm  │  │  PG count adjustment    │                │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  osd create new device  │  │  crush reweight balance │  │  reweight for load bal  │                │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  verify recovery done   │  │  monitor data migration │  │  controlled maintenance │                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  OSD Replacement — Safe Sequence                                                                      │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  1. Confirm OSD down: ceph osd tree | grep down                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  2. Mark out: ceph osd out osd.&lt;id&gt;  — triggers data migration away from failed OSD                   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  3. Wait: watch ceph -s  — BytesToResync reaches 0 before physically replacing disk                   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  4. Stop daemon: systemctl stop ceph-osd@&lt;id&gt;  ·  replace disk  ·  re-run ceph-volume                 │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  5. Verify: ceph osd tree — new OSD shows up/in; ceph -s — HEALTH_OK                                  │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Cluster Expansion — New Node                                                                         │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  cephadm bootstrap adds admin node; ceph orch host add &lt;hostname&gt; adds new node to cluster            │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  ceph orch apply osd --all-available-devices — auto-deploys OSDs on new node&#39;s disks                  │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  CRUSH weight adjusts automatically; monitor rebalance via ceph -s until clean                        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Manual reweight: ceph osd crush reweight osd.&lt;id&gt; &lt;float&gt; — adjust placement if needed               │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  GLOSSARY                                                                                             │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  OSD       — Object Storage Daemon; one per disk; stores, replicates, and recovers data               │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  PG        — Placement Group; logical shard unit; PGs map to OSDs via CRUSH                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  cephadm   — Ceph&#39;s orchestrator for deploying and managing cluster daemons via containers            │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  CRUSH     — Controlled Replication Under Scalable Hashing; Ceph&#39;s data distribution algorithm        │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  reweight  — adjusting an OSD&#39;s relative capacity share in CRUSH map                                  │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  scrub     — data integrity scan; deep-scrub includes checksum verification of stored objects         │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-summary">
 Ceph operational procedures: OSD replacement, adding new nodes, reweighting for load balance, scrub scheduling, pool PG count adjustment, and controlled cluster maintenance.
 </div>
 
 <h2 id="osd-replacement">OSD Replacement<a class="headerlink" href="#osd-replacement" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># When a disk fails and needs replacement:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># 1. Confirm OSD is down</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>down
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 2. Mark OSD out (triggers data migration to remaining OSDs)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.5
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># 3. Wait for PGs to recover (BytesToResync reaches 0)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># 4. Remove OSD daemon</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>rm<span class="w"> </span>osd.5<span class="w"> </span>--force
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 5. Remove OSD from CRUSH and cluster</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rm<span class="w"> </span>osd.5
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ceph<span class="w"> </span>auth<span class="w"> </span>del<span class="w"> </span>osd.5
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>rm<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># 6. Physically replace the disk</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># 7. Add new OSD (cephadm discovers new disk automatically)</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Or specifically:</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node2:/dev/sdb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># When a disk fails and needs replacement:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># 1. Confirm OSD is down</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>down
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 2. Mark OSD out (triggers data migration to remaining OSDs)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>out<span class="w"> </span>osd.5
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># 3. Wait for PGs to recover (BytesToResync reaches 0)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># 4. Remove OSD daemon</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>rm<span class="w"> </span>osd.5<span class="w"> </span>--force
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># 5. Remove OSD from CRUSH and cluster</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rm<span class="w"> </span>osd.5
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ceph<span class="w"> </span>auth<span class="w"> </span>del<span class="w"> </span>osd.5
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>rm<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># 6. Physically replace the disk</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 7. Add new OSD (cephadm discovers new disk automatically)</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Or specifically:</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node2:/dev/sdb
 </code></pre></div>
 <h2 id="add-new-node">Add New Node<a class="headerlink" href="#add-new-node" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Prepare the new node: install dependencies, configure networking</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># 2. Copy SSH key</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@new-node
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 3. Add host to cluster</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>new-node<span class="w"> </span><span class="m">10</span>.0.1.30
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 4. Add OSDs from new node</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdb
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdc
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># 5. Monitor rebalancing (data redistributes to new OSDs)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s<span class="w">   </span><span class="c1"># wait for HEALTH_OK</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># 6. Adjust CRUSH weight if needed (should happen automatically)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Prepare the new node: install dependencies, configure networking</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># 2. Copy SSH key</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@new-node
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 3. Add host to cluster</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>new-node<span class="w"> </span><span class="m">10</span>.0.1.30
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 4. Add OSDs from new node</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdb
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>new-node:/dev/sdc
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># 5. Monitor rebalancing (data redistributes to new OSDs)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>ceph<span class="w"> </span>-s<span class="w">   </span><span class="c1"># wait for HEALTH_OK</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># 6. Adjust CRUSH weight if needed (should happen automatically)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
 </code></pre></div>
 <h2 id="scrub-management">Scrub Management<a class="headerlink" href="#scrub-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Ceph scrubs data to detect bitrot and inconsistencies.</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Deep scrub: reads all objects and verifies checksums (I/O intensive).</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check last scrub time for each PG</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $19}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2<span class="w"> </span>-k3<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Schedule scrub during maintenance window</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noscrub<span class="w">           </span><span class="c1"># disable automatic scrub</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nodeep-scrub<span class="w">      </span><span class="c1"># disable deep scrub</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Trigger scrub on specific pool</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>scrub<span class="w"> </span>rbd
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>deep-scrub<span class="w"> </span>rbd
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Re-enable automatic scrubbing</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noscrub
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nodeep-scrub
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Scrub time restriction (restrict to off-hours)</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_begin_hour<span class="w"> </span><span class="m">22</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_end_hour<span class="w"> </span><span class="m">6</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ceph scrubs data to detect bitrot and inconsistencies.</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Deep scrub: reads all objects and verifies checksums (I/O intensive).</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check last scrub time for each PG</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $19}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t:<span class="w"> </span>-k2<span class="w"> </span>-k3<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Schedule scrub during maintenance window</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noscrub<span class="w">           </span><span class="c1"># disable automatic scrub</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nodeep-scrub<span class="w">      </span><span class="c1"># disable deep scrub</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Trigger scrub on specific pool</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>scrub<span class="w"> </span>rbd
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>deep-scrub<span class="w"> </span>rbd
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Re-enable automatic scrubbing</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noscrub
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nodeep-scrub
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Scrub time restriction (restrict to off-hours)</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_begin_hour<span class="w"> </span><span class="m">22</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_scrub_end_hour<span class="w"> </span><span class="m">6</span>
 </code></pre></div>
 <h2 id="adjusting-pg-count">Adjusting PG Count<a class="headerlink" href="#adjusting-pg-count" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Increase PG count for a pool (can only increase; plan ahead)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Warning: triggers rebalancing — do during low I/O window</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd<span class="w"> </span>pg_num<span class="w"> </span><span class="m">256</span><span class="w">         </span><span class="c1"># increase PGs</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd<span class="w"> </span>pgp_num<span class="w"> </span><span class="m">256</span><span class="w">        </span><span class="c1"># apply new placement</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Monitor PG split progress</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;ceph -s | grep pgs&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Auto-scaling (Nautilus+) — let Ceph manage PG count</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd<span class="w"> </span>pg_autoscale_mode<span class="w"> </span>on
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>autoscale-status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Increase PG count for a pool (can only increase; plan ahead)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Warning: triggers rebalancing — do during low I/O window</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd<span class="w"> </span>pg_num<span class="w"> </span><span class="m">256</span><span class="w">         </span><span class="c1"># increase PGs</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd<span class="w"> </span>pgp_num<span class="w"> </span><span class="m">256</span><span class="w">        </span><span class="c1"># apply new placement</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Monitor PG split progress</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="s2">&quot;ceph -s | grep pgs&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Auto-scaling (Nautilus+) — let Ceph manage PG count</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd<span class="w"> </span>pg_autoscale_mode<span class="w"> </span>on
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>autoscale-status
 </code></pre></div>
 <h2 id="maintenance-mode">Maintenance Mode<a class="headerlink" href="#maintenance-mode" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Before maintenance on an OSD node:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># 1. Disable OSD device replacement alert temporarily</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout<span class="w">    </span><span class="c1"># prevent OSDs from being marked out during maintenance</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Perform maintenance (patch, reboot, hardware work)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># 3. Verify OSDs come back up after reboot</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat<span class="w">   </span><span class="c1"># all OSDs should be up+in</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># 4. Remove noout flag</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Flags reference:</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># noout     = don&#39;t mark OSDs out when they disconnect (maintenance safety)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># noin      = don&#39;t mark OSDs in when they reconnect</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># norecover = suspend recovery</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># nobackfill= suspend backfill</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># norebalance= suspend rebalancing</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Before maintenance on an OSD node:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># 1. Disable OSD device replacement alert temporarily</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout<span class="w">    </span><span class="c1"># prevent OSDs from being marked out during maintenance</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 2. Perform maintenance (patch, reboot, hardware work)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 3. Verify OSDs come back up after reboot</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat<span class="w">   </span><span class="c1"># all OSDs should be up+in</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 4. Remove noout flag</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Flags reference:</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># noout     = don&#39;t mark OSDs out when they disconnect (maintenance safety)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># noin      = don&#39;t mark OSDs in when they reconnect</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># norecover = suspend recovery</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># nobackfill= suspend backfill</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># norebalance= suspend rebalancing</span>
 </code></pre></div>
 
 
