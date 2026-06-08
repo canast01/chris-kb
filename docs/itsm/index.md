@@ -75,4 +75,8 @@ Operational tooling reference covering version control, project tracking, docume
   <strong>Confluence</strong>
   <span>Spaces, pages, templates, search, and cleanup.</span>
 </a>
+<a class="kb-card" href="git/">
+  <strong>Git</strong>
+  <span>Distributed version control — branching, workflows, authentication, and GitHub/GitLab.</span>
+</a>
 </div>
