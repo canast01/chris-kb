@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Jira — Troubleshooting reference.
+Diagnosing Jira performance issues, workflow errors, index corruption, mail handler failures, and integration problems.
 </div>
 
 ```text

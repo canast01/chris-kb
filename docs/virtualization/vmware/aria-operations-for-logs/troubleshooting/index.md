@@ -1,7 +1,7 @@
 # Aria Ops for Logs — Troubleshooting
 
 <div class="kb-summary">
-Aria Ops for Logs — Troubleshooting reference.
+Diagnosing Aria Ops for Logs ingestion failures, agent connectivity issues, and high-cardinality alert storms.
 </div>
 
 ```text

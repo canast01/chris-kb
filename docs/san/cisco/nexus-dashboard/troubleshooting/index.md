@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Nexus Dashboard — Troubleshooting reference.
+Diagnosing Nexus Dashboard site onboarding failures, fabric health alerts, flow collection gaps, and connectivity issues.
 </div>
 
 ```text

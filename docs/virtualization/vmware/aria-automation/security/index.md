@@ -1,7 +1,7 @@
 # Aria Automation — Security
 
 <div class="kb-summary">
-Aria Automation — Security reference.
+Aria Automation hardening — RBAC configuration, endpoint credentials, certificate management, and audit logging.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Veeam — Troubleshooting reference.
+Diagnosing Veeam job failures, transport mode errors, repository issues, restore failures, and agent connectivity problems.
 </div>
 
 ```text

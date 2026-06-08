@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-CyberArk — Troubleshooting reference.
+Diagnosing CyberArk vault connectivity, PSM session failures, CPM rotation errors, and credential reconciliation issues.
 </div>
 ```text
 ┌───────────────────────── Security Cyberark Troubleshooting — Troubleshooting ─────────────────────────┐

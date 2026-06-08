@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-SRDF/S — Security reference.
+SRDF/S security controls — link encryption options, Unisphere access management, and audit logging for synchronous replication.
 </div>
 
 ```text

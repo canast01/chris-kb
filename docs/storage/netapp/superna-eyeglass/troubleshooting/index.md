@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Troubleshooting reference.
+Diagnosing Superna Eyeglass replication failures, configuration sync errors, DR orchestration issues, and Eyeglass connectivity.
 </div>
 
 ```text

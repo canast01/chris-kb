@@ -1,7 +1,7 @@
 # PowerStore — Operations
 
 <div class="kb-summary">
-PowerStore — Operations reference.
+PowerStore day-to-day operations — volume/file provisioning, native replication, snapshots, and host connectivity.
 </div>
 
 ```text

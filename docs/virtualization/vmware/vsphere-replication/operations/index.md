@@ -1,7 +1,7 @@
 # vSphere Replication — Operations
 
 <div class="kb-summary">
-vSphere Replication — Operations reference.
+vSphere Replication daily operations — RPO monitoring, replication group management, and test recovery procedures.
 </div>
 
 ```text

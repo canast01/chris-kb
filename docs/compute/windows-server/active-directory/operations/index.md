@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Active Directory — Operations reference.
+Active Directory day-to-day operations — user and group management, GPO administration, replication health, and OU structure.
 </div>
 ```text
 ┌────────────────────────── Security Active Directory Operations — Operations ──────────────────────────┐

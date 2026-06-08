@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-COD — Common Issues reference.
+Common COD issues — capacity activation failures, allocation errors, and licensing troubleshooting.
 </div>
 
 ```text

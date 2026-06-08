@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Windows Server — Troubleshooting reference.
+Diagnosing Windows Server failures — services, event logs, WMI errors, performance degradation, and common boot issues.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-SRDF/A — Security reference.
+SRDF/A security controls — management access restrictions, SRDF encryption, and Unisphere for PowerMax hardening.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Terraform — Operations reference.
+Terraform day-to-day operations — plan/apply workflows, state management, workspace operations, and provider configuration.
 </div>
 
 ```text

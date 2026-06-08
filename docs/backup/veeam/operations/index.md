@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Veeam — Operations reference.
+Veeam day-to-day operations — backup job management, restore procedures, scale-out repository, and immutability settings.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-PowerShell — Troubleshooting reference.
+Diagnosing script failures, module conflicts, remoting errors, execution policy issues, and common PowerShell problems.
 </div>
 
 ```text

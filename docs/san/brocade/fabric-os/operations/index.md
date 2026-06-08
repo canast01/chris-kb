@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-FabricOS — Operations reference.
+Brocade FabricOS day-to-day operations — zoning, port management, fabric health monitoring, and switch administration.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-NetBackup — Security reference.
+NetBackup hardening — access control, certificate management, encryption at rest and in transit, and audit logging.
 </div>
 
 ```text

@@ -1,7 +1,7 @@
 # Unity — Troubleshooting
 
 <div class="kb-summary">
-Unity — Troubleshooting reference.
+Diagnosing Unity replication failures, host connectivity issues, LUN/share provisioning errors, and drive faults.
 </div>
 
 ```text

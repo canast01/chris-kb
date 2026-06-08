@@ -1,7 +1,7 @@
 # Aria Operations — Operations
 
 <div class="kb-summary">
-Aria Operations — Operations reference.
+Aria Operations daily operations — policy management, alert tuning, dashboard maintenance, and capacity reporting.
 </div>
 
 ```text

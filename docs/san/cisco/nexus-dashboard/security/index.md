@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Nexus Dashboard — Security reference.
+Nexus Dashboard hardening — RBAC, TLS certificate management, user access controls, and secure API configuration.
 </div>
 
 ```text

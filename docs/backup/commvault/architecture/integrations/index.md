@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Commvault — Integrations reference.
+Commvault integration with VMware vSphere, storage arrays, LDAP, SMTP, and third-party monitoring platforms.
 </div>
 
 ```text

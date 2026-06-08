@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-AWS — Escalation reference.
+AWS support case creation, severity level selection, TAM escalation path, and required diagnostics before opening a case.
 </div>
 
 ```text

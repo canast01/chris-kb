@@ -1,7 +1,7 @@
 # vSphere Replication — Troubleshooting
 
 <div class="kb-summary">
-vSphere Replication — Troubleshooting reference.
+Diagnosing vSphere Replication RPO violations, VR server connectivity, delta disk errors, and replication task failures.
 </div>
 
 ```text

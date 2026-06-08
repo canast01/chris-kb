@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-GitHub Actions — Troubleshooting reference.
+Debugging workflow failures, runner connectivity, permission errors, caching issues, and common GitHub Actions pipeline problems.
 </div>
 
 ```text

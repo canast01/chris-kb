@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Windows Server — Security reference.
+Windows Server hardening — security baselines, local admin controls, Windows Firewall, audit policy, and BitLocker configuration.
 </div>
 
 ```text

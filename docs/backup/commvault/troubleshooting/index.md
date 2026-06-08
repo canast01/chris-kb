@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Commvault — Troubleshooting reference.
+Diagnosing Commvault job failures, media agent connectivity, subclient errors, schedule issues, and restore failures.
 </div>
 
 ```text

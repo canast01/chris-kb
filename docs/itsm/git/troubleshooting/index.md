@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Git — Troubleshooting reference.
+Diagnosing merge conflicts, broken remote connections, rebase failures, and common Git workflow errors.
 </div>
 
 ```text

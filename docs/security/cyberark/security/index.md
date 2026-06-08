@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-CyberArk — Security reference.
+CyberArk hardening — vault access controls, DR configuration, MFA enforcement, PSM hardening, and audit logging.
 </div>
 ```text
 ┌──────────────────────────────── Security Cyberark Security — Security ────────────────────────────────┐

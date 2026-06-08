@@ -1,7 +1,7 @@
 # Site Recovery Manager — Operations
 
 <div class="kb-summary">
-Site Recovery Manager — Operations reference.
+Site Recovery Manager daily operations — protection group management, replication monitoring, test failover, and DR plan maintenance.
 </div>
 
 ```text

@@ -1,7 +1,7 @@
 # Aria Ops for Networks — Operations
 
 <div class="kb-summary">
-Aria Ops for Networks — Operations reference.
+Aria Ops for Networks daily operations — data source management, flow analysis, path visibility, and alert configuration.
 </div>
 
 ```text

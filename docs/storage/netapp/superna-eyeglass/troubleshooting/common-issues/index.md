@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Common Issues reference.
+Common Superna Eyeglass issues — sync failures, DR test errors, configuration drift, and SyncIQ job problems.
 </div>
 
 ```text

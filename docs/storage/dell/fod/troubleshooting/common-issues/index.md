@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-FOD — Common Issues reference.
+Common FOD activation errors, feature entitlement failures, and troubleshooting unlicensed features.
 </div>
 
 ```text

@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Cisco DCNM — Security reference.
+DCNM hardening — AAA configuration, RBAC, TLS enforcement, and management interface access controls.
 </div>
 
 ```text

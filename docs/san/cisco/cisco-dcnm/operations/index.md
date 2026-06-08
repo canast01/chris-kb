@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Cisco DCNM — Operations reference.
+Cisco DCNM day-to-day operations — fabric management, template deployment, image management, and health monitoring.
 </div>
 
 ```text

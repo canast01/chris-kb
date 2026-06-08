@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Commvault — Operations reference.
+Commvault day-to-day operations — job management, subclient configuration, data aging policies, SLA monitoring, and library health.
 </div>
 
 ```text

@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Azure CLI — Networking reference.
+Azure CLI commands for networking — VNet, subnets, NSGs, route tables, VNet peering, Private Endpoints, and DNS zones.
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

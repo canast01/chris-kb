@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Venafi — Security reference.
+Venafi hardening — CA connector security, policy enforcement, RBAC, and certificate authority trust chain management.
 </div>
 ```text
 ┌───────────────────────────────── Security Venafi Security — Security ─────────────────────────────────┐

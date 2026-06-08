@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Security reference.
+Superna Eyeglass hardening — RBAC, TLS enforcement, audit logging, and management interface access controls.
 </div>
 
 ```text

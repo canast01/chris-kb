@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Operations reference.
+Superna Eyeglass day-to-day operations — DR orchestration, configuration sync monitoring, and SyncIQ policy management.
 </div>
 
 ```text

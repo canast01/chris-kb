@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Nexus Dashboard — Operations reference.
+Nexus Dashboard daily operations — fabric health monitoring, flow visibility, alert management, and operational runbooks.
 </div>
 
 ```text

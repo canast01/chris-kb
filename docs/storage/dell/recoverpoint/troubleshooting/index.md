@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-RecoverPoint — Troubleshooting reference.
+Diagnosing RecoverPoint replication failures, consistency group errors, splitter connectivity, and RPO violations.
 </div>
 
 ```text

@@ -1,7 +1,7 @@
 # Unity — Security
 
 <div class="kb-summary">
-Unity — Security reference.
+Unity hardening — management access control, audit logging, replication channel security, and NAS share permissions.
 </div>
 
 ```text

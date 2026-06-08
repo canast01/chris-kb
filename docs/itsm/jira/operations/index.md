@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Jira — Operations reference.
+Jira day-to-day operations — project administration, workflow configuration, board management, and user provisioning.
 </div>
 
 ```text

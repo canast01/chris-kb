@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Python Automation — Troubleshooting reference.
+Diagnosing import errors, dependency conflicts, version incompatibilities, and Python automation script failures.
 </div>
 
 ```text

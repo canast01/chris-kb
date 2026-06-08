@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Git — Security reference.
+Git security controls — SSH key management, GPG commit signing, repository access control, and secret scanning.
 </div>
 
 ```text

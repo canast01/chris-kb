@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Venafi — Operations reference.
+Venafi day-to-day operations — certificate discovery, policy enforcement, issuance workflows, and renewal automation.
 </div>
 ```text
 ┌─────────────────────────────── Security Venafi Operations — Operations ───────────────────────────────┐

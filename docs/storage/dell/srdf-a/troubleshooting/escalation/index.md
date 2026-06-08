@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-SRDF/A — Escalation reference.
+SRDF/A escalation procedures — case creation and Dell EMC support triage for async replication failures.
 </div>
 
 ```text

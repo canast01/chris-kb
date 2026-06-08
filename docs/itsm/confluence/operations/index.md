@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Confluence — Operations reference.
+Confluence day-to-day operations — space administration, permissions, content maintenance, and user management.
 </div>
 
 ```text

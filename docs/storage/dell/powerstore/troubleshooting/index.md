@@ -1,7 +1,7 @@
 # PowerStore — Troubleshooting
 
 <div class="kb-summary">
-PowerStore — Troubleshooting reference.
+Diagnosing PowerStore replication failures, host connectivity issues, provisioning errors, and performance degradation.
 </div>
 
 ```text

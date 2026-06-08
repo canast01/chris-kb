@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Active Directory — Troubleshooting reference.
+Diagnosing AD replication failures, Kerberos errors, trust issues, SYSVOL sync problems, and LDAP query failures.
 </div>
 ```text
 ┌───────────────────── Security Active Directory Troubleshooting — Troubleshooting ─────────────────────┐

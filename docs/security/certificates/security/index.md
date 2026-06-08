@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Certificates — Security reference.
+Certificate security controls — CA trust chain management, key storage, mTLS enforcement, and TLS policy hardening.
 </div>
 ```text
 ┌────────────────────────────── Security Certificates Security — Security ──────────────────────────────┐

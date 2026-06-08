@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Certificates — Operations reference.
+Certificate lifecycle operations — renewal, re-issuance, CSR generation, chain validation, and certificate rotation procedures.
 </div>
 ```text
 ┌──────────────────────────── Security Certificates Operations — Operations ────────────────────────────┐

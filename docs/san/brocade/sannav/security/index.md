@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-SANnav — Security reference.
+SANnav hardening — RBAC, TLS configuration, user management, and secure communication with managed switches.
 </div>
 
 ```text

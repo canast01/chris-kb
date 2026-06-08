@@ -6,7 +6,7 @@ title: AWS CLI — IAM
 
 
 <div class="kb-summary">
-AWS CLI — IAM reference.
+AWS CLI commands for IAM — users, groups, roles, policies, STS assume-role, access key rotation, and permission boundaries.
 </div>
 
 ```text

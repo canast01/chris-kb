@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-MDS — Operations reference.
+Cisco MDS day-to-day operations — VSAN management, zoning, port administration, and fabric health monitoring.
 </div>
 
 ```text

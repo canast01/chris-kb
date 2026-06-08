@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Azure CLI — Virtual Machines reference.
+Azure CLI commands for VM management — create, resize, deallocate, managed disks, extensions, and snapshot operations.
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

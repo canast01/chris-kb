@@ -1,7 +1,7 @@
 # Tanzu — Troubleshooting
 
 <div class="kb-summary">
-Tanzu — Troubleshooting reference.
+Diagnosing Tanzu cluster failures, pod scheduling issues, ingress errors, and control plane health problems.
 </div>
 
 ```text

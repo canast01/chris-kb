@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-APEX Storage as a Service — Common Issues reference.
+Common APEX Storage as a Service issues — provisioning failures, connectivity errors, and service-level degradation.
 </div>
 
 ```text

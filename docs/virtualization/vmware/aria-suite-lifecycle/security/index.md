@@ -1,7 +1,7 @@
 # Aria Suite Lifecycle — Security
 
 <div class="kb-summary">
-Aria Suite Lifecycle — Security reference.
+Aria Suite Lifecycle hardening — certificate management, RBAC, locker credential security, and audit logging.
 </div>
 
 ```text

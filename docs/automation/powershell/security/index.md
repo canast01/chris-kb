@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-PowerShell — Security reference.
+PowerShell hardening — execution policy, JEA, script signing, constrained language mode, and script block logging.
 </div>
 
 ```text

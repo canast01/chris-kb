@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-MDS — Troubleshooting reference.
+Diagnosing MDS VSAN errors, port faults, FCNS registration failures, zone database issues, and FLOGI storms.
 </div>
 
 ```text

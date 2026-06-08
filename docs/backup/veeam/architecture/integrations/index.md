@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Veeam — Integrations reference.
+Veeam integration with VMware vSphere, Nutanix, Azure, object storage repositories, and monitoring platforms.
 </div>
 
 ```text

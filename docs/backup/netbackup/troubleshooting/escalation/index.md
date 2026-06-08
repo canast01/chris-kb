@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-NetBackup — Escalation reference.
+NetBackup case creation, nbsu log collection, and Veritas support escalation procedures for unresolved backup failures.
 </div>
 
 ```text

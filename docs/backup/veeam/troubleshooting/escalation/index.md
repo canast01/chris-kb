@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Veeam — Escalation reference.
+Veeam case creation, log export, and Veeam support escalation procedures for unresolved backup and restore failures.
 </div>
 
 ```text

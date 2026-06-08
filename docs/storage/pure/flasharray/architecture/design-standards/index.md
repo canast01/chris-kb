@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-FlashArray — Design Standards reference.
+FlashArray design standards — host group naming conventions, volume layout, protection group design, and replication architecture.
 </div>
 
 FlashArray Design Checklist — Key Areas

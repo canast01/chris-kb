@@ -1,7 +1,7 @@
 # Tanzu — Operations
 
 <div class="kb-summary">
-Tanzu — Operations reference.
+Tanzu day-to-day operations — cluster lifecycle management, namespace administration, workload deployment, and health monitoring.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-NetBackup — Troubleshooting reference.
+Diagnosing NetBackup job failures, status codes, media server errors, client connectivity, and catalog issues.
 </div>
 
 ```text

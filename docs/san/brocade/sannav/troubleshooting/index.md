@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-SANnav — Troubleshooting reference.
+Diagnosing SANnav connectivity issues, fabric discovery failures, certificate errors, and alert configuration problems.
 </div>
 
 ```text

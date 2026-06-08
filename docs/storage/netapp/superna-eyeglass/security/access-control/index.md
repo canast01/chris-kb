@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Access Control reference.
+Superna Eyeglass role-based access — user management, RBAC configuration, and access policy enforcement.
 </div>
 
 ```text

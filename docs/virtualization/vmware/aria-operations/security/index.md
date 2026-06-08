@@ -1,7 +1,7 @@
 # Aria Operations — Security
 
 <div class="kb-summary">
-Aria Operations — Security reference.
+Aria Operations hardening — SSO configuration, RBAC, adapter credential management, and audit logging.
 </div>
 
 ```text

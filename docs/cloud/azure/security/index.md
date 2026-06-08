@@ -1,7 +1,7 @@
 # Azure — Security
 
 <div class="kb-summary">
-Azure — Security reference.
+Azure security posture — Defender for Cloud, Key Vault, Entra ID hardening, NSG policies, Privileged Identity Management, and secure score.
 </div>
 
 ```text

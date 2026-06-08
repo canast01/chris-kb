@@ -1,7 +1,7 @@
 # PowerMax — Operations
 
 <div class="kb-summary">
-PowerMax — Operations reference.
+PowerMax day-to-day operations — SRDF management, storage group provisioning, performance monitoring, and host connectivity.
 </div>
 
 ```text

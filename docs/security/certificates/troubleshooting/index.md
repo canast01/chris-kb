@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Certificates — Troubleshooting reference.
+Diagnosing expired certificates, chain validation errors, revocation failures, and TLS handshake issues.
 </div>
 ```text
 ┌─────────────────────── Security Certificates Troubleshooting — Troubleshooting ───────────────────────┐

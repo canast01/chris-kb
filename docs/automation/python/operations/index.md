@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Python Automation — Operations reference.
+Running, scheduling, and maintaining Python automation scripts — virtual environments, dependency management, and job monitoring.
 </div>
 
 ```text

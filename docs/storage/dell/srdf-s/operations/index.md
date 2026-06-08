@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-SRDF/S — Operations reference.
+SRDF/S day-to-day operations — synchronous link monitoring, R1/R2 device management, and failover/failback procedures.
 </div>
 
 ```text

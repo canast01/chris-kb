@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Encryption reference.
+Superna Eyeglass encryption — TLS configuration and data-in-transit security for Eyeglass management communications.
 </div>
 
 ```text

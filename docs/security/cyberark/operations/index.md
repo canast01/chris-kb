@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-CyberArk — Operations reference.
+CyberArk day-to-day operations — safe management, account onboarding, session recording, CPM rotation, and vault health.
 </div>
 ```text
 ┌────────────────────────────── Security Cyberark Operations — Operations ──────────────────────────────┐

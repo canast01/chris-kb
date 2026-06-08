@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-RecoverPoint — Escalation reference.
+RecoverPoint case creation, log collection, and Dell EMC support escalation procedures for unresolved replication failures.
 </div>
 
 ```text

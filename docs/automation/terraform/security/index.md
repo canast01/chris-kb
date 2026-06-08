@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Terraform — Security reference.
+Terraform security — state file encryption, secrets handling, provider authentication, and Terraform Cloud access controls.
 </div>
 
 ```text

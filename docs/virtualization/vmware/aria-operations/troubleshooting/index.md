@@ -1,7 +1,7 @@
 # Aria Operations — Troubleshooting
 
 <div class="kb-summary">
-Aria Operations — Troubleshooting reference.
+Diagnosing Aria Operations adapter failures, data collection gaps, alert storms, and performance degradation.
 </div>
 
 ```text

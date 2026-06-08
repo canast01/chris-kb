@@ -1,7 +1,7 @@
 # Aria Automation — Operations
 
 <div class="kb-summary">
-Aria Automation — Operations reference.
+Aria Automation day-to-day operations — blueprint publishing, request management, approval workflows, and catalog maintenance.
 </div>
 
 ```text

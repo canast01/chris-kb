@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Terraform — Troubleshooting reference.
+Diagnosing state drift, provider errors, plan failures, lock conflicts, and common Terraform workflow issues.
 </div>
 
 ```text

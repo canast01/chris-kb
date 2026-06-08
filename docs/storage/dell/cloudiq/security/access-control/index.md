@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-CloudIQ — Access Control reference.
+CloudIQ role-based access control — user management, RBAC configuration, and access policy enforcement.
 </div>
 
 ```text

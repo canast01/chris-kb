@@ -1,7 +1,7 @@
 # Site Recovery Manager — Troubleshooting
 
 <div class="kb-summary">
-Site Recovery Manager — Troubleshooting reference.
+Diagnosing SRM replication failures, protection group errors, inventory mapping issues, and failover/failback problems.
 </div>
 
 ```text

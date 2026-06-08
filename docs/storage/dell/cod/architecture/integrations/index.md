@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-COD — Integrations reference.
+Capacity on Demand integration with VMware, Unisphere, and storage management platforms.
 </div>
 
 ```text

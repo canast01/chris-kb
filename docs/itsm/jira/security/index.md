@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Jira — Security reference.
+Jira hardening — permission schemes, project roles, application access, and Jira Software security configuration.
 </div>
 
 ```text

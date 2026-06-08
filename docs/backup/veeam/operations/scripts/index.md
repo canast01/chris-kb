@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Veeam — Scripts reference.
+PowerShell scripts for Veeam job management, capacity reporting, SLA health checks, and backup copy automation.
 </div>
 
 ```text

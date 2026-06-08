@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Authentication reference.
+Superna Eyeglass authentication — LDAP/AD integration, SSO configuration, and MFA enforcement.
 </div>
 
 ```text

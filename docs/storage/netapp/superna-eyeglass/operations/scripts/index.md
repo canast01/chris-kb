@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Superna Eyeglass — Scripts reference.
+Automation scripts for Superna Eyeglass — DR test operations, configuration reporting, and SyncIQ health monitoring.
 </div>
 
 ```text

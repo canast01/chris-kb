@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Commvault — Security reference.
+Commvault hardening — RBAC, encryption keys, audit logging, CommServe access control, and network security configuration.
 </div>
 
 ```text

@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Commvault — Escalation reference.
+Commvault case creation, log collection via cvpkgadd, and Commvault support escalation procedures for unresolved issues.
 </div>
 
 ```text

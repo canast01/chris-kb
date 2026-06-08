@@ -1,7 +1,7 @@
 # PowerScale — Security
 
 <div class="kb-summary">
-PowerScale — Security reference.
+PowerScale hardening — SmartLock compliance mode, NFS export access control, SMB share permissions, and audit logging.
 </div>
 
 ```text

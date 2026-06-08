@@ -1,7 +1,7 @@
 # PowerMax — Security
 
 <div class="kb-summary">
-PowerMax — Security reference.
+PowerMax hardening — user access control, audit logging, encryption at rest, and Unisphere management interface security.
 </div>
 
 ```text

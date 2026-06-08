@@ -1,7 +1,7 @@
 # Aria Ops for Logs — Security
 
 <div class="kb-summary">
-Aria Ops for Logs — Security reference.
+Aria Ops for Logs hardening — RBAC, TLS configuration, syslog source authentication, and audit logging.
 </div>
 
 ```text

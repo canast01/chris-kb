@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Commvault — Common Issues reference.
+Common Commvault issues — backup job failures, media agent errors, deduplication problems, and client connectivity failures.
 </div>
 
 ```text

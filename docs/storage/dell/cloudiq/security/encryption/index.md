@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-CloudIQ — Encryption reference.
+CloudIQ data encryption settings, key management integration, and encryption compliance reporting.
 </div>
 
 ```text

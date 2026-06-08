@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-FOD — Integrations reference.
+Features on Demand integration with PowerMax/Unity management platforms and storage orchestration tools.
 </div>
 
 ```text

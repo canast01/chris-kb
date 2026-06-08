@@ -1,7 +1,7 @@
 # PowerScale — Troubleshooting
 
 <div class="kb-summary">
-PowerScale — Troubleshooting reference.
+Diagnosing PowerScale replication failures, protocol errors, quota violations, node faults, and cluster health issues.
 </div>
 
 ```text

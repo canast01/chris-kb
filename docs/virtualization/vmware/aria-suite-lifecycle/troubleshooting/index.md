@@ -1,7 +1,7 @@
 # Aria Suite Lifecycle — Troubleshooting
 
 <div class="kb-summary">
-Aria Suite Lifecycle — Troubleshooting reference.
+Diagnosing Aria Suite Lifecycle upgrade failures, certificate errors, and product deployment issues.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-SRDF/A — Troubleshooting reference.
+Diagnosing SRDF/A cycle failures, delta set overflow, link errors, and async RPO violations.
 </div>
 
 ```text

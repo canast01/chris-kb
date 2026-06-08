@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Commvault — Scripts reference.
+PowerShell and qscript automation for Commvault job management, SLA reporting, client health checks, and storage utilisation.
 </div>
 
 ```text

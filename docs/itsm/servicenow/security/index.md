@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-ServiceNow — Security reference.
+ServiceNow hardening — ACLs, role-based access, MID server security, SSO configuration, and audit logging.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-ServiceNow — Operations reference.
+ServiceNow day-to-day operations — incident routing, CMDB hygiene, report scheduling, upgrade health checks, and platform monitoring.
 </div>
 
 ```text

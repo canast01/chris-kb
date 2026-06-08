@@ -1,7 +1,7 @@
 # Aria Ops for Logs — Operations
 
 <div class="kb-summary">
-Aria Ops for Logs — Operations reference.
+Aria Ops for Logs daily operations — agent management, log forwarder configuration, content pack updates, and alert tuning.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-RecoverPoint — Security reference.
+RecoverPoint hardening — management access control, user roles, TLS configuration, and audit logging.
 </div>
 
 ```text

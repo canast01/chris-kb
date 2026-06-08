@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-EC2 — Instances reference.
+AWS CLI commands for EC2 — describe-instances, start/stop, resize, AMI creation, metadata queries, and user data operations.
 </div>
 
 ```text

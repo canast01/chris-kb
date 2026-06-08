@@ -1,7 +1,7 @@
 # vSphere Replication — Security
 
 <div class="kb-summary">
-vSphere Replication — Security reference.
+vSphere Replication hardening — certificate management, RBAC, and secure communication between VR appliances.
 </div>
 
 ```text

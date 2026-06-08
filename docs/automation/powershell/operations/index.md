@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-PowerShell — Operations reference.
+Day-to-day PowerShell administration — script execution, module management, remoting, scheduled jobs, and runbook maintenance.
 </div>
 
 ```text

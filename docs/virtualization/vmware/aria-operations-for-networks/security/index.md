@@ -1,7 +1,7 @@
 # Aria Ops for Networks — Security
 
 <div class="kb-summary">
-Aria Ops for Networks — Security reference.
+Aria Ops for Networks hardening — collector security, RBAC configuration, and certificate management.
 </div>
 
 ```text

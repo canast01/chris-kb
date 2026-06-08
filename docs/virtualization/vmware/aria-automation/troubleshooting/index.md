@@ -1,7 +1,7 @@
 # Aria Automation — Troubleshooting
 
 <div class="kb-summary">
-Aria Automation — Troubleshooting reference.
+Diagnosing Aria Automation deployment failures, vRO workflow errors, integration issues, and catalog problems.
 </div>
 
 ```text

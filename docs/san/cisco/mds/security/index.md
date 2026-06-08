@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-MDS — Security reference.
+Cisco MDS hardening — AAA, SSH, port security, fabric binding, RBAC, and VSAN access control.
 </div>
 
 ```text

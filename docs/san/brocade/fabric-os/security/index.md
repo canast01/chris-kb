@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-FabricOS — Security reference.
+FabricOS hardening — RBAC, RADIUS/TACACS+, SSH configuration, SCC/DCC policies, and secure fabric practices.
 </div>
 
 ```text

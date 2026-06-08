@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-SANnav — Operations reference.
+SANnav day-to-day operations — dashboard monitoring, fabric discovery, alert management, firmware upgrades, and reporting.
 </div>
 
 ```text

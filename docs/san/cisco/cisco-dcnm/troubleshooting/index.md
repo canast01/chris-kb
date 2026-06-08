@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Cisco DCNM — Troubleshooting reference.
+Diagnosing DCNM fabric sync issues, template deployment failures, connectivity errors, and common DCNM problems.
 </div>
 
 ```text

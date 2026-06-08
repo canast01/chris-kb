@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Venafi — Troubleshooting reference.
+Diagnosing Venafi discovery failures, CA connector errors, policy violations, and certificate renewal workflow issues.
 </div>
 ```text
 ┌────────────────────────── Security Venafi Troubleshooting — Troubleshooting ──────────────────────────┐

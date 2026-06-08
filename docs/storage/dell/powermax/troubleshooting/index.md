@@ -1,7 +1,7 @@
 # PowerMax — Troubleshooting
 
 <div class="kb-summary">
-PowerMax — Troubleshooting reference.
+Diagnosing PowerMax SRDF failures, provisioning errors, host connectivity issues, and performance degradation.
 </div>
 
 ```text

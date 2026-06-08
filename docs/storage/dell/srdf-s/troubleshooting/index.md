@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-SRDF/S — Troubleshooting reference.
+Diagnosing SRDF/S link failures, synchronisation errors, SUSPENDED state recovery, and RDF group health issues.
 </div>
 
 ```text

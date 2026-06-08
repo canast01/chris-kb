@@ -1,7 +1,7 @@
 # PowerStore — Security
 
 <div class="kb-summary">
-PowerStore — Security reference.
+PowerStore hardening — RBAC, local user management, encryption key management, and management interface security.
 </div>
 
 ```text

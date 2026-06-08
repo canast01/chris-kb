@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Python Automation — Security reference.
+Secure Python scripting — credential handling, dependency scanning, virtual environment isolation, and secrets management.
 </div>
 
 ```text

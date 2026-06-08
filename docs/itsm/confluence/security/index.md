@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Confluence — Security reference.
+Confluence hardening — access control, SSL termination, application links security, and user session management.
 </div>
 
 ```text

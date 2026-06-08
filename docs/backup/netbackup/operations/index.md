@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-NetBackup — Operations reference.
+NetBackup day-to-day operations — policy management, job monitoring, tape/disk pool administration, and catalog maintenance.
 </div>
 
 ```text

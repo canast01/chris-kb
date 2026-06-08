@@ -1,7 +1,7 @@
 # PowerScale — Operations
 
 <div class="kb-summary">
-PowerScale — Operations reference.
+PowerScale day-to-day operations — SMB/NFS share management, SyncIQ replication, snapshots, and quota administration.
 </div>
 
 ```text

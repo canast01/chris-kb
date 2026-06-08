@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-SRDF/A — Operations reference.
+SRDF/A day-to-day operations — cycle monitoring, delta set management, STAR mode, and async replication health checks.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Veeam — Security reference.
+Veeam hardening — RBAC, immutable repositories, backup encryption, Linux hardened repository, and access controls.
 </div>
 
 ```text

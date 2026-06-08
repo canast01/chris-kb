@@ -1,7 +1,7 @@
 # Aria Suite Lifecycle — Operations
 
 <div class="kb-summary">
-Aria Suite Lifecycle — Operations reference.
+Aria Suite Lifecycle daily operations — product upgrades, patch management, locker management, and environment health checks.
 </div>
 
 ```text

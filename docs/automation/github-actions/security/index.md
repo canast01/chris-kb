@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-GitHub Actions — Security reference.
+Workflow secrets management, OIDC token auth, permission scoping, branch protection, and GitHub Actions runner hardening.
 </div>
 
 ```text

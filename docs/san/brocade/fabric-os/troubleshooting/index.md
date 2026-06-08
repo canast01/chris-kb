@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-FabricOS — Troubleshooting reference.
+Diagnosing FabricOS fabric errors, port faults, FLOGI failures, zone conflicts, and principal switch elections.
 </div>
 
 ```text

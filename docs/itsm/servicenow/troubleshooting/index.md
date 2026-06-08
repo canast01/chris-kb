@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-ServiceNow — Troubleshooting reference.
+Diagnosing ServiceNow outages, workflow errors, integration failures, MID server connectivity, and slow performance.
 </div>
 
 ```text

@@ -3,7 +3,7 @@
 
 
 <div class="kb-summary">
-Confluence — Troubleshooting reference.
+Diagnosing Confluence performance issues, indexing failures, login problems, macro errors, and sync failures.
 </div>
 
 ```text

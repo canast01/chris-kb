@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Active Directory — Security reference.
+AD hardening — tiered admin model, Protected Users group, privileged access workstations, Kerberos settings, and audit policies.
 </div>
 ```text
 ┌──────────────────────────── Security Active Directory Security — Security ────────────────────────────┐

@@ -1,7 +1,7 @@
 # Tanzu — Security
 
 <div class="kb-summary">
-Tanzu — Security reference.
+Tanzu hardening — RBAC, network policies, pod security admission, OPA Gatekeeper, and container image scanning.
 </div>
 
 ```text
