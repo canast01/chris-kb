@@ -4023,6 +4023,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#vmware-vm-health-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware VM Health Report
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4213,7 +4224,7 @@
 
 <h1 id="powercli-scripts">PowerCLI — Scripts<a class="headerlink" href="#powercli-scripts" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, snapshot audit, host capacity report, vSAN status, and bulk tag assignment. All scripts follow the standard header and error-handling pattern.
+Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, snapshot audit, host capacity report, vSAN status, bulk tag assignment, and VM health reports. All scripts follow the standard header and error-handling pattern.
 </div>
 
 <h2 id="vm-inventory-report">VM Inventory Report<a class="headerlink" href="#vm-inventory-report" title="Permanent link">&para;</a></h2>
@@ -4384,6 +4395,40 @@ Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, 
 <a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="p">}</span>
 <a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
 <a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
+<h2 id="vmware-vm-health-report">VMware VM Health Report<a class="headerlink" href="#vmware-vm-health-report" title="Permanent link">&para;</a></h2>
+<p>Generate a per-VM health report from vCenter: power state, CPU, memory, snapshot count and age, and datastore.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># vm-health-report.ps1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># Usage: .\vm-health-report.ps1 -vCenter &lt;hostname&gt; -OutputPath .\report.csv</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span> <span class="no">[string]</span> <span class="nv">$vCenter</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="no">[string]</span> <span class="nv">$OutputPath</span> <span class="p">=</span> <span class="s2">&quot;.\vm-health-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">.csv&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="nv">$vCenter</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nv">$report</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="nv">$vm</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="nv">$snaps</span> <span class="p">=</span> <span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="nv">$oldestSnap</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$snaps</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Created</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="nv">$null</span> <span class="p">}</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="n">Name</span>         <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        <span class="n">Cluster</span>      <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="n">-VM</span> <span class="nv">$vm</span><span class="p">).</span><span class="n">Name</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        <span class="n">PowerState</span>   <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">PowerState</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        <span class="n">vCPU</span>         <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">NumCpu</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        <span class="n">MemGB</span>        <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">MemoryGB</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        <span class="n">Snapshots</span>    <span class="p">=</span> <span class="nv">$snaps</span><span class="p">.</span><span class="n">Count</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>        <span class="n">OldestSnap</span>   <span class="p">=</span> <span class="nv">$oldestSnap</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>        <span class="n">Datastore</span>    <span class="p">=</span> <span class="p">(</span><span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Name</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="p">}</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="p">}</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="nv">$report</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="nv">$OutputPath</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="nv">$report</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">Report saved: $OutputPath&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="nb">Disconnect-VIServer</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 
 
