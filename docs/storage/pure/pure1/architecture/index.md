@@ -45,7 +45,7 @@ Pure1 is a SaaS monitoring and analytics platform. FlashArray and FlashBlade sys
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-![Pure1 Architecture](../../../assets/pure1-architecture-overview.svg)
+![Pure1 Architecture](../../../../assets/pure1-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>SaaS architecture, telemetry collection, Pure1 Meta AI, data retention, and network requirements.</span></a>

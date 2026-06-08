@@ -45,7 +45,7 @@ InsightIQ is an on-premises virtual appliance that collects performance telemetr
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-![InsightIQ Architecture](../../../assets/insightiq-architecture-overview.svg)
+![InsightIQ Architecture](../../../../assets/insightiq-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Deployment architecture, data collection, retention sizing, network requirements, and HA.</span></a>

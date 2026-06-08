@@ -47,7 +47,7 @@ Dell AIOps is a fully SaaS-delivered AI operations platform. Telemetry flows fro
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-![Dell AIOps Architecture](../../../assets/dell-aiops-architecture-overview.svg)
+![Dell AIOps Architecture](../../../../assets/dell-aiops-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>SaaS architecture, AI capabilities, telemetry sources, data flow, and component roles.</span></a>

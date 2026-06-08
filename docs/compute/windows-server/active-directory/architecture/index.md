@@ -57,7 +57,7 @@ Windows Server Active Directory forest with multi-site domain controllers, Kerbe
 ```
 
 
-![Active Directory Architecture](../../../assets/active-directory-architecture-overview.svg)
+![Active Directory Architecture](../../../../assets/active-directory-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 

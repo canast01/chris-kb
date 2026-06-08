@@ -49,7 +49,7 @@ Superna Eyeglass DR orchestration for NetApp PowerScale — automates SyncIQ fai
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-![Superna Eyeglass Architecture](../../../assets/superna-eyeglass-architecture-overview.svg)
+![Superna Eyeglass Architecture](../../../../assets/superna-eyeglass-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Failover execution flow, DR readiness scoring, CLI commands, sizing, and RPO tiers.</span></a>

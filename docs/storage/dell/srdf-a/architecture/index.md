@@ -49,7 +49,7 @@ Dell PowerMax SRDF/A asynchronous replication — delta set cycle model buffers 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-![SRDF/A Architecture](../../../assets/srdf-a-architecture-overview.svg)
+![SRDF/A Architecture](../../../../assets/srdf-a-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>Delta set mechanics, SRDF group design, pair states, SYMCLI commands, and bandwidth sizing.</span></a>

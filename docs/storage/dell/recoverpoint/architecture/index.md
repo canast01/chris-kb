@@ -44,7 +44,7 @@ Dell EMC RecoverPoint journal-based replication — RPA clusters intercept write
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-![RecoverPoint Architecture](../../../assets/recoverpoint-architecture-overview.svg)
+![RecoverPoint Architecture](../../../../assets/recoverpoint-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>RPA topology, splitter types, consistency groups, journal sizing, and HA model.</span></a>
