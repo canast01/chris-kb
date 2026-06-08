@@ -4355,41 +4355,41 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 <h2 id="test-failover">Test Failover<a class="headerlink" href="#test-failover" title="Permanent link">&para;</a></h2>
 <p>Test failover runs in an isolated network bubble and does not affect production. Always run a test before a real recovery.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>```powershell
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a># Start a test failover
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>## Start a test failover
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>$plan = Get-SRMRecoveryPlan -Name &lt;plan_name&gt;
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>$plan.RecoveryPlanService.Start($plan.MoRef, (New-Object VMware.VimAutomation.Srm.Types.V1.RecoveryPlanRecoveryMode))
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a># Check test status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>## Check test status
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Get-SRMRecoveryPlan -Name &lt;plan_name&gt; | Select State, ActiveHistoryTask
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a># Clean up (remove test snapshot, restore network)
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>## Clean up (remove test snapshot, restore network)
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>$plan.RecoveryPlanService.Cancel($plan.MoRef)
 </code></pre></div>
 <hr />
 <h2 id="recovery-planned-migration-failover">Recovery (Planned Migration / Failover)<a class="headerlink" href="#recovery-planned-migration-failover" title="Permanent link">&para;</a></h2>
 <p>Real recovery — run only during a DR event or planned migration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Execute planned migration (graceful, bidirectional)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c">## Execute planned migration (graceful, bidirectional)</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Start-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span> <span class="n">-RecoveryMode</span> <span class="n">Planned</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Execute emergency failover (one-way, no replication cleanup)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c">## Execute emergency failover (one-way, no replication cleanup)</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Start-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span> <span class="n">-RecoveryMode</span> <span class="n">Failover</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Stop an in-progress plan</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c">## Stop an in-progress plan</span>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Stop-SRMRecoveryPlan</span> <span class="n">-RecoveryPlan</span> <span class="p">(</span><span class="nb">Get-SRMRecoveryPlan</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">plan_name</span><span class="p">&gt;)</span>
 </code></pre></div>
 <hr />
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>SRM 8.3+ exposes a REST API at <code>https://&lt;srm_fqdn&gt;/api</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">## Authenticate</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/sessions<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w">   </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;administrator@vsphere.local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}&#39;</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List protection groups</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">## List protection groups</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/groups<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List recovery plans</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">## List recovery plans</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://&lt;srm_fqdn&gt;/api/plans<span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Trigger test failover</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1">## Trigger test failover</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>curl<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;srm_fqdn&gt;/api/plans/&lt;plan_id&gt;/actions/test&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: &lt;token&gt;&quot;</span>
 </code></pre></div>
 

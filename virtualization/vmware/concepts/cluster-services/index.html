@@ -4310,7 +4310,7 @@
 <p>vSphere cluster services are the group of features that collectively make a cluster of ESXi hosts behave as a resilient, self-managing compute platform. vSphere High Availability (HA), Distributed Resource Scheduler (DRS), Fault Tolerance (FT), and vSphere Cluster Services (vCLS) are complementary — each addresses a different failure scenario or resource management goal. Understanding how they interact is essential for both day-to-day administration and for the VCP-DCV 8 exam.</p>
 <hr />
 <h2 id="overview-how-the-services-relate">Overview — How the Services Relate<a class="headerlink" href="#overview-how-the-services-relate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                        vSphere Cluster Services                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                                                       │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────┐                                  │
@@ -4324,7 +4324,7 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│         └─────────────────┴──────────────────┴────────────────┘                                       │
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                        All require vCenter for config                                                 │
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                   vCLS keeps HA/DRS running if vCenter fails                                          │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>└────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <table>
 <thead>
@@ -4572,14 +4572,14 @@
 <p>FT provides zero-downtime protection for individual VMs by running a live shadow copy (secondary VM) on a separate host. If the primary host fails, the secondary takes over instantly with no VM restart.</p>
 <h3 id="how-vlockstep-works">How vLockstep Works<a class="headerlink" href="#how-vlockstep-works" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Primary Host                          Secondary Host
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>┌───────────────────┐                 ┌───────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>┌───────────────────┐                 ┌─────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│  Primary VM       │  FT Logging NIC │  Secondary VM                                                   │
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│  (runs normally)  │ ─────────────── │  (mirrors primary)                                              │
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│                   │ All CPU instr.  │                                                                 │
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│  Executes + logs  │ + I/O + DMA     │  Replays log;                                                   │
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│  all non-determ.  │ ──────────────► │  stays in sync                                                  │
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│  events           │                 │                                                                 │
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>└───────────────────┘                 └───────────────────┘
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>└───────────────────┘                 └─────────────────────────────────────────────────────────────────┘
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        │                                      │
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        │  Primary host fails                  │
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        ▼                                      ▼
