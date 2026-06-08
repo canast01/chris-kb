@@ -745,6 +745,8 @@
       
         
       
+        
+      
     
     
     
@@ -800,6 +802,10 @@
     
       
         
+          
+        
+      
+        
       
     
     
@@ -819,11 +825,7 @@
   
   
   
-    
-  
-  
-  
-    <a href="../../../../troubleshooting/vm-performance/" class="md-nav__link">
+    <a href="../../../../troubleshooting/" class="md-nav__link">
       
   
   
@@ -842,8 +844,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
   
 
       
@@ -4250,50 +4250,51 @@
 <p>Aria Operations ingests telemetry from VMware infrastructure and third-party platforms via management packs (adapters). Outbound integrations route alerts and reports to ITSM, notification, and log platforms.</p>
 <h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
 <p>The vCenter adapter is the primary collection source and is configured during initial deployment.</p>
-<p>┌─────────────────────────────────── Aria Operations — Integrations ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   Core Platform Integrations                                  │   │
-│   │            vCenter: primary data source — inventory, metrics, events, tags, alarms            │   │
-│   │            NSX: network topology, logical switches, edges, DFW rules, and BGP state           │   │
-│   │              vSAN: cluster health, capacity, performance, and disk group metrics              │   │
-│   │              Aria Automation: request lifecycle, deployment state, and cost data              │   │
-│   │               Aria Logs: log-based alerts forwarded to Aria Ops as notifications              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Adapters connect Aria Ops to external systems; each adapter has its own credential and schedule    │
-│                                                                                                       │
-│                                                  ▼                                                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Infrastructure Adapters            │  │             ITSM / Notification             │   │
-│   │             Dell EMC: PowerStore             │  │            ServiceNow: CMDB sync            │   │
-│   │           Pure Storage FlashArray            │  │              SMTP: email alerts             │   │
-│   │             NetApp ONTAP adapter             │  │              SNMP trap outbound             │   │
-│   │              Cisco UCS adapter               │  │             Slack/Teams webhook             │   │
-│   │               AWS/Azure cloud                │  │              PagerDuty REST API             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Adapter processes run inside Aria Ops master node · outbound plugins use TCP 443/25/162              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Adapter = PAK-based plugin that collects data from a specific source (storage, cloud, network)       │
-│  PAK file = Plugin/adapter package distributed by VMware or partner; installed via Solutions UI       │
-│  Credential = Stored username/password or token used by adapter to authenticate to source             │
-│  Collection interval = Frequency at which adapter queries source; typically 5 minutes                 │
-│  Outbound plugin = Connector for sending alert notifications (SMTP, SNMP, REST, webhook)              │
-│  CMDB sync = Pushing Aria Ops object inventory into ServiceNow CMDB via adapter                       │
-│  Tag propagation = vSphere tags imported by vCenter adapter and applied to Aria Ops objects           │
-│  Cloud account = AWS/Azure subscription registered in Aria Ops for cross-cloud visibility             │
-│  REST adapter = Generic HTTP adapter for any REST API source not covered by a PAK                     │
-│  Webhook = HTTP POST payload sent by outbound plugin when alert fires                                 │
-│  SNMP trap = UDP notification sent to network management system on alert condition                    │
-│  Alert notification = Outbound message triggered when alert changes state (firing or resolved)        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-Separate plugins are recommended per team channel for targeted routing.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>┌─────────────────────────────────── Aria Operations — Integrations ────────────────────────────────────┐
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>│                                                                                                       │
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│   │                                   Core Platform Integrations                                  │   │
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│   │            vCenter: primary data source — inventory, metrics, events, tags, alarms            │   │
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>│   │            NSX: network topology, logical switches, edges, DFW rules, and BGP state           │   │
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>│   │              vSAN: cluster health, capacity, performance, and disk group metrics              │   │
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>│   │              Aria Automation: request lifecycle, deployment state, and cost data              │   │
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>│   │               Aria Logs: log-based alerts forwarded to Aria Ops as notifications              │   │
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>│                                                                                                       │
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>│    Adapters connect Aria Ops to external systems; each adapter has its own credential and schedule    │
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>│                                                                                                       │
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>│                                                  ▼                                                    │
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>│                                                                                                       │
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>│   │           Infrastructure Adapters            │  │             ITSM / Notification             │   │
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>│   │             Dell EMC: PowerStore             │  │            ServiceNow: CMDB sync            │   │
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>│   │           Pure Storage FlashArray            │  │              SMTP: email alerts             │   │
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>│   │             NetApp ONTAP adapter             │  │              SNMP trap outbound             │   │
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>│   │              Cisco UCS adapter               │  │             Slack/Teams webhook             │   │
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>│   │               AWS/Azure cloud                │  │              PagerDuty REST API             │   │
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>│                                                                                                       │
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>│  Adapter processes run inside Aria Ops master node · outbound plugins use TCP 443/25/162              │
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>│                                                                                                       │
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>│                                                                                                       │
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>│  Adapter = PAK-based plugin that collects data from a specific source (storage, cloud, network)       │
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>│  PAK file = Plugin/adapter package distributed by VMware or partner; installed via Solutions UI       │
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>│  Credential = Stored username/password or token used by adapter to authenticate to source             │
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>│  Collection interval = Frequency at which adapter queries source; typically 5 minutes                 │
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>│  Outbound plugin = Connector for sending alert notifications (SMTP, SNMP, REST, webhook)              │
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>│  CMDB sync = Pushing Aria Ops object inventory into ServiceNow CMDB via adapter                       │
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>│  Tag propagation = vSphere tags imported by vCenter adapter and applied to Aria Ops objects           │
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>│  Cloud account = AWS/Azure subscription registered in Aria Ops for cross-cloud visibility             │
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>│  REST adapter = Generic HTTP adapter for any REST API source not covered by a PAK                     │
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>│  Webhook = HTTP POST payload sent by outbound plugin when alert fires                                 │
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>│  SNMP trap = UDP notification sent to network management system on alert condition                    │
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>│  Alert notification = Outbound message triggered when alert changes state (firing or resolved)        │
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>│                                                                                                       │
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>Separate plugins are recommended per team channel for targeted routing.
+</code></pre></div>
 <h2 id="aria-logs-integration">Aria Logs Integration<a class="headerlink" href="#aria-logs-integration" title="Permanent link">&para;</a></h2>
 <p>Aria Logs (log analytics) integrates bidirectionally — Aria Operations can launch log search in context from an alert, and Aria Logs can trigger alerts back into Aria Operations.</p>
 <p>Admin &gt; Global Settings &gt; Log Integration
