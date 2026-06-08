@@ -52,6 +52,11 @@ Pure Storage Pure1 cloud-based management and analytics — SaaS architecture, A
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>SaaS data pipeline, phone-home architecture, Pure1 Meta analytics engine, and fleet topology.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Standards</strong><span>Configuration standards, naming conventions, and baselines.</span></a>
 <a class="kb-card" href="lifecycle/"><strong>Lifecycle</strong><span>Installation, upgrades, patching, and decommission.</span></a>
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Installation, initial configuration, and deployment procedures.</span>
+</a>
+
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Day-to-day operational tasks, checks, and procedures.</span></a>
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Pure1 REST API, OAuth2 authentication, array health, capacity, and performance queries.</span></a>
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for common tasks and reporting.</span></a>

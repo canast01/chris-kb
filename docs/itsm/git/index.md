@@ -44,6 +44,11 @@ Git knowledge base covering the distributed object model, GitHub Enterprise and 
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Installation, initial configuration, and deployment procedures.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, branching, recovery, and maintenance.</span>

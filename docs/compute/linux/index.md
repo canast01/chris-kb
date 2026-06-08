@@ -47,6 +47,11 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Installation, initial configuration, and deployment procedures.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>
@@ -61,5 +66,9 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
   <strong>Troubleshooting</strong>
   <span>Common issues, diagnostics, and escalation.</span>
 </a>
+
+<a class="kb-card" href="mysql/"><strong>MySQL / MariaDB</strong><span>Database architecture, installation, replication, backup, and performance tuning.</span></a>
+<a class="kb-card" href="postgresql/"><strong>PostgreSQL</strong><span>Database architecture, installation, replication, backup, and performance tuning.</span></a>
+<a class="kb-card" href="directory-integration/"><strong>Directory Integration</strong><span>LDAP/AD authentication, SSSD, Kerberos, and sudo integration for Linux hosts.</span></a>
 
 </div>

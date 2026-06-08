@@ -25,10 +25,9 @@
   <span>Expiration notes, checks, commands, and references.</span>
 </a>
 
-<a class="kb-card" href="validation/">
-  <strong>Validation</strong>
-  <span>Validation notes, checks, commands, and references.</span>
-</a>
+<a class="kb-card" href="validation/"><strong>Validation</strong><span>Certificate chain validation, handshake verification, and openssl testing.</span></a>
+<a class="kb-card" href="ciphers/"><strong>Cipher Suites</strong><span>TLS 1.2/1.3 cipher suite reference, weak cipher identification, and remediation.</span></a>
+<a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>TLS handshake failures, certificate errors, and SNI troubleshooting.</span></a>
 
 </div>
 ## Protocol Versions

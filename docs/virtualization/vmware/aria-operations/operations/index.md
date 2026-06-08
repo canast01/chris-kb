@@ -123,10 +123,11 @@ Aria Operations — Operations reference.
   <span>Capacity trend analysis, forecasting models, and runway calculations for compute and storage.</span>
 </a>
 
-<a class="kb-card" href="resource-optimization/">
-  <strong>Resource Optimisation</strong>
-  <span>Right-sizing VMs and clusters, reclaiming unused resources, and cost/performance optimisation.</span>
-</a>
+<a class="kb-card" href="resource-optimization/"><strong>Resource Optimisation</strong><span>Right-sizing VMs and clusters, reclaiming unused resources, and cost/performance optimisation.</span></a>
+<a class="kb-card" href="capacity/"><strong>Capacity</strong><span>Capacity utilization views, runway analysis, and trending across compute and storage.</span></a>
+<a class="kb-card" href="alerts/"><strong>Alerts</strong><span>Alert management, threshold tuning, suppression rules, and notification configuration.</span></a>
+<a class="kb-card" href="dashboards/"><strong>Dashboards</strong><span>Dashboard creation, widget configuration, and dashboard sharing.</span></a>
+<a class="kb-card" href="reports/"><strong>Reports</strong><span>Scheduled and on-demand reports for capacity, health, and performance.</span></a>
 
 </div>
 

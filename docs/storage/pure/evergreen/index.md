@@ -88,9 +88,12 @@ Pure Storage Evergreen hardware subscription model — non-disruptive controller
   <span>Common issues, diagnostic commands, log locations, and error codes.</span>
 </a>
 
-<a class="kb-card" href="controller-upgrades/">
-  <strong>Controller Upgrades</strong>
-  <span>Ever Modern refresh procedures, pre-checks, and validation steps.</span>
-</a>
+<a class="kb-card" href="controller-upgrades/"><strong>Controller Upgrades</strong><span>Ever Modern refresh procedures, pre-checks, and validation steps.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Purity CLI commands for Evergreen program management and upgrade operations.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for Evergreen health checks and upgrade validation.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Evergreen programme standards, refresh scheduling, and compliance requirements.</span></a>
+<a class="kb-card" href="integration/"><strong>Integration</strong><span>Evergreen integration with Pure1, monitoring, and ITSM platforms.</span></a>
+<a class="kb-card" href="evergreen-one/"><strong>Evergreen//One</strong><span>Storage-as-a-service — consumption-based model, SLA guarantees, and Pure1 management.</span></a>
+<a class="kb-card" href="vendor-support/"><strong>Vendor Support</strong><span>Opening a case, information to collect, support portal, and SLA tiers.</span></a>
 
 </div>

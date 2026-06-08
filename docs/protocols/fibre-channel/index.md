@@ -27,10 +27,8 @@
   <span>Common issues, diagnostic steps, and resolution guides.</span>
 </a>
 
-<a class="kb-card" href="wwns/">
-  <strong>Wwns</strong>
-  <span>Wwns notes, checks, commands, and references.</span>
-</a>
+<a class="kb-card" href="wwns/"><strong>WWNs</strong><span>World Wide Names — WWPN/WWNN addressing, assignment, and management.</span></a>
+<a class="kb-card" href="zoning/"><strong>Zoning</strong><span>FC fabric zoning — hard/soft zoning, zone sets, and best practices.</span></a>
 
 </div>
 ## Key Concepts

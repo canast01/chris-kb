@@ -88,9 +88,10 @@ Evergreen//One Storage-as-a-Service — Pure-owned and managed hardware on-premi
   <span>Common issues, diagnostic commands, log locations, and error codes.</span>
 </a>
 
-<a class="kb-card" href="vendor-support/">
-  <strong>Vendor Support</strong>
-  <span>Opening a case, information to collect, support portal, and SLA tiers.</span>
-</a>
+<a class="kb-card" href="vendor-support/"><strong>Vendor Support</strong><span>Opening a case, information to collect, support portal, and SLA tiers.</span></a>
+<a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Purity CLI and Pure1 API commands relevant to Evergreen//One management.</span></a>
+<a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for health checks and consumption reporting.</span></a>
+<a class="kb-card" href="standards/"><strong>Standards</strong><span>Evergreen//One operational standards, SLA tracking, and compliance requirements.</span></a>
+<a class="kb-card" href="integration/"><strong>Integration</strong><span>Evergreen//One integration with Pure1, monitoring, and billing systems.</span></a>
 
 </div>

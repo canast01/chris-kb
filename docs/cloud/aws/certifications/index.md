@@ -86,10 +86,8 @@ Certifications reference covering Overview, Core Certification Paths, Daily Stud
   <span>Study plan and review schedule.</span>
 </a>
 
-<a class="kb-card" href="weak-areas/">
-  <strong>Weak Areas</strong>
-  <span>Topics needing additional study and focus.</span>
-</a>
+<a class="kb-card" href="weak-areas/"><strong>Weak Areas</strong><span>Topics needing additional study and focus.</span></a>
+<a class="kb-card" href="services/"><strong>Services</strong><span>Per-service study notes — IAM, EC2, VPC, S3, RDS, Lambda, and more.</span></a>
 
 </div>
 ## Overview

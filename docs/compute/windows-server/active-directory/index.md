@@ -130,6 +130,11 @@ Windows Server Active Directory knowledge base covering forest and domain archit
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Installation, initial configuration, and deployment procedures.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, and scripts.</span>

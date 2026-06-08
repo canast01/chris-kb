@@ -55,6 +55,11 @@ Confluence knowledge base covering Data Center cluster architecture, space and p
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Installation, initial configuration, and deployment procedures.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>Page management, search, templates, and maintenance.</span>

@@ -64,4 +64,10 @@ Asset tracking, CMDB, environment mapping, lifecycle, and license management pro
     <span class="kb-card-title">Support Contracts</span>
     <span class="kb-card-desc">Vendor support contract tracking and renewal</span>
   </a>
+<a class="kb-card" href="system-inventory/"><strong>System Inventory</strong><span>Physical and virtual server inventory — discovery, classification, and tracking.</span></a>
+<a class="kb-card" href="configuration-management/"><strong>Configuration Management</strong><span>CMDB CI attributes, relationship mapping, and data quality management.</span></a>
+<a class="kb-card" href="ownership/"><strong>Ownership</strong><span>Asset ownership assignment, accountability model, and transfer procedures.</span></a>
+<a class="kb-card" href="cleanup/"><strong>Cleanup</strong><span>Stale CI remediation, duplicate removal, and CMDB hygiene procedures.</span></a>
+<a class="kb-card" href="audit/"><strong>Audit</strong><span>Asset audit procedures, reconciliation with discovery data, and compliance reporting.</span></a>
+<a class="kb-card" href="hardware-lifecycle/"><strong>Hardware Lifecycle</strong><span>Hardware asset lifecycle — procurement, tracking, refresh planning, and disposal.</span></a>
 </div>

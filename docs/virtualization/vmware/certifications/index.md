@@ -81,10 +81,8 @@ VMware Certification reference covering Overview, Core Certification Paths, Dail
   <span>Study plan and review schedule.</span>
 </a>
 
-<a class="kb-card" href="weak-areas/">
-  <strong>Weak Areas</strong>
-  <span>Topics needing additional study and focus.</span>
-</a>
+<a class="kb-card" href="weak-areas/"><strong>Weak Areas</strong><span>Topics needing additional study and focus.</span></a>
+<a class="kb-card" href="vcp-dcv/"><strong>VCP-DCV</strong><span>VMware Certified Professional – Data Center Virtualization study notes and exam prep.</span></a>
 
 </div>
 ## Overview

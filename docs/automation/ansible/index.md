@@ -44,6 +44,11 @@ Ansible automation knowledge base covering agentless architecture, inventory and
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Installation, initial configuration, and deployment procedures.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>Day-to-day operational tasks, health checks, procedures, and automation scripts.</span>

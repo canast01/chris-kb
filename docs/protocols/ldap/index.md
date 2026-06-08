@@ -52,10 +52,8 @@ Lightweight Directory Access Protocol — directory service query and authentica
   <span>Tls notes, checks, commands, and references.</span>
 </a>
 
-<a class="kb-card" href="troubleshooting/">
-  <strong>Troubleshooting</strong>
-  <span>Common issues, diagnostic steps, and resolution guides.</span>
-</a>
+<a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Common issues, diagnostic steps, and resolution guides.</span></a>
+<a class="kb-card" href="queries/"><strong>Queries</strong><span>LDAP search filters, attribute queries, and ldapsearch examples.</span></a>
 
 </div>
 ## Key Concepts

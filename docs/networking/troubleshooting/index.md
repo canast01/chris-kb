@@ -164,3 +164,7 @@ show interface <int> transceiver    # Cisco
 ping -M do -s 8972 <destination>    # iSCSI/NFS MTU test (9000 bytes)
 ping -M do -s 1472 <destination>    # standard MTU test
 ```
+
+<div class="kb-grid kb-grid-3">
+<a class="kb-card" href="network-connectivity/"><strong>Network Connectivity</strong><span>End-to-end connectivity troubleshooting — L1 through L7 diagnostic procedures and tools.</span></a>
+</div>

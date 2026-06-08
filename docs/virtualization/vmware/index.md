@@ -262,4 +262,6 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
   <span>VMware certification study notes — VCP-DCV, VCAP, exam tracking, practice notes, and review plans.</span>
 </a>
 
+<a class="kb-card" href="operations/"><strong>Operations</strong><span>Cross-platform VMware operational procedures, health check sequences, and runbooks.</span></a>
+
 </div>

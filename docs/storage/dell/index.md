@@ -159,4 +159,8 @@ Dell enterprise storage portfolio — block, file, object, and data protection p
 <a class="kb-card" href="cod/"><strong>Capacity on Demand</strong><span>Pre-installed capacity unlocked via license key — no downtime expansion for Dell arrays.</span></a>
 <a class="kb-card" href="fod/"><strong>Features on Demand</strong><span>Software feature licensing — protocols, replication, snapshots, and encryption unlocked via key.</span></a>
 <a class="kb-card" href="secure-connect-gateway/"><strong>Secure Connect Gateway</strong><span>Phone-home proxy — relays telemetry from on-prem arrays to Dell Support and CloudIQ.</span></a>
+<a class="kb-card" href="recoverpoint/"><strong>RecoverPoint</strong><span>Journal-based replication — CDP, CRR, and CLR modes with point-in-time recovery.</span></a>
+<a class="kb-card" href="srdf-a/"><strong>SRDF/A</strong><span>PowerMax asynchronous replication — delta set cycle model and RPO management.</span></a>
+<a class="kb-card" href="srdf-s/"><strong>SRDF/S</strong><span>PowerMax synchronous replication — RPO=0, write commit model, and RTT requirements.</span></a>
+<a class="kb-card" href="dell-aiops/"><strong>Dell AIOps</strong><span>AI-driven anomaly detection, root cause analysis, and proactive recommendations via CloudIQ.</span></a>
 </div>

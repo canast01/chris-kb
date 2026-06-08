@@ -91,8 +91,6 @@ Reference coverage for the networking and storage protocols used in enterprise i
   <span>SMTP relay configuration, mail flow, authentication, and relay troubleshooting.</span>
 </a>
 
-<a class="kb-card" href="service-integrations/">
-  <strong>Service Integrations</strong>
-  <span>Cross-platform service integration patterns and connection standards.</span>
-</a>
+<a class="kb-card" href="service-integrations/"><strong>Service Integrations</strong><span>Cross-platform service integration patterns and connection standards.</span></a>
+<a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Protocol-level diagnostics — connectivity failures, handshake errors, and port troubleshooting.</span></a>
 </div>
