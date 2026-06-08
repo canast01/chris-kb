@@ -1,5 +1,56 @@
 # FlashBlade — Initial Deployment
 
+```text
+┌──────────────────────────── Pure FlashBlade — Deployment Sequence ────────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  FlashBlade 4U chassis with blade modules pre-installed; chassis management module (dual ports)       │
+│  100GbE data switches with sufficient ports for all chassis NIC ports                                 │
+│  OOB management switch for chassis management interface; dual PDU circuits per chassis shelf          │
+│  IP plan: chassis management IP, data VIF IP(s), replication VIF IP if DR planned                     │
+│  Software: Purity//FB 4.x (pre-installed); Pure1 account; NFS/S3 client tools on hosts                │
+│                                                                                                       │
+│                                        │  rack and initial setup                                      │
+│                                        ▼                                                              │
+│  Step 2 · Rack, Cable, and Setup Wizard                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Rack 4U chassis; connect OOB management cables to chassis management module (both ports for HA)      │
+│  Connect 100GbE data cables from blade network ports to data switches; connect PDU feeds              │
+│  Power on; browse to chassis management IP; complete setup wizard: name, IP, DNS, NTP, password       │
+│  Verify blade inventory: all blades and chassis components show healthy after boot                    │
+│                                                                                                       │
+│                                        │  configure data network                                      │
+│                                        ▼                                                              │
+│  Step 3 · Data VIF and Subnet Configuration                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  System → Network → Subnets: create data subnet matching your data VLAN (MTU 9000 recommended)        │
+│  System → Network → VIFs: create data VIF(s); assign to subnet; bind to blade network ports           │
+│  Create replication VIF if replication is planned; assign to replication subnet                       │
+│  Confirm data VIFs pingable from a host on the same VLAN                                              │
+│                                                                                                       │
+│                                        │  create file systems and buckets                             │
+│                                        ▼                                                              │
+│  Step 4 · File Systems and Object Buckets                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  NFS: Storage → File Systems → Create; set name, capacity, NFS export rules (client network, RW)      │
+│  SMB: create file system; enable SMB; join AD domain for Kerberos (Settings → Directory Service)      │
+│  S3: Storage → Buckets → Create; assign object store account; note S3 endpoint URL and access keys    │
+│  Test: mount NFS export on Linux client (`mount -t nfs <VIF-IP>:/fs_name /mnt`); run write test       │
+│                                                                                                       │
+│                                        │  replication and monitoring                                  │
+│                                        ▼                                                              │
+│  Step 5 · Replication, Pure1, and Baseline                                                            │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Create snapshot policies: snapshots per file system on schedule (hourly/daily/weekly retention)      │
+│  Configure replication: Storage → Replication → Add; select target FlashBlade and source objects      │
+│  Register in Pure1: Settings → Support → Enable Remote Assistance; link to Pure1 organisation         │
+│  Record: chassis serial, blade count, VIF IPs, file system names, bucket names, Pure1 org             │
+│  Set capacity alerts (default 80%); schedule quarterly firmware review via Pure1 recommendations      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 This guide covers deploying a Pure Storage FlashBlade (//S or //E series) from physical installation through validated NFS or S3 access. All steps apply to Purity//FB 4.x and later.
 
 ---

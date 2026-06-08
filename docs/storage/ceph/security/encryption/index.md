@@ -1,5 +1,42 @@
 # Ceph — Encryption
 
+```text
+┌──────────────────────────── Ceph — Encryption Overview ───────────────────────────────────────────────┐
+│                                                                                                       │
+│  Encryption Layers                                                                                    │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+│  │  OSD at-rest (dmcrypt)  │  │  RBD per-image encrypt  │  │  RGW SSE (S3-compat)    │                │
+│  │  block device level     │  │  client-side key mgmt   │  │  SSE-KMS or SSE-S3      │                │
+│  │  configured at OSD      │  │  LUKS key in keyring    │  │  Vault or local KMS     │                │
+│  │  creation time only     │  │  transparent to client  │  │  per-object or per-bkt  │                │
+│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+│                                                                                                       │
+│  In-Transit Encryption                                                                                │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Messenger v2 (msgr2): default in Octopus+; encrypts all OSD-to-OSD and client-to-OSD traffic         │
+│  Enable: ceph config set global ms_encrypt_dispatch true (or set in ceph.conf)                        │
+│  Verify: ceph config get osd ms_client_mode — should show secure (not legacy)                         │
+│                                                                                                       │
+│  OSD dmcrypt — Key Points                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Encryption must be set at OSD creation time — cannot encrypt an existing OSD without rebuild         │
+│  cephadm: ceph orch apply osd --all-available-devices --encrypt                                       │
+│  Keys stored in Ceph monitor key-value store; no external KMS required for OSD encryption             │
+│  Performance impact: modern CPUs with AES-NI hardware acceleration ~1–3% overhead typical             │
+│                                                                                                       │
+│  GLOSSARY                                                                                             │
+│  dmcrypt    — Linux kernel dm-crypt: transparent block device encryption layer                        │
+│  LUKS       — Linux Unified Key Setup: key management standard used by dm-crypt                       │
+│  RBD encrypt— per-image client-side encryption; key managed via LUKS passphrase in keyring            │
+│  SSE-KMS   — Server-Side Encryption with Key Management Service (external Vault integration)          │
+│  SSE-S3    — Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)          │
+│  msgr2     — Ceph messenger protocol v2; supports secure mode (encrypted) and crc mode                │
+│  AES-NI    — Intel/AMD hardware instruction set for accelerated AES encryption operations             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-summary">
 Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-image, RGW server-side encryption with KMS, and in-transit encryption via messenger v2.
 </div>

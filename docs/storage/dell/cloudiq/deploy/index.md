@@ -1,5 +1,55 @@
 # CloudIQ — Initial Setup
 
+```text
+┌──────────────────────────── Dell CloudIQ — Setup Sequence ────────────────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Outbound HTTPS 443/TCP from SCG VM to cloudiq.dell.com (and 8443/TCP for telemetry)                  │
+│  Proxy details if required (hostname, port, credentials); DNS resolution to cloudiq.dell.com          │
+│  Admin credentials for each storage array to be registered; active Dell support contract              │
+│  Supported arrays: PowerStore, PowerMax, PowerFlex, PowerScale (Isilon), Unity XT                     │
+│  SCG VM: 4 vCPU, 8 GB RAM, 100 GB disk — deploy on vSphere or Hyper-V                                 │
+│                                                                                                       │
+│                                        │  deploy SCG appliance                                        │
+│                                        ▼                                                              │
+│  Step 2 · Deploy the Secure Connect Gateway (SCG)                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Download SCG OVA from Dell support portal; deploy to vSphere via Deploy OVF Template                 │
+│  Complete VM wizard: network (management IP, gateway, DNS), admin password                            │
+│  Open SCG UI (HTTPS on SCG VM IP); complete setup wizard; accept EULA; configure proxy if needed      │
+│  Register SCG with Dell: Settings → Connect; enter Dell account credentials; confirm activation       │
+│                                                                                                       │
+│                                        │  register storage arrays                                     │
+│                                        ▼                                                              │
+│  Step 3 · Register Storage Arrays                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Add System: SCG UI → Monitoring → Add System; enter array management IP and admin credentials        │
+│  SCG tests connectivity and polls initial telemetry; status shows Connected once successful           │
+│  Repeat for each array; monitor SCG → System Health to confirm all arrays reporting                   │
+│  Verify CloudIQ portal (cloudiq.dell.com) shows each array within 15–30 minutes                       │
+│                                                                                                       │
+│                                        │  configure alerts and notifications                          │
+│                                        ▼                                                              │
+│  Step 4 · Configure Alerts and Notifications                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  CloudIQ portal → Alerts: review auto-generated recommendations for each registered system            │
+│  Configure email notifications: Settings → Notifications → Email; set recipient list and severity     │
+│  Enable capacity forecasting alerts: Capacity → Configure Thresholds (default: alert at 80%)          │
+│  Enable firmware currency alerts if desired — CloudIQ tracks available updates per array              │
+│                                                                                                       │
+│                                        │  validate and handover                                       │
+│                                        ▼                                                              │
+│  Step 5 · Validate and Baseline                                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Confirm all arrays visible in CloudIQ portal with health status and capacity data                    │
+│  Run test alert: trigger a condition on one array and confirm notification email received             │
+│  Record: SCG VM IP, SCG version, registered array list, CloudIQ account email                         │
+│  Review initial CloudIQ recommendations and schedule remediation tasks in ITSM as appropriate         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-summary">
 Step-by-step guide to connecting Dell storage systems to CloudIQ via the Secure Connect Gateway, verifying telemetry, and configuring alerts and notifications.
 </div>

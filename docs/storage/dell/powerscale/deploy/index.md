@@ -1,5 +1,64 @@
 # Dell PowerScale — Initial Deployment
 
+```text
+┌──────────────────────────── Dell PowerScale — Deployment Sequence ────────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Hardware: Minimum 3 nodes (OneFS quorum); InfiniBand or 100GbE internal backend switches             │
+│  Front-end: 10GbE/25GbE switches for client data access; OOB management network for node Eth0         │
+│  IP plan: node management (Eth0 per node), SmartConnect VIP, NFS/SMB data range, backend (factory)    │
+│  Licenses: OneFS capacity licence; SmartConnect Advanced if zone-based DNS failover is needed         │
+│  SyncIQ licence required for replication; confirm NTP and DNS server details                          │
+│                                                                                                       │
+│                                        │  rack and cable nodes                                        │
+│                                        ▼                                                              │
+│  Step 2 · Rack, Cable, and Boot Nodes                                                                 │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Rack nodes per Dell cabling guide; connect InfiniBand/100GbE backend switch per node                 │
+│  Connect front-end data ports to client access switches; connect Eth0 management to OOB switch        │
+│  Power on nodes in order; monitor serial console; each node enters OneFS boot sequence                │
+│  First node starts cluster; remaining nodes join — cluster forms when all nodes show Healthy          │
+│                                                                                                       │
+│                                        │  form cluster and set IPs                                    │
+│                                        ▼                                                              │
+│  Step 3 · Cluster Initialisation via Console                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Console wizard on first node: set cluster name, encoding, date/time, admin password                  │
+│  Assign static IPs to Eth0 on each node (management network); confirm all nodes reachable             │
+│  Access OneFS WebUI (HTTPS on any node management IP) or SSH as admin                                 │
+│  Join cluster: Cluster → Add Node → enter node serial; repeat for all remaining nodes                 │
+│                                                                                                       │
+│                                        │  configure network and access                                │
+│                                        ▼                                                              │
+│  Step 4 · Network Pools, SmartConnect, and Access Zones                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Create network pool for client access: assign data IPs to pool; set SmartConnect zone name           │
+│  Configure DNS delegation: client DNS must resolve SmartConnect zone name to data VIP range           │
+│  Create access zones for isolation (optional): separate NFS vs SMB or team namespaces                 │
+│  Join Active Directory: AD Providers → Join; enables SMB Kerberos and NFS ID mapping                  │
+│                                                                                                       │
+│                                        │  create storage and share                                    │
+│                                        ▼                                                              │
+│  Step 5 · File System, Shares, and Quota                                                              │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Create directories on /ifs: mkdir /ifs/<project>; set ownership and permissions                      │
+│  Create SMB share: isi smb shares create --name <share> --path /ifs/<project>                         │
+│  Create NFS export: isi nfs exports create --paths /ifs/<project> --clients <subnet>                  │
+│  Set quotas: isi quota quotas create --path /ifs/<project> --type directory --hard-threshold          │
+│                                                                                                       │
+│                                        │  validate and baseline                                       │
+│                                        ▼                                                              │
+│  Step 6 · Validation and Baseline                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Run isi status: all nodes green, no degraded drives, no active events                                │
+│  Test NFS mount from a Linux client; test SMB map from a Windows client; verify throughput            │
+│  Record: cluster GUID, node serials, network pool IPs, SmartConnect zone, share/export list           │
+│  Register with SupportAssist; enable CloudIQ telemetry; schedule capacity and job alerts              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 This guide covers deploying a Dell PowerScale (formerly Isilon) cluster from physical node installation through validated NFS and SMB access. Applies to PowerScale F600, H700, and H7000 nodes running OneFS 9.x.
 
 ---

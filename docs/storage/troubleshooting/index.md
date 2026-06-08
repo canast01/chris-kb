@@ -1,5 +1,43 @@
 # Storage — Troubleshooting
 
+```text
+┌──────────────────────────── Storage — Troubleshooting Decision Tree ──────────────────────────────────┐
+│                                                                                                       │
+│  Problem Classification                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+│  │  Host I/O Errors        │  │  Replication Problems   │  │  Array Health Alerts    │                │
+│  │  APD / PDL in vCenter   │  │  lag growing, link down │  │  capacity, disk faults  │                │
+│  │  multipath path loss     │  │  consistency group err  │  │  controller, fan, PSU   │               │
+│  │  read-only filesystem    │  │  bandwidth saturation   │  │  IOPS or latency alarm  │               │
+│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+│                                                                                                       │
+│  Host I/O Diagnostic Sequence                                                                         │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  1. Check physical path: multipath -ll (Linux) or esxcli storage core path list (ESXi)                │
+│  2. Check kernel log: dmesg | grep -i 'scsi\|mpath\|error' — I/O timeouts, SCSI resets                │
+│  3. Check I/O wait: iostat -xz 1 5 — await > 20ms on SSD is abnormal                                  │
+│  4. Check array side: array event log, queue depth, per-LUN IOPS and latency dashboard                │
+│  5. APD in vCenter: rescan after fabric restored; if persists → maintenance mode → re-add adapter     │
+│                                                                                                       │
+│  Replication Lag Diagnostic Sequence                                                                  │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  1. Check WAN bandwidth: iperf3 -c <target-site-ip> -t 10 — compare to replication throughput         │
+│  2. Check source I/O rate: if source write rate > WAN capacity, lag will grow                         │
+│  3. Pure: purepod show replication --pod <pod>  ·  Dell: symrdf -g <dg> query                         │
+│  4. NetApp: snapmirror show -destination-path <svm>:<vol> — check Lag Time field                      │
+│                                                                                                       │
+│  GLOSSARY                                                                                             │
+│  APD        — All Paths Down: ESXi cannot reach LUN on any path; storage I/O suspended                │
+│  PDL        — Permanent Device Loss: array reports LUN is gone; ESXi marks device failed              │
+│  multipath  — Linux kernel DM-multipath: aggregates multiple HBA paths to one device                  │
+│  IOPS       — Input/Output Operations Per Second; primary storage performance metric                  │
+│  await      — average I/O wait time (iostat); time between request issue and completion               │
+│  lag time   — SnapMirror: delta between source snapshot and destination last-replicated snapshot      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-summary">
 Storage troubleshooting — APD/PDL conditions, multipath failures, replication lag, snapshot failures, host I/O errors, and array health alerts.
 </div>

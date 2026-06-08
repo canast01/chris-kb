@@ -1,5 +1,64 @@
 # Dell PowerStore — Initial Deployment
 
+```text
+┌──────────────────────────── Dell PowerStore — Deployment Sequence ────────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Hardware: 2U rack space (single-node) or 4U (dual-node); dual PDU circuits                           │
+│  Network: 25GbE switches for data/iSCSI/NVMe-oF; FC switches if FC is planned                         │
+│  IPs reserved: Node A mgmt, Node B mgmt, Cluster VIP, iSCSI data ports per node                       │
+│  Software: PowerStore Manager (embedded); license file (.lic) from Dell                               │
+│  Confirm NTP server and syslog/SMTP server availability before racking                                │
+│                                                                                                       │
+│                                        │  rack and cable                                              │
+│                                        ▼                                                              │
+│  Step 2 · Rack, Cable, and Power On                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Mount appliance using rail kit; cable SAS expansion shelves if ordered                               │
+│  Connect management Ethernet from Node A and Node B to OOB management switch                          │
+│  Connect 25GbE data ports to data switches; at least two ports per node for LACP bonding              │
+│  Connect FC ports to SAN fabric A and B if FC is planned; connect both PSU cables to separate PDUs    │
+│  Power on Node A first, then Node B; allow 20 min; status LED turns solid green when ready            │
+│                                                                                                       │
+│                                        │  run setup wizard                                            │
+│                                        ▼                                                              │
+│  Step 3 · PowerStore Manager Setup Wizard                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Browse to cluster management VIP; complete initial setup wizard: cluster name, NTP, DNS              │
+│  Configure network interfaces: management, iSCSI, NVMe-oF, or FC storage ports                        │
+│  Upload license file: Settings → Licensing → Import; verify all licensed features activate            │
+│  Set up SMTP/syslog alerting; create local admin account and change default passwords                 │
+│                                                                                                       │
+│                                        │  provision storage                                           │
+│                                        ▼                                                              │
+│  Step 4 · Storage Provisioning                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Create storage pools (PowerStore auto-manages underlying RAID via RAID-5/6 based on drive count)     │
+│  Create volumes (block), NAS servers and file systems (NAS), or vVols for VMware workloads            │
+│  Apply protection policies (snapshots, replication, CloudIQ-based recommendations) per volume         │
+│                                                                                                       │
+│                                        │  connect hosts                                               │
+│                                        ▼                                                              │
+│  Step 5 · Host Connectivity                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Register hosts: Storage → Hosts → Add; provide host name, OS type, and initiators (iQN or WWPNs)     │
+│  Assign volumes: Hosts → Attach Volume; select volume and access mode (Read/Write)                    │
+│  For VMware: configure VASA provider; register PowerStore in vCenter for vVols                        │
+│  Rescan host HBAs/iSCSI initiators; confirm volumes appear; format per OS runbook                     │
+│                                                                                                       │
+│                                        │  validate                                                    │
+│                                        ▼                                                              │
+│  Step 6 · Validation and Baseline                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Run system health check: Dashboard → Health → All Components green                                   │
+│  Record baseline: cluster serial, node serials, pool capacity, volume-to-host mappings                │
+│  Enable CloudIQ telemetry via SupportAssist/SCG for proactive health monitoring                       │
+│  Schedule capacity alert thresholds (default 80%); document DR replication topology if configured     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 This guide covers initial deployment of a Dell PowerStore appliance from physical installation through validated connectivity. Applies to PowerStore T-series (500T, 1000T, 3000T, 5000T, 9000T) running PowerStoreOS 3.x.
 
 ---

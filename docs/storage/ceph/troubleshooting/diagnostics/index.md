@@ -1,5 +1,44 @@
 # Ceph — Diagnostics
 
+```text
+┌──────────────────────────── Ceph — Diagnostic Overview ───────────────────────────────────────────────┐
+│                                                                                                       │
+│  Diagnostic Layers                                                                                    │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+│  │  Health Codes           │  │  OSD / PG Analysis      │  │  Network & Latency      │                │
+│  │  ceph health detail     │  │  ceph osd tree          │  │  ceph osd perf          │                │
+│  │  OSD_DOWN, PG_DEGRADED  │  │  ceph pg dump           │  │  iperf3 between nodes   │                │
+│  │  SLOW_OPS, NEARFULL     │  │  osd log analysis       │  │  messenger v2 stats     │                │
+│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+│                                                                                                       │
+│  Diagnostic Sequence — Cluster Unhealthy                                                              │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  1. ceph -s — get top-level health, OSD count, PG summary, active I/O rate                            │
+│  2. ceph health detail — enumerate all active health codes with explanations                          │
+│  3. ceph osd tree — identify which OSDs are down/out; cross-reference to host names                   │
+│  4. ceph pg dump_stuck — list inactive/degraded/unclean PGs with primary OSD                          │
+│  5. journalctl -u ceph-osd@<id> — last 100 lines of OSD log for crash or error context                │
+│  6. ceph osd perf — per-OSD commit/apply latency; outliers indicate disk I/O issues                   │
+│                                                                                                       │
+│  Crash Dump and Support Data Collection                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  ceph crash ls — list recent daemon crashes                                                           │
+│  ceph crash info <crash-id> — full crash report with traceback                                        │
+│  ceph crash archive <crash-id> — acknowledge and archive crash after review                           │
+│  Support bundle: sosreport + ceph report > ceph-report.json — attach to vendor support case           │
+│                                                                                                       │
+│  GLOSSARY                                                                                             │
+│  OSD_DOWN      — OSD not responding; check disk status and OSD daemon journal                         │
+│  PG_DEGRADED   — PG has fewer replicas than desired; data still available but unprotected             │
+│  PG_INACTIVE   — PG cannot serve I/O; primary OSD is down; check OSD and network                      │
+│  SLOW_OPS      — Operations queued > 30s; indicates disk or network saturation                        │
+│  OSD_NEARFULL  — OSD disk usage exceeds nearfull ratio; add capacity before OSD_FULL                  │
+│  ceph report   — full cluster state snapshot for support analysis and case submission                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-summary">
 Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump review, network and latency diagnostics, and gathering data for support cases.
 </div>

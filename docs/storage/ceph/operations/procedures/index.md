@@ -1,5 +1,44 @@
 # Ceph — Procedures
 
+```text
+┌──────────────────────────── Ceph — Operational Procedures Overview ───────────────────────────────────┐
+│                                                                                                       │
+│  Procedure Categories                                                                                 │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+│  │  OSD Replacement        │  │  Cluster Expansion      │  │  Maintenance & Tuning   │                │
+│  │  osd out → wait PG heal │  │  ceph orch apply osd    │  │  scrub scheduling       │                │
+│  │  purge → physical swap  │  │  add nodes via cephadm  │  │  PG count adjustment    │                │
+│  │  osd create new device  │  │  crush reweight balance │  │  reweight for load bal  │                │
+│  │  verify recovery done   │  │  monitor data migration │  │  controlled maintenance │                │
+│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+│                                                                                                       │
+│  OSD Replacement — Safe Sequence                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  1. Confirm OSD down: ceph osd tree | grep down                                                       │
+│  2. Mark out: ceph osd out osd.<id>  — triggers data migration away from failed OSD                   │
+│  3. Wait: watch ceph -s  — BytesToResync reaches 0 before physically replacing disk                   │
+│  4. Stop daemon: systemctl stop ceph-osd@<id>  ·  replace disk  ·  re-run ceph-volume                 │
+│  5. Verify: ceph osd tree — new OSD shows up/in; ceph -s — HEALTH_OK                                  │
+│                                                                                                       │
+│  Cluster Expansion — New Node                                                                         │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  cephadm bootstrap adds admin node; ceph orch host add <hostname> adds new node to cluster            │
+│  ceph orch apply osd --all-available-devices — auto-deploys OSDs on new node's disks                  │
+│  CRUSH weight adjusts automatically; monitor rebalance via ceph -s until clean                        │
+│  Manual reweight: ceph osd crush reweight osd.<id> <float> — adjust placement if needed               │
+│                                                                                                       │
+│  GLOSSARY                                                                                             │
+│  OSD       — Object Storage Daemon; one per disk; stores, replicates, and recovers data               │
+│  PG        — Placement Group; logical shard unit; PGs map to OSDs via CRUSH                           │
+│  cephadm   — Ceph's orchestrator for deploying and managing cluster daemons via containers            │
+│  CRUSH     — Controlled Replication Under Scalable Hashing; Ceph's data distribution algorithm        │
+│  reweight  — adjusting an OSD's relative capacity share in CRUSH map                                  │
+│  scrub     — data integrity scan; deep-scrub includes checksum verification of stored objects         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-summary">
 Ceph operational procedures: OSD replacement, adding new nodes, reweighting for load balance, scrub scheduling, pool PG count adjustment, and controlled cluster maintenance.
 </div>

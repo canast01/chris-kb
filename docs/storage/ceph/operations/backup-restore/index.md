@@ -1,5 +1,44 @@
 # Ceph — Backup & Restore
 
+```text
+┌──────────────────────────── Ceph — Backup & Restore Overview ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Ceph Backup Strategies                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
+│  │  RBD Snapshot Export    │  │  RBD Mirroring (DR)     │  │  Config Backup          │                │
+│  │  rbd snap create        │  │  rbd mirror pool enable │  │  ceph config-key export │                │
+│  │  rbd export (full)      │  │  async replication      │  │  ceph auth export       │                │
+│  │  rbd export-diff (incr) │  │  rbd mirror pool status │  │  crush map export       │                │
+│  │  rbd import to restore  │  │  failover: rbd promote  │  │  pool + pg config dump  │                │
+│  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
+│                                                                                                       │
+│  Restore Flow — RBD Image                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  1. Snapshot created before operation: rbd snap create rbd/<vol>@backup-<date>                        │
+│  2. Export to file for off-cluster backup: rbd export rbd/<vol>@snap /backup/<vol>.img                │
+│  3. Incremental export (faster): rbd export-diff ... /backup/<vol>-incr.img                           │
+│  4. Restore: rbd import /backup/<vol>.img rbd/<new-vol>  ·  rbd snap rollback for in-place            │
+│                                                                                                       │
+│  RBD Mirroring (Cross-Site DR)                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Primary site: rbd mirror pool enable <pool> image  ·  mark images for mirroring                      │
+│  Secondary site: bootstrap token exchange  ·  rbd mirror pool peer add <pool> ...                     │
+│  Mirroring daemon (rbd-mirror) handles async replication between sites                                │
+│  Failover: rbd mirror image promote <pool>/<image> on secondary site                                  │
+│  Failback: demote on secondary  ·  resync  ·  promote on primary                                      │
+│                                                                                                       │
+│  GLOSSARY                                                                                             │
+│  RBD          — RADOS Block Device; Ceph's block storage interface for VM disks and containers        │
+│  rbd snap      — RBD snapshot; point-in-time consistent copy of an image (copy-on-write)              │
+│  rbd mirror    — asynchronous image replication between two Ceph clusters                             │
+│  rbd-mirror    — daemon that handles mirroring replication between peer clusters                      │
+│  CRUSH         — Ceph's data placement algorithm; config backed up separately from cluster data       │
+│  ceph auth     — Ceph authentication keyring; exported to preserve access credentials                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-summary">
 Ceph backup: RBD snapshot export for VM disks, RBD mirroring for DR, cluster configuration backup, and crash dump collection. Note: Ceph itself is a redundant store — backup focus is on configuration and RBD images.
 </div>
