@@ -94,7 +94,6 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 
 Test failover runs in an isolated network bubble and does not affect production. Always run a test before a real recovery.
 
-```
 ```powershell
 ## Start a test failover
 $plan = Get-SRMRecoveryPlan -Name <plan_name>
