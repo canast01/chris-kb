@@ -257,4 +257,9 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
   <span>Core vSphere concepts — cluster services, resource management, permissions, networking, and storage internals.</span>
 </a>
 
+<a class="kb-card" href="certifications/">
+  <strong>Certifications</strong>
+  <span>VMware certification study notes — VCP-DCV, VCAP, exam tracking, practice notes, and review plans.</span>
+</a>
+
 </div>

@@ -103,4 +103,9 @@ Cloud infrastructure knowledge base covering AWS and Azure. Includes architectur
   <strong>Azure</strong>
   <span>Microsoft Azure operations, services, and troubleshooting.</span>
 </a>
+
+<a class="kb-card" href="ai/">
+  <strong>Cloud AI</strong>
+  <span>AWS Bedrock, Azure OpenAI, and the OpenAI API — enterprise LLM and AI service reference.</span>
+</a>
 </div>

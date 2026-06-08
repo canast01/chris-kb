@@ -98,4 +98,9 @@ Microsoft Azure knowledge base covering compute, storage, networking, identity, 
   <span>Common issues, diagnostics, and escalation.</span>
 </a>
 
+<a class="kb-card" href="certifications/">
+  <strong>Certifications</strong>
+  <span>Azure certification study notes — exam tracking, practice notes, weak areas, and review plans.</span>
+</a>
+
 </div>

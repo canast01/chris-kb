@@ -109,4 +109,9 @@ Amazon Web Services knowledge base covering compute, storage, networking, identi
   <span>Elastic VMware Service — VCF on bare-metal EC2, NSX-T overlay, HCX migration, and Direct Connect integration.</span>
 </a>
 
+<a class="kb-card" href="certifications/">
+  <strong>Certifications</strong>
+  <span>AWS certification study notes — exam tracking, practice notes, weak areas, and review plans.</span>
+</a>
+
 </div>

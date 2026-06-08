@@ -38,7 +38,7 @@
 
 <a class="kb-card" href="cloud/">
   <strong>Cloud</strong>
-  <span>AWS and Azure — identity, compute, networking, storage, and cost.</span>
+  <span>AWS and Azure — identity, compute, networking, storage, cost, and AI services.</span>
 </a>
 
 <a class="kb-card" href="networking/">
@@ -71,19 +71,9 @@
   <span>PowerShell, Python, Ansible, Terraform, GitHub Actions, and Git.</span>
 </a>
 
-<a class="kb-card" href="ai/">
-  <strong>AI</strong>
-  <span>AWS Bedrock, Azure OpenAI, local AI (Ollama), OpenAI API, and GPU workloads.</span>
-</a>
-
 <a class="kb-card" href="protocols/">
   <strong>Protocols</strong>
   <span>Fibre Channel, iSCSI, NFS, SMB, TLS, DNS, DHCP, LDAP, NTP, SNMP, and SMTP.</span>
-</a>
-
-<a class="kb-card" href="certifications/">
-  <strong>Certifications</strong>
-  <span>Exam study notes and practice tracking for VMware, AWS, Azure, SAN, storage, and AI certifications.</span>
 </a>
 
 </div>

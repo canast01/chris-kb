@@ -97,4 +97,9 @@ Block, file, and object storage platforms used across enterprise infrastructure 
   <strong>Ceph</strong>
   <span>Open-source distributed storage — RBD block, CephFS file, and RGW object via RADOS.</span>
 </a>
+
+<a class="kb-card" href="certifications/">
+  <strong>Certifications</strong>
+  <span>Storage certification study notes — vendor tracks, practice notes, weak areas, and review plans.</span>
+</a>
 </div>
