@@ -1,7 +1,7 @@
 # PowerCLI — Scripts
 
 <div class="kb-summary">
-Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, snapshot audit, host capacity report, vSAN status, and bulk tag assignment. All scripts follow the standard header and error-handling pattern.
+Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, snapshot audit, host capacity report, vSAN status, bulk tag assignment, and VM health reports. All scripts follow the standard header and error-handling pattern.
 </div>
 
 ## VM Inventory Report
@@ -184,5 +184,43 @@ foreach ($cluster in $vsanClusters) {
     }
 }
 
+Disconnect-VIServer -Confirm:$false
+```
+
+## VMware VM Health Report
+
+Generate a per-VM health report from vCenter: power state, CPU, memory, snapshot count and age, and datastore.
+
+```powershell
+# vm-health-report.ps1
+# Usage: .\vm-health-report.ps1 -vCenter <hostname> -OutputPath .\report.csv
+
+param(
+    [Parameter(Mandatory)] [string] $vCenter,
+    [string] $OutputPath = ".\vm-health-$(Get-Date -Format 'yyyyMMdd').csv"
+)
+
+Connect-VIServer -Server $vCenter -Credential (Get-Credential) | Out-Null
+
+$report = Get-VM | ForEach-Object {
+    $vm = $_
+    $snaps = Get-Snapshot -VM $vm
+    $oldestSnap = if ($snaps) { ($snaps | Sort-Object Created | Select-Object -First 1).Created } else { $null }
+
+    [PSCustomObject]@{
+        Name         = $vm.Name
+        Cluster      = (Get-Cluster -VM $vm).Name
+        PowerState   = $vm.PowerState
+        vCPU         = $vm.NumCpu
+        MemGB        = $vm.MemoryGB
+        Snapshots    = $snaps.Count
+        OldestSnap   = $oldestSnap
+        Datastore    = ($vm | Get-Datastore | Select-Object -First 1).Name
+    }
+}
+
+$report | Export-Csv -Path $OutputPath -NoTypeInformation
+$report | Format-Table -AutoSize
+Write-Host "`nReport saved: $OutputPath" -ForegroundColor Green
 Disconnect-VIServer -Confirm:$false
 ```
