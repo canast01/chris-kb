@@ -1,5 +1,75 @@
 # PostgreSQL — Diagnostics
 
 <div class="kb-summary">
-PostgreSQL diagnostics reference.
+PostgreSQL diagnostics — reading pg_stat_activity, lock contention queries, autovacuum analysis, WAL lag, slow query identification, and log analysis.
 </div>
+
+## Error Log
+
+```bash
+sudo tail -100 /var/log/postgresql/postgresql-16-main.log   # Ubuntu
+sudo tail -100 /var/lib/pgsql/16/data/log/postgresql-*.log  # RHEL
+sudo journalctl -u postgresql-16 --since "1 hour ago"
+```
+
+## Active Queries and Blocking
+
+```sql
+-- All non-idle sessions
+SELECT pid, usename, state, wait_event_type, wait_event,
+       now() - query_start AS duration,
+       left(query, 100) AS query
+FROM pg_stat_activity
+WHERE state != 'idle'
+ORDER BY duration DESC;
+
+-- Lock contention: who is blocking whom
+SELECT blocked.pid AS blocked_pid,
+       blocking.pid AS blocking_pid,
+       blocked.query AS blocked_query,
+       blocking.query AS blocking_query
+FROM pg_stat_activity blocked
+JOIN pg_stat_activity blocking
+  ON blocking.pid = ANY(pg_blocking_pids(blocked.pid))
+WHERE cardinality(pg_blocking_pids(blocked.pid)) > 0;
+
+-- Kill a blocking query
+SELECT pg_cancel_backend(<pid>);   -- graceful
+SELECT pg_terminate_backend(<pid>); -- force
+```
+
+## Autovacuum Analysis
+
+```sql
+-- Tables that haven't been vacuumed recently
+SELECT relname, last_autovacuum, last_autoanalyze, n_dead_tup
+FROM pg_stat_user_tables
+WHERE last_autovacuum IS NULL OR last_autovacuum < now() - interval '24 hours'
+ORDER BY n_dead_tup DESC;
+
+-- Force vacuum on a specific table
+VACUUM ANALYZE schema.tablename;
+```
+
+## WAL and Replication Diagnostics
+
+```sql
+-- On primary: replica connections and lag
+SELECT client_addr, state, sent_lsn, write_lsn, flush_lsn, replay_lsn,
+       (sent_lsn - replay_lsn) AS lag_bytes
+FROM pg_stat_replication;
+
+-- On replica: lag in seconds
+SELECT now() - pg_last_xact_replay_timestamp() AS replay_lag;
+SELECT pg_is_in_recovery() AS is_standby;
+```
+
+## Slow Query Identification
+
+```sql
+-- Top queries by total time (requires pg_stat_statements)
+SELECT query, calls, total_exec_time/1000 AS total_sec,
+       mean_exec_time/1000 AS mean_sec, rows
+FROM pg_stat_statements
+ORDER BY total_exec_time DESC LIMIT 10;
+```

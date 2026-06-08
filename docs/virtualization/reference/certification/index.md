@@ -4,7 +4,7 @@
 VMware certification study notes — exam tracking, weak areas, and review plans.
 </div>
 
-<div class="kb-grid kb-grid-3>
+<div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="exam-tracking/"><strong>Exam Tracking</strong><span>Certification exam scheduling, scores, and tracking.</span></a>
 <a class="kb-card" href="practice-notes/"><strong>Practice Notes</strong><span>Practice exam notes and study materials.</span></a>
