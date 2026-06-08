@@ -68,7 +68,7 @@
 
 <a class="kb-card" href="automation/">
   <strong>Automation</strong>
-  <span>PowerShell, Python, Ansible, Terraform, GitHub Actions, and Git.</span>
+  <span>PowerShell, Python, Ansible, Terraform, and GitHub Actions.</span>
 </a>
 
 <a class="kb-card" href="protocols/">
