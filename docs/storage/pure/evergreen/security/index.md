@@ -106,28 +106,4 @@ Under the Evergreen subscription model, Pure manages several security functions 
 
 ---
 
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="authentication/">
-  <strong>Authentication</strong>
-  <span>Identity sources, MFA, and admin account configuration.</span>
-</a>
-
-<a class="kb-card" href="access-control/">
-  <strong>Access Control</strong>
-  <span>RBAC roles, API keys, and least-privilege access.</span>
-</a>
-
-<a class="kb-card" href="encryption/">
-  <strong>Encryption</strong>
-  <span>Data-at-rest encryption, key management, and secure erase.</span>
-</a>
-
-<a class="kb-card" href="hardening/">
-  <strong>Hardening</strong>
-  <span>Security baseline, audit logging, and Pure Security Advisory compliance.</span>
-</a>
-
-</div>
-
 Review the Pure Security Advisories page (https://support.purestorage.com/) regularly and apply Purity upgrades promptly when a security advisory is issued.
