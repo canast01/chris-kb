@@ -6057,30 +6057,27 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── vCenter Upgrade Failure — Investigation Flow ─────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  START: VCSA upgrade fails — installer error / appliance won&#39;t boot / UI unreachable post-upgrade ││
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                              │                                                        │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                  ┌───────────────────────────┼───────────────────────────┐                            │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                  ▼                           ▼                           ▼                            │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│     ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────────┐                │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│     │  Stage 1 failed:       │  │  Stage 2 failed:       │  │  Post-upgrade: UI      │                │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│     │  Deploy appliance      │  │  Migrate data /        │  │  down or services      │                │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│     │  did not complete      │  │  configure new VCSA    │  │  failing               │                │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│     └───────────┬────────────┘  └───────────┬────────────┘  └───────────┬────────────┘                │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                 │                           │                           │                             │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                 ▼                           ▼                           ▼                             │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│     ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────────┐                │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│     │  Source VCSA still     │  │  Rollback snapshot     │  │  Check services /      │                │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│     │  running — no impact   │  │  available? Apply it   │  │  disk space / certs    │                │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│     │  simply re-run Stage 1 │  │  on new VCSA or source │  │  on new appliance      │                │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│     └────────────────────────┘  └────────────────────────┘  └────────────────────────┘                │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                              ▼                                                        │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │  CLOSE: vCenter accessible · All hosts connected · Services healthy · Upgrade log clean            ││
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  OVERVIEW                                                                                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ESXi hosts and running VMs are unaffected during a vCenter upgrade — only management is disrupted    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  VCSA upgrade is two-stage; failure at each stage has a different recovery path                       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  START: VCSA upgrade fails — installer error · appliance won&#39;t boot · UI unreachable post-upgrade     │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  STAGE 1 FAILURE — Deploy appliance did not complete                                                  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Source VCSA still running — no management impact                                                     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Resolution: fix the install error and simply re-run Stage 1                                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  STAGE 2 FAILURE — Migrate data / configure new VCSA                                                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Rollback snapshot available? Apply it on the new VCSA appliance                                      │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  No snapshot: revert to source VCSA if it is still intact                                             │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  POST-UPGRADE FAILURE — UI down or services failing                                                   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Check services via SSH: service-control --status --all                                               │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Check disk space on new VCSA · check certificate dates · check SSO token validity                    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  CLOSE: vCenter accessible · all hosts connected · services healthy · upgrade log clean               │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>

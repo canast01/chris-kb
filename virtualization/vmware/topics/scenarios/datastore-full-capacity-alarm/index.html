@@ -6055,32 +6055,32 @@ finding what is consuming space, recovering quickly, and setting up proactive ca
 to prevent recurrence.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────── Datastore Full / Capacity Alarm — Investigation Flow ─────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────── Datastore Full / Capacity Alarm — Response Flow ───────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  START: vCenter capacity alarm fires OR VMs pause / report disk write errors                        ││
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                │                                                      │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                   ┌────────────────────────────┼────────────────────────────┐                         │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                   ▼                            ▼                            ▼                         │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ┌───────────────────────────┐   ┌───────────────────────────┐  ┌───────────────────────────┐        │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │  VMFS datastore full      │   │  vSAN datastore &gt; 80%     │  │  NFS datastore full       │        │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │  → find large VMDKs,      │   │  → writes stop; VMs pause │  │  → check NFS volume on    │        │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │    snapshots, orphans     │   │    find snapshots first   │  │    storage array           │       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └────────────┬──────────────┘   └────────────┬──────────────┘  └────────────┬──────────────┘        │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                └───────────────────────────────┬┘                              │                      │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                ▼                               │                      │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │  Find the space consumers: snapshots → large VMDKs → orphaned files → thick-provisioned disks      ││
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                │                                                      │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                   ┌────────────────────────────┼────────────────────────────┐                         │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                   ▼                            ▼                            ▼                         │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   ┌───────────────────────────┐   ┌───────────────────────────┐  ┌───────────────────────────┐        │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │  Delete stale snapshots   │   │  Remove orphaned VMDKs    │  │  Expand datastore or      │        │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │  (confirm with VM owner)  │   │  after confirming no VM   │  │  add capacity to vSAN     │        │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │                           │   │  references them          │  │  cluster                  │        │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   └───────────────────────────┘   └───────────────────────────┘  └───────────────────────────┘        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  OVERVIEW                                                                                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Full datastore stops VM writes — VMs pause or crash; on vSAN writes stop at 80% capacity             │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Snapshots are the most common cause of sudden unexpected capacity consumption                        │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  START: vCenter capacity alarm fires OR VMs pause / report disk write errors                          │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  STEP 1 — Identify Datastore Type                                                                     │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  VMFS: find large VMDKs, snapshots, and orphaned files                                                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  vSAN: writes stop at 80%; VMs pause — find snapshots first                                           │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  NFS: check NFS volume on the storage array for capacity                                              │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  STEP 2 — Find the Space Consumers                                                                    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Snapshots → large VMDKs → orphaned delta files → thick-provisioned disks                             │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Run datastore browser or esxcli to list files by size                                                │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  STEP 3 — Free Space                                                                                  │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Delete stale snapshots (confirm with VM owner before deleting)                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Remove orphaned VMDKs after confirming no VM references them                                         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Expand datastore or add capacity to vSAN cluster if needed                                           │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  KEY TERMS                                                                                            │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  vSAN 80% threshold — vSAN stops all writes at 80% full; VMs freeze rather than crash                 │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Delta file — snapshot changed-block tracking file; grows unbounded if left long-term                 │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>

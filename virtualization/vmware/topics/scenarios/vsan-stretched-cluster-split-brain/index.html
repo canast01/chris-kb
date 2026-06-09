@@ -6068,29 +6068,27 @@ is restored.
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────── vSAN Stretched Cluster Split-Brain — Investigation Flow ───────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  START: vCenter shows hosts at one site disconnected OR vSAN health shows cluster partition          ││
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                │                                                      │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                        ┌───────────────────────┼───────────────────────┐                              │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                        ▼                       ▼                       ▼                              │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────┐  ┌────────────────────────────┐        │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │  Witness reachable from     │  │  Witness unreachable     │  │  Both sites reachable but  │       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │  one site only              │  │  from both sites         │  │  vSAN partition detected   │       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │  → quorum on reachable site │  │  → full isolation event  │  │  → unicast agent issue     │       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └──────────────┬──────────────┘  └────────────┬────────────┘  └────────────────────────────┘        │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                  │                               │                                                    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                  ▼                               ▼                                                    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │  Preferred site retains     │  │  All VMs stopped — manual intervention required                 ││
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │  quorum; secondary site     │  │  Contact GSS before forced quorum election                      ││
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │  VMs stopped by HA          │  └─────────────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └──────────────┬──────────────┘                                                                     │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                  ▼                                                                                    │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │  After connectivity restored: monitor resync queue — do NOT perform maintenance until complete      ││
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   └─────────────────────────────────────────────────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  OVERVIEW                                                                                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  vSAN stretched cluster spans two sites + witness at a third — split-brain when inter-site link fails │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Witness appliance decides which site retains quorum; other site&#39;s VMs are stopped by HA              │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  START: vCenter shows hosts at one site disconnected OR vSAN health shows cluster partition           │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  STEP 1 — Identify Failure Type                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Witness reachable from one site only → quorum on that site; other site VMs stopped by HA             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Witness unreachable from both sites → full isolation; all VMs stopped                                │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Both sites reachable but vSAN partition detected → unicast agent / network issue                     │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  STEP 2 — Resolution by Type                                                                          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Normal split-brain: preferred site retains quorum; secondary site VMs stopped by HA                  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Restore inter-site connectivity → secondary VMs restart as quorum is re-established                  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  Full isolation (witness unreachable from both): do NOT force quorum — contact GSS first              │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  STEP 3 — After Connectivity Restored                                                                 │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Monitor resync queue: do NOT perform maintenance on any host until resync completes                  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Check vSAN Skyline Health for residual partition or degraded component issues                        │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>

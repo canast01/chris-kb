@@ -6067,37 +6067,31 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Storage APD — Investigation Flow ───────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  START: Datastore shows grey/unavailable in vCenter · VMs freeze · Aria Ops storage alert         ││
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                              │                                                        │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                           ┌──────────────────┴──────────────────┐                                     │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                           ▼                                     ▼                                     │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│              │  ALL hosts affected?    │           │  Subset of hosts only?  │                        │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│              │  → Fabric / SAN / NFS   │           │  → Per-host HBA/NIC,    │                        │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│              │    server failure       │           │    zoning, or cable      │                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│              └────────────┬────────────┘           └────────────┬────────────┘                        │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                           │                                     │                                     │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                           └──────────────────┬──────────────────┘                                     │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                              ▼                                                        │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│              ┌───────────────────────────────────────────────────────────────────────────┐            │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│              │  esxcli storage core device list · Check path state: APD vs PDL           │            │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│              └───────────────────────────────┬───────────────────────────────────────────┘            │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                              │                                                        │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                           ┌──────────────────┴──────────────────┐                                     │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                           ▼                                     ▼                                     │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│              │  APD: paths recoverable │           │  PDL: device gone       │                        │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│              │  Restore fabric / NFS   │           │  VMCP power-off → HA    │                        │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│              │  paths → VMs resume     │           │  restart on other store │                        │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│              └────────────┬────────────┘           └────────────┬────────────┘                        │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                           └──────────────────┬──────────────────┘                                     │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                              ▼                                                        │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │  CLOSE: Paths restored · All VMs running · Datastore green · VMCP policy reviewed                 ││
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  OVERVIEW                                                                                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  APD (All Paths Down): all storage paths to a datastore are lost; VMs freeze and become inaccessible  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  APD is recoverable (paths may return); PDL (Permanent Device Loss) is not recoverable                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  START: Datastore shows grey/unavailable in vCenter · VMs freeze · Aria Ops storage alert             │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  STEP 1 — Determine Scope                                                                             │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  All hosts affected → fabric / SAN / NFS server failure                                               │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Subset of hosts only → per-host HBA/NIC, zoning, or cable issue                                      │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  STEP 2 — Check Path State                                                                            │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  esxcli storage core device list · check path state: APD vs PDL                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  STEP 3 — Resolution Branch                                                                           │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  APD: paths recoverable — restore fabric / NFS paths → VMs resume automatically                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  PDL: device permanently gone — VMCP triggers power-off → HA restarts VMs on surviving storage        │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  CLOSE: Paths restored · all VMs running · datastore green · VMCP policy reviewed                     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  KEY TERMS                                                                                            │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  APD — All Paths Down: temporary path loss; VMware waits for path recovery before taking action       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  PDL — Permanent Device Loss: device signals it will not return; VMCP responds immediately            │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  VMCP — VM Component Protection: vSphere HA extension that responds to APD/PDL conditions             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>

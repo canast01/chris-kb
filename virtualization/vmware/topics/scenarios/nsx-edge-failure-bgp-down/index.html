@@ -6067,32 +6067,27 @@ the physical network — and restoring connectivity with minimal downtime.
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────── NSX Edge Failure / BGP Down — Investigation Flow ───────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  START: External connectivity lost for VMs — north-south traffic not reaching upstream network      ││
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                │                                                      │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                        ┌───────────────────────┼───────────────────────┐                              │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                        ▼                       ▼                       ▼                              │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────┐  ┌────────────────────────────┐        │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │  All VMs lose external      │  │  Only specific VMs      │  │  Specific destinations     │        │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │  connectivity               │  │  affected               │  │  unreachable only          │        │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │  → T0 gateway / edge issue  │  │  → Check DFW or T1      │  │  → BGP prefix / route leak │        │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └──────────────┬──────────────┘  └────────────┬────────────┘  └────────────┬───────────────┘        │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                  │                               │                             │                      │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                  └───────────────────────────────┼─────────────────────────────┘                      │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                  ▼                                                    │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │  Check edge cluster health in NSX Manager → Check BGP neighbor state on T0 → SSH to edge node      ││
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                │                                                      │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                   ┌────────────────────────────┼────────────────────────────┐                         │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                   ▼                            ▼                            ▼                         │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   ┌───────────────────────────┐   ┌───────────────────────────┐  ┌───────────────────────────┐        │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │  Edge node degraded       │   │  BGP idle / not estab.    │  │  Edge healthy, BGP estab. │        │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │  → check edge VM in       │   │  → check TEP tunnels and  │  │  → problem is upstream    │        │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │    vCenter, power state   │   │    upstream switch config │  │    switch or routing      │        │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   └───────────────────────────┘   └───────────────────────────┘  └───────────────────────────┘        │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  OVERVIEW                                                                                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Edge nodes carry all north-south traffic — when edge or BGP fails, VMs lose external connectivity    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                                                                                                       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  START: External connectivity lost for VMs — north-south traffic not reaching upstream network        │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  STEP 1 — Determine Scope                                                                             │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  All VMs lose external connectivity → T0 gateway / edge cluster issue                                 │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Only specific VMs affected → check DFW or T1 gateway for those VMs                                   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Specific destinations unreachable only → BGP prefix / route leak issue                               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  STEP 2 — Investigate Edge and BGP Health                                                             │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Check edge cluster health in NSX Manager                                                             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Check BGP neighbor state on T0 gateway                                                               │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  SSH to edge node: show interface · show bgp neighbor                                                 │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  STEP 3 — Resolution Branch                                                                           │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Edge node degraded → check edge VM in vCenter, verify power state and host placement                 │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  BGP idle / not established → check TEP tunnels and upstream switch config                            │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Edge healthy + BGP established → problem is upstream switch or ToR routing config                    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>

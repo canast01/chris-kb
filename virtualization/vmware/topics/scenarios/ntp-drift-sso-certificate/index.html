@@ -6089,32 +6089,31 @@ and recovering SSO and certificate services after time is fixed.
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────── NTP Drift — Investigation and Remediation Flow ────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  SYMPTOM: SSO login fails / &quot;token expired&quot; / SSL error / host &quot;Not Responding&quot; / vSAN skew    │  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └──────────────────────────────────────────┬──────────────────────────────────────────────────────┘ │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                              │                                                        │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│              ┌───────────────────────────────┼───────────────────────────────┐                        │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│              ▼                               ▼                               ▼                        │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │ Check VCSA time     │        │ Check ESXi hosts    │        │ Check NSX Manager   │               │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │ timedatectl         │        │ ntpq -p (offset)    │        │ get system clock    │               │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │ chronyc tracking    │        │ date vs vCenter     │        │ get ntp-server      │               │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └────────┬────────────┘        └────────┬────────────┘        └─────────┬───────────┘               │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│            │                              │                               │                           │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│            ▼                              ▼                               ▼                           │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │ Fix VCSA NTP →      │        │ Fix ESXi NTP →      │        │ Fix NSX NTP →       │               │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │ chronyc makestep    │        │ ntpdate force sync  │        │ set ntp-server +    │               │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │                     │        │                     │        │ restart ntp svc     │               │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └────────┬────────────┘        └────────┬────────────┘        └─────────────────────┘               │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│            │                              │                                                           │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│            └──────────────────────────────▼──────────────────────────────────────────────────────────┐│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                           │  All components synced?                                   ││
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                           ▼                                                           ││
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ ││
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │  Restart vmware-stsd (SSO) if token errors persist; re-run vSAN health check for time skew     │ ││
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   └─────────────────────────────────────────────────────────────────────────────────────────────────┘ ││
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  OVERVIEW                                                                                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Time drift causes SSO login failures, SSL handshake errors, host disconnects, and vSAN warnings      │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Maximum allowed skew: 60 seconds between any two VMware components                                   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  SYMPTOM: SSO login fails / &quot;token expired&quot; / SSL error / host &quot;Not Responding&quot; / vSAN skew           │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  STEP 1 — Check Time on All Components (run in parallel)                                              │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  VCSA: SSH → timedatectl status + chronyc tracking (inspect System time offset)                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ESXi hosts: ntpq -p (offset column beyond ±60,000 ms?) · date vs vCenter time                        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  NSX Manager: SSH → get system clock + get ntp-server                                                 │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  STEP 2 — Fix NTP on Each Drifted Component                                                           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  VCSA: chronyc makestep — force immediate step correction (do not wait for gradual slew)              │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  ESXi: esxcli system ntp set --server → ntpdate -u (force sync on each host)                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  NSX Manager: set ntp-server + restart service ntpd                                                   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  STEP 3 — Recover Services                                                                            │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Restart vmware-stsd (SSO) if token errors persist after NTP is fixed                                 │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Re-run vSAN Skyline Health &quot;time divergence&quot; check — confirm all cluster hosts pass                  │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  KEY TERMS                                                                                            │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  chronyc makestep — forces immediate clock correction on VCSA instead of gradual slew                 │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  vmware-stsd — SSO Security Token Service; restart clears stale tokens after time is fixed            │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="products-involved">Products Involved<a class="headerlink" href="#products-involved" title="Permanent link">&para;</a></h2>
 <table>
