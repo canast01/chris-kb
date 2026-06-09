@@ -2726,6 +2726,31 @@
 Common issues, diagnostics, and escalation.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── PostgreSQL — Troubleshooting ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Three sub-sections: common issues (quick fixes), diagnostics (deep analysis), escalation            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Start with error log, pg_stat_activity, and replication status before deeper investigation          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Escalate when: replication broken, OOM crash, connection exhaustion, or corruption                  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Common issues                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Too many connections: raise max_connections or add PgBouncer connection pooling layer               │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Replication lag: check pg_stat_replication; look for long-running queries on primary                │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Slow queries: enable pg_stat_statements; find top queries by total_exec_time                        │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Can&#39;t connect: check pg_hba.conf, listen_addresses, firewall port 5432, user host scope             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Diagnostics entry points                                                                            │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Error log: first stop for crashes, PANIC entries, and authentication failures                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   pg_stat_activity: live query view; identify blocking sessions and long-running queries              │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   pg_stat_statements: cumulative stats per query fingerprint; surface expensive queries               │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   pg_stat_user_tables: dead tuples and autovacuum timestamps; detect table bloat                      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   pg_hba.conf   = authentication rules; wrong entry is a common cause of connection failures          │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   listen_addresses = controls which interfaces PostgreSQL listens for incoming connections            │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   pg_stat_statements = query tracking extension; preloaded in shared_preload_libraries                │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   dead tuples   = old row versions from MVCC; excessive count indicates autovacuum is behind          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="common-issues/">Common Issues</a>
   <a class="kb-card" href="diagnostics/">Diagnostics</a>
