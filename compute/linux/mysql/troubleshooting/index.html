@@ -2726,6 +2726,31 @@
 Common issues, diagnostics, and escalation.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── MySQL — Troubleshooting Reference ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Three sub-sections: common issues (quick fixes), diagnostics (deep investigation), escalation       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Start with: error log, SHOW PROCESSLIST, SHOW REPLICA STATUS, and InnoDB engine status              │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Escalate when: replication is stopped with errors, OOM crashes, or data corruption is suspected     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Common issues                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Too many connections: raise max_connections or add ProxySQL connection pooling                      │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Replication lag: check Seconds_Behind_Source; look for long-running queries on primary              │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Slow queries: enable slow_query_log; analyse with pt-query-digest; add missing indexes              │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Can&#39;t connect: check bind-address, firewall port 3306, and user@host account scope                  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Diagnostics                                                                                         │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Error log: /var/log/mysql/error.log or /var/log/mysqld.log — first stop for crashes and errors      │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   SHOW ENGINE INNODB STATUS: lock waits, deadlocks, buffer pool stats, active transactions            │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   performance_schema: query events_statements_summary_by_digest for top queries by total time         │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   processlist: identify blocking queries; KILL &lt;id&gt; to release locks                                  │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   SHOW ENGINE INNODB STATUS = prints InnoDB internal state including deadlock and lock wait info      │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Seconds_Behind_Source = replica lag in seconds; non-zero means replica is behind primary            │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   performance_schema = MySQL internal schema with runtime instrumentation and wait events             │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   deadlock      = two transactions each holding locks the other needs; MySQL auto-resolves            │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="common-issues/">Common Issues</a>
   <a class="kb-card" href="diagnostics/">Diagnostics</a>

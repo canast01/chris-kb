@@ -2821,6 +2821,39 @@
 PostgreSQL integration points — application connectors (JDBC, psycopg2, asyncpg), PgBouncer, monitoring exporters, logical replication targets, and backup tools.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── PostgreSQL — Integrations ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   PostgreSQL integrates with application connectors, connection poolers, monitoring, and backup tools │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   PgBouncer sits between app and PostgreSQL; reduces connection overhead significantly                │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Prometheus postgres_exporter exposes 40+ metrics; used with Grafana for dashboards                  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Application connectors                                                                              │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   JDBC (Java): postgresql JDBC driver; standard URL: jdbc:postgresql://host/db                        │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   psycopg2 (Python 2/3): most common Python adapter; supports async via asyncpg                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   asyncpg (Python): high-performance async driver; 3-10× faster than psycopg2 for bulk ops            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   libpq (C): native PostgreSQL client library; basis for most language adapters                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Connection pooling                                                                                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   PgBouncer: session/transaction/statement pooling modes; configure in pgbouncer.ini                  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   pgpool-II: pooling + load balancing + replication management; more complex than PgBouncer           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   Monitoring                                                                                          │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   postgres_exporter: exposes pg_stat_* views as Prometheus metrics                                    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   Key metrics: pg_stat_activity (active queries), pg_stat_replication (lag), pg_stat_bgwriter         │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   pgBadger: log analyser; generates HTML reports from PostgreSQL log files                            │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Backup tools                                                                                        │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   pgBackRest: parallel backup and restore; supports differential and incremental backups              │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   pg_dump / pg_basebackup: logical (per-DB) and physical (whole cluster) backup utilities             │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Barman: backup and recovery manager; enterprise-grade WAL archiving and PITR                        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   asyncpg      = high-performance async Python driver using PostgreSQL binary protocol                │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   postgres_exporter = Prometheus exporter; exposes PostgreSQL metrics for Grafana dashboards          │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   pgBackRest   = backup tool with parallel WAL archiving, delta restore, and encryption support       │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   pg_stat_replication = system view showing streaming replication lag per standby                     │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="application-connectors">Application Connectors<a class="headerlink" href="#application-connectors" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2864,16 +2897,16 @@ PostgreSQL integration points — application connectors (JDBC, psycopg2, asyncp
 </tbody>
 </table>
 <h2 id="pgbouncer-integration">PgBouncer Integration<a class="headerlink" href="#pgbouncer-integration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># /etc/pgbouncer/pgbouncer.ini</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">[databases]</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="na">app_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">host=127.0.0.1 port=5432 dbname=app_prod</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">[pgbouncer]</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="na">listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6432</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="na">pool_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">transaction</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="na">max_client_conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="na">default_pool_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">25</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="na">auth_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">scram-sha-256</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/pgbouncer/pgbouncer.ini</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">[databases]</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="na">app_prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">host=127.0.0.1 port=5432 dbname=app_prod</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">[pgbouncer]</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="na">listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6432</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="na">pool_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">transaction</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="na">max_client_conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="na">default_pool_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">25</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="na">auth_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">scram-sha-256</span>
 </code></pre></div>
 <h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
 <table>
@@ -2904,13 +2937,13 @@ PostgreSQL integration points — application connectors (JDBC, psycopg2, asyncp
 </table>
 <p>Key metrics: <code>pg_stat_activity</code> (connections), replication lag, <code>pg_database_size</code>, dead tuples (bloat)</p>
 <h2 id="logical-replication">Logical Replication<a class="headerlink" href="#logical-replication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Publish a table to downstream consumers</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="n">my_pub</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="p">,</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- Subscribe from downstream DB</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SUBSCRIPTION</span><span class="w"> </span><span class="n">my_sub</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="k">CONNECTION</span><span class="w"> </span><span class="s1">&#39;host=primary dbname=app_prod user=repl&#39;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="n">my_pub</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Publish a table to downstream consumers</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="n">my_pub</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="p">,</span><span class="w"> </span><span class="n">customers</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">-- Subscribe from downstream DB</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SUBSCRIPTION</span><span class="w"> </span><span class="n">my_sub</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="k">CONNECTION</span><span class="w"> </span><span class="s1">&#39;host=primary dbname=app_prod user=repl&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="n">PUBLICATION</span><span class="w"> </span><span class="n">my_pub</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="backup-tools">Backup Tools<a class="headerlink" href="#backup-tools" title="Permanent link">&para;</a></h2>
 <table>

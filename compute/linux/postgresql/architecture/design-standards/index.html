@@ -2821,6 +2821,36 @@
 PostgreSQL design standards — HA patterns (streaming + Patroni), connection pooling, sizing guidelines, schema conventions, and backup requirements.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── PostgreSQL — Design Standards ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Production minimum: streaming replication + Patroni for HA + PgBouncer for connection pooling       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Patroni automates failover via etcd/Consul/ZooKeeper consensus; eliminates split-brain              │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Connection pooling is mandatory for applications with &gt;50 concurrent connections                    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   HA topologies                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Streaming replication (sync): primary waits for standby WAL write before commit; zero data loss     │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Streaming replication (async): primary commits without waiting; standby may lag                     │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Patroni + etcd: 3-node DCS for leader election; auto-promotes standby on primary failure            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   pgpool-II: connection pooling + replication management; heavier than PgBouncer                      │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Connection pooling                                                                                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   PgBouncer: lightweight; modes = session (default), transaction, statement                           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Transaction mode: connection returned to pool after each transaction; most efficient                │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   max_client_conn: total clients PgBouncer accepts; default_pool_size: connections to PostgreSQL      │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Sizing guidelines                                                                                   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   shared_buffers: 25% of RAM (PostgreSQL caches here first)                                           │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   effective_cache_size: 75% of RAM (hint to planner for index scan cost estimation)                   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   max_connections: set low (100-200); rely on PgBouncer for client multiplexing                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   work_mem: per sort/hash operation; RAM usage = max_connections × work_mem at peak                   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Patroni      = Python HA template; uses DCS for leader election and failover automation             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   WAL          = Write-Ahead Log; stream of change records; base for replication and PITR             │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   PgBouncer    = lightweight connection pooler; sits between app and PostgreSQL                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   shared_buffers = PostgreSQL shared memory for caching table and index pages                         │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="high-availability-topologies">High-Availability Topologies<a class="headerlink" href="#high-availability-topologies" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

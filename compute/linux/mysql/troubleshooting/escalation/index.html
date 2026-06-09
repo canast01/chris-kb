@@ -2810,6 +2810,37 @@
 MySQL escalation criteria — P1/P2 indicators, what to collect before engaging DBA or vendor support, and support bundle checklist.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── MySQL — Escalation ──────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Escalate when: replication stopped with errors, InnoDB corruption, OOM crash, or data loss risk     │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Collect before escalating: error log, InnoDB status, slow log, and replication status output        │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   P1 (production down): engage DBA immediately; do not attempt self-service recovery on corrupt data  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Escalation thresholds                                                                               │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Replication stopped + Errno != 0: STOP REPLICA; collect Last_Error; escalate to DBA                 │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   InnoDB crash recovery loop: do not restart repeatedly; take snapshot of data dir first              │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Seconds_Behind_Source &gt; 1 hour sustained: check primary for long-running transactions               │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   OOM kill of mysqld: check innodb_buffer_pool_size vs available RAM before restarting                │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   What to collect                                                                                     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   SHOW MASTER STATUS / SHOW REPLICA STATUS \G: binlog position and replication state                  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   SHOW ENGINE INNODB STATUS \G: deadlocks, lock waits, and crash recovery state                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   pt-query-digest: slow query log from last 24 hours                                                  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   dmesg | grep -i mysql: OOM killer messages referencing mysqld                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   /var/log/mysql/error.log: last 500 lines                                                            │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Support contacts                                                                                    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Oracle MySQL support: support.oracle.com (Enterprise licence required)                              │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Percona support: percona.com/services (covers MySQL, MariaDB, and Percona Server)                   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Community: forums.mysql.com, dba.stackexchange.com, #mysql on Libera.Chat IRC                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   Last_Error    = SHOW REPLICA STATUS field; MySQL error code and message for last failure            │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   InnoDB crash recovery = automatic repair process on startup after unclean shutdown                  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   OOM kill      = Linux out-of-memory killer terminates mysqld to reclaim memory; check dmesg         │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   Errno         = MySQL/Linux error number in replication status; 0 = no error                        │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="escalation-thresholds">Escalation Thresholds<a class="headerlink" href="#escalation-thresholds" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2858,34 +2889,34 @@ MySQL escalation criteria — P1/P2 indicators, what to collect before engaging 
 </tbody>
 </table>
 <h2 id="evidence-to-collect-before-escalating">Evidence to Collect Before Escalating<a class="headerlink" href="#evidence-to-collect-before-escalating" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Error log (last 200 lines)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/mysqld.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/mysql-error.log
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Process list</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW FULL PROCESSLIST;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/processlist.txt
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. InnoDB status</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW ENGINE INNODB STATUS\G&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/innodb-status.txt
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Replica status (if applicable)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW REPLICA STATUS\G&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/replica-status.txt
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 5. Disk usage</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/mysql<span class="w"> </span>&gt;<span class="w"> </span>/tmp/disk-usage.txt
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 6. Key variables</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW GLOBAL STATUS; SHOW GLOBAL VARIABLES;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/global-status.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Error log (last 200 lines)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/mysqld.log<span class="w"> </span>&gt;<span class="w"> </span>/tmp/mysql-error.log
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Process list</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW FULL PROCESSLIST;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/processlist.txt
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. InnoDB status</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW ENGINE INNODB STATUS\G&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/innodb-status.txt
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Replica status (if applicable)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW REPLICA STATUS\G&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/replica-status.txt
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 5. Disk usage</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/mysql<span class="w"> </span>&gt;<span class="w"> </span>/tmp/disk-usage.txt
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># 6. Key variables</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW GLOBAL STATUS; SHOW GLOBAL VARIABLES;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/global-status.txt
 </code></pre></div>
 <h2 id="innodb-crash-recovery">InnoDB Crash Recovery<a class="headerlink" href="#innodb-crash-recovery" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Safe restart attempt (innodb_force_recovery = 0 is default)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>mysqld
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If data directory corrupted, try increasing recovery level incrementally</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Add to /etc/mysql/mysqld.cnf, restart after each:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># innodb_force_recovery = 1  → skip corrupt pages</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># innodb_force_recovery = 2  → skip background threads</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># innodb_force_recovery = 3  → do not roll back transactions</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># WARNING: Only use with DBA guidance. Always backup first.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Safe restart attempt (innodb_force_recovery = 0 is default)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>mysqld
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># If data directory corrupted, try increasing recovery level incrementally</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Add to /etc/mysql/mysqld.cnf, restart after each:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># innodb_force_recovery = 1  → skip corrupt pages</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># innodb_force_recovery = 2  → skip background threads</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># innodb_force_recovery = 3  → do not roll back transactions</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># WARNING: Only use with DBA guidance. Always backup first.</span>
 </code></pre></div>
 <h2 id="vendor-dba-support-information">Vendor / DBA Support Information<a class="headerlink" href="#vendor-dba-support-information" title="Permanent link">&para;</a></h2>
 <p>Provide for any escalation:
