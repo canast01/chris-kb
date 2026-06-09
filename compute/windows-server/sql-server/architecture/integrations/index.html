@@ -2748,6 +2748,35 @@
 SQL Server integration points — application drivers (JDBC, ODBC, ADO.NET, pyodbc), linked servers, SSRS/SSIS/SSAS, monitoring via DMVs and third-party tools.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── SQL Server — Integrations ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   SQL Server connects to applications via ODBC, JDBC, ADO.NET, pyodbc, and native drivers             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Linked servers enable T-SQL queries across SQL Server instances and heterogeneous sources           │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Monitoring uses DMVs natively; third-party tools scrape DMV metrics via sql_exporter                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Application drivers                                                                                 │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   .NET: Microsoft.Data.SqlClient; Server=host;Database=db;User Id=u;Password=p;                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Java: mssql-jdbc; jdbc:sqlserver://host:1433;databaseName=db                                        │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Python: pyodbc + ODBC Driver 18; mssql+pyodbc://user:pass@host/db?driver=...                        │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Node.js: mssql / tedious npm package; connection pool recommended                                   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Linked servers                                                                                      │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   sp_addlinkedserver: registers remote SQL Server or heterogeneous OLE DB source                      │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   sp_addlinkedsrvlogin: maps local login to remote login credentials                                  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   Query: SELECT * FROM [REMOTE_SERVER].[database].[schema].[table]                                    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Analytics components (SSIS / SSRS / SSAS)                                                           │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   SSIS: ETL and data integration; packages deployed to SSISDB; scheduled via SQL Agent                │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   SSRS: reporting server; connects to SQL data sources; REST API for embedding                        │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   SSAS: analytical / OLAP; tabular or multidimensional model; Power BI compatible                     │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   ODBC         = Open Database Connectivity; standard API for relational database access              │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   DMV          = Dynamic Management View; sys.dm_* views exposing SQL Server runtime state            │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   SSISDB       = SQL Server Integration Services catalog database; package deployment target          │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   sql_exporter = Prometheus exporter for SQL Server; collects DMV metrics for Grafana                 │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="application-drivers">Application Drivers<a class="headerlink" href="#application-drivers" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2787,13 +2816,13 @@ SQL Server integration points — application drivers (JDBC, ODBC, ADO.NET, pyod
 </table>
 <h2 id="linked-servers">Linked Servers<a class="headerlink" href="#linked-servers" title="Permanent link">&para;</a></h2>
 <p>Linked servers allow T-SQL queries across instances:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Create a linked server</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_addlinkedserver</span><span class="w"> </span><span class="o">@</span><span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;REMOTE_SERVER&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">srvproduct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SQL Server&#39;</span><span class="p">;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_addlinkedsrvlogin</span><span class="w"> </span><span class="o">@</span><span class="n">rmtsrvname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;REMOTE_SERVER&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">useself</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">     </span><span class="o">@</span><span class="n">rmtuser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;remote_user&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">rmtpassword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pass&#39;</span><span class="p">;</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">-- Query via linked server</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">[</span><span class="n">REMOTE_SERVER</span><span class="p">].[</span><span class="k">database</span><span class="p">].[</span><span class="k">schema</span><span class="p">].[</span><span class="k">table</span><span class="p">];</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Create a linked server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_addlinkedserver</span><span class="w"> </span><span class="o">@</span><span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;REMOTE_SERVER&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">srvproduct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;SQL Server&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_addlinkedsrvlogin</span><span class="w"> </span><span class="o">@</span><span class="n">rmtsrvname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;REMOTE_SERVER&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">useself</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">     </span><span class="o">@</span><span class="n">rmtuser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;remote_user&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">@</span><span class="n">rmtpassword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;pass&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">-- Query via linked server</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">[</span><span class="n">REMOTE_SERVER</span><span class="p">].[</span><span class="k">database</span><span class="p">].[</span><span class="k">schema</span><span class="p">].[</span><span class="k">table</span><span class="p">];</span>
 </code></pre></div>
 <h2 id="ssis-ssrs-ssas">SSIS / SSRS / SSAS<a class="headerlink" href="#ssis-ssrs-ssas" title="Permanent link">&para;</a></h2>
 <table>
