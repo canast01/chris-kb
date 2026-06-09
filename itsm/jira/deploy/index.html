@@ -2160,6 +2160,41 @@
 Step-by-step guide to installing Jira Data Center, configuring the database connection, setting up user authentication, and validating the deployment.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Jira — Initial Deployment ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Delivery: Jira Data Center; self-hosted on RHEL 8/9 or Ubuntu 22.04 LTS                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Java: Eclipse Temurin (AdoptOpenJDK) 11 or 17; dedicated install — do not use system JDK            │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Database: PostgreSQL 14/15 (recommended) or MySQL 8.0; UTF-8; collation C                           │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   Ports: 8080 (HTTP), 8443 (HTTPS), 40001 + 40011 (Data Center cluster communication)                 │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Sizing (recommended)                                                                                │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   RAM 16 GB; vCPU 8; App disk 100 GB; Home/data disk 500 GB                                           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ulimit -n ≥ 65536 in /etc/security/limits.conf                                                      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   JVM heap: JVM_MINIMUM_MEMORY=2048m; JVM_MAXIMUM_MEMORY=8192m in setenv.sh                           │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Install sequence                                                                                    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   1. Create PostgreSQL database + dedicated jira user (encoding UTF8, collation C)                    │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   2. Run installer → Custom type → /opt/atlassian/jira + /var/atlassian/application-data/jira         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   3. Setup wizard: set Base URL → licence key → create admin user                                     │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   4. Configure LDAP: User management → Add directory → AD or LDAP; test connection                    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   5. Install recommended plugins: ScriptRunner, JMWE, BigPicture, Assets (Insight)                    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   6. Validate: admin + LDAP login; create test issue; run JQL query                                   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Validation checks                                                                                   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   curl -I http://localhost:8080/status → {&quot;state&quot;:&quot;RUNNING&quot;}                                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   psql -d jira -c &quot;SELECT count(*) FROM app_user;&quot; → confirms schema populated                        │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   JQL: project = OPS ORDER BY created DESC → results must return                                      │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   Data Center   = Atlassian&#39;s enterprise deployment tier; supports clustering and HA                  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   Base URL      = external URL (e.g. https://jira.company.local); must match DNS + proxy config       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   Project Key   = short identifier (e.g. OPS) prepended to all issue numbers in that project          │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   ScriptRunner  = Groovy scripting plugin for workflow automation and custom behaviours               │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   JQL           = Jira Query Language; used to search issues with field filters and sorting           │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   JMWE          = Jira Misc Workflow Extensions; adds validators, conditions, and post-functions      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   ulimit -n     = open file descriptor limit; must be ≥ 65536 for Jira to start reliably              │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <p>Before installing Jira, confirm the following are in place.</p>
 <p><strong>JDK:</strong></p>
@@ -2252,8 +2287,8 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 <ol>
 <li>Download the Jira Data Center Linux installer from <code>https://www.atlassian.com/software/jira/download</code>.</li>
 <li>Make the installer executable and run it:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>atlassian-jira-software-X.Y.Z-x64.bin
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>./atlassian-jira-software-X.Y.Z-x64.bin
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>atlassian-jira-software-X.Y.Z-x64.bin
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>./atlassian-jira-software-X.Y.Z-x64.bin
 </code></pre></div></li>
 <li>Follow the installer prompts:</li>
 <li><strong>Installation type:</strong> Custom (to control install and home directory paths)</li>
@@ -2263,21 +2298,21 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 <li><strong>Start Jira automatically:</strong> yes</li>
 <li>The installer creates the <code>jira</code> system user and starts the service.</li>
 <li>Confirm Jira is running:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>jira
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>jira
 </code></pre></div></li>
 <li>Check the Jira startup log for errors:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/atlassian/jira/logs/catalina.out
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/atlassian/jira/logs/catalina.out
 </code></pre></div></li>
 </ol>
 <hr />
 <h2 id="configure-database-connection">Configure Database Connection<a class="headerlink" href="#configure-database-connection" title="Permanent link">&para;</a></h2>
 <p>Before visiting the web UI, set up the PostgreSQL database.</p>
 <p><strong>Create the database and user (run as postgres):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>CREATE<span class="w"> </span>USER<span class="w"> </span>jira<span class="w"> </span>WITH<span class="w"> </span>PASSWORD<span class="w"> </span><span class="s1">&#39;secure-password-here&#39;</span><span class="p">;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>CREATE<span class="w"> </span>DATABASE<span class="w"> </span>jira<span class="w"> </span>OWNER<span class="w"> </span>jira<span class="w"> </span>ENCODING<span class="w"> </span><span class="s1">&#39;UTF8&#39;</span><span class="w"> </span>LC_COLLATE<span class="w"> </span><span class="s1">&#39;C&#39;</span><span class="w"> </span>LC_CTYPE<span class="w"> </span><span class="s1">&#39;C&#39;</span><span class="w"> </span>TEMPLATE<span class="w"> </span>template0<span class="p">;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>GRANT<span class="w"> </span>ALL<span class="w"> </span>PRIVILEGES<span class="w"> </span>ON<span class="w"> </span>DATABASE<span class="w"> </span>jira<span class="w"> </span>TO<span class="w"> </span>jira<span class="p">;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="se">\q</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>CREATE<span class="w"> </span>USER<span class="w"> </span>jira<span class="w"> </span>WITH<span class="w"> </span>PASSWORD<span class="w"> </span><span class="s1">&#39;secure-password-here&#39;</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>CREATE<span class="w"> </span>DATABASE<span class="w"> </span>jira<span class="w"> </span>OWNER<span class="w"> </span>jira<span class="w"> </span>ENCODING<span class="w"> </span><span class="s1">&#39;UTF8&#39;</span><span class="w"> </span>LC_COLLATE<span class="w"> </span><span class="s1">&#39;C&#39;</span><span class="w"> </span>LC_CTYPE<span class="w"> </span><span class="s1">&#39;C&#39;</span><span class="w"> </span>TEMPLATE<span class="w"> </span>template0<span class="p">;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>GRANT<span class="w"> </span>ALL<span class="w"> </span>PRIVILEGES<span class="w"> </span>ON<span class="w"> </span>DATABASE<span class="w"> </span>jira<span class="w"> </span>TO<span class="w"> </span>jira<span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="se">\q</span>
 </code></pre></div>
 <p><strong>Run the Jira setup wizard:</strong></p>
 <ol>
@@ -2314,9 +2349,9 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 </ol>
 <p><strong>Set JVM heap (recommended):</strong></p>
 <p>Edit <code>/opt/atlassian/jira/bin/setenv.sh</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># For 16 GB server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">JVM_MINIMUM_MEMORY</span><span class="o">=</span><span class="s2">&quot;2048m&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">JVM_MAXIMUM_MEMORY</span><span class="o">=</span><span class="s2">&quot;8192m&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># For 16 GB server</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">JVM_MINIMUM_MEMORY</span><span class="o">=</span><span class="s2">&quot;2048m&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">JVM_MAXIMUM_MEMORY</span><span class="o">=</span><span class="s2">&quot;8192m&quot;</span>
 </code></pre></div>
 <p>Restart Jira: <code>sudo systemctl restart jira</code></p>
 <hr />
@@ -2396,15 +2431,15 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 <h2 id="validate-deployment">Validate Deployment<a class="headerlink" href="#validate-deployment" title="Permanent link">&para;</a></h2>
 <p>Run through the following checks before handing the instance to users.</p>
 <p><strong>Application health:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check Jira process</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>jira
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check no OOM errors in the last boot cycle</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>jira<span class="w"> </span>--since<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;out of memory&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Confirm Jira responds</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://localhost:8080/status
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Expected: HTTP 200, {&quot;state&quot;:&quot;RUNNING&quot;}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check Jira process</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>jira
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check no OOM errors in the last boot cycle</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>jira<span class="w"> </span>--since<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;out of memory&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Confirm Jira responds</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://localhost:8080/status
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Expected: HTTP 200, {&quot;state&quot;:&quot;RUNNING&quot;}</span>
 </code></pre></div>
 <p><strong>Web UI:</strong></p>
 <ul>
@@ -2413,8 +2448,8 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 <li>Search using JQL: <code>project = OPS ORDER BY created DESC</code> — results must return</li>
 </ul>
 <p><strong>Database:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-d<span class="w"> </span>jira<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM app_user;&quot;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Should return the user count — confirms schema is populated</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-d<span class="w"> </span>jira<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM app_user;&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Should return the user count — confirms schema is populated</span>
 </code></pre></div>
 <p><strong>Email (if SMTP configured):</strong></p>
 <ul>
