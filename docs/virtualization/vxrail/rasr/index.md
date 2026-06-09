@@ -9,42 +9,41 @@ unrecoverable by normal means and must be rebuilt from scratch before rejoining 
 ```text
 ┌──────────────────────────── VxRail — RASR (Rapid Appliance Self Recovery) ────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │                     RASR rebuilds a VxRail node that is unrecoverable by normal means                 ││
-│   │     Boot node from RASR USB/ISO · wipe local disks · re-image ESXi and VxRail Manager baseline       ││
-│   │              Cluster must tolerate the node being absent for the full rebuild duration                ││
-│   │         vSAN FTT policy and object rebuild health verified before and after the procedure             ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│   RASR rebuilds a VxRail node that is unrecoverable by normal means                                   │
+│   Boot from RASR USB/ISO → wipe local disks → re-image ESXi + VxRail Manager → rejoin cluster         │
+│   Cluster must tolerate the absent node for the full rebuild duration (vSAN FTT ≥ 1)                  │
+│   Verify vSAN FTT compliance and object rebuild health before and after the procedure                 │
 │                                                                                                       │
-│                ▼                                 ▼                                 ▼                  │
+│   When to use RASR                                                                                    │
+│   ESXi corrupt or unbootable; VxRail Manager DB broken; node stuck post-upgrade; hardware swap        │
+│   Prerequisite: RASR USB prepared; ISO version matches cluster build; Dell GSS case open              │
 │                                                                                                       │
-│   ┌───────────────────────────┐   ┌───────────────────────────┐   ┌───────────────────────────┐       │
-│   │      Pre-RASR checks      │   │       RASR execution       │   │    Post-RASR validation   │      │
-│   │    vSAN FTT compliance    │   │    Boot from USB/ISO       │   │    Node rejoins cluster   │      │
-│   │  Cluster degraded health  │   │    Disk wipe + re-image    │   │    vSAN object rebuild    │      │
-│   │    Backup node config     │   │    ESXi baseline install   │   │    Alarms cleared         │      │
-│   │    RASR ISO version match │   │    VxRail Mgr re-register  │   │    iDRAC + FW verified    │      │
-│   │    Dell GSS case open     │   │    Return node to cluster  │   │    Health check passed    │      │
-│   └───────────────────────────┘   └───────────────────────────┘   └───────────────────────────┘       │
+│   Phase 1 — Pre-RASR checks                                                                           │
+│   Confirm vSAN FTT compliance; check cluster degraded health; back up node config                     │
+│   Verify RASR ISO version matches current cluster LCM baseline                                        │
+│   Open Dell GSS support case before starting; note iDRAC IP and vConsole access                       │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  ESXi corrupt/unbootable  │  VxRail Mgr DB broken  │  Node stuck post-upgrade  │  Hardware swap      ││
-│   │  RASR USB prepared        │  ISO matches cluster   │  vSAN FTT ≥1 before start │  Cluster tolerates  ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│   Phase 2 — RASR execution                                                                            │
+│   Boot node from USB or iDRAC virtual media (vMedia); follow RASR wizard prompts                      │
+│   Full disk wipe + re-image: ESXi boot bank, cache partition, all local storage cleared               │
+│   VxRail Manager re-installs and re-registers the node with the cluster                               │
 │                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell PowerEdge node · iDRAC vConsole/vMedia · USB 3.0 drive ≥16 GB · ToR switch port (node stays cabled)│
+│   Phase 3 — Post-RASR validation                                                                      │
+│   Node rejoins cluster; vSAN object rebuild begins; monitor until health restored                     │
+│   Verify: alarms cleared; iDRAC FW matches; health check passes; vSAN compliance confirmed            │
 │                                                                                                       │
-│  Key terms:                                                                                           │
+│   Physical infrastructure                                                                             │
+│   Dell PowerEdge node; iDRAC vConsole/vMedia; USB 3.0 drive ≥16 GB; ToR switch port stays cabled      │
 │                                                                                                       │
-│  RASR ISO         = Dell-supplied bootable image containing ESXi installer + VxRail Manager baseline build│
-│  RASR USB         = USB drive written with RASR ISO; inserted into node or mounted via iDRAC virtual media│
-│  Re-image         = Full wipe and reinstall of all local disks including ESXi boot bank and cache partition│
-│  Cluster FTT      = Failures To Tolerate; vSAN policy requiring ≥1 so cluster survives one node absent│
-│  Node re-register = VxRail Manager re-adds rebuilt node to the cluster and re-provisions vSAN capacity│
-│  vMedia           = iDRAC feature to mount a remote ISO as a virtual USB device without physical media│
-│  LCM baseline     = The exact ESXi + VxRail Manager build version the RASR ISO must match             │
-│  Object rebuild   = vSAN re-replicates data components onto the returned node after it rejoins        │
+│   Key terms:                                                                                          │
+│   RASR ISO     = Dell bootable image; ESXi installer + VxRail Manager baseline build                  │
+│   RASR USB     = USB drive with RASR ISO; inserted locally or mounted via iDRAC vMedia                │
+│   re-image     = full wipe and reinstall of ESXi boot bank, cache partition, and local disks          │
+│   Cluster FTT  = Failures To Tolerate; vSAN policy; ≥1 required so cluster survives node rebuild      │
+│   re-register  = VxRail Manager re-adds rebuilt node; re-provisions vSAN disk groups                  │
+│   vMedia       = iDRAC virtual media; mounts remote ISO as USB without physical media                 │
+│   LCM baseline = exact ESXi + VxRail Manager build version the RASR ISO must match                    │
+│   object rebuild= vSAN re-replicates data components onto the node after it rejoins cluster           │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
