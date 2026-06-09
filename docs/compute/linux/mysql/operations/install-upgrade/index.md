@@ -4,6 +4,38 @@
 MySQL install and upgrade procedures — major version upgrade path, in-place upgrade steps, upgrade checker tool, and post-upgrade validation.
 </div>
 
+```text
+┌───────────────────────────────────── MySQL — Install and Upgrade ─────────────────────────────────────┐
+│                                                                                                       │
+│   Always upgrade one major version at a time: 5.7 → 8.0 → 8.4; never skip versions                    │
+│   Run mysqlcheck and mysql_upgrade_checker before each major upgrade                                  │
+│   Take a full physical backup (xtrabackup) before starting any major version upgrade                  │
+│                                                                                                       │
+│   Pre-upgrade checklist                                                                               │
+│   Run mysqlcheck --all-databases: identifies corrupt tables that will block upgrade                   │
+│   Run mysql_upgrade_checker (MySQL Shell): flags incompatible config and deprecated syntax            │
+│   Document current version: SELECT @@version; and backup all databases                                │
+│   Review MySQL release notes for removed features and changed defaults                                │
+│                                                                                                       │
+│   In-place upgrade (minor version: 8.0.x → 8.0.y)                                                     │
+│   Stop service; replace packages (dnf/apt upgrade mysql-community-server)                             │
+│   Start service; MySQL auto-runs upgrade scripts on first start                                       │
+│   Verify: SELECT @@version; and check error log for warnings                                          │
+│                                                                                                       │
+│   Major version upgrade (8.0 → 8.4)                                                                   │
+│   Step 1: run mysql_upgrade_checker; fix all reported issues before proceeding                        │
+│   Step 2: mysqldump full backup; verify backup is complete and restorable                             │
+│   Step 3: stop 8.0, install 8.4 packages, start; MySQL runs automatic upgrade scripts                 │
+│   Step 4: test app connections; check error log; run mysqlcheck --all-databases                       │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   mysql_upgrade_checker = MySQL Shell utility; pre-upgrade compatibility analysis                     │
+│   mysqlcheck   = checks, repairs, and optimizes tables; run before and after upgrade                  │
+│   in-place upgrade = replacing packages on same host with existing data directory                     │
+│   error log    = mysqld log at /var/log/mysql/error.log or /var/log/mysqld.log                        │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Version Upgrade Path
 
 Always upgrade one major version at a time: `5.7 → 8.0 → 8.4`

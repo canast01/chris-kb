@@ -4,6 +4,37 @@
 MySQL CLI reference — mysql client, mysqladmin, mysqldump, mysqlcheck, mysqlbinlog, and Percona pt-* tool quick reference.
 </div>
 
+```text
+┌──────────────────────────────────────── MySQL — CLI Reference ────────────────────────────────────────┐
+│                                                                                                       │
+│   Five core CLI tools: mysql (client), mysqladmin (admin ops), mysqldump, mysqlcheck, mysqlbinlog     │
+│   Percona pt-* tools extend the toolkit: pt-query-digest, pt-online-schema-change, pt-heartbeat       │
+│   All tools accept -h host -u user -p for connection; use .my.cnf to avoid password on CLI            │
+│                                                                                                       │
+│   mysql client                                                                                        │
+│   mysql -h host -u user -p db: interactive session; -e "SQL" for one-liner execution                  │
+│   SHOW PROCESSLIST: active connections and current query; KILL <id> terminates a session              │
+│   SHOW REPLICA STATUS\G: replication lag, I/O and SQL thread states, last error                       │
+│   SET GLOBAL slow_query_log=ON: enable slow query log without server restart                          │
+│                                                                                                       │
+│   mysqladmin                                                                                          │
+│   mysqladmin status: uptime, threads, questions, and slow queries in one line                         │
+│   mysqladmin processlist: running queries; mysqladmin kill <id> terminates by process ID              │
+│   mysqladmin flush-logs: rotates general and slow query logs                                          │
+│                                                                                                       │
+│   mysqldump and mysqlbinlog                                                                           │
+│   mysqldump --single-transaction --routines --triggers -A: full logical backup, consistent read       │
+│   mysqlbinlog --start-datetime --stop-datetime binlog.*: replay binlogs for PITR restore              │
+│   mysqlcheck --all-databases --optimize: reclaim space and update index statistics                    │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   .my.cnf      = user-level MySQL config file; stores host/user/pass to avoid CLI prompts             │
+│   PROCESSLIST  = live view of all active connections and their current SQL statement                  │
+│   --single-transaction = mysqldump option; consistent snapshot without locking tables                 │
+│   pt-query-digest = analyses slow log or general log; outputs ranked query report by total time       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## mysql client
 
 ```bash
