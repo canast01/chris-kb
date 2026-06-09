@@ -6,17 +6,60 @@ Integrations reference covering VMware Integration, Backup Integration, Pure1 Mo
 </div>
 
 ```text
-FlashArray Integration Map
-        │             │             │
-        ▼             ├──► Pure1 (phone-home HTTPS)
-  ESXi / Linux        ├──► vCenter VASA / Plugin
-  DB Hosts            ├──► Veeam / Commvault (REST API)
-                      ├──► Ansible / Terraform (REST API)
-                      ├──► SNMP NMS (SNMPv3)
-                      └──► SIEM (TLS syslog)
-                      │
-                      └──────────────► Remote FlashArray
-                                       (ActiveDR / ActiveCluster)
+┌──────────────────────────────────── Pure FlashArray Integrations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        FlashArray Integration Ecosystem — VMware, Kubernetes, Backup, Cloud, Automation       │   │
+│   │          VMware: VASA/VAAI plugin · vVols datastore · SPBM policy-driven provisioning         │   │
+│   │        Kubernetes: Pure Service Orchestrator (PSO) / Portworx; dynamic PVC provisioning       │   │
+│   │           Backup: Veeam, Commvault, Veritas via snapshot-based offload via Pure APIs          │   │
+│   │       Automation: Ansible collection, Terraform provider, REST API v2 for all operations      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Pure REST API v2 is the integration backbone — all plugins and tools consume it                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      VMware Integration     │  │   Kubernetes / Containers   │  │     Backup + Automation     │   │
+│   │  VASA: storage policy mgmt  │  │  PSO: dynamic PVC on-demand │  │  Veeam: snap-based offload  │   │
+│   │   VAAI: HW-accelerated ops  │  │ CSI driver: standard K8s API│  │  Commvault: snap management │   │
+│   │    vVols: per-VM volumes    │  │Portworx: data services layer│  │    purestorage.flasharray   │   │
+│   │   SPBM: QoS per datastore   │  │ StatefulSet persistent store│  │ Terraform: volume lifecycle │   │
+│   │   SRM: site recovery plans  │  │  Multi-attach: RWX volumes  │  │  REST v2: token auth + JSON │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    All integrations leverage REST API · VMware via VASA/VAAI · K8s via CSI/PSO                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   VMware Setup   │    K8s Setup     │   Backup Config   │     REST API     │    Automation    │   │
+│   │Install VASA plug │ Deploy PSO helm  │ Register array IP │   GET /arrays    │  ansible-galaxy  │   │
+│   │Create vVol store │Set storage class │  API token creds  │  POST /volumes   │  terraform init  │   │
+│   │SPBM policy assign│ Test dynamic PVC │ Snapshot schedule │   PATCH /hosts   │ pureuser API add │   │
+│   │SRM plugin config │  Verify PV bind  │   Offload verify  │ DELETE /volumes  │ Idempotent runs  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  FlashArray controllers · ESXi hosts · K8s worker nodes · Backup media server · IP/FC SAN fabric      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VASA          = vSphere API for Storage Awareness; allows vSphere to query array capabilities        │
+│  VAAI          = vSphere API for Array Integration; offloads clone, zero, lock ops to array HW        │
+│  vVols         = Virtual Volumes; per-VM volume objects managed directly by FlashArray                │
+│  SPBM          = Storage Policy-Based Management; assigns QoS and protection to VMs by policy         │
+│  PSO           = Pure Service Orchestrator; Kubernetes dynamic storage provisioner for Pure arrays    │
+│  CSI           = Container Storage Interface; standard Kubernetes block/file storage API              │
+│  Portworx      = Pure-owned container data platform; distributed storage layer for K8s workloads      │
+│  SRM           = Site Recovery Manager; VMware DR orchestration using Pure replication snapshots      │
+│  REST v2       = Pure FlashArray REST API version 2; JSON, token auth, full CRUD for all objects      │
+│  Ansible coll  = purestorage.flasharray Galaxy collection; modules for volumes, hosts, PGs            │
+│  Terraform     = HashiCorp IaC; purestorage/flasharray provider for declarative volume management     │
+│  API token     = Authentication credential for REST and automation; scoped to array user role         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────── Pure FlashArray Integrations ─────────────────────────────────────┐

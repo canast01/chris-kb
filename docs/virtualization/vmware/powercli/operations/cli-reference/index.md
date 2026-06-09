@@ -5,35 +5,55 @@ Core PowerCLI cmdlets for VM management, host operations, cluster management, da
 </div>
 
 ```text
-┌──────────────────────────────────── PowerCLI — Cmdlet Categories ─────────────────────────────────────┐
+┌────────────────────── PowerCLI — vSphere Object Hierarchy and Cmdlet Categories ──────────────────────┐
 │                                                                                                       │
-│   ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
-│   │   VM Management     │  │  Host Operations    │  │ Cluster Management  │  │  Storage / DS       │  │
-│   │  Get-VM             │  │  Get-VMHost         │  │  Get-Cluster        │  │  Get-Datastore      │  │
-│   │  Start/Stop-VM      │  │  Set-VMHost         │  │  Set-Cluster        │  │  Get-HardDisk       │  │
-│   │  Move-VM (vMotion)  │  │  Get-VMHostService  │  │  Get-DrsRecomm…     │  │  Move-VM (svMotion) │  │
-│   │  New-VM             │  │  Get-AdvancedSetting│  │  Apply-DrsRecomm…   │  │  New-Datastore      │  │
-│   └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                          vSphere Inventory Hierarchy (top to bottom)                          │   │
+│   │              vCenter -> Datacenter -> Cluster -> ESXi Host -> VM / Resource Pool              │   │
+│   │                       vCenter -> Datacenter -> Datastore / Network -> VM                      │   │
+│   │                 Use -Location to scope: Get-VM -Location (Get-Cluster "Prod")                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
-│   │   vSAN              │  │   Snapshots         │  │  Tags / Annotations │  │  Networking         │  │
-│   │  Get-VsanCluster…   │  │  Get-Snapshot       │  │  Get-Tag            │  │  Get-VDSwitch       │  │
-│   │  Get-VsanDiskGroup  │  │  New-Snapshot       │  │  New-Tag            │  │  Get-VMHostNetwork  │  │
-│   │  Get-VsanDisk       │  │  Remove-Snapshot    │  │  Get-TagAssignment  │  │  Get-VirtualPortGrp │  │
-│   │  Get-VsanObject     │  │  Set-Snapshot       │  │  Set-Annotation     │  │  New-VDPortgroup    │  │
-│   └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  │
+│   ┌────────────────────────────┐                                                                      │
+│   │      Compute Cmdlets       │                                                                      │
+│   │      Get-VM / Set-VM       │                                                                      │
+│   │     New-VM / Remove-VM     │                                                                      │
+│   │   Start/Stop/Restart-VM    │                                                                      │
+│   │     Move-VM (vMotion)      │                                                                      │
+│   │  Get-VMHost / Set-VMHost   │                                                                      │
+│   │ Get-Cluster / Set-Cluster  │                                                                      │
+│   └────────────────────────────┘                                                                      │
+│                                   ┌─────────────────────────────┐                                     │
+│                                   │       Storage Cmdlets       │                                     │
+│                                   │        Get-Datastore        │                                     │
+│                                   │ Get-HardDisk / Set-HardDisk │                                     │
+│                                   │ Get-Snapshot / New-Snapshot │                                     │
+│                                   │       Remove-Snapshot       │                                     │
+│                                   │         Get-VsanDisk        │                                     │
+│                                   │ Get-VsanClusterHealthSummary│                                     │
+│                                   └─────────────────────────────┘                                     │
+│                                                                    ┌──────────────────────────────┐   │
+│                                                                    │      Management Cmdlets      │   │
+│                                                                    │       Get-VIPermission       │   │
+│                                                                    │       New-VIPermission       │   │
+│                                                                    │   Get-VIRole / New-VIRole    │   │
+│                                                                    │      Get-Tag / New-Tag       │   │
+│                                                                    │         Get-VIEvent          │   │
+│                                                                    │      Get-View (raw API)      │   │
+│                                                                    └──────────────────────────────┘   │
 │                                                                                                       │
-│   Common pipeline pattern:  Get-VM | Where-Object { condition } | ForEach-Object { action }           │
-│   Bulk ops pattern:         Get-View -ViewType VirtualMachine -Filter @{"Name"="*prod*"}              │
-│   Error handling:           try { Connect-VIServer ... } catch { Write-Error $_.Exception.Message }   │
+│  Physical Infrastructure: management workstation or automation server running PowerShell 7+           │
+│  Network path: jump host -> HTTPS/443 -> vCenter FQDN -> vSphere API endpoint                         │
 │                                                                                                       │
-│   GLOSSARY                                                                                            │
-│   Get-View         — returns raw .NET API object; faster than cmdlets for large result sets           │
-│   Where-Object     — pipeline filter ($_ = current item); used to narrow Get-* results                │
-│   ForEach-Object   — pipeline loop; processes each item with a ScriptBlock                            │
-│   Select-Object    — picks/renames properties; @{N="Name";E={expression}} for computed columns        │
-│   Sort-Object      — sorts pipeline output by one or more properties                                  │
-│   Format-Table     — renders output as a table; -AutoSize fits columns to content                     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Pipeline      = PowerShell pipe; Get-VM | Get-Snapshot chains cmdlets                                │
+│  Where-Object  = filter items in a pipeline by property value                                         │
+│  Select-Object = choose which properties to display or export                                         │
+│  ForEach-Object = iterate over each item in the pipeline                                              │
+│  Export-Csv    = write pipeline output to CSV file                                                    │
+│  Format-Table  = render properties as columns in the console                                          │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

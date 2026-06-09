@@ -5,35 +5,59 @@ PowerCLI is VMware's official PowerShell module suite for automating and managin
 </div>
 
 ```text
-┌────────────────────────────────── VMware PowerCLI — Module Overview ──────────────────────────────────┐
+┌────────────────────────────────────── VMware PowerCLI Overview ───────────────────────────────────────┐
 │                                                                                                       │
-│   Connect-VIServer → authenticates to vCenter or ESXi; stores session in $global:DefaultVIServer      │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                VMware PowerCLI — PowerShell module suite for vSphere automation               │   │
+│   │             Built on top of the vSphere SOAP/REST APIs — same calls as vCenter UI             │   │
+│   │               Platform: PowerShell 7+ (cross-platform) or Windows PowerShell 5.1              │   │
+│   │            Install: Install-Module VMware.PowerCLI from PSGallery; 40+ sub-modules            │   │
+│   │           Session: Connect-VIServer -> $global:DefaultVIServer -> all cmdlets use it          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────┐            │
-│   │  VimAutomation.Core      │  │  VimAutomation.Vds       │  │  VimAutomation.Storage   │            │
-│   │  VM, host, cluster ops   │  │  Distributed switch cfg  │  │  Datastore, NFS, iSCSI   │            │
-│   │  Get-VM, Get-VMHost      │  │  Get-VDSwitch, VDPort    │  │  Get-Datastore, Get-Disk │            │
-│   └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────┘            │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │                 Core Modules                 │                                                    │
+│   │   VimAutomation.Core  VM + host + cluster    │                                                    │
+│   │     VimAutomation.Vds   vDS + portgroups     │                                                    │
+│   │   VimAutomation.Storage  VMDK + datastores   │                                                    │
+│   │   VimAutomation.Nsxt  NSX-T policy objects   │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │                Add-on Modules               │   │
+│                                                     │    VimAutomation.Srm   SRM recovery plans   │   │
+│                                                     │      VimAutomation.Hcx   HCX migration      │   │
+│                                                     │      VimAutomation.Horizon  Horizon VDI     │   │
+│                                                     │     VimAutomation.vROps  Aria Operations    │   │
+│                                                     └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   ┌──────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────┐            │
-│   │  VimAutomation.Nsxt      │  │  VimAutomation.vROps     │  │  VimAutomation.Srm       │            │
-│   │  NSX-T policy & fabric   │  │  Operations reporting    │  │  Site Recovery Manager   │            │
-│   │  Get-NSXTSegment, Policy │  │  Get-OMAlert, resource   │  │  Get-SRMRecoveryPlan     │            │
-│   └──────────────────────────┘  └──────────────────────────┘  └──────────────────────────┘            │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │               Connection Model               │                                                    │
+│   │       Connect-VIServer -Server <FQDN>        │                                                    │
+│   │           -> SSO token from vCenter          │                                                    │
+│   │         -> $global:DefaultVIServer set       │                                                    │
+│   │       -> All cmdlets use this implicitly     │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │                 API Binding                 │   │
+│                                                     │       High-level: Get-VM -> VI objects      │   │
+│                                                     │    Low-level: Get-View -> raw vSphere API   │   │
+│                                                     │      View objects: faster, no wrappers      │   │
+│                                                     │        ExtensionData: .NET SDK access       │   │
+│                                                     └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   Credential flow:  Connect-VIServer -Server vcenter -User admin@vsphere.local -Password ****         │
-│   Or use:          $cred = Get-Credential  →  Connect-VIServer -Credential $cred                      │
-│   Multi-vCenter:   $global:DefaultVIServers lists all active sessions                                 │
+│  Physical Infrastructure: Windows/Linux jump host with PowerShell 7+ installed                        │
+│  Network: HTTPS/443 to vCenter FQDN  ·  DNS resolution required                                       │
 │                                                                                                       │
-│   GLOSSARY                                                                                            │
-│   VIServer    — connected vCenter/ESXi session object                                                 │
-│   VI object   — any managed entity (VM, host, cluster, datastore, etc.)                               │
-│   MoRef       — Managed Object Reference; unique identifier for a VI object                           │
-│   PowerCLI    — umbrella for all VMware.VimAutomation.* modules                                       │
-│   PSCredential— PowerShell credential object (username + secure password)                             │
-│   Invoke-VMScript — runs a script inside a VM guest OS via VMware Tools                               │
-│   Get-View    — returns raw .NET API view; faster than high-level cmdlets for bulk ops                │
-│   where-object— PowerShell pipeline filter; used to narrow large Get-* result sets                    │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VI Object    = high-level wrapper (Get-VM, Get-VMHost) with helper properties                        │
+│  View Object  = raw vSphere API object; faster but no helper properties                               │
+│  SOAP API     = vSphere legacy API (port 443 /sdk); used by most cmdlets                              │
+│  REST API     = vSphere modern API; used by newer NSX/vSAN cmdlets                                    │
+│  SSO Token    = session credential; valid 8 h by default; auto-renewed                                │
+│  PSGallery    = PowerShell module repository; source for Install-Module                               │
+│  DefaultVIServer = implicit connection target for all cmdlets in session                              │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

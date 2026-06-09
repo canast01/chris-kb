@@ -5,31 +5,34 @@ Network services reference for load balancer VIP management, pool health monitor
 </div>
 
 ```text
-┌──────────────────────────────── Networking — Load Balancer & Services ────────────────────────────────┐
+┌──────────────────────────────────── Networking — Network Services ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Load balancer: health checks must match app check; monitor pool member state daily     │   │
-│   │        VIP is the client-facing address; backend pool members serve the actual traffic        │   │
-│   │        SNAT ensures return traffic flows back through the LB for stateful session tracking    │   │
+│   │      Network services: DNS (name resolution), DHCP (IP assignment), load balancers, IPAM      │   │
+│   │      DNS: every server needs forward + reverse records; split-horizon for internal names      │   │
+│   │       Load balancer: health checks must match app check; monitor pool member state daily      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Load Balancer                 │  │                   IPAM                      │   │
+│   │                     DNS                      │  │             Load Balancer & DHCP            │   │
 │   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           VIP: virtual IP for pool          │  │          Subnet allocation tracking         │    │
-│   │            Pool: backend servers            │  │          DHCP scope management              │    │
-│   │            Health check: HTTP/TCP           │  │          IP address inventory               │    │
-│   │           SNAT: return path via LB          │  │          DNS integration via IPAM           │    │
-│   │          SSL offload: TLS termination       │  │          See Protocols for DNS/DHCP         │    │
+│   │             A record: name → IP              │  │           VIP: virtual IP for pool          │   │
+│   │            PTR record: IP → name             │  │            Pool: backend servers            │   │
+│   │             CNAME: alias record              │  │            Health check: HTTP/TCP           │   │
+│   │             Test: nslookup / dig             │  │           DHCP: scope + exclusions          │   │
+│   │        TTL: lower for planned changes        │  │           IPAM: track allocations           │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
+│    A record     = DNS forward lookup; hostname → IPv4 address                                         │
+│    PTR record   = DNS reverse lookup; IP → hostname; needed for SMTP and some auth                    │
+│    TTL          = Time To Live; how long resolvers cache the record; lower before cutover             │
+│    Split-horizon= Different DNS answers for internal vs external queries for same name                │
 │    VIP          = Virtual IP; load balancer frontend; clients connect here, not to backend            │
 │    SNAT         = Source NAT on load balancer; ensures response traffic returns via LB                │
-│    Pool member  = Backend server registered in the LB pool; receives forwarded traffic                │
-│    Health check = Probe LB sends to each pool member; removes unhealthy members from rotation         │
-│    SSL offload  = LB terminates TLS; backend receives plain HTTP; reduces cert management scope       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

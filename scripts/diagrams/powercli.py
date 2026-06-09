@@ -86,10 +86,9 @@ def powercli_root():
     lines.append(txt_row('DefaultVIServer = implicit connection target for all cmdlets in session'))
     lines.append(txt_row())
 
-    border = '+' + '-' * (W2 - 2) + '+'
-    lines.append(border)
+    lines.append('└' + '─' * W2 + '┘')
 
-    return '\n'.join(lines)
+    return lines
 
 
 # ── PowerCLI Operations ──────────────────────────────────────────────────────
@@ -165,7 +164,6 @@ def powercli_operations():
     lines.append(txt_row('Format-Table  = render properties as columns in the console'))
     lines.append(txt_row())
 
-    border = '+' + '-' * (W2 - 2) + '+'
-    lines.append(border)
+    lines.append('└' + '─' * W2 + '┘')
 
-    return '\n'.join(lines)
+    return lines
