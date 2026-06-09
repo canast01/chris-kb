@@ -34,7 +34,7 @@
 │   Fabric discovery = SANnav queries name server on seed switch to find all fabric members             │
 │   CRC error    = Cyclic Redundancy Check error; indicates physical layer or cable problem             │
 │   ISL          = Inter-Switch Link; E_Port connection between switches in the same fabric             │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 This guide covers deploying Brocade SANnav Management Portal from installation through validated fabric discovery and monitoring. SANnav replaces the legacy Brocade Network Advisor (BNA) and provides centralized SAN management, zoning, analytics, and alert handling.
