@@ -4,6 +4,36 @@
 Operational scripts for EVS: daily health check, host add/remove workflow, vSAN capacity report, and HCX migration status tracker.
 </div>
 
+```text
+┌────────────────────────────────── Amazon EVS — Operational Scripts ───────────────────────────────────┐
+│                                                                                                       │
+│   Three operational scripts: daily health check, vSAN capacity report, and HCX service mesh status    │
+│   All scripts require environment variables for credentials; no plaintext passwords in script files   │
+│   Run health-check.sh daily via cron; vsan-capacity.ps1 and hcx-status.sh on-demand or scheduled      │
+│                                                                                                       │
+│   health-check.sh                                                                                     │
+│   Checks: EVS environment state (expect CREATED), all host states, NSX control cluster stability      │
+│   Inputs: EVS_ENV_ID, VCENTER_HOST, VCENTER_PASSWORD, NSX_MANAGER_URL, NSX_PASSWORD                   │
+│   Output: per-check [OK]/[FAIL] lines; exits 0 on all-pass, exits 1 on any failure                    │
+│                                                                                                       │
+│   vsan-capacity.ps1                                                                                   │
+│   Connects to vCenter via PowerCLI; queries all vSAN datastores for capacity and free space           │
+│   Thresholds: >80% used = WARN, >70% = INFO, ≤70% = OK; outputs formatted table                       │
+│   Inputs: VCENTER_HOST, VCENTER_PASSWORD environment variables                                        │
+│                                                                                                       │
+│   hcx-status.sh                                                                                       │
+│   Queries HCX Manager REST API for service mesh link status and HCX version                           │
+│   Inputs: HCX_MANAGER_IP, HCX_PASSWORD environment variables                                          │
+│   Output: per-link [OK]/[FAIL] with label and status; HCX version string                              │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   EVS environment = the AWS-managed VMware cluster; environment-id is the unique identifier           │
+│   NSX control cluster = NSX-T management plane; STABLE means all managers are in consensus            │
+│   HCX service mesh = VMware HCX interconnect between on-premises and EVS; links must be UP            │
+│   vSAN datastore  = VMware vSAN storage pool on the EVS cluster; monitored for capacity headroom      │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## health-check.sh
 
 ```bash

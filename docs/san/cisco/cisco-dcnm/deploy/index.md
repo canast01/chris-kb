@@ -1,5 +1,41 @@
 # Cisco DCNM — Initial Deployment
 
+```text
+┌────────────────────────────────── Cisco DCNM — Deployment Overview ───────────────────────────────────┐
+│                                                                                                       │
+│   DCNM manages Nexus (LAN/VXLAN) and MDS (SAN/FC) fabrics from a single OVA-deployed VM               │
+│   DCNM 11.x is standalone; v12+ is renamed NDFC and runs on the Nexus Dashboard platform              │
+│   Fabric parameters (BGP ASN, underlay IP range, NTP, DNS) must be set before adding switches         │
+│                                                                                                       │
+│   VM requirements                                                                                     │
+│   8 vCPU, 32 GB RAM, 500 GB disk; vSphere 7.0+ for OVA; static IP with DNS resolvable FQDN            │
+│   Size at deploy: Small (≤25 switches), Medium (≤150), Large (≤500)                                   │
+│   Ports: inbound UDP 162 (SNMP traps), TCP 443 (NX-API callback); outbound TCP 22 + UDP 161           │
+│                                                                                                       │
+│   OVA deployment and initial setup                                                                    │
+│   Deploy OVA via vSphere: map eth0 to management VLAN, eth1 to data/fabric network                    │
+│   Run /root/packaged-files/scripts/appmgr initial_setup (sets IP, DNS, NTP, admin password)           │
+│   Upload licence file under Administration > Licensing before adding fabrics                          │
+│                                                                                                       │
+│   Adding fabrics                                                                                      │
+│   SAN fabric (MDS): SAN > Fabrics > Add Fabric; enter seed switch IP + SNMP community string          │
+│   LAN fabric (Nexus): LAN > Fabrics > Create Fabric; choose Easy Fabric (VXLAN BGP EVPN)              │
+│   Assign spine/leaf roles; click Recalculate & Deploy to push underlay config to all switches         │
+│                                                                                                       │
+│   Validation                                                                                          │
+│   All switches show Policy Status: In Sync and Config Status: In Sync                                 │
+│   Dashboard health score green; no critical alarms in Monitor > Events                                │
+│   Test SNMP trap: shut/no-shut an access port; event appears in DCNM within 30 seconds                │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   NDFC        = Nexus Dashboard Fabric Controller; DCNM renamed from v12 onward                       │
+│   NX-API      = Nexus REST API; DCNM uses it to push configuration to Nexus switches                  │
+│   VXLAN BGP EVPN = overlay fabric using VXLAN encapsulation and BGP for MAC/IP distribution           │
+│   In Sync     = switch running config matches the DCNM-intended config; no drift detected             │
+│   Easy Fabric = DCNM template for new VXLAN BGP EVPN deployments; auto-assigns underlay IPs           │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 This guide covers deploying Cisco Data Center Network Manager (DCNM) from OVA installation through adding a first fabric. DCNM (now integrated into Nexus Dashboard Fabric Controller, NDFC) is Cisco's centralized management platform for Nexus data center switching fabrics — covering both SAN (MDS) and LAN (Nexus VXLAN/Classic) fabrics.
 
 Note: Cisco renamed DCNM to NDFC starting with version 12.x on the Nexus Dashboard platform. This guide covers standalone DCNM 11.x deployment; for NDFC 12.x+ see the Nexus Dashboard deployment guide.

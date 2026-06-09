@@ -12,6 +12,36 @@
   </div>
 </div>
 
+```text
+┌────────────────────────────── Knowledge Base — Infrastructure Reference ──────────────────────────────┐
+│                                                                                                       │
+│   Technical reference for enterprise infrastructure engineering — procedures, concepts, and runbooks  │
+│   12 platform sections: from virtualisation and storage to security, ITSM, and automation             │
+│   Maintained by Christos Anastasiadis — infrastructure engineer, domain: chrisanastasiadis.com        │
+│                                                                                                       │
+│   Platform coverage                                                                                   │
+│   Virtualization: VMware VCF, vCenter, ESXi, vSAN, NSX, VxRail, Aria, PowerCLI, OpenShift             │
+│   Storage: Dell (PowerMax, PowerStore, PowerScale, Unity, SRDF), Pure (FlashArray, FlashBlade)        │
+│   Storage (cont.): NetApp (SnapCenter, SnapMirror), Ceph; SAN: Brocade, Cisco MDS and Nexus           │
+│   Cloud: AWS (EVS, Bedrock, CLI), Azure, AI services; Compute: Linux, Windows Server                  │
+│   Networking: FC, iSCSI, NFS, SMB, TLS, DNS, DHCP, LDAP, NTP, SNMP, SMTP                              │
+│                                                                                                       │
+│   Operational coverage                                                                                │
+│   Backup and DR: Veeam, Commvault, NetBackup; DR operations, recovery testing, runbooks               │
+│   Security: CyberArk, Venafi, PKI/certificates, LDAP/SAML, MFA, vulnerability management              │
+│   ITSM: ServiceNow change management, Jira, Confluence                                                │
+│   Automation: PowerShell, Python, Ansible, Terraform, GitHub Actions                                  │
+│   Certifications: SAN and storage vendor study notes, practice materials, review plans                │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   VCF         = VMware Cloud Foundation; full-stack SDDC platform                                     │
+│   vSAN        = VMware vSAN; hyperconverged distributed storage                                       │
+│   SRDF        = Symmetrix Remote Data Facility; Dell synchronous/asynchronous replication             │
+│   EVS         = Amazon Elastic VMware Service; VMware workloads on AWS bare-metal                     │
+│   ITSM        = IT Service Management; change, incident, and asset lifecycle processes                │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Platforms
 
 <div class="kb-grid kb-grid-3">
