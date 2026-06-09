@@ -4,6 +4,41 @@
 PostgreSQL integration points — application connectors (JDBC, psycopg2, asyncpg), PgBouncer, monitoring exporters, logical replication targets, and backup tools.
 </div>
 
+```text
+┌────────────────────────────────────── PostgreSQL — Integrations ──────────────────────────────────────┐
+│                                                                                                       │
+│   PostgreSQL integrates with application connectors, connection poolers, monitoring, and backup tools │
+│   PgBouncer sits between app and PostgreSQL; reduces connection overhead significantly                │
+│   Prometheus postgres_exporter exposes 40+ metrics; used with Grafana for dashboards                  │
+│                                                                                                       │
+│   Application connectors                                                                              │
+│   JDBC (Java): postgresql JDBC driver; standard URL: jdbc:postgresql://host/db                        │
+│   psycopg2 (Python 2/3): most common Python adapter; supports async via asyncpg                       │
+│   asyncpg (Python): high-performance async driver; 3-10× faster than psycopg2 for bulk ops            │
+│   libpq (C): native PostgreSQL client library; basis for most language adapters                       │
+│                                                                                                       │
+│   Connection pooling                                                                                  │
+│   PgBouncer: session/transaction/statement pooling modes; configure in pgbouncer.ini                  │
+│   pgpool-II: pooling + load balancing + replication management; more complex than PgBouncer           │
+│                                                                                                       │
+│   Monitoring                                                                                          │
+│   postgres_exporter: exposes pg_stat_* views as Prometheus metrics                                    │
+│   Key metrics: pg_stat_activity (active queries), pg_stat_replication (lag), pg_stat_bgwriter         │
+│   pgBadger: log analyser; generates HTML reports from PostgreSQL log files                            │
+│                                                                                                       │
+│   Backup tools                                                                                        │
+│   pgBackRest: parallel backup and restore; supports differential and incremental backups              │
+│   pg_dump / pg_basebackup: logical (per-DB) and physical (whole cluster) backup utilities             │
+│   Barman: backup and recovery manager; enterprise-grade WAL archiving and PITR                        │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   asyncpg      = high-performance async Python driver using PostgreSQL binary protocol                │
+│   postgres_exporter = Prometheus exporter; exposes PostgreSQL metrics for Grafana dashboards          │
+│   pgBackRest   = backup tool with parallel WAL archiving, delta restore, and encryption support       │
+│   pg_stat_replication = system view showing streaming replication lag per standby                     │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Application Connectors
 
 | Language | Library | Notes |

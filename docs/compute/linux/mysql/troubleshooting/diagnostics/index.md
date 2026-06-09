@@ -4,6 +4,37 @@
 MySQL diagnostics — reading the error log, SHOW PROCESSLIST, slow query log analysis, InnoDB status, and performance_schema queries for locking and I/O bottlenecks.
 </div>
 
+```text
+┌───────────────────────────────────────── MySQL — Diagnostics ─────────────────────────────────────────┐
+│                                                                                                       │
+│   Diagnostic sequence: error log → SHOW PROCESSLIST → InnoDB status → performance_schema              │
+│   Error log is the first stop for crashes, plugin failures, and replication errors                    │
+│   InnoDB engine status shows deadlocks, lock waits, and buffer pool state in one command              │
+│                                                                                                       │
+│   Error log                                                                                           │
+│   Location: /var/log/mysql/error.log (Debian) or /var/log/mysqld.log (RHEL)                           │
+│   journalctl -u mysqld -n 100: systemd journal for recent service events                              │
+│   Look for: [ERROR], InnoDB startup messages, and crash recovery messages                             │
+│                                                                                                       │
+│   Process and lock analysis                                                                           │
+│   SHOW FULL PROCESSLIST: all sessions with full query text and wait state                             │
+│   SHOW ENGINE INNODB STATUS: deadlocks, lock waits, active trx, buffer pool hit rate                  │
+│   SELECT * FROM information_schema.INNODB_TRX: transactions holding locks > 60 seconds                │
+│   SELECT * FROM performance_schema.events_waits_current: current wait events per thread               │
+│                                                                                                       │
+│   Slow query analysis                                                                                 │
+│   SET GLOBAL slow_query_log=ON; SET GLOBAL long_query_time=1: enable without restart                  │
+│   pt-query-digest /var/log/mysql/slow.log: top queries ranked by total execution time                 │
+│   EXPLAIN SELECT ...: shows index usage, join type, and estimated rows for a query                    │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   SHOW ENGINE INNODB STATUS = InnoDB internal diagnostic dump; includes deadlock history              │
+│   EXPLAIN     = query plan analyser; shows which indexes MySQL will use for a SELECT                  │
+│   long_query_time = threshold in seconds; queries exceeding it are written to slow_query_log          │
+│   INNODB_TRX  = information_schema table listing all currently running InnoDB transactions            │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Error Log
 
 ```bash
