@@ -4,6 +4,39 @@
 SQL Server hardening — surface area reduction, disabling xp_cmdshell, SQL Browser, CLR, linked server restrictions, auditing, and CIS benchmark key controls.
 </div>
 
+```text
+┌─────────────────────────────────────── SQL Server — Hardening ────────────────────────────────────────┐
+│                                                                                                       │
+│   Disable all unused features: xp_cmdshell, CLR, OLE Automation, Database Mail, remote admin          │
+│   SQL Browser should be disabled if using default instance on static port 1433                        │
+│   Enable SQL Server Audit; log FAILED_LOGIN_GROUP and SUCCESSFUL_LOGIN_GROUP at minimum               │
+│                                                                                                       │
+│   Surface area reduction (sp_configure)                                                               │
+│   xp_cmdshell = 0: removes OS command execution from T-SQL context                                    │
+│   Ole Automation Procedures = 0; clr enabled = 0 (if CLR not used)                                    │
+│   Database Mail XPs = 0 (if mail not used); remote admin connections = 0                              │
+│                                                                                                       │
+│   Dangerous logins                                                                                    │
+│   ALTER LOGIN guest DISABLE; check for blank passwords via sys.sql_logins PWDCOMPARE                  │
+│   Restrict sysadmin membership: audit sys.server_role_members WHERE role = sysadmin                   │
+│   Rename or disable the sa account: ALTER LOGIN sa DISABLE                                            │
+│                                                                                                       │
+│   SQL Server Audit                                                                                    │
+│   CREATE SERVER AUDIT to FILE; add FAILED_LOGIN_GROUP and SUCCESSFUL_LOGIN_GROUP                      │
+│   ALTER SERVER AUDIT WITH (STATE = ON); verify with sys.server_audits                                 │
+│                                                                                                       │
+│   CIS Benchmark key controls                                                                          │
+│   xp_cmdshell = 0; sa login disabled; TDE on sensitive databases; TLS forced                          │
+│   Audit enabled; sysadmin members reviewed; no blank-password SQL logins                              │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   xp_cmdshell   = extended stored proc executing OS commands; major attack surface if enabled         │
+│   CLR            = Common Language Runtime integration; allows .NET code in SQL Server                │
+│   SQL Browser   = resolves named instance names to ports; disable if not using named instances        │
+│   sa             = built-in SQL Server Administrator login; disable or rename in production           │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Surface Area Reduction
 
 ```sql

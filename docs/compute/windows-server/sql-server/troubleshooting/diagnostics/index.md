@@ -4,6 +4,39 @@
 SQL Server diagnostics — error log, Activity Monitor equivalent via DMVs, blocking chain analysis, AG health, tempdb contention, and Query Store.
 </div>
 
+```text
+┌────────────────────────────────────── SQL Server — Diagnostics ───────────────────────────────────────┐
+│                                                                                                       │
+│   Primary diagnostic sources: error log (sp_readerrorlog), DMVs, Windows Event Log                    │
+│   Blocking: sys.dm_exec_requests WHERE blocking_session_id > 0; KILL head blocker to unblock          │
+│   AG health: sys.dm_hadr_availability_replica_states; log_send_queue_size = bytes not sent            │
+│                                                                                                       │
+│   Error log                                                                                           │
+│   EXEC sp_readerrorlog; filter: EXEC sp_readerrorlog 0, 1, 'Login failed'                             │
+│   Windows Event Log: Get-EventLog -LogName Application -Source MSSQLSERVER -Newest 50                 │
+│                                                                                                       │
+│   Active requests and blocking                                                                        │
+│   sys.dm_exec_requests: session_id, status, blocking_session_id, wait_type, wait_time                 │
+│   CROSS APPLY sys.dm_exec_sql_text(sql_handle): gets query text per request                           │
+│   KILL <session_id>: terminates a session; use to release blocking locks                              │
+│                                                                                                       │
+│   AG and tempdb                                                                                       │
+│   sys.dm_hadr_availability_replica_states: role, sync state, health per replica                       │
+│   sys.dm_hadr_database_replica_states: log_send_queue_size, redo_queue_size                           │
+│   tempdb contention: sys.dm_os_wait_stats WHERE wait_type LIKE 'PAGELATCH%'                           │
+│                                                                                                       │
+│   Query Store (SQL 2016+)                                                                             │
+│   ALTER DATABASE app_prod SET QUERY_STORE = ON; captures plan history per query                       │
+│   sys.query_store_runtime_stats: avg_duration, count_executions per plan                              │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   sp_readerrorlog = reads SQL Server error log; ERRORLOG file on disk                                 │
+│   DMV            = Dynamic Management View; sys.dm_* views exposing live SQL Server state             │
+│   PAGELATCH      = wait for in-memory data page access; high counts = tempdb contention               │
+│   Query Store    = built-in workload tracking; captures execution plans and regressions               │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Error Log
 
 ```sql

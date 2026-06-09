@@ -4,6 +4,36 @@
 SQL Server escalation criteria — P1/P2 indicators, evidence bundle before engaging Microsoft CSS or DBA team, and AG failover decision criteria.
 </div>
 
+```text
+┌─────────────────────────────────────── SQL Server — Escalation ───────────────────────────────────────┐
+│                                                                                                       │
+│   Collect evidence bundle before paging DBA; reduces triage time significantly                        │
+│   P1 triggers: service down, AG primary lost, blocking > 10 min, log full, corruption                 │
+│   P2 triggers: AG sync degraded with RPO risk, repeated deadlocks with application impact             │
+│                                                                                                       │
+│   P1 — page DBA on-call immediately                                                                   │
+│   SQL Server service down / unreachable                                                               │
+│   AG primary down; no automatic failover (manual failover required)                                   │
+│   Blocking chain > 10 minutes with application impact                                                 │
+│   Transaction log full; writes failing (log growth investigation required)                            │
+│   Corruption detected (database in suspect state)                                                     │
+│   Disk > 90% on data or log volume                                                                    │
+│                                                                                                       │
+│   P2 — alert DBA; begin triage                                                                        │
+│   AG synchronisation degraded; RPO at risk (log_send_queue growing)                                   │
+│   Repeated deadlocks affecting application throughput                                                 │
+│                                                                                                       │
+│   Evidence bundle (collect before calling)                                                            │
+│   sp_readerrorlog; sys.dm_exec_requests (blocking); sys.dm_hadr_*; xp_fixeddrives; DBCC SQLPERF       │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   FORCE_FAILOVER_ALLOW_DATA_LOSS = manual AG failover; use only when primary completely lost          │
+│   DBCC SQLPERF(LOGSPACE) = reports log file size and used space per database                          │
+│   suspect database = SQL Server marked DB suspect after crash; do not restart without DBA             │
+│   deadlock        = two sessions each waiting for the other's lock; SQL Auto-resolves by killing one  │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Escalation Thresholds
 
 | Condition | Severity | Action |

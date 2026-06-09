@@ -4,6 +4,39 @@
 SQL Server encryption — Transparent Data Encryption (TDE), Always Encrypted, column-level encryption, TLS for connections, and backup encryption.
 </div>
 
+```text
+┌─────────────────────────────────────── SQL Server — Encryption ───────────────────────────────────────┐
+│                                                                                                       │
+│   TDE encrypts data files and logs at rest; I/O encrypted transparently with no app changes required  │
+│   Always Encrypted: column-level encryption; key never leaves client; SQL Server sees ciphertext      │
+│   Back up TDE certificate immediately after creation — losing it means losing database access         │
+│                                                                                                       │
+│   TDE setup sequence                                                                                  │
+│   1. USE master; CREATE MASTER KEY ENCRYPTION BY PASSWORD = '...'                                     │
+│   2. CREATE CERTIFICATE TDE_Cert WITH SUBJECT = 'TDE Certificate'                                     │
+│   3. USE app_prod; CREATE DATABASE ENCRYPTION KEY WITH ALGORITHM = AES_256                            │
+│   4. ALTER DATABASE app_prod SET ENCRYPTION ON                                                        │
+│   5. Verify: sys.dm_database_encryption_keys; encryption_state = 3 = encrypted                        │
+│   6. BACKUP CERTIFICATE TDE_Cert TO FILE with PRIVATE KEY                                             │
+│                                                                                                       │
+│   Always Encrypted                                                                                    │
+│   Column Master Key (CMK): stored in Windows Certificate Store or Azure Key Vault                     │
+│   Column Encryption Key (CEK): encrypted by CMK; stored in SQL Server as ciphertext                   │
+│   Application driver must support Always Encrypted; SQL Server never decrypts the data                │
+│                                                                                                       │
+│   TLS and backup encryption                                                                           │
+│   TLS: configure via SQL Server Configuration Manager; Force Encryption = Yes                         │
+│   Verify: sys.dm_exec_connections WHERE session_id = @@SPID; encrypt_option = TRUE                    │
+│   Backup encryption: WITH ENCRYPTION (ALGORITHM = AES_256, SERVER CERTIFICATE = TDE_Cert)             │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   TDE           = Transparent Data Encryption; encrypts .mdf/.ldf/.ndf files and backups at rest      │
+│   Always Encrypted = client-side column encryption; SQL Server processes only ciphertext              │
+│   CMK           = Column Master Key; stored outside SQL Server; protects CEKs                         │
+│   CEK           = Column Encryption Key; stored in SQL Server; encrypted by CMK                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Transparent Data Encryption (TDE)
 
 TDE encrypts data and log files at rest. I/O is encrypted/decrypted transparently.
