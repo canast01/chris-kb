@@ -21,4 +21,9 @@ PowerCLI security: RBAC and role management, credential and certificate handling
   <span>Session controls, connection security settings, script signing, and audit log review.</span>
 </a>
 
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>vSAN encryption and key rotation, VM encryption (VMcrypt), KMS management, and TLS configuration.</span>
+</a>
+
 </div>

@@ -4,7 +4,7 @@
 Diagnosing and resolving PowerCLI issues: connection failures, module conflicts, API errors, certificate problems, and performance issues with large inventories.
 </div>
 
-<div class="kb-grid kb-grid-2">
+<div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">
   <strong>Common Issues</strong>
@@ -14,6 +14,11 @@ Diagnosing and resolving PowerCLI issues: connection failures, module conflicts,
 <a class="kb-card" href="diagnostics/">
   <strong>Diagnostics</strong>
   <span>Debug mode, API call tracing, performance profiling, and log collection for escalation.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>Diagnostic info collection, VMware support case process, API error codes, and community resources.</span>
 </a>
 
 </div>

@@ -31,4 +31,9 @@ PowerCLI operational reference: cmdlet library, automation scripts, health check
   <span>PowerCLI version upgrades, module management, and compatibility with vCenter versions.</span>
 </a>
 
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>VM inventory exports, storage policy snapshots, permissions exports, tag backups, and module inventory.</span>
+</a>
+
 </div>
