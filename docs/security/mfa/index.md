@@ -61,20 +61,6 @@ Multi-Factor Authentication (MFA) reference covering Overview, MFA Authenticatio
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-<div class="kb-grid">
-  <a class="kb-card" href="operations/">
-    <div class="kb-card-icon">⚙️</div>
-    <div class="kb-card-title">Operations</div>
-    <div class="kb-card-desc">Authentication flows, MFA method management, health checks, enrollment</div>
-  </a>
-</div>
-
-## Overview
-
-MFA adds an additional authentication factor beyond passwords to protect accounts and systems from unauthorized access.
-
-## MFA Authentication Flow
-
 ```text
   User                  Identity Provider (IdP)          MFA Service           Application
     │                            │                            │                     │
@@ -96,8 +82,6 @@ MFA adds an additional authentication factor beyond passwords to protect account
     │                    [Session established — token TTL enforced]                │
 ```
 
-## TOTP vs Push Comparison
-
 ```text
   TOTP (Time-based OTP)                Push Notification
   ──────────────────────────────────   ─────────────────────────────────────────
@@ -108,6 +92,18 @@ MFA adds an additional authentication factor beyond passwords to protect account
   Phishing-resistant if typed once     Vulnerable to MFA fatigue (auto-accept)
   Hardware token: highest assurance    Number-matching mitigates fatigue attacks
 ```
+
+<div class="kb-grid">
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Authentication flows, MFA method management, health checks, enrollment</div>
+  </a>
+</div>
+
+## Overview
+
+MFA adds an additional authentication factor beyond passwords to protect accounts and systems from unauthorized access.
 
 ## Daily Checks
 

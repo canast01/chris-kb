@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Test Failover Date and Result, Alert on Plans Not Tested in 30 Days, Check Placeholder VMs Exist at Recovery Site, Export Recovery Plan Summary.
+SRM operational scripts — PowerCLI and REST API automation for replication lag reporting, RPO compliance checking, recovery plan test scheduling, 90-day compliance alerting, placeholder VM verification, and plan history export to CSV for DR governance reporting.
 </div>
 
   SRM Automation via PowerCLI + REST API

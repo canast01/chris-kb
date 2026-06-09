@@ -1,7 +1,7 @@
 # Horizon (VDI) — Security
 
 <div class="kb-summary">
-Horizon (VDI) — Security reference.
+Horizon security controls — AD authentication, RSA SecurID and SAML MFA, Connection Server and UAG certificate management, RBAC entitlements, Blast Extreme and PCoIP TLS encryption, smart card authentication, App Volumes and DEM file encryption, and USB device restriction policies.
 </div>
 
 ```text

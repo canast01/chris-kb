@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Azure Backup jobs, restore procedures, and Recovery Services vault management. See also: [Backup & DR](../../backup-dr/index.md) for full Azure Backup and Azure Site Recovery reference.
+Azure Backup and Restore — Recovery Services vault management, VM backup policies, snapshot schedules (hourly/daily/weekly), volume-level and file-level restore procedures, replication to DR site, and quarterly test restore cadence.
 </div>
 ```text
 ┌───────────────────────────── Cloud Azure Operations — Backup and Restore ─────────────────────────────┐

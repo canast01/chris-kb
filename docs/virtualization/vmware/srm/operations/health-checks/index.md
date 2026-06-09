@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Health Checks reference covering Protection Group Health, RPO Compliance Check, SRA Status (Array-Based Replication), Placeholder VMs at Recovery Site, Recovery Plan Pre-Check and 2 more sections.
+SRM health checks — site pair connectivity verification, VM replication status and RPO compliance, recovery plan test compliance (90-day rule), RTO validation, placeholder VM presence at recovery site, and protection group coverage audit across all protected workloads.
 </div>
 
 ```text

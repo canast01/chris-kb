@@ -119,20 +119,6 @@ Public Key Infrastructure (PKI) reference covering PKI Architecture (Typical Ent
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-<div class="kb-grid">
-  <a class="kb-card" href="deploy/">
-    <div class="kb-card-icon">🚀</div>
-    <div class="kb-card-title">Deploy</div>
-    <div class="kb-card-desc">CA hierarchy deployment: Root CA, Issuing CA, CRL/OCSP, and auto-enrollment</div>
-  </a>
-  <a class="kb-card" href="operations/">
-    <div class="kb-card-icon">⚙️</div>
-    <div class="kb-card-title">Operations</div>
-    <div class="kb-card-desc">Certificate issuance, renewal, revocation, ADCS health checks</div>
-  </a>
-</div>
-
-## PKI Architecture (Typical Enterprise)
 
 ```text
 Root CA (offline, air-gapped)
@@ -141,8 +127,6 @@ Root CA (offline, air-gapped)
         ├── User certificates (smart card / email encryption)
         └── Code signing certificates
 ```
-
-## TLS Handshake Flow
 
 ```text
   Client                                          Server
@@ -172,8 +156,6 @@ Root CA (offline, air-gapped)
     │◄──────── Application Data (encrypted) ───────►│
 ```
 
-## Certificate Validation Chain
-
 ```text
   Browser / Client
        │  verify signature
@@ -189,6 +171,19 @@ Root CA (offline, air-gapped)
        └── [trusted]  →  chain valid
            [not found] →  UNKNOWN_CA / PKIX error
 ```
+
+<div class="kb-grid">
+  <a class="kb-card" href="deploy/">
+    <div class="kb-card-icon">🚀</div>
+    <div class="kb-card-title">Deploy</div>
+    <div class="kb-card-desc">CA hierarchy deployment: Root CA, Issuing CA, CRL/OCSP, and auto-enrollment</div>
+  </a>
+  <a class="kb-card" href="operations/">
+    <div class="kb-card-icon">⚙️</div>
+    <div class="kb-card-title">Operations</div>
+    <div class="kb-card-desc">Certificate issuance, renewal, revocation, ADCS health checks</div>
+  </a>
+</div>
 
 ## ADCS Health Checks
 

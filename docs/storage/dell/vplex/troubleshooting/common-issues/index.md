@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Common Issues reference covering Incident Triage, Issue Reference, Common Issues — Quick Reference.
+Dell VPLEX common issues — path and virtual volume failures, backend LUN errors, Metro cluster connectivity problems, Witness quorum events, and authentication failures. Symptom-to-resolution quick reference with diagnostic steps and escalation path.
 </div>
 ```text
 ┌───────────────────────────────────── Dell VPLEX — Common Issues ──────────────────────────────────────┐

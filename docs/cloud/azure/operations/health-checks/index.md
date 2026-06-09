@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Service health, VM status, load balancer health, and monitor alert review. See also: [Operations](../index.md) for the full daily checklist and incident triage procedures.
+Azure daily health checks — runnable CLI routine covering service health incidents, VM power states and provisioning failures, load balancer backend pool health, storage capacity, NSG flow log validation, and Monitor alert review.
 </div>
 
 ## Run This Routine

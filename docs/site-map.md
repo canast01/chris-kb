@@ -99,8 +99,7 @@ Full index of all KB sections and sub-sections.
 
 | Section | Sub-sections |
 |---|---|
-| [Backup](backup/index.md) | [Veeam](backup/veeam/index.md) · [Commvault](backup/commvault/index.md) · [NetBackup](backup/netbackup/index.md) |
-| [Disaster Recovery](dr/index.md) | [DR Design](dr/design/index.md) · [Runbooks](dr/runbooks/index.md) · [Recovery Testing](dr/recovery-testing/index.md) · [IRE](dr/ire/index.md) · [Backup Validation](dr/backup-validation/index.md) · [Troubleshooting](dr/troubleshooting/index.md) · [SLOs](dr/service-level-objectives/index.md) · [Service Availability](dr/service-availability/index.md) · [Failure Testing](dr/failure-testing/index.md) · [Reliability Engineering](dr/reliability-engineering/index.md) · [Health Checks](dr/health-checks/index.md) |
+| [Backup & DR](backup/index.md) | [Veeam](backup/veeam/index.md) · [Commvault](backup/commvault/index.md) · [NetBackup](backup/netbackup/index.md) · [DR Design](backup/dr-design/index.md) · [Runbooks](backup/runbooks/index.md) · [Recovery Testing](backup/recovery-testing/index.md) · [IRE](backup/ire/index.md) · [Backup Validation](backup/backup-validation/index.md) · [Health Checks](backup/health-checks/index.md) · [Failure Testing](backup/failure-testing/index.md) · [Reliability Engineering](backup/reliability-engineering/index.md) · [Service Availability](backup/service-availability/index.md) · [SLOs](backup/service-level-objectives/index.md) · [Troubleshooting](backup/troubleshooting/index.md) |
 
 ## Security & Compliance
 
