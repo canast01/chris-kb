@@ -54,5 +54,5 @@ AWS CLI S3 command reference: high-level s3 commands (cp, mv, sync, ls, rm) and 
 │   Lifecycle rule = transitions objects to cheaper tiers (Glacier) or expires them                     │
 │   Replication    = CRR/SRR: cross-region or same-region copy for DR or compliance                     │
 │   head-object    = returns metadata without downloading the object body                               │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
