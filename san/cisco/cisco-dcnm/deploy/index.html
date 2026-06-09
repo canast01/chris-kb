@@ -2230,6 +2230,40 @@
 
 
 <h1 id="cisco-dcnm-initial-deployment">Cisco DCNM — Initial Deployment<a class="headerlink" href="#cisco-dcnm-initial-deployment" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Cisco DCNM — Deployment Overview ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   DCNM manages Nexus (LAN/VXLAN) and MDS (SAN/FC) fabrics from a single OVA-deployed VM               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   DCNM 11.x is standalone; v12+ is renamed NDFC and runs on the Nexus Dashboard platform              │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Fabric parameters (BGP ASN, underlay IP range, NTP, DNS) must be set before adding switches         │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   VM requirements                                                                                     │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   8 vCPU, 32 GB RAM, 500 GB disk; vSphere 7.0+ for OVA; static IP with DNS resolvable FQDN            │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Size at deploy: Small (≤25 switches), Medium (≤150), Large (≤500)                                   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Ports: inbound UDP 162 (SNMP traps), TCP 443 (NX-API callback); outbound TCP 22 + UDP 161           │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   OVA deployment and initial setup                                                                    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Deploy OVA via vSphere: map eth0 to management VLAN, eth1 to data/fabric network                    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Run /root/packaged-files/scripts/appmgr initial_setup (sets IP, DNS, NTP, admin password)           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Upload licence file under Administration &gt; Licensing before adding fabrics                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   Adding fabrics                                                                                      │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   SAN fabric (MDS): SAN &gt; Fabrics &gt; Add Fabric; enter seed switch IP + SNMP community string          │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   LAN fabric (Nexus): LAN &gt; Fabrics &gt; Create Fabric; choose Easy Fabric (VXLAN BGP EVPN)              │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Assign spine/leaf roles; click Recalculate &amp; Deploy to push underlay config to all switches         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Validation                                                                                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   All switches show Policy Status: In Sync and Config Status: In Sync                                 │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Dashboard health score green; no critical alarms in Monitor &gt; Events                                │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Test SNMP trap: shut/no-shut an access port; event appears in DCNM within 30 seconds                │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   NDFC        = Nexus Dashboard Fabric Controller; DCNM renamed from v12 onward                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   NX-API      = Nexus REST API; DCNM uses it to push configuration to Nexus switches                  │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   VXLAN BGP EVPN = overlay fabric using VXLAN encapsulation and BGP for MAC/IP distribution           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   In Sync     = switch running config matches the DCNM-intended config; no drift detected             │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   Easy Fabric = DCNM template for new VXLAN BGP EVPN deployments; auto-assigns underlay IPs           │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>This guide covers deploying Cisco Data Center Network Manager (DCNM) from OVA installation through adding a first fabric. DCNM (now integrated into Nexus Dashboard Fabric Controller, NDFC) is Cisco's centralized management platform for Nexus data center switching fabrics — covering both SAN (MDS) and LAN (Nexus VXLAN/Classic) fabrics.</p>
 <p>Note: Cisco renamed DCNM to NDFC starting with version 12.x on the Nexus Dashboard platform. This guide covers standalone DCNM 11.x deployment; for NDFC 12.x+ see the Nexus Dashboard deployment guide.</p>
 <hr />
@@ -2284,7 +2318,7 @@
 <li>Access the VM console. Log in with <code>root</code> / the password set in the OVA deployment wizard.</li>
 <li>Run the DCNM installation wizard:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/root/packaged-files/scripts/appmgr<span class="w"> </span>initial_setup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>/root/packaged-files/scripts/appmgr<span class="w"> </span>initial_setup
 </code></pre></div>
 <p>The wizard prompts for:</p>
 <ul>
@@ -2386,10 +2420,10 @@
 <li>Check the event log under <strong>Monitor &gt; Events</strong> — no critical events should be present post-deployment.</li>
 </ol>
 <p><strong>Configuration consistency:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On a deployed Nexus switch, confirm DCNM-generated config is applied:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>nv<span class="w"> </span>overlay
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># BGP neighbors (spine) should show Established state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On a deployed Nexus switch, confirm DCNM-generated config is applied:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>nv<span class="w"> </span>overlay
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># BGP neighbors (spine) should show Established state</span>
 </code></pre></div>
 <p><strong>SNMP trap test:</strong></p>
 <ol>
@@ -2397,10 +2431,10 @@
 <li>In DCNM under <strong>Monitor &gt; Events</strong>, the event should appear within 30 seconds.</li>
 </ol>
 <p><strong>Save DCNM application backup:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From DCNM CLI:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>appmgr<span class="w"> </span>backup
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Creates a .tar.gz backup of the DCNM database and configuration</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Store this in an external location</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From DCNM CLI:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>appmgr<span class="w"> </span>backup
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Creates a .tar.gz backup of the DCNM database and configuration</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Store this in an external location</span>
 </code></pre></div>
 
 
