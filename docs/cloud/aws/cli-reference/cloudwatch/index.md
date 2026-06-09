@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-CloudWatch reference.
+AWS CloudWatch CLI reference — metrics queries, alarm management, log group operations, and Insights queries.
 </div>
 
 ```text

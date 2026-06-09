@@ -1,7 +1,7 @@
 # Pure Operations
 
 <div class="kb-summary">
-Pure Operations reference.
+Pure Storage operations — Pure1 cloud portal management, hardware and capacity alerts, and support case workflows.
 </div>
 
 ```text

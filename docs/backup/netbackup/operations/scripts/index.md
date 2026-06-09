@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-NetBackup Scripts reference.
+NetBackup automation scripts — job summary reporting, failed job alerts, STU capacity monitoring, and catalog validation.
 </div>
 
 ```text

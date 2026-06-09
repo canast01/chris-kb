@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-CloudFormation reference.
+AWS CloudFormation CLI reference — stack lifecycle, change set preview, drift detection, and StackSet operations.
 </div>
 
 ```text
