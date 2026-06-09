@@ -2636,6 +2636,49 @@
 <p>This guide covers deploying a CommVault CommCell environment from scratch — from
 CommServe installation through MediaAgent configuration, client onboarding, policy
 creation, and first-backup validation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── CommVault — Initial Deployment ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   CommCell: CommVault&#39;s deployment unit — CommServe + MediaAgent(s) + clients                         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   CommServe is Windows-only: min 8 vCPU / 32 GB RAM / 200 GB SSD; SQL Server required                 │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   MediaAgents handle data movement; one per backup domain, subnet, or VLAN segment                    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   Backup clients: Windows, Linux, VMware vCenter, SQL, Exchange, SharePoint                           │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   CommServe installation                                                                              │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Run CommVault installer as local admin; select CommServe + Content Store + tools                    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Provide SQL instance (SQL 2016–2022); installer creates CommServ database schema                    │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   License activation: CommCell Console → Administration → CommCell Registration                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   Post-install: apply latest service pack (CSP) before adding clients or MediaAgents                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   MediaAgent configuration                                                                            │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Install MediaAgent package on backup server; register to CommServe during install                   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   Define library (local disk / NAS share / tape) via Storage → Library and Drive                      │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   Create storage policy: Protection → Policies → Storage Policies → Add Storage Policy                │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Assign primary and secondary copy: disk pool primary; dedup or tape for secondary                   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Client onboarding                                                                                   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Install client package (Win/Linux) or register vCenter as VSA pseudoclient                          │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Push install: CommCell Console → Client Computers → Add Client (Windows only)                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Verify firewall ports: TCP 8400 (CommServe tunnel), 8403 (Media tunnel), 443 (web)                  │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   First-backup validation                                                                             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   Create subclient; associate storage policy; run full backup immediately                             │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   Monitor: Job Controller tab; verify status = Completed; check job summary report                    │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   Verify recovery: browse backup → restore single file to alternate path as smoke test                │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   Physical infrastructure                                                                             │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   CommServe VM: Windows Server 2019/2022; dedicated SQL instance; SSD storage                         │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   MediaAgent VMs or physical servers per subnet; NAS or tape libraries for repositories               │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│   CommServe    = CommCell central server; hosts database, job scheduler, and media mgmt               │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│   MediaAgent   = data movement engine; streams data between client and storage target                 │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│   storage policy = CommVault policy linking clients to storage pools and retention rules              │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│   subclient    = logical subset of a client&#39;s data; own schedule, policy, and options                 │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│   CSP          = CommVault Service Pack; cumulative fix and feature update bundle                     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│   VSA          = Virtual Server Agent; CommVault&#39;s VMware/Hyper-V backup component                    │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│   dedup pool   = deduplication storage pool on MediaAgent; reduces backup storage size                │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <h3 id="hardware-and-os">Hardware and OS<a class="headerlink" href="#hardware-and-os" title="Permanent link">&para;</a></h3>

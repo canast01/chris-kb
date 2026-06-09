@@ -2592,6 +2592,51 @@
 <p>This guide walks through deploying Veeam Backup &amp; Replication from bare metal to a
 fully operational backup environment. Steps cover server installation, infrastructure
 onboarding, proxy and repository configuration, and first-job validation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Veeam — Initial Deployment ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   VBR server: Windows 2019/2022; min 4 vCPU / 16 GB RAM; SQL Server for catalog                       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Proxy servers offload data processing from VBR; one per VMware cluster or subnet                    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Repositories store backup files; NAS, SAN LUN, object storage, or Scale-Out                         │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   Configuration DB: bundled SQL Express (10 GB limit) or external SQL for production                  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   VBR server installation                                                                             │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Run Veeam installer; select Backup &amp; Replication component; provide SQL connection                  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Accept port defaults (9392 TCP for service, 443 for API and Enterprise Manager)                     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Apply latest Veeam cumulative patches (P-series) immediately after initial install                  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   License: Help → License → Add License; enter NFR, rental, or perpetual key                          │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Infrastructure onboarding                                                                           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Add vCenter: Infrastructure → Add Server → VMware vSphere → vCenter Server                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   Add Hyper-V host: Infrastructure → Add Server → Microsoft Hyper-V                                   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   Add physical servers (Linux/Windows): Infrastructure → Add Server → Windows/Linux                   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Credentials stored in Veeam Credentials Manager; use service accounts, not admin                    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Proxy and repository configuration                                                                  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Add proxy: Infrastructure → Backup Proxies → Add VMware Backup Proxy                                │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Proxy transport mode: Direct SAN (fastest), Hot-Add (vSAN), NBD (fallback)                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Add repository: Backup Infrastructure → Backup Repositories → Add Backup Repository                 │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Scale-Out: combines multiple repositories into a single performance-tiering pool                    │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   First-job validation                                                                                │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   Create job: Home → Backup Job → Virtual machine; select VMs, policy, retention                      │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   Run immediately: right-click job → Start; verify status = Success in last run column                │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   Smoke test: restore single file from backup; verify content is intact and usable                    │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│                                                                                                       │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   Physical infrastructure                                                                             │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   VBR VM: Windows 2019/2022 with SQL; dedicated disk for VBRCatalog                                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   Proxy VMs co-located with ESXi clusters; repositories on NAS or directly on SAN LUNs                │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│   VBR          = Veeam Backup &amp; Replication; the main server and console application                  │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│   proxy        = data processing VM; handles de-dup, compression, and encryption                      │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│   repository   = storage target holding .vbk (full) and .vib (incremental) backup files               │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│   Hot-Add      = proxy inside same vSAN cluster; accesses VMDKs via vSphere storage API               │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│   Direct SAN   = proxy reads VM data directly from SAN LUN; bypasses ESXi network path                │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│   NBD          = Network Block Device; LAN-based data path; slowest but always available              │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│   Scale-Out    = performance tier + capacity tier pool; auto-moves old data to cold storage           │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│   retention    = number of restore points kept; older points expire per policy settings               │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <h3 id="hardware-and-os">Hardware and OS<a class="headerlink" href="#hardware-and-os" title="Permanent link">&para;</a></h3>

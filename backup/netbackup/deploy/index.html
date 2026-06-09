@@ -2581,6 +2581,49 @@
 <p>This guide covers deploying Veritas NetBackup from bare metal through a fully
 operational backup environment — Primary Server, Media Servers, storage units,
 deduplication pool, client onboarding, and policy creation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── NetBackup — Initial Deployment ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   NetBackup: Primary Server + Media Server(s) + clients + MSDP dedup pool                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Primary Server: RHEL 8/9 or Windows 2019/2022; min 32 GB RAM; 500 GB+ catalog volume                │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Media Servers handle data streams; one per backup domain, LAN segment, or tape library              │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   MSDP: deduplication pool on Media Server SSD/NVMe volumes; reduces storage consumption              │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Primary Server installation                                                                         │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Run NetBackup installer as root (Linux) or local admin (Windows)                                    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Set primary server hostname during install — must match DNS A record permanently                    │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Activate license key: nbactls -AddKey -Key &lt;key&gt;  or  Admin Console → Help → Licenses               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   Apply latest EEB (Emergency Engineering Binary) patches post-install                                │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Media Server installation                                                                           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Install media server package; provide Primary Server hostname during setup                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   Define storage units: Disk STU (MSDP pool path), BasicDisk STU, or tape device                      │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   MSDP pool creation: nbdevconfig command or Admin Console → Storage → New Storage Unit               │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Verify Media Server reachability: bptestnetconn -h mediaserver -verbose                             │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Client onboarding                                                                                   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Push install: bpinst -MASTER_SERVER primary.fqdn -VERBOSE -UNIX_CLIENT client.fqdn                  │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Manual: install client package; set server list to point to Primary Server                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Verify: bpclntcmd -self on client; check client in Admin Console → Hosts                            │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Policy creation                                                                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   Create policy: bppolicynew policyname -pt Standard; assign client, schedule, storage                │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   Schedule types: Full (weekly), Differential Incremental (daily), Cumulative Incremental             │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   Test: bpbackup -p policyname -s sched_name; monitor with bpdbjobs -all_columns                      │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   Physical infrastructure                                                                             │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   Primary Server: dedicated VM or physical; isolated catalog volume; SSD storage                      │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   Media Servers: per site or subnet; high-throughput network to MSDP/tape storage                     │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│   Primary Server = NBU master; manages catalog, job scheduling, policy engine                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│   Media Server = data mover; streams backup data from clients to storage units                        │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│   MSDP         = Media Server Deduplication Pool; SHA-based dedup on Media Server disk                │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│   catalog      = NBU database of all backup images, schedules, and client records                     │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│   STU          = Storage Unit; logical pointer from NBU policy to a physical storage device           │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│   EEB          = Emergency Engineering Binary; targeted patch for a specific NBU bug                  │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│   bptestnetconn = diagnostic tool to verify network connectivity between NBU components               │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <h3 id="hardware-and-os">Hardware and OS<a class="headerlink" href="#hardware-and-os" title="Permanent link">&para;</a></h3>
@@ -2672,12 +2715,12 @@ deduplication pool, client onboarding, and policy creation.</p>
 <li>Transfer to the Primary Server.</li>
 </ol>
 <h3 id="step-2-linux-installation">Step 2 — Linux Installation<a class="headerlink" href="#step-2-linux-installation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Extract the tarball</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tar<span class="w"> </span>-xzf<span class="w"> </span>NetBackup_10.x_LinuxR_x86_64.tar.gz
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>NetBackup_10.x_LinuxR_x86_64/
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Run the installer</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>./install
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Extract the tarball</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>tar<span class="w"> </span>-xzf<span class="w"> </span>NetBackup_10.x_LinuxR_x86_64.tar.gz
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">cd</span><span class="w"> </span>NetBackup_10.x_LinuxR_x86_64/
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Run the installer</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>./install
 </code></pre></div>
 <p>At the interactive prompts:</p>
 <ul>
@@ -2696,15 +2739,15 @@ deduplication pool, client onboarding, and policy creation.</p>
 <li>Complete the wizard and wait for installation to finish.</li>
 </ol>
 <h3 id="step-4-verify-services-linux">Step 4 — Verify Services (Linux)<a class="headerlink" href="#step-4-verify-services-linux" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all NetBackup daemons are running</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Key daemons to verify:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># bpdbm   — database manager</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># bprd    — request daemon</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># bpcd    — client daemon (runs on primary too)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># nbpem   — policy execution manager</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># nbstserv — storage server</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all NetBackup daemons are running</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Key daemons to verify:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># bpdbm   — database manager</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># bprd    — request daemon</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># bpcd    — client daemon (runs on primary too)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># nbpem   — policy execution manager</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># nbstserv — storage server</span>
 </code></pre></div>
 <h3 id="step-5-access-the-web-ui">Step 5 — Access the Web UI<a class="headerlink" href="#step-5-access-the-web-ui" title="Permanent link">&para;</a></h3>
 <p>Browse to <code>https://&lt;primary-server-fqdn&gt;/webui</code> and log in as the local admin
@@ -2714,9 +2757,9 @@ or domain account. The web UI is the primary management interface from NBU 9+.</
 <h3 id="step-1-run-the-installer-on-the-media-server">Step 1 — Run the Installer on the Media Server<a class="headerlink" href="#step-1-run-the-installer-on-the-media-server" title="Permanent link">&para;</a></h3>
 <p>Follow the same download and extraction steps as for the Primary Server.</p>
 <p>On Linux:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./install
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Select: 2 — NetBackup Media Server</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Enter the Primary Server FQDN when prompted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./install
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Select: 2 — NetBackup Media Server</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Enter the Primary Server FQDN when prompted</span>
 </code></pre></div>
 <p>On Windows, choose <strong>NetBackup Media Server</strong> in the setup wizard and enter
 the Primary Server hostname.</p>
@@ -2726,16 +2769,16 @@ Primary Server before it can be used.</p>
 <p>Via web UI: <strong>Hosts</strong> → <strong>Host Properties</strong> → the Media Server appears in a
 pending state → click <strong>Approve</strong>.</p>
 <p>Via CLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run on the Primary Server</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-addhost<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-machinename<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-machinetype<span class="w"> </span>media<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-masterserver<span class="w"> </span>&lt;primary-server-fqdn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run on the Primary Server</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/openv/netbackup/bin/admincmd/nbemmcmd<span class="w"> </span>-addhost<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-machinename<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-machinetype<span class="w"> </span>media<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-masterserver<span class="w"> </span>&lt;primary-server-fqdn&gt;
 </code></pre></div>
 <h3 id="step-3-verify-connectivity">Step 3 — Verify Connectivity<a class="headerlink" href="#step-3-verify-connectivity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From the Primary Server, test connection to the Media Server</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/openv/netbackup/bin/admincmd/bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;media-server-fqdn&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected output: EXIT STATUS 0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From the Primary Server, test connection to the Media Server</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/openv/netbackup/bin/admincmd/bptestbpcd<span class="w"> </span>-host<span class="w"> </span>&lt;media-server-fqdn&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expected output: EXIT STATUS 0</span>
 </code></pre></div>
 <hr />
 <h2 id="configure-storage-units">Configure Storage Units<a class="headerlink" href="#configure-storage-units" title="Permanent link">&para;</a></h2>
@@ -2763,20 +2806,20 @@ to give operational headroom.</p>
 <p>MSDP provides inline deduplication and is the recommended storage type for
 disk-based backups.</p>
 <h3 id="step-1-create-the-msdp-storage-server">Step 1 — Create the MSDP Storage Server<a class="headerlink" href="#step-1-create-the-msdp-storage-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Run on the Primary Server</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-creatests<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-media_server<span class="w"> </span>&lt;media-server-fqdn&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Run on the Primary Server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-creatests<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-media_server<span class="w"> </span>&lt;media-server-fqdn&gt;
 </code></pre></div>
 <p>Or via web UI: <strong>Storage</strong> → <strong>Storage Servers</strong> → <strong>+ Add</strong> →
 select <strong>Media Server Deduplication Pool</strong>.</p>
 <h3 id="step-2-create-the-dedup-pool">Step 2 — Create the Dedup Pool<a class="headerlink" href="#step-2-create-the-dedup-pool" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-createdp<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-dp_name<span class="w"> </span>MSDP-Pool-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-dp_path<span class="w"> </span>/mnt/msdp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/usr/openv/netbackup/bin/admincmd/nbdevconfig<span class="w"> </span>-createdp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-storage_server<span class="w"> </span>&lt;media-server-fqdn&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-dp_name<span class="w"> </span>MSDP-Pool-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-dp_path<span class="w"> </span>/mnt/msdp
 </code></pre></div>
 <p>The <code>/mnt/msdp</code> path should be a dedicated high-throughput volume. Do not share
 this volume with other data.</p>
@@ -2810,10 +2853,10 @@ vCenter credentials.</p>
 </ol>
 <h3 id="step-3-manual-client-installation-linux">Step 3 — Manual Client Installation (Linux)<a class="headerlink" href="#step-3-manual-client-installation-linux" title="Permanent link">&para;</a></h3>
 <p>If the Primary Server cannot reach the client directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the client, run the installer from a copied package</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>./install
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Select: 4 — NetBackup Client</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Enter the Primary Server FQDN</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the client, run the installer from a copied package</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>./install
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Select: 4 — NetBackup Client</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Enter the Primary Server FQDN</span>
 </code></pre></div>
 <p>After install, verify the client is visible under <strong>Hosts</strong> in the web UI.</p>
 <hr />
@@ -2905,7 +2948,7 @@ successfully completed)</strong>.</p>
 <h3 id="step-4-verify-catalog-backup">Step 4 — Verify Catalog Backup<a class="headerlink" href="#step-4-verify-catalog-backup" title="Permanent link">&para;</a></h3>
 <p>The NetBackup catalog must be protected by a catalog backup policy. Confirm
 the catalog backup policy exists and ran successfully:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/usr/openv/netbackup/bin/admincmd/bpbackupdb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/usr/openv/netbackup/bin/admincmd/bpbackupdb
 </code></pre></div>
 <p>A failed catalog backup is a critical risk; the catalog is required for all restores.</p>
 <h3 id="step-5-document-the-deployment">Step 5 — Document the Deployment<a class="headerlink" href="#step-5-document-the-deployment" title="Permanent link">&para;</a></h3>
