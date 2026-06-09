@@ -4,6 +4,38 @@
 Managing vSphere encryption via PowerCLI — vSAN encryption enablement and key rotation, VM encryption (vSphere VMcrypt) configuration, KMS cluster management, encrypted credential file handling, and TLS connection security settings.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Encryption Management ───────────────────────────────────────────┐
+│                                                                                                       │
+│   vSphere encryption is managed via PowerCLI through three paths: vSAN, VM (VMcrypt), and KMS         │
+│   Key provider must be configured first (Native Key Provider or external KMS) before enabling         │
+│   Always test encryption operations in a maintenance window — they are not instantaneously reversible │
+│                                                                                                       │
+│   vSAN encryption                                                                                     │
+│   Enable: Set-VsanClusterConfiguration -Configuration $cfg -EncryptionEnabled $true                   │
+│   Key rotation: Set-VsanClusterConfiguration with -ReKeyMethod (deep or shallow)                      │
+│   Check status: Get-VsanClusterConfiguration | Select-Object EncryptionEnabled, KmsServerName         │
+│   Requires: vSAN Enterprise licence + KMS cluster configured in vCenter                               │
+│                                                                                                       │
+│   VM encryption (VMcrypt)                                                                             │
+│   Create SPBM policy with encryption: New-SpbmStoragePolicy with encryption rule                      │
+│   Assign to VM: Set-VM -StoragePolicy $encryptionPolicy                                               │
+│   KMS cluster: Add-KeyManagementServer; trust established with certificate exchange                   │
+│   vSphere Native Key Provider (NKP): backup to VCSA file-based backup; no external KMS required       │
+│                                                                                                       │
+│   Credential file encryption                                                                          │
+│   Export-Clixml saves PSCredential objects as encrypted XML (DPAPI, machine-bound by default)         │
+│   Import-Clixml reads the file back and restores the credential object for the current user           │
+│   Limitation: the encrypted file is only usable on the machine and user account that created it       │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   NKP    = Native Key Provider; vCenter-internal key provider; backed by VCSA file-based backup       │
+│   KMS    = Key Management Server; external KMIP-compliant server (Thales, Entrust, HashiCorp Vault)   │
+│   DPAPI  = Windows Data Protection API; encrypts Export-Clixml output to the current user identity    │
+│   VMcrypt = per-VM encryption via SPBM policy; keys managed independently from vSAN encryption        │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## vSAN Encryption via PowerCLI
 
 Enable and manage vSAN data-at-rest encryption. Requires a configured KMS cluster in vCenter.

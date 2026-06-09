@@ -4,6 +4,41 @@
 Hardening PowerCLI deployments: enforcing certificate validation, script execution policies, session timeout controls, audit log review, and secure pipeline configuration.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Hardening and Secure Configuration ─────────────────────────────┐
+│                                                                                                       │
+│   Hardening PowerCLI protects vSphere management from credential theft and unauthorized access        │
+│   Enforce TLS validation, execution policies, and least-privilege accounts before deploying scripts   │
+│   Review audit logs regularly; vCenter logs all API calls made by automation service accounts         │
+│                                                                                                       │
+│   Certificate validation (most critical)                                                              │
+│   Production: Set-PowerCLIConfiguration -InvalidCertificateAction Fail -Confirm:$false                │
+│   Verify: Get-PowerCLIConfiguration | Select-Object InvalidCertificateAction                          │
+│   Import vCenter CA into OS trust store so -Fail mode accepts valid internal certificates             │
+│   Never use Ignore in production — MitM attacks against management plane become trivially easy        │
+│                                                                                                       │
+│   Script execution policy                                                                             │
+│   Set-ExecutionPolicy RemoteSigned: scripts from the internet must be signed; local scripts run free  │
+│   Set-ExecutionPolicy AllSigned: all scripts must be signed; strictest option                         │
+│   CI/CD pipelines: use Set-ExecutionPolicy Bypass -Scope Process for ephemeral pipeline sessions      │
+│                                                                                                       │
+│   Credential hygiene                                                                                  │
+│   Never store plaintext passwords in scripts or version control                                       │
+│   Use Store-VICredentialStoreItem or Export-Clixml (machine-bound); rotate quarterly                  │
+│   Service account passwords: managed in CyberArk or equivalent PAM; auto-rotated                      │
+│                                                                                                       │
+│   Audit log review                                                                                    │
+│   vCenter events: filter for service account login events and bulk API operations                     │
+│   ESXI audit: /var/log/shell.log captures SSH and ESXCLI commands on the host                         │
+│   Review automation run logs monthly for anomalous patterns (unexpected object modifications)         │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   ExecutionPolicy  = PowerShell script signing policy; Bypass/Unrestricted/RemoteSigned/AllSigned     │
+│   PAM              = Privileged Access Management; manages service account credentials (CyberArk)     │
+│   CEIP             = Customer Experience Improvement Program; disable in air-gapped environments      │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## PowerCLI Configuration Hardening
 
 ```powershell

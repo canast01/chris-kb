@@ -4,6 +4,36 @@
 PowerCLI diagnostic techniques: verbose/debug output, API call tracing via ExtensionData, performance profiling for large inventories, and log collection for VMware support escalations.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Diagnostics and Tracing ─────────────────────────────────────────┐
+│                                                                                                       │
+│   Start with verbose output; escalate to API tracing if the error is not obvious from the message     │
+│   ExtensionData exposes the raw vSphere API object — use it when PowerCLI cmdlets abstract too much   │
+│   Collect module versions and vCenter version as first step before any advanced diagnostics           │
+│                                                                                                       │
+│   Verbose and debug output                                                                            │
+│   $VerbosePreference = 'Continue': shows -Verbose messages from all cmdlets in the session            │
+│   $DebugPreference = 'Continue': shows -Debug messages; very verbose; useful for API call tracing     │
+│   Per-cmdlet: add -Verbose to a specific cmdlet without changing global preference                    │
+│                                                                                                       │
+│   API call tracing via ExtensionData                                                                  │
+│   $vm.ExtensionData: returns the raw Managed Object Reference; all properties visible                 │
+│   $vm.ExtensionData.Config: VM config as seen by vSphere API; bypasses PowerCLI property mapping      │
+│   $vm.ExtensionData.Runtime: current runtime state including power state and migration state          │
+│   Use Get-View for bulk API queries: much faster than Get-VM | ForEach .ExtensionData                 │
+│                                                                                                       │
+│   Performance profiling                                                                               │
+│   Measure-Command { Get-VM }: shows execution time in milliseconds for any cmdlet or block            │
+│   Large inventories (>500 VMs): switch to Get-View -ViewType VirtualMachine for speed                 │
+│   Filter early: pass -Filter to Get-View instead of piping to Where-Object                            │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   ExtensionData   = property on any PowerCLI VI object; returns the raw vSphere API managed object    │
+│   Get-View        = low-level API query; specify -ViewType and -Filter for efficient large queries    │
+│   Measure-Command = PowerShell cmdlet for timing code execution; used to profile script performance   │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Enable Verbose and Debug Output
 
 ```powershell

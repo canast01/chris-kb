@@ -4,6 +4,38 @@
 PowerCLI authentication methods: credential objects, encrypted credential files, certificate-based auth, SSO token reuse, and multi-session management for automation pipelines.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Authentication Methods ──────────────────────────────────────────┐
+│                                                                                                       │
+│   PowerCLI authentication options range from interactive prompts to fully automated pipelines         │
+│   Never hardcode credentials in script files; use credential store or pipeline secrets                │
+│   Service accounts must authenticate with the minimum required vCenter role (not Administrator)       │
+│                                                                                                       │
+│   Credential methods                                                                                  │
+│   Interactive (dev only): Get-Credential → prompts for username and password at runtime               │
+│   Credential store: Store-VICredentialStoreItem saves host-bound encrypted credentials to disk        │
+│   Secure string export: Export-Clixml saves PSCredential encrypted to a file (machine-bound)          │
+│   Environment variables: pass credentials via $env:VCENTER_USER and $env:VCENTER_PASS in CI/CD        │
+│   Pipeline secrets: store in GitHub Actions Secrets, Azure KeyVault, or HashiCorp Vault               │
+│                                                                                                       │
+│   Multi-session management                                                                            │
+│   $global:DefaultVIServers: array of all active vCenter connections in the current session            │
+│   Connect to multiple vCenters: Connect-VIServer called multiple times; -Server targets each          │
+│   Disconnect cleanly: Disconnect-VIServer -Server * at end of script; prevents orphaned sessions      │
+│                                                                                                       │
+│   Certificate validation                                                                              │
+│   Lab: Set-PowerCLIConfiguration -InvalidCertificateAction Ignore (accept any cert)                   │
+│   Production: import vCenter CA cert into OS trust store; use -InvalidCertificateAction Fail          │
+│   Mutual TLS: available for VCSA REST API endpoints; requires client certificate provisioning         │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   PSCredential          = PowerShell credential object; contains username and SecureString password   │
+│   Store-VICredentialStoreItem = encrypted host-bound credential saved to local Windows credential store│
+│   SecureString          = encrypted in-memory password; only readable by the current user/process     │
+│   DefaultVIServers      = global variable holding all active PowerCLI connection objects              │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Credential Methods
 
 ### Interactive (development only)

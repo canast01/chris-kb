@@ -4,6 +4,39 @@
 PowerCLI escalation — collecting diagnostic information, engaging VMware support for PowerCLI and vSphere API issues, module version compatibility matrix, and community resources for advanced troubleshooting.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Escalation Procedures ───────────────────────────────────────────┐
+│                                                                                                       │
+│   Escalate when the issue persists after checking module version, cert config, and API compatibility  │
+│   Collect a minimal reproduction script before escalating; reduces resolution time significantly      │
+│   Check community resources first — most PowerCLI issues have a known solution without a support case │
+│                                                                                                       │
+│   When to escalate                                                                                    │
+│   vSphere API returns an undocumented error code not found in the vSphere API Reference               │
+│   A PowerCLI cmdlet produces inconsistent results across identical vCenter versions                   │
+│   A module installs successfully but throws unexpected exceptions on import                           │
+│   Performance regression after a PowerCLI or vCenter upgrade that cannot be explained by workload     │
+│                                                                                                       │
+│   Information to collect                                                                              │
+│   PowerCLI module versions: Get-Module VMware.* | Select-Object Name, Version                         │
+│   vCenter version: $global:DefaultVIServer | Select-Object Name, Version, Build                       │
+│   Full error message: $Error[0] | Format-List * -Force                                                │
+│   Minimal repro: smallest script that triggers the issue (no proprietary data)                        │
+│   vCenter support bundle from VAMI (for API-layer issues affecting multiple clients)                  │
+│                                                                                                       │
+│   Escalation path                                                                                     │
+│   Step 1: VMware PowerCLI Community (community.vmware.com) — check existing threads                   │
+│   Step 2: PowerCLI GitHub (github.com/vmware/PowerCLI) — check issues tab for known bugs              │
+│   Step 3: VMware GSS support case — attach collected data; include reproduction steps                 │
+│   Step 4: VMware Product Team via GSS (if confirmed product defect)                                   │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   GSS           = Global Support Services; Broadcom/VMware support case portal                        │
+│   vSphere API Ref = API reference documentation; documents all managed object types and methods       │
+│   Minimal repro  = smallest possible script that reproduces the issue; no credentials or env details  │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## When to Escalate
 
 Escalate to VMware support (or the community) when:
