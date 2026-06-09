@@ -1,20 +1,11 @@
-# Integration — Certificate Trust
+# Certificate Trust Store Management
 
-```bash
-# Ubuntu / Debian
-cp internal-ca.crt /usr/local/share/ca-certificates/internal-ca.crt
-update-ca-certificates
-# Verify
-openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt server.crt
+<div class="kb-summary">
+Adding CA certificates to OS and application trust stores so that TLS connections to internal services succeed. Covers Linux (RHEL, Ubuntu/Debian), Windows (machine store and GPO), Java keystores, and verification commands.
+</div>
 
-# RHEL / Rocky / AlmaLinux
-cp internal-ca.crt /etc/pki/ca-trust/source/anchors/internal-ca.crt
-update-ca-trust extract
-# Verify
-trust list | grep "internal-ca"
-```
 ```text
-┌─────────────────────────────────── Integration — Certificate Trust ───────────────────────────────────┐
+┌──────────────────────────── Certificate Trust Store Management ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Add CA certificates to trust stores so TLS connections to internal services succeed      │   │
@@ -51,6 +42,66 @@ trust list | grep "internal-ca"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Ubuntu / Debian
+
+```bash
+cp internal-ca.crt /usr/local/share/ca-certificates/internal-ca.crt
+update-ca-certificates
+# Verify
+openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt server.crt
+```
+
+## RHEL / Rocky / AlmaLinux
+
+```bash
+cp internal-ca.crt /etc/pki/ca-trust/source/anchors/internal-ca.crt
+update-ca-trust extract
+# Verify
+trust list | grep "internal-ca"
+```
+
+## Windows — Local Machine Store
+
+```powershell
+# Import CA cert to Trusted Root CA store on a single machine
+certutil -addstore "Root" internal-ca.crt
+
+# Verify
+certutil -viewstore -enterprise Root | findstr "Corp"
+```
+
+## Windows — GPO (Domain Distribution)
+
+1. Open **Group Policy Management** and create or edit a GPO linked to the domain.
+2. Navigate to: `Computer Configuration → Windows Settings → Security Settings → Public Key Policies → Trusted Root Certification Authorities`
+3. Right-click → **Import** → select the CA certificate file.
+4. Apply the GPO and run `gpupdate /force` on a test machine.
+5. Verify: open `certlm.msc` → Trusted Root Certification Authorities → check the CA appears.
+
+This distributes the Root CA certificate to all domain-joined machines automatically at next Group Policy refresh.
+
+## Java Keystore
+
+```bash
+# Import CA cert into JVM trust store
+keytool -import \
+  -alias internal-ca \
+  -file internal-ca.crt \
+  -keystore $JAVA_HOME/lib/security/cacerts \
+  -storepass changeit \
+  -noprompt
+
+# Verify
+keytool -list -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit | grep internal-ca
+```
+
+---
+
+## Verification Commands
+
+### openssl Chain Verification
+
 ```bash
 # Full chain verification
 openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt server.crt
@@ -67,6 +118,9 @@ openssl x509 -in server.crt -noout -fingerprint -sha256
 # Test live TLS trust from the OS
 openssl s_client -connect <hostname>:443 -CAfile /etc/ssl/certs/ca-certificates.crt </dev/null 2>&1 | grep -E "Verify return|Certificate chain"
 ```
+
+### TLS Debug
+
 ```bash
 # Full TLS handshake trace
 openssl s_client -connect <host>:443 -showcerts </dev/null
@@ -80,6 +134,9 @@ curl -v --cacert /path/to/internal-ca.crt https://<host>/endpoint
 # Python — test with custom CA
 REQUESTS_CA_BUNDLE=/path/to/internal-ca.crt python3 -c "import requests; print(requests.get('https://<host>').status_code)"
 ```
+
+### Bulk Expiry Check
+
 ```bash
 # Check expiry of a file
 openssl x509 -in server.crt -noout -enddate

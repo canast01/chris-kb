@@ -81,11 +81,9 @@ Security reference: Standard LDAP Integration, Standard SAML Configuration, Acti
 <a class="kb-card" href="incident-handling/"><strong>Incident Handling</strong><span>Security incident response: detection, containment, eradication, recovery, and lessons learned.</span></a>
 <a class="kb-card" href="mfa/"><strong>MFA</strong><span>Multi-factor authentication configuration, enforcement policies, and troubleshooting.</span></a>
 <a class="kb-card" href="patch-compliance/"><strong>Patch Compliance</strong><span>Patch status reporting, missing patch identification, and remediation tracking.</span></a>
-<a class="kb-card" href="pki/"><strong>PKI</strong><span>CA hierarchy, certificate templates, enrollment, revocation, CRL, and OCSP.</span></a>
 <a class="kb-card" href="security-audit/"><strong>Security Audit</strong><span>Security posture audit covering accounts, configurations, patching, and access controls.</span></a>
 <a class="kb-card" href="security-monitoring/"><strong>Security Monitoring</strong><span>SIEM, log analysis, threat detection, and alert triage for security events.</span></a>
 <a class="kb-card" href="vulnerability-management/"><strong>Vulnerability Management</strong><span>Scan scheduling, CVSS-based prioritization, remediation tracking, and exception handling.</span></a>
-<a class="kb-card" href="certificate-trust/"><strong>Certificate Trust</strong><span>Trusted root stores, custom CA distribution, trust chain validation, and browser trust.</span></a>
 <a class="kb-card" href="data-protection/"><strong>Data Protection</strong><span>Data classification, encryption, key management, governance, and retention policy.</span></a>
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Day-2 security operations — health checks, routine procedures, and escalation paths.</span></a>
 <a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Common security issues, diagnostics, and incident escalation.</span></a>

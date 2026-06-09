@@ -64,6 +64,11 @@ PKI and certificate management knowledge base covering three-tier CA hierarchy, 
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>CA hierarchy deployment — Root CA, Issuing CA, CDP/AIA, templates, and auto-enrollment.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, and scripts.</span>

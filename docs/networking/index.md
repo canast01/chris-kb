@@ -51,8 +51,8 @@ Networking knowledge base covering switching, routing, security, and network ser
 </a>
 
 <a class="kb-card" href="services/">
-  <strong>Services</strong>
-  <span>DNS, DHCP, load balancers, and network service management.</span>
+  <strong>Load Balancer & Services</strong>
+  <span>Load balancer VIP management, pool health monitoring, and IPAM. DNS and DHCP covered under Protocols.</span>
 </a>
 
 <a class="kb-card" href="troubleshooting/">

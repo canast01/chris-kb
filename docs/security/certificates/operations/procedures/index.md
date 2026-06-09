@@ -374,3 +374,99 @@ openssl crl -in crl.pem -text -noout | grep -A2 "Revoked"
 ```
 
 Notify service owners relying on the revoked certificate to install a replacement immediately.
+
+---
+
+## Request and Issue a Certificate via certreq
+
+Use `certreq` for CSR-based certificate requests on Windows hosts, especially for server certificates and non-auto-enrolled scenarios.
+
+1. Generate a CSR and private key using a `request.inf` file that specifies Subject, KeyLength, and EnhancedKeyUsage:
+
+```cmd
+certreq -new request.inf request.csr
+```
+
+2. Submit the CSR to the CA:
+
+```cmd
+certreq -submit -attrib "CertificateTemplate:<TemplateName>" -config "<CA-Server>\<CA-Name>" request.csr response.cer
+```
+
+3. If the CA requires manager approval, approve the pending request in the Certificate Authority MMC under **Pending Requests**.
+
+4. Retrieve the signed certificate:
+
+```cmd
+certreq -retrieve <RequestID> response.cer
+```
+
+5. Accept and install the certificate:
+
+```cmd
+certreq -accept response.cer
+```
+
+6. Verify the certificate appears in the local machine certificate store:
+
+```powershell
+Get-ChildItem Cert:\LocalMachine\My | Where-Object Subject -like "*<CN>*"
+```
+
+---
+
+## Add a Certificate Template
+
+Duplicate and publish a new certificate template to AD CS when a new certificate type is required (e.g., a new application, code signing, or LDAPS).
+
+1. Open the **Certificate Templates** console (`certtmpl.msc`).
+
+2. Right-click an existing template that is closest to the required use case → **Duplicate Template**.
+
+3. Set the **Compatibility** tab to the minimum CA/recipient OS version in your environment.
+
+4. On the **General** tab, set a unique **Template display name** and **Template name** (no spaces).
+
+5. Configure the **Subject Name**, **Extensions** (EKU, Key Usage), **Security** (who can enrol), and **Request Handling** tabs as required.
+
+6. Click **OK** to save the new template.
+
+7. In the **Certificate Authority** MMC (`certsrv.msc`), right-click **Certificate Templates** → **New** → **Certificate Template to Issue**.
+
+8. Select the new template and click **OK** — the template is now available for enrolment.
+
+9. If auto-enrolment is needed, confirm the template has **Autoenroll** permission granted to the target security group, then configure Group Policy (see **Configure Auto-Enrollment GPO** above).
+
+---
+
+## Check CA Service Health
+
+Run these checks on the Issuing CA server to confirm operational status before and after maintenance.
+
+```powershell
+# Confirm CA service is running
+Get-Service -Name CertSvc
+
+# List CA configuration
+certutil -getconfig
+
+# View pending certificate requests
+certutil -view -restrict "disposition=9" -out "requestID,requesterName,CommonName,NotAfter"
+
+# Check CRL validity at distribution point
+certutil -URL <crl-distribution-point-url>
+
+# Verify CRL freshness and OCSP
+certutil -verifyCRL C:\Windows\System32\certsrv\CertEnroll\<ca>.crl
+
+# View recently issued certificates
+certutil -view -restrict "Disposition=20" -out "RequestID,CommonName,NotBefore,NotAfter,Requester" | head -100
+```
+
+| Event | Action Required |
+|---|---|
+| Certificate expiring in 60 days | Initiate renewal |
+| Certificate expiring in 30 days | Escalate if not renewed |
+| Certificate expiring in 7 days | Emergency renewal; notify service owners |
+| CA certificate expiring in 6 months | Plan CA renewal (impacts all issued certs) |
+| Key compromise suspected | Revoke immediately; issue replacement |

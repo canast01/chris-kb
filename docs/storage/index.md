@@ -99,6 +99,6 @@ Block, file, and object storage platforms used across enterprise infrastructure 
 </a>
 
 <a class="kb-card" href="storage-design/"><strong>Storage Design</strong><span>Storage architecture design — tiering, sizing, replication topology, and design decision reference.</span></a>
-<a class="kb-card" href="operations/"><strong>Operations</strong><span>Cross-platform storage operations — health checks, capacity management, and maintenance procedures.</span></a>
+<a class="kb-card" href="runbooks/"><strong>Runbooks</strong><span>Cross-platform storage runbooks — volume expansion, LUN provisioning, replication failover, and capacity management.</span></a>
 <a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Cross-platform storage diagnostics — path failures, capacity alerts, and escalation.</span></a>
 </div>

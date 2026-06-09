@@ -9,9 +9,9 @@ Full index of all KB sections and sub-sections.
 | Section | Sub-sections |
 |---|---|
 | [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vxrail/index.md) · [Operations](virtualization/operations/index.md) · [Reference](virtualization/reference/index.md) |
-| [Storage](storage/index.md) | [Dell](storage/dell/index.md) · [Pure Storage](storage/pure/index.md) · [NetApp](storage/netapp/index.md) · [Ceph](storage/ceph/index.md) · [Storage Design](storage/storage-design/index.md) |
+| [Storage](storage/index.md) | [Dell](storage/dell/index.md) · [Pure Storage](storage/pure/index.md) · [NetApp](storage/netapp/index.md) · [Ceph](storage/ceph/index.md) · [Storage Design](storage/storage-design/index.md) · [Runbooks](storage/runbooks/index.md) |
 | [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) |
-| [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [Local AI & GPU](compute/local-ai/index.md) |
+| [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [Local AI & GPU](compute/local-ai/index.md) · [High CPU](compute/linux/troubleshooting/high-cpu/index.md) |
 | [Certifications](certifications/index.md) | [SAN](certifications/san/index.md) · [Storage](certifications/storage/index.md) |
 | [Cloud](cloud/index.md) | [AWS](cloud/aws/index.md) · [Azure](cloud/azure/index.md) · [Cloud AI](cloud/ai/index.md) |
 | [Networking](networking/index.md) | [Switching & Routing](networking/switching-routing/index.md) · [Network Services](networking/services/index.md) · [Network Security](networking/security/index.md) · [External Connectivity](networking/external-connectivity/index.md) · [Network Design](networking/network-design/index.md) · [Troubleshooting](networking/troubleshooting/index.md) · [Protocols](networking/protocols/index.md) |
@@ -83,7 +83,7 @@ Full index of all KB sections and sub-sections.
 | Section | Sub-sections |
 |---|---|
 | [Windows Server](compute/windows-server/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · [Active Directory](compute/windows-server/active-directory/index.md) · [SQL Server](compute/windows-server/sql-server/index.md) |
-| [Linux](compute/linux/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · [MySQL/MariaDB](compute/linux/mysql/index.md) · [PostgreSQL](compute/linux/postgresql/index.md) · [Directory Integration](compute/linux/directory-integration/index.md) |
+| [Linux](compute/linux/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · [High CPU](compute/linux/troubleshooting/high-cpu/index.md) · [MySQL/MariaDB](compute/linux/mysql/index.md) · [PostgreSQL](compute/linux/postgresql/index.md) · [Directory Integration](compute/linux/directory-integration/index.md) |
 | [Local AI & GPU](compute/local-ai/index.md) | [Ollama](compute/local-ai/ollama/index.md) · [GPU Workloads](compute/local-ai/gpu/index.md) |
 
 ### Cloud Sub-sections
@@ -98,13 +98,13 @@ Full index of all KB sections and sub-sections.
 
 | Section | Sub-sections |
 |---|---|
-| [Backup & DR](backup/index.md) | [Veeam](backup/veeam/index.md) · [Commvault](backup/commvault/index.md) · [NetBackup](backup/netbackup/index.md) · [DR Design](backup/dr-design/index.md) · [Runbooks](backup/runbooks/index.md) · [Recovery Testing](backup/recovery-testing/index.md) · [IRE](backup/ire/index.md) · [Backup Validation](backup/backup-validation/index.md) · [Health Checks](backup/health-checks/index.md) · [Failure Testing](backup/failure-testing/index.md) · [Reliability Engineering](backup/reliability-engineering/index.md) · [Service Availability](backup/service-availability/index.md) · [SLOs](backup/service-level-objectives/index.md) · [Troubleshooting](backup/troubleshooting/index.md) |
+| [Backup & DR](backup/index.md) | [Veeam](backup/veeam/index.md) · [Commvault](backup/commvault/index.md) · [NetBackup](backup/netbackup/index.md) · [DR Operations](backup/dr-operations/index.md) · [DR Design](backup/dr-operations/dr-design/index.md) · [Runbooks](backup/dr-operations/runbooks/index.md) · [Recovery Testing](backup/dr-operations/recovery-testing/index.md) · [IRE](backup/dr-operations/ire/index.md) · [Backup Validation](backup/dr-operations/backup-validation/index.md) · [Health Checks](backup/dr-operations/health-checks/index.md) · [Failure Testing](backup/dr-operations/failure-testing/index.md) · [Reliability Engineering](backup/dr-operations/reliability-engineering/index.md) · [Service Availability](backup/dr-operations/service-availability/index.md) · [SLOs](backup/dr-operations/service-level-objectives/index.md) · [Troubleshooting](backup/dr-operations/troubleshooting/index.md) |
 
 ## Security & Compliance
 
 | Section | Sub-sections |
 |---|---|
-| [Security](security/index.md) | [CyberArk](security/cyberark/index.md) · [Venafi](security/venafi/index.md) · [PKI](security/pki/index.md) · [Certificates](security/certificates/index.md) · [MFA](security/mfa/index.md) · [LDAP Integration](security/ldap-integration/index.md) · [SAML Configuration](security/saml-configuration/index.md) · [Access Review](security/access-review/index.md) · [Compliance Standards](security/compliance-standards/index.md) · [Vulnerability Management](security/vulnerability-management/index.md) · [Security Monitoring](security/security-monitoring/index.md) · [Security Audit](security/security-audit/index.md) · [Patch Compliance](security/patch-compliance/index.md) · [Incident Handling](security/incident-handling/index.md) · [Data Protection](security/data-protection/index.md) |
+| [Security](security/index.md) | [CyberArk](security/cyberark/index.md) · [Venafi](security/venafi/index.md) · [Certificates](security/certificates/index.md) · [Certificates — Deploy](security/certificates/deploy/index.md) · [MFA](security/mfa/index.md) · [LDAP Integration](security/ldap-integration/index.md) · [SAML Configuration](security/saml-configuration/index.md) · [Access Review](security/access-review/index.md) · [Compliance Standards](security/compliance-standards/index.md) · [Vulnerability Management](security/vulnerability-management/index.md) · [Security Monitoring](security/security-monitoring/index.md) · [Security Audit](security/security-audit/index.md) · [Patch Compliance](security/patch-compliance/index.md) · [Incident Handling](security/incident-handling/index.md) · [Data Protection](security/data-protection/index.md) |
 
 ## Automation & Tooling
 

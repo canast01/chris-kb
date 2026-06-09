@@ -90,4 +90,9 @@ Certificate lifecycle operations — renewal, re-issuance, CSR generation, chain
   <span>Automation scripts for expiry scanning, TLS checks, and CRL monitoring.</span>
 </a>
 
+<a class="kb-card" href="certificate-trust/">
+  <strong>Certificate Trust</strong>
+  <span>Adding CA certificates to OS trust stores — Linux, Windows (local and GPO), Java keystores, and chain verification.</span>
+</a>
+
 </div>

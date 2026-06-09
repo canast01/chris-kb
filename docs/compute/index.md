@@ -78,5 +78,4 @@ Compute platform knowledge base covering Windows Server, Linux, GPU workloads, a
 <a class="kb-card" href="windows-server/"><strong>Windows Server</strong><span>Architecture, standards, lifecycle, operations, CLI, scripts, troubleshooting, and security.</span></a>
 <a class="kb-card" href="linux/"><strong>Linux</strong><span>Architecture, standards, lifecycle, operations, CLI, scripts, troubleshooting, and security.</span></a>
 <a class="kb-card" href="local-ai/"><strong>Local AI & GPU</strong><span>Run LLMs locally with Ollama and manage GPU workloads — drivers, CUDA, sizing, and performance tuning.</span></a>
-<a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Cross-platform compute diagnostics — boot failures, network issues, storage faults, and escalation.</span></a>
 </div>
