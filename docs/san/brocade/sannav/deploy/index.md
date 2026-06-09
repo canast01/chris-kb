@@ -1,5 +1,42 @@
 # SANnav — Initial Deployment
 
+```text
+┌──────────────────────────────── Brocade SANnav — Deployment Overview ─────────────────────────────────┐
+│                                                                                                       │
+│   SANnav replaces Brocade Network Advisor (BNA) for centralized SAN management and analytics          │
+│   Deployment: OVA on ESXi 7.0+ or RPM/DEB install on RHEL 8/9 or SLES 15                              │
+│   Requires: static IP with FQDN resolvable from all managed Brocade switches                          │
+│                                                                                                       │
+│   VM requirements                                                                                     │
+│   4 vCPU, 16 GB RAM, 200 GB disk; VMware ESXi 7.0+ or physical Linux host                             │
+│   Ports inbound: TCP 443 (HTTPS), UDP 162 (SNMP traps), TCP 22 outbound to switches                   │
+│   Switch prereqs: FOS 8.2.1+ (9.x recommended), SNMP and SSH enabled, admin credentials               │
+│                                                                                                       │
+│   Initial configuration                                                                               │
+│   Deploy OVA or install RPM; run networkconfig.sh or postinstall.sh to set IP/hostname                │
+│   Set: system name, time zone, NTP, SMTP relay for alerts                                             │
+│   Create RBAC accounts (sannav_admin, sannav_readonly); optionally configure LDAP                     │
+│   Replace self-signed TLS certificate with internal CA-signed certificate                             │
+│                                                                                                       │
+│   Fabric discovery                                                                                    │
+│   Discover > Add Fabric: enter one switch IP — SANnav auto-discovers all switches in the fabric       │
+│   Troubleshoot: SSH reachability (TCP 22), SNMP community string mismatch, firewall ACLs              │
+│   Verify: all switches appear in Fabric Summary with status Online                                    │
+│                                                                                                       │
+│   Monitoring and alerts                                                                               │
+│   Alert policies: link-down, ISL-down, fabric segmentation, CRC threshold, port utilisation >80%      │
+│   Performance monitoring: enable per-port stats (30s polling); review utilisation and heatmaps        │
+│   Test: disable a non-production port; SANnav should generate the alert within 30 seconds             │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   FOS          = Fabric OS; operating system running on Brocade SAN switches                          │
+│   SNMP trap    = unsolicited alert sent from switch to SANnav when an event occurs                    │
+│   Fabric discovery = SANnav queries name server on seed switch to find all fabric members             │
+│   CRC error    = Cyclic Redundancy Check error; indicates physical layer or cable problem             │
+│   ISL          = Inter-Switch Link; E_Port connection between switches in the same fabric             │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 This guide covers deploying Brocade SANnav Management Portal from installation through validated fabric discovery and monitoring. SANnav replaces the legacy Brocade Network Advisor (BNA) and provides centralized SAN management, zoning, analytics, and alert handling.
 
 ---
