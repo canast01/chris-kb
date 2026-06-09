@@ -4,6 +4,45 @@
 General-purpose PowerShell automation patterns — ITSM scripts for daily checks, incident triage, change management, and health validation. Platform-specific scripts live with their product sections.
 </div>
 
+```text
+┌──────────────────────────────────── PowerShell — Scripts Library ─────────────────────────────────────┐
+│                                                                                                       │
+│   General-purpose ITSM automation patterns; platform-specific scripts in product sections             │
+│   Daily checks, incident triage, change management, and health validation scripts                     │
+│   Use $env:SCRIPT_DIR and $env:LOG_DIR to control paths; default to C:\Scripts, C:\Logs               │
+│   All scripts idempotent by design; safe to schedule and run multiple times per day                   │
+│                                                                                                       │
+│   Daily check patterns                                                                                │
+│   Verify scheduled tasks ran and wrote clean log entries (no ERROR or CRITICAL lines)                 │
+│   Test connectivity to key infra endpoints (vCenter, backup server, domain controllers)               │
+│   Check module availability: Get-Module -ListAvailable | Where Version -lt MinVersion                 │
+│   Exit code 0 = healthy; exit code 1 = warning; exit code 2 = failure (for monitoring)                │
+│                                                                                                       │
+│   Incident triage patterns                                                                            │
+│   Capture: Get-EventLog, Get-WinEvent, Get-Service, Test-NetConnection before changes                 │
+│   Export snapshot: ConvertTo-Json | Out-File for reproducibility and handoff notes                    │
+│   Error classification: severity map (P1–P4) based on service name and error pattern                  │
+│   Alert: Send-MailMessage or REST POST to ITSM API for automated ticket creation                      │
+│                                                                                                       │
+│   Change management patterns                                                                          │
+│   Pre/post snapshots: record service states, config hash, port listeners, disk usage                  │
+│   Diff the snapshots post-change to produce a machine-readable evidence trail                         │
+│   Rollback trigger: compare post-check to pre-check; auto-revert if delta exceeds threshold           │
+│                                                                                                       │
+│   Physical infrastructure                                                                             │
+│   Run from automation controller, scheduled task, or CI pipeline job                                  │
+│   Output structured JSON logs; integrate with monitoring platform for alerting                        │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   $env:SCRIPT_DIR  = environment variable for script root; default C:\Scripts                         │
+│   $env:LOG_DIR     = environment variable for log root; default C:\Logs                               │
+│   exit code        = script return code used by schedulers and monitoring to assess health            │
+│   ConvertTo-Json   = serialises PS objects to JSON; use for structured log output                     │
+│   Send-MailMessage = sends email alerts; or use REST POST to ServiceNow/PagerDuty API                 │
+│   idempotent       = script produces same result on repeated runs; safe to schedule                   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 See also:
 - [Windows Server Scripts](../../../../compute/windows-server/operations/scripts/) — remote health checks, cert expiry monitoring, service health, script runners
 - [PowerCLI Scripts](../../../../virtualization/vmware/powercli/operations/scripts/) — VMware vSphere inventory, snapshot audit, host reports

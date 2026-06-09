@@ -4,6 +4,53 @@ This guide walks through deploying Veeam Backup & Replication from bare metal to
 fully operational backup environment. Steps cover server installation, infrastructure
 onboarding, proxy and repository configuration, and first-job validation.
 
+```text
+┌───────────────────────────────────── Veeam — Initial Deployment ──────────────────────────────────────┐
+│                                                                                                       │
+│   VBR server: Windows 2019/2022; min 4 vCPU / 16 GB RAM; SQL Server for catalog                       │
+│   Proxy servers offload data processing from VBR; one per VMware cluster or subnet                    │
+│   Repositories store backup files; NAS, SAN LUN, object storage, or Scale-Out                         │
+│   Configuration DB: bundled SQL Express (10 GB limit) or external SQL for production                  │
+│                                                                                                       │
+│   VBR server installation                                                                             │
+│   Run Veeam installer; select Backup & Replication component; provide SQL connection                  │
+│   Accept port defaults (9392 TCP for service, 443 for API and Enterprise Manager)                     │
+│   Apply latest Veeam cumulative patches (P-series) immediately after initial install                  │
+│   License: Help → License → Add License; enter NFR, rental, or perpetual key                          │
+│                                                                                                       │
+│   Infrastructure onboarding                                                                           │
+│   Add vCenter: Infrastructure → Add Server → VMware vSphere → vCenter Server                          │
+│   Add Hyper-V host: Infrastructure → Add Server → Microsoft Hyper-V                                   │
+│   Add physical servers (Linux/Windows): Infrastructure → Add Server → Windows/Linux                   │
+│   Credentials stored in Veeam Credentials Manager; use service accounts, not admin                    │
+│                                                                                                       │
+│   Proxy and repository configuration                                                                  │
+│   Add proxy: Infrastructure → Backup Proxies → Add VMware Backup Proxy                                │
+│   Proxy transport mode: Direct SAN (fastest), Hot-Add (vSAN), NBD (fallback)                          │
+│   Add repository: Backup Infrastructure → Backup Repositories → Add Backup Repository                 │
+│   Scale-Out: combines multiple repositories into a single performance-tiering pool                    │
+│                                                                                                       │
+│   First-job validation                                                                                │
+│   Create job: Home → Backup Job → Virtual machine; select VMs, policy, retention                      │
+│   Run immediately: right-click job → Start; verify status = Success in last run column                │
+│   Smoke test: restore single file from backup; verify content is intact and usable                    │
+│                                                                                                       │
+│   Physical infrastructure                                                                             │
+│   VBR VM: Windows 2019/2022 with SQL; dedicated disk for VBRCatalog                                   │
+│   Proxy VMs co-located with ESXi clusters; repositories on NAS or directly on SAN LUNs                │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   VBR          = Veeam Backup & Replication; the main server and console application                  │
+│   proxy        = data processing VM; handles de-dup, compression, and encryption                      │
+│   repository   = storage target holding .vbk (full) and .vib (incremental) backup files               │
+│   Hot-Add      = proxy inside same vSAN cluster; accesses VMDKs via vSphere storage API               │
+│   Direct SAN   = proxy reads VM data directly from SAN LUN; bypasses ESXi network path                │
+│   NBD          = Network Block Device; LAN-based data path; slowest but always available              │
+│   Scale-Out    = performance tier + capacity tier pool; auto-moves old data to cold storage           │
+│   retention    = number of restore points kept; older points expire per policy settings               │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Prerequisites

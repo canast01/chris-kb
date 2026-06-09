@@ -4,6 +4,52 @@ This guide covers the initial setup of a PowerShell automation environment: inst
 PowerShell Core, loading required modules, configuring a profile and execution policy,
 enabling remote management, and turning on logging.
 
+```text
+┌─────────────────────────────────── PowerShell — Environment Setup ────────────────────────────────────┐
+│                                                                                                       │
+│   PowerShell Core (v7+) is cross-platform: runs on Windows, Linux, and macOS                          │
+│   Replaces Windows PowerShell 5.1; both coexist; use pwsh for Core, powershell for 5.1                │
+│   Install on Windows: winget install Microsoft.PowerShell                                             │
+│   Install on Linux: dnf install powershell  OR  apt install powershell                                │
+│                                                                                                       │
+│   Module management                                                                                   │
+│   PSGallery is the default repository; Install-Module -Name ModuleName -Scope CurrentUser             │
+│   List installed: Get-Module -ListAvailable | Select Name, Version, Path                              │
+│   Update all: Update-Module; remove: Uninstall-Module -Name ModuleName -AllVersions                   │
+│   Trusted gallery: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted                       │
+│                                                                                                       │
+│   Profile and execution policy                                                                        │
+│   Profile path: $PROFILE (per-user, per-host); auto-loaded on each session start                      │
+│   Execution policy: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser              │
+│   Corporate baseline: RemoteSigned (local scripts run; remote scripts need signing)                   │
+│   Test: Get-ExecutionPolicy -List; bypass for one script: pwsh -ExecutionPolicy Bypass                │
+│                                                                                                       │
+│   Remote management (WinRM)                                                                           │
+│   Enable: Enable-PSRemoting -Force (Windows); sets WinRM listeners on 5985/5986                       │
+│   Connect: Enter-PSSession -ComputerName server01 -Credential (Get-Credential)                        │
+│   Non-interactive: Invoke-Command -ComputerName server01 -ScriptBlock { Get-Service }                 │
+│   Kerberos used automatically on domain; HTTPS listener required for cross-domain                     │
+│                                                                                                       │
+│   Logging                                                                                             │
+│   ScriptBlock logging: HKLM:\...\PowerShell\ScriptBlockLogging → EnableScriptBlockLogging             │
+│   Transcription: Start-Transcript -Path C:\Logs\ps_session.log -Append                                │
+│   Module logging: logs all module pipeline execution details to Windows Event Log                     │
+│                                                                                                       │
+│   Physical infrastructure                                                                             │
+│   Management workstation or jump host with PowerShell 7+ and required modules                         │
+│   WinRM listeners on target Windows servers; firewall allows TCP 5985/5986 inbound                    │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   PSGallery    = Microsoft-hosted public module repository; default for Install-Module                │
+│   profile      = $PROFILE script; runs at session start; customize prompt and aliases                 │
+│   execution policy = controls which scripts run; does not apply to interactive commands               │
+│   WinRM        = Windows Remote Management; underlying PS remoting transport                          │
+│   PSSession    = persistent remote session; keep-alive for multiple commands                          │
+│   ScriptBlock logging = logs all executed PS code to Event Log for security auditing                  │
+│   cmdlet       = compiled .NET command following Verb-Noun naming (Get-Service, etc.)                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Install PowerShell Core (Cross-Platform)

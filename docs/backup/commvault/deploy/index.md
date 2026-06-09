@@ -4,6 +4,51 @@ This guide covers deploying a CommVault CommCell environment from scratch — fr
 CommServe installation through MediaAgent configuration, client onboarding, policy
 creation, and first-backup validation.
 
+```text
+┌─────────────────────────────────── CommVault — Initial Deployment ────────────────────────────────────┐
+│                                                                                                       │
+│   CommCell: CommVault's deployment unit — CommServe + MediaAgent(s) + clients                         │
+│   CommServe is Windows-only: min 8 vCPU / 32 GB RAM / 200 GB SSD; SQL Server required                 │
+│   MediaAgents handle data movement; one per backup domain, subnet, or VLAN segment                    │
+│   Backup clients: Windows, Linux, VMware vCenter, SQL, Exchange, SharePoint                           │
+│                                                                                                       │
+│   CommServe installation                                                                              │
+│   Run CommVault installer as local admin; select CommServe + Content Store + tools                    │
+│   Provide SQL instance (SQL 2016–2022); installer creates CommServ database schema                    │
+│   License activation: CommCell Console → Administration → CommCell Registration                       │
+│   Post-install: apply latest service pack (CSP) before adding clients or MediaAgents                  │
+│                                                                                                       │
+│   MediaAgent configuration                                                                            │
+│   Install MediaAgent package on backup server; register to CommServe during install                   │
+│   Define library (local disk / NAS share / tape) via Storage → Library and Drive                      │
+│   Create storage policy: Protection → Policies → Storage Policies → Add Storage Policy                │
+│   Assign primary and secondary copy: disk pool primary; dedup or tape for secondary                   │
+│                                                                                                       │
+│   Client onboarding                                                                                   │
+│   Install client package (Win/Linux) or register vCenter as VSA pseudoclient                          │
+│   Push install: CommCell Console → Client Computers → Add Client (Windows only)                       │
+│   Verify firewall ports: TCP 8400 (CommServe tunnel), 8403 (Media tunnel), 443 (web)                  │
+│                                                                                                       │
+│   First-backup validation                                                                             │
+│   Create subclient; associate storage policy; run full backup immediately                             │
+│   Monitor: Job Controller tab; verify status = Completed; check job summary report                    │
+│   Verify recovery: browse backup → restore single file to alternate path as smoke test                │
+│                                                                                                       │
+│   Physical infrastructure                                                                             │
+│   CommServe VM: Windows Server 2019/2022; dedicated SQL instance; SSD storage                         │
+│   MediaAgent VMs or physical servers per subnet; NAS or tape libraries for repositories               │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   CommServe    = CommCell central server; hosts database, job scheduler, and media mgmt               │
+│   MediaAgent   = data movement engine; streams data between client and storage target                 │
+│   storage policy = CommVault policy linking clients to storage pools and retention rules              │
+│   subclient    = logical subset of a client's data; own schedule, policy, and options                 │
+│   CSP          = CommVault Service Pack; cumulative fix and feature update bundle                     │
+│   VSA          = Virtual Server Agent; CommVault's VMware/Hyper-V backup component                    │
+│   dedup pool   = deduplication storage pool on MediaAgent; reduces backup storage size                │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Prerequisites
