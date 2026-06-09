@@ -3211,28 +3211,26 @@
 SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1 Disabled Issues, Kerberos vs NTLM Authentication, Signing Mismatch and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code>    TRIAGE: CANNOT ACCESS SMB SHARE
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall                                           │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│          │ ok                                                                                         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  2. Share exists? (Get-SmbShare) ───── no ──► create share                                            │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│          │ yes                                                                                        │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  3. Share permission (Get-SmbShareAccess) ─ deny ► fix perms                                          │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│          │ permit                                                                                     │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  4. NTFS ACL (icacls path) ─── deny / no entry ──► fix ACL                                            │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│          │ permit                                                                                     │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  5. Auth issue? (klist / Event ID 4625) ─ yes ──► Kerberos                                            │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│          │                                        SPN / creds                                         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  6. SMB dialect (Get-SmbSession | Select Dialect)                                                     │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│     SMB1 negotiated ──────────────────────────► disable SMB1                                          │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><code>text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall                                           │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  2. Share exists? (Get-SmbShare) ───── no ──► create share                                            │
-│          │ yes                                                                                        │
-│          ▼                                                                                            │
-│  3. Share permission (Get-SmbShareAccess) ─ deny ► fix perms                                          │
-│          │ permit                                                                                     │
-│          ▼                                                                                            │
-│  4. NTFS ACL (icacls path) ─── deny / no entry ──► fix ACL                                            │
-│          │ permit                                                                                     │
-│          ▼                                                                                            │
-│  5. Auth issue? (klist / Event ID 4625) ─ yes ──► Kerberos                                            │
-│          │                                        SPN / creds                                         │
-│          ▼                                                                                            │
-│  6. SMB dialect (Get-SmbSession | Select Dialect)                                                     │
-│     SMB1 negotiated ──────────────────────────► disable SMB1                                          │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>SMB access problems fall into a small set of categories: permission denials, authentication failures (Kerberos vs NTLM), performance issues, version mismatches, and signing conflicts. Start by narrowing which layer is failing before diving into logs.</p>
 <table>

@@ -3250,31 +3250,29 @@
 SNMP is the primary protocol for collecting metrics from network devices, storage arrays, and infrastructure components that do not expose native Prometheus endpoints. This page covers integrating SNMP with the main monitoring platforms.
 </div>
 
-<div class="highlight"><pre><span></span><code>    SNMP MONITORING INTEGRATION
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Infrastructure                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                                  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │ Switches │ │ Routers  │ │ Storage  │ │   UPS    │                                                  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘                                                  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│       │ SNMP Poll  │ UDP/161     │             │                                                      │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│       └────────────┴────────────┴─────────────┘                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                            │  UDP 162 TRAPs                                                           │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│             ┌──────────────▼──────────────────┐                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│             │  SNMP Exporter / NMS Collector  │                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│             │  (Prometheus snmp_exporter,     │                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│             │   Zabbix proxy, LibreNMS)        │                                                      │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│             └──────────────┬──────────────────┘                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                            │                                                                          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│             ┌──────────────▼──────────────────┐                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│             │  Prometheus / Zabbix / LibreNMS │                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│             └──────────────┬──────────────────┘                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                            │                                                                          │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│             ┌──────────────▼──────────────────┐                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│             │  Grafana dashboards + Alertmanager│                                                     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│             └─────────────────────────────────┘                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><code>text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Infrastructure                                                                                       │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                                  │
-│  │ Switches │ │ Routers  │ │ Storage  │ │   UPS    │                                                  │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘                                                  │
-│       │ SNMP Poll  │ UDP/161     │             │                                                      │
-│       └────────────┴────────────┴─────────────┘                                                       │
-│                            │  UDP 162 TRAPs                                                           │
-│             ┌──────────────▼──────────────────┐                                                       │
-│             │  SNMP Exporter / NMS Collector  │                                                       │
-│             │  (Prometheus snmp_exporter,     │                                                       │
-│             │   Zabbix proxy, LibreNMS)        │                                                      │
-│             └──────────────┬──────────────────┘                                                       │
-│                            │                                                                          │
-│             ┌──────────────▼──────────────────┐                                                       │
-│             │  Prometheus / Zabbix / LibreNMS │                                                       │
-│             └──────────────┬──────────────────┘                                                       │
-│                            │                                                                          │
-│             ┌──────────────▼──────────────────┐                                                       │
-│             │  Grafana dashboards + Alertmanager│                                                     │
-│             └─────────────────────────────────┘                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     A[Switches\nRouters\nStorage\nUPS] --&gt;|SNMP Poll UDP/161| B[SNMP Exporter\nor NMS Collector]

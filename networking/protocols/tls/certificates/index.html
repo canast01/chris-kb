@@ -3280,27 +3280,25 @@
 A TLS certificate is a signed X.509 document that binds a public key to an identity (hostname, IP, or service).
 </div>
 
-<div class="highlight"><pre><span></span><code>    CERTIFICATE FIELD STRUCTURE (X.509)
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Certificate                                                                                          │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌──────────────────────────────────────────────────────┐                                             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │  Subject:  CN=web.example.com, O=Example Corp        │                                             │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  SANs:     DNS:web.example.com, DNS:api.example.com  │                                             │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │            IP:10.0.0.10                              │                                             │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  Issuer:   CN=Example Intermediate CA                │                                             │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  Valid:    2026-01-01  to  2027-01-01                │                                             │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  Key:      RSA 4096  (or ECDSA P-256)                │                                             │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  Key Usage: Digital Signature, Key Encipherment      │                                             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  EKU:      TLS Web Server Authentication             │                                             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ├──────────────────────────────────────────────────────┤                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  Signature: SHA-256 with RSA (by Intermediate CA)   │                                              │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  └──────────────────────────────────────────────────────┘                                             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  Client checks: SAN matches hostname + not expired +                                                  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                 chain traces to trusted root CA                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><code>text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Certificate                                                                                          │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │  Subject:  CN=web.example.com, O=Example Corp        │                                             │
-│  │  SANs:     DNS:web.example.com, DNS:api.example.com  │                                             │
-│  │            IP:10.0.0.10                              │                                             │
-│  │  Issuer:   CN=Example Intermediate CA                │                                             │
-│  │  Valid:    2026-01-01  to  2027-01-01                │                                             │
-│  │  Key:      RSA 4096  (or ECDSA P-256)                │                                             │
-│  │  Key Usage: Digital Signature, Key Encipherment      │                                             │
-│  │  EKU:      TLS Web Server Authentication             │                                             │
-│  ├──────────────────────────────────────────────────────┤                                             │
-│  │  Signature: SHA-256 with RSA (by Intermediate CA)   │                                              │
-│  └──────────────────────────────────────────────────────┘                                             │
-│                                                                                                       │
-│  Client checks: SAN matches hostname + not expired +                                                  │
-│                 chain traces to trusted root CA                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code>
 The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.</p>
 <h2 id="certificate-components">Certificate Components<a class="headerlink" href="#certificate-components" title="Permanent link">&para;</a></h2>
 <table>

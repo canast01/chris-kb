@@ -3211,32 +3211,30 @@
 LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Certificate Errors, Using ldp.exe (Windows GUI Tool), LDAP Referrals and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code>    TRIAGE: LDAP BIND FAILS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  1. Resolve DC name                                                                                   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│     nslookup dc01.example.local ─── fail ──► fix DNS                                                  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│          │ ok                                                                                         │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  2. Port reachable?                                                                                   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│     nc -zv dc01 389 ─────────── fail ──► firewall / DC down                                           │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│     nc -zv dc01 636            (636 = LDAPS)                                                          │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│          │ ok                                                                                         │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  3. Simple bind (test creds)                                                                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│     ldapsearch -x -D svc@corp -w pass ─ fail ──► check DN,                                            │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│          │ ok                                   password, lock                                        │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  4. Check network: nc -zv dc01 636 (port reachable)                                                   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  5. TLS error? openssl s_client -connect dc01:636                                                     │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│     cert untrusted ──────────────────────► install root CA                                            │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│     cert expired ────────────────────────► renew DC cert                                              │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│          │ ok                                                                                         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│          ▼                                                                                            │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  6. Query returns no results? ──► check base DN, filter                                               │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><code>text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  1. Resolve DC name                                                                                   │
-│     nslookup dc01.example.local ─── fail ──► fix DNS                                                  │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  2. Port reachable?                                                                                   │
-│     nc -zv dc01 389 ─────────── fail ──► firewall / DC down                                           │
-│     nc -zv dc01 636            (636 = LDAPS)                                                          │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  3. Simple bind (test creds)                                                                          │
-│     ldapsearch -x -D svc@corp -w pass ─ fail ──► check DN,                                            │
-│          │ ok                                   password, lock                                        │
-│          ▼                                                                                            │
-│  4. Check network: nc -zv dc01 636 (port reachable)                                                   │
-│          ▼                                                                                            │
-│  5. TLS error? openssl s_client -connect dc01:636                                                     │
-│     cert untrusted ──────────────────────► install root CA                                            │
-│     cert expired ────────────────────────► renew DC cert                                              │
-│          │ ok                                                                                         │
-│          ▼                                                                                            │
-│  6. Query returns no results? ──► check base DN, filter                                               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>LDAP failures usually manifest as bind errors, query timeouts, certificate problems, or referrals to other directories. Identify the failure layer first: DNS, TCP connectivity, TLS, bind credentials, or query filter.</p>
 <table>

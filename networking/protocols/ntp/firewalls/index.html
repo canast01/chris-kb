@@ -3222,30 +3222,28 @@
 NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewalld, Linux — iptables, Windows Firewall, Cisco ASA / Firepower and 2 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code>    NTP FIREWALL REQUIREMENTS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  NTP CLIENT (server/device)                                                                           │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐                                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │  Client host │ ─────────────────────►│  NTP Server      │                                          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  (chrony/    │                       │  (stratum 2)     │                                          │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │   w32tm)     │◄──────────────────────│                  │                                          │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  └──────────────┘   UDP 123 response    └──────────────────┘                                          │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                     (src port 123)                                                                    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Stateful firewall: return traffic handled automatically                                              │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Stateless ACL: must permit both directions explicitly                                                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  NTP SERVER (serving clients):                                                                        │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ┌──────────────┐   UDP 123 inbound     ┌──────────────────┐                                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  NTP Server  │◄──────────────────────│  Clients         │                                          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  (chrony     │ ─────────────────────►│                  │                                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  allow 10/8) │   UDP 123 response    └──────────────────┘                                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └──────────────┘                                                                                     │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Rule summary:  permit udp any → ntpserver port 123                                                   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                 permit udp ntpserver port 123 → any                                                   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><code>text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  NTP CLIENT (server/device)                                                                           │
-│  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐                                          │
-│  │  Client host │ ─────────────────────►│  NTP Server      │                                          │
-│  │  (chrony/    │                       │  (stratum 2)     │                                          │
-│  │   w32tm)     │◄──────────────────────│                  │                                          │
-│  └──────────────┘   UDP 123 response    └──────────────────┘                                          │
-│                     (src port 123)                                                                    │
-│  Stateful firewall: return traffic handled automatically                                              │
-│  Stateless ACL: must permit both directions explicitly                                                │
-│                                                                                                       │
-│  NTP SERVER (serving clients):                                                                        │
-│  ┌──────────────┐   UDP 123 inbound     ┌──────────────────┐                                          │
-│  │  NTP Server  │◄──────────────────────│  Clients         │                                          │
-│  │  (chrony     │ ─────────────────────►│                  │                                          │
-│  │  allow 10/8) │   UDP 123 response    └──────────────────┘                                          │
-│  └──────────────┘                                                                                     │
-│                                                                                                       │
-│  Rule summary:  permit udp any → ntpserver port 123                                                   │
-│                 permit udp ntpserver port 123 → any                                                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></p>
 <p>NTP uses <strong>UDP port 123</strong> for all client-server and peer communication. If this port is blocked between a host and its NTP server, the clock will not synchronise.</p>
 <h2 id="required-firewall-rules">Required Firewall Rules<a class="headerlink" href="#required-firewall-rules" title="Permanent link">&para;</a></h2>
 <table>

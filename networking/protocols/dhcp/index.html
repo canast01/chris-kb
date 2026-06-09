@@ -3146,28 +3146,26 @@
 Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using a four-step DORA handshake (Discover, Offer, Request, Ack) over UDP — client broadcasts on port 68, server listens on port 67. The primary operational concerns are scope design, lease time tuning, option correctness (gateway, DNS, domain), and failover configuration for high availability, as DHCP failure renders an entire subnet unreachable without static fallback.
 </div>
 
-<div class="highlight"><pre><span></span><code>    DORA HANDSHAKE
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Client (new device)              DHCP Server                                                         │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌───────────────────┐            ┌────────────────────────┐                                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │  No IP yet        │            │  Scope: 192.168.1.0/24 │                                          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │                   │            │  Pool: .100 – .200     │                                          │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  1. DISCOVER ─────┼────────────┼►  (broadcast)          │                                          │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │    src: 0.0.0.0   │            │  server receives       │                                          │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │    dst: broadcast │            │                        │                                          │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │                   │◄───────────┼── 2. OFFER             │                                          │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │                   │            │   &quot;here&#39;s 192.168.1.105&quot;│                                         │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  3. REQUEST ──────┼────────────┼►  (broadcast)          │                                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │    &quot;I want .105&quot;  │            │   server confirms lease │                                         │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │                   │◄───────────┼── 4. ACK               │                                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  IP: 192.168.1.105│            │   lease begins         │                                          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  GW: 192.168.1.1  │            │   options delivered    │                                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  DNS: 10.0.0.53   │            └────────────────────────┘                                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └───────────────────┘                                                                                │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Renewal at 50% of lease time (T1); rebind at 87.5% (T2)                                              │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p><code>text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Client (new device)              DHCP Server                                                         │
-│  ┌───────────────────┐            ┌────────────────────────┐                                          │
-│  │  No IP yet        │            │  Scope: 192.168.1.0/24 │                                          │
-│  │                   │            │  Pool: .100 – .200     │                                          │
-│  │  1. DISCOVER ─────┼────────────┼►  (broadcast)          │                                          │
-│  │    src: 0.0.0.0   │            │  server receives       │                                          │
-│  │    dst: broadcast │            │                        │                                          │
-│  │                   │◄───────────┼── 2. OFFER             │                                          │
-│  │                   │            │   "here's 192.168.1.105"│                                         │
-│  │  3. REQUEST ──────┼────────────┼►  (broadcast)          │                                          │
-│  │    "I want .105"  │            │   server confirms lease │                                         │
-│  │                   │◄───────────┼── 4. ACK               │                                          │
-│  │  IP: 192.168.1.105│            │   lease begins         │                                          │
-│  │  GW: 192.168.1.1  │            │   options delivered    │                                          │
-│  │  DNS: 10.0.0.53   │            └────────────────────────┘                                          │
-│  └───────────────────┘                                                                                │
-│  Renewal at 50% of lease time (T1); rebind at 87.5% (T2)                                              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></p>
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="scopes/">
