@@ -2828,6 +2828,36 @@
 SQL Server authentication — Windows vs Mixed Mode, service account configuration, AD group logins, Managed Service Accounts, and password policy enforcement.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── SQL Server — Authentication ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Windows Authentication uses Kerberos/NTLM via AD; recommended for internal applications             │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Mixed Mode adds SQL logins; required for apps that cannot use Windows auth                          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Service accounts: use gMSA (Group Managed Service Account); avoid NETWORK SERVICE in production     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Authentication modes                                                                                │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Windows only: SERVERPROPERTY(&#39;IsIntegratedSecurityOnly&#39;) = 1                                        │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Mixed Mode: both Windows and SQL logins; set via SQL Server setup or sp_configure                   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   SQL auth only: no Windows auth — avoid; no Kerberos delegation or AD group management               │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   Windows auth logins                                                                                 │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Individual: CREATE LOGIN [DOMAIN\username] FROM WINDOWS                                             │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   AD group: CREATE LOGIN [DOMAIN\SQL_DBA_Group] FROM WINDOWS; all group members inherit access        │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   SQL authentication                                                                                  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   CREATE LOGIN appuser WITH PASSWORD = &#39;...&#39;, CHECK_POLICY = ON, CHECK_EXPIRATION = ON                │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   CHECK_POLICY enforces Windows domain password complexity and lockout rules                          │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Service accounts                                                                                    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   gMSA: New-ADServiceAccount; password auto-rotated by AD; no manual password management              │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   SQL Server service should run as DOMAIN\svc-sql-prod$ (gMSA) not NETWORK SERVICE                    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Kerberos       = ticket-based auth protocol; used for Windows Authentication in AD domains          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   gMSA           = Group Managed Service Account; AD-managed service account with auto-rotation       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   CHECK_POLICY   = enforces Windows account lockout and complexity on SQL logins                      │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   Mixed Mode     = allows both Windows and SQL logins; changed via SQL Server Configuration Manager   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="authentication-modes">Authentication Modes<a class="headerlink" href="#authentication-modes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2855,48 +2885,48 @@ SQL Server authentication — Windows vs Mixed Mode, service account configurati
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Check current auth mode</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">SERVERPROPERTY</span><span class="p">(</span><span class="s1">&#39;IsIntegratedSecurityOnly&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">windows_only</span><span class="p">;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">-- 1 = Windows only; 0 = Mixed Mode</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Check current auth mode</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">SERVERPROPERTY</span><span class="p">(</span><span class="s1">&#39;IsIntegratedSecurityOnly&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">windows_only</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">-- 1 = Windows only; 0 = Mixed Mode</span>
 </code></pre></div>
 <h2 id="windows-authentication-logins">Windows Authentication Logins<a class="headerlink" href="#windows-authentication-logins" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Individual AD user</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="p">[</span><span class="k">DOMAIN</span><span class="err">\</span><span class="n">username</span><span class="p">]</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">WINDOWS</span><span class="p">;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- AD security group (all members inherit access)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="p">[</span><span class="k">DOMAIN</span><span class="err">\</span><span class="n">SQL_DBA_Group</span><span class="p">]</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">WINDOWS</span><span class="p">;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">sysadmin</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">MEMBER</span><span class="w"> </span><span class="p">[</span><span class="k">DOMAIN</span><span class="err">\</span><span class="n">SQL_DBA_Group</span><span class="p">];</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Individual AD user</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="p">[</span><span class="k">DOMAIN</span><span class="err">\</span><span class="n">username</span><span class="p">]</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">WINDOWS</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">-- AD security group (all members inherit access)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="p">[</span><span class="k">DOMAIN</span><span class="err">\</span><span class="n">SQL_DBA_Group</span><span class="p">]</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">WINDOWS</span><span class="p">;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">sysadmin</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">MEMBER</span><span class="w"> </span><span class="p">[</span><span class="k">DOMAIN</span><span class="err">\</span><span class="n">SQL_DBA_Group</span><span class="p">];</span>
 </code></pre></div>
 <h2 id="sql-authentication">SQL Authentication<a class="headerlink" href="#sql-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Create SQL login with password policy</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;StrongPass1!&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="n">CHECK_POLICY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">,</span><span class="w">      </span><span class="c1">-- enforce Windows password policy</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="n">CHECK_EXPIRATION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span><span class="w">  </span><span class="c1">-- enforce password expiration</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Create SQL login with password policy</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;StrongPass1!&#39;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="n">CHECK_POLICY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">,</span><span class="w">      </span><span class="c1">-- enforce Windows password policy</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="n">CHECK_EXPIRATION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span><span class="w">  </span><span class="c1">-- enforce password expiration</span>
 </code></pre></div>
 <h2 id="service-account-configuration">Service Account Configuration<a class="headerlink" href="#service-account-configuration" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Use a <strong>Managed Service Account (MSA)</strong> or <strong>Group MSA (gMSA)</strong> — password managed by AD</li>
 <li>Avoid local service or <code>NETWORK SERVICE</code> for production instances</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Create gMSA</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-ADServiceAccount</span> <span class="n">-Name</span> <span class="s2">&quot;svc-sql-prod&quot;</span> <span class="n">-DNSHostName</span> <span class="n">sql01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Install-ADServiceAccount</span> <span class="n">-Identity</span> <span class="s2">&quot;svc-sql-prod&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Then configure SQL Server service to run as DOMAIN\svc-sql-prod$</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create gMSA</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-ADServiceAccount</span> <span class="n">-Name</span> <span class="s2">&quot;svc-sql-prod&quot;</span> <span class="n">-DNSHostName</span> <span class="n">sql01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Install-ADServiceAccount</span> <span class="n">-Identity</span> <span class="s2">&quot;svc-sql-prod&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Then configure SQL Server service to run as DOMAIN\svc-sql-prod$</span>
 </code></pre></div>
 <h2 id="password-policy">Password Policy<a class="headerlink" href="#password-policy" title="Permanent link">&para;</a></h2>
 <p>SQL logins created with <code>CHECK_POLICY = ON</code> inherit the Windows account lockout and complexity policy from the domain/local policy.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- View SQL logins and their policy status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">is_policy_checked</span><span class="p">,</span><span class="w"> </span><span class="n">is_expiration_checked</span><span class="p">,</span><span class="w"> </span><span class="n">is_disabled</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">sql_logins</span><span class="p">;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">-- Unlock a locked SQL login</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;NewPass1!&#39;</span><span class="w"> </span><span class="n">UNLOCK</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- View SQL logins and their policy status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">is_policy_checked</span><span class="p">,</span><span class="w"> </span><span class="n">is_expiration_checked</span><span class="p">,</span><span class="w"> </span><span class="n">is_disabled</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">sql_logins</span><span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">-- Unlock a locked SQL login</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">appuser</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;NewPass1!&#39;</span><span class="w"> </span><span class="n">UNLOCK</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="auditing-authentication-events">Auditing Authentication Events<a class="headerlink" href="#auditing-authentication-events" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Failed logins in SQL error log</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_readerrorlog</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Login failed&#39;</span><span class="p">;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">-- C2 audit / SQL Server Audit for detailed authentication logging</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- Failed logins in SQL error log</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">EXEC</span><span class="w"> </span><span class="n">sp_readerrorlog</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Login failed&#39;</span><span class="p">;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">-- C2 audit / SQL Server Audit for detailed authentication logging</span>
 </code></pre></div>
 
 
