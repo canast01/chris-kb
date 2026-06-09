@@ -4,6 +4,36 @@
 PostgreSQL diagnostics — reading pg_stat_activity, lock contention queries, autovacuum analysis, WAL lag, slow query identification, and log analysis.
 </div>
 
+```text
+┌────────────────────────────────────── PostgreSQL — Diagnostics ───────────────────────────────────────┐
+│                                                                                                       │
+│   Primary diagnostic sources: error log, pg_stat_activity, pg_stat_replication, pg_locks              │
+│   Lock contention: use pg_blocking_pids() to find which session is blocking another                   │
+│   Slow queries: pg_stat_statements tracks cumulative execution stats per query fingerprint            │
+│                                                                                                       │
+│   Error log locations                                                                                 │
+│   Ubuntu: /var/log/postgresql/postgresql-16-main.log                                                  │
+│   RHEL: /var/lib/pgsql/16/data/log/postgresql-*.log                                                   │
+│   Systemd: journalctl -u postgresql-16 --since "1 hour ago"                                           │
+│                                                                                                       │
+│   Active queries and blocking                                                                         │
+│   pg_stat_activity: shows pid, user, state, wait_event, duration, query text per session              │
+│   pg_blocking_pids(pid): returns array of PIDs blocking the given session                             │
+│   Cancel: pg_cancel_backend(<pid>); terminate: pg_terminate_backend(<pid>)                            │
+│                                                                                                       │
+│   Replication and autovacuum                                                                          │
+│   pg_stat_replication: shows sent/write/flush/replay LSN and lag_bytes per replica                    │
+│   pg_last_xact_replay_timestamp(): seconds since last WAL replay on standby replica                   │
+│   pg_stat_user_tables: last_autovacuum, n_dead_tup per table; find tables with bloat                  │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   pg_stat_activity = live view of all backend processes and their current query state                 │
+│   pg_blocking_pids = returns PIDs that hold locks blocking a given session PID                        │
+│   pg_stat_statements = extension tracking top queries by total and mean execution time                │
+│   LSN          = Log Sequence Number; WAL position; used to calculate replication lag bytes           │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Error Log
 
 ```bash

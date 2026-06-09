@@ -4,6 +4,36 @@
 PostgreSQL escalation criteria — P1/P2 indicators, evidence bundle to collect before engaging DBA support, and crash recovery guidance.
 </div>
 
+```text
+┌─────────────────────────────────────── PostgreSQL — Escalation ───────────────────────────────────────┐
+│                                                                                                       │
+│   Always collect an evidence bundle before paging DBA on-call; reduces triage time                    │
+│   P1 triggers: database unreachable, lock chain > 10 min, disk > 90%, corruption (PANIC)              │
+│   P2 triggers: replication broken, autovacuum wraparound warning, connection exhaustion               │
+│                                                                                                       │
+│   P1 — page DBA on-call immediately                                                                   │
+│   Database unreachable / postmaster down                                                              │
+│   Lock wait chain > 10 minutes with application impact                                                │
+│   Disk > 90% on data directory or WAL volume                                                          │
+│   Corruption detected (PANIC in PostgreSQL error log)                                                 │
+│   FATAL: connection limit exceeded (all connection slots exhausted)                                   │
+│                                                                                                       │
+│   P2 — alert DBA; begin triage                                                                        │
+│   Replica SQL stopped / replication broken with increasing lag                                        │
+│   Autovacuum wraparound warning in log (transaction ID approaching limit)                             │
+│                                                                                                       │
+│   Evidence bundle (collect before calling)                                                            │
+│   Last 200 lines of error log; pg_stat_activity; pg_locks WHERE NOT granted                           │
+│   pg_stat_replication; df -h on data dir; pg_stat_user_tables (top n_dead_tup)                        │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   PANIC         = PostgreSQL log level for unrecoverable errors; indicates data corruption risk       │
+│   wraparound    = transaction ID exhaustion; PostgreSQL freezes DB; requires emergency VACUUM         │
+│   VACUUM FREEZE = forces visibility update on all rows; prevents XID wraparound database shutdown     │
+│   pg_blocking_pids = returns PIDs holding locks that block a given session                            │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Escalation Thresholds
 
 | Condition | Severity | Action |
