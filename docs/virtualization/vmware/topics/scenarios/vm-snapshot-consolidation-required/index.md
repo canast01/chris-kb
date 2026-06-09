@@ -9,7 +9,7 @@ preventing snapshot sprawl through SPBM policy and backup integration.
 </div>
 
 ```text
-┌──────────────── VM Snapshot Consolidation Required — Investigation Flow ──────────────────────────────┐
+┌─────────────────────── VM Snapshot Consolidation Required — Investigation Flow ───────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: vCenter warning "Virtual machine disks consolidation is needed" on one or more VMs        ││

@@ -51,7 +51,7 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 ```
 
 ```text
-┌─────────────────────────────── vSAN — CLOM Resync Priority Queue ─────────────────────────────────────┐
+┌────────────────────────────────── vSAN — CLOM Resync Priority Queue ──────────────────────────────────┐
 │                                                                                                       │
 │  CLOM manages all resync operations through a prioritised queue. Higher-priority operations           │
 │  always preempt lower-priority ones for disk and network bandwidth on all participating hosts.        │

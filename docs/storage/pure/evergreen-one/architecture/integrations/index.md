@@ -7,7 +7,7 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 
 ```text
   FlashArray / FlashBlade
-  ┌────────────────────────────────────────────────┐
+  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   │  Management plane                              │
   │  ├── Pure1 (phonehome) ──HTTPS 443──► Cloud   │
   │  │     capacity / SLA / firmware               │
@@ -28,7 +28,7 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
   │                                                │
   │  Replication                                   │
   │  └── ActiveCluster ──TCP 8081──► Peer array   │
-  └────────────────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Evergreen//One uses the same FlashArray and FlashBlade hardware as standard Evergreen, so all host-side and management integrations are identical. The key difference is that Pure manages the hardware lifecycle — the management plane integration with Pure1 is mandatory and always active.

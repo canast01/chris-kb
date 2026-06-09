@@ -10,7 +10,7 @@ description: Visitor statistics for chrisanastasiadis.com
 Visitor statistics for chrisanastasiadis.com
 </div>
 ```text
-┌───────────────────────────────────── Site Stats — chrisanastasiadis.com ──────────────────────────────┐
+┌───────────────────────────────── Site Stats — chrisanastasiadis.com ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Visitor analytics for the KB site; regenerated automatically at each GitHub Actions deploy│   │

@@ -19,7 +19,7 @@ Pre-Upgrade Checklist Flow
 ```
 ```text
                                │
-┌──────────────────────────────▼────────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
 │  Infrastructure + Backup                                                                              │
 │  DNS forward/reverse working for all nodes and vCenter                                                │
 │  NTP synchronized · vCenter backup current                                                            │

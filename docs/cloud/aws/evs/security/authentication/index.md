@@ -5,7 +5,7 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Authentication ──────────────────────────────────────────┐
+┌───────────────────────────────────── Amazon EVS — Authentication ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   vCenter SSO: local vsphere.local domain; join AD for centralized authentication             │   │

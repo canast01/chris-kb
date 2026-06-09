@@ -3,7 +3,7 @@
 This page documents key architectural design decisions made for the VMware platform environment. Each entry captures what was chosen, why it was chosen over the alternatives, and what trade-offs were accepted. This serves as institutional memory — a record of intent that should inform future changes and prevent decisions from being revisited without cause.
 
 ```text
-┌──────────────────────────── VMware Platform — Design Decision Framework ────────────────────────────────┐
+┌───────────────────────────── VMware Platform — Design Decision Framework ─────────────────────────────┐
 │                                                                                                       │
 │   Each decision records: WHAT was chosen, WHY over alternatives, WHAT trade-offs were accepted        │
 │   Decisions become blockers for future change — a review trigger must be met before reversing         │
@@ -34,7 +34,7 @@ This page documents key architectural design decisions made for the VMware platf
 │   PVLAN          = Private VLAN; L2 isolation without a router; Isolated/Community/Promiscuous        │
 │   vLCM           = vSphere Lifecycle Manager; image-based = no VUM baselines; cluster images          │
 │   Review trigger = the condition that must be met before this decision can be reversed                │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

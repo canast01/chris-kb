@@ -5,7 +5,7 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 </div>
 
 ```text
-┌──────────────────────────────────── Ceph — How It Works ──────────────────────────────────────────────┐
+┌───────────────────────────────────────── Ceph — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   CRUSH: clients compute OSD placement locally; no central metadata lookup required            │  │

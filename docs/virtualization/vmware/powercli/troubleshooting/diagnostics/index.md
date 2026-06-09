@@ -5,7 +5,7 @@ PowerCLI diagnostic techniques: verbose/debug output, API call tracing via Exten
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Diagnostics and Tracing ─────────────────────────────────────────┐
+┌───────────────────────────────── PowerCLI — Diagnostics and Tracing ──────────────────────────────────┐
 │                                                                                                       │
 │   Start with verbose output; escalate to API tracing if the error is not obvious from the message     │
 │   ExtensionData exposes the raw vSphere API object — use it when PowerCLI cmdlets abstract too much   │
@@ -31,7 +31,7 @@ PowerCLI diagnostic techniques: verbose/debug output, API call tracing via Exten
 │   ExtensionData   = property on any PowerCLI VI object; returns the raw vSphere API managed object    │
 │   Get-View        = low-level API query; specify -ViewType and -Filter for efficient large queries    │
 │   Measure-Command = PowerShell cmdlet for timing code execution; used to profile script performance   │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Enable Verbose and Debug Output

@@ -5,7 +5,7 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 </div>
 
 ```text
-┌──────────────────────────────────── KB Site Quality Dashboard ────────────────────────────────────────┐
+┌────────────────────────────────────── KB Site Quality Dashboard ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       Quality gates and content standards for the chrisanastasiadis.com knowledge base        │   │

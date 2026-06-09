@@ -5,7 +5,7 @@ EVS health check routine: cluster and host status via AWS CLI, vSAN and vCenter 
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Health Checks ───────────────────────────────────────────┐
+┌───────────────────────────────────── Amazon EVS — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Check sequence: AWS cluster → vCenter hosts → vSAN health → NSX-T → HCX → capacity          │   │

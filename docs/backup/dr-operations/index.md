@@ -5,7 +5,7 @@ Cross-product disaster recovery governance and operations — DR design, runbook
 </div>
 
 ```text
-┌──────────────────────────────── DR Operations Hub ────────────────────────────────────────────────────┐
+┌────────────────────────────────────────── DR Operations Hub ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    DR governance: define RTO/RPO tiers → build runbooks → test recovery → validate backups    │   │

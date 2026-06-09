@@ -5,7 +5,7 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Upgrade Path ───────────────────────────────────────────┐
+┌─────────────────────────────────────── OpenShift Upgrade Path ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   CVO manages upgrades: downloads release image, updates operators, drains+reboots nodes      │   │

@@ -9,7 +9,7 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
 Evergreen Common Issues — Triage
   Issue type
        │
-   ┌───┴───────────────────────────────────────┐
+   ┌────────────────────────────────────────────────── ┴ ──────────────────────────────────────────────────┐
    ▼                                           ▼
 Capacity / subscription                 Hardware / performance
 Pure1 subscription dashboard            purealert + puredrive

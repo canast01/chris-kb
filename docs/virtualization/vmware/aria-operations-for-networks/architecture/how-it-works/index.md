@@ -63,7 +63,7 @@ Collectors maintain a persistent TLS connection back to the Platform VM on TCP 4
 ```
 
 ```text
-┌──────────────────────── Aria Operations for Networks — Data Pipeline ─────────────────────────────────┐
+┌──────────────────────────── Aria Operations for Networks — Data Pipeline ─────────────────────────────┐
 │                                                                                                       │
 │  Flow data travels from physical and virtual sources through Collectors to the Platform               │
 │  where Kafka, Cassandra, and Elasticsearch index, correlate, and make it searchable.                  │

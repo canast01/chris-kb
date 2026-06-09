@@ -5,7 +5,7 @@ VMware certification exam tracking — scheduled exams, attempt history, scores,
 </div>
 
 ```text
-┌──────────────────────────── VMware Certification Track Overview ────────────────────────────────────────┐
+┌───────────────────────────────── VMware Certification Track Overview ─────────────────────────────────┐
 │                                                                                                       │
 │   Track progression: VCP (Associate) → VCAP (Professional) → VCDX (Design Expert)                     │
 │   All certs are product-track-specific: DCV, NV, CMA, DTM, SEC                                        │
@@ -36,5 +36,5 @@ VMware certification exam tracking — scheduled exams, attempt history, scores,
 │   DCV       = Data Center Virtualization track; most common path for infra engineers                  │
 │   Pearson VUE = exam delivery platform; schedule online at least 5 business days ahead                │
 │   Acclaim   = Credly-powered badge platform; VMware digital badges issued here on pass                │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

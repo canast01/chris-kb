@@ -1,7 +1,7 @@
 # RecoverPoint — Initial Deployment
 
 ```text
-┌──────────────────────────── Dell RecoverPoint — Deployment Sequence ──────────────────────────────────┐
+┌─────────────────────────────── Dell RecoverPoint — Deployment Sequence ───────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

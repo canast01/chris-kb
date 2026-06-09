@@ -1,7 +1,7 @@
 # Storage — Troubleshooting
 
 ```text
-┌──────────────────────────── Storage — Troubleshooting Decision Tree ──────────────────────────────────┐
+┌─────────────────────────────── Storage — Troubleshooting Decision Tree ───────────────────────────────┐
 │                                                                                                       │
 │  Problem Classification                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

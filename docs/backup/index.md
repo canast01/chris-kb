@@ -5,7 +5,7 @@ Enterprise backup and disaster recovery — Veeam, Commvault, and NetBackup back
 </div>
 
 ```text
-┌──────────────────────────── Backup & Disaster Recovery Platform ──────────────────────────────────────┐
+┌───────────────────────────────── Backup & Disaster Recovery Platform ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                    Backup & DR — Scope and Objectives                                         │   │

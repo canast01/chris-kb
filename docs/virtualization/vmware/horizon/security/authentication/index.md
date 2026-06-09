@@ -11,7 +11,7 @@ Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurI
                                       │  │ → short-lived cert  │   │
                                       │  │ → Windows login     │   │
                                       │  └─────────────────────┘   │
-                                      └─────────────────────────────┘
+                                      └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────── VMware Horizon — Authentication ───────────────────────────────────┐

@@ -12,7 +12,7 @@ Evergreen Troubleshooting Flow
           ▼
   Check Pure1 portal ──► fleet health + subscription status
           │
-   ┌──────┴──────────────────────────────────────┐
+   ┌────────────────────────────────────────────────── ┴ ──────────────────────────────────────────────────┐
    ▼                                             ▼
 Capacity / subscription issue           Hardware / performance issue
 Pure1 → subscription dashboard          purealert list

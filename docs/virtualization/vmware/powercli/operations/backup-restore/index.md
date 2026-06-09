@@ -5,7 +5,7 @@ Exporting vSphere configurations using PowerCLI — VM inventory exports, storag
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Configuration Backup and Export ────────────────────────────────┐
+┌───────────────────────────── PowerCLI — Configuration Backup and Export ──────────────────────────────┐
 │                                                                                                       │
 │   vSphere configuration backups capture platform state not covered by VCSA file-based backup          │
 │   Run exports weekly; commit outputs to a version-controlled repository for diff history              │
@@ -32,7 +32,7 @@ Exporting vSphere configurations using PowerCLI — VM inventory exports, storag
 │   VCSA backup  = file-based backup of the appliance; scheduled via VAMI; restores full vCenter        │
 │   SPBM export  = storage policy definition export; re-import with Import-SpbmStoragePolicy            │
 │   Permissions  = role + principal + object; PowerCLI export captures all three per assignment         │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Run This Routine

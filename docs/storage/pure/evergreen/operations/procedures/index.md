@@ -11,7 +11,7 @@ Part of the [Evergreen Operations](../index.md) reference.
   Pure Operational Procedure Flow
 
   Provision volume          Snapshot / Replication
-  ┌────────────────┐        ┌───────────────────────┐
+  ┌───────────────────────────────────────────── ┐        ┌ ──────────────────────────────────────────────┐
   │ purevol create │        │ purepgroup create      │
   │ purevol connect│        │ purepgroup setattr     │
   │  --hgroup      │        │  --vollist             │
@@ -20,7 +20,7 @@ Part of the [Evergreen Operations](../index.md) reference.
   └────────────────┘        │ purepgroup connect     │
                             │  --hgroup <remote>     │
   Purity Upgrade            └───────────────────────┘
-  ┌────────────────────────────────────┐
+  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   │ Pre: purearray upgrade --check     │
   │      purealert list (no errors)    │
   │      purehostconnection list       │
@@ -30,7 +30,7 @@ Part of the [Evergreen Operations](../index.md) reference.
   │ Post: purearray list (version)     │
   │       purealert list (no new)      │
   │       purepod list (online)        │
-  └────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

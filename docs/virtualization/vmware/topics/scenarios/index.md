@@ -5,7 +5,7 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 </div>
 
 ```text
-┌──────────────────────────────────── VMware — Scenarios ───────────────────────────────────────────────┐
+┌───────────────────────────────────────── VMware — Scenarios ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────┐   ┌───────────────────────────────────────────────────┐│
 │   │              ISSUES (Reactive)            │   │               TASKS (Planned)                    ││

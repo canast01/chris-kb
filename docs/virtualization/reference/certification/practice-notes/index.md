@@ -5,7 +5,7 @@ VMware certification practice exam notes — question patterns, topic areas, and
 </div>
 
 ```text
-┌─────────────────────────────── Practice Exam Approach — VCP-DCV ────────────────────────────────────────┐
+┌────────────────────────────────── Practice Exam Approach — VCP-DCV ───────────────────────────────────┐
 │                                                                                                       │
 │   Scenario questions test "why X not Y?" — identify the principle then apply elimination              │
 │   Most wrong answers are valid in a different context; read the full scenario carefully               │
@@ -32,5 +32,5 @@ VMware certification practice exam notes — question patterns, topic areas, and
 │   PVLAN   = Private VLAN; Isolated/Community/Promiscuous; communication rules tested heavily          │
 │   FTT     = Failures to Tolerate; vSAN storage policy; FTT=1 requires minimum 3 hosts                 │
 │   vCLS    = vSphere Cluster Services; retreat mode disables DRS automation and HA placement           │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

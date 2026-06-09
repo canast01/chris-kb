@@ -5,7 +5,7 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 </div>
 
 ```text
-┌──────────────────────────────────── vCenter — Deployment Phases ──────────────────────────────────────┐
+┌───────────────────────────────────── vCenter — Deployment Phases ─────────────────────────────────────┐
 │                                                                                                       │
 │  Six phases from DNS record creation to a hardened, production-ready vCenter. Each phase has a        │
 │  clear exit criterion. Do not proceed until the current phase validates clean.                        │

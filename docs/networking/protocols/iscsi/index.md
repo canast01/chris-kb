@@ -10,7 +10,7 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
 
         iSCSI END-TO-END ARCHITECTURE
 ```text
-┌────────────────────┐       ┌──────────────────┐       ┌───────────────────────────────────────────────┐
+┌──────────────────────────────── ┐       ┌──────────────────┐       ┌ ─────────────────────────────────┐
 │       HOST         │       │   IP NETWORK     │       │  iSCSI TARGET                                 │
 │                    │       │                  │       │  (Storage Array)                              │
 │  ┌──────────────┐  │       │  ┌────────────┐  │       │                                               │
@@ -25,7 +25,7 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
 │                    │       │                  │       │  │(block dev) │                               │
 │  IQN: iqn.YYYY-MM. │       │                  │       │  └────────────┘                               │
 │    domain:name     │       │                  │       │  CHAP auth                                    │
-└────────────────────┘       └──────────────────┘       └───────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## iSCSI Session Establishment

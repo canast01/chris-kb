@@ -5,7 +5,7 @@ PowerCLI and bash scripts for VxRail automation. Includes vSAN health summary, c
 </div>
 
 ```text
-┌──────────────────────────────────────── VxRail — Scripts ─────────────────────────────────────────────┐
+┌────────────────────────────────────────── VxRail — Scripts ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   All PowerCLI scripts require: Connect-VIServer before running                               │   │

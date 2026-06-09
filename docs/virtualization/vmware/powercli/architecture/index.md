@@ -5,7 +5,7 @@ PowerCLI module architecture, vSphere API connectivity model, credential managem
 </div>
 
 ```text
-┌────────────────────────────── PowerCLI — Module Architecture ───────────────────────────────────────────┐
+┌─────────────────────────────────── PowerCLI — Module Architecture ────────────────────────────────────┐
 │                                                                                                       │
 │   PowerCLI is a set of PowerShell modules that wrap the vSphere REST and SOAP APIs                    │
 │   Each VMware product has its own sub-module; VMware.PowerCLI is the meta-package                     │
@@ -29,7 +29,7 @@ PowerCLI module architecture, vSphere API connectivity model, credential managem
 │   VIM     = vSphere Infrastructure Management; the SOAP API layer that PowerCLI wraps                 │
 │   VI object = any vSphere managed entity returned by Get- cmdlets (VM, VMHost, Datastore)             │
 │   $_ (pipeline) = current object in the pipeline; used with ForEach-Object or Where-Object            │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

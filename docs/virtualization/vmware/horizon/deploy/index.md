@@ -5,7 +5,7 @@ End-to-end deployment guide for VMware Horizon VDI and published applications. P
 </div>
 
 ```text
-┌──────────────────────────────────── Horizon — Deployment Phases ──────────────────────────────────────┐
+┌───────────────────────────────────── Horizon — Deployment Phases ─────────────────────────────────────┐
 │                                                                                                       │
 │  Six phases from AD/vCenter prerequisites to a validated VDI environment. Complete each phase         │
 │  and confirm the exit criterion before advancing to the next phase.                                   │

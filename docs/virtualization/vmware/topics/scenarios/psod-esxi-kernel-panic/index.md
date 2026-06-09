@@ -8,7 +8,7 @@ and identifying driver/firmware mismatch as the most common production cause.
 </div>
 
 ```text
-┌───────────────────────────── ESXi PSOD — Response and Diagnosis Flow ─────────────────────────────────┐
+┌─────────────────────────────── ESXi PSOD — Response and Diagnosis Flow ───────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  START: Host goes offline; vCenter shows "Not Responding"; VMs show "Disconnected"              │ │

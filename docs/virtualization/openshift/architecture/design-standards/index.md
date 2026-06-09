@@ -5,7 +5,7 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Design Standards ───────────────────────────────────────┐
+┌───────────────────────────────────── OpenShift Design Standards ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Master nodes: 3× fixed, never scale; size for etcd (IOPS-sensitive); dedicated infra nodes  │   │

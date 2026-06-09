@@ -5,7 +5,7 @@ Deep-dive reference articles on core vSphere concepts: cluster services, lifecyc
 </div>
 
 ```text
-┌─────────────────────────────────── VMware Concepts — Reference Map ─────────────────────────────────────┐
+┌─────────────────────────────────── VMware Concepts — Reference Map ───────────────────────────────────┐
 │                                                                                                       │
 │   Concepts pages explain internals: how features work, why limits exist, what terms mean              │
 │   Use these pages to build the mental model before working on procedures or troubleshooting           │
@@ -37,7 +37,7 @@ Deep-dive reference articles on core vSphere concepts: cluster services, lifecyc
 │   vLCM  = vSphere Lifecycle Manager; cluster-image-based patching, replacing VUM baselines            │
 │   SPBM  = Storage Policy-Based Management; maps VM requirements to datastore capabilities             │
 │   vCLS  = vSphere Cluster Services; agent VMs that coordinate DRS and HA placement decisions          │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

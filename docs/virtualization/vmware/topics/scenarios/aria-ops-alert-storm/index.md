@@ -8,7 +8,7 @@ source — then tuning alert definitions to prevent recurrence.
 </div>
 
 ```text
-┌──────────────────────────────── Aria Ops Alert Storm — Investigation Flow ────────────────────────────┐
+┌────────────────────────────── Aria Ops Alert Storm — Investigation Flow ──────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Aria Operations shows a spike in active critical/warning alerts — dozens fire simultaneously ││

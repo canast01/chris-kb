@@ -7,7 +7,7 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 </div>
 
 ```text
-┌──────────────────────────── ESXi Host Disconnected — Investigation Flow ──────────────────────────────┐
+┌───────────────────────────── ESXi Host Disconnected — Investigation Flow ─────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  START: vCenter shows host as "Disconnected" or "Not Responding"                                │ │

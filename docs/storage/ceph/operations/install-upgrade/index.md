@@ -5,7 +5,7 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Lifecycle & Upgrades ──────────────────────────────────────────┐
+┌───────────────────────────────────── Ceph — Lifecycle & Upgrades ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   cephadm handles upgrade orchestration; upgrades one daemon at a time with health checks     │   │

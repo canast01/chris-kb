@@ -89,7 +89,7 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 ```
 
 ```text
-┌──────────────────────────── VMware Platform — Installation Sequence ──────────────────────────────────┐
+┌─────────────────────────────── VMware Platform — Installation Sequence ───────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Physical Infrastructure                                                                     │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

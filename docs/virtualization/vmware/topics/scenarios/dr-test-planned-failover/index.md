@@ -10,7 +10,7 @@ them to fail.
 </div>
 
 ```text
-┌──────────────────────────────── DR Test vs Planned Failover — Procedure Paths ────────────────────────┐
+┌──────────────────────────── DR Test vs Planned Failover — Procedure Paths ────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: SRM Recovery Plan selected — choose execution type                                               ││

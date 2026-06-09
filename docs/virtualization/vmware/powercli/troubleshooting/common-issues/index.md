@@ -5,7 +5,7 @@ Solutions for the most frequent PowerCLI problems: certificate errors, connectio
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Common Issues and Fixes ─────────────────────────────────────────┐
+┌───────────────────────────────── PowerCLI — Common Issues and Fixes ──────────────────────────────────┐
 │                                                                                                       │
 │   Most PowerCLI issues occur at connect time, during module load, or when cmdlet parameters fail      │
 │   Start diagnosis with: Get-Module VMware.* and the full error message                                │
@@ -35,7 +35,7 @@ Solutions for the most frequent PowerCLI problems: certificate errors, connectio
 │   PSModulePath = environment variable; add custom module paths with $env:PSModulePath += ";path"      │
 │   API version  = vCenter exposes a versioned vSphere API; newer cmdlet params may not be available    │
 │   IsConnected  = property on DefaultVIServer object; false when session has expired or timed out      │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Certificate Error on Connect

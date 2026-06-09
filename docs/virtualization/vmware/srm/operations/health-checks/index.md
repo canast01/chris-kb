@@ -13,7 +13,7 @@ SRM health checks — site pair connectivity verification, VM replication status
                         │  └────────────┘  │    │  Pair healthy?   │
                         └──────────────────┘    │  Last discovery  │
                                                 │  recent?         │
-                                                └──────────────────┘
+                                                └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── VMware SRM — Health Checks ──────────────────────────────────────┐

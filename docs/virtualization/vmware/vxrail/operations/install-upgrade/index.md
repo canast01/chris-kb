@@ -5,7 +5,7 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 </div>
 
 ```text
-┌──────────────────────────────────────── VxRail — Install & Upgrade ───────────────────────────────────┐
+┌───────────────────────────────────── VxRail — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   VxRail LCM is the only supported upgrade method — never patch ESXi or firmware manually     │   │

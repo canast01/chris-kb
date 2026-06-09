@@ -1,7 +1,7 @@
 # SnapMirror — Initial Configuration
 
 ```text
-┌──────────────────────────── NetApp SnapMirror — Configuration Sequence ───────────────────────────────┐
+┌───────────────────────────── NetApp SnapMirror — Configuration Sequence ──────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

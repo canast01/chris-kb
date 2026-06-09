@@ -8,7 +8,7 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 </div>
 
 ```text
-┌──────────────────────────── VxRail LCM Upgrade — Failure Decision Flow ───────────────────────────────┐
+┌───────────────────────────── VxRail LCM Upgrade — Failure Decision Flow ──────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  START: VxRail Manager → LCM → Upgrade shows failure; identify phase from Upgrade History      │  │

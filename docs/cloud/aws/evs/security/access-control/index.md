@@ -5,7 +5,7 @@ AWS IAM permissions for EVS cluster management, vSphere RBAC roles for VMs and i
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Access Control ──────────────────────────────────────────┐
+┌───────────────────────────────────── Amazon EVS — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Two separate RBAC planes: AWS IAM (cluster/host lifecycle) + vSphere RBAC (VM operations)   │   │

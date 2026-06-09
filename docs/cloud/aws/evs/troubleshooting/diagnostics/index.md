@@ -5,7 +5,7 @@ EVS diagnostic data collection: AWS CloudTrail, VPC Flow Logs, NSX-T support bun
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Diagnostics ─────────────────────────────────────────────┐
+┌────────────────────────────────────── Amazon EVS — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   AWS: CloudTrail (API actions) + VPC Flow Logs (network) are always-on diagnostic sources    │   │

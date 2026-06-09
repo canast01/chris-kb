@@ -9,7 +9,7 @@ Maps VCP-DCV 8 exam objectives (exam code 2V0-21.23) to KB content pages. Use th
 </div>
 
 ```text
-┌──────────────────────── VCP-DCV 8 (2V0-21.23) — Exam Blueprint Map ────────────────────────────────────┐
+┌───────────────────────────── VCP-DCV 8 (2V0-21.23) — Exam Blueprint Map ──────────────────────────────┐
 │                                                                                                       │
 │   70 questions / 135 min / pass 300 of 500 / Pearson VUE / 2-year recertification required            │
 │   Section 1 (Architecture) is the largest — weight study time there first                             │
@@ -46,7 +46,7 @@ Maps VCP-DCV 8 exam objectives (exam code 2V0-21.23) to KB content pages. Use th
 │   vTA   = vSphere Trust Authority; hardware-rooted trust chain for encrypted VMs                      │
 │   VBS   = Virtualization-Based Security; Windows feature requiring vTPM and UEFI VM firmware          │
 │   vCLS  = vSphere Cluster Services; retreat mode stops DRS automation and HA optimal placement        │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -5,7 +5,7 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 </div>
 
 ```text
-┌────────────────────────────────────── NSX — Deployment Phases ────────────────────────────────────────┐
+┌─────────────────────────────────────── NSX — Deployment Phases ───────────────────────────────────────┐
 │                                                                                                       │
 │  Six phases from physical underlay to validated overlay networking. Each phase has a clear exit       │
 │  criterion. Do not proceed until TEP health is confirmed at each host-prep step.                      │

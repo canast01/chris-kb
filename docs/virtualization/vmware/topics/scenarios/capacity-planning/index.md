@@ -9,7 +9,7 @@ procurement decision.
 </div>
 
 ```text
-┌──────────────────────────────── Capacity Planning — Review Workflow ──────────────────────────────────┐
+┌───────────────────────────────── Capacity Planning — Review Workflow ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Scheduled capacity review, or approaching threshold alert from Aria Operations                   ││

@@ -1,7 +1,7 @@
 # Dell PowerScale — Initial Deployment
 
 ```text
-┌──────────────────────────── Dell PowerScale — Deployment Sequence ────────────────────────────────────┐
+┌──────────────────────────────── Dell PowerScale — Deployment Sequence ────────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

@@ -5,7 +5,7 @@ AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere opera
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — CLI Reference ───────────────────────────────────────────┐
+┌───────────────────────────────────── Amazon EVS — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   AWS CLI: cluster/host lifecycle, capacity, and status; requires EVS IAM permissions          │  │

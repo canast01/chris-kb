@@ -7,7 +7,7 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 </div>
 
 ```text
-┌──────────────────────────────── VM Inaccessible / HA Failover — Investigation Flow ───────────────────┐
+┌───────────────────────── VM Inaccessible / HA Failover — Investigation Flow ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: VMs unreachable / Aria Ops alert: host disconnected or not responding                     ││

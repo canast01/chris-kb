@@ -8,7 +8,7 @@ the physical network — and restoring connectivity with minimal downtime.
 </div>
 
 ```text
-┌───────────────────────────── NSX Edge Failure / BGP Down — Investigation Flow ────────────────────────┐
+┌────────────────────────── NSX Edge Failure / BGP Down — Investigation Flow ───────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: External connectivity lost for VMs — north-south traffic not reaching upstream network      ││

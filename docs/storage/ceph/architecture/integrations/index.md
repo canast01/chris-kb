@@ -5,7 +5,7 @@ Ceph integrations: Kubernetes CSI (Rook-Ceph), OpenStack Cinder/Glance/Swift, RB
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Integrations ──────────────────────────────────────────────────┐
+┌───────────────────────────────────────── Ceph — Integrations ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Kubernetes: Rook operator manages Ceph inside K8s; CSI driver for PVC provisioning          │   │

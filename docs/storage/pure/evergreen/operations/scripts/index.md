@@ -9,7 +9,7 @@ Script Reference reference covering Subscription Capacity Report, Alert Configur
   Pure Script Execution Paths
 
   Purity CLI (SSH)               Pure1 REST API
-  ┌──────────────────┐           ┌──────────────────────┐
+  ┌──────────────────────────────────────────── ┐           ┌ ────────────────────────────────────────────┐
   │  puritysh        │           │  Bearer token auth   │
   │  purearray list  │           │  GET /arrays         │
   │  purevol list    │           │  GET /metrics/history│
@@ -22,7 +22,7 @@ Script Reference reference covering Subscription Capacity Report, Alert Configur
   │  New-PfaArray    │             │  eo1_usage.py      │
   │  Get-PfaVolumes  │             │  burst_alert.sh    │
   │  Set-PfaVolume   │             │  sla_check.py      │
-  └──────────────────┘             └────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
   Alert audit: curl ──► /api/2.x/alert-watchers
   Replication:  curl ──► /api/2.x/protection-groups

@@ -5,7 +5,7 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 </div>
 
 ```text
-┌──────────────────────────────── ESXi Host Deployment Flow ────────────────────────────────────────────┐
+┌────────────────────────────────────── ESXi Host Deployment Flow ──────────────────────────────────────┐
 │                                                                                                       │
 │  Phase 1: Physical Readiness                                                                          │
 │  BIOS/firmware at vendor minimum  ·  VT-x on  ·  DNS A+PTR records created  ·  NTP reachable          │

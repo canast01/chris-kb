@@ -5,7 +5,7 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Design Standards ────────────────────────────────────────┐
+┌──────────────────────────────────── Amazon EVS — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Minimum: 3 hosts (FTT=1 RAID-1); production: 4+ hosts; stretched: 6+ (3 per AZ + witness)  │    │

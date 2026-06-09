@@ -5,7 +5,7 @@ PowerCLI security: RBAC and role management, credential and certificate handling
 </div>
 
 ```text
-┌───────────────────────────── PowerCLI — Security Reference ─────────────────────────────────────────────┐
+┌──────────────────────────────────── PowerCLI — Security Reference ────────────────────────────────────┐
 │                                                                                                       │
 │   PowerCLI security covers four areas: access control, authentication, encryption, and hardening      │
 │   Automation service accounts must follow least-privilege; never use an admin account in scripts      │
@@ -35,7 +35,7 @@ PowerCLI security: RBAC and role management, credential and certificate handling
 │   VIPermission            = vCenter permission: role + principal + entity + propagation flag          │
 │   InvalidCertificateAction = Fail (prod) / Ignore (lab only) / Warn (default in older versions)       │
 │   Store-VICredentialStoreItem = saves encrypted username+password bound to the target host name       │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

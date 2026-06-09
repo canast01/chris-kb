@@ -5,7 +5,7 @@ Common operational procedures using PowerCLI: bulk VM operations, host maintenan
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Common Operational Procedures ───────────────────────────────────┐
+┌────────────────────────────── PowerCLI — Common Operational Procedures ───────────────────────────────┐
 │                                                                                                       │
 │   Common administrative procedures with PowerCLI for bulk and single-object operations                │
 │   All procedures follow: pre-check → act → verify → report pattern                                    │
@@ -35,7 +35,7 @@ Common operational procedures using PowerCLI: bulk VM operations, host maintenan
 │   -Evacuate     = with Set-VMHost maintenance; triggers DRS to migrate all VMs off the host           │
 │   -Confirm:$false = suppresses the Y/N prompt in scripts; required for unattended automation          │
 │   Get-Task      = retrieves running and recent vCenter tasks; monitor long-running operations         │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Put Host in Maintenance Mode

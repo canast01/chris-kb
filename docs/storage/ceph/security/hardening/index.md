@@ -5,7 +5,7 @@ Ceph security hardening: network firewall rules for cluster isolation, disabling
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Hardening ─────────────────────────────────────────────────────┐
+┌────────────────────────────────────────── Ceph — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Network: firewall the cluster network; only Ceph nodes should reach OSD ports              │    │

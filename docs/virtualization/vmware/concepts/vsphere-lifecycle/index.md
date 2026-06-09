@@ -9,7 +9,7 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 </div>
 
 ```text
-┌──────────────────────── vSphere Lifecycle Manager — Desired State ────────────────────────────────────┐
+┌────────────────────────────── vSphere Lifecycle Manager — Desired State ──────────────────────────────┐
 │                                                                                                       │
 │  ┌──────────────────────────────────────────────────────────────────────────────────────────┐         │
 │  │  Cluster Image (Desired State)                                                           │         │

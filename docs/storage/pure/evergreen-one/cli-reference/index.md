@@ -11,7 +11,7 @@ Part of the [Evergreen//One](../index.md) reference.
   Subscription & Capacity Management — Command Flow
 
   Pure1 REST API                    Per-Array CLI (SSH)
-  ┌─────────────────────┐           ┌──────────────────────┐
+  ┌──────────────────────────────────────────── ┐           ┌ ────────────────────────────────────────────┐
   │ /subscriptions      │           │ purearray list       │
   │  ├─ list all subs   │           │   --space  (usage)   │
   │  └─ get capacity    │           │   --controller       │
@@ -21,15 +21,15 @@ Part of the [Evergreen//One](../index.md) reference.
   │                     │           │ purehw list          │
   │ /metrics/history    │           │   --type drive/fan   │
   │  └─ trend data      │           └──────────────────────┘
-  └──────────┬──────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
              │ Bearer token (OAuth2 RS256 JWT)
              ▼
-  ┌─────────────────────┐
+  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   │  Capacity States    │
   │  Reserved ◄── OK    │
   │  >Reserved ◄─ BURST │  ← higher per-TiB billing
   │  >Burst cap ◄─ OVER │  ← order required
-  └─────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Overview

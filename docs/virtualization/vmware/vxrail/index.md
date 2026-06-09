@@ -69,7 +69,7 @@ Technical and operational reference for Dell VxRail. Covers VxRail Manager, the 
 ```
 
 ```text
-┌───────────────────────────────── VxRail Cluster — Deployment Sequence ────────────────────────────────┐
+┌──────────────────────────────── VxRail Cluster — Deployment Sequence ─────────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Physical Readiness                                                                          │
 │  ─────────────────────────────────────────────────────────────────────────────────────────            │

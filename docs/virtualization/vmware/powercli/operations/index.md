@@ -5,7 +5,7 @@ PowerCLI operational reference: cmdlet library, automation scripts, health check
 </div>
 
 ```text
-┌───────────────────────────── PowerCLI — Operations Reference ───────────────────────────────────────────┐
+┌─────────────────────────────────── PowerCLI — Operations Reference ───────────────────────────────────┐
 │                                                                                                       │
 │   Operational PowerCLI use cases: health checks, bulk operations, exports, and lifecycle tasks        │
 │   All scripts follow a connect → query → act → verify pattern                                         │
@@ -32,7 +32,7 @@ PowerCLI operational reference: cmdlet library, automation scripts, health check
 │   Set-VM     = modifies VM properties; -NumCpu, -MemoryGB, -Notes; requires PoweredOff for hardware   │
 │   Export-Csv = exports object properties to CSV; used for reports and audit exports                   │
 │   Pipeline   = PowerShell object passing; Get-VM | Where-Object | ForEach-Object pattern              │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

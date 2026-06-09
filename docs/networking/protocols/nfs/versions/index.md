@@ -7,7 +7,7 @@ NFS Versions reference covering Version Comparison, Recommended Version, Checkin
 
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
 ```text
-┌─────────────────────┬──────────────┬──────────────┬───────────────────────────────────────────────────┐
+┌─────────────────────────────────── ┬──────────────┬──────────────┬ ───────────────────────────────────┐
 │ Feature             │   NFSv3      │   NFSv4      │  NFSv4.1                                          │
 ├─────────────────────┼──────────────┼──────────────┼──────────────┤
 │ Transport           │ UDP or TCP   │ TCP only     │ TCP only                                          │
@@ -20,7 +20,7 @@ NFS Versions reference covering Version Comparison, Recommended Version, Checkin
 │ ID mapping          │ UID/GID nums │ user@domain  │ user@domain                                       │
 ├─────────────────────┼──────────────┼──────────────┼──────────────┤
 │ Recommended for     │ Legacy only  │ General use  │ Modern/perf                                       │
-└─────────────────────┴──────────────┴──────────────┴───────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## NFSv4.1 Session Model and pNFS Data Path

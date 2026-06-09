@@ -5,7 +5,7 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 </div>
 
 ```text
-┌───────────────────────── Aria Suite Lifecycle Manager — Deployment Phases ────────────────────────────┐
+┌────────────────────────── Aria Suite Lifecycle Manager — Deployment Phases ───────────────────────────┐
 │                                                                                                       │
 │  Six phases from bare metal to LCM managing its first product environment.                            │
 │  LCM must be stable and depot-synced before deploying any Aria product through it.                    │

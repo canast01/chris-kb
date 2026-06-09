@@ -72,7 +72,7 @@ Source Site                          Target Site
 Source vCenter ◄──── VRA-src         Target vCenter ◄──── VRA-tgt
   (plugin installed)   (registered)    (plugin installed)   (registered)
                           |                                      |
-                          └──────── TCP 44046 ────────────────────┘
+                          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
                                 (VRA pairing / management)
 ```
 

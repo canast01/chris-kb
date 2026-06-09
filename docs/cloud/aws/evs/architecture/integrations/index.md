@@ -5,7 +5,7 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Integrations ────────────────────────────────────────────┐
+┌────────────────────────────────────── Amazon EVS — Integrations ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   HCX: live migration and cold migration between on-prem vSphere and EVS; no re-IP required   │   │

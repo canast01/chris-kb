@@ -5,7 +5,7 @@ EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS V
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Hardening ───────────────────────────────────────────────┐
+┌─────────────────────────────────────── Amazon EVS — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   NSX-T DFW: default deny + explicit allow; isolate tenants and workload tiers by policy       │  │

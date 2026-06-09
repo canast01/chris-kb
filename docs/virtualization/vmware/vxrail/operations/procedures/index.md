@@ -5,7 +5,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 </div>
 
 ```text
-┌──────────────────────────────────────── VxRail — Procedures ──────────────────────────────────────────┐
+┌───────────────────────────────────────── VxRail — Procedures ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Node maintenance mode: vSAN evacuates objects before ESXi maintenance begins                │   │

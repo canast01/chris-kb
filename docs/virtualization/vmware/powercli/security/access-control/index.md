@@ -5,7 +5,7 @@ Managing vSphere RBAC via PowerCLI: auditing existing permissions, creating auto
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — vSphere RBAC and Access Control ────────────────────────────────┐
+┌───────────────────────────── PowerCLI — vSphere RBAC and Access Control ──────────────────────────────┐
 │                                                                                                       │
 │   vSphere RBAC: a permission = role + principal + entity + propagation flag                           │
 │   Automation service accounts must use custom roles with the minimum required privilege set           │
@@ -32,7 +32,7 @@ Managing vSphere RBAC via PowerCLI: auditing existing permissions, creating auto
 │   Principal    = user or group; must exist in an SSO identity source (vsphere.local, AD)              │
 │   Propagation  = whether the permission cascades to child objects in the inventory hierarchy          │
 │   Permission sprawl = accumulation of over-broad permissions; a common audit finding                  │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Audit Existing Permissions

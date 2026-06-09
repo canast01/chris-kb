@@ -82,7 +82,7 @@ vSphere Trust Authority (introduced in vSphere 7.0) provides a way to attest the
 vTA uses two separate clusters:
 
 ```text
-┌─────────────────────────┐      ┌──────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────── ┐      ┌ ───────────────────────────────────────────────┐
 │  Trust Authority Cluster│      │      Trusted Cluster                                                 │
 │  (TA hosts)             │      │  (workload hosts)                                                    │
 │                         │      │                                                                      │
@@ -95,7 +95,7 @@ vTA uses two separate clusters:
 │  - Approved ESXi images │      │                                                                      │
 │  - Approved TPM certs   │      │  TA verifies against inventory                                       │
 │                         │      │  and releases keys if trusted                                        │
-└─────────────────────────┘      └──────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### When to Use vTA
@@ -268,11 +268,11 @@ Admin browser ──────► vCenter login page
                     Redirect to external IdP
                              │
                              ▼
-                    ┌──────────────────┐
+                    ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
                     │  External IdP    │
                     │  (Okta, ADFS,    │
                     │   Azure AD)      │
-                    └────────┬─────────┘
+                    └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
                              │ IdP authenticates user
                              │ Issues ID token (JWT)
                              ▼

@@ -5,7 +5,7 @@ Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accou
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift RBAC Model ─────────────────────────────────────────────┐
+┌──────────────────────────────────────── OpenShift RBAC Model ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Role (namespace) + RoleBinding → namespace-scoped permissions                               │   │

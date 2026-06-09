@@ -5,7 +5,7 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Design Standards ──────────────────────────────────────────────┐
+┌─────────────────────────────────────── Ceph — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Minimum production: 3 nodes × 4 OSDs; use 5 MONs for large clusters; 2 MGRs always         │    │

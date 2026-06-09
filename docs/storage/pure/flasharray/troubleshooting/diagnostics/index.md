@@ -7,7 +7,7 @@ Diagnostics reference covering First-Response Sequence, Alert Triage, Controller
 
 ```text
 FlashArray Diagnostic Sequence
-  ┌──────────────────────────────────────────────────┐
+  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   │  1. purearray list           ─ version + status  │
   │  2. purearray list --controller ─ CT0/CT1 health │
   │  3. purealert list           ─ failure domain    │
@@ -15,7 +15,7 @@ FlashArray Diagnostic Sequence
   │  5. purehost list            ─ host paths        │
   │  6. purepod list             ─ replication state │
   │  7. purearray monitor        ─ live performance  │
-  └──────────────────────┬───────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
                          │  if escalating
                          ▼
   Pure1 telemetry ──► Support case ──► purediag --send

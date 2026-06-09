@@ -5,7 +5,7 @@ oc command reference: resource management, log collection, exec, adm commands, d
 </div>
 
 ```text
-┌─────────────────────────────────── OpenShift oc CLI Reference ────────────────────────────────────────┐
+┌───────────────────────────────────── OpenShift oc CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   oc is a superset of kubectl — all kubectl commands work; oc adds OCP-specific shortcuts     │   │

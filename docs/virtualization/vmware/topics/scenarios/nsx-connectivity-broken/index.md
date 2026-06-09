@@ -8,7 +8,7 @@ exact commands and UI paths to isolate and resolve each layer.
 </div>
 
 ```text
-┌──────────────────────────────────── NSX Connectivity Broken — Investigation Flow ─────────────────────┐
+┌──────────────────────────── NSX Connectivity Broken — Investigation Flow ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Connectivity complaint — determine scope before touching any config                        ││
@@ -91,7 +91,7 @@ Navigate to **NSX Manager → Security → Distributed Firewall** and search by 
 
 ```text
 DFW Rule Evaluation Order (top to bottom within each category):
-  ┌─────────────────┬─────────────────────────────────────────────────────────────────────────────────────┐
+  ┌────────────────────────────────────────────────── ┬ ──────────────────────────────────────────────────┐
   │ Category        │ Typical Use                                            │
   ├─────────────────┼────────────────────────────────────────────────────────┤
   │ Emergency       │ Breakglass allow/deny; applied first globally          │
@@ -99,7 +99,7 @@ DFW Rule Evaluation Order (top to bottom within each category):
   │ Environment     │ Environment-level segment isolation rules              │
   │ Application     │ Microsegmentation — app-tier allow rules               │
   │ Default         │ Implicit drop if no rule above matches                 │
-  └─────────────────┴────────────────────────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

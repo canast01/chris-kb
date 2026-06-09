@@ -5,7 +5,7 @@ End-to-end deployment guide for a new VxRail cluster. Covers pre-deployment read
 </div>
 
 ```text
-┌──────────────────────────────── VxRail Cluster Deployment Flow ───────────────────────────────────────┐
+┌─────────────────────────────────── VxRail Cluster Deployment Flow ────────────────────────────────────┐
 │                                                                                                       │
 │  Phase 1: Physical Readiness                                                                          │
 │  Rack + cable nodes  ·  iDRAC IP on each node  ·  DNS A+PTR for all FQDNs  ·  NTP reachable           │

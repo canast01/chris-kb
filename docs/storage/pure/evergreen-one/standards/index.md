@@ -9,22 +9,22 @@ Pure Storage Evergreen//One Standards reference covering Naming Conventions, Bui
   Naming & Configuration Standards
 
   Object       Pattern                   Example
-  ┌────────────┬─────────────────────────┬──────────────────────┐
+  ┌───────────────────────────────────── ┬─────────────────────────┬ ─────────────────────────────────────┐
   │ Volume     │ <env>-<app>-<vol##>      │ prod-oracle-vol01    │
   │ Host       │ <hostname> (exact)       │ esxi-prod-01         │
   │ Host Group │ <env>-<cluster>          │ prod-esxi-cluster    │
   │ Snapshot   │ <volname>.<date>         │ prod-oracle.2026-05  │
   │ Prot. Group│ <env>-<app>-pg          │ prod-oracle-pg       │
   │ Pod        │ <env>-<app>-pod         │ prod-oracle-pod      │
-  └────────────┴─────────────────────────┴──────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
   Host Configuration Baseline
-  ┌──────────────────────────────────────────┐
+  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   │  Multipath: ≥2 active paths per host     │
   │  FC zoning: single-initiator/target      │
   │  iSCSI: MTU 9000, dual-homed             │
   │  Phonehome: TCP 443 confirmed open       │
-  └──────────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
   Protection Policies
   ├─ Tier-1 vols ──► snapshot schedule + SafeMode

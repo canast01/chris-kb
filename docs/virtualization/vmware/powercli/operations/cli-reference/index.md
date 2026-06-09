@@ -5,7 +5,7 @@ Core PowerCLI cmdlets for VM management, host operations, cluster management, da
 </div>
 
 ```text
-┌──────────────────────────────── PowerCLI — Cmdlet Categories ─────────────────────────────────────────┐
+┌──────────────────────────────────── PowerCLI — Cmdlet Categories ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
 │   │   VM Management     │  │  Host Operations    │  │ Cluster Management  │  │  Storage / DS       │  │

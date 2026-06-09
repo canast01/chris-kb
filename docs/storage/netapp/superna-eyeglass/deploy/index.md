@@ -1,7 +1,7 @@
 # Superna Eyeglass — Initial Deployment
 
 ```text
-┌──────────────────────────── Superna Eyeglass — Deployment Sequence ───────────────────────────────────┐
+┌─────────────────────────────── Superna Eyeglass — Deployment Sequence ────────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

@@ -5,7 +5,7 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Backup & Restore ───────────────────────────────────────┐
+┌───────────────────────────────────── OpenShift Backup & Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   etcd backup = cluster state snapshot; restore recovers from catastrophic control plane loss  │  │

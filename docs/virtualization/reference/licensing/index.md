@@ -3,7 +3,7 @@
 Quick reference for determining which licence tier is required to enable a specific capability. Use this page to answer "do I need to buy more licences to enable X?" before raising a change or procurement request.
 
 ```text
-┌───────────────────────── VMware / Broadcom Licence Bundle Comparison ───────────────────────────────────┐
+┌───────────────────────────── VMware / Broadcom Licence Bundle Comparison ─────────────────────────────┐
 │                                                                                                       │
 │   Post-2024 model: subscription only; per-core pricing; two main bundles: VCF and VVF                 │
 │   VCF = full SDDC stack (vSphere + vSAN Ent + NSX Ent+ + Aria Suite + SDDC Manager)                   │
@@ -38,7 +38,7 @@ Quick reference for determining which licence tier is required to enable a speci
 │   VVF = vSphere Foundation; mid-tier bundle; vSphere + vSAN Standard; NSX not included                │
 │   VDS = vSphere Distributed Switch; required for NIOC, LACP, Host Profiles, Auto Deploy               │
 │   SnS = Support and Subscription; perpetual contract type; no longer sold on new purchases            │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -5,7 +5,7 @@ PowerCLI module lifecycle: upgrading to new versions, managing individual sub-mo
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Module Lifecycle Management ─────────────────────────────────────┐
+┌─────────────────────────────── PowerCLI — Module Lifecycle Management ────────────────────────────────┐
 │                                                                                                       │
 │   PowerCLI is versioned independently from vCenter; check compatibility before upgrading              │
 │   Each sub-module has its own version; the meta-package pins all sub-module versions                  │
@@ -36,7 +36,7 @@ PowerCLI module lifecycle: upgrading to new versions, managing individual sub-mo
 │   Meta-package = VMware.PowerCLI; installs all sub-modules; pinned to specific versions               │
 │   PSGallery   = PowerShell Gallery; public module repository; requires internet access                │
 │   NuGet        = package manager provider; required for PSGallery; Install-PackageProvider NuGet      │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Check Installed Version

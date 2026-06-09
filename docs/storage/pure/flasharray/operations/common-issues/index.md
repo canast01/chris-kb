@@ -12,7 +12,7 @@ FlashArray Triage Flow
           ▼
   purealert list ──► Identify failure domain
           │
-   ┌──────┴──────────────────────────────┐
+   ┌────────────────────────────────────────────────── ┴ ──────────────────────────────────────────────────┐
    ▼                                     ▼
 Drive fault                       Host connectivity loss
 puredrive list                    purehost list + pureport list

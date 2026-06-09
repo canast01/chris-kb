@@ -5,7 +5,7 @@ Essential Ceph CLI commands: ceph status and health, OSD management, pool operat
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — CLI Reference ─────────────────────────────────────────────────┐
+┌──────────────────────────────────────── Ceph — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   ceph: admin CLI for cluster status, OSD, pool, PG, and auth management                     │    │

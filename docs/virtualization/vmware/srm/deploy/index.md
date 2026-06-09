@@ -5,7 +5,7 @@ End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. P
 </div>
 
 ```text
-┌──────────────────────────────────── SRM — Deployment Phases ──────────────────────────────────────────┐
+┌─────────────────────────────────────── SRM — Deployment Phases ───────────────────────────────────────┐
 │                                                                                                       │
 │  Six phases from infrastructure prerequisites to a tested and validated recovery plan. Both sites     │
 │  must be deployed before pairing; test failover is mandatory before sign-off.                         │

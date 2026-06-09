@@ -5,7 +5,7 @@ Common operational procedures: node drain and maintenance mode, scaling MachineS
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Operational Procedures ─────────────────────────────────┐
+┌────────────────────────────────── OpenShift Operational Procedures ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Always: health check before maintenance; cordon then drain; verify workloads rescheduled    │   │

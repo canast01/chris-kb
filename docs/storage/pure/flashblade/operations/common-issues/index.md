@@ -12,7 +12,7 @@ FlashBlade Triage Flow
           ▼
   purefb alert list ──► Identify failure domain
           │
-   ┌──────┴──────────────────────────────┐
+   ┌────────────────────────────────────────────────── ┴ ──────────────────────────────────────────────────┐
    ▼                                     ▼
 Blade fault                       Client connectivity loss
 purefb blade list                  Check NFS export policy

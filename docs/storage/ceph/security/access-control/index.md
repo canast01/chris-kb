@@ -5,7 +5,7 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Access Control ────────────────────────────────────────────────┐
+┌──────────────────────────────────────── Ceph — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   CephX: every client authenticates with a shared secret key; no anonymous access            │    │

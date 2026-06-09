@@ -5,7 +5,7 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Support Escalation ────────────────────────────────────────────┐
+┌────────────────────────────────────── Ceph — Support Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Red Hat Ceph Storage: full commercial support for RHCS; similar to RHEL support model       │   │

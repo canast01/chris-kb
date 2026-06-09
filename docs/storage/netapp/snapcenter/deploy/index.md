@@ -1,7 +1,7 @@
 # SnapCenter — Initial Deployment
 
 ```text
-┌──────────────────────────── NetApp SnapCenter — Deployment Sequence ──────────────────────────────────┐
+┌─────────────────────────────── NetApp SnapCenter — Deployment Sequence ───────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

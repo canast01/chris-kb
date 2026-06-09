@@ -8,7 +8,7 @@ Pure Storage Evergreen//One Security reference covering Hardening Checklist, RBA
 ```text
   Pure Security Architecture
 
-  ┌─────────────────────────────────────────────────┐
+  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   │  FlashArray / FlashBlade                        │
   │                                                 │
   │  Encryption                                     │
@@ -29,7 +29,7 @@ Pure Storage Evergreen//One Security reference covering Hardening Checklist, RBA
   │  SafeMode                                       │
   │  └─ Snapshot destroy requires Pure Support ─►   │
   │     Protection against ransomware               │
-  └─────────────────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
   SSO/SAML ──► IdP MFA enforced for all interactive login
 ```
 

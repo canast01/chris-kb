@@ -5,7 +5,7 @@ Backup and restore coverage for VxRail clusters. Covers VxRail Manager VM backup
 </div>
 
 ```text
-┌──────────────────────────────────────── VxRail — Backup & Restore ────────────────────────────────────┐
+┌────────────────────────────────────── VxRail — Backup & Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   VxRail Manager VM: back up daily via Veeam or equivalent; retain 14 days                   │    │

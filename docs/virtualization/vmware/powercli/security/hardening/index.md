@@ -5,7 +5,7 @@ Hardening PowerCLI deployments: enforcing certificate validation, script executi
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Hardening and Secure Configuration ─────────────────────────────┐
+┌──────────────────────────── PowerCLI — Hardening and Secure Configuration ────────────────────────────┐
 │                                                                                                       │
 │   Hardening PowerCLI protects vSphere management from credential theft and unauthorized access        │
 │   Enforce TLS validation, execution policies, and least-privilege accounts before deploying scripts   │
@@ -36,7 +36,7 @@ Hardening PowerCLI deployments: enforcing certificate validation, script executi
 │   ExecutionPolicy  = PowerShell script signing policy; Bypass/Unrestricted/RemoteSigned/AllSigned     │
 │   PAM              = Privileged Access Management; manages service account credentials (CyberArk)     │
 │   CEIP             = Customer Experience Improvement Program; disable in air-gapped environments      │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## PowerCLI Configuration Hardening

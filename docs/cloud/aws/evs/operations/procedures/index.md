@@ -5,7 +5,7 @@ EVS operational procedures: adding and removing hosts, host maintenance mode, vS
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Procedures ──────────────────────────────────────────────┐
+┌─────────────────────────────────────── Amazon EVS — Procedures ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Adding a host: vSAN resyncs data automatically; allow 2-4 hours before another change       │   │

@@ -5,7 +5,7 @@ EVS backup strategy: SDDC Manager configuration backup to S3, vCenter database b
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Backup & Restore ────────────────────────────────────────┐
+┌──────────────────────────────────── Amazon EVS — Backup & Restore ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   SDDC Manager config backup: SFTP target (S3 via SFTP bridge or on-prem SFTP); daily        │    │

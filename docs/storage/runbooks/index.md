@@ -5,7 +5,7 @@ Cross-platform storage operational runbooks — volume expansion, LUN provisioni
 </div>
 
 ```text
-┌──────────────────────────── Storage — Cross-Platform Runbooks ────────────────────────────────────────┐
+┌────────────────────────────────── Storage — Cross-Platform Runbooks ──────────────────────────────────┐
 │                                                                                                       │
 │  Operational Domain                                                                                   │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

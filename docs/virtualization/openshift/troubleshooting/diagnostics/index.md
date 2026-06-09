@@ -5,7 +5,7 @@ Diagnostic tools and techniques: must-gather collection, oc adm inspect, etcd di
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Diagnostics ────────────────────────────────────────────┐
+┌──────────────────────────────────────── OpenShift Diagnostics ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   must-gather: full cluster state in one command; attach to every Red Hat support case        │   │

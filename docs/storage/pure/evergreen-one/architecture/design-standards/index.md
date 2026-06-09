@@ -7,7 +7,7 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
 
 ```text
   Capacity Planning                  Refresh Triggers
-  ┌──────────────────────┐           ┌──────────────────────┐
+  ┌──────────────────────────────────────────── ┐           ┌ ────────────────────────────────────────────┐
   │ Current TiB          │           │ >90% committed ──►   │
   │ × Growth Factor      │           │   Reserve increase   │
   │ × 1.15 safety buffer │           │                      │

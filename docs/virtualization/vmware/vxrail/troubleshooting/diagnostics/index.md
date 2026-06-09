@@ -5,7 +5,7 @@ Diagnostic data collection for VxRail clusters: VxRail Manager log paths, ESXi h
 </div>
 
 ```text
-┌──────────────────────────────── VxRail — Diagnostics ─────────────────────────────────────────────────┐
+┌──────────────────────────────────────── VxRail — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────┐       │
 │   │  Four diagnostic data sources — choose based on symptom type                             │        │

@@ -8,7 +8,7 @@ continue operating without vCenter — VMs keep running throughout.
 </div>
 
 ```text
-┌─────────────────────────────── vCenter Down — Investigation Flow ─────────────────────────────────────┐
+┌────────────────────────────────── vCenter Down — Investigation Flow ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
 │   │  START: https://vcenter-fqdn unreachable / UI times out / monitoring alert fires                │ │

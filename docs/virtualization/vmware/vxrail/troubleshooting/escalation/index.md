@@ -5,7 +5,7 @@ Dell support escalation procedures for VxRail incidents: severity classification
 </div>
 
 ```text
-┌──────────────────────────────── VxRail — Escalation ──────────────────────────────────────────────────┐
+┌───────────────────────────────────────── VxRail — Escalation ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────┐       │
 │   │  Escalation is required when internal troubleshooting does not resolve the issue          │       │

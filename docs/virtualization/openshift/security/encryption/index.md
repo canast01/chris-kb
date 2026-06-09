@@ -5,7 +5,7 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Encryption ─────────────────────────────────────────────┐
+┌──────────────────────────────────────── OpenShift Encryption ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   etcd encryption: enable on APIServer CR; AES-GCM or AES-CBC; applies to secrets/configmaps  │   │

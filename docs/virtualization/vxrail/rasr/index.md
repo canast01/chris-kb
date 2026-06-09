@@ -7,7 +7,7 @@ unrecoverable by normal means and must be rebuilt from scratch before rejoining 
 </div>
 
 ```text
-┌──────────────────────────────── VxRail — RASR (Rapid Appliance Self Recovery) ────────────────────────┐
+┌──────────────────────────── VxRail — RASR (Rapid Appliance Self Recovery) ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │                     RASR rebuilds a VxRail node that is unrecoverable by normal means                 ││

@@ -5,7 +5,7 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 </div>
 
 ```text
-┌────────────────────────────── VCF — Deployment Phases ────────────────────────────────────────────────┐
+┌─────────────────────────────────────── VCF — Deployment Phases ───────────────────────────────────────┐
 │                                                                                                       │
 │  Six phases from bare-metal validation to an operational VCF management domain with first workload    │
 │  domain. Each phase has a clear exit criterion. Do not proceed until current phase validates clean.   │

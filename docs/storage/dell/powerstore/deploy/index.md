@@ -1,7 +1,7 @@
 # Dell PowerStore — Initial Deployment
 
 ```text
-┌──────────────────────────── Dell PowerStore — Deployment Sequence ────────────────────────────────────┐
+┌──────────────────────────────── Dell PowerStore — Deployment Sequence ────────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

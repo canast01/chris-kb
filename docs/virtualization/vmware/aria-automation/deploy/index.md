@@ -5,7 +5,7 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 </div>
 
 ```text
-┌──────────────────────────────── Aria Automation — Deployment Phases ──────────────────────────────────┐
+┌───────────────────────────────── Aria Automation — Deployment Phases ─────────────────────────────────┐
 │                                                                                                       │
 │  Six phases from prerequisites to a fully validated Aria Automation environment. Each phase has a     │
 │  clear exit criterion. Do not proceed until the current phase validates clean.                        │

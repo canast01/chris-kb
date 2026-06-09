@@ -5,7 +5,7 @@ End-to-end deployment guide for VMware Tanzu Kubernetes Grid on vSphere. Covers 
 </div>
 
 ```text
-┌──────────────────────────────────── Tanzu — Deployment Phases ────────────────────────────────────────┐
+┌────────────────────────────────────── Tanzu — Deployment Phases ──────────────────────────────────────┐
 │                                                                                                       │
 │  Six phases from licensed vSphere cluster to operational TKG environment. Each phase has a clear      │
 │  exit criterion. Do not proceed until the current phase validates clean.                              │

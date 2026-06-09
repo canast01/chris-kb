@@ -5,7 +5,7 @@ VMware certification study plan — weekly review schedule, topic weighting by e
 </div>
 
 ```text
-┌───────────────────────────── VCP-DCV Study Plan — 6-Week Cycle ─────────────────────────────────────────┐
+┌────────────────────────────────── VCP-DCV Study Plan — 6-Week Cycle ──────────────────────────────────┐
 │                                                                                                       │
 │   Weight study time by blueprint section weighting: Architecture is the largest section               │
 │   Practice exam score ≥75% before booking; raw pass threshold is approximately 65–70%                 │
@@ -44,5 +44,5 @@ VMware certification study plan — weekly review schedule, topic weighting by e
 │   Blueprint = official exam guide with objective weights per section; download from Broadcom          │
 │   OSI       = On-Screen Items (VCAP-Deploy); hands-on tasks in a live lab under time pressure         │
 │   Mock exam = MeasureUp / Udemy practice packs; different question pool from the real exam            │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

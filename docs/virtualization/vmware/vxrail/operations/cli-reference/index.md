@@ -5,7 +5,7 @@ Complete command reference for VxRail operations: VxRail Manager REST API, esxcl
 </div>
 
 ```text
-┌────────────────────────────────────── VxRail — CLI Reference ─────────────────────────────────────────┐
+┌─────────────────────────────────────── VxRail — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   VxRail Manager REST API  ·  base URL: https://<vxm-ip>/rest/vxm/v1/  ·  Basic auth (mystic) │   │

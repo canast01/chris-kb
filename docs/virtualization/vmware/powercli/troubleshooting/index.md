@@ -5,7 +5,7 @@ Diagnosing and resolving PowerCLI issues: connection failures, module conflicts,
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Troubleshooting Reference ───────────────────────────────────────┐
+┌──────────────────────────────── PowerCLI — Troubleshooting Reference ─────────────────────────────────┐
 │                                                                                                       │
 │   PowerCLI issues fall into three categories: connection, module, and API/performance problems        │
 │   Enable verbose output with -Verbose or $VerbosePreference = 'Continue' for immediate diagnosis      │
@@ -31,7 +31,7 @@ Diagnosing and resolving PowerCLI issues: connection failures, module conflicts,
 │   ExtensionData = raw Managed Object Reference from the vSphere API; bypasses the PowerCLI layer      │
 │   Get-View      = low-level vSphere API query; significantly faster than Get-VM for large sets        │
 │   PSModulePath  = environment variable listing directories where PowerShell searches for modules      │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

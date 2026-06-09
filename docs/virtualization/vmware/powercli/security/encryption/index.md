@@ -5,7 +5,7 @@ Managing vSphere encryption via PowerCLI — vSAN encryption enablement and key 
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Encryption Management ───────────────────────────────────────────┐
+┌────────────────────────────────── PowerCLI — Encryption Management ───────────────────────────────────┐
 │                                                                                                       │
 │   vSphere encryption is managed via PowerCLI through three paths: vSAN, VM (VMcrypt), and KMS         │
 │   Key provider must be configured first (Native Key Provider or external KMS) before enabling         │
@@ -33,7 +33,7 @@ Managing vSphere encryption via PowerCLI — vSAN encryption enablement and key 
 │   KMS    = Key Management Server; external KMIP-compliant server (Thales, Entrust, HashiCorp Vault)   │
 │   DPAPI  = Windows Data Protection API; encrypts Export-Clixml output to the current user identity    │
 │   VMcrypt = per-VM encryption via SPBM policy; keys managed independently from vSAN encryption        │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## vSAN Encryption via PowerCLI

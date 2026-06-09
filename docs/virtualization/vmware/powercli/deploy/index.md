@@ -5,7 +5,7 @@ Installing PowerCLI, first connection to vCenter, service account setup, certifi
 </div>
 
 ```text
-┌───────────────────────── PowerCLI — Deployment and First Connection ────────────────────────────────────┐
+┌───────────────────────────── PowerCLI — Deployment and First Connection ──────────────────────────────┐
 │                                                                                                       │
 │   PowerCLI runs on PowerShell 5.1 (Windows) or PowerShell 7+ (Windows, Linux, macOS)                  │
 │   Install from PSGallery (online) or from an offline bundle (air-gapped environments)                 │
@@ -34,7 +34,7 @@ Installing PowerCLI, first connection to vCenter, service account setup, certifi
 │   PSGallery              = PowerShell Gallery; public module repository at powershellgallery.com      │
 │   Scope CurrentUser      = install for current user only; no admin rights required                    │
 │   InvalidCertificateAction = controls behaviour on untrusted TLS cert; Warn/Ignore/Fail               │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Prerequisites

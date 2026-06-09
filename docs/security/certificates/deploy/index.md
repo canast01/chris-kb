@@ -5,7 +5,7 @@ Certificate infrastructure deployment — CA hierarchy build-out, ADCS configura
 </div>
 
 ```text
-┌────────────────────────── Security Certificates — Deployment ─────────────────────────────────────────┐
+┌───────────────────────────────── Security Certificates — Deployment ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       PKI deployment sequence: Root CA → Issuing CA → CRL/OCSP → Templates → Enrolment       │    │

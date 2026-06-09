@@ -1,7 +1,7 @@
 # Pure Storage — Getting Started
 
 ```text
-┌──────────────────────────── Pure Storage — First-Day Orientation ─────────────────────────────────────┐
+┌──────────────────────────────── Pure Storage — First-Day Orientation ─────────────────────────────────┐
 │                                                                                                       │
 │  FlashArray (block) — First-Day Steps                                                                 │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

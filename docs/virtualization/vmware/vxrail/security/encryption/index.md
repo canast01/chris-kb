@@ -5,7 +5,7 @@ Encryption reference for VxRail in the VMware product context. Covers vSAN data-
 </div>
 
 ```text
-┌─────────────────────────────────────────── VxRail — Encryption ───────────────────────────────────────┐
+┌───────────────────────────────────────── VxRail — Encryption ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      vSAN data-at-rest encryption via KMIP KMS or vCenter Native Key Provider (NKP)           │   │

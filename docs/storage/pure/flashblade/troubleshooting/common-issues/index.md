@@ -70,7 +70,7 @@ FlashBlade Common Issues reference covering NFS/SMB mount problems, S3 403 error
   │    └─ Filesystem near limit ──► purefb filesystem       │
   │         update --provisioned <new_size>                 │
   │                                                         │
-  └─ Hardware alert ────────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
        ├─ Blade failed/missing ──► purefb blade list        │
        │    Open Pure Support case immediately              │
        └─ Blade rebalancing ──► normal after blade add      │

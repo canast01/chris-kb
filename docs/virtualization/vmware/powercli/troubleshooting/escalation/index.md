@@ -5,7 +5,7 @@ PowerCLI escalation — collecting diagnostic information, engaging VMware suppo
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Escalation Procedures ───────────────────────────────────────────┐
+┌────────────────────────────────── PowerCLI — Escalation Procedures ───────────────────────────────────┐
 │                                                                                                       │
 │   Escalate when the issue persists after checking module version, cert config, and API compatibility  │
 │   Collect a minimal reproduction script before escalating; reduces resolution time significantly      │
@@ -34,7 +34,7 @@ PowerCLI escalation — collecting diagnostic information, engaging VMware suppo
 │   GSS           = Global Support Services; Broadcom/VMware support case portal                        │
 │   vSphere API Ref = API reference documentation; documents all managed object types and methods       │
 │   Minimal repro  = smallest possible script that reproduces the issue; no credentials or env details  │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## When to Escalate

@@ -5,7 +5,7 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Common Issues ──────────────────────────────────────────┐
+┌─────────────────────────────────────── OpenShift Common Issues ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   First: check events (oc get events) and logs (oc logs); 90% of issues visible there        │    │

@@ -8,7 +8,7 @@ on HCI deployments.
 </div>
 
 ```text
-┌───────────────────────────────── vSAN Disk / Component Failure — Investigation Flow ──────────────────┐
+┌───────────────────────── vSAN Disk / Component Failure — Investigation Flow ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: vCenter alarm — vSAN health degraded / component absent / capacity critical               ││

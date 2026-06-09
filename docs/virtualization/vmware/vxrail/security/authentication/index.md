@@ -5,7 +5,7 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 </div>
 
 ```text
-┌────────────────────────────────────── VxRail — Authentication ────────────────────────────────────────┐
+┌─────────────────────────────────────── VxRail — Authentication ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │          VxRail Manager local mystic account; LDAP/AD groups mapped to VxRail roles           │   │

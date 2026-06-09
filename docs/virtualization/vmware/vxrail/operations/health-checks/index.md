@@ -5,7 +5,7 @@ Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin 
 </div>
 
 ```text
-┌──────────────────────────────────────── VxRail — Health Checks ───────────────────────────────────────┐
+┌─────────────────────────────────────── VxRail — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Daily checks: VxRail Plugin node status · vSAN health green · iDRAC alarms · resync = 0    │    │

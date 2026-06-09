@@ -5,7 +5,7 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Health Checks ─────────────────────────────────────────────────┐
+┌──────────────────────────────────────── Ceph — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Health baseline: HEALTH_OK + all OSDs up+in + all PGs active+clean + MON quorum             │   │

@@ -9,7 +9,7 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 </div>
 
 ```text
-┌─────────────────────── ESXi Host — Networking Stack ──────────────────────────────────────────────────┐
+┌──────────────────────────────────── ESXi Host — Networking Stack ─────────────────────────────────────┐
 │                                                                                                       │
 │   VMkernel Ports (vmk0 … vmkN)                                                                        │
 │   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                    │

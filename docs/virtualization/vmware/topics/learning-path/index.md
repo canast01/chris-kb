@@ -5,7 +5,7 @@ Recommended reading order for VMware. Start here to build a complete mental mode
 </div>
 
 ```text
-┌─────────────────────────────── VMware Learning Path — Layered Progression ────────────────────────────┐
+┌───────────────────────────── VMware Learning Path — Layered Progression ──────────────────────────────┐
 │                                                                                                       │
 │   Stage 6 ┌───────────────────────────────────────────────────────────────────────────────────────────┐│
 │   VxRail   │  HCI Appliance: ESXi + vSAN + vCenter bundled · First Run Wizard · VxRail Manager       ││

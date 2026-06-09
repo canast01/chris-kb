@@ -5,7 +5,7 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Encryption ──────────────────────────────────────────────┐
+┌─────────────────────────────────────── Amazon EVS — Encryption ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   vSAN encryption: cluster-level; requires KMS; AWS KMS + vSphere Native Key Provider        │    │

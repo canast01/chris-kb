@@ -5,7 +5,7 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 </div>
 
 ```text
-┌──────────────────────────────────────── VxRail — Access Control ──────────────────────────────────────┐
+┌─────────────────────────────────────── VxRail — Access Control ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      VxRail Manager roles: Admin (mystic/LDAP) and Read-only scoped to VxRail operations      │   │

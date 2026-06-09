@@ -5,7 +5,7 @@ PowerCLI is VMware's official PowerShell module suite for automating and managin
 </div>
 
 ```text
-┌─────────────────────────────── VMware PowerCLI — Module Overview ─────────────────────────────────────┐
+┌────────────────────────────────── VMware PowerCLI — Module Overview ──────────────────────────────────┐
 │                                                                                                       │
 │   Connect-VIServer → authenticates to vCenter or ESXi; stores session in $global:DefaultVIServer      │
 │                                                                                                       │

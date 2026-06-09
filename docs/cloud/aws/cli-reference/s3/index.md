@@ -2,53 +2,57 @@
 
 
 <div class="kb-summary">
-S3 reference.
+AWS CLI S3 command reference: high-level s3 commands (cp, mv, sync, ls, rm) and low-level s3api operations for bucket management, object handling, versioning, encryption, lifecycle rules, and access policy configuration.
 </div>
 
 ```text
-┌──────────────────────────────────────────── AWS CLI — S3 ─────────────────────────────────────────────┐
+┌─────────────────────────────────── AWS CLI — S3 Command Reference ────────────────────────────────────┐
 │                                                                                                       │
-│  S3 CLI commands for bucket management, object operations, sync, and policy config.                   │
+│   Two CLI interfaces: s3 (high-level, multipart auto) and s3api (direct REST, fine-grained control)   │
+│   Use s3 for day-to-day copy/sync; use s3api when you need exact control over request headers         │
+│   All S3 operations require correct IAM permissions on the calling identity                           │
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            High-Level S3 Commands            │  │              Object Operations              │   │
-│   │           s3 cp: copy file/folder            │  │          s3api get-object: download         │   │
-│   │              s3 mv: move/rename              │  │           s3api put-object: upload          │   │
-│   │           s3 rm: delete object(s)            │  │             s3api delete-object             │   │
-│   │          s3 ls: list bucket/prefix           │  │            s3api list-objects-v2            │   │
-│   │          s3 sync: delta sync folder          │  │         s3api head-object: metadata         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│   High-level s3 commands                                                                              │
+│   aws s3 cp src dst         copy file or folder; --recursive for directories                          │
+│   aws s3 mv src dst         move or rename; removes source after copy                                 │
+│   aws s3 rm s3://bucket/key delete object; --recursive deletes prefix                                 │
+│   aws s3 ls s3://bucket/    list bucket contents or prefixes                                          │
+│   aws s3 sync src dst       delta sync; --delete removes objects not in source                        │
+│   aws s3 mb s3://bucket     make a new bucket                                                         │
 │                                                                                                       │
-│  s3 commands wrap multipart upload; s3api gives direct REST API access                                │
+│   s3api object operations                                                                             │
+│   put-object                upload a single object with full metadata control                         │
+│   get-object                download an object; supports Range for partial reads                      │
+│   delete-object             delete a specific version or current object                               │
+│   head-object               returns metadata without downloading the object body                      │
+│   list-objects-v2           paginated listing with --prefix and --max-items filter                    │
+│   copy-object               server-side copy; used for storage class transitions                      │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│   Bucket management                                                                                   │
+│   create-bucket             creates bucket; --create-bucket-configuration sets region                 │
+│   delete-bucket             bucket must be empty before deletion                                      │
+│   put-bucket-versioning     enables versioning; keeps all object versions on overwrite/delete         │
+│   put-bucket-lifecycle-configuration  transitions objects to cheaper tiers or expires them            │
+│   put-bucket-replication    cross-region or cross-account copy for DR or compliance                   │
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Bucket Management               │  │             Security and Policy             │   │
-│   │             s3api create-bucket              │  │           s3api put-bucket-policy           │   │
-│   │             s3api delete-bucket              │  │        s3api put-public-access-block        │   │
-│   │         s3api put-bucket-versioning          │  │         s3api put-bucket-encryption         │   │
-│   │   s3api put-bucket-lifecycle-configuration   │  │           s3api put-bucket-logging          │   │
-│   │         s3api put-bucket-replication         │  │     s3api put-object-lock-configuration     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│   Security and policy                                                                                 │
+│   put-bucket-policy         resource-based IAM policy controlling access to the bucket                │
+│   put-public-access-block   blocks all public ACLs and bucket policies; set at account level          │
+│   put-bucket-encryption     enforces SSE-S3 (managed) or SSE-KMS (CMK) for stored objects             │
+│   put-bucket-logging        enables server access logging to a target bucket                          │
+│   put-object-lock-configuration  WORM retention; prevents object deletion during retention period     │
 │                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  S3 storage nodes (11 nines durability) · KMS · CloudTrail · CloudFront (CDN)                         │
+│   Physical infrastructure                                                                             │
+│   S3 storage nodes: 11 nines durability across multiple AZs                                           │
+│   Supporting services: KMS (encryption), CloudTrail (API logging), CloudFront (CDN delivery)          │
 │                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  s3 sync         = Transfers only new or changed objects; --delete removes extras                     │
-│  Multipart upload= S3 splits large files into parts; automatic via aws s3 cp                          │
-│  s3api           = Low-level REST API wrapper; all S3 operations directly                             │
-│  Versioning      = Keeps all object versions; protects against accidental delete                      │
-│  Object lock     = WORM: prevents object deletion during retention period                             │
-│  Lifecycle rule  = Transitions objects to cheaper tiers or expires them                               │
-│  Replication     = Cross-region or cross-account object copy for DR/compliance                        │
-│  put-public-access-block= Blocks all public ACLs and bucket policies; account level                   │
-│  head-object     = Returns metadata without downloading the object body                               │
-│  Bucket policy   = Resource-based IAM policy controlling access to bucket                             │
-│  Server-side encryption= SSE-S3 (managed) or SSE-KMS (CMK) encrypts stored objects                    │
-│  list-objects-v2 = Paginated listing of objects in bucket with prefix filter                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+│   Key terms:                                                                                          │
+│   s3api          = low-level REST API wrapper; exposes all S3 operations directly                     │
+│   Multipart upload = S3 splits large files into parts; automatic via aws s3 cp                        │
+│   Versioning     = keeps all object versions; protects against accidental delete                      │
+│   Object lock    = WORM: prevents object deletion during retention period                             │
+│   Lifecycle rule = transitions objects to cheaper tiers (Glacier) or expires them                     │
+│   Replication    = CRR/SRR: cross-region or same-region copy for DR or compliance                     │
+│   head-object    = returns metadata without downloading the object body                               │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

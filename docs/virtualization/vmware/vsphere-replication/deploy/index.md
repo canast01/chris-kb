@@ -5,7 +5,7 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 </div>
 
 ```text
-┌───────────────────────────── vSphere Replication — Deployment Phases ─────────────────────────────────┐
+┌─────────────────────────────── vSphere Replication — Deployment Phases ───────────────────────────────┐
 │                                                                                                       │
 │  Six phases from pre-deployment network checks to validated replication with confirmed RPO. Each      │
 │  phase has a clear exit criterion. Do not proceed until current phase validates clean.                │

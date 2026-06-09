@@ -5,7 +5,7 @@ PowerCLI integrates with the full VMware product stack. Each product family has 
 </div>
 
 ```text
-┌───────────────────────────── PowerCLI — Integration Model ──────────────────────────────────────────────┐
+┌──────────────────────────────────── PowerCLI — Integration Model ─────────────────────────────────────┐
 │                                                                                                       │
 │   Each VMware product has its own PowerCLI module with its own connection cmdlet                      │
 │   Connect-VIServer covers vCenter and ESXi; all other products need a separate connect call           │
@@ -35,7 +35,7 @@ PowerCLI integrates with the full VMware product stack. Each product family has 
 │   Connect-VIServer  = authenticates to vCenter/ESXi; session used by Core module cmdlets              │
 │   Disconnect-*Server = close session explicitly; prevents orphaned sessions in scripts                │
 │   -Server parameter  = targets a specific connection when multiple vCenters are connected             │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## NSX-T Integration

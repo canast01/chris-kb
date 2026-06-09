@@ -9,7 +9,7 @@ are difficult to diagnose after the fact.
 </div>
 
 ```text
-┌──────────────────────────────── Add ESXi Host to Cluster — Procedure Flow ────────────────────────────┐
+┌────────────────────────────── Add ESXi Host to Cluster — Procedure Flow ──────────────────────────────┐
 │                                                                                                       │
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  START: Rack and cable new host — update BIOS, HBA, and NIC firmware to vendor-minimum before install     ││

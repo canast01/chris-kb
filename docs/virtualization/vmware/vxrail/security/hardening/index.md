@@ -5,7 +5,7 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </div>
 
 ```text
-┌──────────────────────────────────────────── VxRail — Hardening ───────────────────────────────────────┐
+┌───────────────────────────────────────── VxRail — Hardening ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │         VxRail Manager: mystic changed, LDAP configured, API and SSH restricted                │  │

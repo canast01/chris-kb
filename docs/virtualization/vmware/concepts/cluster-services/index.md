@@ -53,7 +53,7 @@ Master Host
     ├── Network heartbeat (every 1s) ──► Slave Host A  ✓ alive
     ├── Network heartbeat            ──► Slave Host B  ✗ no response
     │                                        │
-    └── Datastore heartbeat check ───────────┘
+    └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
             If no datastore HB either → Host declared FAILED
             If datastore HB present   → Host ISOLATED (not failed)
 ```
@@ -206,14 +206,14 @@ FT provides zero-downtime protection for individual VMs by running a live shadow
 
 ```text
 Primary Host                          Secondary Host
-┌───────────────────┐                 ┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────── ┐                 ┌ ─────────────────────────────────────────┐
 │  Primary VM       │  FT Logging NIC │  Secondary VM                                                   │
 │  (runs normally)  │ ─────────────── │  (mirrors primary)                                              │
 │                   │ All CPU instr.  │                                                                 │
 │  Executes + logs  │ + I/O + DMA     │  Replays log;                                                   │
 │  all non-determ.  │ ──────────────► │  stays in sync                                                  │
 │  events           │                 │                                                                 │
-└───────────────────┘                 └─────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
         │                                      │
         │  Primary host fails                  │
         ▼                                      ▼
@@ -267,7 +267,7 @@ vCenter (may be offline)
          │
          │  Initial config only
          ▼
-  ┌──────────────────────────────────────┐
+  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   │           vSphere Cluster            │
   │                                      │
   │  ┌──────────┐ ┌──────────┐ ┌──────┐  │
@@ -278,7 +278,7 @@ vCenter (may be offline)
   │                                      │
   │  vCLS agents maintain HA/DRS         │
   │  even when vCenter is unavailable    │
-  └──────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Retreat Mode

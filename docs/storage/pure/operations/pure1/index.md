@@ -9,7 +9,7 @@ Pure1 Cloud Management reference covering Accessing Pure1, Key Navigation Areas,
   Pure1 — Phone-Home to Cloud Analytics
 
   FlashArray / FlashBlade               Pure1 Cloud
-  ┌──────────────────┐   HTTPS 443   ┌──────────────────────┐
+  ┌────────────────────────────────────────── ┐   HTTPS 443   ┌ ──────────────────────────────────────────┐
   │  Phone-home agent│──────────────►│  Telemetry ingest    │
   │  (continuous)    │               │  ├─ Health score      │
   └──────────────────┘               │  ├─ Capacity trends   │
@@ -24,7 +24,7 @@ Pure1 Cloud Management reference covering Accessing Pure1, Key Navigation Areas,
   │ Alerts           │               │  ├─ Anomaly detect    │
   │ Support → Cases  │               │  ├─ Predictive failure│
   │ Billing          │               │  └─ Capacity forecast │
-  └──────────────────┘               └──────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
   REST API: GET /arrays, /metrics, /subscriptions
 ```
 

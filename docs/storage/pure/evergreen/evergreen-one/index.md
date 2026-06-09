@@ -10,7 +10,7 @@ Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Wor
 
   Customer pays for consumed capacity (OpEx — no CapEx)
 
-  ┌───────────────┐   installs &    ┌───────────────────┐
+  ┌───────────────────────────────────────── ┐   installs &    ┌ ─────────────────────────────────────────┐
   │  Pure Storage │──manages HW────►│  Customer Site    │
   │               │◄────────────────│  FlashArray /     │
   │  Guarantees:  │  phonehome      │  FlashBlade       │
@@ -19,7 +19,7 @@ Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Wor
   │  ├─ IOPS/latency SLA                       │
   │  └─ capacity SLA            FC/iSCSI/NVMe  │
   └───────────────┘                            ▼
-                               ┌───────────────────────┐
+                               ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
   Monthly billing:             │  Hosts / VMs          │
   ┌──────────────────┐         │  (customer-managed)   │
   │ Reserved ──► rate│         └───────────────────────┘

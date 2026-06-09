@@ -5,7 +5,7 @@ Certification weak areas log — topics that scored below threshold in practice 
 </div>
 
 ```text
-┌─────────────────────────────── Certification Weak-Area Analysis Cycle ──────────────────────────────────┐
+┌─────────────────────────────── Certification Weak-Area Analysis Cycle ────────────────────────────────┐
 │                                                                                                       │
 │   After each practice exam: flag incorrect answers and note the correct principle                     │
 │   Group flags by exam section; ≥2 misses in a section on a single run = weak area                     │
@@ -33,5 +33,5 @@ Certification weak areas log — topics that scored below threshold in practice 
 │   Isolation  = practice only the weak sub-topic questions, not mixed full exams                       │
 │   Threshold  = target for moving on: ≥75% overall mixed, ≥80% isolated sub-topic                      │
 │   Blueprint  = official exam objective guide; section weights drive how many questions appear         │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

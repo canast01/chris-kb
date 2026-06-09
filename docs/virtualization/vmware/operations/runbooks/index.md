@@ -5,7 +5,7 @@ Step-by-step operational runbooks for vSphere platform tasks.
 </div>
 
 ```text
-┌──────────────────────────── VMware Platform — Operational Runbooks ─────────────────────────────────────┐
+┌─────────────────────────────── VMware Platform — Operational Runbooks ────────────────────────────────┐
 │                                                                                                       │
 │   Runbooks are step-by-step procedures for repeatable platform operations                             │
 │   Each runbook covers: prerequisites, steps, verification, and rollback procedure                     │
@@ -28,7 +28,7 @@ Step-by-step operational runbooks for vSphere platform tasks.
 │   Runbook    = documented operational procedure; used to ensure repeatability and auditability        │
 │   Pre-check  = state capture before making any change; used as the rollback baseline                  │
 │   Change window = scheduled maintenance period; runbooks must be executed inside the window           │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-1">

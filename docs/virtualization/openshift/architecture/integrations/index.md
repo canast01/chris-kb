@@ -5,7 +5,7 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 </div>
 
 ```text
-┌──────────────────────────────────── OpenShift Integrations ───────────────────────────────────────────┐
+┌─────────────────────────────────────── OpenShift Integrations ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   vSphere IPI: installer creates VMs via vCenter API; CCM manages node lifecycle              │   │

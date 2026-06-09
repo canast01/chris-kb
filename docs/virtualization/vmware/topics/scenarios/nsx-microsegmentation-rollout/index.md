@@ -10,7 +10,7 @@ projects.
 </div>
 
 ```text
-┌─────────────────────────────── NSX Microsegmentation Rollout — Procedure Flow ────────────────────────┐
+┌─────────────────────────── NSX Microsegmentation Rollout — Procedure Flow ────────────────────────────┐
 │                                                                                                       │
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │  │  START: Enable IPFIX flow collection — Aria Networks proxy node receives flows from VDS via NSX IPFIX      ││

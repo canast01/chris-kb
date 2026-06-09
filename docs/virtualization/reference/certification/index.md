@@ -5,7 +5,7 @@ VMware certification study notes — exam tracking, weak areas, and review plans
 </div>
 
 ```text
-┌──────────────────────────────── VMware Certification — Study Hub ───────────────────────────────────────┐
+┌────────────────────────────────── VMware Certification — Study Hub ───────────────────────────────────┐
 │                                                                                                       │
 │   Track progression: VCP (Associate) → VCAP (Professional) → VCDX (Design Expert)                     │
 │   Primary track for infra engineers: DCV — covers vSphere, vSAN, NSX, VCF                             │
@@ -32,7 +32,7 @@ VMware certification study notes — exam tracking, weak areas, and review plans
 │   VCAP      = VMware Certified Advanced Professional; Deploy (hands-on) or Design (case study)        │
 │   DCV       = Data Center Virtualization track; most common VMware cert path for infra engineers      │
 │   Blueprint = official exam guide with section weights; download from Broadcom education portal       │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">

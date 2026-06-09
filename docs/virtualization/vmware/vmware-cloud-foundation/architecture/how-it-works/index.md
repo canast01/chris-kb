@@ -163,7 +163,7 @@ graph TB
 ```
 
 ```text
-┌──────────────────────────── VMware Cloud Foundation — Domain Lifecycle ───────────────────────────────┐
+┌───────────────────────────── VMware Cloud Foundation — Domain Lifecycle ──────────────────────────────┐
 │                                                                                                       │
 │  VCF organises all infrastructure into domains managed by SDDC Manager. Each domain gets its          │
 │  own vCenter + NSX + vSAN stack provisioned and lifecycle-managed as a single unit.                   │

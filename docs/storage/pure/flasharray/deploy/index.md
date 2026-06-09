@@ -1,7 +1,7 @@
 # FlashArray — Initial Deployment
 
 ```text
-┌──────────────────────────── Pure FlashArray — Deployment Sequence ────────────────────────────────────┐
+┌──────────────────────────────── Pure FlashArray — Deployment Sequence ────────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

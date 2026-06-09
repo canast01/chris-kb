@@ -5,7 +5,7 @@ PowerCLI health check routines for vSphere platform health: host connection stat
 </div>
 
 ```text
-┌────────────────────────────── PowerCLI — Platform Health Check Routine ────────────────────────────────┐
+┌────────────────────────────── PowerCLI — Platform Health Check Routine ───────────────────────────────┐
 │                                                                                                       │
 │   Health check covers: hosts, VMs, snapshots, datastores, cluster HA state, and vSAN                  │
 │   Run daily minimum; always run before and after a change window                                      │
@@ -34,7 +34,7 @@ PowerCLI health check routines for vSphere platform health: host connection stat
 │   APD  = All Paths Down; storage device unreachable; VMs affected but not immediately terminated      │
 │   PDL  = Permanent Device Loss; device removed; HA terminates VMs on affected datastore               │
 │   %RDY = CPU Ready in ESXTOP; >10 ms per 20-second interval = CPU contention on the host              │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Run This Routine

@@ -9,7 +9,7 @@ to prevent recurrence.
 </div>
 
 ```text
-┌───────────────────────────── Datastore Full / Capacity Alarm — Investigation Flow ────────────────────┐
+┌──────────────────────── Datastore Full / Capacity Alarm — Investigation Flow ─────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: vCenter capacity alarm fires OR VMs pause / report disk write errors                        ││

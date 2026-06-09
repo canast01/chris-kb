@@ -5,7 +5,7 @@ End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-f
 </div>
 
 ```text
-┌────────────────────── Aria Operations for Networks — Deployment Phases ───────────────────────────────┐
+┌────────────────────────── Aria Operations for Networks — Deployment Phases ───────────────────────────┐
 │                                                                                                       │
 │  Six phases from bare metal to operational flow-collection and topology mapping.                      │
 │  Complete each phase validation check before proceeding to the next phase.                            │

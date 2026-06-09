@@ -1,7 +1,7 @@
 # FlashBlade — Initial Deployment
 
 ```text
-┌──────────────────────────── Pure FlashBlade — Deployment Sequence ────────────────────────────────────┐
+┌──────────────────────────────── Pure FlashBlade — Deployment Sequence ────────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Prerequisites                                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │

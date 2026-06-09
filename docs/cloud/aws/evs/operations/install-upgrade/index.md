@@ -5,7 +5,7 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T upgrade sequence, 
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Lifecycle & Upgrades ────────────────────────────────────┐
+┌────────────────────────────────── Amazon EVS — Lifecycle & Upgrades ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   VCF upgrades: SDDC Manager → Lifecycle Management → Bundle download → Sequential upgrade   │    │

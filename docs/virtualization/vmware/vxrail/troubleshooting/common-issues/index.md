@@ -5,7 +5,7 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 </div>
 
 ```text
-┌──────────────────────────────── VxRail — Common Issues ───────────────────────────────────────────────┐
+┌─────────────────────────────────────── VxRail — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────┐       │
 │   │  Symptom categories and first triage step for each                                        │       │

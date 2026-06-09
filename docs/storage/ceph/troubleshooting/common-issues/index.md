@@ -5,7 +5,7 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 </div>
 
 ```text
-┌──────────────────────────────── Ceph — Common Issues ─────────────────────────────────────────────────┐
+┌──────────────────────────────────────── Ceph — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   First: ceph health detail — every health warning has a code (e.g. OSD_DOWN, SLOW_OPS)      │    │

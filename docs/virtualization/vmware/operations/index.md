@@ -5,7 +5,7 @@ Operational runbooks and procedures for VMware platform management.
 </div>
 
 ```text
-┌────────────────────────────── VMware Platform — Operations Overview ────────────────────────────────────┐
+┌──────────────────────────────── VMware Platform — Operations Overview ────────────────────────────────┐
 │                                                                                                       │
 │   Day-2 operations: runbooks for repeatable tasks; health checks for platform state review            │
 │   All runbooks use PowerCLI or vCenter UI steps; tested against vSphere 8.x / VCF 5.x                 │
@@ -30,7 +30,7 @@ Operational runbooks and procedures for VMware platform management.
 │   vm-support   = ESXi support bundle; collect with: vm-support -w /tmp/support; retrieve via SCP      │
 │   GSS          = Global Support Services; Broadcom support portal for raising VMware cases            │
 │   Change window = scheduled maintenance window; major platform changes require a CAB ticket           │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-1">

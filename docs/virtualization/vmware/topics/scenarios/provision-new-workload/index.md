@@ -9,7 +9,7 @@ segment assignment, tagging, and post-provision compliance verification.
 </div>
 
 ```text
-┌──────────────────────────────── Provision New Workload — Full Workflow ───────────────────────────────┐
+┌─────────────────────────────── Provision New Workload — Full Workflow ────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Application team requests new VM — gather requirements (CPU, RAM, disk, SLA tier, network tier) ││

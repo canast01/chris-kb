@@ -5,7 +5,7 @@ PowerCLI authentication methods: credential objects, encrypted credential files,
 </div>
 
 ```text
-┌──────────────────────────── PowerCLI — Authentication Methods ──────────────────────────────────────────┐
+┌────────────────────────────────── PowerCLI — Authentication Methods ──────────────────────────────────┐
 │                                                                                                       │
 │   PowerCLI authentication options range from interactive prompts to fully automated pipelines         │
 │   Never hardcode credentials in script files; use credential store or pipeline secrets                │
@@ -33,7 +33,7 @@ PowerCLI authentication methods: credential objects, encrypted credential files,
 │   Store-VICredentialStoreItem = encrypted host-bound credential saved to local Windows credential store│
 │   SecureString          = encrypted in-memory password; only readable by the current user/process     │
 │   DefaultVIServers      = global variable holding all active PowerCLI connection objects              │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Credential Methods

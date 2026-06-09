@@ -5,7 +5,7 @@ Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, 
 </div>
 
 ```text
-┌───────────────────────── PowerCLI — Production Script Reference ────────────────────────────────────────┐
+┌─────────────────────────────── PowerCLI — Production Script Reference ────────────────────────────────┐
 │                                                                                                       │
 │   All production scripts follow: param block → connect → try/catch → query → export → disconnect      │
 │   Use -vCenter and -OutputPath parameters; avoid hardcoded credentials in script files                │
@@ -34,7 +34,7 @@ Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, 
 │   param block    = PowerShell function parameters; defines script inputs with type and mandatory flag │
 │   try/catch      = error handling; catches Connect-VIServer failures and other terminating errors     │
 │   Export-Csv     = exports pipeline objects to CSV; use -NoTypeInformation to suppress header line    │
-└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## VM Inventory Report

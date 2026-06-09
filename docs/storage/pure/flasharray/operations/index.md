@@ -11,9 +11,9 @@ FlashArray Day-to-Day Operations Flow
 │  Pure1 Cloud                                                                                          │
 │  ├── Fleet health dashboard + AI anomaly alerts                                                       │
 │  └── Capacity forecasting + upgrade scheduling                                                        │
-└───────────────────────┬───────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
                         │  phone-home telemetry
-┌───────────────────────▼───────────────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
 │  FlashArray (Purity GUI / CLI / REST)                                                                 │
 │  ├── purealert list  ─── active alerts                                                                │
 │  ├── puredrive list  ─── drive health                                                                 │

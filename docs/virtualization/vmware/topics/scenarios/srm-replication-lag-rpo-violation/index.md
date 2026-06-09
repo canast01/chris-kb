@@ -9,7 +9,7 @@ replication to within RPO before verifying with an SRM test recovery.
 </div>
 
 ```text
-┌─────────────────────────── SRM Replication Lag / RPO Violation — Investigation Flow ──────────────────┐
+┌────────────────────── SRM Replication Lag / RPO Violation — Investigation Flow ───────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: SRM alert — RPO Exceeded on one or more VMs, or Aria Operations fires RPO warning alert     ││

@@ -5,7 +5,7 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Common Issues ───────────────────────────────────────────┐
+┌───────────────────────────────────── Amazon EVS — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Host FAILED state: AWS-side issue — contact AWS support; don't delete manually first        │   │

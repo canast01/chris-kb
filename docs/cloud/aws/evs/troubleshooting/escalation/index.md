@@ -5,7 +5,7 @@ AWS support escalation for EVS: severity levels, required data for support cases
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — Support Escalation ──────────────────────────────────────┐
+┌─────────────────────────────────── Amazon EVS — Support Escalation ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   EVS issues span two vendors: AWS (host/infrastructure) and VMware/Broadcom (VCF software)   │   │

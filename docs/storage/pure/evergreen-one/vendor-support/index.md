@@ -8,7 +8,7 @@ Pure Storage Evergreen//One Vendor Support reference covering Support Portal, Op
 ```text
   Pure Support Case Flow
 
-  ┌─────────────────────┐     ┌─────────────────────────┐
+  ┌─────────────────────────────────────────────── ┐     ┌ ───────────────────────────────────────────────┐
   │  Collect info       │     │  My Pure Storage Portal  │
   │  ├─ purearray list  │     │  support.purestorage.com │
   │  ├─ purealert list  │────►│  Create Case             │
@@ -16,21 +16,21 @@ Pure Storage Evergreen//One Vendor Support reference covering Support Portal, Op
   │  └─ phonehome status│     │  ├─ P2: degraded   ─ 4h  │
   └─────────────────────┘     │  ├─ P3: non-crit  ─ NBD  │
                                │  └─ P4: query    ─ best │
-                               └────────────┬────────────┘
+                               └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
                                             │ P1/P2
                                             ▼
-                               ┌────────────────────────┐
+                               ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
                                │  Phone Pure Support    │
                                │  (do not wait on email)│
-                               └────────────┬───────────┘
+                               └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
                                             │ not progressing
                                             ▼
-                               ┌────────────────────────┐
+                               ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
                                │  CSM escalation        │
                                │  Billing / SLA credits │
                                │  Capacity increase     │
                                │  Contract renewal      │
-                               └────────────────────────┘
+                               └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
   Phonehome active ──► Pure auto-detects hw faults proactively
 ```
 

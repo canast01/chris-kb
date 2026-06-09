@@ -5,7 +5,7 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 </div>
 
 ```text
-┌──────────────────────────────── Amazon EVS — How It Works ────────────────────────────────────────────┐
+┌────────────────────────────────────── Amazon EVS — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   EVS = VCF on AWS bare-metal; runs in your VPC; treated like on-prem vSphere by VMware tools │   │

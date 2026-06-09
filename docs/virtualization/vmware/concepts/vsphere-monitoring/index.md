@@ -9,7 +9,7 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 </div>
 
 ```text
-┌──────────────────────── vSphere Monitoring Stack ─────────────────────────────────────────────────────┐
+┌────────────────────────────────────── vSphere Monitoring Stack ───────────────────────────────────────┐
 │                                                                                                       │
 │  ┌──────────────────────────────────────────────────────────────────────────┐                         │
 │  │  Skyline / Aria Operations (external telemetry → proactive advisories)  │                          │
