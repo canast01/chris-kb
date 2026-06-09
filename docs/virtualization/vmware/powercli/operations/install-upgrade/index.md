@@ -4,6 +4,41 @@
 PowerCLI module lifecycle: upgrading to new versions, managing individual sub-modules, handling multi-vCenter version compatibility, and offline bundle management.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Module Lifecycle Management ─────────────────────────────────────┐
+│                                                                                                       │
+│   PowerCLI is versioned independently from vCenter; check compatibility before upgrading              │
+│   Each sub-module has its own version; the meta-package pins all sub-module versions                  │
+│   Upgrade process: remove old version → install new → test connection → test key cmdlets              │
+│                                                                                                       │
+│   Version management                                                                                  │
+│   Check current: Get-Module -Name VMware.PowerCLI -ListAvailable | Select-Object Name, Version        │
+│   Check all sub-modules: Get-Module -Name VMware.* -ListAvailable | Sort-Object Name                  │
+│   Find latest: Find-Module -Name VMware.PowerCLI (requires PSGallery access)                          │
+│                                                                                                       │
+│   Upgrade procedure                                                                                   │
+│   Step 1: note current version; check the VMware compatibility matrix for the target vCenter version  │
+│   Step 2: uninstall old version: Uninstall-Module -Name VMware.PowerCLI -AllVersions                  │
+│   Step 3: install new version: Install-Module -Name VMware.PowerCLI -Scope CurrentUser                │
+│   Step 4: verify: connect to vCenter and run Get-Cluster to confirm basic operation                   │
+│                                                                                                       │
+│   Multi-vCenter version compatibility                                                                 │
+│   PowerCLI supports connecting to vCenter versions up to N-2 (two major versions behind)              │
+│   Use -Force with Connect-VIServer to connect to unsupported older vCenter versions                   │
+│   Cmdlet behaviour may differ: test critical scripts against each vCenter version                     │
+│                                                                                                       │
+│   Offline (air-gapped) management                                                                     │
+│   Save on internet host: Save-Module -Name VMware.PowerCLI -Path C:\offline-modules                   │
+│   Copy to air-gapped system; register as local repo: Register-PSRepository                            │
+│   Install from local: Install-Module -Name VMware.PowerCLI -Repository LocalRepo                      │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   Meta-package = VMware.PowerCLI; installs all sub-modules; pinned to specific versions               │
+│   PSGallery   = PowerShell Gallery; public module repository; requires internet access                │
+│   NuGet        = package manager provider; required for PSGallery; Install-PackageProvider NuGet      │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Check Installed Version
 
 ```powershell

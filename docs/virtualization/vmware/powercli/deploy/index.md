@@ -4,7 +4,38 @@
 Installing PowerCLI, first connection to vCenter, service account setup, certificate configuration, and proxy settings for environments without direct internet access.
 </div>
 
-<!-- diagram:powercli-deploy -->
+```text
+┌───────────────────────── PowerCLI — Deployment and First Connection ────────────────────────────────────┐
+│                                                                                                       │
+│   PowerCLI runs on PowerShell 5.1 (Windows) or PowerShell 7+ (Windows, Linux, macOS)                  │
+│   Install from PSGallery (online) or from an offline bundle (air-gapped environments)                 │
+│   Service account credentials should be stored in credential store for unattended scripts             │
+│                                                                                                       │
+│   Prerequisites                                                                                       │
+│   PowerShell 5.1 (Windows built-in) or PowerShell 7+ for cross-platform use                           │
+│   .NET Framework 4.7.2+ required for Windows PowerShell 5.1                                           │
+│   TCP 443 access to vCenter Server; vCenter account with at minimum read-only permissions             │
+│                                                                                                       │
+│   Installation                                                                                        │
+│   Online: Install-Module -Name VMware.PowerCLI -Scope CurrentUser                                     │
+│   Air-gapped: download bundle via Save-Module on an internet host; copy and import offline            │
+│   Verify: Get-Module -ListAvailable | Where-Object { $_.Name -like 'VMware*' }                        │
+│                                                                                                       │
+│   Certificate configuration                                                                           │
+│   Default: InvalidCertificateAction = Prompt (warns on untrusted certs)                               │
+│   Lab/dev: Set-PowerCLIConfiguration -InvalidCertificateAction Ignore                                 │
+│   Production: import the vCenter CA cert into the OS trust store; use Fail mode                       │
+│                                                                                                       │
+│   Proxy configuration (air-gapped or proxied environments)                                            │
+│   Set-PowerCLIConfiguration -ProxyPolicy UseSystemProxy                                               │
+│   Or: $env:HTTPS_PROXY = 'http://proxy.example.com:8080'                                              │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   PSGallery              = PowerShell Gallery; public module repository at powershellgallery.com      │
+│   Scope CurrentUser      = install for current user only; no admin rights required                    │
+│   InvalidCertificateAction = controls behaviour on untrusted TLS cert; Warn/Ignore/Fail               │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Prerequisites
 

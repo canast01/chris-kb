@@ -4,6 +4,40 @@
 PowerCLI integrates with the full VMware product stack. Each product family has its own module. Most require a separate Connect- call in addition to Connect-VIServer.
 </div>
 
+```text
+┌───────────────────────────── PowerCLI — Integration Model ──────────────────────────────────────────────┐
+│                                                                                                       │
+│   Each VMware product has its own PowerCLI module with its own connection cmdlet                      │
+│   Connect-VIServer covers vCenter and ESXi; all other products need a separate connect call           │
+│   Install sub-modules individually or via the VMware.PowerCLI meta-package                            │
+│                                                                                                       │
+│   NSX-T integration                                                                                   │
+│   Module: VMware.VimAutomation.Nsxt                                                                   │
+│   Connect: Connect-NsxtServer -Server <nsxmgr> -User admin                                            │
+│   Key cmdlets: Get-NsxtSegment, Get-NsxtTransportNode, Get-NsxtPolicy, Get-NsxtFirewallRule           │
+│                                                                                                       │
+│   vSAN integration                                                                                    │
+│   Module: VMware.VimAutomation.Storage (included in Core)                                             │
+│   Connect: uses existing Connect-VIServer session                                                     │
+│   Key cmdlets: Get-VsanDisk, Get-VsanClusterConfiguration, Test-VsanClusterHealth                     │
+│                                                                                                       │
+│   Site Recovery Manager integration                                                                   │
+│   Module: VMware.VimAutomation.SRM                                                                    │
+│   Connect: Connect-SrmServer -Server <srm-server> -SrmServerAddress <srm>                             │
+│   Key cmdlets: Get-SrmProtectionGroup, Get-SrmRecoveryPlan, Start-SrmRecoveryPlan                     │
+│                                                                                                       │
+│   Horizon integration                                                                                 │
+│   Module: VMware.VimAutomation.HorizonView                                                            │
+│   Connect: Connect-HVServer -Server <cs> -User <user>                                                 │
+│   Key cmdlets: Get-HVDesktop, Get-HVPool, Get-HVEntitlement, Set-HVDesktop                            │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   Connect-VIServer  = authenticates to vCenter/ESXi; session used by Core module cmdlets              │
+│   Disconnect-*Server = close session explicitly; prevents orphaned sessions in scripts                │
+│   -Server parameter  = targets a specific connection when multiple vCenters are connected             │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## NSX-T Integration
 
 ```powershell

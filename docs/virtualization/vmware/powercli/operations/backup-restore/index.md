@@ -4,6 +4,37 @@
 Exporting vSphere configurations using PowerCLI — VM inventory exports, storage policy snapshots, permissions and role exports, tag taxonomy backups, and module inventory for reproducible automation environments.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Configuration Backup and Export ────────────────────────────────┐
+│                                                                                                       │
+│   vSphere configuration backups capture platform state not covered by VCSA file-based backup          │
+│   Run exports weekly; commit outputs to a version-controlled repository for diff history              │
+│   Exports are the restore source for permissions, tags, and policies after a vCenter rebuild          │
+│                                                                                                       │
+│   What to back up with PowerCLI                                                                       │
+│   VM inventory: CSV of all VMs with CPU, RAM, datastore, cluster, and tag assignments                 │
+│   Storage policies: export SPBM policy definitions; re-import after vCenter rebuild                   │
+│   Permissions and roles: export role definitions and permission assignments per object                │
+│   Tag taxonomy: export categories and tags; lost on vCenter rebuild without VCSA backup               │
+│   Module list: installed PowerCLI modules with versions for reproducible automation environments      │
+│                                                                                                       │
+│   Backup schedule                                                                                     │
+│   Weekly: VM inventory, permissions export, tag taxonomy, storage policy export                       │
+│   Before any vCenter upgrade: full config export + VCSA file-based backup first                       │
+│   After significant changes: re-run permissions, tags, and policy exports                             │
+│                                                                                                       │
+│   Important limitations                                                                               │
+│   PowerCLI exports do not replace VCSA file-based backup — they are complementary                     │
+│   VCSA backup covers: vCenter database, SSO config, certificates, inventory                           │
+│   PowerCLI exports cover: granular config state that is easier to restore selectively                 │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   VCSA backup  = file-based backup of the appliance; scheduled via VAMI; restores full vCenter        │
+│   SPBM export  = storage policy definition export; re-import with Import-SpbmStoragePolicy            │
+│   Permissions  = role + principal + object; PowerCLI export captures all three per assignment         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Run This Routine
 
 Run this sequence weekly to capture a baseline configuration export of the vSphere environment.

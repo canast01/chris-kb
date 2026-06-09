@@ -4,6 +4,40 @@
 Common operational procedures using PowerCLI: bulk VM operations, host maintenance workflow, snapshot consolidation, datastore migration, and tag management at scale.
 </div>
 
+```text
+┌──────────────────────────── PowerCLI — Common Operational Procedures ───────────────────────────────────┐
+│                                                                                                       │
+│   Common administrative procedures with PowerCLI for bulk and single-object operations                │
+│   All procedures follow: pre-check → act → verify → report pattern                                    │
+│   Use -WhatIf with Set-/Remove- cmdlets to preview impact before committing                           │
+│                                                                                                       │
+│   Host maintenance mode                                                                               │
+│   Get running VMs on host; confirm DRS will drain (Fully Automated cluster required)                  │
+│   Set-VMHost -State Maintenance -Evacuate:$true; wait until VMs = 0 before patching                   │
+│   Exit: Set-VMHost -State Connected; verify host reconnects and cluster HA recalculates               │
+│                                                                                                       │
+│   Snapshot management                                                                                 │
+│   Audit: Get-VM | Get-Snapshot | Where-Object { $_.Created -lt (Get-Date).AddDays(-2) }               │
+│   Remove: Remove-Snapshot -Snapshot $snap -Confirm:$false; one snapshot at a time for safety          │
+│   Consolidate: Get-VM | Where-Object { $_.Extensiondata.Runtime.ConsolidationNeeded }                 │
+│                                                                                                       │
+│   Bulk VM operations                                                                                  │
+│   Power off by tag: Get-VM -Tag "maintenance" | Stop-VMGuest -Confirm:$false                          │
+│   Restart tools: Get-VM | Where-Object { $_.ExtensionData.Guest.ToolsRunningStatus -eq 'toolsOld' }   │
+│   Move to folder: Get-VM -Name "app-*" | Move-VM -Destination (Get-Folder "AppServers")               │
+│                                                                                                       │
+│   Storage vMotion (datastore migration)                                                               │
+│   Single VM: Move-VM -VM $vm -Datastore $target -DiskStorageFormat Thin                               │
+│   Bulk: Get-Datastore "old-ds" | Get-VM | Move-VM -Datastore $target                                  │
+│   Monitor: track with Get-Task | Where-Object { $_.State -eq 'Running' }                              │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   -Evacuate     = with Set-VMHost maintenance; triggers DRS to migrate all VMs off the host           │
+│   -Confirm:$false = suppresses the Y/N prompt in scripts; required for unattended automation          │
+│   Get-Task      = retrieves running and recent vCenter tasks; monitor long-running operations         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Put Host in Maintenance Mode
 
 ```powershell
