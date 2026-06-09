@@ -2900,6 +2900,35 @@
 Health checks, procedures, CLI, backup/restore, upgrades, and scripts.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── MySQL — Operations Reference ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Six operational sub-sections: health checks, procedures, CLI reference, backup/restore, upgrades    │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Daily operations: monitor replication lag, slow queries, connection count, and buffer pool hit rate │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Backup strategy must cover: nightly full + binlog retention for PITR                                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Health checks                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Replication lag: SHOW REPLICA STATUS; Seconds_Behind_Source should be 0 or near 0                   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Buffer pool hit rate: (1 - innodb_buffer_pool_reads/innodb_buffer_pool_read_requests) * 100         │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Connection pressure: Threads_connected vs max_connections; alert at 80%                             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Slow query log: set long_query_time=1; review with mysqldumpslow or pt-query-digest                 │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Backup and restore                                                                                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Logical: mysqldump --single-transaction --routines --triggers; slow on large databases              │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Physical hot backup: xtrabackup --backup; faster restore; requires Percona XtraBackup tool          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   PITR: restore full backup + replay binlogs up to the recovery point time                            │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Procedures                                                                                          │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   Promote replica: STOP REPLICA; check lag = 0; set read_only=OFF; redirect app connections           │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Add replica: xtrabackup + binlog position or GTID; START REPLICA; verify lag catches up             │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Schema change: use pt-online-schema-change or gh-ost for non-blocking ALTER on live tables          │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Seconds_Behind_Source = replication lag metric; seconds replica is behind primary                   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   xtrabackup   = Percona tool for online physical hot backup without locking tables                   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   PITR         = Point-In-Time Recovery; restore backup then replay binlogs to target time            │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   pt-query-digest = Percona toolkit tool; analyses slow query log and ranks by total time             │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="health-checks/">Health Checks</a>
   <a class="kb-card" href="procedures/">Procedures</a>

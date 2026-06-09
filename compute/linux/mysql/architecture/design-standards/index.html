@@ -2821,6 +2821,37 @@
 MySQL design standards — HA topology choices, replication sizing, InnoDB tuning baselines, naming conventions, and backup strategy requirements.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── MySQL — Design Standards ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Design decisions made before deployment define reliability, recovery time, and operational cost     │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Minimum production standard: semi-sync replication + automated failover + nightly backup            │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   InnoDB Cluster (Group Replication + MySQL Router) for zero-manual-failover HA                       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   HA topology selection                                                                               │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Async 1+1: primary + one replica; manual failover; use for dev/test or low RPO tolerance            │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Semi-sync 1+1: primary ACKs replica before commit; no data loss on primary crash                    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Group Replication: multi-primary or single-primary; auto-failover; high write availability          │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   InnoDB Cluster: Group Replication + MySQL Router + MySQL Shell; fully managed HA                    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ProxySQL: connection proxy; read/write split; app-transparent failover routing                      │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   InnoDB tuning baselines                                                                             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   innodb_buffer_pool_size: 60-80% of total RAM; single most impactful setting                         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   innodb_log_file_size: 1-4 GB for write-heavy workloads; larger = faster writes, slower recovery     │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   innodb_flush_log_at_trx_commit=1: full ACID; set to 2 for write performance if durability permits   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   max_connections: set to expected peak concurrency; each connection uses ~1 MB RAM                   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Naming conventions                                                                                  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Database: lowercase_underscore (app_db, reporting_db); no spaces, no uppercase                      │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Tables: plural nouns (users, orders, audit_log); prefix with schema if multi-tenant                 │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Service accounts: svc_&lt;app&gt;_rw (read-write) and svc_&lt;app&gt;_ro (read-only) per application            │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   RPO           = Recovery Point Objective; max acceptable data loss (semi-sync = near zero)          │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   RTO           = Recovery Time Objective; max acceptable downtime (InnoDB Cluster = seconds)         │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   innodb_buffer_pool = in-memory InnoDB page cache; sizing directly controls I/O load                 │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   MySQL Router  = lightweight proxy included with InnoDB Cluster; routes to current primary           │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="high-availability-topologies">High-Availability Topologies<a class="headerlink" href="#high-availability-topologies" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
