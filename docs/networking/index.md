@@ -70,4 +70,9 @@ Networking knowledge base covering switching, routing, security, and network ser
   <span>Enterprise network design — topology, redundancy, trust zones, and observability references.</span>
 </a>
 
+<a class="kb-card" href="protocols/">
+  <strong>Protocols</strong>
+  <span>Protocol reference — FC, iSCSI, NFS, SMB, DNS, DHCP, NTP, LDAP, SNMP, TLS, Syslog, and SMTP.</span>
+</a>
+
 </div>

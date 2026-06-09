@@ -171,4 +171,18 @@ ping -M do -s 1472 <destination>    # standard MTU test
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="network-connectivity/"><strong>Network Connectivity</strong><span>End-to-end connectivity troubleshooting — L1 through L7 diagnostic procedures and tools.</span></a>
+<a class="kb-card" href="dns-resolution/"><strong>DNS Resolution Failures</strong><span>DNS resolution failure diagnosis — resolver, zone, and client-side troubleshooting steps.</span></a>
 </div>
+
+## Protocol Symptom Index
+
+| Symptom | Protocol | First command |
+|---|---|---|
+| Name resolution fails | DNS | `dig @<server> A hostname` |
+| Kerberos auth fails | DNS / Kerberos | `dcdiag /test:dns`, check NTP sync |
+| TLS handshake fails | TLS | `openssl s_client -connect host:443` |
+| Certificate not trusted | TLS/PKI | `openssl verify -CAfile ca.crt cert.crt` |
+| LDAP bind fails | LDAP | `ldapsearch -H ldap://dc -x -b "dc=corp,dc=local"` |
+| FC port not online | Fibre Channel | `fcinfo hba-port`, `show interface fc` |
+| iSCSI target unreachable | iSCSI | `iscsiadm -m discovery`, check port 3260 |
+| NTP time drift | NTP | `timedatectl status`, `ntpq -pn` |

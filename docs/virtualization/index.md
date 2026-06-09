@@ -78,8 +78,6 @@ Virtualization platform knowledge base covering VMware and OpenShift. Includes a
 <a class="kb-card" href="vmware/"><strong>VMware Platform</strong><span>vCenter, ESXi, vSAN, NSX, VCF, VxRail, Aria Suite, Horizon, SRM, and vSphere Replication.</span></a>
 <a class="kb-card" href="openshift/"><strong>OpenShift</strong><span>Red Hat OpenShift Container Platform — IPI/UPI install, RHCOS, OVN-Kubernetes, MachineSet, OLM, SCC, and PSA.</span></a>
 <a class="kb-card" href="vxrail/"><strong>VxRail</strong><span>Dell HCI appliance reference — hardware, lifecycle, VxRail Manager, RASR, scripts, and field notes.</span></a>
-<a class="kb-card" href="high-availability/"><strong>High Availability Design</strong><span>HA design patterns, vSphere HA, admission control, and multi-site HA architecture.</span></a>
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Cross-platform virtualization operations — health checks, runbooks, and troubleshooting.</span></a>
-<a class="kb-card" href="reference/"><strong>Reference</strong><span>Design decisions, standards, licensing, inventory, upgrade readiness, and quick reference.</span></a>
-<a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Cross-platform virtualization diagnostics — vSphere failures, vSAN health, and escalation paths.</span></a>
+<a class="kb-card" href="reference/"><strong>Reference</strong><span>Design decisions, standards, licensing, inventory, upgrade readiness, HA design, and quick reference.</span></a>
 </div>

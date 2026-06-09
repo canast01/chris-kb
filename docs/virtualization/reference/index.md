@@ -95,5 +95,7 @@ Standards, inventory, upgrade readiness checklists, and quick reference material
 <a class="kb-card" href="design-decisions/"><strong>Design Decisions</strong><span>Architectural decision records for platform design choices and rationale.</span></a>
 <a class="kb-card" href="licensing/"><strong>Licensing</strong><span>VMware licensing models, SKU comparison, capacity planning, and compliance.</span></a>
 <a class="kb-card" href="certification/"><strong>Certification</strong><span>Certification reference materials, paths, and exam notes.</span></a>
+<a class="kb-card" href="high-availability/"><strong>High Availability</strong><span>HA design patterns, vSphere HA, admission control, redundancy tiers, and multi-site architecture.</span></a>
+<a class="kb-card" href="troubleshooting/"><strong>Troubleshooting</strong><span>Cross-platform virtualization diagnostics — vSphere host failures, vSAN issues, Tanzu, and SRM.</span></a>
 
 </div>

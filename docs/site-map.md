@@ -8,13 +8,13 @@ Full index of all KB sections and sub-sections.
 
 | Section | Sub-sections |
 |---|---|
-| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vxrail/index.md) · [High Availability](virtualization/high-availability/index.md) · [Operations](virtualization/operations/index.md) · [Reference](virtualization/reference/index.md) |
-| [Storage](storage/index.md) | [Dell](storage/dell/index.md) · [Pure Storage](storage/pure/index.md) · [NetApp](storage/netapp/index.md) · [Ceph](storage/ceph/index.md) · [Storage Design](storage/storage-design/index.md) · [Certifications](storage/certifications/index.md) |
-| [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) · [Certifications](san/certifications/index.md) |
-| [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [GPU Workloads](compute/gpu-workloads/index.md) · [Local AI (Ollama)](compute/local-ai-ollama/index.md) |
+| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vxrail/index.md) · [Operations](virtualization/operations/index.md) · [Reference](virtualization/reference/index.md) |
+| [Storage](storage/index.md) | [Dell](storage/dell/index.md) · [Pure Storage](storage/pure/index.md) · [NetApp](storage/netapp/index.md) · [Ceph](storage/ceph/index.md) · [Storage Design](storage/storage-design/index.md) |
+| [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) |
+| [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [Local AI & GPU](compute/local-ai/index.md) |
+| [Certifications](certifications/index.md) | [SAN](certifications/san/index.md) · [Storage](certifications/storage/index.md) |
 | [Cloud](cloud/index.md) | [AWS](cloud/aws/index.md) · [Azure](cloud/azure/index.md) · [Cloud AI](cloud/ai/index.md) |
-| [Networking](networking/index.md) | [Switching & Routing](networking/switching-routing/index.md) · [Network Services](networking/services/index.md) · [Network Security](networking/security/index.md) · [External Connectivity](networking/external-connectivity/index.md) · [Network Design](networking/network-design/index.md) · [Troubleshooting](networking/troubleshooting/index.md) |
-| [Protocols](protocols/index.md) | [Fibre Channel](protocols/fibre-channel/index.md) · [iSCSI](protocols/iscsi/index.md) · [NFS](protocols/nfs/index.md) · [SMB](protocols/smb/index.md) · [DNS](protocols/dns/index.md) · [DHCP](protocols/dhcp/index.md) · [NTP](protocols/ntp/index.md) · [LDAP](protocols/ldap/index.md) · [SNMP](protocols/snmp/index.md) · [TLS](protocols/tls/index.md) · [Syslog](protocols/syslog/index.md) · [API Connectivity](protocols/api-connectivity/index.md) · [Email Relay](protocols/email-relay/index.md) · [Service Integrations](protocols/service-integrations/index.md) |
+| [Networking](networking/index.md) | [Switching & Routing](networking/switching-routing/index.md) · [Network Services](networking/services/index.md) · [Network Security](networking/security/index.md) · [External Connectivity](networking/external-connectivity/index.md) · [Network Design](networking/network-design/index.md) · [Troubleshooting](networking/troubleshooting/index.md) · [Protocols](networking/protocols/index.md) |
 
 ### VMware Products
 
@@ -84,8 +84,7 @@ Full index of all KB sections and sub-sections.
 |---|---|
 | [Windows Server](compute/windows-server/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · [Active Directory](compute/windows-server/active-directory/index.md) · [SQL Server](compute/windows-server/sql-server/index.md) |
 | [Linux](compute/linux/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting · [MySQL/MariaDB](compute/linux/mysql/index.md) · [PostgreSQL](compute/linux/postgresql/index.md) · [Directory Integration](compute/linux/directory-integration/index.md) |
-| [GPU Workloads](compute/gpu-workloads/index.md) | Drivers · Monitoring · Performance · Sizing · Troubleshooting |
-| [Local AI (Ollama)](compute/local-ai-ollama/index.md) | CLI Reference · GPU Usage · Install Notes · Models · Testing · Troubleshooting |
+| [Local AI & GPU](compute/local-ai/index.md) | [Ollama](compute/local-ai/ollama/index.md) · [GPU Workloads](compute/local-ai/gpu/index.md) |
 
 ### Cloud Sub-sections
 
@@ -105,7 +104,7 @@ Full index of all KB sections and sub-sections.
 
 | Section | Sub-sections |
 |---|---|
-| [Security](security/index.md) | [CyberArk](security/cyberark/index.md) · [Venafi](security/venafi/index.md) · [PKI](security/pki/index.md) · [Certificates](security/certificates/index.md) · [MFA](security/mfa/index.md) · [LDAP Integration](security/ldap-integration/index.md) · [SAML Configuration](security/saml-configuration/index.md) · [Access Review](security/access-review/index.md) · [Compliance Standards](security/compliance-standards/index.md) · [Vulnerability Management](security/vulnerability-management/index.md) · [Security Monitoring](security/security-monitoring/index.md) · [Security Audit](security/security-audit/index.md) · [Patch Compliance](security/patch-compliance/index.md) · [Incident Handling](security/incident-handling/index.md) · [Log Retention](security/log-retention/index.md) · [Event Correlation](security/event-correlation/index.md) |
+| [Security](security/index.md) | [CyberArk](security/cyberark/index.md) · [Venafi](security/venafi/index.md) · [PKI](security/pki/index.md) · [Certificates](security/certificates/index.md) · [MFA](security/mfa/index.md) · [LDAP Integration](security/ldap-integration/index.md) · [SAML Configuration](security/saml-configuration/index.md) · [Access Review](security/access-review/index.md) · [Compliance Standards](security/compliance-standards/index.md) · [Vulnerability Management](security/vulnerability-management/index.md) · [Security Monitoring](security/security-monitoring/index.md) · [Security Audit](security/security-audit/index.md) · [Patch Compliance](security/patch-compliance/index.md) · [Incident Handling](security/incident-handling/index.md) · [Data Protection](security/data-protection/index.md) |
 
 ## Automation & Tooling
 

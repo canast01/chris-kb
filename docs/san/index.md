@@ -80,8 +80,7 @@ SAN knowledge base covering Cisco MDS switches, DCNM, Nexus Dashboard, Brocade F
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-<div class="kb-grid kb-grid-3">
+<div class="kb-grid kb-grid-2">
 <a class="kb-card" href="cisco/"><strong>Cisco SAN</strong><span>MDS switches — architecture, standards, lifecycle, CLI, scripts, troubleshooting, and security.</span></a>
 <a class="kb-card" href="brocade/"><strong>Brocade SAN</strong><span>Fabric OS switches — architecture, standards, lifecycle, CLI, scripts, troubleshooting, and security.</span></a>
-<a class="kb-card" href="certifications/"><strong>Certifications</strong><span>SAN certification study notes — fabric concepts, zoning, practice notes, and review plans.</span></a>
 </div>
