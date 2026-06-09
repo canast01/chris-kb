@@ -11,33 +11,31 @@ segment assignment, tagging, and post-provision compliance verification.
 ```text
 ┌─────────────────────────────── Provision New Workload — Full Workflow ────────────────────────────────┐
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: Application team requests new VM — gather requirements (CPU, RAM, disk, SLA tier, network tier) ││
-│   └────────────────────────────────────┬─────────────────────────────────────────────────────────────────────┘│
-│                                        │                                                              │
-│                   ┌────────────────────┼────────────────────┐                                         │
-│                   ▼                    ▼                    ▼                                         │
-│   ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐                        │
-│   │  Right-size VM       │  │  Choose vSAN storage │  │  Identify NSX        │                        │
-│   │  CPU, RAM, disk      │  │  policy (FTT, RAID)  │  │  segment for VM NIC  │                        │
-│   └──────────┬───────────┘  └──────────┬───────────┘  └──────────┬───────────┘                        │
-│              └─────────────────────────┼──────────────────────────┘                                   │
-│                                        ▼                                                              │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Create VM in vCenter — attach to vSAN datastore with correct storage policy                             ││
-│   └────────────────────────────────────┬─────────────────────────────────────────────────────────────────────┘│
-│                                        │                                                              │
-│                   ┌────────────────────┼────────────────────┐                                         │
-│                   ▼                    ▼                    ▼                                         │
-│   ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐                        │
-│   │  Apply SPBM storage  │  │  Tag VM in vCenter   │  │  Add VM to NSX       │                        │
-│   │  policy to all disks │  │  for Aria Ops groups │  │  security group      │                        │
-│   └──────────┬───────────┘  └──────────┬───────────┘  └──────────┬───────────┘                        │
-│              └─────────────────────────┼──────────────────────────┘                                   │
-│                                        ▼                                                              │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Post-provision: verify storage policy compliance, NSX segment, DFW group membership, Aria Ops tags      ││
-│   └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  Default VM settings give zero redundancy (vSAN), no DFW rules (NSX), no monitoring (Aria Ops)        │
+│  Every new VM requires: right-sizing, storage policy, NSX segment, tags, security group               │
+│                                                                                                       │
+│  START: Application team requests new VM — gather CPU, RAM, disk, SLA tier, network tier              │
+│                                                                                                       │
+│  STEP 1 — Right-Size the VM                                                                           │
+│  CPU: application peak requirement · RAM: working set + 20% headroom                                  │
+│  Disk: OS (60–80 GB) + data volume with 3-month growth estimate · 1 vNIC per network tier             │
+│                                                                                                       │
+│  STEP 2 — Choose vSAN Storage Policy                                                                  │
+│  Production-Critical: FTT=1 RAID-1 (databases, DC, vCenter) — minimum 3 hosts                         │
+│  Production-Standard: FTT=1 RAID-5 (general app VMs) — minimum 4 hosts                                │
+│  Development: FTT=0 no redundancy — dev/test only                                                     │
+│                                                                                                       │
+│  STEP 3 — Create VM and Apply Compliance                                                              │
+│  Create VM on target host + vSAN datastore with right-sized resources                                 │
+│  Apply SPBM storage policy to all hard disks · verify ComplianceStatus = Compliant                    │
+│                                                                                                       │
+│  STEP 4 — Tag and Secure                                                                              │
+│  Tag VM in vCenter: Environment · Application · Owner (Aria Ops picks up within 5 min)                │
+│  Add VM to NSX security group — static or dynamic via matching tag criteria                           │
+│                                                                                                       │
+│  CLOSE: Policy compliant · NSX segment assigned · tags applied · Aria Ops groups populated            │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

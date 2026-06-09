@@ -8,43 +8,34 @@ scenario covers the full procedure from pre-flight checks through post-patch val
 </div>
 
 ```text
-┌─────────────────────────── Host Maintenance and Patching — Procedure Flow ────────────────────────────┐
+┌───────────────────────────── Host Maintenance Patching — Procedure Flow ──────────────────────────────┐
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: Host requires patching — ESXi update, firmware, driver, or hardware maintenance                  ││
-│   └────────────────────────────────────────────┬─────────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                                                ▼                                                      │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Step 1 — Pre-maintenance checks: DRS enabled, HA enabled, vSAN health green, resync queue = 0          ││
-│   └────────────────────────────────────────────┬─────────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                                                ▼                                                      │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Step 2 — Evacuate VMs: Enter maintenance mode → DRS vMotions all running VMs off host automatically    ││
-│   └────────────────────────────────────────────┬─────────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                                                ▼                                                      │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Step 3 — vSAN maintenance mode: choose data migration option (Ensure Accessibility recommended)        ││
-│   └────────────────────────────────────────────┬─────────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                          ┌─────────────────────┼─────────────────────┐                                │
-│                          ▼                     ▼                     ▼                                │
-│            ┌─────────────────────┐  ┌──────────────────────┐  ┌─────────────────────┐                 │
-│            │  LCM / VUM patch    │  │  esxcli manual patch │  │  Firmware / hardware│                 │
-│            │  via vCenter LCM    │  │  (no LCM available)  │  │  — short outage only│                 │
-│            └──────────┬──────────┘  └──────────┬───────────┘  └──────────┬──────────┘                 │
-│                       └─────────────────────────┼──────────────────────────┘                          │
-│                                                 ▼                                                     │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Step 4 — Reboot host → exits maintenance mode → DRS rebalances VMs back                                 ││
-│   └────────────────────────────────────────────┬─────────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                                                ▼                                                      │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Step 5 — Post-patch validation: version confirmed, vSAN resync = 0, HA agent running                   ││
-│   └──────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  Done correctly: zero VM downtime — DRS vMotions all VMs off before any disruption                    │
+│  Done incorrectly: vSAN data unavailability, stuck resync queues, or VM outages                       │
+│                                                                                                       │
+│  START: Host requires patching — ESXi update, firmware, driver, or hardware maintenance               │
+│                                                                                                       │
+│  STEP 1 — Pre-Maintenance Checks                                                                      │
+│  DRS enabled · HA enabled · vSAN Skyline Health green · resync queue = 0                              │
+│                                                                                                       │
+│  STEP 2 — Evacuate VMs                                                                                │
+│  Enter maintenance mode → DRS vMotions all running VMs off the host automatically                     │
+│                                                                                                       │
+│  STEP 3 — vSAN Maintenance Mode                                                                       │
+│  Choose data migration option: Ensure Accessibility (recommended for most patches)                    │
+│                                                                                                       │
+│  STEP 4 — Patch Method                                                                                │
+│  LCM / VUM patch via vCenter Lifecycle Manager (preferred)                                            │
+│  esxcli manual patch if no LCM available                                                              │
+│  Firmware / hardware: short outage only                                                               │
+│                                                                                                       │
+│  STEP 5 — Reboot and Return                                                                           │
+│  Reboot host → exits maintenance mode → DRS rebalances VMs back automatically                         │
+│                                                                                                       │
+│  STEP 6 — Post-Patch Validation                                                                       │
+│  ESXi version confirmed · vSAN resync = 0 · HA agent running · Aria Ops health green                  │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

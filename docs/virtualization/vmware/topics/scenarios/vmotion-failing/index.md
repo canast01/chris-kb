@@ -9,29 +9,29 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 ```text
 ┌──────────────────────────────── vMotion Failing — Investigation Flow ─────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: vCenter Recent Tasks — vMotion task Failed; note the exact error message                  ││
-│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                              │                                                        │
-│        ┌───────────────────┬─────────────────┼───────────────────┬───────────────────┐                │
-│        ▼                   ▼                 ▼                   ▼                   ▼                │
-│  ┌───────────┐       ┌───────────┐     ┌───────────┐      ┌───────────┐       ┌───────────┐           │
-│  │ "Incompat-│       │ "A general│     │ "Migration│      │ "The      │       │ "Timed    │           │
-│  │ ible CPU" │       │ system    │     │ was       │      │ host is   │       │ out" —    │           │
-│  │ or CPU    │       │ error"    │     │ canceled" │      │ not lic-  │       │ large VM  │           │
-│  │ mismatch  │       │ — network │     │ — timeout │      │ ensed"    │       │ or low BW │           │
-│  └─────┬─────┘       └─────┬─────┘     └─────┬─────┘      └─────┬─────┘       └─────┬─────┘           │
-│        │                   │                 │                   │                   │                │
-│        ▼                   ▼                 ▼                   ▼                   ▼                │
-│  ┌───────────┐       ┌───────────┐     ┌───────────┐      ┌───────────┐       ┌───────────┐           │
-│  │ Check EVC │       │ Test MTU  │     │ Check vmk │      │ vCenter → │       │ Check BW  │           │
-│  │ mode on   │       │ vmkping   │     │ routing + │      │ Admin →   │       │ between   │           │
-│  │ cluster   │       │ -d -s8972 │     │ firewall  │      │ Licences  │       │ hosts     │           │
-│  └───────────┘       └───────────┘     └───────────┘      └───────────┘       └───────────┘           │
-│                                              │                                                        │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  NSX segment check: segment available on destination host transport node?                         ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  vMotion failures have distinct error messages that directly identify the fix                         │
+│  Always read the exact error in vCenter Recent Tasks before diagnosing                                │
+│                                                                                                       │
+│  START: vCenter Recent Tasks — vMotion task Failed; note the exact error message                      │
+│                                                                                                       │
+│  ERROR: "Incompatible CPU" or CPU mask mismatch                                                       │
+│  Fix: check EVC mode on the cluster — enable EVC to mask CPU differences between host generations     │
+│                                                                                                       │
+│  ERROR: "A general system error" — typically a network issue                                          │
+│  Fix: test MTU — vmkping -d -s 8972 from source to destination host vMotion VMkernel IP               │
+│                                                                                                       │
+│  ERROR: "Migration was canceled" — timeout                                                            │
+│  Fix: check vmk routing + firewall rules · verify vMotion VMkernel port is tagged and reachable       │
+│                                                                                                       │
+│  ERROR: "The host is not licensed"                                                                    │
+│  Fix: vCenter → Admin → Licences — assign vMotion-capable ESXi licence to the destination host        │
+│                                                                                                       │
+│  ERROR: "Timed out" — large VM or low bandwidth                                                       │
+│  Fix: check available bandwidth between hosts · reduce concurrent vMotions                            │
+│                                                                                                       │
+│  NSX CHECK: is the segment available on the destination host transport node?                          │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

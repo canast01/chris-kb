@@ -11,41 +11,30 @@ are difficult to diagnose after the fact.
 ```text
 ┌────────────────────────────── Add ESXi Host to Cluster — Procedure Flow ──────────────────────────────┐
 │                                                                                                       │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  START: Rack and cable new host — update BIOS, HBA, and NIC firmware to vendor-minimum before install     ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 1 — Install ESXi via vendor ISO; configure management IP, FQDN hostname, DNS via DCUI (F2)         ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 2 — DNS pre-check: verify A record and PTR record resolve correctly from jump host                  ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 3 — SSH to host: configure NTP, configure vMotion and vSAN VMkernel ports, test vSAN MTU           ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 4 — Add host to vCenter cluster via PowerCLI; assign ESXi licence                                   ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                          ┌───────────────────────────┼───────────────────────────┐                    │
-│                          ▼                           ▼                           ▼                    │
-│          ┌───────────────────────┐   ┌───────────────────────────┐  ┌───────────────────────────┐     │
-│          │  vSAN: claim disks,   │   │  NSX: configure transport │  │  LCM: remediate patch     │     │
-│          │  verify disk group    │   │  node, install VIBs, TEP  │  │  baseline on new host     │     │
-│          └──────────┬────────────┘   └──────────────┬────────────┘  └──────────────┬────────────┘     │
-│                     └──────────────────────────────┬─┘─────────────────────────────┘                  │
-│                                                    ▼                                                  │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 5 — Disable SSH; validate in Aria Operations; confirm HA agent, NTP, vSAN, NSX all green            ││
-│  └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  Adding a host spans: firmware, ESXi install, vCenter, vSAN, NSX, LCM, Aria Ops                       │
+│  Steps must be in order — skipping causes network, storage, or security gaps                          │
+│                                                                                                       │
+│  START: Rack and cable new host                                                                       │
+│  Update BIOS, HBA, and NIC firmware to vendor-minimum before starting ESXi install                    │
+│                                                                                                       │
+│  STEP 1 — Install ESXi                                                                                │
+│  Install via vendor ISO · configure mgmt IP, FQDN hostname, DNS via DCUI (F2)                         │
+│                                                                                                       │
+│  STEP 2 — DNS Pre-check                                                                               │
+│  Verify A record and PTR record resolve correctly from jump host                                      │
+│                                                                                                       │
+│  STEP 3 — VMkernel and NTP Configuration                                                              │
+│  SSH to host · configure NTP · configure vMotion and vSAN VMkernel ports · test vSAN MTU              │
+│                                                                                                       │
+│  STEP 4 — Join vCenter Cluster                                                                        │
+│  Add host to vCenter cluster via PowerCLI · assign ESXi licence                                       │
+│  Parallel: vSAN disk claim · NSX transport node + VIBs + TEP · LCM patch baseline                     │
+│                                                                                                       │
+│  STEP 5 — Post-Join Validation                                                                        │
+│  Disable SSH · validate in Aria Operations                                                            │
+│  Confirm HA agent, NTP, vSAN health, and NSX transport node all green                                 │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

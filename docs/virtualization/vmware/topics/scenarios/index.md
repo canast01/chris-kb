@@ -7,25 +7,22 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 ```text
 ┌───────────────────────────────────────── VMware — Scenarios ──────────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────┐   ┌───────────────────────────────────────────────────┐│
-│   │              ISSUES (Reactive)            │   │               TASKS (Planned)                    ││
-│   │  Something broke — trace it across layers │   │  Operational workflow — execute across products  ││
-│   │                                           │   │                                                   ││
-│   │  · VM Performance Degraded                │   │  · Host Maintenance and Patching                 ││
-│   │  · VM Inaccessible / HA Failover          │   │  · Capacity Planning                             ││
-│   │  · vSAN Disk or Component Failure         │   │  · Provision a New Workload                      ││
-│   │  · vMotion Failing                        │   │  · Certificate Expiry and Rotation               ││
-│   │  · NSX Connectivity Broken                │   │  · DR Test / Planned Failover                    ││
-│   │    ... + 13 more                          │   │    ... + 6 more                                  ││
-│   └───────────────────────────────────────────┘   └───────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  Cross-product VMware scenarios: reactive troubleshooting and planned operational workflows           │
+│  Products: vCenter · ESXi · vSAN · NSX · Aria Suite (Ops / Logs / Networks) · VxRail · SRM            │
 │                                                                                                       │
-│                              ▼                                          ▼                             │
+│  ISSUES (Reactive) — something broke, trace it across layers                                          │
+│  VM Performance Degraded · VM Inaccessible / HA Failover · vSAN Disk / Component Failure              │
+│  vMotion Failing · NSX Connectivity Broken · NSX Edge Failure / BGP Down                              │
+│  Storage APD / Datastore Inaccessible · NTP Drift / SSO Certificate Errors                            │
+│  SRM RPO Violation · HA Admission Control Breach · VM Snapshot Consolidation                          │
+│  vCenter Upgrade Failure · vSAN Stretched Cluster Split-Brain · Aria Ops Alert Storm                  │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │   Products involved across all scenarios                                                         ││
-│   │   vCenter · ESXi · vSAN · NSX · Aria Suite (Ops / Logs / Networks) · VxRail · SRM                ││
-│   │   Each scenario shows which product you start in and where the chain leads                       ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  TASKS (Planned) — operational workflow, execute across products                                      │
+│  Host Maintenance and Patching · Capacity Planning · Provision New Workload                           │
+│  Certificate Expiry and Rotation · DR Test / Planned Failover                                         │
+│  NSX Microsegmentation Rollout · Enable vSAN Encryption · Expand VxRail Cluster                       │
+│  Storage vMotion / Datastore Migration · Add ESXi Host to Cluster                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

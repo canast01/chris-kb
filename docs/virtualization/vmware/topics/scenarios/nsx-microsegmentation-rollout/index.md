@@ -12,39 +12,30 @@ projects.
 ```text
 ┌─────────────────────────── NSX Microsegmentation Rollout — Procedure Flow ────────────────────────────┐
 │                                                                                                       │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  START: Enable IPFIX flow collection — Aria Networks proxy node receives flows from VDS via NSX IPFIX      ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Phase 1 (2-4 weeks) — Observe flows in Aria Networks: document all east-west and north-south connections  ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 1 — Create NSX security groups (dynamic membership via VM tags or folders)                           ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 2 — Define DFW policy in MONITOR mode: rules log violations but do not block traffic                 ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Phase 2 (1-2 weeks) — Review DFW monitor logs: add missing rules, fix group membership errors             ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 3 — Import Aria Networks recommended rules; switch DFW policy mode to ENFORCE                        ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Post-enforcement: monitor DFW block logs and Aria Networks security alerts; validate application health   ││
-│  └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  DFW applies east-west firewall rules at the hypervisor — no network re-architecture needed           │
+│  Rollout follows learn-then-enforce: observe flows → monitor mode → enforce                           │
+│                                                                                                       │
+│  STEP 1 — Enable IPFIX Flow Collection                                                                │
+│  Aria Networks proxy node receives flows from VDS via NSX IPFIX (UDP 2055)                            │
+│  Allow at least 24 hours before analysis — capture regular and infrequent traffic                     │
+│                                                                                                       │
+│  PHASE 1 — Observe Flows (2–4 weeks)                                                                  │
+│  Document all east-west and north-south connections in Aria Networks → Flows tab                      │
+│  Capture infrequent flows: month-end batch jobs, weekly backup agents, maintenance scripts            │
+│                                                                                                       │
+│  STEP 2 — Create Security Groups and DFW Policy in Monitor Mode                                       │
+│  Create NSX security groups (dynamic membership via VM tags or folders)                               │
+│  Define DFW policy in MONITOR mode — rules log violations but do not block traffic                    │
+│                                                                                                       │
+│  PHASE 2 — Review Monitor Logs (1–2 weeks)                                                            │
+│  Review DFW monitor logs: add missing rules, fix group membership errors                              │
+│  Import Aria Networks recommended rules as second validation pass                                     │
+│                                                                                                       │
+│  STEP 3 — Switch to Enforce Mode                                                                      │
+│  Switch DFW policy from MONITOR to ENFORCE                                                            │
+│  Post-enforcement: monitor DFW block logs · Aria Networks security alerts · application health        │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

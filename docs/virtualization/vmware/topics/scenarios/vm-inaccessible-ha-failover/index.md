@@ -9,42 +9,27 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 ```text
 ┌───────────────────────── VM Inaccessible / HA Failover — Investigation Flow ──────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: VMs unreachable / Aria Ops alert: host disconnected or not responding                     ││
-│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                              │                                                        │
-│                           ┌──────────────────┴──────────────────┐                                     │
-│                           ▼                                     ▼                                     │
-│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-│              │  Host disconnected in   │           │  Host isolated (network │                        │
-│              │  vCenter — hardware or  │           │  partition) — VMs still │                        │
-│              │  management network     │           │  running on host        │                        │
-│              └────────────┬────────────┘           └────────────┬────────────┘                        │
-│                           │                                     │                                     │
-│                           ▼                                     ▼                                     │
-│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-│              │ Check HA restart log:   │           │ Host isolation response │                        │
-│              │ vCenter → Cluster →     │           │ policy: power off /     │                        │
-│              │ Monitor → vSphere HA    │           │ leave powered on?       │                        │
-│              └────────────┬────────────┘           └────────────┬────────────┘                        │
-│                           │                                     │                                     │
-│                           └──────────────────┬──────────────────┘                                     │
-│                                              ▼                                                        │
-│              ┌───────────────────────────────────────────────────────────────────────────┐            │
-│              │  Check vSAN: Resyncing Objects · APD vs PDL path state · VMCP policy      │            │
-│              └───────────────────────────────────────────────────────────────────────────┘            │
-│                                              │                                                        │
-│                           ┌──────────────────┴──────────────────┐                                     │
-│                           ▼                                     ▼                                     │
-│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-│              │  APD: wait for path     │           │  PDL: VMCP triggers     │                        │
-│              │  to recover; vSAN will  │           │  immediate HA restart   │                        │
-│              │  resync on reconnect    │           │  on surviving hosts     │                        │
-│              └─────────────────────────┘           └─────────────────────────┘                        │
-│                                              │                                                        │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  CLOSE: Verify VMs running · vSAN health green · HA re-armed · Resync queue draining              ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  Host fails or loses connectivity — VMs become inaccessible until HA restarts them elsewhere          │
+│  Key distinction: host disconnected (hardware failure) vs host isolated (network partition only)      │
+│                                                                                                       │
+│  START: VMs unreachable · Aria Ops alert: host disconnected or not responding                         │
+│                                                                                                       │
+│  STEP 1 — Determine Failure Type                                                                      │
+│  Host disconnected in vCenter → hardware or management network failure                                │
+│  Host isolated (network partition) → VMs may still be running on the isolated host                    │
+│                                                                                                       │
+│  STEP 2 — Check HA Status                                                                             │
+│  Host disconnected: vCenter → Cluster → Monitor → vSphere HA → check restart log                      │
+│  Host isolated: review isolation response policy (power off vs leave powered on)                      │
+│                                                                                                       │
+│  STEP 3 — Check vSAN Path State                                                                       │
+│  Check vSAN: resyncing objects · APD vs PDL path state · VMCP policy                                  │
+│  APD: wait for path to recover; vSAN will resync on reconnect                                         │
+│  PDL: VMCP triggers immediate HA restart on surviving hosts                                           │
+│                                                                                                       │
+│  CLOSE: VMs running · vSAN health green · HA re-armed · resync queue draining                         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

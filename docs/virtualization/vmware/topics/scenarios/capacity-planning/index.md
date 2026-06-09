@@ -9,31 +9,31 @@ procurement decision.
 </div>
 
 ```text
-┌───────────────────────────────── Capacity Planning — Review Workflow ─────────────────────────────────┐
+┌───────────────────────────────── Capacity Planning — Assessment Flow ─────────────────────────────────┐
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: Scheduled capacity review, or approaching threshold alert from Aria Operations                   ││
-│   └─────────────────────────────────────────┬────────────────────────────────────────────────────────────────┘│
-│                                             │                                                         │
-│                    ┌────────────────────────┼────────────────────┐                                    │
-│                    ▼                        ▼                    ▼                                    │
-│   ┌────────────────────────┐  ┌──────────────────────┐  ┌────────────────────────┐                    │
-│   │  vSAN storage headroom │  │  Compute headroom    │  │  Aria Ops time-        │                    │
-│   │  — check used vs total │  │  — CPU and RAM after │  │  remaining projections │                    │
-│   │  — 70% warning         │  │    HA reservation    │  │  — 90-day trend        │                    │
-│   └───────────┬────────────┘  └──────────┬───────────┘  └───────────┬────────────┘                    │
-│               └─────────────────────────┬┘──────────────────────────┘                                 │
-│                                         ▼                                                             │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Check reclaimable waste first — powered-off VMs, oversized VMs, orphaned VMDKs                         ││
-│   └─────────────────────────────────────┬────────────────────────────────────────────────────────────────────┘│
-│                                         │                                                             │
-│                    ┌────────────────────┼──────────────────────┐                                      │
-│                    ▼                                           ▼                                      │
-│   ┌────────────────────────────────────┐        ┌─────────────────────────────────────┐               │
-│   │  Waste reclaimed — headroom        │        │  Waste already optimised — headroom │               │
-│   │  restored, no hardware needed yet  │        │  still insufficient: order node     │               │
-│   └────────────────────────────────────┘        └─────────────────────────────────────┘               │
+│  OVERVIEW                                                                                             │
+│  Decide when to add resources before performance degrades — not after                                 │
+│  Tools: Aria Operations time-remaining projections · reclaimable waste · what-if modelling            │
+│                                                                                                       │
+│  START: Scheduled capacity review or approaching threshold alert from Aria Operations                 │
+│                                                                                                       │
+│  STEP 1 — Check Headroom (three parallel checks)                                                      │
+│  vSAN storage headroom: check used vs total · 70% warning threshold                                   │
+│  Compute headroom: CPU and RAM after HA reservation · 90-day trend                                    │
+│  Aria Ops projections: time-remaining to capacity limit per resource type                             │
+│                                                                                                       │
+│  STEP 2 — Check Reclaimable Waste First                                                               │
+│  Powered-off VMs · oversized VMs · orphaned VMDKs · thick-provisioned disks                           │
+│  Reclaiming waste often extends runway by weeks before hardware is needed                             │
+│                                                                                                       │
+│  STEP 3 — Resolution                                                                                  │
+│  Waste reclaimed: headroom restored, no hardware needed yet                                           │
+│  Waste already optimised and headroom insufficient: raise hardware procurement request                │
+│                                                                                                       │
+│  KEY TERMS                                                                                            │
+│  Time remaining — Aria Ops projection of days until a resource (CPU/RAM/storage) reaches capacity     │
+│  Reclaimable waste — underused or idle resources that can free headroom without new hardware          │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

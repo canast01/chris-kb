@@ -11,29 +11,26 @@ ESXi hosts and running VMs are unaffected during a vCenter upgrade — only mana
 ```text
 ┌──────────────────────────── vCenter Upgrade Failure — Investigation Flow ─────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: VCSA upgrade fails — installer error / appliance won't boot / UI unreachable post-upgrade ││
-│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                              │                                                        │
-│                  ┌───────────────────────────┼───────────────────────────┐                            │
-│                  ▼                           ▼                           ▼                            │
-│     ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────────┐                │
-│     │  Stage 1 failed:       │  │  Stage 2 failed:       │  │  Post-upgrade: UI      │                │
-│     │  Deploy appliance      │  │  Migrate data /        │  │  down or services      │                │
-│     │  did not complete      │  │  configure new VCSA    │  │  failing               │                │
-│     └───────────┬────────────┘  └───────────┬────────────┘  └───────────┬────────────┘                │
-│                 │                           │                           │                             │
-│                 ▼                           ▼                           ▼                             │
-│     ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────────┐                │
-│     │  Source VCSA still     │  │  Rollback snapshot     │  │  Check services /      │                │
-│     │  running — no impact   │  │  available? Apply it   │  │  disk space / certs    │                │
-│     │  simply re-run Stage 1 │  │  on new VCSA or source │  │  on new appliance      │                │
-│     └────────────────────────┘  └────────────────────────┘  └────────────────────────┘                │
+│  OVERVIEW                                                                                             │
+│  ESXi hosts and running VMs are unaffected during a vCenter upgrade — only management is disrupted    │
+│  VCSA upgrade is two-stage; failure at each stage has a different recovery path                       │
 │                                                                                                       │
-│                                              ▼                                                        │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  CLOSE: vCenter accessible · All hosts connected · Services healthy · Upgrade log clean            ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  START: VCSA upgrade fails — installer error · appliance won't boot · UI unreachable post-upgrade     │
+│                                                                                                       │
+│  STAGE 1 FAILURE — Deploy appliance did not complete                                                  │
+│  Source VCSA still running — no management impact                                                     │
+│  Resolution: fix the install error and simply re-run Stage 1                                          │
+│                                                                                                       │
+│  STAGE 2 FAILURE — Migrate data / configure new VCSA                                                  │
+│  Rollback snapshot available? Apply it on the new VCSA appliance                                      │
+│  No snapshot: revert to source VCSA if it is still intact                                             │
+│                                                                                                       │
+│  POST-UPGRADE FAILURE — UI down or services failing                                                   │
+│  Check services via SSH: service-control --status --all                                               │
+│  Check disk space on new VCSA · check certificate dates · check SSO token validity                    │
+│                                                                                                       │
+│  CLOSE: vCenter accessible · all hosts connected · services healthy · upgrade log clean               │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

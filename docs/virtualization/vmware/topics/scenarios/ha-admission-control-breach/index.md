@@ -9,31 +9,28 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 </div>
 
 ```text
-┌────────────────────────── HA Admission Control Breach — Investigation Flow ───────────────────────────┐
+┌───────────────────────────── HA Admission Control Breach — Response Flow ─────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: Multiple VMs powered off · HA restart status "Insufficient resources" · Cluster red       ││
-│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                              │                                                        │
-│                  ┌───────────────────────────┼───────────────────────────┐                            │
-│                  ▼                           ▼                           ▼                            │
-│     ┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────────┐                │
-│     │  How many hosts down?  │  │  Remaining capacity    │  │  Which VMs are         │                │
-│     │  Are they recoverable? │  │  vs VM demand          │  │  priority 1 / critical │                │
-│     └───────────┬────────────┘  └───────────┬────────────┘  └───────────┬────────────┘                │
-│                 │                           │                           │                             │
-│                 └───────────────────────────┼───────────────────────────┘                             │
-│                                             ▼                                                         │
-│              ┌────────────────────────────────────────────────────────────┐                           │
-│              │  Option A: Restore a failed host → capacity recovers       │                           │
-│              │  Option B: Temporarily lower HA slot reservation policy    │                           │
-│              │  Option C: Add an emergency host to the cluster            │                           │
-│              └───────────────────────────────┬────────────────────────────┘                           │
-│                                              │                                                        │
-│                                              ▼                                                        │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  CLOSE: All priority VMs running · Cluster capacity ≥ N+1 · Admission control policy corrected    ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  Multiple hosts fail simultaneously, exhausting HA reserved failover capacity                         │
+│  VMs cannot restart because no surviving host has sufficient CPU and memory headroom                  │
+│                                                                                                       │
+│  START: Multiple VMs powered off · HA restart status "Insufficient resources" · Cluster red           │
+│                                                                                                       │
+│  STEP 1 — Assess the Situation                                                                        │
+│  How many hosts are down and are they recoverable?                                                    │
+│  Remaining capacity vs total VM demand (CPU + RAM)                                                    │
+│  Which VMs are priority 1 / critical vs non-critical?                                                 │
+│                                                                                                       │
+│  STEP 2 — Resolution Options                                                                          │
+│  Option A: Restore a failed host → capacity recovers, HA restarts pending VMs                         │
+│  Option B: Temporarily lower HA slot reservation policy to allow immediate restarts                   │
+│  Option C: Add an emergency host to the cluster to increase available capacity                        │
+│                                                                                                       │
+│  STEP 3 — Close                                                                                       │
+│  All priority VMs running · cluster capacity ≥ N+1 · admission control policy corrected               │
+│  Review HA policy sizing to prevent recurrence (minimum N+1 reserve for expected failures)            │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

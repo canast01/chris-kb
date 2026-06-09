@@ -10,45 +10,30 @@ on HCI deployments.
 ```text
 ┌───────────────────────── vSAN Disk / Component Failure — Investigation Flow ──────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: vCenter alarm — vSAN health degraded / component absent / capacity critical               ││
-│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                              │                                                        │
-│                           ┌──────────────────┴──────────────────┐                                     │
-│                           ▼                                     ▼                                     │
-│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-│              │ Skyline Health red      │           │ Virtual Objects view:   │                        │
-│              │ check — which category? │           │ find VMs with degraded  │                        │
-│              │ Disk / capacity /       │           │ or absent components    │                        │
-│              │ network partition?      │           │                         │                        │
-│              └────────────┬────────────┘           └────────────┬────────────┘                        │
-│                           │                                     │                                     │
-│                           ▼                                     ▼                                     │
-│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-│              │ Identify host + disk    │           │ Assess FTT for affected │                        │
-│              │ group with absent       │           │ VMs — are they still    │                        │
-│              │ component               │           │ compliant?              │                        │
-│              └────────────┬────────────┘           └────────────┬────────────┘                        │
-│                           │                                     │                                     │
-│                           └──────────────────┬──────────────────┘                                     │
-│                                              ▼                                                        │
-│              ┌───────────────────────────────────────────────────────────────────────────┐            │
-│              │  Check physical disk health via ESXi · iDRAC (VxRail) · OMIVV alerts      │            │
-│              └───────────────────────────────┬───────────────────────────────────────────┘            │
-│                                              │                                                        │
-│                           ┌──────────────────┴──────────────────┐                                     │
-│                           ▼                                     ▼                                     │
-│              ┌─────────────────────────┐           ┌─────────────────────────┐                        │
-│              │  Disk truly failed:     │           │  Disk present but       │                        │
-│              │  replace hardware;      │           │  disconnected: reseat / │                        │
-│              │  vSAN auto-reclaims +   │           │  check HBA; no replace  │                        │
-│              │  rebuilds               │           │  needed                 │                        │
-│              └────────────┬────────────┘           └────────────┬────────────┘                        │
-│                           └──────────────────┬──────────────────┘                                     │
-│                                              ▼                                                        │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  CLOSE: Monitor resync ETA · Confirm all VMs compliant · Skyline Health green                     ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  A vSAN disk failure leaves VMs with reduced fault tolerance (FTT drops toward 0)                     │
+│  Risk window: VMs with FTT=0 lose data if another disk fails before rebuild completes                 │
+│                                                                                                       │
+│  START: vCenter alarm — vSAN health degraded / component absent / capacity critical                   │
+│                                                                                                       │
+│  STEP 1 — Locate the Problem                                                                          │
+│  Skyline Health: check which category is red — disk / capacity / network partition                    │
+│  Virtual Objects view: find VMs with degraded or absent components                                    │
+│                                                                                                       │
+│  STEP 2 — Assess Risk                                                                                 │
+│  Identify host + disk group with the absent component                                                 │
+│  Assess FTT for affected VMs — are they still policy compliant (FTT ≥ 1)?                             │
+│                                                                                                       │
+│  STEP 3 — Check Physical Disk Health                                                                  │
+│  ESXi: esxcli storage core device list · check disk health status                                     │
+│  VxRail: iDRAC event log · OMIVV hardware alerts visible in vCenter                                   │
+│                                                                                                       │
+│  STEP 4 — Resolution Branch                                                                           │
+│  Disk truly failed: replace hardware; vSAN auto-reclaims the disk slot and rebuilds components        │
+│  Disk present but disconnected: reseat / check HBA; no replacement needed                             │
+│                                                                                                       │
+│  CLOSE: Monitor resync ETA · confirm all VMs compliant · Skyline Health green                         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

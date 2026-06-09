@@ -10,31 +10,26 @@ the physical network — and restoring connectivity with minimal downtime.
 ```text
 ┌────────────────────────── NSX Edge Failure / BGP Down — Investigation Flow ───────────────────────────┐
 │                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: External connectivity lost for VMs — north-south traffic not reaching upstream network      ││
-│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                        ┌───────────────────────┼───────────────────────┐                              │
-│                        ▼                       ▼                       ▼                              │
-│   ┌─────────────────────────────┐  ┌─────────────────────────┐  ┌────────────────────────────┐        │
-│   │  All VMs lose external      │  │  Only specific VMs      │  │  Specific destinations     │        │
-│   │  connectivity               │  │  affected               │  │  unreachable only          │        │
-│   │  → T0 gateway / edge issue  │  │  → Check DFW or T1      │  │  → BGP prefix / route leak │        │
-│   └──────────────┬──────────────┘  └────────────┬────────────┘  └────────────┬───────────────┘        │
-│                  │                               │                             │                      │
-│                  └───────────────────────────────┼─────────────────────────────┘                      │
-│                                                  ▼                                                    │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Check edge cluster health in NSX Manager → Check BGP neighbor state on T0 → SSH to edge node      ││
-│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                   ┌────────────────────────────┼────────────────────────────┐                         │
-│                   ▼                            ▼                            ▼                         │
-│   ┌───────────────────────────┐   ┌───────────────────────────┐  ┌───────────────────────────┐        │
-│   │  Edge node degraded       │   │  BGP idle / not estab.    │  │  Edge healthy, BGP estab. │        │
-│   │  → check edge VM in       │   │  → check TEP tunnels and  │  │  → problem is upstream    │        │
-│   │    vCenter, power state   │   │    upstream switch config │  │    switch or routing      │        │
-│   └───────────────────────────┘   └───────────────────────────┘  └───────────────────────────┘        │
+│  OVERVIEW                                                                                             │
+│  Edge nodes carry all north-south traffic — when edge or BGP fails, VMs lose external connectivity    │
+│                                                                                                       │
+│  START: External connectivity lost for VMs — north-south traffic not reaching upstream network        │
+│                                                                                                       │
+│  STEP 1 — Determine Scope                                                                             │
+│  All VMs lose external connectivity → T0 gateway / edge cluster issue                                 │
+│  Only specific VMs affected → check DFW or T1 gateway for those VMs                                   │
+│  Specific destinations unreachable only → BGP prefix / route leak issue                               │
+│                                                                                                       │
+│  STEP 2 — Investigate Edge and BGP Health                                                             │
+│  Check edge cluster health in NSX Manager                                                             │
+│  Check BGP neighbor state on T0 gateway                                                               │
+│  SSH to edge node: show interface · show bgp neighbor                                                 │
+│                                                                                                       │
+│  STEP 3 — Resolution Branch                                                                           │
+│  Edge node degraded → check edge VM in vCenter, verify power state and host placement                 │
+│  BGP idle / not established → check TEP tunnels and upstream switch config                            │
+│  Edge healthy + BGP established → problem is upstream switch or ToR routing config                    │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

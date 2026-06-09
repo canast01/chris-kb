@@ -9,38 +9,29 @@ LCM upgrades and voids the support configuration.
 </div>
 
 ```text
-┌────────────────────────── Expand VxRail Cluster (Add Node) — Procedure Flow ──────────────────────────┐
+┌─────────────────────────────── Expand VxRail Cluster — Procedure Flow ────────────────────────────────┐
 │                                                                                                       │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  START: Rack and cable new node — assign iDRAC IP via DCUI, confirm iDRAC reachable on mgmt network       ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 1 — Network pre-checks: verify mgmt, vMotion, vSAN VLANs reachable; DNS A+PTR records pre-created   ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 2 — VxRail Manager → Cluster Expansion → Discover Nodes: new node appears on management network     ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 3 — Run expansion wizard: supply mgmt IP, vMotion IP, vSAN IP, FQDN hostname                        ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                              ┌───────────────────────┼───────────────────────┐                        │
-│                              ▼                       ▼                       ▼                        │
-│          ┌─────────────────────────┐   ┌─────────────────────────┐  ┌─────────────────────────┐       │
-│          │  Firmware update        │   │  Join vCenter cluster,  │  │  NSX transport node     │       │
-│          │  (if bundle mismatch)   │   │  VMkernel config, disks │  │  configuration          │       │
-│          └────────────┬────────────┘   └────────────┬────────────┘  └────────────┬────────────┘       │
-│                       └────────────────────────────┬─┘──────────────────────────┘                     │
-│                                                    ▼                                                  │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 4 — vSAN rebalance: monitor resyncing objects until 0 bytes remain; validate in OMIVV               ││
-│  └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  Node expansion done exclusively through VxRail Manager — never manually through vCenter              │
+│  VxRail Manager validates firmware, enforces bundle version, orchestrates full join sequence          │
+│                                                                                                       │
+│  START: Rack and cable new node                                                                       │
+│  Assign iDRAC IP via DCUI · confirm iDRAC reachable on management network                             │
+│                                                                                                       │
+│  STEP 1 — Network Pre-checks                                                                          │
+│  Verify mgmt, vMotion, vSAN VLANs reachable · DNS A+PTR records pre-created for new node              │
+│                                                                                                       │
+│  STEP 2 — Discover Node in VxRail Manager                                                             │
+│  VxRail Manager → Cluster Expansion → Discover Nodes: new node appears on management network          │
+│                                                                                                       │
+│  STEP 3 — Run Expansion Wizard                                                                        │
+│  Supply mgmt IP, vMotion IP, vSAN IP, FQDN hostname                                                   │
+│  Parallel: firmware update if bundle mismatch · vCenter join + VMkernel config · NSX transport node   │
+│                                                                                                       │
+│  STEP 4 — vSAN Rebalance                                                                              │
+│  Monitor resyncing objects until 0 bytes remain                                                       │
+│  Validate in OMIVV · confirm new node visible in Aria Operations                                      │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

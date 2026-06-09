@@ -10,31 +10,30 @@ and recovering SSO and certificate services after time is fixed.
 ```text
 ┌─────────────────────────── NTP Drift — Investigation and Remediation Flow ────────────────────────────┐
 │                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ │
-│   │  SYMPTOM: SSO login fails / "token expired" / SSL error / host "Not Responding" / vSAN skew    │  │
-│   └──────────────────────────────────────────┬──────────────────────────────────────────────────────┘ │
-│                                              │                                                        │
-│              ┌───────────────────────────────┼───────────────────────────────┐                        │
-│              ▼                               ▼                               ▼                        │
-│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-│   │ Check VCSA time     │        │ Check ESXi hosts    │        │ Check NSX Manager   │               │
-│   │ timedatectl         │        │ ntpq -p (offset)    │        │ get system clock    │               │
-│   │ chronyc tracking    │        │ date vs vCenter     │        │ get ntp-server      │               │
-│   └────────┬────────────┘        └────────┬────────────┘        └─────────┬───────────┘               │
-│            │                              │                               │                           │
-│            ▼                              ▼                               ▼                           │
-│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-│   │ Fix VCSA NTP →      │        │ Fix ESXi NTP →      │        │ Fix NSX NTP →       │               │
-│   │ chronyc makestep    │        │ ntpdate force sync  │        │ set ntp-server +    │               │
-│   │                     │        │                     │        │ restart ntp svc     │               │
-│   └────────┬────────────┘        └────────┬────────────┘        └─────────────────────┘               │
-│            │                              │                                                           │
-│            └──────────────────────────────▼──────────────────────────────────────────────────────────┐│
-│                                           │  All components synced?                                   ││
-│                                           ▼                                                           ││
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐ ││
-│   │  Restart vmware-stsd (SSO) if token errors persist; re-run vSAN health check for time skew     │ ││
-│   └─────────────────────────────────────────────────────────────────────────────────────────────────┘ ││
+│  OVERVIEW                                                                                             │
+│  Time drift causes SSO login failures, SSL handshake errors, host disconnects, and vSAN warnings      │
+│  Maximum allowed skew: 60 seconds between any two VMware components                                   │
+│                                                                                                       │
+│  SYMPTOM: SSO login fails / "token expired" / SSL error / host "Not Responding" / vSAN skew           │
+│                                                                                                       │
+│  STEP 1 — Check Time on All Components (run in parallel)                                              │
+│  VCSA: SSH → timedatectl status + chronyc tracking (inspect System time offset)                       │
+│  ESXi hosts: ntpq -p (offset column beyond ±60,000 ms?) · date vs vCenter time                        │
+│  NSX Manager: SSH → get system clock + get ntp-server                                                 │
+│                                                                                                       │
+│  STEP 2 — Fix NTP on Each Drifted Component                                                           │
+│  VCSA: chronyc makestep — force immediate step correction (do not wait for gradual slew)              │
+│  ESXi: esxcli system ntp set --server → ntpdate -u (force sync on each host)                          │
+│  NSX Manager: set ntp-server + restart service ntpd                                                   │
+│                                                                                                       │
+│  STEP 3 — Recover Services                                                                            │
+│  Restart vmware-stsd (SSO) if token errors persist after NTP is fixed                                 │
+│  Re-run vSAN Skyline Health "time divergence" check — confirm all cluster hosts pass                  │
+│                                                                                                       │
+│  KEY TERMS                                                                                            │
+│  chronyc makestep — forces immediate clock correction on VCSA instead of gradual slew                 │
+│  vmware-stsd — SSO Security Token Service; restart clears stale tokens after time is fixed            │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

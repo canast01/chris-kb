@@ -10,37 +10,29 @@ them to fail.
 </div>
 
 ```text
-┌──────────────────────────── DR Test vs Planned Failover — Procedure Paths ────────────────────────────┐
+┌───────────────────────────── DR Test / Planned Failover — Procedure Flow ─────────────────────────────┐
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: SRM Recovery Plan selected — choose execution type                                               ││
-│   └────────────────────────────────────┬─────────────────────────────────────────────────────────────────────┘│
-│                                        │                                                              │
-│                 ┌──────────────────────┴──────────────────────┐                                       │
-│                 ▼                                             ▼                                       │
-│   ┌──────────────────────────────┐             ┌──────────────────────────────┐                       │
-│   │  DR TEST (non-disruptive)    │             │  PLANNED FAILOVER            │                       │
-│   │  Production continues        │             │  Graceful shutdown at primary│                       │
-│   └──────────────┬───────────────┘             └──────────────┬───────────────┘                       │
-│                  │                                             │                                      │
-│                  ▼                                             ▼                                      │
-│   ┌──────────────────────────────┐             ┌──────────────────────────────┐                       │
-│   │  SRM powers on VM replicas   │             │  Pre-flight: check DR site   │                       │
-│   │  in isolated bubble network  │             │  capacity and replication RPO│                       │
-│   └──────────────┬───────────────┘             └──────────────┬───────────────┘                       │
-│                  │                                             │                                      │
-│                  ▼                                             ▼                                      │
-│   ┌──────────────────────────────┐             ┌──────────────────────────────┐                       │
-│   │  Application smoke test on   │             │  SRM shuts down primary VMs  │                       │
-│   │  isolated VMs at DR site     │             │  syncs final blocks → powers  │                      │
-│   └──────────────┬───────────────┘             │  on at DR with production IPs│                       │
-│                  │                             └──────────────┬───────────────┘                       │
-│                  ▼                                             │                                      │
-│   ┌──────────────────────────────┐                            ▼                                       │
-│   │  Cleanup: SRM powers off     │             ┌──────────────────────────────┐                       │
-│   │  test VMs, removes test net  │             │  Validate: VMs up, DNS, NSX  │                       │
-│   │  Production unaffected       │             │  segments, Aria Ops alerts   │                       │
-│   └──────────────────────────────┘             └──────────────────────────────┘                       │
+│  OVERVIEW                                                                                             │
+│  DR Test: non-disruptive — VMs boot in isolated bubble network, production continues                  │
+│  Planned Failover: real migration — graceful shutdown at primary, services move to DR site            │
+│                                                                                                       │
+│  START: SRM Recovery Plan selected — choose execution type                                            │
+│                                                                                                       │
+│  DR TEST PATH                                                                                         │
+│  SRM powers on VM replicas in isolated bubble network at DR site                                      │
+│  Application smoke test on isolated VMs — production unaffected throughout                            │
+│  Cleanup: SRM powers off test VMs, removes test network · production unaffected                       │
+│                                                                                                       │
+│  PLANNED FAILOVER PATH                                                                                │
+│  Pre-flight: check DR site capacity and verify replication RPO is within target                       │
+│  SRM shuts down primary VMs · syncs final changed blocks → powers on at DR with prod IPs              │
+│  Validate: VMs up · DNS resolves · NSX segments mapped · Aria Ops alerts clear                        │
+│                                                                                                       │
+│  COMMON ERRORS                                                                                        │
+│  RPO not met before failover — check vSphere Replication health first                                 │
+│  Forgot to run Cleanup after DR test — test replicas block real failover capacity                     │
+│  NSX segment mapping not configured — VMs power on with no network at DR site                         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

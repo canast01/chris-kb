@@ -11,31 +11,29 @@ replication to within RPO before verifying with an SRM test recovery.
 ```text
 ┌────────────────────── SRM Replication Lag / RPO Violation — Investigation Flow ───────────────────────┐
 │                                                                                                       │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: SRM alert — RPO Exceeded on one or more VMs, or Aria Operations fires RPO warning alert     ││
-│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                   ┌────────────────────────────┼────────────────────────────┐                         │
-│                   ▼                            ▼                            ▼                         │
-│   ┌───────────────────────────┐   ┌───────────────────────────┐  ┌───────────────────────────┐        │
-│   │  One or a few VMs lagging │   │  Many VMs lagging across  │  │  Replication stopped      │        │
-│   │  → high change rate on    │   │  multiple hosts           │  │  entirely on some VMs     │        │
-│   │    specific VMs           │   │  → inter-site link issue  │  │  → vSR appliance health   │        │
-│   └────────────┬──────────────┘   └────────────┬──────────────┘  └────────────┬──────────────┘        │
-│                │                               │                               │                      │
-│                └───────────────────────────────┼───────────────────────────────┘                      │
-│                                                ▼                                                      │
-│   ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Check vSR appliance health → Check inter-site bandwidth → Check VM change rate                     ││
-│   └────────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                                │                                                      │
-│                   ┌────────────────────────────┼────────────────────────────┐                         │
-│                   ▼                            ▼                            ▼                         │
-│   ┌───────────────────────────┐   ┌───────────────────────────┐  ┌───────────────────────────┐        │
-│   │  Appliance fault          │   │  Bandwidth exhausted      │  │  VM change rate too high  │        │
-│   │  → redeploy or restart    │   │  → throttle, compress,    │  │  → enable compression,   │         │
-│   │    vSR appliance          │   │    or expand link         │  │    or increase RPO target │        │
-│   └───────────────────────────┘   └───────────────────────────┘  └───────────────────────────┘        │
+│  OVERVIEW                                                                                             │
+│  RPO violation: the DR copy is more than X minutes behind production — data loss risk                 │
+│  If production fails during a violation, more data will be lost than the SLA allows                   │
+│                                                                                                       │
+│  START: SRM alert — RPO Exceeded on one or more VMs, or Aria Operations fires RPO warning             │
+│                                                                                                       │
+│  STEP 1 — Identify Scope                                                                              │
+│  One or a few VMs lagging → high change rate on specific VMs                                          │
+│  Many VMs lagging across multiple hosts → inter-site link bandwidth issue                             │
+│  Replication stopped entirely on some VMs → vSR appliance health issue                                │
+│                                                                                                       │
+│  STEP 2 — Diagnose Root Cause                                                                         │
+│  Check vSR appliance health on both production and DR sites                                           │
+│  Check inter-site bandwidth: NIC stats on ESXi vSphere Replication VMkernel                           │
+│  Check VM change rate: SRM → Replication → Details → Current vs Average replication rate              │
+│                                                                                                       │
+│  STEP 3 — Resolution Branch                                                                           │
+│  Appliance fault → redeploy or restart the vSR appliance                                              │
+│  Bandwidth exhausted → throttle low-priority VMs, enable compression, or expand inter-site link       │
+│  VM change rate too high → enable compression per VM or increase RPO target (requires SLA review)     │
+│                                                                                                       │
+│  CLOSE: Force Sync Now → monitor until RPO status returns to Met · validate with SRM test recovery    │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

@@ -9,29 +9,27 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 ```text
 ┌──────────────────────────── VM Performance Degraded — Investigation Flow ─────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  START: Alert in Aria Operations — VM latency / CPU ready / dropped packets anomaly detected      ││
-│   └──────────────────────────────────────────┬────────────────────────────────────────────────────────┘│
-│                                              │                                                        │
-│              ┌───────────────────────────────┼───────────────────────────────┐                        │
-│              ▼                               ▼                               ▼                        │
-│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-│   │   CPU Ready > 5%?   │        │  Memory Balloon/     │        │ Disk DAVG > 20 ms?  │              │
-│   │  Check ESXi PCPU    │        │  Swap Active?        │        │ Check vSAN layer    │              │
-│   │  %RDY via esxtop    │        │  Check MEM via       │        │ IOPS / throughput   │              │
-│   │                     │        │  esxtop              │        │ / latency per VM    │              │
-│   └────────┬────────────┘        └────────┬─────────────┘        └─────────┬───────────┘              │
-│            │                              │                                 │                         │
-│            ▼                              ▼                                 ▼                         │
-│   ┌─────────────────────┐        ┌─────────────────────┐        ┌─────────────────────┐               │
-│   │ DRS migration or    │        │ Increase RAM         │        │ vSAN component      │              │
-│   │ resource pool       │        │ reservation;         │        │ health check;       │              │
-│   │ adjustment          │        │ remove balloon       │        │ disk rebuild?       │              │
-│   └─────────────────────┘        └─────────────────────┘        └─────────────────────┘               │
+│  OVERVIEW                                                                                             │
+│  Layered investigation: Aria Ops triage → ESXi host metrics → vSAN storage → NSX DFW overhead         │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│   │  Network issue? → NSX DFW: Aria Networks path trace → DFW rule hit count → reduce rule count      ││
-│   └───────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  START: Alert in Aria Operations — VM latency / CPU ready / dropped packets anomaly detected          │
+│                                                                                                       │
+│  STEP 1 — CPU Check                                                                                   │
+│  CPU Ready > 5%? Check ESXi PCPU %RDY via esxtop                                                      │
+│  Fix: DRS migration to less-loaded host or resource pool adjustment                                   │
+│                                                                                                       │
+│  STEP 2 — Memory Check                                                                                │
+│  Memory Balloon or Swap Active? Check MEM via esxtop (MCTL%, SWPD%)                                   │
+│  Fix: increase RAM reservation; remove balloon if host is not overcommitted                           │
+│                                                                                                       │
+│  STEP 3 — Storage Check                                                                               │
+│  Disk DAVG > 20 ms? Check vSAN IOPS / throughput / latency per VM                                     │
+│  Fix: vSAN component health check — check if disk rebuild or resync is pending                        │
+│                                                                                                       │
+│  STEP 4 — Network Check                                                                               │
+│  Network issue? Use Aria Networks path trace to identify affected path                                │
+│  Check NSX DFW rule hit count on VM vNIC — high rule count adds latency                               │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

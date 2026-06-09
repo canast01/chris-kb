@@ -11,36 +11,28 @@ large VMDKs and always verify destination capacity and storage policy before sta
 ```text
 ┌─────────────────────── Storage vMotion / Datastore Migration — Procedure Flow ────────────────────────┐
 │                                                                                                       │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  START: Identify VMs to migrate — capacity rebalance, datastore decommission, or SAN-to-vSAN migration    ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 1 — Pre-migration checks: destination free space ≥ 1.5× source VMDK, storage policy chosen         ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 2 — Initiate svMotion: vCenter UI (right-click → Migrate) or PowerCLI Move-VM                       ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                                                      ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 3 — Monitor: vCenter Recent Tasks + esxtop disk view (DAVG < 30 ms during migration)                ││
-│  └──────────────────────────────────────────────────┬───────────────────────────────────────────────────────┘│
-│                                                      │                                                │
-│                          ┌───────────────────────────┼───────────────────────────┐                    │
-│                          ▼                           ▼                           ▼                    │
-│          ┌─────────────────────────┐   ┌─────────────────────────┐  ┌─────────────────────────┐       │
-│          │  Migration complete:    │   │  Performance impact:    │  │  Policy update needed:  │       │
-│          │  verify new datastore  │   │  throttle or reschedule │  │  apply target policy    │        │
-│          └────────────┬────────────┘   └────────────┬────────────┘  └────────────┬────────────┘       │
-│                       └────────────────────────────┬─┘──────────────────────────┘                     │
-│                                                    ▼                                                  │
-│  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
-│  │  Step 4 — Post-migration: verify VM on new datastore, policy compliant, old datastore empty               ││
-│  └────────────────────────────────────────────────────────────────────────────────────────────────────────────┘│
+│  OVERVIEW                                                                                             │
+│  svMotion migrates VMDKs while the VM stays powered on — for rebalancing, decommission, SAN→vSAN      │
+│  Plan during off-peak hours for large VMDKs; verify destination capacity before starting              │
+│                                                                                                       │
+│  START: Identify VMs to migrate — capacity rebalance, datastore decommission, or SAN-to-vSAN          │
+│                                                                                                       │
+│  STEP 1 — Pre-Migration Checks                                                                        │
+│  Destination free space ≥ 1.5× source VMDK size · storage policy for target datastore chosen          │
+│                                                                                                       │
+│  STEP 2 — Initiate Storage vMotion                                                                    │
+│  vCenter UI: right-click VM → Migrate → Change storage only                                           │
+│  PowerCLI: Move-VM -Datastore <target-datastore>                                                      │
+│                                                                                                       │
+│  STEP 3 — Monitor                                                                                     │
+│  vCenter Recent Tasks: watch migration % completion                                                   │
+│  esxtop disk view: DAVG should stay < 30 ms during migration                                          │
+│  If performance impact: throttle or reschedule migration to off-peak window                           │
+│  If policy update needed: apply target storage policy to migrated VMDKs                               │
+│                                                                                                       │
+│  STEP 4 — Post-Migration                                                                              │
+│  Verify VM on new datastore · storage policy compliant · old datastore empty and ready to unmount     │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
