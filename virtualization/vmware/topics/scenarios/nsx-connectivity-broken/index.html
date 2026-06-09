@@ -6054,7 +6054,7 @@ inter-segment routing (T1 gateway), or north-south external traffic (T0/edge BGP
 exact commands and UI paths to isolate and resolve each layer.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── NSX Connectivity Broken — Investigation Flow ─────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── NSX Connectivity Broken — Investigation Flow ─────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────────┐│
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  START: Connectivity complaint — determine scope before touching any config                        ││
@@ -6168,7 +6168,7 @@ exact commands and UI paths to isolate and resolve each layer.
 <p>DFW evaluates rules top-to-bottom within each category — a correct allow rule lower in the list can be shadowed by a deny rule above it.</p>
 <p>Navigate to <strong>NSX Manager → Security → Distributed Firewall</strong> and search by the rule ID from path trace.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>DFW Rule Evaluation Order (top to bottom within each category):
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  ┌─────────────────┬─────────────────────────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  ┌────────────────────────────────────────────────── ┬ ──────────────────────────────────────────────────┐
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  │ Category        │ Typical Use                                            │
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  ├─────────────────┼────────────────────────────────────────────────────────┤
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  │ Emergency       │ Breakglass allow/deny; applied first globally          │
@@ -6176,7 +6176,7 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  │ Environment     │ Environment-level segment isolation rules              │
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  │ Application     │ Microsegmentation — app-tier allow rules               │
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  │ Default         │ Implicit drop if no rule above matches                 │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  └─────────────────┴────────────────────────────────────────────────────────┘
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From ESXi host where the affected VM runs — dump all DFW rules applied to the VM&#39;s vNIC</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Get the VM world ID first</span>

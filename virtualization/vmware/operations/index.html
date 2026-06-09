@@ -3303,6 +3303,33 @@
 Operational runbooks and procedures for VMware platform management.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── VMware Platform — Operations Overview ────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   Day-2 operations: runbooks for repeatable tasks; health checks for platform state review            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   All runbooks use PowerCLI or vCenter UI steps; tested against vSphere 8.x / VCF 5.x                 │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Run health check weekly minimum; always run before and after significant change windows             │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   Common operational tasks                                                                            │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   VM snapshot: create → verify post-change → remove within 72h; consolidate before next change        │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Host maintenance: enter DRS drain → wait for evacuation → apply patch → remediate → exit maint      │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Cluster health: check HA status → vSAN health service → alarm panel → resource utilisation          │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Capacity review: cluster utilisation trend → growth forecast → raise procurement if &gt;80% sustained  │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   Certificate expiry: VMCA leaf certs → machine SSL → solution user certs → 90-day renewal trigger    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Escalation path when a fault cannot be resolved from operational checks                             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Step 1: Review the vCenter event timeline for the affected object (VM, host, datastore)             │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   Step 2: Run the PowerCLI health check script and record output                                      │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   Step 3: Collect the vm-support bundle from the affected ESXi host                                   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Step 4: Raise a VMware support case via the Broadcom GSS portal with the bundle attached            │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Runbook      = documented step-by-step procedure for a specific repeatable operational task         │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   DRS drain    = vSphere migrates all running VMs off a host before it enters maintenance mode        │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   vm-support   = ESXi support bundle; collect with: vm-support -w /tmp/support; retrieve via SCP      │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   GSS          = Global Support Services; Broadcom support portal for raising VMware cases            │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Change window = scheduled maintenance window; major platform changes require a CAB ticket           │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-1">
 
 <a class="kb-card" href="runbooks/">
