@@ -2,6 +2,41 @@
 
 This page documents key architectural design decisions made for the VMware platform environment. Each entry captures what was chosen, why it was chosen over the alternatives, and what trade-offs were accepted. This serves as institutional memory — a record of intent that should inform future changes and prevent decisions from being revisited without cause.
 
+```text
+┌──────────────────────────── VMware Platform — Design Decision Framework ────────────────────────────────┐
+│                                                                                                       │
+│   Each decision records: WHAT was chosen, WHY over alternatives, WHAT trade-offs were accepted        │
+│   Decisions become blockers for future change — a review trigger must be met before reversing         │
+│   Sections: Storage → Compute → Networking → Security → Lifecycle & Management                        │
+│                                                                                                       │
+│   Storage decisions                                                                                   │
+│   vSAN for HCI VM storage; PowerMax/Pure for mission-critical latency-sensitive workloads             │
+│   SPBM RAID-5 FTT=1 as default storage policy; vSAN Enterprise encryption at datastore level          │
+│                                                                                                       │
+│   Compute & availability decisions                                                                    │
+│   vSphere HA and DRS enabled on all clusters; FT for tier-1 VMs (2 vCPU max, no vSAN snapshots)       │
+│   Resource pool per workload tier; vCLS always-on; 4:1 vCPU overcommit default (8:1 ceiling)          │
+│                                                                                                       │
+│   Networking decisions                                                                                │
+│   VDS across all production hosts (required for NIOC, LACP, Host Profiles)                            │
+│   NSX overlay for SDDC; PVLAN for DMZ and PCI segmentation; NIOC traffic shares configured            │
+│                                                                                                       │
+│   Security decisions                                                                                  │
+│   ESXi lockdown mode: Normal (DCUI access retained); VMCA for internal certificate trust              │
+│   AD identity source for SSO; vSphere Native Key Provider for encryption; 90-day log retention        │
+│                                                                                                       │
+│   Lifecycle & management decisions                                                                    │
+│   vLCM image-based management per cluster (one-way migration from baseline); quarterly patching       │
+│   VCF SDDC Manager for new deployments; Aria Operations for monitoring; Large VCSA sizing default     │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   SPBM           = Storage Policy-Based Management; FTT=1 RAID-5 = 1 host failure tolerated           │
+│   PVLAN          = Private VLAN; L2 isolation without a router; Isolated/Community/Promiscuous        │
+│   vLCM           = vSphere Lifecycle Manager; image-based = no VUM baselines; cluster images          │
+│   Review trigger = the condition that must be met before this decision can be reversed                │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Storage Decisions
