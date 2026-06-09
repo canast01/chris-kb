@@ -48,7 +48,7 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 │                                                                                                       │
 │  mystic              = VxRail Manager local admin account; must be vaulted and LDAP configured        │
 │  root/Calvin         = Factory iDRAC credentials; unique per-node replacement mandatory               │
-│  Normal Lockdown     = ESXi state forcing all management through vCenter; DCUI accessible to exceptions│
+│  Normal Lockdown     = ESXi state forcing management through vCenter; DCUI accessible to exceptions   │
 │  TSM-SSH             = ESXi Tech Support Mode SSH service; must be stopped and disabled               │
 │  TSM                 = ESXi Tech Support Mode shell; must be stopped and disabled                     │
 │  Host Profile        = vCenter configuration template enforcing security, NTP, syslog baselines       │

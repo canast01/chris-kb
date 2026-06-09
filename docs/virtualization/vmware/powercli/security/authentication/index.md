@@ -30,7 +30,7 @@ PowerCLI authentication methods: credential objects, encrypted credential files,
 │                                                                                                       │
 │   Key terms:                                                                                          │
 │   PSCredential          = PowerShell credential object; contains username and SecureString password   │
-│   Store-VICredentialStoreItem = encrypted host-bound credential saved to local Windows credential store│
+│   Store-VICredentialStoreItem = encrypted host-bound credential saved to local Windows cred store     │
 │   SecureString          = encrypted in-memory password; only readable by the current user/process     │
 │   DefaultVIServers      = global variable holding all active PowerCLI connection objects              │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘

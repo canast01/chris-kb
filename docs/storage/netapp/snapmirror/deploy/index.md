@@ -18,7 +18,7 @@
 │  Create intercluster LIFs on each node: network interface create -role intercluster ...               │
 │  Peer clusters: cluster peer create -peer-addrs <dest-intercluster-LIF-IPs> on source cluster         │
 │  Accept on destination: cluster peer create -peer-addrs <source-intercluster-LIF-IPs>                 │
-│  Peer SVMs: vserver peer create -vserver <source-svm> -peer-vserver <dest-svm> -applications snapmirror│
+│  Peer SVMs: vserver peer create -vserver <src-svm> -peer-vserver <dst-svm> -applications snapmirror   │
 │  Accept SVM peer on destination: vserver peer accept -vserver <dest-svm> -peer-vserver <source-svm>   │
 │                                                                                                       │
 │                                        │  create destination volume                                   │
