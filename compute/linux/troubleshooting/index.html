@@ -730,8 +730,6 @@
       
         
       
-        
-      
     
     
     
@@ -1348,6 +1346,8 @@
       
         
       
+        
+      
     
     
     
@@ -1576,6 +1576,64 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="high-cpu/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    High CPU
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1635,66 +1693,6 @@
     
   
     Local AI
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    <a href="../../troubleshooting/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshooting
   
 
     
@@ -1887,26 +1885,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
     
     
     
@@ -1963,10 +1941,6 @@
       
         
           
-        
-      
-        
-      
         
       
         
@@ -2296,6 +2270,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#symptom-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Symptom Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2488,7 +2481,81 @@ Linux — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>
 <a class="kb-card" href="diagnostics/"><strong>Diagnostics</strong><span>Diagnostic procedures and log analysis.</span></a>
 <a class="kb-card" href="escalation/"><strong>Escalation</strong><span>Vendor escalation procedures and support contacts.</span></a>
+<a class="kb-card" href="high-cpu/"><strong>High CPU</strong><span>High CPU diagnosis — process-level analysis, run queues, kernel profiling, JVM threads, and remediation on Linux, Windows, and ESXi.</span></a>
 </div>
+
+<h2 id="symptom-index">Symptom Index<a class="headerlink" href="#symptom-index" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Platform</th>
+<th>Where to look</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>High CPU / load</td>
+<td>Linux</td>
+<td><code>top</code>, <code>perf top</code>, <code>ps aux --sort=-%cpu</code></td>
+</tr>
+<tr>
+<td>High CPU</td>
+<td>Windows</td>
+<td>Task Manager → Resource Monitor → CPU tab</td>
+</tr>
+<tr>
+<td>Memory exhaustion / OOM</td>
+<td>Linux</td>
+<td><code>dmesg | grep oom</code>, <code>/var/log/messages</code></td>
+</tr>
+<tr>
+<td>Service won't start</td>
+<td>Linux</td>
+<td><code>journalctl -u &lt;svc&gt; -n 50</code>, <code>systemctl status</code></td>
+</tr>
+<tr>
+<td>Service won't start</td>
+<td>Windows</td>
+<td>Event Viewer → Windows Logs → System/Application</td>
+</tr>
+<tr>
+<td>Disk full</td>
+<td>Linux</td>
+<td><code>df -h</code>, <code>du -sh /*</code></td>
+</tr>
+<tr>
+<td>Disk I/O bottleneck</td>
+<td>Linux</td>
+<td><code>iostat -xz 1 5</code>, <code>iotop</code></td>
+</tr>
+<tr>
+<td>Network unreachable</td>
+<td>Both</td>
+<td><code>ping</code>, <code>traceroute</code>/<code>tracert</code>, <code>ss -tnp</code>/<code>netstat -an</code></td>
+</tr>
+<tr>
+<td>DNS failure</td>
+<td>Both</td>
+<td><code>dig @&lt;server&gt;</code>, <code>nslookup</code>, <code>Resolve-DnsName</code></td>
+</tr>
+<tr>
+<td>DB connection refused</td>
+<td>MySQL/PG/MSSQL</td>
+<td>Check service running, port open, firewall, pg_hba/login</td>
+</tr>
+<tr>
+<td>Replication broken</td>
+<td>MySQL/PG/MSSQL</td>
+<td><code>SHOW REPLICA STATUS</code> / <code>pg_stat_replication</code> / AG DMVs</td>
+</tr>
+<tr>
+<td>AD login failures</td>
+<td>Windows</td>
+<td><code>dcdiag /test:dns</code>, Event ID 4625 in Security log</td>
+</tr>
+</tbody>
+</table>
 
 
 
