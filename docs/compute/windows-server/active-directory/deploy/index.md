@@ -1,6 +1,39 @@
 # Active Directory — Initial Deployment
 
-This guide covers deploying a new Active Directory forest from scratch on Windows Server 2022, including the first domain controller, DNS, NTP, replica DCs, OU structure, and a security baseline GPO.
+<div class="kb-summary">
+Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, NTP, replica DCs, OU structure, and security baseline GPO.
+</div>
+
+```text
+┌──────────────────────────────── Active Directory — Initial Deployment ────────────────────────────────┐
+│                                                                                                       │
+│   Deploy a new forest: Install-ADDSForest; server auto-reboots and becomes first domain controller    │
+│   Minimum two DCs per site for fault tolerance; replicas join via Install-ADDSDomainController        │
+│   PDC Emulator syncs from external NTP (time.windows.com); all others sync from PDC Emulator          │
+│                                                                                                       │
+│   Deployment sequence                                                                                 │
+│   1. Install role: Install-WindowsFeature AD-Domain-Services -IncludeManagementTools                  │
+│   2. Promote first DC: Install-ADDSForest -DomainName corp.local -InstallDns                          │
+│   3. Configure DNS forwarders: Set-DnsServerForwarder -IPAddress 8.8.8.8, 8.8.4.4                     │
+│   4. Configure NTP on PDC: w32tm /config /manualpeerlist:time.windows.com                             │
+│   5. Add replica DCs: Install-ADDSDomainController -DomainName corp.local                             │
+│   6. Create OU structure: Servers, Workstations, Users, Groups, ServiceAccounts                       │
+│   7. Apply security baseline GPO: import MSFT Security Compliance Toolkit baseline                    │
+│                                                                                                       │
+│   Post-deployment validation                                                                          │
+│   Replication: repadmin /showrepl (0 consecutive failures for all DCs)                                │
+│   DNS: dcdiag /test:dns /v (all tests pass)                                                           │
+│   FSMO roles: netdom query fsmo (all 5 roles assigned)                                                │
+│   Kerberos: klist tickets; nltest /sc_verify:corp.local                                               │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   ADDS         = Active Directory Domain Services; directory service for identity and access          │
+│   PDC Emulator = FSMO role; authoritative time source for all domain members                          │
+│   repadmin     = replication diagnostic tool; showrepl and replsummary check DC health                │
+│   dcdiag       = domain controller diagnostic; runs tests for DNS, replication, services, FSMO        │
+│   FSMO         = Flexible Single Master Operations; 5 roles: Schema, Domain Naming, PDC, RID, Infra   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
