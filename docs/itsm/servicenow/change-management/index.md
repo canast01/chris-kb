@@ -4,6 +4,44 @@
 ServiceNow change management procedures — change request lifecycle, CAB process, standard changes, and post-implementation review.
 </div>
 
+```text
+┌─────────────────────────────────── ServiceNow — Change Management ────────────────────────────────────┐
+│                                                                                                       │
+│   Change types: Standard (pre-approved), Normal (CAB review), Emergency (expedited approval)          │
+│   CAB: Change Advisory Board; reviews Normal changes; meets on schedule (typically weekly)            │
+│   Risk matrix: scored by impact × likelihood; drives approval path and required documentation         │
+│   PIR: Post-Implementation Review; mandatory for all Normal and Emergency changes                     │
+│                                                                                                       │
+│   Change lifecycle                                                                                    │
+│   Raise RFC    Create change record; fill required fields; attach backout plan + test steps           │
+│   Categorise   Standard (auto-approve) / Normal (CAB) / Emergency (e-CAB or ECAB)                     │
+│   Risk assess  Score impact + likelihood; attach mitigation plan for Medium and above                 │
+│   Approve      Standard: auto; Normal: CAB vote; Emergency: CAB Chair + 2 approvers minimum           │
+│   Implement    Follow deployment procedure; go/no-go gate before execution window                     │
+│   Validate     Post-change testing per validation checklist; sign-off by change owner                 │
+│   Close        Classify outcome (Successful / Unsuccessful / Partial); schedule PIR if required       │
+│                                                                                                       │
+│   Standard change catalogue                                                                           │
+│   Pre-approved for low-risk repeatable tasks; no CAB review required                                  │
+│   Examples: OS patch within approved window, SSL cert renewal, AD group modification                  │
+│   New templates added by CAB after initial approval; annual review of existing templates              │
+│                                                                                                       │
+│   Emergency change process                                                                            │
+│   CAB override when production impact is active and delay is not acceptable                           │
+│   Minimum approvers: ECAB Chair + 2 (e.g. Technical Lead + Service Owner)                             │
+│   Post-implementation: retrospective RFC raised within 24h; PIR within 5 business days                │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   RFC          = Request for Change; the ServiceNow change record                                     │
+│   CAB          = Change Advisory Board; weekly meeting to approve Normal changes                      │
+│   ECAB         = Emergency CAB; subset of CAB; can convene within 30 min for P1 changes               │
+│   PIR          = Post-Implementation Review; lessons learned after significant changes                │
+│   backout plan = documented rollback steps; must be approved before change is authorised              │
+│   go/no-go     = decision gate before execution; based on environment health and readiness criteria   │
+│   change freeze= period where no changes are allowed (e.g. business-critical periods, holidays)       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="change-request/"><strong>Change Request (RFC)</strong><span>RFC creation, required fields, and submission workflow in ServiceNow.</span></a>
