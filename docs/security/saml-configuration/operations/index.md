@@ -4,6 +4,42 @@
 Step-by-step procedures for configuring SAML SSO with Azure Entra ID and Okta, managing attribute mappings, rotating signing certificates, and troubleshooting assertion failures.
 </div>
 
+```text
+┌─────────────────────────────────── SAML Configuration — Operations ───────────────────────────────────┐
+│                                                                                                       │
+│   IdP options: Azure Entra ID (Enterprise Applications) or Okta (SAML 2.0 app integration)            │
+│   Key URLs: Entity ID (Identifier), ACS URL (Reply URL), Sign-on URL; must match exactly SP-side      │
+│   Signing cert: rotate before expiry; dual-cert trust allows zero-downtime cut-over                   │
+│   Testing: always validate with SAML-tracer (browser extension) before marking complete               │
+│                                                                                                       │
+│   Azure Entra ID configuration                                                                        │
+│   App: Enterprise Applications > New > Create your own; select non-gallery app                        │
+│   SAML config: Identifier = SP Entity ID; Reply URL = ACS endpoint; Sign-on URL = app login           │
+│   Metadata: download Federation Metadata XML; import into SP SAML IdP configuration screen            │
+│   Assign: Users and groups → assign AD group to the Entra ID application                              │
+│                                                                                                       │
+│   Okta configuration                                                                                  │
+│   Create: Applications > Create App Integration > SAML 2.0                                            │
+│   Config: SSO URL = ACS URL; Audience URI = Entity ID; Name ID format = EmailAddress                  │
+│   Attributes: add firstName, lastName, groups in Attribute Statements section                         │
+│   Export: View Setup Instructions → download IdP metadata XML or note SSO URL + cert                  │
+│                                                                                                       │
+│   Attribute mappings and signing certificate                                                          │
+│   Azure: Attributes & Claims > Add new claim; source = user.assignedroles or directory extension      │
+│   Okta: Sign On > Edit > Attribute Statements; value = Okta expression (user.roles)                   │
+│   Cert rotation: generate new cert in IdP; import to SP as secondary; make active; verify; remove old │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   SAML          = Security Assertion Markup Language; XML-based SSO federation protocol               │
+│   ACS URL       = Assertion Consumer Service URL; SP endpoint that receives SAMLResponse              │
+│   Entity ID     = unique identifier for the SP in SAML metadata; must match IdP configuration         │
+│   SAMLResponse  = Base64-encoded XML assertion; contains NameID, attributes, and signature            │
+│   NameID        = user identifier in the assertion; format must match SP expectation (email / UPN)    │
+│   clock skew    = time diff between IdP and SP; >5 min causes SAML assertion validation failure       │
+│   SAML-tracer   = browser extension for capturing and decoding SAML requests and responses            │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Configure SAML SSO with Azure Entra ID
 
 Register an application in Azure Entra ID and configure it as a SAML identity provider.

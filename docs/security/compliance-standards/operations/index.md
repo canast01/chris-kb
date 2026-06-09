@@ -4,6 +4,41 @@
 Step-by-step procedures for assessing controls against CIS, ISO 27001, NIST, and PCI-DSS frameworks, collecting audit evidence, and managing control gaps to closure.
 </div>
 
+```text
+┌────────────────────────────────── Compliance Standards — Operations ──────────────────────────────────┐
+│                                                                                                       │
+│   Frameworks covered: CIS Benchmarks, ISO 27001:2022, NIST SP 800-53 rev5, PCI-DSS v4.0               │
+│   Tool: CIS-CAT Pro Assessor for technical scoring; GRC platform for control tracking                 │
+│   Cadence: re-assess within 30 days of remediation; review control register quarterly                 │
+│   Audit prep: start 4 weeks before engagement; internal pre-assessment before external auditors       │
+│                                                                                                       │
+│   Assessment workflow                                                                                 │
+│   CIS benchmark    Run CIS-CAT Pro; HTML report; prioritise Level 1 failures for immediate fix        │
+│   Control mapping  Tag each control with ISO A.x, NIST AC-x, PCI 8.x; identify framework gaps         │
+│   Gap closure      Remediate (Ansible / GPO); collect post-remediation evidence; update register      │
+│   Evidence collect  Screenshot, log export, policy doc, config file; label with control ID + date     │
+│                                                                                                       │
+│   Exception management                                                                                │
+│   Raise in GRC: control ID, reason, risk owner, compensating control, expiry (max 12 months)          │
+│   Approval path: Control Owner → Security Manager → CISO (High/Critical risk exceptions)              │
+│   Review all open exceptions quarterly; close or renew before expiry date                             │
+│                                                                                                       │
+│   External audit preparation                                                                          │
+│   Artefact bundles: policy docs, risk register, previous findings + closure evidence, control register│
+│   Brief all staff who will be interviewed on their area of responsibility                             │
+│   Provide auditor access via SharePoint / Confluence — not direct production system access            │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   CIS-CAT Pro      = CIS Configuration Assessment Tool; scores systems against CIS Benchmarks         │
+│   ISO A.8.2        = ISO 27001:2022 Annex A control for information classification                    │
+│   NIST AC-2        = NIST SP 800-53 control for account management                                    │
+│   PCI-DSS 8.2.1    = PCI requirement for unique IDs for users and administrators                      │
+│   control register = master list of all security controls: owner, status, evidence link, framework    │
+│   compensating ctrl= alternative measure when primary control cannot be implemented                   │
+│   management resp. = formal acknowledgment of audit finding + stated remediation action               │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Run CIS Benchmark Assessment
 
 Evaluate infrastructure against the CIS Benchmark for the relevant OS or platform to produce a scored compliance baseline.

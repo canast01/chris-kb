@@ -4,6 +4,41 @@
 Step-by-step procedures for enrolling users in MFA, resetting credentials, configuring MFA across vCenter and Azure AD, and reviewing MFA adoption.
 </div>
 
+```text
+┌────────────────────────────────────────── MFA — Operations ───────────────────────────────────────────┐
+│                                                                                                       │
+│   MFA methods: Microsoft Authenticator push / TOTP; RADIUS (Duo/RSA) for vCenter SSO; SMS backup      │
+│   Platforms: Azure Entra ID Conditional Access; vCenter RADIUS integration; Okta Verify               │
+│   Identity verification required before any helpdesk MFA reset (video, in-person, manager confirm)    │
+│   Service account exclusions require compensating control: restrict to trusted IPs + risk acceptance  │
+│                                                                                                       │
+│   Enrolment and reset                                                                                 │
+│   Enrol new user  Entra ID > Users > Authentication methods > Add > Microsoft Authenticator           │
+│   Reset (helpdesk) Delete all methods > Require re-register — user prompted at next login             │
+│   Backup method   Register phone number for SMS as fallback for lost device scenarios                 │
+│                                                                                                       │
+│   Platform configuration                                                                              │
+│   vCenter SSO (RADIUS)  Administration > SSO > Smart Card Auth > RADIUS; port 1812; shared secret     │
+│   Azure Conditional Access  Security > CA > Policies > Grant > Require MFA; test in Report-only first │
+│   Service account exclusion  CA-Exclusions-ServiceAccounts group + location restriction (trusted IPs) │
+│                                                                                                       │
+│   Testing and reporting                                                                               │
+│   Test flow: private browser + test account; validate push prompt; test deny path → login blocked     │
+│   MFA adoption: Entra ID > Identity > Auth methods > User registration details > Download CSV         │
+│   Gap accounts: MFA Registered = No + Account Enabled = Yes; target 100% adoption                     │
+│   Enforce missing users: CA policy set to Block access until MFA registered                           │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   RADIUS         = Remote Authentication Dial-In User Service; protocol used by vCenter MFA           │
+│   Conditional Access = Azure policy engine; grants or blocks access based on user/device conditions   │
+│   TOTP           = Time-based One-Time Password; 6-digit code from authenticator app                  │
+│   break-glass    = emergency account excluded from CA MFA; must be monitored and secured              │
+│   Report-only    = CA policy mode; logs what would happen without enforcing; safe for testing         │
+│   shared secret  = RADIUS pre-shared key; store in vault; rotate on schedule                          │
+│   re-register    = Entra ID flag forcing user to set up MFA fresh at next interactive login           │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Enrol a User in MFA
 
 Register a new user's authenticator device so they can complete MFA challenges at login.

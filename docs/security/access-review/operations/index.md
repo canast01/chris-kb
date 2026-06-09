@@ -4,6 +4,42 @@
 Step-by-step procedures for conducting, documenting, and remediating periodic access reviews across AD, service accounts, and privileged groups.
 </div>
 
+```text
+┌───────────────────────────────────── Access Review — Operations ──────────────────────────────────────┐
+│                                                                                                       │
+│   Quarterly cycle: create campaign → assign managers → export AD snapshot → collect evidence          │
+│   Scope: all AD users, service accounts, and tier-0 privileged groups (DA, EA, Schema Admins)         │
+│   Tools: SailPoint / Saviynt / AD PowerShell; evidence in \\fileserver\Audit\AccessReview\            │
+│   SLA: 10-business-day certification window; 5-day remediation SLA for access removal findings        │
+│                                                                                                       │
+│   Review types                                                                                        │
+│   User access       Quarterly; managers certify direct-report memberships; 90-day inactivity cut      │
+│   Service accounts  Confirm owner, group memberships, no interactive logon, 365-day rotation          │
+│   Privileged groups DA / EA / Schema Admins; compare to approved register; remove unauthorised        │
+│   AD group export   Get-ADGroupMember; pivot table; Compare-Object quarter-on-quarter                 │
+│                                                                                                       │
+│   Stale account remediation                                                                           │
+│   Identify: Search-ADAccount -AccountInactive -TimeSpan 90.00:00:00 -UsersOnly                        │
+│   Step 1: Disable-ADAccount + move to Disabled Users OU                                               │
+│   Step 2: Set-ADAccountExpiration +30 days (grace period for reinstatement requests)                  │
+│   Step 3: Remove-ADUser after 30-day hold; log each removal with ticket reference                     │
+│                                                                                                       │
+│   Evidence package (AR-YYYYQQ)                                                                        │
+│   Raw group membership CSV; reviewer sign-off log; removals/changes CSV; exception log                │
+│   Hash each file: Get-FileHash | Export-Csv manifest.csv; upload to GRC platform                      │
+│   Retain evidence ≥ 3 years; escalate SLA breaches to department head                                 │
+│                                                                                                       │
+│   Key terms:                                                                                          │
+│   SailPoint / Saviynt = identity governance platforms for running access review campaigns             │
+│   PAM justification  = privileged access ticket required for tier-0 group membership approval         │
+│   tier-0 groups      = Domain Admins, Schema Admins, Enterprise Admins — highest AD privilege         │
+│   inactive query     = Search-ADAccount -AccountInactive -TimeSpan 90.00:00:00 -UsersOnly             │
+│   GRC platform       = governance, risk, and compliance tool (e.g., ServiceNow GRC, Archer)           │
+│   grace period       = 30-day expiry hold allowing account reinstatement before permanent removal     │
+│   Compare-Object     = PowerShell cmdlet used to diff two CSVs and identify new quarter additions     │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ## Run Quarterly Access Review
 
 Initiate a formal access review cycle to confirm that all user accounts hold only the access required for their current role.
