@@ -4,7 +4,6 @@
 Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using a four-step DORA handshake (Discover, Offer, Request, Ack) over UDP — client broadcasts on port 68, server listens on port 67. The primary operational concerns are scope design, lease time tuning, option correctness (gateway, DNS, domain), and failover configuration for high availability, as DHCP failure renders an entire subnet unreachable without static fallback.
 </div>
 
-        DORA HANDSHAKE
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Client (new device)              DHCP Server                                                         │

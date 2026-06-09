@@ -5,7 +5,7 @@ Adding CA certificates to OS and application trust stores so that TLS connection
 </div>
 
 ```text
-┌──────────────────────────── Certificate Trust Store Management ────────────────────────────────────────┐
+┌──────────────────────────── Certificate Trust Store Management ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Add CA certificates to trust stores so TLS connections to internal services succeed      │   │

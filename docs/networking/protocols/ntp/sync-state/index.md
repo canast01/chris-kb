@@ -5,7 +5,6 @@
 NTP Sync State reference covering Reading `chronyc tracking` (Linux), Reading `timedatectl` (Linux — systemd-timesyncd), Windows — w32tm, Network Devices, States and Meanings and 1 more sections.
 </div>
 
-        SYNC STATE METRICS
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  chronyc tracking output                                                                              │

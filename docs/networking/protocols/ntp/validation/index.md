@@ -5,7 +5,6 @@
 NTP Validation reference covering Validation Checklist, Validation Commands, Post-Config Convergence, Validating NTP on Multiple Hosts, Common Validation Failures.
 </div>
 
-        VALIDATION CHECKLIST
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  chronyc tracking                                                                                     │

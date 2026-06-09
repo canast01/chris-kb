@@ -5,7 +5,6 @@
 LDAP Queries reference covering Overview, Filter Syntax, Common AD Attributes, PowerShell: Get-ADObject, Search Scope and Base and 1 more sections.
 </div>
 
-        LDAP QUERY STRUCTURE
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  ldapsearch -H ldap://dc01 -D "svc@corp.local" -w "pass"                                              │

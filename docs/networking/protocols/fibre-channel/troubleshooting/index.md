@@ -5,7 +5,6 @@
 FC Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues Reference, Error Counter Interpretation (Brocade), Log Locations.
 </div>
 
-        TRIAGE: HOST CANNOT SEE LUN
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  1. No LUN visible on host                                                                            │

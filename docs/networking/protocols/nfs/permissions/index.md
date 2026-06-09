@@ -5,7 +5,6 @@
 NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (idmapd), Kerberos Security Modes, ACL Interaction and 1 more sections.
 </div>
 
-        NFS PERMISSION LAYERS
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Layer 1 — EXPORT OPTIONS (server /etc/exports)                                                       │

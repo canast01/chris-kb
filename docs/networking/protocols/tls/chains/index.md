@@ -5,7 +5,6 @@
 A certificate chain (or chain of trust) links a server certificate back to a trusted root CA through one or more intermediate CAs.
 </div>
 
-        CHAIN OF TRUST
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  depth=2  Root CA (self-signed)                                                                       │

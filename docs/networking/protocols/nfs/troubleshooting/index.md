@@ -5,7 +5,6 @@
 NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues, Performance Tuning, Export Configuration Reference and 2 more sections.
 </div>
 
-        TRIAGE: STALE NFS HANDLE / MOUNT FAILURE
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  1. nc -zv <server> 2049 ── fail ──► firewall / routing                                               │

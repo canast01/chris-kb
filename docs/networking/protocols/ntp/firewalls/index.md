@@ -5,7 +5,6 @@
 NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewalld, Linux — iptables, Windows Firewall, Cisco ASA / Firepower and 2 more sections.
 </div>
 
-        NTP FIREWALL REQUIREMENTS
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  NTP CLIENT (server/device)                                                                           │

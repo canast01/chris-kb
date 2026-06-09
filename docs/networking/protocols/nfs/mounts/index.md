@@ -5,7 +5,6 @@
 NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount Option Reference, Automount with autofs and 1 more sections.
 </div>
 
-        CLIENT-SIDE MOUNT PROCESS
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  mount -t nfs -o vers=4.1,hard,rsize=1048576 \                                                        │

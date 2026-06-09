@@ -4,7 +4,6 @@
 Server Message Block (SMB) is a network file sharing protocol running over TCP port 445, used for file shares, printer sharing, and inter-process communication in Windows environments and increasingly in mixed Linux/macOS fleets via Samba. The critical operational concerns are version enforcement (SMB1 must be disabled; SMB3 is required for encryption and signing), the interaction between share permissions and NTFS permissions (most restrictive wins), and diagnosing authentication and session failures in domain environments.
 </div>
 
-        SMB ARCHITECTURE
 ```text
 ┌──────────────────┐     TCP 445      ┌─────────────────────────────────────────────────────────────────┐
 │  Windows/Linux   │                  │   SMB SERVER (Windows)                                          │

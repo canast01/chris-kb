@@ -8,7 +8,6 @@ title: NTP
 Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a hierarchical stratum model. Clock skew breaks Kerberos auth, TLS validity, and log correlation. Coverage includes chrony/ntpd/w32tm configuration, stratum selection, sync health metrics, and VMware time sync rules.
 </div>
 
-        NTP STRATUM HIERARCHY
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Stratum 0  ┌──────────────────────────────────┐                                                      │

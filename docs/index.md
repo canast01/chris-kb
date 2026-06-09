@@ -66,9 +66,14 @@
   <span>PowerShell, Python, Ansible, Terraform, and GitHub Actions.</span>
 </a>
 
-<a class="kb-card" href="protocols/">
+<a class="kb-card" href="networking/protocols/">
   <strong>Protocols</strong>
   <span>Fibre Channel, iSCSI, NFS, SMB, TLS, DNS, DHCP, LDAP, NTP, SNMP, and SMTP.</span>
+</a>
+
+<a class="kb-card" href="certifications/">
+  <strong>Certifications</strong>
+  <span>Study notes, practice exam materials, review plans, and weak-area trackers for SAN and storage vendor certifications.</span>
 </a>
 
 </div>

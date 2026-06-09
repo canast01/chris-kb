@@ -5,7 +5,6 @@
 SMB Share Permissions reference covering Overview, Viewing and Setting Share Permissions, Creating Shares with net share, Combining NTFS and Share Permissions, PowerShell Share Creation and 1 more sections.
 </div>
 
-        TWO-LAYER PERMISSION MODEL
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Network client accesses \\server\Finance                                                             │

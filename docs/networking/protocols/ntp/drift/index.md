@@ -5,7 +5,6 @@
 NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, Interpreting Drift History, Drift After VM Operations and 1 more sections.
 </div>
 
-        CLOCK DRIFT AND NTP CORRECTION
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  Without NTP:                                                                                         │

@@ -91,7 +91,7 @@ Navigate to **NSX Manager → Security → Distributed Firewall** and search by 
 
 ```text
 DFW Rule Evaluation Order (top to bottom within each category):
-  ┌─────────────────┬────────────────────────────────────────────────────────┐
+  ┌─────────────────┬─────────────────────────────────────────────────────────────────────────────────────┐
   │ Category        │ Typical Use                                            │
   ├─────────────────┼────────────────────────────────────────────────────────┤
   │ Emergency       │ Breakglass allow/deny; applied first globally          │

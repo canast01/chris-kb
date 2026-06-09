@@ -5,7 +5,6 @@
 DHCP Failover reference covering Overview, Configuring Failover, Checking Failover State, Failover States Reference, Split Scope (Pre-2012 Fallback) and 2 more sections.
 </div>
 
-        DHCP FAILOVER MODES
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │  LOAD BALANCE (50/50 split):                                                                          │
