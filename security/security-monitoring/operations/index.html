@@ -2595,6 +2595,39 @@
 Step-by-step procedures for reviewing SIEM alerts, investigating security events, tuning detection rules, and generating monitoring reports.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Security Monitoring — Operations ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   SIEM platforms: Splunk, Microsoft Sentinel (KQL), Elastic SIEM, IBM QRadar                          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Daily triage: sort Critical first; classify TP / FP / Needs Tuning; escalate TPs to IR              │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Detection source: MITRE ATT&amp;CK technique mapping; alert-only mode before enabling auto-response     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   Reporting metrics: MTTD, MTTR, true positive rate, top 5 rules by volume                            │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Alert investigation workflow                                                                        │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Triage   Filter last 24h; sort by severity; open Critical/High events for context                   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Investigate  Pull auth history (AD / Entra ID); check endpoint telemetry (Defender / CrowdStrike)   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Contain   Revoke sessions (Revoke-MgUserSignInSession); reset AD password; network isolation        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ATT&amp;CK    Map observed indicators to technique IDs (e.g., T1078 Valid Accounts, T1110 Brute Force)  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Detection engineering                                                                               │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Tune noisy rule  Identify FP pattern (30d data); add exclusion (NOT src_ip / AccountName !in)       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   New rule         Write KQL/SPL query on historical data; tune FPs; set severity + MITRE tags        │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   Deploy           Alert-only mode 7d; verify on historical data before enabling automated response   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   Suspicious login response                                                                           │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Check source IP, geo, device, time; verify with user via phone if unusual location                  │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   If unverified or denied: revoke sessions + reset password + enable risk-based CA                    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Review all actions taken in the session window: mail forwarding, file access, lateral movement      │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   MTTD          = Mean Time to Detect; time from attack start to first SIEM alert                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   MTTR          = Mean Time to Respond; time from alert to containment action                         │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   KQL           = Kusto Query Language; used by Microsoft Sentinel for log queries                    │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   SPL           = Splunk Processing Language; search and reporting language for Splunk                │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   MITRE ATT&amp;CK  = framework of adversary tactics, techniques, and procedures (TTPs)                   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   T1078         = Valid Accounts; adversary uses legitimate credentials to gain access                │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   blast radius  = all systems the compromised account or host communicated with in the incident window│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="daily-siem-alert-review">Daily SIEM Alert Review<a class="headerlink" href="#daily-siem-alert-review" title="Permanent link">&para;</a></h2>
 <p>Perform the morning triage of overnight SIEM alerts to identify threats requiring analyst investigation.</p>
 <ol>
@@ -2602,7 +2635,7 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 <li>Filter alerts to the last 24 hours and sort by severity (Critical first).</li>
 <li>For each Critical or High alert, open the event and review: source IP, destination, username, process name, and alert rule triggered.</li>
 <li>In Splunk, run a quick context search on the source IP:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>index=firewall OR index=proxy src_ip=&lt;alerting_ip&gt; earliest=-24h | stats count by action, dest_ip, url | sort -count
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>index=firewall OR index=proxy src_ip=&lt;alerting_ip&gt; earliest=-24h | stats count by action, dest_ip, url | sort -count
 </code></pre></div></li>
 <li>Classify each alert as: <strong>True Positive</strong> (escalate to investigation), <strong>False Positive</strong> (close with note), or <strong>Needs Tuning</strong> (flag for rule adjustment).</li>
 <li>Escalate all True Positives to the incident response workflow and assign to an analyst.</li>
@@ -2614,8 +2647,8 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 <ol>
 <li>Open the incident ticket created from the alert and review the initial SIEM alert details.</li>
 <li>Gather additional context from supporting data sources:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Splunk — all events for the involved user in the last 7 days
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>index=* user=&lt;username&gt; earliest=-7d | stats count by index, sourcetype, action | sort -count
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Splunk — all events for the involved user in the last 7 days
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>index=* user=&lt;username&gt; earliest=-7d | stats count by index, sourcetype, action | sort -count
 </code></pre></div></li>
 <li>Pull the full authentication history for the involved account from AD or Entra ID sign-in logs.</li>
 <li>Check endpoint telemetry (Microsoft Defender, CrowdStrike, or Carbon Black) for the affected host: look for unusual processes, network connections, and file writes.</li>
@@ -2630,8 +2663,8 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 <ol>
 <li>Identify the noisy rule from the false positive classification log or alert volume metrics in the SIEM dashboard.</li>
 <li>Pull 30 days of alert data for the rule and categorise triggers by source:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>index=siem_alerts rule_name=&quot;&lt;NoisyRule&gt;&quot; earliest=-30d |
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  stats count by src_ip, user, action | sort -count
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>index=siem_alerts rule_name=&quot;&lt;NoisyRule&gt;&quot; earliest=-30d |
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  stats count by src_ip, user, action | sort -count
 </code></pre></div></li>
 <li>Identify the dominant false positive pattern (e.g., a specific backup service, monitoring IP, or scheduled task).</li>
 <li>Add an exclusion to the rule logic to suppress known-good sources without removing the core detection logic:</li>
@@ -2648,12 +2681,12 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 <li>Identify the threat or technique to detect; reference the MITRE ATT&amp;CK technique ID (e.g., T1078 — Valid Accounts).</li>
 <li>Determine which data source contains the relevant events (e.g., Windows Security event log, firewall logs, EDR telemetry).</li>
 <li>Write the detection query against historical data to test its coverage:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c">// Sentinel KQL — detect logins from unusual countries</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">SigninLogs</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">7</span><span class="n">d</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="err">!</span><span class="n">in</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;GB&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;US&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;IE&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">ResultType</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="mi">0</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">UserPrincipalName</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">,</span><span class="w"> </span><span class="n">IPAddress</span><span class="p">,</span><span class="w"> </span><span class="n">AppDisplayName</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c">// Sentinel KQL — detect logins from unusual countries</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">SigninLogs</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">7</span><span class="n">d</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="err">!</span><span class="n">in</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;GB&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;US&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;IE&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">ResultType</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">UserPrincipalName</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">,</span><span class="w"> </span><span class="n">IPAddress</span><span class="p">,</span><span class="w"> </span><span class="n">AppDisplayName</span>
 </code></pre></div></li>
 <li>Tune the query to eliminate known false positives (exclude known travel IPs, service accounts, etc.).</li>
 <li>Set the alert severity, MITRE technique tags, and response playbook link in the rule metadata.</li>
@@ -2666,19 +2699,19 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 <ol>
 <li>Open the alert and note the key details: account name, source IP, geolocation, device, and time.</li>
 <li>Check the user's recent login history for context:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c">// Sentinel — last 30 logins for the user</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">SigninLogs</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">UserPrincipalName</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;&lt;user@corp.local&gt;&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">d</span><span class="p">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">,</span><span class="w"> </span><span class="n">IPAddress</span><span class="p">,</span><span class="w"> </span><span class="n">DeviceDetail</span><span class="p">,</span><span class="w"> </span><span class="n">ResultDescription</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="n">desc</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c">// Sentinel — last 30 logins for the user</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">SigninLogs</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">UserPrincipalName</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="s">&quot;&lt;user@corp.local&gt;&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">d</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">,</span><span class="w"> </span><span class="n">IPAddress</span><span class="p">,</span><span class="w"> </span><span class="n">DeviceDetail</span><span class="p">,</span><span class="w"> </span><span class="n">ResultDescription</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="n">desc</span>
 </code></pre></div></li>
 <li>If the login is from an unusual country or IP and occurred outside business hours, attempt to contact the user via phone to verify whether they initiated the login.</li>
 <li>If unable to reach the user or if they deny the login, immediately revoke all active sessions and reset the account password:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Revoke Entra ID sessions</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Revoke-MgUserSignInSession</span> <span class="n">-UserId</span> <span class="p">&lt;</span><span class="n">ObjectId</span><span class="p">&gt;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># Reset AD password</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Set-ADAccountPassword</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">SamAccountName</span><span class="p">&gt;</span> <span class="n">-Reset</span> <span class="n">-NewPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;TempP@ss1!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Revoke Entra ID sessions</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Revoke-MgUserSignInSession</span> <span class="n">-UserId</span> <span class="p">&lt;</span><span class="n">ObjectId</span><span class="p">&gt;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># Reset AD password</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Set-ADAccountPassword</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">SamAccountName</span><span class="p">&gt;</span> <span class="n">-Reset</span> <span class="n">-NewPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;TempP@ss1!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
 </code></pre></div></li>
 <li>Enable risk-based Conditional Access for the account (if not already active) to force MFA re-enrolment.</li>
 <li>Review all actions taken by the account during the suspicious session period; check for mail forwarding rules, file access, and lateral movement.</li>
@@ -2689,16 +2722,16 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 <p>Analyse failed authentication patterns across the environment to detect brute-force, password spray, or credential stuffing activity.</p>
 <ol>
 <li>In the SIEM, query the Security event log for Event ID 4625 (failed logon) over the last 7 days:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>index=wineventlog EventCode=4625 earliest=-7d |
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  stats count by Account_Name, src_ip, Logon_Type |
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  where count &gt; 50 | sort -count
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>index=wineventlog EventCode=4625 earliest=-7d |
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  stats count by Account_Name, src_ip, Logon_Type |
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  where count &gt; 50 | sort -count
 </code></pre></div></li>
 <li>In Entra ID sign-in logs, filter for <code>ResultType != 0</code> over the last 7 days, group by IP and user:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">SigninLogs</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">7</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">ResultType</span><span class="w"> </span><span class="p">!=</span><span class="w"> </span><span class="mi">0</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">FailCount</span><span class="p">=</span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">IPAddress</span><span class="p">,</span><span class="w"> </span><span class="n">UserPrincipalName</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">FailCount</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">20</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">FailCount</span><span class="w"> </span><span class="n">desc</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">SigninLogs</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">TimeGenerated</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">7</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">ResultType</span><span class="w"> </span><span class="p">!=</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">|</span><span class="w"> </span><span class="k">summarize</span><span class="w"> </span><span class="n">FailCount</span><span class="p">=</span><span class="k">count</span><span class="p">()</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">IPAddress</span><span class="p">,</span><span class="w"> </span><span class="n">UserPrincipalName</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">FailCount</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">20</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">FailCount</span><span class="w"> </span><span class="n">desc</span>
 </code></pre></div></li>
 <li>Identify IPs with high failure counts across many different usernames — this is characteristic of password spray; block at the perimeter firewall: <code>Set-NetFirewallRule -DisplayName "Block-Spray-IP" -RemoteAddress &lt;IP&gt; -Action Block</code>.</li>
 <li>Identify accounts with high failure counts from a single IP — this may be a targeted brute force; lock the account and alert the user.</li>
@@ -2710,16 +2743,16 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 <p>Extract SIEM alert data for inclusion in the monthly security operations report.</p>
 <ol>
 <li>In Splunk, run the monthly alert summary query and export to CSV:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>index=siem_alerts earliest=-30d
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>| stats count by rule_name, severity, disposition
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>| sort severity, -count
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>| outputcsv /tmp/monthly-alerts-$(date +%Y%m).csv
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>index=siem_alerts earliest=-30d
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>| stats count by rule_name, severity, disposition
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>| sort severity, -count
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>| outputcsv /tmp/monthly-alerts-$(date +%Y%m).csv
 </code></pre></div></li>
 <li>In Microsoft Sentinel, export the incidents table:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">SecurityIncident</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">CreatedTime</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">d</span><span class="p">)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">IncidentName</span><span class="p">,</span><span class="w"> </span><span class="n">Severity</span><span class="p">,</span><span class="w"> </span><span class="n">Status</span><span class="p">,</span><span class="w"> </span><span class="n">Owner</span><span class="p">,</span><span class="w"> </span><span class="n">CreatedTime</span><span class="p">,</span><span class="w"> </span><span class="n">ClosedTime</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Severity</span><span class="w"> </span><span class="n">asc</span><span class="p">,</span><span class="w"> </span><span class="n">CreatedTime</span><span class="w"> </span><span class="n">desc</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">SecurityIncident</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">|</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">CreatedTime</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="n">ago</span><span class="p">(</span><span class="mi">30</span><span class="n">d</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="p">|</span><span class="w"> </span><span class="k">project</span><span class="w"> </span><span class="n">IncidentName</span><span class="p">,</span><span class="w"> </span><span class="n">Severity</span><span class="p">,</span><span class="w"> </span><span class="n">Status</span><span class="p">,</span><span class="w"> </span><span class="n">Owner</span><span class="p">,</span><span class="w"> </span><span class="n">CreatedTime</span><span class="p">,</span><span class="w"> </span><span class="n">ClosedTime</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">|</span><span class="w"> </span><span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Severity</span><span class="w"> </span><span class="n">asc</span><span class="p">,</span><span class="w"> </span><span class="n">CreatedTime</span><span class="w"> </span><span class="n">desc</span>
 </code></pre></div>
    Copy the query output to Excel for the report.</li>
 <li>Calculate key metrics:</li>

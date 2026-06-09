@@ -2595,6 +2595,40 @@
 Step-by-step procedures for configuring SAML SSO with Azure Entra ID and Okta, managing attribute mappings, rotating signing certificates, and troubleshooting assertion failures.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── SAML Configuration — Operations ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   IdP options: Azure Entra ID (Enterprise Applications) or Okta (SAML 2.0 app integration)            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Key URLs: Entity ID (Identifier), ACS URL (Reply URL), Sign-on URL; must match exactly SP-side      │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Signing cert: rotate before expiry; dual-cert trust allows zero-downtime cut-over                   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   Testing: always validate with SAML-tracer (browser extension) before marking complete               │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Azure Entra ID configuration                                                                        │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   App: Enterprise Applications &gt; New &gt; Create your own; select non-gallery app                        │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   SAML config: Identifier = SP Entity ID; Reply URL = ACS endpoint; Sign-on URL = app login           │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Metadata: download Federation Metadata XML; import into SP SAML IdP configuration screen            │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   Assign: Users and groups → assign AD group to the Entra ID application                              │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   Okta configuration                                                                                  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Create: Applications &gt; Create App Integration &gt; SAML 2.0                                            │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   Config: SSO URL = ACS URL; Audience URI = Entity ID; Name ID format = EmailAddress                  │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   Attributes: add firstName, lastName, groups in Attribute Statements section                         │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Export: View Setup Instructions → download IdP metadata XML or note SSO URL + cert                  │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Attribute mappings and signing certificate                                                          │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Azure: Attributes &amp; Claims &gt; Add new claim; source = user.assignedroles or directory extension      │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Okta: Sign On &gt; Edit &gt; Attribute Statements; value = Okta expression (user.roles)                   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   Cert rotation: generate new cert in IdP; import to SP as secondary; make active; verify; remove old │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   SAML          = Security Assertion Markup Language; XML-based SSO federation protocol               │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   ACS URL       = Assertion Consumer Service URL; SP endpoint that receives SAMLResponse              │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   Entity ID     = unique identifier for the SP in SAML metadata; must match IdP configuration         │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   SAMLResponse  = Base64-encoded XML assertion; contains NameID, attributes, and signature            │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   NameID        = user identifier in the assertion; format must match SP expectation (email / UPN)    │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   clock skew    = time diff between IdP and SP; &gt;5 min causes SAML assertion validation failure       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   SAML-tracer   = browser extension for capturing and decoding SAML requests and responses            │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="configure-saml-sso-with-azure-entra-id">Configure SAML SSO with Azure Entra ID<a class="headerlink" href="#configure-saml-sso-with-azure-entra-id" title="Permanent link">&para;</a></h2>
 <p>Register an application in Azure Entra ID and configure it as a SAML identity provider.</p>
 <ol>

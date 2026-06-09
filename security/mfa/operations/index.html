@@ -2595,6 +2595,39 @@
 Step-by-step procedures for enrolling users in MFA, resetting credentials, configuring MFA across vCenter and Azure AD, and reviewing MFA adoption.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── MFA — Operations ───────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   MFA methods: Microsoft Authenticator push / TOTP; RADIUS (Duo/RSA) for vCenter SSO; SMS backup      │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   Platforms: Azure Entra ID Conditional Access; vCenter RADIUS integration; Okta Verify               │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   Identity verification required before any helpdesk MFA reset (video, in-person, manager confirm)    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   Service account exclusions require compensating control: restrict to trusted IPs + risk acceptance  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Enrolment and reset                                                                                 │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   Enrol new user  Entra ID &gt; Users &gt; Authentication methods &gt; Add &gt; Microsoft Authenticator           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   Reset (helpdesk) Delete all methods &gt; Require re-register — user prompted at next login             │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   Backup method   Register phone number for SMS as fallback for lost device scenarios                 │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   Platform configuration                                                                              │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   vCenter SSO (RADIUS)  Administration &gt; SSO &gt; Smart Card Auth &gt; RADIUS; port 1812; shared secret     │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   Azure Conditional Access  Security &gt; CA &gt; Policies &gt; Grant &gt; Require MFA; test in Report-only first │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   Service account exclusion  CA-Exclusions-ServiceAccounts group + location restriction (trusted IPs) │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   Testing and reporting                                                                               │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   Test flow: private browser + test account; validate push prompt; test deny path → login blocked     │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   MFA adoption: Entra ID &gt; Identity &gt; Auth methods &gt; User registration details &gt; Download CSV         │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Gap accounts: MFA Registered = No + Account Enabled = Yes; target 100% adoption                     │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Enforce missing users: CA policy set to Block access until MFA registered                           │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   Key terms:                                                                                          │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   RADIUS         = Remote Authentication Dial-In User Service; protocol used by vCenter MFA           │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   Conditional Access = Azure policy engine; grants or blocks access based on user/device conditions   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   TOTP           = Time-based One-Time Password; 6-digit code from authenticator app                  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   break-glass    = emergency account excluded from CA MFA; must be monitored and secured              │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   Report-only    = CA policy mode; logs what would happen without enforcing; safe for testing         │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   shared secret  = RADIUS pre-shared key; store in vault; rotate on schedule                          │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   re-register    = Entra ID flag forcing user to set up MFA fresh at next interactive login           │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="enrol-a-user-in-mfa">Enrol a User in MFA<a class="headerlink" href="#enrol-a-user-in-mfa" title="Permanent link">&para;</a></h2>
 <p>Register a new user's authenticator device so they can complete MFA challenges at login.</p>
 <ol>
