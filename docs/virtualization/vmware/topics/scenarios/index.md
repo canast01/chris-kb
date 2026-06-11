@@ -17,6 +17,8 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 │  Storage APD / Datastore Inaccessible · NTP Drift / SSO Certificate Errors                            │
 │  SRM RPO Violation · HA Admission Control Breach · VM Snapshot Consolidation                          │
 │  vCenter Upgrade Failure · vSAN Stretched Cluster Split-Brain · Aria Ops Alert Storm                  │
+│  vSAN Capacity Alarm · NSX DFW Blocking Application Traffic                                           │
+│  VCF SDDC Manager Upgrade Stalled · Host Profile Compliance Drift                                     │
 │                                                                                                       │
 │  TASKS (Planned) — operational workflow, execute across products                                      │
 │  Host Maintenance and Patching · Capacity Planning · Provision New Workload                           │
@@ -119,6 +121,26 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 <a class="kb-card" href="ha-admission-control-breach/">
   <strong>HA Admission Control Breach</strong>
   <span>Multi-host failure, capacity exhausted, restart triage, policy relaxation, N+1 sizing.</span>
+</a>
+
+<a class="kb-card" href="vsan-capacity-alarm/">
+  <strong>vSAN Capacity Alarm</strong>
+  <span>Capacity threshold breached — snapshot cleanup, storage vMotion, disk group expansion.</span>
+</a>
+
+<a class="kb-card" href="nsx-dfw-blocking-application-traffic/">
+  <strong>NSX DFW Blocking Application Traffic</strong>
+  <span>Traceflow to identify blocking rule, group membership fix, targeted allow rule.</span>
+</a>
+
+<a class="kb-card" href="vcf-sddc-manager-upgrade-stalled/">
+  <strong>VCF SDDC Manager Upgrade Stalled</strong>
+  <span>LCM task failure, SOS precheck, log analysis, retry after root-cause fix.</span>
+</a>
+
+<a class="kb-card" href="host-profile-compliance-drift/">
+  <strong>Host Profile Compliance Drift</strong>
+  <span>Identify drifted settings, classify intent, remediate or update reference profile.</span>
 </a>
 
 </div>

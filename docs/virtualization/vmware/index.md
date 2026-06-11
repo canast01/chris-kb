@@ -264,4 +264,14 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Cross-platform VMware operational procedures, health check sequences, and runbooks.</span></a>
 
+<a class="kb-card" href="reference/">
+  <strong>Reference</strong>
+  <span>Design decisions with rationale and operational gotchas — underdocumented behaviours and default limits.</span>
+</a>
+
+<a class="kb-card" href="licensing/">
+  <strong>Licensing</strong>
+  <span>Post-Broadcom edition structure — VVF vs VCF, per-core pricing, add-on SKUs, and legacy migration.</span>
+</a>
+
 </div>
