@@ -1,5 +1,9 @@
 # Aria Operations Health Checks
 
+<div class="kb-summary">
+Health checks for Aria Operations — cluster node status, adapter collection health, disk usage, service states, NTP sync, alert pipeline validation, and capacity API queries.
+</div>
+
 ```text
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -45,13 +49,7 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  NTP Health (all nodes must be < 1 second drift)                                                      │
-│  chronyc tracking (per node)                                                                          │
-│  chronyc makestep (force sync if drifted)                                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ## Run This Routine
 
 Run these 8 checks in order at the start of each shift or after any infrastructure change.
@@ -67,8 +65,10 @@ Run these 8 checks in order at the start of each shift or after any infrastructu
 
 ---
 
+## Adapter Collection Commands
+
 ```bash
-## List adapters with verbose collection state
+# List adapters with verbose collection state
 vracli adapter list --verbose
 
 ## Check the collector service log for adapter errors
@@ -82,10 +82,12 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"collectorId": "<collector-id>", "resourceKindKey": "ADAPTER", "adapterKindKey": "VMWARE"}'
 ```
+## Disk and Resource Commands
+
 ```bash
 ssh admin@vrops-prod-01.example.local
 
-## Check disk usage on primary node
+# Check disk usage on primary node
 df -h /storage/db /storage/log /storage/core
 
 ## Check Cassandra data directory sizes (main metrics store)
@@ -94,8 +96,10 @@ du -sh /storage/db/cassandra/data/*
 ## Check available inodes — can cause "disk full" errors even with space remaining
 df -i /storage/db
 ```
+## Service Health Commands
+
 ```bash
-## Check all vmware services on the primary node
+# Check all vmware services on the primary node
 systemctl list-units 'vmware-*' --state=active
 
 ## Check a specific service that appears failed
@@ -111,8 +115,10 @@ journalctl -u vmware-vcops-analytics --since "1 hour ago" | tail -100
 ## nginx                    — active (running)
 ## vmware-vcops-watchdog    — active (running)
 ```
+## NTP Health
+
 ```bash
-## Check NTP sync on each cluster node
+# Check NTP sync on each cluster node
 for node in vrops-prod-01 vrops-prod-02 vrops-prod-03; do
   echo -n "$node.example.local: "
   ssh admin@"$node.example.local" "chronyc tracking 2>/dev/null | grep 'System time'"
@@ -124,8 +130,10 @@ chronyc makestep
 ## Verify NTP sources
 chronyc sources -v
 ```
+## Alert API Queries
+
 ```bash
-## Get all active alerts grouped by criticality via API
+# Get all active alerts grouped by criticality
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true" | \
   jq '[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})'
@@ -135,12 +143,13 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&criticality=CRITICAL" | \
   jq '.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}'
 ```
+## Capacity Summary via API
+
 ```bash
-## Check cluster-level capacity summary via API
+# Check cluster-level capacity summary
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource" | \
   jq '.resourceList[] | {name: .resourceKey.name}'
 ```
-```text
-Administration → Alert Settings → Alert Definitions
-```
+
+Also verify alert definitions are active: **Administration → Alert Settings → Alert Definitions** — confirm no policies are disabled unexpectedly.

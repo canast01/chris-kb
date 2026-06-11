@@ -1,23 +1,9 @@
 # vRNI Health Checks
 
-```bash
-TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin@local","password":"PASSWORD"}' \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+<div class="kb-summary">
+Health checks for Aria Operations for Networks (vRNI) — collector connectivity, data source status, flow freshness, platform disk and resource health, and certificate expiry.
+</div>
 
-curl -sk "https://aon.example.local/api/ni/collectors" \
-  -H "Authorization: NetworkInsight ${TOKEN}" \
-  | python3 -c "
-import sys, json
-from datetime import datetime, timezone
-data = json.load(sys.stdin)
-for c in data.get('results', []):
-    last_hb = c.get('last_heartbeat_ms', 0) / 1000
-    dt = datetime.fromtimestamp(last_hb, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if last_hb else 'Never'
-    print(f\"{c.get('nickname',''):<25} {c.get('status',''):<15} Last HB: {dt}\")
-"
-```
 ```text
 ┌───────────────────────────────────────── vRNI Health Checks ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -79,6 +65,29 @@ Run these 8 checks in order at the start of each shift or after any infrastructu
 
 ---
 
+## Collector API Status Check
+
+```bash
+TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin@local","password":"PASSWORD"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+curl -sk "https://aon.example.local/api/ni/collectors" \
+  -H "Authorization: NetworkInsight ${TOKEN}" \
+  | python3 -c "
+import sys, json
+from datetime import datetime, timezone
+data = json.load(sys.stdin)
+for c in data.get('results', []):
+    last_hb = c.get('last_heartbeat_ms', 0) / 1000
+    dt = datetime.fromtimestamp(last_hb, tz=timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if last_hb else 'Never'
+    print(f\"{c.get('nickname',''):<25} {c.get('status',''):<15} Last HB: {dt}\")
+"
+```
+
+## Flow Queries (AON Natural Language)
+
 ```bash
 # Flows in the last 15 minutes
 flows where time_range = "last 15 minutes"
@@ -89,6 +98,8 @@ flows where source ip = "10.10.20.0/24"
 # Top talkers by bytes
 flows where time_range = "last 1 hour" order by bytes desc
 ```
+## Collector Flow Ingestion Check
+
 ```bash
 ssh ubuntu@aon-collector.example.local
 
@@ -99,6 +110,8 @@ sudo tcpdump -i eth0 udp port 2055 -n -c 20
 sudo tcpdump -i eth0 udp port 2055 -n 2>/dev/null | \
   awk '{print $3}' | cut -d. -f1-4 | sort | uniq -c | sort -rn | head -20
 ```
+## Platform Disk Usage
+
 ```bash
 ssh ubuntu@aon-platform.example.local
 
@@ -121,6 +134,8 @@ sudo du -sh /var/lib/elasticsearch/data/* 2>/dev/null | sort -rh | head -10
 # Check inode usage (can exhaust before disk space)
 df -i
 ```
+## Certificate Expiry Check
+
 ```bash
 # Check the currently installed certificate expiry
 echo | openssl s_client -connect aon.example.local:443 -servername aon.example.local 2>/dev/null \
@@ -136,9 +151,11 @@ echo | openssl s_client -connect aon.example.local:443 2>/dev/null \
   | awk -F= '{print $2}' \
   | xargs -I{} sh -c 'echo "$(( ( $(date -d "{}" +%s) - $(date +%s) ) / 86400 )) days remaining"'
 ```
+Targeted flow check by collector:
 ```text
 flows where collector = "aon-collector-dc1" and time_range = "last 5 minutes"
 ```
+
 ```bash
 # Check if any flows exist at all (remove time constraint)
 flows where collector = "aon-collector-dc1"
@@ -156,6 +173,8 @@ sudo tcpdump -r /tmp/netflow-capture.pcap -n | head -20
 
 # If no packets: check firewall rules between switch and Collector
 ```
+## Automated Health Check Script
+
 ```bash
 #!/bin/bash
 # aon-health-check.sh
@@ -191,6 +210,8 @@ fi
 echo "OK: All collectors connected, API reachable"
 exit 0
 ```
+## Platform Resource Utilisation
+
 ```bash
 ssh ubuntu@aon-platform.example.local
 

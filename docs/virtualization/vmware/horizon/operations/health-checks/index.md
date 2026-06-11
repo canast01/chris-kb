@@ -1,5 +1,9 @@
 # VMware Horizon — Health Checks
 
+<div class="kb-summary">
+Health checks for Horizon — Connection Server status, desktop pool availability, UAG gateway health, session counts vs licensed capacity, certificate expiry, and App Volumes / DEM component health.
+</div>
+
 ```text
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -76,13 +80,8 @@
 
 ---
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Desktop Pools                                                                                        │
-│  (Available > 0,                                                                                      │
-│   Error = 0?)                                                                                         │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+## Session Count and Pool Status
+
 ```powershell
 ## Using VMware.Hv.Helper PowerShell module
 Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
@@ -94,8 +93,10 @@ Write-Host "Active sessions: $($sessions.Count)"
 ## Get licensed session count from License page
 ## Horizon Console → Settings → Product Licensing and Usage
 ```
+## UAG Health and Port Checks
+
 ```bash
-## UAG exposes a health API endpoint
+# UAG exposes a health API endpoint
 curl -sk https://uag.example.local/favicon.ico  # should return 200
 curl -sk https://uag.example.local:9443/rest/v1/monitor/health \
   -u admin:<password> | python3 -m json.tool
@@ -107,26 +108,29 @@ curl -sk https://uag.example.local:9443/rest/v1/monitor/health \
 nc -vz uag.example.local 8443
 nc -vz uag.example.local 4172
 ```
-```text
-App Volumes Manager UI → Activity → Current Activity
-  No stuck attachments or detachments
-App Volumes Manager UI → Infrastructure → Managers
-  All managers show Healthy
-```
+## App Volumes Health
+
+App Volumes Manager UI → **Activity → Current Activity** — no stuck attachments or detachments.
+App Volumes Manager UI → **Infrastructure → Managers** — all managers show Healthy.
+
 ```bash
-## Test App Volumes Manager API
+# Test App Volumes Manager API
 curl -sk https://appvol-mgr.example.local/cv_api/status
 ```
+## DEM Agent Health
+
 ```powershell
-## On a desktop VM or Connection Server:
+# On a desktop VM or Connection Server:
 Test-Path "\\fileserver.example.local\DEM-Config\General"
 ## Should return True
 
 ## Check DEM Agent service in a desktop VM
 Get-Service -ComputerName <desktop-vm> -Name "User Environment Manager Agent"
 ```
+## Certificate Expiry Checks
+
 ```bash
-## Check Connection Server SSL certificate
+# Check Connection Server SSL certificate
 echo | openssl s_client -connect horizon-cs01.example.local:443 -servername horizon-cs01.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 
@@ -138,10 +142,12 @@ echo | openssl s_client -connect uag.example.local:443 -servername uag.example.l
 echo | openssl s_client -connect uag.example.local:8443 2>/dev/null \
   | openssl x509 -noout -dates
 ```
+## Desktop Error State Cleanup
+
 ```powershell
 Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 
-## Get desktops in error state
+# Get desktops in error state
 Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } | 
   Select-Object -ExpandProperty Base | 
   Select-Object Name, BasicState, DesktopSummaryData
@@ -150,8 +156,10 @@ Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |
 Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |
   Remove-HVDesktop -Confirm:$false
 ```
+## External Connectivity Port Check
+
 ```bash
-## Blast Extreme — TCP 8443 to UAG
+# Blast Extreme — TCP 8443 to UAG
 nc -vz uag.public.corp.com 8443
 
 ## PCoIP — TCP 4172 and UDP 4172 to UAG

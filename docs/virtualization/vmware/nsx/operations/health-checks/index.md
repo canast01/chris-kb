@@ -1,22 +1,9 @@
 # NSX — Health Checks
 
-```bash
-# SSH to any NSX Manager node
-nsxcli
+<div class="kb-summary">
+Health checks for NSX — Manager cluster status, transport node health, Edge BGP sessions, DFW policy state, certificate expiry, alarm review, backup age, and post-change verification.
+</div>
 
-# Cluster status (must show STABLE)
-get cluster status
-
-# Individual node reachability (all should show CONNECTED)
-get managers
-
-# Corfu (Raft DB) — control plane health
-get corfu-cluster status
-
-# All services running
-get services | grep -v " running"
-# The above grep shows any service NOT in running state — output should be empty
-```
 ```text
 ┌───────────────────────────────────────── NSX — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -201,6 +188,28 @@ get bgp neighbor summary
 # Specific peer detail
 get bgp neighbor <peer-ip>
 ```
+
+## NSX Manager CLI Quick Reference
+
+```bash
+# SSH to any NSX Manager node
+nsxcli
+
+# Cluster status (must show STABLE)
+get cluster status
+
+# Individual node reachability (all should show CONNECTED)
+get managers
+
+# Corfu (Raft DB) — control plane health
+get corfu-cluster status
+
+# All services running (output should be empty — grep removes "running" lines)
+get services | grep -v " running"
+```
+
+## Alarm Review
+
 ```bash
 # Critical alarms (action required immediately)
 curl -sk -u 'admin:password' \
@@ -221,6 +230,8 @@ d = json.load(sys.stdin)
 print(f'MEDIUM alarms open: {d.get(\"result_count\",0)}')
 "
 ```
+## Certificate Expiry Check
+
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/trust-management/certificates?details=true" | \
@@ -239,6 +250,9 @@ for c in d.get('results', []):
         print(f'  {name:<40}  expires={exp[:10]}  days={days}{flag}')
 "
 ```
+
+## IP Pool Utilisation
+
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/pools/ip-pools" | python3 -c "
@@ -261,6 +275,8 @@ for s in d.get('subnets', []):
     print(f'  {s.get(\"cidr\",\"?\")}  total={t}  free={f}  used={pct}%')
 "
 ```
+## Post-Change Verification
+
 ```bash
 # 1. Check for new alarms
 curl -sk -u 'admin:password' \

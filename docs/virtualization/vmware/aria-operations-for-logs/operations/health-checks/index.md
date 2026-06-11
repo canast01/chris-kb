@@ -1,13 +1,9 @@
 # Aria Operations for Logs — Health Checks
 
-```bash
-# Check all cluster nodes via API
-curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
-  jq '.nodes[] | {host: .hostname, state: .state, role: .role, version: .version}'
+<div class="kb-summary">
+Health checks for Aria Operations for Logs — cluster node status, disk and ingestion rate, alert configuration, archive jobs, syslog source connectivity, and integration health.
+</div>
 
-# Expected: all nodes state = "ACTIVE"
-```
 ```text
 ┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
 │                                                                                                       │
@@ -69,6 +65,18 @@ Run these 8 checks in order at the start of each shift or after any infrastructu
 
 ---
 
+## Cluster Node Status Commands
+
+```bash
+# Check all cluster nodes via API
+curl -sk -u 'admin:<password>' \
+  "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
+  jq '.nodes[] | {host: .hostname, state: .state, role: .role, version: .version}'
+# Expected: all nodes state = "ACTIVE"
+```
+
+## Alert Configuration Commands
+
 ```bash
 # Check that all alert definitions are enabled
 curl -sk -u 'admin:<password>' \
@@ -76,6 +84,8 @@ curl -sk -u 'admin:<password>' \
   jq '.alerts[] | select(.enabled == false) | {name: .name, enabled: .enabled}'
 # Output should be empty — no alerts should be disabled unintentionally
 ```
+## Ingestion and Source Activity
+
 ```bash
 # Via API — get unique hosts seen in the last hour
 curl -sk -u 'admin:<password>' \
@@ -89,9 +99,10 @@ curl -sk -u 'admin:<password>' \
     "limit": 0
   }' | jq '.fieldValues[] | .value'
 ```
-```text
-Administration → Notification Channels → select channel → Test
-```
+Notification channel test: **Administration → Notification Channels → select channel → Test**
+
+## Platform Log Checks
+
 ```bash
 # Watch main runtime log for errors
 tail -f /var/log/loginsight/runtime.log | grep -i "error\|warn\|exception"
