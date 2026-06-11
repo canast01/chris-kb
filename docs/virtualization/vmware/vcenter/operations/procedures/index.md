@@ -368,3 +368,165 @@ Invoke-RestMethod "https://<vcenter-fqdn>/api/vcenter/deployment/backup/job" -He
 ```
 
 Backup includes: vCenter database, configuration, inventory, and optionally historical data (SEAT). Restore requires the vCenter ISO and backup archive.
+
+---
+
+## Manage Roles and Permissions
+
+vCenter RBAC uses Roles (permission sets) assigned to Principals (users or groups) at a specific inventory object level.
+
+```powershell
+# List all roles
+Get-VIRole
+
+# Create a custom role with specific privileges
+New-VIRole -Name "VM-Operator" -Privilege (Get-VIPrivilege -Id "VirtualMachine.Interact.PowerOn",
+    "VirtualMachine.Interact.PowerOff",
+    "VirtualMachine.Interact.ConsoleInteract",
+    "VirtualMachine.Interact.Suspend")
+
+# Assign role to an AD group at a folder level
+$folder = Get-Folder -Name "Production-VMs"
+$principal = "DOMAIN\vm-operators"
+New-VIPermission -Entity $folder -Principal $principal -Role "VM-Operator" -Propagate:$true
+
+# List permissions on an object
+Get-VIPermission -Entity (Get-Folder "Production-VMs")
+
+# Remove a permission
+Get-VIPermission -Entity (Get-Folder "Production-VMs") -Principal "DOMAIN\vm-operators" |
+    Remove-VIPermission -Confirm:$false
+```
+
+**Best practices:**
+- Assign permissions at the lowest scope that satisfies the use case (folder/cluster, not root)
+- Use AD groups, not individual user accounts
+- Never assign Administrator role at root unless required for the admin account
+- Audit permissions quarterly: export and review unexpected root-level assignments
+
+---
+
+## Configure SSO Identity Source (Active Directory)
+
+Required before AD accounts/groups can authenticate to vCenter.
+
+1. vCenter → **Administration** → **Single Sign On** → **Configuration** → **Identity Sources**
+2. Click **Add Identity Source**
+3. Select **Active Directory (Integrated Windows Authentication)** for domain-joined VCSA, or **Active Directory as an LDAP Server** for explicit LDAP binding
+4. For LDAP binding:
+   - **Domain name**: `EXAMPLE.LOCAL`
+   - **Domain alias**: `EXAMPLE`
+   - **Base DN for users**: `CN=Users,DC=example,DC=local`
+   - **Base DN for groups**: `CN=Users,DC=example,DC=local`
+   - **Username / Password**: dedicated service account (e.g., `svc-vcenter-ldap`)
+5. Click **Test Connection** → confirm AD is reachable
+6. Click **Add** → SSO now resolves AD users
+7. Assign vCenter roles to AD groups: Administration → **Access Control** → **Global Permissions** or per-object permissions
+
+```bash
+# Verify AD identity source via SSO API
+curl -sk -X GET "https://<vcenter-fqdn>/api/vcenter/identity/providers" \
+  -H "vmware-api-session-id: <session-id>"
+```
+
+---
+
+## Configure a vSphere Alarm
+
+Alarms alert on object state changes or metric threshold violations.
+
+1. vCenter → right-click the target object (cluster, datastore, host) → **Alarms → New Alarm**
+2. Set the alarm name and description
+3. Under **Triggers**, define the condition:
+   - **State trigger**: Host Connection State = Not Responding → trigger after 60 seconds
+   - **Metric trigger**: Datastore Free Space < 20% for 5 minutes
+4. Under **Actions**, configure what happens when the alarm fires:
+   - Send email notification (requires SMTP configured: Administration → SMTP)
+   - Run a script
+   - Send an SNMP trap
+5. Click **OK** — the alarm is immediately active for the selected object and (if checked) its children
+
+```powershell
+# List all defined alarms
+Get-AlarmDefinition | Select-Object Name, Enabled, Description
+
+# Enable/disable a specific alarm
+Get-AlarmDefinition -Name "Host CPU Usage" | Set-AlarmDefinition -Enabled:$false
+
+# Acknowledge an active alarm
+Get-AlarmAction | Where-Object { $_.Alarm.Name -eq "Host CPU Usage" }
+```
+
+---
+
+## Configure a Cluster (DRS and HA)
+
+When creating or reconfiguring a cluster:
+
+```powershell
+# Create a new cluster with DRS and HA
+New-Cluster -Name "CL-LON-PROD" -Location (Get-Datacenter "DC-LON") `
+    -DrsEnabled:$true -DrsAutomationLevel FullyAutomated `
+    -HAEnabled:$true -HAAdmissionControlEnabled:$true
+
+# Configure HA admission control (25% = 1-host failover for a 4-node cluster)
+$cluster = Get-Cluster "CL-LON-PROD"
+$spec = New-Object VMware.Vim.ClusterConfigSpecEx
+$spec.DasConfig = New-Object VMware.Vim.ClusterDasConfigInfo
+$spec.DasConfig.AdmissionControlPolicy = New-Object VMware.Vim.ClusterFailoverResourcesAdmissionControlPolicy
+$spec.DasConfig.AdmissionControlPolicy.CpuFailoverResourcesPercent = 25
+$spec.DasConfig.AdmissionControlPolicy.MemoryFailoverResourcesPercent = 25
+($cluster | Get-View).ReconfigureComputeResource_Task($spec, $true)
+
+# Enable EVC (Enhanced vMotion Compatibility) for mixed CPU generations
+$clusterView = Get-Cluster "CL-LON-PROD" | Get-View
+$evcSpec = New-Object VMware.Vim.EVCMode
+$evcSpec.Key = "intel-broadwell"  # set to the lowest CPU generation in cluster
+$clusterView.ConfigureEvcMode_Task($evcSpec)
+```
+
+Verify cluster health after configuration:
+
+```powershell
+# Check HA and DRS configuration
+Get-Cluster "CL-LON-PROD" | Select-Object Name, HAEnabled, DrsEnabled, DrsAutomationLevel, HAAdmissionControlEnabled, HAFailoverLevel
+```
+
+---
+
+## Upgrade vCenter Server (VCSA)
+
+vCenter upgrades use the VCSA installer ISO and run a 2-phase migration: deploy new VCSA then transfer data.
+
+**Pre-upgrade checklist:**
+- Snapshot or file-based backup of current VCSA
+- Confirm all ESXi hosts are at or below the target vCenter's supported version
+- Resolve any existing alarms and health warnings
+- Check VMware Interoperability Matrix for NSX/vSAN/Aria compatibility
+
+**Phase 1 — Deploy new VCSA:**
+1. Mount the vCenter ISO on a Windows/Linux/macOS machine
+2. Run `vcsa-ui-installer/win32/installer.exe` (or `.../lin64/installer` on Linux)
+3. Select **Upgrade** → **Install**
+4. Enter the source vCenter FQDN and credentials
+5. Configure the new VCSA: deployment size, FQDN, IP, NTP, SSO password
+6. The installer deploys the new VCSA alongside the existing one — no downtime yet
+
+**Phase 2 — Transfer data:**
+1. The installer prompts to switch to the new VCSA
+2. vCenter inventory, permissions, and historical data are transferred
+3. Source VCSA is powered off after successful transfer
+4. Update DNS if using hostname-based access
+
+**Post-upgrade validation:**
+```bash
+# Verify vCenter version from VAMI
+curl -sk "https://<new-vcenter-fqdn>:5480/rest/appliance/system/version" \
+  -u "administrator@vsphere.local:<password>"
+
+# Check all services running
+ssh root@<new-vcenter-fqdn>
+vmon-cli --status | grep -v RUNNING
+
+# Verify ESXi hosts still show Connected in the new vCenter
+```

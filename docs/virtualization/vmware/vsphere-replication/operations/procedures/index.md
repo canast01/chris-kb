@@ -1,5 +1,9 @@
 # vSphere Replication — Procedures
 
+<div class="kb-summary">
+Operational procedures for vSphere Replication — configuring VM replication, managing RPO, handling stuck replications, non-disruptive test recovery, failback, and integration with SRM protection groups.
+</div>
+
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │              vSphere Replication — Operational Flow                                                   │

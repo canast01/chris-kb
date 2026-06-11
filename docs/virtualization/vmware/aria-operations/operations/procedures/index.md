@@ -1,5 +1,9 @@
 # Aria Operations Procedures
 
+<div class="kb-summary">
+Day-2 operational procedures for Aria Operations — adding adapters, configuring alert policies, managing custom groups, remote collectors, dashboards, workload optimisation, and API data export.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
 │                                                                                                       │
@@ -45,8 +49,182 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Add an Adapter Instance
+
+Adapter instances connect Aria Operations to data sources — vCenter, NSX, physical hardware, cloud accounts.
+
+1. Aria Ops → **Data Sources** → Cloud Accounts (for vSphere/NSX) or **Integrations** (for third-party adapters)
+2. Click **Add Account** → select the adapter kind (vSphere, NSX-T, AWS, etc.)
+3. Enter the adapter target details: FQDN/IP, credentials
+4. Click **Validate Connection** — confirm the green tick before saving
+5. Click **Add** — the adapter begins collecting data immediately
+6. Verify collection: after 5–15 minutes, navigate to the target object in **Environment → Object Browser** and confirm metrics are populating
+
+Add the adapter to a collector group if the target is in an isolated network:
+- Edit the adapter instance → change **Collector/Group** to the appropriate remote collector
+
+---
+
+## Update Adapter Credentials
+
+When a service account password changes, update the stored credentials before the adapter goes red.
+
+1. Aria Ops → **Data Sources** → locate the affected adapter instance
+2. Click **Edit** on the adapter → update the **Credentials** field with the new password
+3. Click **Test Connection** — must pass before saving
+4. Click **Save** → confirm the adapter returns to green status within one collection cycle
+
+---
+
+## Add a Remote Collector
+
+Remote collectors reach isolated networks (DMZ, remote sites) without exposing the primary cluster.
+
+1. Deploy the remote collector OVA to the target network segment
+2. During OVA deployment, set the primary cluster FQDN and admin credentials
+3. Aria Ops → **Administration** → **Remote Collectors** — the new collector appears with **Online** status
+4. Assign adapter instances to the collector: edit each adapter → change **Collector/Group** to the remote collector
+5. Confirm data is flowing: Administration → Remote Collectors → select collector → verify all assigned adapters show green
+
+---
+
+## Configure an Alert Policy
+
+Policies define symptom thresholds and alert priorities for a set of objects.
+
+1. Aria Ops → **Configure** → **Policies** → **Add Policy**
+2. Enter a policy name and description; optionally clone from the **Default Policy** as a baseline
+3. Under **Alert/Symptom Definitions**, modify thresholds for the relevant object types:
+   - Example: CPU Workload > 85% for 15 minutes → **Symptom: Critical**
+   - Example: Datastore Capacity > 80% → **Symptom: Warning**
+4. Set **Alert Actions** — which notification plugin fires when an alert triggers
+5. Click **Save** — the policy is inactive until assigned to an object group
+6. Assign the policy: **Policies** tab → select the policy → **Apply to Groups** → select target groups
+
+---
+
+## Create a Custom Group
+
+Custom groups scope policy assignments and dashboard filters to specific objects.
+
+1. Aria Ops → **Environment** → **Custom Groups** → **Add Group**
+2. Set the group type: **Custom** (manual membership) or **Dynamic** (auto-membership based on criteria)
+3. For dynamic groups, set membership criteria:
+   - Object type: VirtualMachine
+   - Property filter: e.g., `summary|tag|Environment = "Production"`
+4. Click **Preview Members** to verify the membership before saving
+5. Click **Save** — the group is now available for policy assignment and dashboard filters
+
+Assign a policy to the group: **Configure → Policies → select policy → Apply to Groups**.
+
+---
+
+## Configure SMTP Notifications
+
+SMTP must be configured before email notification rules will deliver.
+
+1. Aria Ops → **Administration** → **Outbound Settings** → **Add Outbound Plugin**
+2. Select **Standard Email** plugin
+3. Configure:
+   - **SMTP host**: relay FQDN or IP
+   - **SMTP port**: 25 (plain), 587 (STARTTLS), or 465 (SSL)
+   - **Sender address**: `aria-ops@example.local`
+   - **Authentication**: enable if relay requires credentials
+4. Click **Test** — confirm a test email arrives at the specified address
+5. Click **Save**
+
+Reference the outbound plugin in notification rules: **Configure → Notifications → Add Rule → Action → Standard Email**.
+
+---
+
+## Configure a Notification Rule
+
+1. Aria Ops → **Configure** → **Notifications** → **Add**
+2. Select the trigger: **Alert severity** (Critical, Immediate, Warning) or specific **Alert Definition**
+3. Set the filter scope: all objects, a custom group, or specific object types
+4. Under **Action**, select the outbound plugin (SMTP email or webhook)
+5. Configure the email/webhook details for this rule
+6. Click **Test** — confirms the notification delivers before saving
+7. Click **Save** — rule is immediately active
+
+---
+
+## Install a Management Pack (Solution)
+
+Management packs extend Aria Ops with adapters and dashboards for third-party products.
+
+1. Obtain the PAK file for the management pack from the vendor or VMware Marketplace
+2. Aria Ops → **Administration** → **Repository** → **Upload** → select the PAK file
+3. Review the certificate warning — click **Install** to proceed
+4. Once installed, navigate to **Data Sources** → the new adapter kind is now available
+5. Add adapter instances for the new management pack as needed
+
+---
+
+## Create a Custom Dashboard
+
+1. Aria Ops → **Visualize** → **Dashboards** → **New**
+2. Enter a dashboard name and description; set visibility: **Private** or **Shared with group**
+3. Drag widgets from the widget panel:
+   - **Metric Chart** — time-series metrics for selected objects
+   - **Topology Graph** — object relationship visualisation
+   - **Alert List** — active alerts filtered by scope or severity
+   - **Heatmap** — colour-coded object health across a group
+4. Configure each widget: select object type, specific objects, and metric or alert filter
+5. Arrange and resize widgets → click **Save**
+6. Share: **Actions → Share** → select the user group
+
+---
+
+## Generate a Report
+
+Reports export object metrics, alert summaries, and capacity data to PDF or CSV.
+
+1. Aria Ops → **Visualize** → **Reports** → **Add Report Template**
+2. Select a built-in template (e.g., "VM CPU Report", "Capacity Summary") or start from blank
+3. Add report sections: select object type, time range, and metrics to include
+4. Click **Generate** to produce an immediate report or **Schedule** to deliver on a recurring basis
+5. Scheduled reports are emailed to the configured recipient list via the SMTP outbound plugin
+
+---
+
+## Create a Super Metric
+
+Super metrics aggregate metrics from multiple objects or calculate derived values.
+
+1. Aria Ops → **Configure** → **Super Metrics** → **Add Super Metric**
+2. Build the formula using the formula editor:
+   - Example: average CPU across all VMs in a cluster: `avg(${this, metric=cpu|usage_average, depth=2, where=objecttype=VirtualMachine})`
+3. Set the object type this super metric applies to (e.g., Cluster Compute Resource)
+4. Click **Save** → assign the super metric to a policy to enable collection
+5. Verify collection: navigate to a cluster object → **Metrics** tab → locate the super metric
+
+---
+
+## Reclaim Idle VM Resources
+
+1. Aria Ops → **Optimize** → **Reclamation** → **Idle VMs**
+2. Review the list of VMs with sustained low CPU, memory, and network utilisation
+3. Each VM shows projected savings (vCPU, memory, storage)
+4. For each VM: **Approve** (Aria Ops schedules the right-sizing action) or **Defer** (snooze)
+5. Approved actions are executed via vCenter — VMs are right-sized or powered off
+6. Track savings: **Optimize → Reclamation → Savings** tab
+
+---
+
+## Query Idle VMs via API
+
 ```bash
-## Query idle VMs via API
+# Acquire token
+TOKEN=$(curl -sk -X POST "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","authSource":"local","password":"<pw>"}' \
+  | jq -r '.token')
+
+# Query idle VMs (CPU < 5%, connected)
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/resources/query" \
   -H "Content-Type: application/json" \
@@ -61,104 +239,56 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
     }
   }' | jq '.resourceList[] | {name: .resourceKey.name, cpuAvg: .properties["cpu|usage_average"]}'
 ```
-```bash
-## Trigger a test notification
-curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.example.local/suite-api/api/notifications/test" \
-  -H "Content-Type: application/json" \
-  -d '{"notificationRuleId":"<rule-id>"}'
-```
-```bash
-## Via UI: Administration → Support → Generate Support Bundle
-## Bundle is downloaded directly from the UI
-
-## Via CLI
-ssh admin@vrops-prod-01.example.local
-vracli support bundle generate
-
-## The bundle is placed at:
-ls -lh /storage/log/support-bundle/
-## Download to local machine
-scp admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip .
-
----
-
-## Add a Remote Collector
-
-Remote collectors allow Aria Operations to reach isolated networks (DMZ, remote sites) without requiring direct access from the primary cluster nodes.
-
-1. Aria Ops → Administration → Remote Collectors → **Add**
-2. Specify the collector IP or FQDN and an identifying name
-3. Deploy the remote collector OVA to the target network segment — or configure an existing collector appliance to point at the Aria Ops cluster
-4. Once registered, the collector appears in the list with **Online** status
-5. Assign adapter instances to the collector: edit each adapter instance → change **Collector/Group** to the new remote collector
-6. Verify data is flowing: Administration → Remote Collectors → select collector → confirm all assigned adapters show green
-
----
-
-## Create a Custom Dashboard
-
-1. Aria Ops → Visualize → Dashboards → **New**
-2. Enter a dashboard name and description; set visibility (private or shared to group)
-3. Drag widgets from the widget panel onto the canvas:
-   - **Metric Chart** — plot time-series metrics for selected objects
-   - **Topology Graph** — visualise object relationships
-   - **Alert List** — show active alerts filtered by scope or severity
-4. Configure each widget's data source: select object type, specific objects, and the metric or alert filter
-5. Arrange and resize widgets to create the layout
-6. Click **Save** → share the dashboard to a user group via **Actions → Share**
-
----
-
-## Configure a Notification (Email/Webhook)
-
-1. Aria Ops → Configure → Notifications → **Add**
-2. Select the trigger type:
-   - **Alert severity** — fire when an alert reaches Critical/Immediate
-   - **Symptom** — fire when a specific symptom is true
-3. Configure the notification action:
-   - **SMTP email** — specify recipients, subject template, and SMTP relay details (Administration → SMTP Settings must be configured first)
-   - **REST webhook** — specify the endpoint URL, HTTP method, and payload template
-4. Click **Test** to send a test notification and confirm delivery
-5. Save the notification rule — it is now active for all matching future alerts
-
----
-
-## Reclaim Idle VM Resources (Workload Optimization)
-
-1. Aria Ops → Optimize → Reclamation → **Idle VMs**
-2. Aria Operations identifies VMs with sustained low CPU, memory, and network utilisation based on the configured reclamation policy
-3. Review the reclamation recommendations — each VM shows projected savings (vCPU, memory, storage)
-4. For each VM select **Approve** (Aria Ops schedules the right-sizing action) or **Defer** (snooze for a set period)
-5. Approved actions are executed via vCenter — VMs are right-sized or powered off depending on the recommendation type
-6. Track cumulative savings over time: Optimize → Reclamation → **Savings** tab
 
 ---
 
 ## Export Metrics Data via API
 
-Acquire an authentication token:
-
-```
 ```bash
+# Acquire token
 TOKEN=$(curl -sk -X POST "https://<aria-ops>/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","authSource":"local","password":"<pw>"}' \
   | jq -r '.token')
-```
 
-Use the token to query metric data for a resource:
-
-```bash
-## Get resource ID for a VM by name
+# Get resource ID for a VM by name
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://<aria-ops>/suite-api/api/resources?name=<vm-name>&resourceKind=VirtualMachine" \
   | jq '.resourceList[].identifier'
 
-## Export metric rollup for the resource
+# Export metric rollup for the resource
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://<aria-ops>/suite-api/api/resources/<resource-id>/stats?statKey=cpu|usage_average&rollUpType=AVG&intervalType=HOURS&intervalQuantifier=24" \
   | jq '.values[].stat-list.stat[]'
 ```
 
-Token lifetime is 60 minutes by default; re-acquire as needed for long-running export scripts.
+Token lifetime is 60 minutes; re-acquire for long-running scripts.
+
+---
+
+## Trigger a Test Notification
+
+```bash
+curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
+  "https://vrops-prod-01.example.local/suite-api/api/notifications/test" \
+  -H "Content-Type: application/json" \
+  -d '{"notificationRuleId":"<rule-id>"}'
+```
+
+---
+
+## Generate a Support Bundle
+
+Via UI: **Administration → Support → Generate Support Bundle** — downloads directly from the browser.
+
+Via CLI:
+```bash
+ssh admin@vrops-prod-01.example.local
+vracli support bundle generate
+
+# Confirm bundle location
+ls -lh /storage/log/support-bundle/
+
+# Download to local machine
+scp admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip .
+```

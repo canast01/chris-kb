@@ -1,6 +1,8 @@
 # AON Operational Procedures
 
-Day-2 procedures for VMware Aria Operations for Networks (AON / vRNI). Covers data source management, application discovery, micro-segmentation planning, flow investigation, alerts, and reporting.
+<div class="kb-summary">
+Day-2 procedures for VMware Aria Operations for Networks — data source management, application discovery, micro-segmentation planning, flow investigation, alerts, and reporting.
+</div>
 
 ```text
 ┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐

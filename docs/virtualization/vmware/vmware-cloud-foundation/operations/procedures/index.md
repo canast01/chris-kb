@@ -468,3 +468,93 @@ curl -sk -u admin@local -X POST \
 | `resource` | Target resource FQDN or ID |
 | `status` | `SUCCESS`, `FAILURE`, or `IN_PROGRESS` |
 | `sourceIp` | Client IP address of the initiating session |
+
+---
+
+## Configure SDDC Manager File-Based Backup
+
+SDDC Manager backup captures its own database and configuration — not the managed product backups.
+
+1. SDDC Manager → **Administration** → **Backup and Restore** → **Configure**
+2. Select backup type: **SFTP** or **NFS**
+3. Enter:
+   - Server FQDN or IP
+   - Backup directory path
+   - Credentials (for SFTP)
+   - Encryption passphrase (required — store securely; needed for restore)
+4. Click **Test Connection** → confirm write access
+5. Set schedule: daily backup recommended; retain at least 3 copies
+6. Click **Save**
+
+To trigger an immediate backup:
+```bash
+# Via SDDC Manager API
+curl -sk -u 'admin@local:<password>' -X POST \
+  "https://sddc-manager.example.local/v1/backups" \
+  -H "Content-Type: application/json" \
+  -d '{"elements": [{"resourceType": "SDDC_MANAGER"}]}'
+```
+
+---
+
+## Add an ESXi Host to the Free Pool
+
+Hosts must be in the free pool before they can be assigned to a workload domain.
+
+1. SDDC Manager → **Hosts** → **Commission Hosts**
+2. Enter the ESXi host FQDN — host must be:
+   - Running the VCF-approved ESXi build
+   - Reachable from SDDC Manager
+   - Time-synced (NTP drift < 5 minutes)
+   - SSH enabled
+3. SDDC Manager runs pre-validation (network, NTP, connectivity)
+4. Confirm and submit — host moves from **Unassigned** to **Unallocated** (free pool)
+
+```bash
+# Verify host is in the free pool via API
+curl -sk -u 'admin@local:<password>' \
+  "https://sddc-manager.example.local/v1/hosts?status=UNASSIGNED_USEABLE" \
+  | jq '.elements[] | {fqdn: .fqdn, status: .status}'
+```
+
+---
+
+## Configure External Certificates for VCF Components
+
+VCF supports replacing VMCA-signed certificates with CA-signed certificates for all managed components.
+
+1. SDDC Manager → **Administration** → **Certificates** → **Generate CSRs**
+2. Select the components to replace (SDDC Manager, vCenter, NSX Manager, etc.)
+3. Submit — SDDC Manager generates CSR files for each component
+4. Download the CSR bundle and submit to your CA
+5. Import signed certificates:
+   - SDDC Manager → Certificates → **Import Certificate**
+   - Upload the signed PEM and the CA chain for each component
+6. SDDC Manager → Certificates → **Replace Certificates** → select all components
+7. SDDC Manager orchestrates the certificate push to each component — monitor via **Tasks**
+
+```bash
+# Check current certificate expiry for all VCF components
+curl -sk -u 'admin@local:<password>' \
+  "https://sddc-manager.example.local/v1/certificate-authorities/certificates" \
+  | jq '.elements[] | {resourceFqdn: .resourceFqdn, notAfter: .certificate.notAfter}'
+```
+
+---
+
+## Review SDDC Manager Health Dashboard
+
+1. SDDC Manager → **Dashboard** — shows overall health status (green/yellow/red) for:
+   - Management domain components (vCenter, NSX, vSAN, ESXi)
+   - Workload domains
+   - Storage and network health
+2. Click any component tile to drill into component-level health
+3. For degraded components, review the **Tasks** panel for in-progress or failed tasks
+4. Run an explicit health check: **SDDC Manager → Workload Domains → select domain → Health Check**
+
+```bash
+# Run SOS health check from SDDC Manager appliance
+ssh vcf@sddc-manager.example.local
+sudo /opt/vmware/sddc-support/sos --health-check --domain-name sfo-m01
+# Output saved to /var/log/vmware/vcf/sddc-support/sos-<timestamp>/
+```

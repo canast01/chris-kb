@@ -1,5 +1,9 @@
 # NSX — Standard Procedures
 
+<div class="kb-summary">
+Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies, NAT, load balancers, IPsec VPN, certificate rotation, backup/restore, and upgrade validation. Includes API commands.
+</div>
+
 ```text
 ┌────────────────────────────────────── NSX — Standard Procedures ──────────────────────────────────────┐
 │                                                                                                       │

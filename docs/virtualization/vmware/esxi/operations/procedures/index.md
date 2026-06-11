@@ -587,3 +587,115 @@ vSphere Lifecycle Manager (vLCM) image-based management replaces baseline patchi
     ```
 
 8. Once all hosts are compliant, the cluster is fully under vLCM image management. Future patching is done by editing the desired image and re-remediating.
+
+---
+
+## Configure NTP
+
+Accurate time is required for SSO Kerberos, vSAN consensus, certificates, and HA heartbeats.
+
+```bash
+# Set NTP servers (replace existing config)
+esxcli system ntp set --server ntp1.example.local --server ntp2.example.local
+
+# Enable the NTP client service
+esxcli system ntp set --enabled true
+
+# Verify NTP sync status
+esxcli system ntp get
+# Look for: NTP Service: Running, Sync: Yes
+
+# Manual time sync if NTP is syncing but host time has drifted
+ntpq -p    # run from ESXi shell; shows stratum and offset
+```
+
+Verify from vCenter: **Host → Configure → Time Configuration** — confirm NTP service running and servers listed.
+
+---
+
+## Configure Hostname and DNS
+
+```bash
+# Set the hostname
+esxcli system hostname set --fqdn esxi-01.example.local
+
+# Set DNS servers
+esxcli network ip dns server add --server-address 10.0.0.10
+esxcli network ip dns server add --server-address 10.0.0.11
+
+# Set DNS search domain
+esxcli network ip dns search add --domain example.local
+
+# Verify hostname and DNS
+esxcli system hostname get
+esxcli network ip dns server list
+esxcli network ip dns search list
+
+# Confirm forward/reverse DNS resolution
+nslookup esxi-01.example.local
+nslookup 10.0.1.20   # host management IP
+```
+
+---
+
+## Join ESXi Host to Active Directory
+
+AD join allows AD users and groups to authenticate to the ESXi host and enables LDAP-based lockdown mode.
+
+```bash
+# Join domain from ESXi shell
+esxcli system secpolicy domain join --domain EXAMPLE.LOCAL \
+    --username administrator --password '<password>'
+
+# Verify domain join status
+esxcli system secpolicy domain list
+# Expect: Domain: EXAMPLE.LOCAL, Joined: true
+```
+
+Assign AD group to ESXi Administrator role after joining:
+- vCenter → **Host → Configure → Authentication Services** → confirm domain status
+- vCenter → **Host → Configure → Host Users/Groups** → add the AD group
+
+---
+
+## Configure SNMP
+
+```bash
+# Enable SNMP service
+esxcli system snmp set --enable true
+
+# Set SNMP community string (SNMPv1/v2c)
+esxcli system snmp set --communities <community-string>
+
+# Configure trap targets (NMS IP + community)
+esxcli system snmp set --targets <nms-ip>@161/<community>
+
+# Verify configuration
+esxcli system snmp get
+
+# Test SNMP (send a test trap)
+esxcli system snmp test
+```
+
+---
+
+## Configure a Coredump Target
+
+Required for support bundle generation and post-crash analysis.
+
+```bash
+# List available disk partitions for coredump
+esxcli system coredump partition list
+
+# Set the coredump partition (use a small dedicated partition)
+esxcli system coredump partition set --partition /vmfs/devices/disks/naa.xxx:9
+
+# Enable coredump to network (coredump collector) — preferred for diskless hosts
+esxcli system coredump network set --interface-name vmk0 \
+    --server-ip <coredump-collector-ip> --server-port 6500
+esxcli system coredump network set --enable true
+
+# Verify coredump configuration
+esxcli system coredump partition get
+esxcli system coredump network get
+```
