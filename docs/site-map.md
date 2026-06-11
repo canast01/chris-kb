@@ -38,7 +38,7 @@ Full index of all KB sections and sub-sections.
 | [PowerCLI](virtualization/vmware/powercli/index.md) | Architecture · Deploy · Operations · Security · Troubleshooting |
 | [VMware Certifications](virtualization/vmware/certifications/index.md) | VCP-DCV · Products · Practice Notes · Exam Tracking · Weak Areas · Review Plan |
 | [VMware Topics](virtualization/vmware/topics/index.md) | Learning Path · Scenarios |
-| [VMware Concepts](virtualization/vmware/concepts/index.md) | Cluster Services · Networking · Permissions · Resource Management · Security · Storage |
+| [VMware Internals](virtualization/vmware/internals/index.md) | Cluster Services · Networking · Permissions · Resource Management · Security · Storage |
 
 ### Dell Storage Products
 

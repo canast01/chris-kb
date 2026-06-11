@@ -1,11 +1,11 @@
-# VMware Concepts
+# VMware Internals
 
 <div class="kb-summary">
-Deep-dive reference articles on core vSphere concepts: cluster services, lifecycle management, monitoring, networking, permissions, resource management, security, and storage internals.
+Deep-dive articles on how core vSphere components work internally: cluster services, lifecycle management, monitoring, networking, permissions, resource management, security, and storage architecture. Focus is "how it works" rather than step-by-step procedures.
 </div>
 
 ```text
-┌─────────────────────────────────── VMware Concepts — Reference Map ───────────────────────────────────┐
+┌─────────────────────────────────── VMware Internals — Reference Map ──────────────────────────────────┐
 │                                                                                                       │
 │   Concepts pages explain internals: how features work, why limits exist, what terms mean              │
 │   Use these pages to build the mental model before working on procedures or troubleshooting           │

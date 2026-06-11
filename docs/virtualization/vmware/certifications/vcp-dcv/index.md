@@ -100,7 +100,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Storage Concepts](../concepts/vsphere-storage/) | All storage protocols, SPBM, vVOLs, RDMs, SIOC, datastore clusters |
+| [vSphere Storage Concepts](../internals/vsphere-storage/) | All storage protocols, SPBM, vVOLs, RDMs, SIOC, datastore clusters |
 | [vSAN Architecture](../../../vmware/vsan/architecture/) | vSAN cluster architecture, fault domains, policies |
 
 > **VCP-DCV Exam Note:** **VAAI** offloads storage operations (full copy, block zero, locking) to the array. **VASA** allows arrays to report their capabilities to vCenter for SPBM policy matching. **SPBM** is the policy layer that maps VM storage requirements to datastore capabilities — it is the link between VASA (what the array can do) and VM storage profiles (what the VM needs).
@@ -113,7 +113,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [Cluster Services — DRS, HA, FT, and EVC](../concepts/cluster-services/) | All cluster services, configuration, requirements |
+| [Cluster Services — DRS, HA, FT, and EVC](../internals/cluster-services/) | All cluster services, configuration, requirements |
 
 ---
 
@@ -123,7 +123,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Networking Concepts](../concepts/vsphere-networking/) | VSS/VDS comparison, VMkernel types, NIOC traffic types, PVLAN |
+| [vSphere Networking Concepts](../internals/vsphere-networking/) | VSS/VDS comparison, VMkernel types, NIOC traffic types, PVLAN |
 
 ---
 
@@ -133,7 +133,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Lifecycle Management](../concepts/vsphere-lifecycle/) | vLCM, cluster images, Quick Boot, Update Planner |
+| [vSphere Lifecycle Management](../internals/vsphere-lifecycle/) | vLCM, cluster images, Quick Boot, Update Planner |
 
 ---
 
@@ -153,7 +153,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Security Concepts](../concepts/vsphere-security/) | VM encryption, vSphere Trust Authority, KMS integration |
+| [vSphere Security Concepts](../internals/vsphere-security/) | VM encryption, vSphere Trust Authority, KMS integration |
 
 ---
 
@@ -163,7 +163,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Security Concepts](../concepts/vsphere-security/) | vTPM, VBS, VM firmware options |
+| [vSphere Security Concepts](../internals/vsphere-security/) | vTPM, VBS, VM firmware options |
 
 ---
 
@@ -173,7 +173,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Security Concepts](../concepts/vsphere-security/) | SSO, identity federation, external IdP configuration |
+| [vSphere Security Concepts](../internals/vsphere-security/) | SSO, identity federation, external IdP configuration |
 
 ---
 
@@ -250,7 +250,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Networking Concepts](../concepts/vsphere-networking/) | VSS/VDS creation, port group VLAN modes, uplink policies |
+| [vSphere Networking Concepts](../internals/vsphere-networking/) | VSS/VDS creation, port group VLAN modes, uplink policies |
 
 ---
 
@@ -270,7 +270,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [Cluster Services — DRS, HA, FT](../concepts/cluster-services/) | HA admission control options, DRS automation levels, rules |
+| [Cluster Services — DRS, HA, FT](../internals/cluster-services/) | HA admission control options, DRS automation levels, rules |
 
 ---
 
@@ -290,7 +290,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Lifecycle Management](../concepts/vsphere-lifecycle/) | Content Library types, publish/subscribe, template deployment |
+| [vSphere Lifecycle Management](../internals/vsphere-lifecycle/) | Content Library types, publish/subscribe, template deployment |
 
 ---
 
@@ -300,7 +300,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Security Concepts](../concepts/vsphere-security/) | vTA architecture, trusted cluster, key provider config |
+| [vSphere Security Concepts](../internals/vsphere-security/) | vTA architecture, trusted cluster, key provider config |
 
 ---
 
@@ -321,7 +321,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Lifecycle Management](../concepts/vsphere-lifecycle/) | vLCM setup, depot configuration, image creation, remediation |
+| [vSphere Lifecycle Management](../internals/vsphere-lifecycle/) | vLCM setup, depot configuration, image creation, remediation |
 
 ---
 
@@ -331,7 +331,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Lifecycle Management](../concepts/vsphere-lifecycle/) | Host profiles, answer files, compliance checks, remediation |
+| [vSphere Lifecycle Management](../internals/vsphere-lifecycle/) | Host profiles, answer files, compliance checks, remediation |
 
 ---
 
@@ -341,7 +341,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Lifecycle Management](../concepts/vsphere-lifecycle/) | Secure Boot chain, Quick Boot requirements (UEFI, no passthrough) |
+| [vSphere Lifecycle Management](../internals/vsphere-lifecycle/) | Secure Boot chain, Quick Boot requirements (UEFI, no passthrough) |
 
 ---
 
@@ -373,7 +373,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [Cluster Services — Resource Pools](../concepts/cluster-services/) | Shares, reservations, limits, expandable reservations |
+| [Cluster Services — Resource Pools](../internals/cluster-services/) | Shares, reservations, limits, expandable reservations |
 
 ---
 
@@ -383,8 +383,8 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Networking — NIOC](../concepts/vsphere-networking/) | NIOC traffic types, shares, limits, VDS requirement |
-| [vSphere Monitoring](../concepts/vsphere-monitoring/) | Performance charts, key metrics, ESXTOP, thresholds |
+| [vSphere Networking — NIOC](../internals/vsphere-networking/) | NIOC traffic types, shares, limits, VDS requirement |
+| [vSphere Monitoring](../internals/vsphere-monitoring/) | Performance charts, key metrics, ESXTOP, thresholds |
 
 ---
 
@@ -404,7 +404,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Lifecycle Management](../concepts/vsphere-lifecycle/) | Update Planner, staged remediation, compliance verification |
+| [vSphere Lifecycle Management](../internals/vsphere-lifecycle/) | Update Planner, staged remediation, compliance verification |
 
 ---
 
@@ -414,7 +414,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Monitoring — Skyline](../concepts/vsphere-monitoring/) | Skyline telemetry, Advisor Pro, Aria Operations comparison |
+| [vSphere Monitoring — Skyline](../internals/vsphere-monitoring/) | Skyline telemetry, Advisor Pro, Aria Operations comparison |
 
 ---
 
@@ -426,7 +426,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Monitoring — vCLS Retreat Mode](../concepts/vsphere-monitoring/) | Retreat mode trigger, HA impact, DRS impact, re-enabling vCLS |
+| [vSphere Monitoring — vCLS Retreat Mode](../internals/vsphere-monitoring/) | Retreat mode trigger, HA impact, DRS impact, re-enabling vCLS |
 
 ---
 
@@ -436,7 +436,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Monitoring — Log Files](../concepts/vsphere-monitoring/) | Full table of log files, locations, contents |
+| [vSphere Monitoring — Log Files](../internals/vsphere-monitoring/) | Full table of log files, locations, contents |
 
 ---
 
@@ -446,7 +446,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Monitoring — Log Bundle](../concepts/vsphere-monitoring/) | vm-support commands, VCSA VAMI bundle, API method |
+| [vSphere Monitoring — Log Bundle](../internals/vsphere-monitoring/) | vm-support commands, VCSA VAMI bundle, API method |
 | ESXi Troubleshooting | Host support bundle collection, log forwarding to syslog |
 
 ---
@@ -479,7 +479,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [vSphere Storage Concepts](../concepts/vsphere-storage/) | Datastore types, VMFS expansion, PSPs, SPBM, vVOLs |
+| [vSphere Storage Concepts](../internals/vsphere-storage/) | Datastore types, VMFS expansion, PSPs, SPBM, vVOLs |
 
 ---
 
@@ -489,7 +489,7 @@ This section covers the foundational concepts of vSphere architecture, storage, 
 
 | KB Reference | Content |
 |---|---|
-| [Cluster Services — DRS Rules](../concepts/cluster-services/) | Affinity/anti-affinity, VM-Host rules, mandatory vs optional |
+| [Cluster Services — DRS Rules](../internals/cluster-services/) | Affinity/anti-affinity, VM-Host rules, mandatory vs optional |
 
 ---
 

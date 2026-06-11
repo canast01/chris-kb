@@ -37,7 +37,7 @@ Operational runbooks and procedures for VMware platform management.
 
 <a class="kb-card" href="runbooks/">
   <strong>Runbooks</strong>
-  <span>Step-by-step operational runbooks for vSphere tasks — VM snapshot procedures and platform operations.</span>
+  <span>Step-by-step operational runbooks — VM snapshots, host maintenance mode, vCenter backup, certificate rotation, and vSAN capacity review.</span>
 </a>
 
 </div>

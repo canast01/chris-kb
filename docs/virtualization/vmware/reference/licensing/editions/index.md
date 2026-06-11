@@ -203,5 +203,5 @@ vCenter → Administration → Licensing → Assets
 ## Related Pages
 
 - [Design Decisions](../design-decisions/index.md) — VCF vs manual deployment decision rationale.
-- [VMware Cloud Foundation](../../vmware-cloud-foundation/index.md) — VCF architecture, SDDC Manager, and workload domains.
-- [vCenter](../../vcenter/index.md) — licensing assignment and compliance view in vCenter.
+- [VMware Cloud Foundation](../../../vmware-cloud-foundation/index.md) — VCF architecture, SDDC Manager, and workload domains.
+- [vCenter](../../../vcenter/index.md) — licensing assignment and compliance view in vCenter.

@@ -1,7 +1,7 @@
 # VMware Reference
 
 <div class="kb-summary">
-Quick-reference pages for VMware platform decision-making: architecture design decisions with rationale, and operational gotchas — underdocumented behaviours and default limits that cause incidents.
+Quick-reference pages for VMware platform decision-making: architecture design decisions with rationale, operational gotchas — underdocumented behaviours and default limits that cause incidents, and VMware licensing — edition structure, per-core pricing, and legacy migration.
 </div>
 
 ```text
@@ -33,6 +33,11 @@ Quick-reference pages for VMware platform decision-making: architecture design d
 <a class="kb-card" href="gotchas/">
   <strong>Gotchas</strong>
   <span>Underdocumented behaviours, default limits, and common traps across the VMware platform.</span>
+</a>
+
+<a class="kb-card" href="licensing/">
+  <strong>Licensing</strong>
+  <span>Post-Broadcom edition structure — VVF vs VCF, per-core pricing, add-on SKUs, and legacy perpetual migration.</span>
 </a>
 
 </div>

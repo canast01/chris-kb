@@ -252,9 +252,9 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
   <span>Deep-dive references on cluster behavior, HA/DRS edge cases, storage latency, scenarios, and learning paths.</span>
 </a>
 
-<a class="kb-card" href="concepts/">
-  <strong>Concepts</strong>
-  <span>Core vSphere concepts — cluster services, resource management, permissions, networking, and storage internals.</span>
+<a class="kb-card" href="internals/">
+  <strong>Internals</strong>
+  <span>How vSphere works internally — cluster services, resource management, permissions, networking, and storage architecture.</span>
 </a>
 
 <a class="kb-card" href="certifications/">
@@ -266,12 +266,7 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 
 <a class="kb-card" href="reference/">
   <strong>Reference</strong>
-  <span>Design decisions with rationale and operational gotchas — underdocumented behaviours and default limits.</span>
-</a>
-
-<a class="kb-card" href="licensing/">
-  <strong>Licensing</strong>
-  <span>Post-Broadcom edition structure — VVF vs VCF, per-core pricing, add-on SKUs, and legacy migration.</span>
+  <span>Design decisions with rationale, operational gotchas, and licensing — edition structure, per-core pricing, and legacy migration.</span>
 </a>
 
 </div>

@@ -31,11 +31,31 @@ Step-by-step operational runbooks for vSphere platform tasks.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-<div class="kb-grid kb-grid-1">
+<div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="vm-snapshot/">
   <strong>VM Snapshot Runbook</strong>
-  <span>Procedure for creating, managing, and removing VM snapshots — including pre/post-change snapshot workflow.</span>
+  <span>Creating, managing, and removing VM snapshots — pre/post-change workflow and delta disk risks.</span>
+</a>
+
+<a class="kb-card" href="esxi-host-maintenance/">
+  <strong>ESXi Host Maintenance Mode</strong>
+  <span>Entering and exiting maintenance mode — DRS drain, capacity pre-checks, and vLCM remediation path.</span>
+</a>
+
+<a class="kb-card" href="vcenter-backup/">
+  <strong>vCenter File-Based Backup</strong>
+  <span>Ad-hoc and scheduled VCSA backup to SFTP — backup token management and restore summary.</span>
+</a>
+
+<a class="kb-card" href="certificate-rotation/">
+  <strong>Certificate Rotation</strong>
+  <span>Rotating Machine SSL, VMCA root, and custom CA certificates — pre-checks, options A/B/C, and verification.</span>
+</a>
+
+<a class="kb-card" href="vsan-capacity-check/">
+  <strong>vSAN Capacity Review</strong>
+  <span>Weekly capacity audit — usage thresholds, growth rate calculation, snapshot cleanup, and expansion options.</span>
 </a>
 
 </div>
