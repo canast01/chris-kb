@@ -27,12 +27,20 @@
 │  Scripts use set -euo pipefail for safe error propagation; non-zero exit = check required             │
 │  Output format: [OK] / [WARN] / [FAIL] prefixed lines + summary count at bottom                       │
 │                                                                                                       │
-│  GLOSSARY                                                                                             │
-│  ceph -s      — cluster status: health, OSD count, PG summary, I/O rate, capacity                     │
-│  ceph osd tree— visual tree of hosts, buckets, OSDs, and their weights                                │
-│  ceph df      — per-pool capacity: stored, objects, used, available, quota                            │
-│  ceph pg stat — aggregate PG count by state (active+clean, degraded, etc.)                            │
-│  PASS/WARN/FAIL— script exit convention: all PASS = 0, any WARN = 1, any FAIL = 2                     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ceph -s      = Cluster status: health, OSD up/in counts, PG summary, I/O rate, capacity              │
+│  ceph osd tree= Visual tree of hosts, buckets, OSDs, and their weights and up/in state                │
+│  ceph df      = Per-pool capacity: stored objects, data used, available, and quota                    │
+│  ceph pg stat = Aggregate PG count by state (active+clean, degraded, recovering, etc.)                │
+│  PASS/WARN/FAIL= Script exit convention: all PASS = exit 0, any WARN = exit 1, any FAIL = exit 2      │
+│  admin keyring= /etc/ceph/ceph.client.admin.keyring; required on execution host for all scripts       │
+│  ceph.conf    = Cluster config file; must point to correct monitors for scripts to connect            │
+│  set -euo pipefail = Bash safe mode: exit on error, unset var, or pipe failure in scripts             │
+│  nearfull ratio= Configurable OSD full threshold (default 85%); script alerts when exceeded           │
+│  OSD_DOWN     = Health code raised when OSD is not responding; scripts parse this for alerting        │
+│  ceph health detail = Enumerates health codes with per-item detail; parsed by health-check script     │
+│  cron         = Linux task scheduler; used to run health-check and capacity scripts daily             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

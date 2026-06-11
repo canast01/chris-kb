@@ -30,6 +30,21 @@ Key properties:
   - Keys stored at: /etc/ceph/ceph.client.<name>.keyring (clients)
                      /var/lib/ceph/osd/ceph-N/keyring (OSDs)
                      /var/lib/ceph/mon/ceph-<host>/keyring (MONs)
+
+Key terms:
+
+  CephX          = Ceph's shared-secret mutual authentication protocol; required for all access
+  shared secret  = Pre-shared 128-bit key; stored in keyring files; never transmitted in clear
+  session ticket = Time-limited auth token issued by MON; client presents to OSD to prove identity
+  HMAC           = Hash-based Message Authentication Code; used to sign all CephX challenges
+  nonce          = One-time random value preventing replay attacks in CephX challenge flow
+  client.admin   = Default superuser identity; full cluster access; created during cephadm bootstrap
+  keyring        = File holding CephX identity and shared secret; chmod 600 required on all nodes
+  capability     = Permission string granted per identity: allow r/rw/* per service and pool
+  bootstrap key  = Temporary key used during OSD/MDS initialization; replaced by permanent key
+  ceph auth get  = Retrieves key and capabilities for a given CephX identity
+  key rotation   = Replacing an existing CephX key; requires update on all clients using that key
+  auth DB        = MON-maintained key-value store mapping identity names to keys and capabilities
 ```
 
 ## Key Distribution

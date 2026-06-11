@@ -13,6 +13,21 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 │   │   Data loss risk: any HEALTH_ERR with inactive PGs → open Sev 1 immediately                   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Red Hat RHCS  = Red Hat Ceph Storage; commercial distribution with SLA-backed enterprise support     │
+│  Sev 1         = Production down; data at risk or I/O halted; 24×7 immediate response required        │
+│  Sev 2         = Degraded production; reduced redundancy; 2–4 hour initial response SLA               │
+│  sosreport     = Linux system diagnostics collector; required attachment for all Red Hat cases        │
+│  ceph report   = Full cluster state JSON snapshot; ceph report > ceph-report.json for support         │
+│  ceph crash    = Daemon crash report store; ceph crash info <id> provides traceback and context       │
+│  ceph-users ML = Upstream mailing list; community support for non-RHCS Ceph deployments               │
+│  GitHub issues = ceph/ceph repository; upstream bug tracking and community Ceph case management       │
+│  IRC/Slack     = #ceph on OFTC IRC and ceph.io Slack; real-time community support channel             │
+│  vendor TAM    = Technical Account Manager; Red Hat named escalation contact for Premier subscribers  │
+│  support bundle= sosreport + ceph report + OSD journal; standard data set for vendor cases            │
+│  HEALTH_ERR    = Threshold for Sev 1 escalation; any HEALTH_ERR with inactive PGs → immediate case    │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

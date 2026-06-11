@@ -28,13 +28,20 @@
 │  CRUSH weight adjusts automatically; monitor rebalance via ceph -s until clean                        │
 │  Manual reweight: ceph osd crush reweight osd.<id> <float> — adjust placement if needed               │
 │                                                                                                       │
-│  GLOSSARY                                                                                             │
-│  OSD       — Object Storage Daemon; one per disk; stores, replicates, and recovers data               │
-│  PG        — Placement Group; logical shard unit; PGs map to OSDs via CRUSH                           │
-│  cephadm   — Ceph's orchestrator for deploying and managing cluster daemons via containers            │
-│  CRUSH     — Controlled Replication Under Scalable Hashing; Ceph's data distribution algorithm        │
-│  reweight  — adjusting an OSD's relative capacity share in CRUSH map                                  │
-│  scrub     — data integrity scan; deep-scrub includes checksum verification of stored objects         │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OSD          = Object Storage Daemon; one per disk; stores, replicates, and recovers data            │
+│  PG           = Placement Group; logical shard unit; PGs map to OSD sets via CRUSH algorithm          │
+│  cephadm      = Ceph's orchestrator; deploys and manages cluster daemons via containers               │
+│  CRUSH        = Controlled Replication Under Scalable Hashing; Ceph's data distribution algorithm     │
+│  reweight     = Adjusting an OSD's relative capacity share in the CRUSH map                           │
+│  scrub        = Data integrity scan; deep-scrub adds checksum verification of stored objects          │
+│  ceph osd out = Marks OSD as out of the cluster; triggers data migration to remaining OSDs            │
+│  ceph osd in  = Marks OSD back in; triggers data rebalancing back onto the OSD                        │
+│  BytesToResync= Remaining bytes to replicate after OSD change; wait for 0 before physical swap        │
+│  noout flag   = Prevents OSDs being marked out automatically during planned maintenance               │
+│  CRUSH rule   = Policy defining fault domain (host, rack) for data placement in a pool                │
+│  ceph orch    = Orchestration commands: apply osds, add hosts, remove daemons via cephadm             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

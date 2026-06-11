@@ -13,6 +13,21 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
 │   │   HEALTH_ERR: investigate immediately; OSDs down or PGs inactive blocks client I/O            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HEALTH_OK    = All daemons running; all PGs active+clean; no warnings or errors                      │
+│  HEALTH_WARN  = Non-critical issue; I/O continues; example: clock skew or nearfull OSD                │
+│  HEALTH_ERR   = Critical issue; cluster may stop writes; example: OSD full or PG inactive             │
+│  OSD          = Object Storage Daemon; one per disk; stores, replicates, and recovers data            │
+│  PG           = Placement Group; data shard mapping to OSD sets via CRUSH algorithm                   │
+│  active+clean = Normal PG state: primary OSD active, correct replica count, no repair needed          │
+│  MON quorum   = Majority of MON daemons agree on cluster map; quorum loss stops all writes            │
+│  nearfull     = OSD disk usage threshold (default 85%); HEALTH_WARN raised when crossed               │
+│  BytesToResync= Outstanding bytes not yet replicated; recovery incomplete while non-zero              │
+│  noout flag   = Prevents OSDs being marked out during maintenance; set before rebooting hosts         │
+│  ceph -s      = Top-level status: health, OSD count, PG summary, I/O rate, capacity                   │
+│  ceph osd tree= Visual host/bucket/OSD topology with weights and up/in state per daemon               │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

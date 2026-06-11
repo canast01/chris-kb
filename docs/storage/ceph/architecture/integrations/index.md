@@ -13,6 +13,21 @@ Ceph integrations: Kubernetes CSI (Rook-Ceph), OpenStack Cinder/Glance/Swift, RB
 │   │   RBD: thin-provisioned block devices; snapshots, clones, live resize without downtime        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Rook-Ceph    = Kubernetes operator deploying and managing Ceph inside Kubernetes clusters            │
+│  CSI driver   = Container Storage Interface; provisions PVCs from Ceph RBD or CephFS                  │
+│  PVC          = PersistentVolumeClaim; Kubernetes storage resource backed by Ceph RBD or CephFS       │
+│  Cinder       = OpenStack block storage service; uses Ceph RBD via librbd for VM disk volumes         │
+│  Glance       = OpenStack image service; stores VM images on Ceph RBD objects                         │
+│  Manila       = OpenStack shared filesystem service; backed by CephFS volumes                         │
+│  RGW          = RADOS Gateway; S3/Swift-compatible object storage frontend for Ceph RADOS             │
+│  RBD          = RADOS Block Device; Ceph block storage with snapshot, clone, and live resize          │
+│  CephFS       = Ceph Filesystem; POSIX-compliant distributed filesystem using MDS daemon              │
+│  NFS Ganesha  = NFS export layer for CephFS; enables standard NFS clients to access CephFS            │
+│  libvirt/QEMU = KVM hypervisor stack; integrates with Ceph RBD for direct block I/O                   │
+│  StorageClass = Kubernetes resource referencing CSI driver; auto-provisions PVCs from Ceph pools      │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

@@ -28,13 +28,20 @@
 │  Failover: rbd mirror image promote <pool>/<image> on secondary site                                  │
 │  Failback: demote on secondary  ·  resync  ·  promote on primary                                      │
 │                                                                                                       │
-│  GLOSSARY                                                                                             │
-│  RBD          — RADOS Block Device; Ceph's block storage interface for VM disks and containers        │
-│  rbd snap      — RBD snapshot; point-in-time consistent copy of an image (copy-on-write)              │
-│  rbd mirror    — asynchronous image replication between two Ceph clusters                             │
-│  rbd-mirror    — daemon that handles mirroring replication between peer clusters                      │
-│  CRUSH         — Ceph's data placement algorithm; config backed up separately from cluster data       │
-│  ceph auth     — Ceph authentication keyring; exported to preserve access credentials                 │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RBD           = RADOS Block Device; Ceph's block storage interface for VM disks and containers       │
+│  rbd snap      = RBD snapshot; point-in-time consistent copy of an image (copy-on-write)              │
+│  rbd export    = Full image export to a file; rbd export-diff for incremental exports                 │
+│  rbd import    = Restores exported image back into Ceph pool from a file                              │
+│  rbd mirror    = Asynchronous image replication between two Ceph clusters for DR                      │
+│  rbd-mirror    = Daemon handling mirroring replication; must run on both primary and secondary sites  │
+│  CRUSH         = Ceph's data placement algorithm; export crush map separately for DR recovery         │
+│  ceph auth     = Authentication keyring; export all keys as part of cluster config backup             │
+│  ceph config-key export = Exports monitor key-value store; includes cluster config and flags          │
+│  rbd promote   = Promotes a secondary mirrored image to primary during DR failover                    │
+│  RPO           = Recovery Point Objective; how much data loss is acceptable; depends on mirror lag    │
+│  RTO           = Recovery Time Objective; how quickly failover must complete for service restoration  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

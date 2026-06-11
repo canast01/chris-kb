@@ -26,6 +26,21 @@ Ceph architecture: RADOS object store, daemon roles (OSD/MON/MGR/MDS), CRUSH map
 │   │          Pool types        │  │      Capacity planning     │  │        CephFS NFS export      │   │
 │   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RADOS     = Reliable Autonomic Distributed Object Store; Ceph's foundational storage layer           │
+│  OSD       = Object Storage Daemon; one per disk; handles data placement, replication, recovery       │
+│  MON       = Monitor daemon; maintains cluster maps (OSD, CRUSH, PG); requires quorum                 │
+│  MGR       = Manager daemon; provides metrics, dashboard, and orchestration APIs                      │
+│  MDS       = Metadata Server; manages CephFS namespace operations and directory layout                │
+│  CRUSH     = Controlled Replication Under Scalable Hashing; client-computed data placement            │
+│  PG        = Placement Group; logical data shard; PGs map to OSD sets via CRUSH rules                 │
+│  RBD       = RADOS Block Device; thin-provisioned block storage with snapshot/clone support           │
+│  CephFS    = POSIX-compliant distributed filesystem; requires MDS; supports snapshots                 │
+│  RGW       = RADOS Gateway; S3 and Swift-compatible object storage REST API frontend                  │
+│  EC pool   = Erasure Coding pool; more space-efficient than 3× replication; higher CPU cost           │
+│  CRUSH rule= Policy defining fault domain (host, rack, AZ) for data placement decisions               │
+│                                                                                                       │
 ```
 <div class="kb-grid">
   <a class="kb-card" href="how-it-works/">

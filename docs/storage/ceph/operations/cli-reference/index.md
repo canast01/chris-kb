@@ -13,6 +13,21 @@ Essential Ceph CLI commands: ceph status and health, OSD management, pool operat
 │   │   radosgw-admin: S3 user, bucket, quota, and zone management for RGW                          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ceph -s      = Cluster status: health state, OSD up/in counts, PG summary, I/O rate                  │
+│  ceph health detail = Lists all active health codes with per-item explanation and affected OSDs       │
+│  ceph osd tree= Hierarchical view of hosts, buckets, OSDs, weights, and up/in state                   │
+│  rbd          = RADOS Block Device CLI; create/list/snap/map/resize/export images                     │
+│  radosgw-admin= RGW admin CLI; manage S3 users, buckets, quotas, and zones                            │
+│  ceph auth    = Key management: create/list/delete CephX user keys and capabilities                   │
+│  ceph pg stat = Aggregate PG count by state (active+clean, degraded, recovering, etc.)                │
+│  ceph osd pool= Pool management: create, set PG count, set replication size, set quotas               │
+│  ceph df      = Per-pool capacity: stored objects, data used, available, and quota usage              │
+│  cephadm      = Cluster orchestration CLI: add hosts, deploy daemons, run upgrades                    │
+│  ceph config  = Runtime configuration: get/set per-daemon options without daemon restart              │
+│  ceph crash   = Crash report management: list, inspect, and archive daemon crash reports              │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

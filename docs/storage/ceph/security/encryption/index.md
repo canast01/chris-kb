@@ -25,14 +25,20 @@
 │  Keys stored in Ceph monitor key-value store; no external KMS required for OSD encryption             │
 │  Performance impact: modern CPUs with AES-NI hardware acceleration ~1–3% overhead typical             │
 │                                                                                                       │
-│  GLOSSARY                                                                                             │
-│  dmcrypt    — Linux kernel dm-crypt: transparent block device encryption layer                        │
-│  LUKS       — Linux Unified Key Setup: key management standard used by dm-crypt                       │
-│  RBD encrypt— per-image client-side encryption; key managed via LUKS passphrase in keyring            │
-│  SSE-KMS   — Server-Side Encryption with Key Management Service (external Vault integration)          │
-│  SSE-S3    — Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)          │
-│  msgr2     — Ceph messenger protocol v2; supports secure mode (encrypted) and crc mode                │
-│  AES-NI    — Intel/AMD hardware instruction set for accelerated AES encryption operations             │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  dmcrypt    = Linux kernel dm-crypt; transparent block device encryption layer for OSD disks          │
+│  LUKS       = Linux Unified Key Setup; key management standard used by dm-crypt                       │
+│  RBD encrypt= Per-image client-side encryption; LUKS key managed via LUKS passphrase in keyring       │
+│  SSE-KMS    = Server-Side Encryption with external KMS (Vault); per-object or per-bucket in RGW       │
+│  SSE-S3     = Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)         │
+│  msgr2      = Ceph messenger protocol v2; supports secure (encrypted) and crc (checksummed) modes     │
+│  AES-NI     = Intel/AMD hardware AES instruction set; ~1–3% overhead with modern CPUs                 │
+│  KMS        = Key Management Service; external secret store (e.g. HashiCorp Vault) for SSE-KMS        │
+│  DEK        = Data Encryption Key; per-object key used by RGW SSE; wrapped by KEK from KMS            │
+│  KEK        = Key Encryption Key; master key stored in KMS; wraps DEKs; rotate to re-protect data     │
+│  ms_encrypt_dispatch = Ceph config option enabling msgr2 encryption on all messenger traffic          │
+│  --encrypt  = cephadm OSD option; applies dmcrypt to all OSDs created by that apply command           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

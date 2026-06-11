@@ -28,13 +28,20 @@
 │  ceph crash archive <crash-id> — acknowledge and archive crash after review                           │
 │  Support bundle: sosreport + ceph report > ceph-report.json — attach to vendor support case           │
 │                                                                                                       │
-│  GLOSSARY                                                                                             │
-│  OSD_DOWN      — OSD not responding; check disk status and OSD daemon journal                         │
-│  PG_DEGRADED   — PG has fewer replicas than desired; data still available but unprotected             │
-│  PG_INACTIVE   — PG cannot serve I/O; primary OSD is down; check OSD and network                      │
-│  SLOW_OPS      — Operations queued > 30s; indicates disk or network saturation                        │
-│  OSD_NEARFULL  — OSD disk usage exceeds nearfull ratio; add capacity before OSD_FULL                  │
-│  ceph report   — full cluster state snapshot for support analysis and case submission                 │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OSD_DOWN      = OSD not responding; check disk status (smartctl) and OSD daemon journal              │
+│  PG_DEGRADED   = PG has fewer replicas than desired; data still available but unprotected             │
+│  PG_INACTIVE   = PG cannot serve I/O; primary OSD is down; investigate immediately                    │
+│  SLOW_OPS      = Operations queued more than 30s; indicates disk I/O or network saturation            │
+│  OSD_NEARFULL  = OSD disk usage exceeds nearfull ratio; add capacity before OSD_FULL occurs           │
+│  ceph report   = Full cluster state JSON snapshot; attach to all vendor support case submissions      │
+│  sosreport     = Linux system diagnostics bundle; collect on admin node for RHCS support cases        │
+│  ceph crash ls = Lists recent daemon crash reports with IDs for further investigation                 │
+│  journalctl    = systemd journal; use -u ceph-osd@<id> to read OSD daemon logs                        │
+│  ceph osd perf = Per-OSD commit/apply latency; outliers indicate disk I/O issues on specific OSD      │
+│  ceph pg dump_stuck = Lists inactive, degraded, or unclean PGs with their primary OSD                 │
+│  iperf3        = Network bandwidth test; run between Ceph nodes to validate cluster network speed     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
