@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Provisioning Flow: Namespace → Bucket → IAM User, Creating a Namespace and 7 more sections.
+Dell ECS operational procedures — namespace and bucket provisioning, IAM user and policy management, S3 access configuration, replication, retention policy, change readiness, and incident triage.
 </div>
 ```text
 ┌────────────────────────────────── Dell ECS — Operational Procedures ──────────────────────────────────┐

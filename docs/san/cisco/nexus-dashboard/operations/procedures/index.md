@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Overview, 1. Registering a New Site (Fabric), 2. Discovering a New SAN Fabric (NDFC), 3. VSAN Management (NDFC), 4. Zoning — Add a Host Zone (NDFC) and 5 more sections.
+Nexus Dashboard and NDFC procedures — site registration, SAN fabric discovery, VSAN management, host zoning, MDS firmware upgrade via NDFC, fabric health monitoring, and configuration compliance.
 </div>
 
 ```text

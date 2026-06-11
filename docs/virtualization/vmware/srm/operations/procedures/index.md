@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Create a Protection Group (vSphere Replication), Create a Recovery Plan, Run a Test Failover (Non-Disruptive), Run a Planned Migration, Run a Disaster Recovery (Protected Site Down) and 4 more sections.
+Site Recovery Manager procedures — planned migration, emergency failover, reprotect, failback, quarterly DR drills, protection groups, recovery plans, network/resource mapping updates, SRM upgrade, and VM lifecycle management.
 </div>
 
   Test Failover vs Actual Failover

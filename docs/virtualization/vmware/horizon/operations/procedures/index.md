@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image Update to an Instant Clone Pool, Add a New Connection Server Replica, Configure UAG for External Access, Enable True SSO and 4 more sections.
+Day-2 Horizon procedures — managing desktop and RDS pools, user entitlements, session operations, instant clone recompose, certificate renewal, UAG configuration, True SSO, App Volumes, DEM, and pool decommission.
 </div>
 
   Common Operational Procedures

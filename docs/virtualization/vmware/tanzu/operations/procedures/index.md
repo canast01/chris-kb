@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Create a vSphere Namespace, Deploy a TKG Workload Cluster in a Namespace, Grant Namespace Access to a Team, Configure Harbor Project with Vulnerability Scanning, Configure Pull-Through Cache in Harbor and 4 more sections.
+TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Harbor project configuration, Helm deployments, Ingress setup, node scaling, cluster upgrade, Velero backup/restore, and persistent storage via vSAN CNS.
 </div>
 ```text
 ┌──────────────────────── Virtualization Vmware Tanzu — Operational Procedures ─────────────────────────┐

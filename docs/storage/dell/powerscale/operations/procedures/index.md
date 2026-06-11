@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, NFS Export Management, SMB Share Management and 1 more sections.
+PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot operations, quota management, SmartConnect zone configuration, replication, node maintenance, and change readiness.
 </div>
 ```text
 ┌────────────────────────────── Dell PowerScale — Operational Procedures ───────────────────────────────┐

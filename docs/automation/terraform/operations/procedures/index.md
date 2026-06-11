@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Standard Apply Workflow, Plan Workflows, Change Readiness, Maintenance Window, Post-Change Validation and 1 more sections.
+Terraform operational procedures — standard apply workflow, plan and apply strategies, change readiness, workspace management, state operations, incident triage, and provider credential rotation.
 </div>
 
 ## Standard Apply Workflow

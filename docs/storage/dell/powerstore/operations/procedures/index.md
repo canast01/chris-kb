@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Provisioning a Block Volume, Provisioning a NAS File System (NFS), Snapshot Operations, Host Management, Replication Management and 2 more sections.
+PowerStore operational procedures — block volume and NAS file system provisioning, snapshot management, host management, replication configuration, Metro volume operations, and performance monitoring.
 </div>
 ```text
 ┌────────────────────────────── Dell PowerStore — Operational Procedures ───────────────────────────────┐

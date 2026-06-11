@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering SVM / Volume / LUN Hierarchy, Change Readiness, Rolling Node Upgrade Sequence, Maintenance Window, Post-Change Validation and 4 more sections.
+ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and LUN provisioning, SVM management, snapshot and SnapMirror operations, capacity management, and incident triage.
 </div>
 ```text
 ┌──────────────────────────────── NetApp ONTAP — Operational Procedures ────────────────────────────────┐

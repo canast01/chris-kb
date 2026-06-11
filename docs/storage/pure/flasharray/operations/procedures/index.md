@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Host Volume Provisioning Flow, Host Management and 2 more sections.
+FlashArray operational procedures — host and volume provisioning, snapshot and replication management, pod and ActiveCluster operations, capacity monitoring, performance analysis, and change readiness.
 </div>
 
 ```text

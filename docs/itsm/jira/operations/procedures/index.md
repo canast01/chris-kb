@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Stories, Story Structure, Story Points, Epics, Story Splitting and 13 more sections.
+Jira operational procedures — story and epic creation, sprint management, backlog grooming, workflow configuration, user and permission management, board setup, and reporting.
 </div>
 
 ## Stories

@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Procedures reference covering Pre-Maintenance Steps, Restarting Services Safely, Adding an ESXi Host to vCenter, Placing a Host in Maintenance Mode, vMotion — Migrating a VM and 6 more sections.
+Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration, content library, certificate replacement, file-based backup, roles/permissions, SSO identity sources, alarms, cluster config, and VCSA upgrade.
 </div>
 
 ```text
