@@ -13,6 +13,21 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T upgrade sequence, 
 │   │   ESXi patches: AWS manages OS-level host AMI; VCF LCM manages ESXi version within VCF       │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VCF LCM      = Lifecycle Manager in VCF; orchestrates all component upgrades via SDDC Manager        │
+│  SDDC Manager = Must be upgraded first in every VCF cycle; before vCenter and NSX-T                   │
+│  Upgrade bundle = VCF update package downloaded from VMware depot; contains all installers            │
+│  Rolling upgrade = ESXi hosts patched one at a time; vSAN evacuates data before each host             │
+│  Remediation  = vLCM action applying an image to a host; automatically enters maintenance mode        │
+│  NSX-T upgrade = Manager → Edge nodes → host transport nodes; never skip order                        │
+│  EUS          = Extended Update Support; allows version jumps between select VCF releases             │
+│  HCX upgrade  = Upgrade last in the VCF stack; both sites must run same HCX version                   │
+│  Bundle download = SDDC Manager → Lifecycle → Available Updates → Download before scheduling          │
+│  Host AMI     = AWS-managed OS image for EVS bare-metal hosts; AWS handles OS-level updates           │
+│  Pre-check    = SDDC Manager automated compatibility validation run before upgrade starts             │
+│  Brownfield   = Existing EVS environment being upgraded; follow supported upgrade path matrix         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

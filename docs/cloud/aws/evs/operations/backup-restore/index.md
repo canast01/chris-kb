@@ -13,6 +13,21 @@ EVS backup strategy: SDDC Manager configuration backup to S3, vCenter database b
 │   │   VM backups: Veeam with vStorage API (VADP); backup datastores on-prem or S3/EBS            │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SDDC Manager backup = VCF configuration backup covering domains, hosts, and topology data            │
+│  vCenter VCSA backup = VCSA file-based backup to SFTP/NFS; does not include VM disk data              │
+│  VADP         = vStorage APIs for Data Protection; enables agentless VM backup via Veeam              │
+│  S3           = AWS object storage; primary backup destination for EVS configuration data             │
+│  Transfer Family = AWS managed SFTP service with S3 backend; acts as SFTP target for VCF              │
+│  RTO          = Recovery Time Objective; max acceptable downtime; drives backup frequency             │
+│  RPO          = Recovery Point Objective; max acceptable data loss; drives retention count            │
+│  Veeam        = Backup software using VADP to quiesce and snapshot VMs inside EVS cluster             │
+│  AWS Backup   = Native AWS backup service; can protect EVS VMs via integration agents                 │
+│  Retention    = Number of backup copies kept; minimum 3 for production environments                   │
+│  SFTP bridge  = EC2 instance running OpenSSH proxy to S3; alternative to Transfer Family              │
+│  Encryption token = Password protecting the VCSA backup; required for restore — store in vault        │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

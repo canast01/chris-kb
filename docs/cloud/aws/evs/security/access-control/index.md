@@ -13,6 +13,21 @@ AWS IAM permissions for EVS cluster management, vSphere RBAC roles for VMs and i
 │   │   vSphere RBAC: no-permissions root role; assign custom roles scoped to inventory objects     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  IAM role     = AWS identity with attached policies; grants evs:* API permissions                     │
+│  AmazonEVSFullAccess = AWS managed policy; full EVS cluster and host lifecycle management             │
+│  AmazonEVSReadOnlyAccess = Read-only EVS policy; safe for monitoring and compliance roles             │
+│  vSphere RBAC = Binds a role to a user/group on a vCenter inventory object                            │
+│  SDDC Manager role = Built-in VCF roles: ADMIN, OPERATOR, VIEWER for lifecycle management             │
+│  SSO domain   = vSphere auth domain; vsphere.local default or AD-backed identity source               │
+│  Privilege    = Atomic vCenter permission (~400+ available; e.g., VirtualMachine.Config.*)            │
+│  Custom role  = User-defined set of vCenter privileges; assign at datacenter or cluster scope         │
+│  Least privilege = Grant only minimum permissions; read-only roles where write is not needed          │
+│  Service account = Non-human identity for CI/CD or monitoring; assign minimum required roles          │
+│  CloudTrail   = AWS audit log capturing all evs:* API calls with actor, time, and IP address          │
+│  SCP          = Service Control Policy; AWS Organizations guardrail restricting evs:* actions         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

@@ -22,6 +22,21 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 │   │  No re-IP of VMs during mig │  │  CloudWatch: metrics via CW  │  │  BGP on T0 router to VPC   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HCX          = VMware Hybrid Cloud Extension; live and cold migration between sites                  │
+│  vMotion      = Live VM migration while powered on; zero downtime; requires sufficient DX bandwidth   │
+│  Cold migration = Powered-off VM transfer; faster for bulk moves; no vMotion bandwidth constraint     │
+│  Network Extension = HCX L2 stretch; VMs keep their IP addresses during migration window              │
+│  Service Mesh = Paired HCX appliances: Interconnect + WAN Optimizer + NE deployed together            │
+│  Direct Connect = Private dedicated AWS link; sub-100ms latency required for HCX vMotion              │
+│  Transit Gateway = AWS routing hub connecting EVS VPC to other VPCs and on-premises networks          │
+│  Route 53     = AWS DNS; use private hosted zone to resolve EVS management FQDNs inside VPC           │
+│  IAM role     = AWS identity with permission policies; controls evs:* API action authorisation        │
+│  CloudWatch   = AWS monitoring; EVS publishes host-level metrics for dashboards and alerting          │
+│  BGP          = Border Gateway Protocol; T0 router peers with VPC subnet for workload routing         │
+│  S3           = AWS object storage; primary backup destination for EVS configuration data             │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

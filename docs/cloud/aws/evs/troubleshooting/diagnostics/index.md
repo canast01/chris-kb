@@ -13,6 +13,21 @@ EVS diagnostic data collection: AWS CloudTrail, VPC Flow Logs, NSX-T support bun
 │   │   HCX: built-in log bundle download from HCX Manager UI for migration/connectivity issues     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CloudTrail   = AWS API audit log; download from S3 or query via Athena for evs:* events              │
+│  VPC Flow Logs = ENI-level traffic metadata; check for dropped packets or unexpected flows            │
+│  vm-support bundle = ESXi diagnostic archive; collect with: vm-support -w /tmp; SCP off host          │
+│  vCenter log bundle = VCSA diagnostic archive; VAMI → Monitor → Log Bundle; ~2-5 GB                   │
+│  NSX-T support bundle = Collected from NSX Manager UI; Troubleshoot → Support Bundle                  │
+│  SDDC Manager log = VCF audit log covering bringup, lifecycle, and compliance history                 │
+│  HCX log bundle = HCX Manager → Support → Download Log Bundle; includes service mesh logs             │
+│  CloudWatch   = AWS metrics for EVS host CPU, memory, and network via AWS integration                 │
+│  AWS Health Dashboard = Personal Health Dashboard; shows AWS events affecting EVS resources           │
+│  vSAN HCL check = vSAN Health → Hardware Compatibility; flags unsupported disk configurations         │
+│  Athena       = AWS serverless query engine; analyze CloudTrail logs at scale using SQL               │
+│  tcpdump      = Packet capture on ESXi vmnic; use for network-level diagnostic data collection        │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

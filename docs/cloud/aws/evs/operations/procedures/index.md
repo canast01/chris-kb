@@ -13,6 +13,21 @@ EVS operational procedures: adding and removing hosts, host maintenance mode, vS
 │   │   HCX vMotion: verify bandwidth and HCX service mesh green before migrating production VMs    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  create-environment-host = AWS CLI command to provision a new bare-metal host into the cluster        │
+│  delete-environment-host = AWS CLI command to terminate and return a bare-metal host to AWS           │
+│  Maintenance mode = ESXi state where all VMs are migrated off before hardware or patch work           │
+│  vSAN evacuation = Moving all data components off a host to ensure no data loss during removal        │
+│  vSAN rebalance = Auto-redistribution of objects after host addition; monitor BytesToSync             │
+│  NSX segment  = Logical L2 network in NSX-T; attached to a T1 gateway for routing                     │
+│  DFW          = Distributed Firewall; NSX-T feature enforcing rules at each VM NIC                    │
+│  BytesToSync  = vSAN resync metric; must be 0 before next host removal or maintenance step            │
+│  HCX vMotion  = Live migration over Direct Connect; verify bandwidth before production use            │
+│  ENI          = Elastic Network Interface; AWS virtual NIC providing host network connectivity        │
+│  Change window = Scheduled maintenance period; host add/remove requires CAB-approved window           │
+│  vSAN object  = Distributed data unit; FTT=1 means 2 components on different hosts                    │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

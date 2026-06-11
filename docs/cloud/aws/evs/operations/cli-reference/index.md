@@ -13,6 +13,21 @@ AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere opera
 │   │   esxcli: host-level storage, network, and VMkernel diagnostics on bare-metal ESXi             │  │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  aws evs      = AWS CLI service prefix for all EVS environment and host management commands           │
+│  environment-id = Unique EVS cluster identifier (env-xxxx format); required for all API calls         │
+│  PowerCLI     = VMware PowerShell module; Connect-VIServer to EVS vCenter from a VPC jump host        │
+│  esxcli       = Command-line tool on ESXi bare-metal; SSH access for host-level diagnostics           │
+│  Connect-VIServer = PowerCLI cmdlet to authenticate against vCenter inside the EVS VPC                │
+│  Get-VMHost   = PowerCLI cmdlet returning ESXi host objects from vCenter cluster inventory            │
+│  VsanView     = PowerCLI API object for vSAN health, capacity, and resync status queries              │
+│  aws configure = Sets AWS CLI default credentials and region for API access                           │
+│  --output table = AWS CLI output flag; produces human-readable table format vs JSON default           │
+│  vmkping      = ESXi command to test VMkernel interface reachability and validate MTU settings        │
+│  NSX-T REST API = HTTP API on NSX Manager for segment, DFW, and gateway management                    │
+│  jq           = JSON command-line processor; commonly piped from AWS CLI or NSX-T API outputs         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
