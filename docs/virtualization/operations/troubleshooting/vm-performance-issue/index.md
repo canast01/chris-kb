@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Part of the [Troubleshooting](../index.md) hub.
+Diagnosing VM performance degradation across the VMware stack — CPU ready, memory balloon, storage latency, and network saturation. Covers esxtop analysis, vSAN I/O queues, and NSX DFW overhead.
 </div>
 ```text
 ┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐

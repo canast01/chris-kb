@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Part of the [Troubleshooting](../index.md) hub.
+Diagnosing ESXi hosts showing disconnected or not responding in vCenter — management network failures, HA isolation, hostd/vpxa agent issues, and reconnect procedures.
 </div>
 ```text
 ┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐

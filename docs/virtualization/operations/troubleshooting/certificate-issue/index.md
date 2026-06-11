@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Part of the [Troubleshooting](../index.md) hub.
+Diagnosing and resolving certificate errors across the VMware platform — VCSA certificate expiry, ESXi thumbprint mismatches, NSX certificate chains, and Aria certificate rotation.
 </div>
 ```text
 ┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐

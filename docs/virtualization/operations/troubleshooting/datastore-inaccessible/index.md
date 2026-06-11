@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Part of the [Troubleshooting](../index.md) hub.
+Diagnosing inaccessible datastores across VMFS, NFS, and vSAN — APD/PDL states, HBA path failures, NFS mount errors, and vSAN component health.
 </div>
 ```text
 ┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐

@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Part of the [Troubleshooting](../index.md) hub.
+Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, portgroup VLAN mismatches, VMkernel routing, NSX segment issues, and physical uplink failures.
 </div>
 ```text
 ┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐

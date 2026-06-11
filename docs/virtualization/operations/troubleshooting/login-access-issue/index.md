@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Part of the [Troubleshooting](../index.md) hub.
+Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD accounts, LDAP connectivity, NTP drift breaking Kerberos, and certificate validation failures.
 </div>
 ```text
 ┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐
