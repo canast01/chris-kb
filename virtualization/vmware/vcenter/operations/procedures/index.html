@@ -4044,6 +4044,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#manage-roles-and-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manage Roles and Permissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-sso-identity-source-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure SSO Identity Source (Active Directory)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-vsphere-alarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a vSphere Alarm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-cluster-drs-and-ha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a Cluster (DRS and HA)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-vcenter-server-vcsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade vCenter Server (VCSA)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4528,6 +4583,138 @@ Service restart order for manual recovery:
 <a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>  <span class="nb">Select-Object</span> <span class="n">id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">messages</span>
 </code></pre></div>
 <p>Backup includes: vCenter database, configuration, inventory, and optionally historical data (SEAT). Restore requires the vCenter ISO and backup archive.</p>
+<hr />
+<h2 id="manage-roles-and-permissions">Manage Roles and Permissions<a class="headerlink" href="#manage-roles-and-permissions" title="Permanent link">&para;</a></h2>
+<p>vCenter RBAC uses Roles (permission sets) assigned to Principals (users or groups) at a specific inventory object level.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c"># List all roles</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">Get-VIRole</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c"># Create a custom role with specific privileges</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    <span class="s2">&quot;VirtualMachine.Interact.ConsoleInteract&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="s2">&quot;VirtualMachine.Interact.Suspend&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c"># Assign role to an AD group at a folder level</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="nv">$folder</span> <span class="p">=</span> <span class="nb">Get-Folder</span> <span class="n">-Name</span> <span class="s2">&quot;Production-VMs&quot;</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="nv">$principal</span> <span class="p">=</span> <span class="s2">&quot;DOMAIN\vm-operators&quot;</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$folder</span> <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="n">-Role</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="c"># List permissions on an object</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="c"># Remove a permission</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Folder</span> <span class="s2">&quot;Production-VMs&quot;</span><span class="p">)</span> <span class="n">-Principal</span> <span class="s2">&quot;DOMAIN\vm-operators&quot;</span> <span class="p">|</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>    <span class="nb">Remove-VIPermission</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
+<p><strong>Best practices:</strong>
+- Assign permissions at the lowest scope that satisfies the use case (folder/cluster, not root)
+- Use AD groups, not individual user accounts
+- Never assign Administrator role at root unless required for the admin account
+- Audit permissions quarterly: export and review unexpected root-level assignments</p>
+<hr />
+<h2 id="configure-sso-identity-source-active-directory">Configure SSO Identity Source (Active Directory)<a class="headerlink" href="#configure-sso-identity-source-active-directory" title="Permanent link">&para;</a></h2>
+<p>Required before AD accounts/groups can authenticate to vCenter.</p>
+<ol>
+<li>vCenter → <strong>Administration</strong> → <strong>Single Sign On</strong> → <strong>Configuration</strong> → <strong>Identity Sources</strong></li>
+<li>Click <strong>Add Identity Source</strong></li>
+<li>Select <strong>Active Directory (Integrated Windows Authentication)</strong> for domain-joined VCSA, or <strong>Active Directory as an LDAP Server</strong> for explicit LDAP binding</li>
+<li>For LDAP binding:</li>
+<li><strong>Domain name</strong>: <code>EXAMPLE.LOCAL</code></li>
+<li><strong>Domain alias</strong>: <code>EXAMPLE</code></li>
+<li><strong>Base DN for users</strong>: <code>CN=Users,DC=example,DC=local</code></li>
+<li><strong>Base DN for groups</strong>: <code>CN=Users,DC=example,DC=local</code></li>
+<li><strong>Username / Password</strong>: dedicated service account (e.g., <code>svc-vcenter-ldap</code>)</li>
+<li>Click <strong>Test Connection</strong> → confirm AD is reachable</li>
+<li>Click <strong>Add</strong> → SSO now resolves AD users</li>
+<li>Assign vCenter roles to AD groups: Administration → <strong>Access Control</strong> → <strong>Global Permissions</strong> or per-object permissions</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Verify AD identity source via SSO API</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;vcenter-fqdn&gt;/api/vcenter/identity/providers&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-id&gt;&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="configure-a-vsphere-alarm">Configure a vSphere Alarm<a class="headerlink" href="#configure-a-vsphere-alarm" title="Permanent link">&para;</a></h2>
+<p>Alarms alert on object state changes or metric threshold violations.</p>
+<ol>
+<li>vCenter → right-click the target object (cluster, datastore, host) → <strong>Alarms → New Alarm</strong></li>
+<li>Set the alarm name and description</li>
+<li>Under <strong>Triggers</strong>, define the condition:</li>
+<li><strong>State trigger</strong>: Host Connection State = Not Responding → trigger after 60 seconds</li>
+<li><strong>Metric trigger</strong>: Datastore Free Space &lt; 20% for 5 minutes</li>
+<li>Under <strong>Actions</strong>, configure what happens when the alarm fires:</li>
+<li>Send email notification (requires SMTP configured: Administration → SMTP)</li>
+<li>Run a script</li>
+<li>Send an SNMP trap</li>
+<li>Click <strong>OK</strong> — the alarm is immediately active for the selected object and (if checked) its children</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># List all defined alarms</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Get-AlarmDefinition</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">Description</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c"># Enable/disable a specific alarm</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nb">Get-AlarmDefinition</span> <span class="n">-Name</span> <span class="s2">&quot;Host CPU Usage&quot;</span> <span class="p">|</span> <span class="nb">Set-AlarmDefinition</span> <span class="n">-Enabled</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c"># Acknowledge an active alarm</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="nb">Get-AlarmAction</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Alarm</span><span class="p">.</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Host CPU Usage&quot;</span> <span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="configure-a-cluster-drs-and-ha">Configure a Cluster (DRS and HA)<a class="headerlink" href="#configure-a-cluster-drs-and-ha" title="Permanent link">&para;</a></h2>
+<p>When creating or reconfiguring a cluster:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Create a new cluster with DRS and HA</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">New-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-LON&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">-DrsEnabled</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-DrsAutomationLevel</span> <span class="n">FullyAutomated</span> <span class="p">`</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="n">-HAEnabled</span><span class="p">:</span><span class="nv">$true</span> <span class="n">-HAAdmissionControlEnabled</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="c"># Configure HA admission control (25% = 1-host failover for a 4-node cluster)</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDasConfigInfo</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterFailoverResourcesAdmissionControlPolicy</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span><span class="p">.</span><span class="n">CpuFailoverResourcesPercent</span> <span class="p">=</span> <span class="n">25</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">DasConfig</span><span class="p">.</span><span class="n">AdmissionControlPolicy</span><span class="p">.</span><span class="n">MemoryFailoverResourcesPercent</span> <span class="p">=</span> <span class="n">25</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="p">(</span><span class="nv">$cluster</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">ReconfigureComputeResource_Task</span><span class="p">(</span><span class="nv">$spec</span><span class="p">,</span> <span class="nv">$true</span><span class="p">)</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="c"># Enable EVC (Enhanced vMotion Compatibility) for mixed CPU generations</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="nv">$clusterView</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-View</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="nv">$evcSpec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">EVCMode</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="nv">$evcSpec</span><span class="p">.</span><span class="n">Key</span> <span class="p">=</span> <span class="s2">&quot;intel-broadwell&quot;</span>  <span class="c"># set to the lowest CPU generation in cluster</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="nv">$clusterView</span><span class="p">.</span><span class="n">ConfigureEvcMode_Task</span><span class="p">(</span><span class="nv">$evcSpec</span><span class="p">)</span>
+</code></pre></div>
+<p>Verify cluster health after configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c"># Check HA and DRS configuration</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">DrsAutomationLevel</span><span class="p">,</span> <span class="n">HAAdmissionControlEnabled</span><span class="p">,</span> <span class="n">HAFailoverLevel</span>
+</code></pre></div>
+<hr />
+<h2 id="upgrade-vcenter-server-vcsa">Upgrade vCenter Server (VCSA)<a class="headerlink" href="#upgrade-vcenter-server-vcsa" title="Permanent link">&para;</a></h2>
+<p>vCenter upgrades use the VCSA installer ISO and run a 2-phase migration: deploy new VCSA then transfer data.</p>
+<p><strong>Pre-upgrade checklist:</strong>
+- Snapshot or file-based backup of current VCSA
+- Confirm all ESXi hosts are at or below the target vCenter's supported version
+- Resolve any existing alarms and health warnings
+- Check VMware Interoperability Matrix for NSX/vSAN/Aria compatibility</p>
+<p><strong>Phase 1 — Deploy new VCSA:</strong>
+1. Mount the vCenter ISO on a Windows/Linux/macOS machine
+2. Run <code>vcsa-ui-installer/win32/installer.exe</code> (or <code>.../lin64/installer</code> on Linux)
+3. Select <strong>Upgrade</strong> → <strong>Install</strong>
+4. Enter the source vCenter FQDN and credentials
+5. Configure the new VCSA: deployment size, FQDN, IP, NTP, SSO password
+6. The installer deploys the new VCSA alongside the existing one — no downtime yet</p>
+<p><strong>Phase 2 — Transfer data:</strong>
+1. The installer prompts to switch to the new VCSA
+2. vCenter inventory, permissions, and historical data are transferred
+3. Source VCSA is powered off after successful transfer
+4. Update DNS if using hostname-based access</p>
+<p><strong>Post-upgrade validation:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Verify vCenter version from VAMI</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://&lt;new-vcenter-fqdn&gt;:5480/rest/appliance/system/version&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:&lt;password&gt;&quot;</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="c1"># Check all services running</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>ssh<span class="w"> </span>root@&lt;new-vcenter-fqdn&gt;
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>RUNNING
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="c1"># Verify ESXi hosts still show Connected in the new vCenter</span>
+</code></pre></div></p>
 
 
 

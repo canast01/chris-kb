@@ -4055,6 +4055,50 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#configure-sddc-manager-file-based-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure SDDC Manager File-Based Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-an-esxi-host-to-the-free-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add an ESXi Host to the Free Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-external-certificates-for-vcf-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure External Certificates for VCF Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-sddc-manager-health-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review SDDC Manager Health Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4752,6 +4796,81 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="configure-sddc-manager-file-based-backup">Configure SDDC Manager File-Based Backup<a class="headerlink" href="#configure-sddc-manager-file-based-backup" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager backup captures its own database and configuration — not the managed product backups.</p>
+<ol>
+<li>SDDC Manager → <strong>Administration</strong> → <strong>Backup and Restore</strong> → <strong>Configure</strong></li>
+<li>Select backup type: <strong>SFTP</strong> or <strong>NFS</strong></li>
+<li>Enter:</li>
+<li>Server FQDN or IP</li>
+<li>Backup directory path</li>
+<li>Credentials (for SFTP)</li>
+<li>Encryption passphrase (required — store securely; needed for restore)</li>
+<li>Click <strong>Test Connection</strong> → confirm write access</li>
+<li>Set schedule: daily backup recommended; retain at least 3 copies</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<p>To trigger an immediate backup:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Via SDDC Manager API</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/backups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;elements&quot;: [{&quot;resourceType&quot;: &quot;SDDC_MANAGER&quot;}]}&#39;</span>
+</code></pre></div></p>
+<hr />
+<h2 id="add-an-esxi-host-to-the-free-pool">Add an ESXi Host to the Free Pool<a class="headerlink" href="#add-an-esxi-host-to-the-free-pool" title="Permanent link">&para;</a></h2>
+<p>Hosts must be in the free pool before they can be assigned to a workload domain.</p>
+<ol>
+<li>SDDC Manager → <strong>Hosts</strong> → <strong>Commission Hosts</strong></li>
+<li>Enter the ESXi host FQDN — host must be:</li>
+<li>Running the VCF-approved ESXi build</li>
+<li>Reachable from SDDC Manager</li>
+<li>Time-synced (NTP drift &lt; 5 minutes)</li>
+<li>SSH enabled</li>
+<li>SDDC Manager runs pre-validation (network, NTP, connectivity)</li>
+<li>Confirm and submit — host moves from <strong>Unassigned</strong> to <strong>Unallocated</strong> (free pool)</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Verify host is in the free pool via API</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/hosts?status=UNASSIGNED_USEABLE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {fqdn: .fqdn, status: .status}&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="configure-external-certificates-for-vcf-components">Configure External Certificates for VCF Components<a class="headerlink" href="#configure-external-certificates-for-vcf-components" title="Permanent link">&para;</a></h2>
+<p>VCF supports replacing VMCA-signed certificates with CA-signed certificates for all managed components.</p>
+<ol>
+<li>SDDC Manager → <strong>Administration</strong> → <strong>Certificates</strong> → <strong>Generate CSRs</strong></li>
+<li>Select the components to replace (SDDC Manager, vCenter, NSX Manager, etc.)</li>
+<li>Submit — SDDC Manager generates CSR files for each component</li>
+<li>Download the CSR bundle and submit to your CA</li>
+<li>Import signed certificates:</li>
+<li>SDDC Manager → Certificates → <strong>Import Certificate</strong></li>
+<li>Upload the signed PEM and the CA chain for each component</li>
+<li>SDDC Manager → Certificates → <strong>Replace Certificates</strong> → select all components</li>
+<li>SDDC Manager orchestrates the certificate push to each component — monitor via <strong>Tasks</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check current certificate expiry for all VCF components</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/certificate-authorities/certificates&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.elements[] | {resourceFqdn: .resourceFqdn, notAfter: .certificate.notAfter}&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="review-sddc-manager-health-dashboard">Review SDDC Manager Health Dashboard<a class="headerlink" href="#review-sddc-manager-health-dashboard" title="Permanent link">&para;</a></h2>
+<ol>
+<li>SDDC Manager → <strong>Dashboard</strong> — shows overall health status (green/yellow/red) for:</li>
+<li>Management domain components (vCenter, NSX, vSAN, ESXi)</li>
+<li>Workload domains</li>
+<li>Storage and network health</li>
+<li>Click any component tile to drill into component-level health</li>
+<li>For degraded components, review the <strong>Tasks</strong> panel for in-progress or failed tasks</li>
+<li>Run an explicit health check: <strong>SDDC Manager → Workload Domains → select domain → Health Check</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Run SOS health check from SDDC Manager appliance</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.example.local
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>sudo<span class="w"> </span>/opt/vmware/sddc-support/sos<span class="w"> </span>--health-check<span class="w"> </span>--domain-name<span class="w"> </span>sfo-m01
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Output saved to /var/log/vmware/vcf/sddc-support/sos-&lt;timestamp&gt;/</span>
+</code></pre></div>
 
 
 
