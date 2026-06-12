@@ -3723,13 +3723,33 @@ Community strings provide no encryption.</p>
         });
         return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
       }
+      function fillLum(shape) {
+        // Mermaid v10 applies classDef as inline style="fill:#xxx", not as
+        // a bare fill="" attribute, so we must check both paths.
+        var raw = shape.getAttribute('fill') ||
+                  (shape.style && shape.style.fill) || '';
+        if (!raw || raw === 'none' || raw === 'transparent') {
+          // Fall back to computed fill (returns rgb(...) string)
+          raw = window.getComputedStyle(shape).fill || '';
+        }
+        if (raw.startsWith('#')) return lum(raw);
+        var m = raw.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (m) {
+          var ch = [+m[1], +m[2], +m[3]].map(function(v) {
+            v /= 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+          });
+          return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+        }
+        return null; // unknown format — skip
+      }
       function fixSvg(svg) {
         svg.querySelectorAll('.node').forEach(function(node) {
           var shape = node.querySelector('rect, circle, polygon, path');
           if (!shape) return;
-          var fill = shape.getAttribute('fill') || '';
-          if (!fill || fill === 'none' || fill === 'transparent') return;
-          var textColor = (fill.startsWith('#') && lum(fill) > 0.25) ? '#1f2937' : '#fff';
+          var l = fillLum(shape);
+          if (l === null) return;
+          var textColor = l > 0.25 ? '#1f2937' : '#fff';
           node.querySelectorAll('.nodeLabel, .nodeLabel p, .nodeLabel span, foreignObject div, foreignObject p').forEach(function(el) {
             el.style.setProperty('color', textColor, 'important');
           });
