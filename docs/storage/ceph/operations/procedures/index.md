@@ -6,11 +6,11 @@
 │  Procedure Categories                                                                                 │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
 │  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
-│  │  OSD Replacement        │  │  Cluster Expansion      │  │  Maintenance & Tuning   │                │
-│  │  osd out → wait PG heal │  │  ceph orch apply osd    │  │  scrub scheduling       │                │
-│  │  purge → physical swap  │  │  add nodes via cephadm  │  │  PG count adjustment    │                │
-│  │  osd create new device  │  │  crush reweight balance │  │  reweight for load bal  │                │
-│  │  verify recovery done   │  │  monitor data migration │  │  controlled maintenance │                │
+│  │  OSD Lifecycle          │  │  Cluster Maintenance    │  │  Capacity Management    │                │
+│  │  add new OSD            │  │  noout / norebalance    │  │  reweight by util       │                │
+│  │  replace failed OSD     │  │  scrub scheduling       │  │  add nodes via cephadm  │                │
+│  │  decommission host      │  │  PG repair              │  │  crush reweight-all     │                │
+│  │  osd out → wait → purge │  │  inconsistent PG fix    │  │  monitor data migration │                │
 │  └─────────────────────────┘  └─────────────────────────┘  └─────────────────────────┘                │
 │                                                                                                       │
 │  OSD Replacement — Safe Sequence                                                                      │
@@ -20,13 +20,6 @@
 │  3. Wait: watch ceph -s  — BytesToResync reaches 0 before physically replacing disk                   │
 │  4. Stop daemon: systemctl stop ceph-osd@<id>  ·  replace disk  ·  re-run ceph-volume                 │
 │  5. Verify: ceph osd tree — new OSD shows up/in; ceph -s — HEALTH_OK                                  │
-│                                                                                                       │
-│  Cluster Expansion — New Node                                                                         │
-│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  cephadm bootstrap adds admin node; ceph orch host add <hostname> adds new node to cluster            │
-│  ceph orch apply osd --all-available-devices — auto-deploys OSDs on new node's disks                  │
-│  CRUSH weight adjusts automatically; monitor rebalance via ceph -s until clean                        │
-│  Manual reweight: ceph osd crush reweight osd.<id> <float> — adjust placement if needed               │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
@@ -47,10 +40,195 @@
 ```
 
 <div class="kb-summary">
-Ceph operational procedures: OSD replacement, adding new nodes, reweighting for load balance, scrub scheduling, pool PG count adjustment, and controlled cluster maintenance.
+Ceph operational procedures: add/replace/decommission OSDs, reweight for capacity balance, scrub management, PG repair, and controlled cluster maintenance with noout/norebalance flags.
 </div>
 
-## OSD Replacement
+```mermaid
+graph TD
+    classDef cat  fill:#2563eb,color:#fff
+    classDef step fill:#15803d,color:#fff
+    classDef flag fill:#b45309,color:#fff
+    classDef cap  fill:#7c3aed,color:#fff
+
+    OSD[OSD Lifecycle]:::cat
+    OSD --> ADD[Add new OSD<br/>ceph orch daemon add]:::step
+    OSD --> REPL[Replace failed OSD<br/>out → wait → purge → add]:::step
+    OSD --> DECOM[Decommission host<br/>drain all OSDs]:::step
+
+    PGM[PG Management]:::cat
+    PGM --> REPAIR[Repair inconsistent PG<br/>ceph pg repair pgid]:::step
+    PGM --> SCRUB[Scrub scheduling<br/>noscrub / nodeep-scrub flags]:::step
+
+    MAINT[Cluster Maintenance]:::cat
+    MAINT --> NOOUT[Set noout flag<br/>prevent auto-out during work]:::flag
+    MAINT --> NORB[Set norebalance<br/>pause data migration]:::flag
+
+    CAP[Capacity Management]:::cap
+    CAP --> RWU[reweight-by-utilization<br/>move data off full OSDs]:::step
+    CAP --> ADDNODE[Add new node<br/>ceph orch host add]:::step
+```
+
+## Add a New OSD (Single Device)
+
+```bash
+# 1. Verify device is clean — no existing filesystem or partition
+lsblk -f /dev/sdX
+
+# 2. Wipe device if it has previous data
+cephadm ceph-volume lvm zap /dev/sdX --destroy
+
+# 3. Add OSD via cephadm
+ceph orch daemon add osd <hostname>:/dev/sdX
+
+# 4. Verify new OSD appears and cluster recovers
+ceph osd tree                    # new OSD with correct weight
+watch -n 10 ceph -s              # HEALTH_OK after rebalance completes
+```
+
+## Replace a Failed OSD
+
+```bash
+# 1. Identify failed OSD — note ID and host
+ceph osd tree | grep down
+
+# 2. Set noout before starting to avoid false alarms
+ceph osd set noout
+
+# 3. Mark OSD out — starts data migration away from failed disk
+ceph osd out <id>
+
+# 4. Wait for PGs to recover before touching hardware
+watch -n 10 ceph -s              # wait until active+clean
+
+# 5. Stop the OSD daemon
+ceph orch daemon stop osd.<id>
+
+# 6. Replace the physical disk on the host
+
+# 7. Purge old OSD entry from cluster
+ceph osd purge <id> --yes-i-really-mean-it
+
+# 8. Add new OSD on the same host/device
+ceph orch daemon add osd <hostname>:/dev/sdX
+
+# 9. Remove noout
+ceph osd unset noout
+
+# 10. Verify
+ceph osd tree                    # new OSD has correct weight
+ceph -s                          # HEALTH_OK
+```
+
+## Decommission a Host (Remove All Its OSDs)
+
+```bash
+# 1. Set both noout and norebalance to control data migration
+ceph osd set noout
+ceph osd set norebalance
+
+# 2. Identify all OSD IDs on the target host
+ceph osd tree | grep <hostname>
+
+# 3. Mark all host OSDs out
+for i in <id1> <id2> <id3>; do ceph osd out $i; done
+
+# 4. Unset norebalance to allow data to migrate away
+ceph osd unset norebalance
+
+# 5. Wait for all PGs to return to active+clean
+watch -n 10 ceph -s
+
+# 6. Drain and stop all daemons on the host
+ceph orch host drain <hostname>
+
+# 7. Purge each OSD from the cluster map
+for i in <id1> <id2> <id3>; do
+    ceph osd purge $i --yes-i-really-mean-it
+done
+
+# 8. Remove host from orchestrator
+ceph orch host rm <hostname>
+
+# 9. Unset noout
+ceph osd unset noout
+```
+
+## Reweight OSDs to Balance Capacity
+
+```bash
+# Check current utilization per OSD
+ceph osd df tree
+
+# Sort to find most-full OSDs
+ceph osd df tree | sort -k8 -rn
+
+# Automatic reweight: move data off OSDs more than 115% of average utilization
+ceph osd reweight-by-utilization 115
+
+# Manual reweight for a single OSD (lower value = less data placed on it)
+ceph osd reweight <id> <0.0–1.0>
+
+# Reweight all OSDs to match their actual device capacity (after adding larger disks)
+ceph osd crush reweight-all
+
+# Verify effect after rebalance
+ceph osd df tree | sort -k8 -rn
+```
+
+## Manage Scrub Operations
+
+```bash
+# Check scrub status across PGs
+ceph pg dump | grep scrub
+
+# Force immediate scrub on a specific PG
+ceph pg scrub <pgid>
+
+# Force scrub on all PGs in a pool
+ceph osd pool scrub <pool>
+ceph osd pool deep-scrub <pool>
+
+# Disable scrub during maintenance window
+ceph osd set noscrub
+ceph osd set nodeep-scrub
+
+# Re-enable after maintenance
+ceph osd unset noscrub
+ceph osd unset nodeep-scrub
+
+# Restrict automatic scrub to off-hours
+ceph config set osd osd_scrub_begin_hour 1
+ceph config set osd osd_scrub_end_hour 5
+
+# Per-pool scrub disable (does not affect other pools)
+ceph osd pool set <pool> noscrub true
+ceph osd pool set <pool> nodeep-scrub true
+```
+
+## Repair an Inconsistent PG
+
+```bash
+# 1. Identify inconsistent PGs
+ceph health detail | grep inconsistent
+
+# 2. Trigger repair on the affected PG
+ceph pg repair <pgid>
+
+# 3. Monitor repair progress
+watch -n 10 "ceph pg <pgid> query | python3 -m json.tool | grep state"
+
+# 4. Confirm PG returns to active+clean
+ceph pg stat
+
+# If repair fails — identify which OSD has the bad object copy
+ceph pg <pgid> query | python3 -m json.tool | grep acting
+
+# Pull the object from the good OSD manually
+rados get -p <pool> <object> /tmp/recovered-object
+rados put -p <pool> <object> /tmp/recovered-object
+```
+
+## OSD Replacement (Original Procedure — ceph orch)
 
 ```bash
 # When a disk fails and needs replacement:
@@ -101,67 +279,24 @@ watch -n 10 ceph -s   # wait for HEALTH_OK
 ceph osd tree
 ```
 
-## Scrub Management
-
-```bash
-# Ceph scrubs data to detect bitrot and inconsistencies.
-# Deep scrub: reads all objects and verifies checksums (I/O intensive).
-
-# Check last scrub time for each PG
-ceph pg dump | awk '{print $1, $19}' | sort -t: -k2 -k3 | head -20
-
-# Schedule scrub during maintenance window
-ceph osd set noscrub           # disable automatic scrub
-ceph osd set nodeep-scrub      # disable deep scrub
-
-# Trigger scrub on specific pool
-ceph osd pool scrub rbd
-ceph osd pool deep-scrub rbd
-
-# Re-enable automatic scrubbing
-ceph osd unset noscrub
-ceph osd unset nodeep-scrub
-
-# Scrub time restriction (restrict to off-hours)
-ceph config set osd osd_scrub_begin_hour 22
-ceph config set osd osd_scrub_end_hour 6
-```
-
-## Adjusting PG Count
-
-```bash
-# Increase PG count for a pool (can only increase; plan ahead)
-# Warning: triggers rebalancing — do during low I/O window
-ceph osd pool set rbd pg_num 256         # increase PGs
-ceph osd pool set rbd pgp_num 256        # apply new placement
-
-# Monitor PG split progress
-watch -n 5 "ceph -s | grep pgs"
-
-# Auto-scaling (Nautilus+) — let Ceph manage PG count
-ceph osd pool set rbd pg_autoscale_mode on
-ceph osd pool autoscale-status
-```
-
 ## Maintenance Mode
 
 ```bash
 # Before maintenance on an OSD node:
-# 1. Disable OSD device replacement alert temporarily
-ceph osd set noout    # prevent OSDs from being marked out during maintenance
+ceph osd set noout        # prevent OSDs from being marked out during maintenance
 
-# 2. Perform maintenance (patch, reboot, hardware work)
+# Perform maintenance (patch, reboot, hardware work)
 
-# 3. Verify OSDs come back up after reboot
-ceph osd stat   # all OSDs should be up+in
+# Verify OSDs come back up after reboot
+ceph osd stat             # all OSDs should be up+in
 
-# 4. Remove noout flag
+# Remove noout flag
 ceph osd unset noout
 
 # Flags reference:
-# noout     = don't mark OSDs out when they disconnect (maintenance safety)
-# noin      = don't mark OSDs in when they reconnect
-# norecover = suspend recovery
-# nobackfill= suspend backfill
+# noout      = don't mark OSDs out when they disconnect (maintenance safety)
+# noin       = don't mark OSDs in when they reconnect
+# norecover  = suspend recovery
+# nobackfill = suspend backfill
 # norebalance= suspend rebalancing
 ```

@@ -7,7 +7,7 @@
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
 │  ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐                │
 │  │  RBD Snapshot Export    │  │  RBD Mirroring (DR)     │  │  Config Backup          │                │
-│  │  rbd snap create        │  │  rbd mirror pool enable │  │  ceph config-key export │                │
+│  │  rbd snap create        │  │  rbd mirror pool enable │  │  ceph config-key dump   │                │
 │  │  rbd export (full)      │  │  async replication      │  │  ceph auth export       │                │
 │  │  rbd export-diff (incr) │  │  rbd mirror pool status │  │  crush map export       │                │
 │  │  rbd import to restore  │  │  failover: rbd promote  │  │  pool + pg config dump  │                │
@@ -38,102 +38,196 @@
 │  rbd-mirror    = Daemon handling mirroring replication; must run on both primary and secondary sites  │
 │  CRUSH         = Ceph's data placement algorithm; export crush map separately for DR recovery         │
 │  ceph auth     = Authentication keyring; export all keys as part of cluster config backup             │
-│  ceph config-key export = Exports monitor key-value store; includes cluster config and flags          │
+│  ceph config-key dump = Exports monitor key-value store; includes cluster config and flags            │
 │  rbd promote   = Promotes a secondary mirrored image to primary during DR failover                    │
 │  RPO           = Recovery Point Objective; how much data loss is acceptable; depends on mirror lag    │
 │  RTO           = Recovery Time Objective; how quickly failover must complete for service restoration  │
+│  CephFS snap   = CephFS snapshot in .snap/ directory; restored by copying from snapshot subtree       │
+│  RGW zone sync = Multi-site RGW replication; objects sync between zones asynchronously                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-summary">
-Ceph backup: RBD snapshot export for VM disks, RBD mirroring for DR, cluster configuration backup, and crash dump collection. Note: Ceph itself is a redundant store — backup focus is on configuration and RBD images.
+Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, RGW bucket replication for objects, cluster configuration backup, and MON data recovery.
 </div>
+
+```mermaid
+graph TD
+    classDef src  fill:#2563eb,color:#fff
+    classDef dest fill:#15803d,color:#fff
+    classDef dr   fill:#b45309,color:#fff
+    classDef cfg  fill:#7c3aed,color:#fff
+    classDef rest fill:#1e3a5f,color:#fff
+
+    CLUSTER[Ceph Cluster]:::src
+
+    CLUSTER --> RBD[RBD Snapshots<br/>VM / block volumes]:::dest
+    CLUSTER --> CFS[CephFS Snapshots<br/>file data]:::dest
+    CLUSTER --> RGW[RGW Bucket Replication<br/>object data cross-cluster]:::dr
+    CLUSTER --> CFG[cephadm config export<br/>cluster configuration]:::cfg
+
+    RBD --> RBDR[Restore: rbd import<br/>or snap rollback]:::rest
+    CFS --> CFSR[Restore: cp from .snap/<br/>snapshot subtree]:::rest
+    RGW --> RGWR[Restore: sync pull<br/>or re-enable zone]:::rest
+    CFG --> CFGR[Restore: ceph auth import<br/>ceph osd setcrushmap]:::rest
+```
 
 ## RBD Snapshot and Export
 
 ```bash
-# Create snapshot before changes
-rbd snap create rbd/my-volume@backup-$(date +%F)
-rbd snap ls rbd/my-volume
+# Create snapshot before a change or on schedule
+rbd snap create <pool>/<image>@backup-$(date +%F)
+rbd snap ls <pool>/<image>
 
-# Export snapshot to file (for off-cluster backup)
-rbd export rbd/my-volume@backup-2026-06-07 /backup/my-volume-2026-06-07.img
+# Full export to file (for off-cluster backup)
+rbd export <pool>/<image>@backup-$(date +%F) /mnt/backup/image-$(date +%F).img
 
-# Export incremental (since last snapshot) — more efficient
-rbd export-diff rbd/my-volume@snap-old rbd/my-volume@snap-new \
-  /backup/my-volume-incremental.img
+# Incremental export (differential since last snapshot — much smaller)
+rbd export-diff --from-snap <prev-snap> <pool>/<image>@<snap> /mnt/backup/diff.img
 
-# Import and restore
-rbd import /backup/my-volume-2026-06-07.img rbd/my-volume-restored
+# Restore: import as new image
+rbd import /mnt/backup/image.img <pool>/<new-image>
 
-# Import incremental diff
-rbd import-diff /backup/my-volume-incremental.img rbd/my-volume
+# Restore: in-place rollback to snapshot (discards all writes since snap)
+rbd snap rollback <pool>/<image>@<snap>
+
+# Apply incremental diff to existing image
+rbd import-diff /mnt/backup/diff.img <pool>/<image>
+```
+
+## CephFS Snapshots
+
+```bash
+# Create snapshot — snapshots live in the .snap/ virtual directory of each CephFS directory
+mkdir /mnt/cephfs/.snap/daily-$(date +%F)
+
+# List existing snapshots
+ls /mnt/cephfs/.snap/
+
+# Restore: copy files out of the snapshot subtree
+cp -a /mnt/cephfs/.snap/daily-2026-06-01/important-dir /mnt/cephfs/restored/
+
+# Delete old snapshot
+rmdir /mnt/cephfs/.snap/daily-2026-05-01
+
+# Snapshot scheduling via CephFS snapshot scheduler module
+ceph mgr module enable snap_schedule
+ceph fs snap-schedule add / 1d               # daily snapshots at root
+ceph fs snap-schedule retention add / 7d    # keep 7 days
+ceph fs snap-schedule list /
+```
+
+## RGW Bucket Replication (Cross-Cluster DR)
+
+```bash
+# Check multi-site sync status on source
+radosgw-admin sync status
+
+# Commit any pending period updates
+radosgw-admin period update --commit
+
+# Bucket-level replication using S3 API (via AWS CLI pointed at RGW)
+aws s3api put-bucket-replication \
+    --bucket <src-bucket> \
+    --replication-configuration file://replicate.json
+
+# Check per-bucket sync status
+radosgw-admin bucket sync status --bucket=<name>
+
+# Force sync of a specific bucket
+radosgw-admin bucket sync run --bucket=<name>
 ```
 
 ## RBD Mirroring (DR / Async Replication)
 
 ```bash
-# RBD mirroring replicates RBD images between two Ceph clusters asynchronously.
-# Use case: DR site; RPO = configurable (journal-based or snapshot-based)
+# Enable mirroring on pool (image mode = per-image opt-in)
+rbd mirror pool enable rbd image
+# Pool mode (all images in pool are mirrored)
+rbd mirror pool enable rbd pool
 
-# Enable mirroring on pool
-rbd mirror pool enable rbd image    # image mode (per-image enable)
-# or:
-rbd mirror pool enable rbd pool     # pool mode (all images mirrored)
+# Enable on specific image (journaling feature required)
+rbd mirror image enable rbd/my-volume journaling
 
-# Enable mirroring on specific image
-rbd mirror image enable rbd/my-volume journaling   # requires journaling feature
-
-# On secondary cluster: create peer
+# On secondary cluster: import bootstrap token
 rbd mirror pool peer bootstrap import rbd bootstrap-token
 
 # Check mirror status
-rbd mirror pool status rbd          # pool-level status
-rbd mirror image status rbd/my-volume  # per-image sync status
+rbd mirror pool status rbd
+rbd mirror image status rbd/my-volume
 
-# Failover: promote secondary image
-rbd mirror image promote rbd/my-volume  # on DR site
-rbd mirror image demote rbd/my-volume   # on primary (if accessible)
+# DR failover: promote secondary image to writable
+rbd mirror image promote rbd/my-volume          # on DR site
+rbd mirror image demote rbd/my-volume           # on primary (if accessible)
 ```
 
 ## Cluster Configuration Backup
 
 ```bash
-# Back up all configuration keys
-ceph config-key dump > /backup/ceph-configkeys-$(date +%F).json
+# Export all monitor key-value store entries (includes config flags and settings)
+ceph config-key dump > ceph-config-backup-$(date +%F).json
 
-# Back up auth keys (all users and capabilities)
+# List all running daemon state
+cephadm ls > cephadm-ls-$(date +%F).json
+
+# Export auth keys for all CephX users
 ceph auth list > /backup/ceph-auth-$(date +%F).txt
 ceph auth export > /backup/ceph-auth-$(date +%F).keyring
 
-# Back up CRUSH map
-ceph osd getcrushmap -o /backup/crush-$(date +%F).bin
-crushtool -d /backup/crush-$(date +%F).bin -o /backup/crush-$(date +%F).txt
-
-# Back up ceph.conf (on admin node)
-cp /etc/ceph/ceph.conf /backup/ceph.conf.$(date +%F)
+# Export CRUSH map — binary and human-readable text
+ceph osd getcrushmap -o crushmap.bin
+crushtool -d crushmap.bin -o crushmap.txt
 
 # OSD map
 ceph osd dump > /backup/osd-dump-$(date +%F).txt
+
+# Copy ceph.conf from admin node
+cp /etc/ceph/ceph.conf /backup/ceph.conf.$(date +%F)
 ```
 
-## Restore from Backup
+## Restore from Configuration Backup
 
 ```bash
 # Restore CRUSH map
 ceph osd setcrushmap -i /backup/crush-2026-06-07.bin
 
-# Restore auth key for a specific user
+# Restore auth keys for all users
 ceph auth import -i /backup/ceph-auth-2026-06-07.keyring
+
+# Restore a single auth key
+ceph auth get-or-create client.rbd > /etc/ceph/ceph.client.rbd.keyring
 
 # Restore RBD image from exported file
 rbd import /backup/my-volume-2026-06-07.img rbd/my-volume-restored
 
-# For full cluster recovery from scratch:
+# Full cluster recovery from scratch:
 # 1. Deploy new cluster with cephadm bootstrap (same cluster FSID required)
 # 2. Import auth keys
 # 3. Re-add OSDs (existing data may be recoverable if disks intact)
 # 4. Restore CRUSH map
-# 5. Run: ceph osd repair; ceph pg repair
+# 5. Run: ceph pg repair; ceph osd repair
+```
+
+## MON Data Recovery (Loss of Quorum)
+
+```bash
+# If monitors lose quorum and cannot be recovered normally:
+
+# Rebuild MON store from OSD data (last resort)
+ceph-monstore-tool /var/lib/ceph/mon/ceph-<id>/store.db rebuild \
+    --keyring /etc/ceph/ceph.client.admin.keyring
+
+# Inject a new MON map if the map is corrupted
+ceph-mon --inject-monmap /tmp/monmap --id <mon-id>
+
+# Export MON map for inspection
+ceph mon getmap -o /tmp/monmap
+monmaptool --print /tmp/monmap
+
+# Check MON store integrity
+ceph-kvstore-tool rocksdb /var/lib/ceph/mon/ceph-<id>/store.db check
+
+# Stop all MONs before running store rebuild
+systemctl stop ceph-mon@<id>
 ```
