@@ -31,6 +31,23 @@ AWS support escalation for EVS: severity levels, required data for support cases
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Case Routing Matrix
+
+Use this matrix to determine who to contact first and when to open joint cases.
+
+| Issue Type | First Contact | Escalation | Joint Case? |
+|---|---|---|---|
+| Host FAILED or CREATE_FAILED | AWS Support | AWS TAM after 2 hours with no progress | No — AWS owns host infrastructure |
+| vSAN data loss risk (object inaccessible) | VMware/Broadcom GSS | VMware TAM / Duty Manager | Yes if EVS host or ENI is also failed |
+| NSX-T control plane down (Manager VMs unreachable) | VMware/Broadcom GSS | VMware TAM | Yes if vSAN or host failure contributed |
+| HCX migration failure | AWS Support (DX/network layer) + VMware GSS (HCX layer) | Both TAMs | Always — HCX spans both |
+| EVS API error (InternalServerException) | AWS Support | AWS TAM after 1 hour | No |
+| DX connectivity loss affecting EVS management | AWS Support | AWS TAM immediately (P1 scope) | No |
+| SDDC Manager workflow stuck | VMware/Broadcom GSS | VMware TAM | No |
+| vCenter unreachable (not vSAN-related) | VMware/Broadcom GSS | VMware TAM | No |
+
+When an issue involves both infrastructure and software (e.g., a host failure that triggered vSAN degradation which then caused NSX-T Manager VMs to lose storage), open cases with both vendors simultaneously and share case IDs between them. AWS and VMware/Broadcom have a joint escalation process for EVS specifically.
+
 ## Severity Levels
 
 | Severity | Definition | AWS Response SLA |
@@ -42,7 +59,9 @@ AWS support escalation for EVS: severity levels, required data for support cases
 
 Enterprise Support plan required for Critical SLA. Business Support provides High = 4 hours.
 
-## Required Data for AWS Support Case
+## AWS Support Case Requirements
+
+Always include this data when opening an EVS case with AWS. Missing information causes round-trip delays averaging 4-6 hours per exchange.
 
 ```bash
 # 1. EVS environment and host IDs
@@ -72,6 +91,110 @@ aws ec2 describe-subnets \
 # Include: last successful operation timestamp, first error observed, any DX/VPN changes
 ```
 
+For networking issues (HCX tunnel down, BGP failure), also include:
+
+```bash
+# VPC route tables
+aws ec2 describe-route-tables \
+  --filters Name=vpc-id,Values=$EVS_VPC_ID --output json > vpc-route-tables.json
+
+# ENI status for EVS management subnet
+aws ec2 describe-network-interfaces \
+  --filters Name=subnet-id,Values=$EVS_MGMT_SUBNET_ID \
+  --output json > eni-status.json
+
+# DX connection state
+aws directconnect describe-connections \
+  --query 'connections[*].[connectionId,connectionName,connectionState,bandwidth]' \
+  --output table
+```
+
+## VMware Support Case Requirements
+
+```bash
+# Always gather before calling VMware support
+
+# 1. NSX-T support bundle
+curl -sk -u "admin:$NSX_PASSWORD" \
+  -X POST "$NSX_URL/api/v1/support-bundles?action=collect" \
+  -H "Content-Type: application/json" -d '{}' | python3 -m json.tool
+
+# 2. vCenter log bundle
+# vCenter UI → Administration → Support → Create Support Bundle
+# Or SFTP: /var/log/vmware/support/*.zip on vCenter appliance
+
+# 3. SDDC Manager bundle
+curl -sk -u "$SDDC_USER:$SDDC_PASS" \
+  -X POST "https://sddc-manager.vcf.internal/v1/support-bundles" \
+  -H "Content-Type: application/json" | python3 -m json.tool
+
+# 4. vSAN Health XML export
+# vCenter → Cluster → vSAN → Skyline Health → Export Health Data
+```
+
+Additional data for VMware support cases:
+
+```powershell
+# VCF version and build numbers
+Connect-VIServer -Server $VCENTER -User administrator@vsphere.local -Password $PASS
+$vcenter = Get-View -Id "ServiceInstance"
+Write-Host "vCenter build: $($vcenter.Content.About.Build)"
+Write-Host "vCenter version: $($vcenter.Content.About.Version)"
+
+# Host build info
+Get-VMHost | Select Name, Build, Version
+
+# vSAN cluster health summary for case description
+$cluster = Get-Cluster
+$vsanHealth = Get-VsanView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system"
+$summary = $vsanHealth.QueryVsanClusterHealthSummary(
+    $cluster.Id, $null, $null, $true, $null, $null, "defaultView")
+Write-Host "Overall vSAN health: $($summary.OverallHealth)"
+$summary.Groups | Where-Object { $_.GroupHealth -ne "green" } | ForEach-Object {
+    Write-Host "DEGRADED: $($_.GroupName)"
+}
+```
+
+For SR (Service Request) submission, include the VCF version (from SDDC Manager → Dashboard → Version), the support bundle file URLs, and the PowerCLI output above in the case description.
+
+## TAM and Account Team Escalation
+
+Escalate to your AWS TAM when:
+- A P1 production outage has no progress after 4 hours with standard AWS Support.
+- There is a risk of data loss (vSAN objects inaccessible, host with encrypted datastores unrecoverable).
+- The issue spans both AWS and VMware and neither vendor is making progress.
+- A scheduled maintenance window is at risk and business impact is imminent.
+
+```bash
+# Set severity to Critical via AWS Support console
+# Support → Cases → Open case → Severity: Critical (Business-impacting)
+# OR via AWS Support API:
+aws support create-case \
+  --subject "EVS Production Cluster Outage - Environment $ENV_ID" \
+  --service-code "aws-elastic-vmware-service" \
+  --severity-code "critical" \
+  --category-code "general-guidance" \
+  --communication-body "Environment ID: $ENV_ID
+Host IDs: <list>
+Issue: <description>
+Impact: Production workloads unavailable since <timestamp>
+Steps taken: <what has been tried>
+
+CloudTrail export attached. EC2 instance status attached."
+```
+
+Expected response times by support tier:
+
+| Plan | Critical | High | Medium |
+|---|---|---|---|
+| Enterprise | 15 minutes (24/7 phone) | 1 hour | 4 hours |
+| Business | 1 hour (24/7 phone for critical) | 4 hours | 12 hours |
+| Developer | Not available | Not available | 12 business hours |
+
+Enterprise Support is required for EVS production. Business Support is the minimum for non-production. Developer Support has no SLA for infrastructure issues.
+
+To request TAM engagement on an existing case, add a case correspondence explicitly asking for TAM review: "Requesting TAM review — P1 production outage with no resolution progress in 4 hours." Your TAM will join the case within 30 minutes during business hours or can be reached directly by phone.
+
 ## Escalation Path
 
 ```text
@@ -94,25 +217,28 @@ Both vendors involved (most common for HCX issues):
   3. Note: AWS and VMware have joint escalation process for EVS
 ```
 
-## VMware Support Data Collection
+## Post-Incident Review
 
-```bash
-# Always gather before calling VMware support
+After any P1 or P2 EVS incident, conduct a post-incident review before closing the support case.
 
-# 1. NSX-T support bundle
-curl -sk -u "admin:$NSX_PASSWORD" \
-  -X POST "$NSX_URL/api/v1/support-bundles?action=collect" \
-  -H "Content-Type: application/json" -d '{}' | python3 -m json.tool
+Steps for post-incident review:
+1. Document the full timeline: when the issue started, when it was detected, when each diagnostic step was taken, when resolution was achieved.
+2. Identify the root cause using a 5-why analysis. Ask "why did this happen?" five times to reach the underlying systemic cause rather than the proximate cause.
+3. Request the Root Cause Analysis (RCA) document from AWS and/or VMware. AWS Enterprise Support provides formal RCA documents for P1 incidents. VMware/Broadcom provides these for Critical SRs with data loss risk.
+4. Document corrective actions: what changes to monitoring, runbooks, or architecture will prevent recurrence.
+5. Add the timeline, root cause, and corrective actions to the team runbook for this issue category.
 
-# 2. vCenter log bundle
-# vCenter UI → Administration → Support → Create Support Bundle
-# Or SFTP: /var/log/vmware/support/*.zip on vCenter appliance
+```text
+RCA document request (add to support case correspondence):
 
-# 3. SDDC Manager bundle
-curl -sk -u "$SDDC_USER:$SDDC_PASS" \
-  -X POST "https://sddc-manager.vcf.internal/v1/support-bundles" \
-  -H "Content-Type: application/json" | python3 -m json.tool
+"Please provide a formal Root Cause Analysis document for this incident.
+Include:
+- Timeline of events on the AWS/VMware infrastructure side
+- Root cause of the failure
+- AWS/VMware corrective actions taken or planned
+- Recommended customer-side preventive measures
 
-# 4. vSAN Health XML export
-# vCenter → Cluster → vSAN → Skyline Health → Export Health Data
+This is required for our internal post-incident review process."
 ```
+
+For recurring issues (same root cause appearing more than once), escalate to your AWS TAM and request a Well-Architected Review for your EVS environment. AWS offers a focused EVS review that covers resiliency, networking, and operations best practices.
