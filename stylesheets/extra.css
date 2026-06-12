@@ -1431,14 +1431,22 @@ body,
 
 /* ── Mermaid diagrams ── */
 
-/* Node label text: white on our coloured fills (blue/green/purple) */
+/* Node label text.
+   classDef color:#fff is an SVG attribute and does NOT cascade into HTML
+   inside <foreignObject>. We cover every HTML path Mermaid v9/v10 may use. */
 .mermaid .node .nodeLabel,
-.mermaid .node .label div {
+.mermaid .node .nodeLabel p,
+.mermaid .node .nodeLabel span,
+.mermaid .node .label div,
+.mermaid .node .label div p,
+.mermaid .node foreignObject > div,
+.mermaid .node foreignObject > div > p {
   color: #fff !important;
 }
 
-/* SVG text fallback for older Mermaid renders */
-.mermaid .node text {
+/* SVG text fallback (non-HTML-label renders) */
+.mermaid .node text,
+.mermaid .node tspan {
   fill: #fff !important;
 }
 

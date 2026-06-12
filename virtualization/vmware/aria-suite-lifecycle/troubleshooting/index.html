@@ -4252,6 +4252,49 @@ Diagnosing Aria Suite Lifecycle upgrade failures, certificate errors, and produc
       });
     })();
 
+    // Mermaid node contrast fix
+    // classDef color:#fff is an SVG attribute and does NOT cascade into
+    // <foreignObject> HTML labels. After Mermaid renders we read each node's
+    // actual fill and apply white or dark text accordingly.
+    (function () {
+      function lum(hex) {
+        hex = hex.replace(/^#/, '');
+        if (hex.length === 3) hex = hex.split('').map(function(c){return c+c;}).join('');
+        var n = parseInt(hex, 16);
+        var ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function(v) {
+          v /= 255;
+          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+      }
+      function fixSvg(svg) {
+        svg.querySelectorAll('.node').forEach(function(node) {
+          var shape = node.querySelector('rect, circle, polygon, path');
+          if (!shape) return;
+          var fill = shape.getAttribute('fill') || '';
+          if (!fill || fill === 'none' || fill === 'transparent') return;
+          var textColor = (fill.startsWith('#') && lum(fill) > 0.25) ? '#1f2937' : '#fff';
+          node.querySelectorAll('.nodeLabel, .nodeLabel p, .nodeLabel span, foreignObject div, foreignObject p').forEach(function(el) {
+            el.style.setProperty('color', textColor, 'important');
+          });
+          node.querySelectorAll('text, tspan').forEach(function(el) {
+            el.style.setProperty('fill', textColor, 'important');
+          });
+        });
+      }
+      var obs = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          m.addedNodes.forEach(function(n) {
+            if (n.nodeType !== 1) return;
+            if (n.tagName === 'svg') fixSvg(n);
+            else if (n.querySelectorAll) n.querySelectorAll('svg').forEach(fixSvg);
+          });
+        });
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+      document.querySelectorAll('.mermaid svg').forEach(fixSvg);
+    })();
+
     // Service Worker registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
