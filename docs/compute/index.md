@@ -4,6 +4,8 @@
 Compute platform knowledge base covering Windows Server, Linux, GPU workloads, and local AI (Ollama). Includes architecture references, server build standards, operational procedures, CLI commands, patching and lifecycle management, performance troubleshooting, and security hardening guides.
 </div>
 
+![Compute Platform Landscape](../assets/compute-landscape-overview.svg)
+
 ```text
 ┌────────────────────────────────────── Compute Platform Overview ──────────────────────────────────────┐
 │                                                                                                       │

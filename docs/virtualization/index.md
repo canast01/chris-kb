@@ -4,6 +4,8 @@
 Virtualization platform knowledge base covering VMware and OpenShift. Includes architecture references, operational procedures, CLI commands, health checks, lifecycle management, and troubleshooting guides.
 </div>
 
+![Virtualization Platform Landscape](../assets/virtualization-landscape-overview.svg)
+
 ```text
 ┌──────────────────────────────────────── VMware Platform Stack ────────────────────────────────────────┐
 │                                                                                                       │
