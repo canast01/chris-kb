@@ -231,3 +231,31 @@ ceph-kvstore-tool rocksdb /var/lib/ceph/mon/ceph-<id>/store.db check
 # Stop all MONs before running store rebuild
 systemctl stop ceph-mon@<id>
 ```
+
+## Backup Schedule Recommendations
+
+| Data type | Method | Frequency | Retention |
+|-----------|--------|-----------|-----------|
+| RBD images (VM disks) | `rbd snap create` + `rbd export-diff` | Daily | 7 days |
+| CephFS directories | `.snap/` snapshot | Daily | 7–14 days |
+| Cluster config (auth, CRUSH) | `ceph auth export` + `getcrushmap` | Weekly | 4 weeks |
+| config-key store | `ceph config-key dump` | Weekly | 4 weeks |
+| RGW object data (DR) | RBD mirroring or zone sync | Continuous | N/A — async replication |
+
+Snapshots are cheap (copy-on-write) and do not require cluster downtime. Full image exports consume storage equal to the image size; use `export-diff` for incremental backups after the first full export.
+
+## Verify Backup Integrity
+
+```bash
+# Verify exported RBD image is readable
+qemu-img check /mnt/backup/image-2026-06-07.img
+
+# Check RBD image can be imported cleanly (into a test pool)
+rbd import /mnt/backup/image-2026-06-07.img rbd/restore-test && echo "Import OK"
+
+# Verify CRUSH map is decompilable
+crushtool -d /backup/crushmap.bin -o /tmp/crush-verify.txt && echo "CRUSH OK"
+
+# Verify auth keyring is parseable
+ceph-authtool --print-key /backup/ceph-auth-2026-06-07.keyring && echo "Keyring OK"
+```

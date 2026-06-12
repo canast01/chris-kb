@@ -1,7 +1,7 @@
 # Ceph — Hardening
 
 <div class="kb-summary">
-Ceph security hardening: network firewall rules for cluster isolation, disabling unused mgr modules, alert configuration, dashboard access control, and CIS-aligned controls.
+Ceph security hardening: network isolation, msgr2 encryption, cephx least-privilege, OSD encryption, RGW HTTPS, dashboard TLS, audit logging, and CIS-aligned controls.
 </div>
 
 ```text
@@ -24,54 +24,106 @@ Ceph security hardening: network firewall rules for cluster isolation, disabling
 │  crash module   = Captures daemon crash dumps; keep enabled for diagnostic visibility                 │
 │  admin socket   = Unix socket for per-daemon runtime info; restrict file permissions on all hosts     │
 │  msgr2 secure   = Ceph messenger v2 encryption mode; encrypts all OSD-to-OSD and client traffic       │
-│  ceph config    = Central config database; use to set security options without editing ceph.conf      │
 │  nomonmap       = Prevents unauthenticated MON map enumeration; enforced by CephX by default          │
 │  CIS benchmark  = Center for Internet Security hardening guide; reference for Ceph compliance audits  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Network Firewall Rules
+```mermaid
+graph TD
+    classDef layer fill:#1e3a5f,color:#fff
+    classDef ctrl fill:#2563eb,color:#fff
+    classDef detail fill:#374151,color:#fff
 
-```bash
-# Ports used by Ceph daemons:
-# MON:      6789 (msgr1), 3300 (msgr2)
-# OSD:      6800-7568 (each OSD uses 2 ports)
-# MGR:      8443 (dashboard), 9283 (Prometheus metrics)
-# RGW:      7480 (HTTP), 443 (HTTPS)
-# MDS:      6800+ (communication with MON + clients)
-
-# firewalld example for OSD nodes (cluster network must be internal-only)
-firewall-cmd --permanent --zone=internal --add-source=10.0.2.0/24  # cluster network CIDR
-firewall-cmd --permanent --zone=internal --add-port=6800-7568/tcp
-
-# Public network (client access)
-firewall-cmd --permanent --zone=public --add-source=10.0.1.0/24   # public network CIDR
-firewall-cmd --permanent --zone=public --add-port=6789/tcp          # MON
-firewall-cmd --permanent --zone=public --add-port=3300/tcp          # MON msgr2
-firewall-cmd --permanent --zone=public --add-port=6800-7568/tcp     # OSD
-firewall-cmd --reload
-
-# Block all other inbound on cluster network
-# (cluster network should not be reachable from outside Ceph nodes)
+    A([Network isolation\ncluster / public separation]):::layer --> B[msgr2 secure mode\nin-transit encryption]:::ctrl
+    B --> C[CephX auth\nper-entity keys + caps]:::ctrl
+    C --> D[OSD encryption\ndm-crypt at rest]:::ctrl
+    D --> E[RGW HTTPS / TLS\nobject gateway hardening]:::ctrl
+    E --> F[Dashboard TLS + MFA\nrestrict admin access]:::ctrl
+    F --> G[Audit logging\nauth_debug + ops log]:::detail
 ```
 
-## Dashboard Hardening
+## Network Isolation
+
+```bash
+# Verify cluster network is configured (OSD replication stays on dedicated network)
+ceph config get osd cluster_network
+ceph config get osd public_network
+
+# Set if not configured
+ceph config set global cluster_network 10.0.1.0/24
+ceph config set global public_network 10.0.0.0/24
+
+# Verify separation took effect on a running OSD
+ceph daemon osd.0 config show | grep -E "cluster_network|public_network"
+```
+
+## Firewall Rules
+
+| Port | Protocol | From | To | Purpose |
+|---|---|---|---|---|
+| 6789 | TCP | Client hosts | MON nodes | MON msgr1 (legacy) |
+| 3300 | TCP | All Ceph nodes + clients | MON nodes | MON msgr2 |
+| 6800–7300 | TCP | Ceph nodes only | OSD nodes | OSD replication + client I/O |
+| 8080 | TCP | Admin hosts | MGR node | Dashboard HTTP (disable; use 8443) |
+| 8443 | TCP | Admin hosts | MGR node | Dashboard HTTPS |
+| 9283 | TCP | Prometheus host | MGR node | Prometheus metrics exporter |
+| 7480 | TCP | Client hosts | RGW nodes | RGW HTTP default (prefer 443) |
+| 443 | TCP | Client hosts | RGW nodes | RGW HTTPS |
+
+```bash
+# firewalld example for OSD nodes (cluster network must be internal-only)
+firewall-cmd --permanent --zone=internal --add-source=10.0.1.0/24  # cluster network CIDR
+firewall-cmd --permanent --zone=internal --add-port=6800-7300/tcp
+
+# Public network (client access to MON and OSD)
+firewall-cmd --permanent --zone=public --add-source=10.0.0.0/24
+firewall-cmd --permanent --zone=public --add-port=3300/tcp          # MON msgr2
+firewall-cmd --permanent --zone=public --add-port=6800-7300/tcp     # OSD client I/O
+firewall-cmd --reload
+# Block all other inbound on cluster network from outside Ceph nodes
+```
+
+## Disable Insecure msgr1
+
+```bash
+# Force all connections to use msgr2 (prevents protocol downgrade attacks)
+ceph config set global ms_bind_msgr1 false
+
+# Enable encrypted mode on all connection types
+ceph config set global ms_cluster_mode secure    # OSD-to-OSD
+ceph config set global ms_service_mode secure    # client-to-OSD / MON
+ceph config set global ms_client_mode secure     # outgoing client connections
+
+# Verify
+ceph config get mon ms_cluster_mode   # expected: secure
+```
+
+## Dashboard Security
 
 ```bash
 # Change default admin password
 ceph dashboard ac-user-set-password admin --password-policy-check-enabled NewSecurePassword123!
 
-# Enable TLS (use custom cert)
-ceph config set mgr mgr/dashboard/ssl true
+# Enable HTTPS with a signed certificate
 ceph dashboard set-ssl-certificate -i /etc/ceph/dashboard.crt
 ceph dashboard set-ssl-certificate-key -i /etc/ceph/dashboard.key
+ceph config set mgr mgr/dashboard/ssl true
 
-# Create read-only monitoring user (instead of using admin)
-ceph dashboard ac-user-create monitoring viewer viewer
-# Roles: administrator, read-only, block-manager, rgw-manager, cluster-manager, pool-manager, cephfs-manager
+# Create self-signed cert for internal use (testing only)
+ceph dashboard create-self-signed-cert
 
-# Disable dashboard if not needed
+# Verify HTTPS is active
+ceph mgr services | grep dashboard   # URL should show https://
+
+# Create read-only monitoring user (never use admin account for monitoring)
+ceph dashboard ac-user-create monitoring --roles=read-only
+
+# List available roles
+# administrator, read-only, block-manager, rgw-manager, cluster-manager, pool-manager, cephfs-manager
+
+# Disable dashboard entirely if not needed
 ceph mgr module disable dashboard
 ```
 
@@ -82,28 +134,70 @@ ceph mgr module disable dashboard
 ceph mgr module ls | grep enabled
 
 # Disable modules not in use
-ceph mgr module disable telemetry      # disables opt-in telemetry
-ceph mgr module disable insights       # workload analytics (if not using)
-ceph mgr module disable rbd_support    # if not using RBD monitoring hooks
+ceph mgr module disable telemetry      # anonymous usage data sent to Ceph project
+ceph mgr module disable insights       # workload analytics
+ceph mgr module disable rbd_support    # RBD monitoring hooks (if not using)
 
-# pg_autoscaler: useful but review if you want manual PG control
-ceph mgr module disable pg_autoscaler  # if you manage PGs manually
+# Review pg_autoscaler (disable for manual PG control in production)
+ceph mgr module disable pg_autoscaler
 
-# List currently active module plugins
+# List currently exposed services
 ceph mgr services
 ```
 
-## CIS Hardening Checklist
+## Audit Logging
 
-| Control | Action |
-|---|---|
-| Change default admin keyring location | Move client.admin keyring out of /etc/ceph/ on non-admin nodes |
-| Disable SSH root login on Ceph nodes | Use cephadm SSH key only; disable PasswordAuthentication |
-| Enable NTP on all nodes | Clock skew > 500ms causes MON election failures |
-| Enable msgr2 secure mode | Encrypt client and inter-daemon traffic |
-| Enable OSD encryption | Configure dmcrypt at OSD creation time |
-| Restrict dashboard access | Use TLS; non-admin roles for monitoring users |
-| Enable Prometheus auth | Configure basic auth or mTLS for Prometheus scrape endpoint |
-| Disable unused mgr modules | Reduce attack surface; disable telemetry, insights if unused |
-| Log audit trail | Enable Ceph audit log: `ceph config set global log_to_file true` |
-| Firewall cluster network | Only Ceph nodes should reach OSD replication ports |
+```bash
+# Enable auth debug logging for incident investigation
+# WARNING: verbose — disable after investigation; not for permanent production use
+ceph config set global auth_debug true
+
+# Log slow ops (threshold in seconds — log ops slower than this)
+ceph config set osd osd_op_log_threshold 5
+
+# Enable cluster-level audit log (records all config changes and auth events)
+ceph config set global log_to_file true
+ceph config set global log_file /var/log/ceph/ceph.log
+
+# Verify audit log is capturing events
+tail -f /var/log/ceph/ceph.log | grep -E "auth|audit"
+
+# Reset debug logging after investigation
+ceph config rm global auth_debug
+```
+
+## Least Privilege: Key Hygiene
+
+```bash
+# Never use client.admin in application configuration
+# Create a pool-scoped service account per application
+ceph auth get-or-create client.myapp \
+  mon 'allow r' \
+  osd 'allow rw pool=myapp-pool'
+
+# Check which hosts have the admin keyring (should be admin workstations only)
+for host in $(ceph orch host ls -f json | python3 -c \
+  "import sys,json; [print(h['hostname']) for h in json.load(sys.stdin)]"); do
+  echo -n "$host: "
+  ssh "$host" "ls /etc/ceph/ceph.client.admin.keyring 2>/dev/null && echo PRESENT || echo absent"
+done
+
+# Rotate keyrings quarterly: create new entity, distribute, verify, delete old
+ceph auth del client.myapp        # delete old
+ceph auth get-or-create client.myapp mon 'allow r' osd 'allow rw pool=myapp-pool'
+```
+
+## CIS Hardening Controls
+
+| Control | Implementation | Command |
+|---|---|---|
+| Network separation | Dedicated cluster network, firewall OSD ports | `ceph config set global cluster_network 10.0.1.0/24` |
+| In-transit encryption | msgr2 secure mode, disable msgr1 | `ceph config set global ms_cluster_mode secure` |
+| Authentication | CephX enabled (default); pool-scoped keys | `ceph auth get-or-create client.app ...` |
+| At-rest encryption | OSD dm-crypt enabled at creation | `ceph orch apply osd ... --data-encrypt` |
+| Dashboard access | HTTPS only, non-admin roles for monitoring | `ceph config set mgr mgr/dashboard/ssl true` |
+| Audit logging | Ceph audit log + OS audit (auditd) | `ceph config set global log_to_file true` |
+| SSH hardening | Disable password auth; cephadm SSH key only | `/etc/ssh/sshd_config: PasswordAuthentication no` |
+| NTP enforced | Clock skew > 50 ms causes MON warnings | `systemctl enable --now chronyd` |
+| Prometheus auth | mTLS or basic auth on scrape endpoint | `ceph dashboard set-prometheus-credentials` |
+| Unused modules | Disable telemetry, insights, rbd_support | `ceph mgr module disable telemetry` |

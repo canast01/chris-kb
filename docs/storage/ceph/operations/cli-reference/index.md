@@ -242,4 +242,22 @@ ceph orch host rm <hostname>
 # Upgrade
 ceph orch upgrade status
 ceph orch upgrade start --image quay.io/ceph/ceph:v18.2.0
+
+# Crash reports
+ceph crash ls                                        # list recorded daemon crashes
+ceph crash info <crash-id>                           # full backtrace and context
+ceph crash archive <crash-id>                        # mark crash as acknowledged
+ceph crash archive-all                               # clear all crash alerts
+```
+
+## Auth Management
+
+```bash
+ceph auth ls                                         # list all CephX users and capabilities
+ceph auth get client.admin                           # show key and caps for a user
+ceph auth get-or-create client.rbd mon 'allow r' osd 'allow rwx pool=rbd'
+ceph auth caps client.rbd mon 'allow r' osd 'allow rw pool=rbd'   # update caps
+ceph auth del client.rbd                             # remove user
+ceph auth export client.admin > /backup/admin.keyring
+ceph auth import -i /backup/admin.keyring
 ```

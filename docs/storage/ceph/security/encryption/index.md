@@ -1,5 +1,9 @@
 # Ceph — Encryption
 
+<div class="kb-summary">
+Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-image, RGW server-side encryption with KMS, and in-transit encryption via messenger v2.
+</div>
+
 ```text
 ┌───────────────────────────────────── Ceph — Encryption Overview ──────────────────────────────────────┐
 │                                                                                                       │
@@ -15,13 +19,13 @@
 │  In-Transit Encryption                                                                                │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
 │  Messenger v2 (msgr2): default in Octopus+; encrypts all OSD-to-OSD and client-to-OSD traffic         │
-│  Enable: ceph config set global ms_encrypt_dispatch true (or set in ceph.conf)                        │
+│  Enable: ceph config set global ms_cluster_mode secure                                                │
 │  Verify: ceph config get osd ms_client_mode — should show secure (not legacy)                         │
 │                                                                                                       │
 │  OSD dmcrypt — Key Points                                                                             │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
 │  Encryption must be set at OSD creation time — cannot encrypt an existing OSD without rebuild         │
-│  cephadm: ceph orch apply osd --all-available-devices --encrypt                                       │
+│  cephadm: ceph orch apply osd --all-available-devices --data-encrypt                                  │
 │  Keys stored in Ceph monitor key-value store; no external KMS required for OSD encryption             │
 │  Performance impact: modern CPUs with AES-NI hardware acceleration ~1–3% overhead typical             │
 │                                                                                                       │
@@ -32,41 +36,91 @@
 │  RBD encrypt= Per-image client-side encryption; LUKS key managed via LUKS passphrase in keyring       │
 │  SSE-KMS    = Server-Side Encryption with external KMS (Vault); per-object or per-bucket in RGW       │
 │  SSE-S3     = Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)         │
+│  SSE-C      = Server-Side Encryption with Client-provided keys; Ceph never stores the key             │
 │  msgr2      = Ceph messenger protocol v2; supports secure (encrypted) and crc (checksummed) modes     │
 │  AES-NI     = Intel/AMD hardware AES instruction set; ~1–3% overhead with modern CPUs                 │
 │  KMS        = Key Management Service; external secret store (e.g. HashiCorp Vault) for SSE-KMS        │
 │  DEK        = Data Encryption Key; per-object key used by RGW SSE; wrapped by KEK from KMS            │
 │  KEK        = Key Encryption Key; master key stored in KMS; wraps DEKs; rotate to re-protect data     │
-│  ms_encrypt_dispatch = Ceph config option enabling msgr2 encryption on all messenger traffic          │
-│  --encrypt  = cephadm OSD option; applies dmcrypt to all OSDs created by that apply command           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-<div class="kb-summary">
-Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-image, RGW server-side encryption with KMS, and in-transit encryption via messenger v2.
-</div>
+```mermaid
+graph TD
+    classDef layer fill:#1e3a5f,color:#fff
+    classDef ctrl fill:#15803d,color:#fff
+    classDef detail fill:#374151,color:#fff
 
-## OSD Encryption at Rest (dmcrypt)
+    A([OSD at-rest\ndm-crypt / LUKS]):::layer --> B[Key stored in\nMON KV store]:::ctrl
+    B --> C[cephadm generates\nrandom LUKS key per OSD]:::detail
+
+    D([In-transit\nmsgr2 secure mode]):::layer --> E[AES-GCM encryption\nall daemon connections]:::ctrl
+    E --> F[Enable: ms_cluster_mode secure\nms_service_mode secure]:::detail
+
+    G([RGW SSE\nObject-level encryption]):::layer --> H{Key management}:::ctrl
+    H --> I([SSE-S3\nCeph-managed keys]):::detail
+    H --> J([SSE-KMS\nHashiCorp Vault]):::detail
+    H --> K([SSE-C\nClient-provided key]):::detail
+```
+
+## OSD Encryption at Rest (dmcrypt / cephadm)
+
+OSD encryption uses dm-crypt (Linux kernel) to encrypt the block device. Must be configured at OSD creation time — cannot encrypt existing OSDs without destroying and re-creating them.
 
 ```bash
-# OSD encryption uses dm-crypt (Linux kernel) to encrypt the block device.
-# Must be configured at OSD creation time — cannot encrypt existing OSDs.
+# Enable encryption for all available devices at provision time
+ceph orch apply osd --all-available-devices --data-encrypt
 
-# Enable encryption for new OSDs via cephadm
-ceph orch apply osd --all-available-devices --method raw --encrypt
+# Or per OSD specification file (preferred for production):
+cat > osd-spec.yaml <<EOF
+service_type: osd
+service_id: encrypted
+placement:
+  hosts: [node1, node2, node3]
+spec:
+  data_devices:
+    all: true
+  encrypted: true
+EOF
+ceph orch apply -i osd-spec.yaml
 
-# Or for specific device:
+# For a specific device on a single host:
 ceph orch daemon add osd ceph-node1:/dev/sdb --encrypted
+```
 
-# Verify encryption status
-ceph osd tree
-ceph device ls | grep encrypted
-# Encrypted OSDs show "encrypted" in their OSD spec
+## dm-crypt Key Management
 
-# Note: encryption keys are stored in the MON keystore.
-# If all MONs are lost, encrypted OSDs cannot be recovered.
-# Always maintain a MON quorum and backup MON keyrings.
+cephadm generates a unique random LUKS key per OSD. Keys are stored in the MON KV store — no external KMS is required, but the MON quorum must remain intact or encrypted OSDs cannot be unlocked.
+
+```bash
+# Retrieve LUKS key for a specific OSD (requires admin caps)
+ceph config-key get dm-crypt/osd/<id>/luks
+
+# List all stored dm-crypt keys
+ceph config-key dump | grep dm-crypt
+
+# Back up all dm-crypt keys for escrow (store in vault or secure offline storage)
+ceph config-key dump | grep dm-crypt > /secure-backup/ceph-luks-keys-$(date +%F).json
+
+# Verify encryption is active on a running OSD
+cryptsetup status /dev/mapper/ceph-<uuid>
+# Output shows: cipher aes-xts-plain64, keysize 512 bits, mode rw
+```
+
+> **Critical**: if all MONs are lost, encrypted OSD data is unrecoverable. Always maintain MON quorum and back up MON keyrings separately from the cluster.
+
+## Verify OSD Encryption Status
+
+```bash
+# Check OSD spec shows encrypted flag
+ceph orch ls --service-type osd --format yaml | grep -A5 encrypted
+
+# On OSD host: verify LUKS header present on device
+cryptsetup isLuks /dev/sdb && echo "LUKS encrypted" || echo "Not encrypted"
+
+# List all LUKS-encrypted mapper devices on a node
+dmsetup ls --target crypt
 ```
 
 ## RBD Image Encryption
@@ -84,49 +138,77 @@ rbd encryption open rbd/encrypted-vol --passphrase-file /root/secret.key
 
 # Map the opened image as a block device
 rbd map rbd/encrypted-vol
-
-# Note: encryption metadata is stored in the image itself.
-# The Ceph cluster is unaware of the encryption key.
+# Note: encryption metadata is stored in the image itself; the Ceph cluster is unaware of the key.
 ```
 
-## RGW Server-Side Encryption (S3-SSE)
+## RGW Server-Side Encryption (SSE)
+
+### SSE-S3: Ceph-Managed Keys
 
 ```bash
-# RGW supports SSE-S3 (cluster-managed keys) and SSE-KMS (external KMS).
-# Configure SSE-KMS with HashiCorp Vault or AWS KMS.
-
 # Enable SSE-S3 (Ceph manages the keys)
-# /etc/ceph/ceph.conf or via config:
 ceph config set client.rgw.myorg rgw_crypt_require_ssl true
 ceph config set client.rgw.myorg rgw_crypt_s3_kms_backend secrettable
 
-# Upload object with SSE-S3
+# Upload object with SSE-S3 (client sends encryption request header)
 aws s3 cp myfile.dat s3://mybucket/myfile.dat \
-  --endpoint-url http://rgw.ceph.local:7480 \
+  --endpoint-url https://rgw.ceph.local:443 \
   --sse AES256
-
-# Upload with SSE-KMS (requires Vault integration)
-aws s3 cp myfile.dat s3://mybucket/myfile.dat \
-  --endpoint-url http://rgw.ceph.local:7480 \
-  --sse aws:kms --sse-kms-key-id vault-key-id
 ```
+
+### SSE-KMS: HashiCorp Vault-Backed Keys
+
+```bash
+# Configure Vault integration in ceph.conf / config DB
+ceph config set client.rgw.myorg rgw_crypt_s3_kms_backend vault
+ceph config set client.rgw.myorg rgw_crypt_vault_addr https://vault.example.com:8200
+ceph config set client.rgw.myorg rgw_crypt_vault_auth token
+ceph config set client.rgw.myorg rgw_crypt_vault_token_file /etc/ceph/vault-token
+
+# Client sends KMS header with key reference
+aws s3 cp myfile.dat s3://mybucket/myfile.dat \
+  --endpoint-url https://rgw.ceph.local:443 \
+  --sse aws:kms \
+  --sse-kms-key-id vault-key-id
+```
+
+### SSE-C: Client-Provided Keys
+
+```bash
+# Client supplies the encryption key with every request
+# Ceph applies the key for encryption/decryption but never stores it
+aws s3 cp myfile.dat s3://mybucket/myfile.dat \
+  --endpoint-url https://rgw.ceph.local:443 \
+  --sse-c AES256 \
+  --sse-c-key fileb:///path/to/32-byte-key.bin
+
+# Client MUST supply the same key for every subsequent GET; Ceph cannot recover data without it
+```
+
+## Encryption Options Summary
+
+| Option | Scope | Key management | Perf impact | Use case |
+|---|---|---|---|---|
+| OSD dmcrypt | All cluster data at rest | MON KV store (LUKS key per OSD) | ~1–3% (AES-NI) | Disk theft / decommission protection |
+| RBD image encrypt | Single RBD image | Client-held passphrase | ~3–5% | Tenant isolation, client-side key control |
+| RGW SSE-S3 | Object data in RGW | Ceph-managed per-object DEK | ~2–4% | S3-compatible object encryption, simple config |
+| RGW SSE-KMS | Object data in RGW | External KMS (Vault) wraps DEK | ~2–4% + KMS latency | Compliance, centralized key governance |
+| RGW SSE-C | Object data in RGW | Client provides key per request | ~2–4% | Client retains full key custody |
+| msgr2 secure | All in-transit data | Session keys negotiated per connection | ~5–10% | MITM protection on cluster/public networks |
 
 ## Messenger v2 (In-Transit Encryption)
 
 ```bash
-# msgr2 protocol (Nautilus+) supports optional encryption for daemon-to-daemon
-# and client-to-daemon communication.
-
 # Enable encryption for all connections
 ceph config set global ms_cluster_mode secure    # OSD-to-OSD (cluster network)
 ceph config set global ms_service_mode secure    # client-to-OSD
+ceph config set global ms_client_mode secure     # client connections
 ceph config set global ms_mon_cluster_mode secure  # MON-to-MON
 
-# Verify connections use secure mode
-ceph -s
-# Look for: "mon: ... using msgr2"
+# Disable legacy msgr1 to prevent downgrade attacks
+ceph config set global ms_bind_msgr1 false
 
-# Note: "secure" mode adds AES-GCM overhead (~5-10% throughput reduction).
-# "crc" mode (default) provides integrity only, no confidentiality.
-ceph config set global ms_cluster_mode crc     # back to integrity-only if needed
+# Verify connections use secure mode
+ceph config get mon ms_cluster_mode
+# Expected: secure
 ```
