@@ -2434,6 +2434,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#capability-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capability Audit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-control-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profile-based-capabilities-pre-defined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile-Based Capabilities (Pre-Defined)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2842,6 +2875,105 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>oc<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>ceph-app-keyring<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--from-file<span class="o">=</span><span class="nv">keyring</span><span class="o">=</span>/etc/ceph/ceph.client.myapp.keyring<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>-n<span class="w"> </span>rook-ceph
+</code></pre></div>
+<h2 id="capability-audit">Capability Audit<a class="headerlink" href="#capability-audit" title="Permanent link">&para;</a></h2>
+<p>Regularly audit which entities exist and what capabilities they hold. Remove unused entities; tighten capabilities that are wider than needed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show all entities with capabilities (review for over-privileged accounts)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Find any entity with allow * (should only be client.admin and bootstrap keys)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B1<span class="w"> </span><span class="s2">&quot;allow \*&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Export full auth state for offline review</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ceph<span class="w"> </span>auth<span class="w"> </span><span class="nb">export</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/ceph-auth-audit-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.txt
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Check for entities with rw on all pools (should be pool-scoped)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ceph<span class="w"> </span>auth<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;allow rw</span>$<span class="s2">&quot;</span><span class="w">   </span><span class="c1"># flag: no pool restriction</span>
+</code></pre></div>
+<h2 id="access-control-checklist">Access Control Checklist<a class="headerlink" href="#access-control-checklist" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Expected state</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No app uses client.admin</td>
+<td>client.admin absent from all app configs</td>
+<td><code>grep -r client.admin /etc/</code></td>
+</tr>
+<tr>
+<td>All keyring files mode 600</td>
+<td><code>-rw-------</code> on all keyring files</td>
+<td><code>ls -la /etc/ceph/*.keyring</code></td>
+</tr>
+<tr>
+<td>Per-pool scoping</td>
+<td>All app accounts have <code>pool=</code> in osd caps</td>
+<td><code>ceph auth ls \| grep osd</code></td>
+</tr>
+<tr>
+<td>Unused entities removed</td>
+<td>No orphaned service accounts</td>
+<td><code>ceph auth ls</code></td>
+</tr>
+<tr>
+<td>Bootstrap keys restricted</td>
+<td>No bootstrap key with <code>allow *</code></td>
+<td><code>ceph auth get client.bootstrap-osd</code></td>
+</tr>
+<tr>
+<td>Keyring rotation log</td>
+<td>All rotations logged with date and owner</td>
+<td>Maintain a rotation register</td>
+</tr>
+</tbody>
+</table>
+<h2 id="profile-based-capabilities-pre-defined">Profile-Based Capabilities (Pre-Defined)<a class="headerlink" href="#profile-based-capabilities-pre-defined" title="Permanent link">&para;</a></h2>
+<p>Ceph ships with pre-defined capability profiles that bundle common permissions. Prefer profiles over raw capability strings to reduce misconfiguration risk.</p>
+<table>
+<thead>
+<tr>
+<th>Profile</th>
+<th>Target service</th>
+<th>What it grants</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>profile rbd</code></td>
+<td>mon + osd</td>
+<td>RBD client: pool access, class methods</td>
+</tr>
+<tr>
+<td><code>profile rbd-read-only</code></td>
+<td>osd</td>
+<td>RBD read-only access to a named pool</td>
+</tr>
+<tr>
+<td><code>profile osd</code></td>
+<td>mon</td>
+<td>OSD daemon identity (used by OSD daemons)</td>
+</tr>
+<tr>
+<td><code>profile mds</code></td>
+<td>mon</td>
+<td>MDS daemon identity</td>
+</tr>
+<tr>
+<td><code>profile bootstrap-osd</code></td>
+<td>mon</td>
+<td>Provision new OSD keyrings; limited scope</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Use profile rbd for OpenStack Cinder/Nova/Glance</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.cinder<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;profile rbd&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images&#39;</span>
 </code></pre></div>
 
 

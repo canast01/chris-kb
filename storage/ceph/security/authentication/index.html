@@ -2456,6 +2456,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#authentication-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Reference Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keyring-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyring File Format
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2841,6 +2874,92 @@ CephX shared-secret authentication protocol, how clients authenticate to MONs an
 <blockquote>
 <p><strong>Performance note</strong>: <code>secure</code> mode adds ~5–10% throughput overhead on the cluster network. On hardware with AES-NI, overhead is typically 3–5%. Enable on cluster network at minimum; the public (client) network is lower priority if clients are on a trusted VLAN.</p>
 </blockquote>
+<h2 id="authentication-troubleshooting">Authentication Troubleshooting<a class="headerlink" href="#authentication-troubleshooting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Client fails with &quot;EACCES Permission denied&quot;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Cause: capabilities too restrictive for the operation</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get<span class="w"> </span>client.&lt;name&gt;<span class="w">   </span><span class="c1"># check caps</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Fix: widen caps with ceph auth caps</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Client fails with &quot;ENOENT&quot; or &quot;auth: unable to find a keyring&quot;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Cause: keyring file missing or wrong path</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>ls<span class="w"> </span>/etc/ceph/ceph.client.&lt;name&gt;.keyring
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Fix: copy keyring from admin node</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="c1"># &quot;clock skew detected&quot; errors on client</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Fix: synchronise client clock with NTP before retrying</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># Authentication debugging (produces verbose auth log)</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>ceph<span class="w"> </span>--debug-auth<span class="w"> </span><span class="m">10</span><span class="w"> </span>--id<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="c1"># Shows: key lookup, challenge/response, ticket grant or denial</span>
+</code></pre></div>
+<h2 id="authentication-reference-table">Authentication Reference Table<a class="headerlink" href="#authentication-reference-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Default value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session ticket TTL</td>
+<td>12 hours (43200 s)</td>
+<td>Set via <code>auth_service_ticket_ttl</code></td>
+</tr>
+<tr>
+<td>MON auth DB backend</td>
+<td>LevelDB (MON KV)</td>
+<td>Keys persist through MON restarts</td>
+</tr>
+<tr>
+<td>Keyring default path</td>
+<td><code>/etc/ceph/ceph.client.&lt;name&gt;.keyring</code></td>
+<td>Override with <code>--keyring</code> flag</td>
+</tr>
+<tr>
+<td>Admin keyring path</td>
+<td><code>/etc/ceph/ceph.client.admin.keyring</code></td>
+<td>Created by cephadm bootstrap</td>
+</tr>
+<tr>
+<td>OSD keyring path</td>
+<td><code>/var/lib/ceph/osd/ceph-&lt;id&gt;/keyring</code></td>
+<td>Per-OSD unique key</td>
+</tr>
+<tr>
+<td>MON keyring path</td>
+<td><code>/var/lib/ceph/mon/ceph-&lt;host&gt;/keyring</code></td>
+<td>Never copy to client hosts</td>
+</tr>
+<tr>
+<td>msgr2 default mode</td>
+<td><code>crc</code> (integrity only)</td>
+<td>Change to <code>secure</code> for encryption</td>
+</tr>
+<tr>
+<td>Key algorithm</td>
+<td>AES-128 / HMAC-SHA1</td>
+<td>Shared-secret symmetric key</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keyring-file-format">Keyring File Format<a class="headerlink" href="#keyring-file-format" title="Permanent link">&para;</a></h2>
+<p>Understanding the keyring file format helps when scripting key distribution.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># /etc/ceph/ceph.client.myapp.keyring</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">[client.myapp]</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">        </span><span class="na">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">AQBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxA==</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">        </span><span class="na">caps mon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;allow r&quot;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">        </span><span class="na">caps osd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;allow rw pool=myapp-pool&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Extract just the key value (for environment variables or scripts)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-key<span class="w"> </span>client.myapp
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># Returns: AQBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxA==</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Use in environment variable for containerised workloads</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">CEPH_KEY</span><span class="o">=</span><span class="k">$(</span>ceph<span class="w"> </span>auth<span class="w"> </span>get-key<span class="w"> </span>client.myapp<span class="k">)</span>
+</code></pre></div>
 
 
 
