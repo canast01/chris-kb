@@ -56,15 +56,17 @@
   
   <style>
     /* Mermaid node label contrast — light mode only.
-       Inlined here to bypass Cloudflare CSS cache on extra.css. */
-    [data-md-color-scheme="default"] svg foreignObject div,
-    [data-md-color-scheme="default"] svg foreignObject p,
-    [data-md-color-scheme="default"] svg foreignObject span { color:#fff!important; }
-    [data-md-color-scheme="default"] svg .edgeLabel foreignObject div,
-    [data-md-color-scheme="default"] svg .edgeLabel foreignObject p,
-    [data-md-color-scheme="default"] svg .edgeLabel foreignObject span { color:#374151!important; }
-    [data-md-color-scheme="default"] g.node text,
-    [data-md-color-scheme="default"] g.node tspan { fill:#fff!important; }
+       Inlined to bypass Cloudflare CSS file cache.
+       Selectors include .md-typeset to reach specificity (0,2,3),
+       beating Material's (0,2,1) .md-typeset p rule when both use !important. */
+    [data-md-color-scheme="default"] .md-typeset svg foreignObject div,
+    [data-md-color-scheme="default"] .md-typeset svg foreignObject p,
+    [data-md-color-scheme="default"] .md-typeset svg foreignObject span { color:#fff!important; }
+    [data-md-color-scheme="default"] .md-typeset svg .edgeLabel foreignObject div,
+    [data-md-color-scheme="default"] .md-typeset svg .edgeLabel foreignObject p,
+    [data-md-color-scheme="default"] .md-typeset svg .edgeLabel foreignObject span { color:#374151!important; }
+    [data-md-color-scheme="default"] .md-typeset svg g.node text,
+    [data-md-color-scheme="default"] .md-typeset svg g.node tspan { fill:#fff!important; }
   </style>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui%2Csans-serif' font-size='13' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3ECA%3C/text%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -3709,59 +3711,30 @@
       });
     })();
 
-    // Mermaid node contrast fix (JS safety-net — CSS g.node rule is the primary fix).
-    // Material for MkDocs replaces pre.mermaid with the raw SVG; no .mermaid ancestor
-    // exists. Target g.node directly and poll after render in case observer fires early.
+    // Mermaid node contrast fix (JS safety-net — CSS .md-typeset rule is the primary fix).
+    // KB rule: all classDef fills are dark (lum ≤ 0.25), so white text is always correct.
+    // fillLum removed: fill may come from SVG-internal CSS class, not inline style,
+    // making getComputedStyle unreliable — skip the check and force white unconditionally.
     (function () {
-      function lum(hex) {
-        hex = hex.replace(/^#/, '');
-        if (hex.length === 3) hex = hex.split('').map(function(c){return c+c;}).join('');
-        var n = parseInt(hex, 16);
-        var ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function(v) {
-          v /= 255;
-          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-        });
-        return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
-      }
-      function parseFill(raw) {
-        if (!raw) return null;
-        raw = raw.trim();
-        if (raw === 'none' || raw === 'transparent') return null;
-        if (raw.charAt(0) === '#') return lum(raw);
-        var m = raw.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
-        if (m) {
-          var ch = [+m[1], +m[2], +m[3]].map(function(v) {
-            v /= 255;
-            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-          });
-          return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
-        }
-        return null;
-      }
-      function fillLum(shape) {
-        var l = parseFill(shape.getAttribute('fill'));
-        if (l !== null) return l;
-        l = parseFill(shape.style.fill);
-        if (l !== null) return l;
-        return parseFill(window.getComputedStyle(shape).fill || '');
-      }
       function fixSvg(svg) {
-        svg.querySelectorAll('g.node').forEach(function(node) {
-          var shape = node.querySelector('rect, circle, polygon, path');
-          if (!shape) return;
-          var l = fillLum(shape);
-          if (l === null) return;
-          var textColor = l > 0.25 ? '#1f2937' : '#fff';
-          node.querySelectorAll('.nodeLabel, .nodeLabel p, .nodeLabel span, foreignObject div, foreignObject p').forEach(function(el) {
-            el.style.setProperty('color', textColor, 'important');
+        if (document.body.getAttribute('data-md-color-scheme') !== 'default') return;
+        // Force white on all node label content; skip edge labels
+        svg.querySelectorAll('foreignObject').forEach(function(fo) {
+          if (fo.closest('.edgeLabel') || fo.closest('[class*="edge"]')) return;
+          fo.querySelectorAll('div, p, span').forEach(function(el) {
+            el.style.setProperty('color', '#fff', 'important');
           });
-          node.querySelectorAll('text, tspan').forEach(function(el) {
-            el.style.setProperty('fill', textColor, 'important');
-          });
+        });
+        svg.querySelectorAll('g.node text, g.node tspan').forEach(function(el) {
+          el.style.setProperty('fill', '#fff', 'important');
+        });
+        // Restore dark on edge labels
+        svg.querySelectorAll('.edgeLabel foreignObject div, .edgeLabel foreignObject p').forEach(function(el) {
+          el.style.setProperty('color', '#374151', 'important');
         });
       }
       function fixAll() {
-        document.querySelectorAll('svg').forEach(fixSvg);
+        document.querySelectorAll('.md-typeset svg').forEach(fixSvg);
       }
       var obs = new MutationObserver(function(mutations) {
         mutations.forEach(function(m) {
@@ -3773,7 +3746,6 @@
         });
       });
       obs.observe(document.body, { childList: true, subtree: true });
-      // Polling safety net: Mermaid renders async; retry after it settles
       [200, 600, 1200, 2500].forEach(function(d) { setTimeout(fixAll, d); });
     })();
 
