@@ -1,7 +1,7 @@
 # Amazon EVS — CLI Reference
 
 <div class="kb-summary">
-AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere operations, and esxcli for ESXi-level diagnostics on EVS bare-metal hosts.
+AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere operations, NSX-T REST API for network queries, and HCX API for migration management on EVS bare-metal hosts.
 </div>
 
 ```text
@@ -10,123 +10,439 @@ AWS CLI commands for EVS cluster and host management, PowerCLI for vSphere opera
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   AWS CLI: cluster/host lifecycle, capacity, and status; requires EVS IAM permissions          │  │
 │   │   PowerCLI: vSphere cluster, vSAN, and VM management; connect to vCenter in EVS VPC           │   │
-│   │   esxcli: host-level storage, network, and VMkernel diagnostics on bare-metal ESXi             │  │
+│   │   NSX-T REST API: HTTP API on NSX Manager for segment, DFW, and gateway queries               │   │
+│   │   HCX API: migration job status and service mesh health from HCX Cloud Manager                │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  aws evs      = AWS CLI service prefix for all EVS environment and host management commands           │
-│  environment-id = Unique EVS cluster identifier (env-xxxx format); required for all API calls         │
-│  PowerCLI     = VMware PowerShell module; Connect-VIServer to EVS vCenter from a VPC jump host        │
-│  esxcli       = Command-line tool on ESXi bare-metal; SSH access for host-level diagnostics           │
+│  aws evs         = AWS CLI service prefix for all EVS environment and host management commands        │
+│  environment-id  = Unique EVS cluster identifier (env-xxxx format); required for all API calls        │
+│  PowerCLI        = VMware PowerShell module; Connect-VIServer to EVS vCenter from a VPC jump host     │
+│  esxcli          = Command-line tool on ESXi bare-metal; SSH access for host-level diagnostics        │
+│  NSX Manager     = NSX-T control plane; REST API on port 443; accepts Basic or session token auth     │
+│  HCX Cloud       = HCX appliance deployed in EVS; exposes REST API for migration and mesh status      │
 │  Connect-VIServer = PowerCLI cmdlet to authenticate against vCenter inside the EVS VPC                │
-│  Get-VMHost   = PowerCLI cmdlet returning ESXi host objects from vCenter cluster inventory            │
-│  VsanView     = PowerCLI API object for vSAN health, capacity, and resync status queries              │
-│  aws configure = Sets AWS CLI default credentials and region for API access                           │
-│  --output table = AWS CLI output flag; produces human-readable table format vs JSON default           │
-│  vmkping      = ESXi command to test VMkernel interface reachability and validate MTU settings        │
-│  NSX-T REST API = HTTP API on NSX Manager for segment, DFW, and gateway management                    │
-│  jq           = JSON command-line processor; commonly piped from AWS CLI or NSX-T API outputs         │
+│  Get-VMHost      = PowerCLI cmdlet returning ESXi host objects from vCenter cluster inventory         │
+│  VsanView        = PowerCLI API object for vSAN health, capacity, and resync status queries           │
+│  jq              = JSON command-line processor; commonly piped from AWS CLI or NSX-T API outputs      │
+│  vmkping         = ESXi command to test VMkernel interface reachability and validate MTU settings     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## AWS CLI — EVS Cluster
+## EVS CLI Quick Reference
+
+| Action | Command |
+|---|---|
+| List all environments | `aws evs list-environments --output table` |
+| Get environment details | `aws evs get-environment --environment-id env-xxx` |
+| List hosts in environment | `aws evs list-environment-hosts --environment-id env-xxx --output table` |
+| Get a specific host | `aws evs get-environment-host --environment-id env-xxx --host-id host-xxx` |
+| Add a host | `aws evs create-environment-host --environment-id env-xxx --host '{...}'` |
+| Remove a host | `aws evs delete-environment-host --environment-id env-xxx --host-id host-xxx` |
+| List environment VLANs | `aws evs list-environment-vlans --environment-id env-xxx` |
+| Create new environment | `aws evs create-environment --cli-input-json file://evs-env.json` |
+| Check environment tags | `aws evs list-tags-for-resource --resource-arn arn:aws:evs:...` |
+| Update environment tags | `aws evs tag-resource --resource-arn arn:aws:evs:... --tags Key=Env,Value=prod` |
+
+## AWS EVS CLI
+
+### list-environments
 
 ```bash
-# List all EVS environments
-aws evs list-environments --query 'environmentSummaries[*].[environmentId,environmentName,state]' \
+aws evs list-environments \
+  --query 'environmentSummaries[*].[environmentId,environmentName,state,createdAt]' \
   --output table
-
-# Get environment details
-aws evs get-environment --environment-id env-xxx
-
-# List hosts in cluster
-aws evs list-environment-hosts --environment-id env-xxx \
-  --query 'hostSummaries[*].[hostId,instanceType,state]' --output table
-
-# Add a host to cluster
-aws evs create-environment-host \
-  --environment-id env-xxx \
-  --host '{"instanceType":"i4i.metal","keyName":"evs-cluster-key"}'
-
-# Delete (remove) a host
-aws evs delete-environment-host --environment-id env-xxx --host-id host-xxx
-
-# Get VLANs for the environment
-aws evs list-environment-vlans --environment-id env-xxx
 ```
 
-## AWS CLI — Host Replacement
+Expected output structure:
+
+```text
+----------------------------------------------------------
+|               ListEnvironments                         |
++----------------+-------------------+---------+---------+
+|  env-0a1b2c3d  |  evs-prod-cluster |  ACTIVE | 2024-01 |
+|  env-9z8y7x6w  |  evs-dev-cluster  |  ACTIVE | 2024-03 |
++----------------+-------------------+---------+---------+
+```
+
+### get-environment
 
 ```bash
-# When AWS notifies of a scheduled host maintenance or failure:
-# 1. Put the ESXi host into maintenance mode first (via PowerCLI or vCenter)
-# 2. Wait for vSAN to fully evacuate and resyncs to complete
-# 3. Then delete the host via EVS API → AWS provisions a replacement
-
-# Monitor vSAN resync after adding replacement host
-# PowerCLI: Get-VsanResyncDashboard -Cluster (cluster object)
+aws evs get-environment --environment-id env-0a1b2c3d
 ```
 
-## PowerCLI — vSphere Operations
+Extract key fields with `--query`:
+
+```bash
+aws evs get-environment --environment-id env-0a1b2c3d \
+  --query 'environment.{ID:environmentId,Name:environmentName,State:state,VcfVersion:vcfVersion,VPCID:vpcId}' \
+  --output table
+```
+
+### create-environment
+
+```bash
+aws evs create-environment \
+  --environment-name evs-prod-cluster \
+  --kms-key-id arn:aws:kms:us-east-1:123456789012:key/mrk-xxx \
+  --vcf-version VCF-5.1 \
+  --connectivity-info '{"privateRouteServerPeerings":[{"routeServerId":"rts-xxx"}]}' \
+  --vcf-host-names '["evs-host-01","evs-host-02","evs-host-03","evs-host-04"]' \
+  --vcenter-configuration '{"datastoreName":"vsanDatastore","rootPassword":"P@ssw0rd!","vmFolderName":"management-vms"}' \
+  --nsx-configuration '{"nsxManagerRootPassword":"P@ssw0rd!","overlaySubnetwork":"192.168.100.0/26"}' \
+  --initial-vlans '[{"cidr":"10.0.10.0/24","mtu":9000,"vlanId":10,"vlanType":"vmotionVlan"}]'
+```
+
+### create-environment-host
+
+```bash
+aws evs create-environment-host \
+  --environment-id env-0a1b2c3d \
+  --host '{
+    "instanceType": "i4i.metal",
+    "keyName": "evs-cluster-key",
+    "hostName": "evs-host-05",
+    "placementGroupId": "pg-xxx"
+  }'
+```
+
+Expected output:
+
+```json
+{
+    "host": {
+        "hostId": "host-05abcdef",
+        "environmentId": "env-0a1b2c3d",
+        "instanceType": "i4i.metal",
+        "state": "CREATING",
+        "createdAt": "2024-06-11T10:00:00Z"
+    }
+}
+```
+
+### list-environment-hosts
+
+```bash
+aws evs list-environment-hosts --environment-id env-0a1b2c3d \
+  --query 'hostSummaries[*].[hostId,hostName,instanceType,state,createdAt]' \
+  --output table
+```
+
+Filter only ACTIVE hosts:
+
+```bash
+aws evs list-environment-hosts --environment-id env-0a1b2c3d \
+  --query 'hostSummaries[?state==`ACTIVE`].[hostId,hostName,instanceType]' \
+  --output table
+```
+
+### delete-environment-host
+
+Always put the ESXi host in vSphere maintenance mode and verify vSAN BytesToSync is 0 before running this command.
+
+```bash
+aws evs delete-environment-host \
+  --environment-id env-0a1b2c3d \
+  --host-id host-01abcdef
+```
+
+Poll until the host is removed:
+
+```bash
+watch -n 30 "aws evs list-environment-hosts --environment-id env-0a1b2c3d \
+  --query 'hostSummaries[*].[hostId,hostName,state]' --output table"
+```
+
+## vSphere PowerCLI
+
+Connect to vCenter before running any PowerCLI commands:
 
 ```powershell
-# Connect to vCenter in EVS
-Connect-VIServer -Server vcenter.vcf.internal -User administrator@vsphere.local -Password 'P@ssw0rd'
+Connect-VIServer -Server vcenter.vcf.internal \
+  -User administrator@vsphere.local \
+  -Password 'P@ssw0rd'
+```
 
-# Cluster health overview
-Get-Cluster | Select Name, HAEnabled, DRSEnabled
+### Cluster and Host Queries
 
-# Host summary
-Get-VMHost | Select Name, ConnectionState, PowerState, NumCpu, MemoryTotalGB, MemoryUsageGB
+```powershell
+# All clusters with HA and DRS status
+Get-Cluster | Select Name, HAEnabled, DRSEnabled, @{N="Hosts";E={($_ | Get-VMHost).Count}}
 
-# vSAN cluster health
-$cluster = Get-Cluster -Name "EVS-Management-Cluster"
-Get-VsanView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system" |
-  ForEach-Object { $_.QueryVsanClusterHealthSummary($cluster.Id, $null, $null, $true, $null, $null, "defaultView") } |
-  Select -ExpandProperty Groups |
-  ForEach-Object { Write-Host "$($_.GroupName): $($_.GroupHealth)" }
+# Hosts in a specific cluster
+Get-Cluster -Name "EVS-Management-Cluster" | Get-VMHost | `
+  Select Name, ConnectionState, PowerState, NumCpu, MemoryTotalGB, MemoryUsageGB
 
-# vSAN disk groups
-Get-VsanDiskGroup | Select VMHost, @{N="CacheDisks";E={($_.ExtensionData.SSD).Count}}, @{N="CapDisks";E={($_.ExtensionData.NonSSD).Count}}
+# Hosts filtered by connection state
+Get-VMHost | Where-Object { $_.ConnectionState -eq "Connected" } | `
+  Select Name, NumCpu, MemoryTotalGB
 
-# VM inventory
+# Hosts with low free memory (flag those with <10% free)
+Get-VMHost | Select Name, MemoryTotalGB, MemoryUsageGB, `
+  @{N="MemFreePct";E={[math]::Round((1-($_.MemoryUsageGB/$_.MemoryTotalGB))*100,1)}} | `
+  Where-Object { $_.MemFreePct -lt 10 }
+```
+
+### VM Queries
+
+```powershell
+# All VMs with host and power state
 Get-VM | Select Name, PowerState, NumCpu, MemoryGB, @{N="Host";E={$_.VMHost.Name}} | Sort Name
 
-# vMotion a VM to a different host
+# VMs on a specific datastore
+Get-Datastore -Name "vsanDatastore" | Get-VM | Select Name, PowerState, VMHost
+
+# Powered-off VMs only
+Get-VM | Where-Object { $_.PowerState -eq "PoweredOff" } | Select Name, VMHost
+
+# VMs by CPU usage (descending)
+Get-VM | Where-Object { $_.PowerState -eq "PoweredOn" } | `
+  Select Name, @{N="CPUUsageMHz";E={$_.ExtensionData.Summary.QuickStats.OverallCpuUsage}} | `
+  Sort CPUUsageMHz -Descending | Select -First 10
+```
+
+### Datastore Queries
+
+```powershell
+# All datastores with capacity
+Get-Datastore | Select Name, Type, CapacityGB, FreeSpaceGB, `
+  @{N="UsedGB";E={[math]::Round($_.CapacityGB - $_.FreeSpaceGB,1)}}, `
+  @{N="UsedPct";E={[math]::Round((1-($_.FreeSpaceGB/$_.CapacityGB))*100,1)}}
+
+# vSAN datastore free space alert (flag if <20% free)
+Get-Datastore -Name "vsanDatastore" | `
+  Select Name, CapacityGB, FreeSpaceGB, `
+  @{N="FreePct";E={[math]::Round(($_.FreeSpaceGB/$_.CapacityGB)*100,1)}}
+```
+
+### vSAN Health and Resync
+
+```powershell
+# vSAN cluster health summary
+$cluster = Get-Cluster -Name "EVS-Management-Cluster"
+$vsanHealth = Get-VsanView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system"
+$result = $vsanHealth.QueryVsanClusterHealthSummary($cluster.Id,$null,$null,$true,$null,$null,"defaultView")
+$result.Groups | Select GroupName, GroupHealth
+
+# vSAN disk groups per host
+Get-VsanDiskGroup | Select VMHost, `
+  @{N="CacheDisks";E={($_.ExtensionData.SSD).Count}}, `
+  @{N="CapacityDisks";E={($_.ExtensionData.NonSSD).Count}}
+
+# vSAN resync status (BytesToSync must be 0 before removing a host)
+Get-VsanResyncDashboard -Cluster (Get-Cluster "EVS-Management-Cluster") | `
+  Select BytesToSync, RecoveryETA
+```
+
+### vMotion and Maintenance Mode
+
+```powershell
+# Move VM to a specific host (vMotion)
 Move-VM -VM "myvm" -Destination (Get-VMHost "evs-host-02.vcf.internal")
 
-# Put host in maintenance mode (vSAN data evacuation)
+# Move all VMs from a host to the cluster (DRS-based placement)
+$src = Get-VMHost "evs-host-01.vcf.internal"
+Get-VM -Location $src | Move-VM -Destination (Get-Cluster "EVS-Management-Cluster")
+
+# Put host in maintenance mode with vSAN full data evacuation
 Set-VMHost -VMHost "evs-host-01.vcf.internal" -State Maintenance -Evacuate $true
 
 # Exit maintenance mode
 Set-VMHost -VMHost "evs-host-01.vcf.internal" -State Connected
 ```
 
-## esxcli — ESXi Host Diagnostics
+## NSX-T API
+
+Set variables before running curl commands:
 
 ```bash
-# SSH to ESXi host (enable SSH via vCenter or DCUI first)
-ssh root@evs-host-01.vcf.internal
+NSX_MANAGER="https://nsx-manager.vcf.internal"
+NSX_USER="admin"
+NSX_PASS="VMware1!VMware1!"
+```
 
-# Storage adapter / vSAN disk info
+### Cluster Status
+
+```bash
+curl -sk -u "${NSX_USER}:${NSX_PASS}" \
+  "${NSX_MANAGER}/api/v1/cluster/status" | \
+  python3 -c "import sys,json; d=json.load(sys.stdin); \
+  [print(f'{k}: {v}') for k,v in d.items() if k in ['control_cluster_status','mgmt_cluster_status']]"
+```
+
+### Transport Nodes
+
+```bash
+# List all transport nodes
+curl -sk -u "${NSX_USER}:${NSX_PASS}" \
+  "${NSX_MANAGER}/api/v1/transport-nodes" | \
+  python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for n in d.get('results', []):
+    print(n['display_name'], n.get('resource_type',''), n.get('state',''))
+"
+
+# Filter Edge Nodes only
+curl -sk -u "${NSX_USER}:${NSX_PASS}" \
+  "${NSX_MANAGER}/api/v1/transport-nodes?node_types=EdgeNode" | \
+  python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for n in d.get('results', []):
+    print(n['display_name'], n.get('state',''))
+"
+
+# Filter Host Nodes only
+curl -sk -u "${NSX_USER}:${NSX_PASS}" \
+  "${NSX_MANAGER}/api/v1/transport-nodes?node_types=HostNode" | \
+  python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for n in d.get('results', []):
+    print(n['display_name'], n.get('state',''))
+"
+```
+
+### Logical Routers
+
+```bash
+curl -sk -u "${NSX_USER}:${NSX_PASS}" \
+  "${NSX_MANAGER}/api/v1/logical-routers" | \
+  python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for r in d.get('results', []):
+    print(r['display_name'], r['router_type'], r.get('high_availability_mode',''))
+"
+```
+
+### Firewall Sections
+
+```bash
+curl -sk -u "${NSX_USER}:${NSX_PASS}" \
+  "${NSX_MANAGER}/api/v1/firewall/sections" | \
+  python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for s in d.get('results', []):
+    rule_count = s.get('rule_count', 0)
+    print(f\"{s['display_name']:<40} rules={rule_count:<5} type={s.get('section_type','')}\")
+"
+```
+
+## HCX API
+
+Set variables before running HCX commands:
+
+```bash
+HCX_MANAGER="https://hcx-cloud.vcf.internal"
+HCX_USER="administrator@vsphere.local"
+HCX_PASS="P@ssw0rd"
+```
+
+Authenticate and get a session token:
+
+```bash
+HCX_TOKEN=$(curl -sk -X POST \
+  "${HCX_MANAGER}/hybridity/api/sessions" \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"${HCX_USER}\",\"password\":\"${HCX_PASS}\"}" | \
+  python3 -c "import sys,json; print(json.load(sys.stdin).get('data',{}).get('token',''))")
+```
+
+### Service Mesh Status
+
+```bash
+curl -sk -H "x-hm-authorization: ${HCX_TOKEN}" \
+  "${HCX_MANAGER}/hybridity/api/interconnect/links" | \
+  python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for link in d.get('data', []):
+    print(link.get('displayName',''), link.get('status',''), link.get('endpointType',''))
+"
+```
+
+### Migration Job Status
+
+```bash
+curl -sk -H "x-hm-authorization: ${HCX_TOKEN}" \
+  "${HCX_MANAGER}/hybridity/api/vmotion/jobs" | \
+  python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for job in d.get('data', []):
+    print(job.get('displayName',''), job.get('state',''), job.get('progressPercent',''), '%')
+"
+```
+
+### Start a vMotion Migration
+
+```bash
+curl -sk -X POST \
+  -H "x-hm-authorization: ${HCX_TOKEN}" \
+  -H "Content-Type: application/json" \
+  "${HCX_MANAGER}/hybridity/api/vmotion" \
+  -d '{
+    "migrationType": "vMotion",
+    "migrations": [
+      {
+        "srcVM": {
+          "objectType": "VirtualMachine",
+          "id": "vm-123",
+          "name": "myvm"
+        },
+        "destNetworkMapping": [
+          {
+            "srcNetwork": { "name": "on-prem-pg" },
+            "destNetwork": { "name": "evs-segment-prod" }
+          }
+        ],
+        "destDatastore": { "name": "vsanDatastore" },
+        "destFolder": { "name": "Migrated-VMs" },
+        "destCluster": { "name": "EVS-Management-Cluster" }
+      }
+    ]
+  }'
+```
+
+## esxcli — ESXi Host Diagnostics
+
+SSH to an ESXi host (enable SSH via vCenter or DCUI first):
+
+```bash
+ssh root@evs-host-01.vcf.internal
+```
+
+```bash
+# Storage adapter list
 esxcli storage core adapter list
+
+# vSAN disk list on this host
 esxcli vsan storage list
 
-# Network VMkernel interfaces
-esxcli network ip interface list
-
-# VMkernel routing
-esxcli network ip route list
-
-# Check vSAN health from host
-esxcli vsan health cluster list
-
-# Check NVMe devices (EVS hosts use NVMe for vSAN)
+# NVMe device list (EVS hosts use NVMe for vSAN cache and capacity)
 esxcli nvme device list
 
-# Network connectivity test from VMkernel
+# VMkernel interface list
+esxcli network ip interface list
+
+# VMkernel routing table
+esxcli network ip route list
+
+# vSAN health check from host level
+esxcli vsan health cluster list
+
+# Test VMkernel reachability (MTU-aware)
 vmkping -I vmk0 <target-ip>
 vmkping -I vmk1 <vtep-gateway-ip>   # NSX-T VTEP VMkernel
+
+# Check NVMe device health
+esxcli nvme device get -A vmhba1
+
+# List running VMs on this host
+vim-cmd vmsvc/getallvms
 ```
