@@ -54,20 +54,6 @@
     
     
   
-  <style>
-    /* Mermaid node label contrast — light mode only.
-       Inlined to bypass Cloudflare CSS file cache.
-       Selectors include .md-typeset to reach specificity (0,2,3),
-       beating Material's (0,2,1) .md-typeset p rule when both use !important. */
-    [data-md-color-scheme="default"] .md-typeset svg foreignObject div,
-    [data-md-color-scheme="default"] .md-typeset svg foreignObject p,
-    [data-md-color-scheme="default"] .md-typeset svg foreignObject span { color:#fff!important; }
-    [data-md-color-scheme="default"] .md-typeset svg .edgeLabel foreignObject div,
-    [data-md-color-scheme="default"] .md-typeset svg .edgeLabel foreignObject p,
-    [data-md-color-scheme="default"] .md-typeset svg .edgeLabel foreignObject span { color:#374151!important; }
-    [data-md-color-scheme="default"] .md-typeset svg g.node text,
-    [data-md-color-scheme="default"] .md-typeset svg g.node tspan { fill:#fff!important; }
-  </style>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui%2Csans-serif' font-size='13' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3ECA%3C/text%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
@@ -2508,6 +2494,36 @@ Windows Components → Windows PowerShell</code></p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
+  <script>
+    // Mermaid node label contrast fix.
+    // Material renders Mermaid into a closed shadow DOM — no external CSS or JS
+    // can reach it. The only entry point is patching mermaid.initialize() BEFORE
+    // Material calls it, so themeCSS uses color:inherit instead of an explicit
+    // color variable that breaks classDef color:#fff via cascade override.
+    (function () {
+      var _m;
+      try {
+        Object.defineProperty(window, 'mermaid', {
+          configurable: true,
+          enumerable: true,
+          get: function () { return _m; },
+          set: function (lib) {
+            _m = lib;
+            if (!lib || typeof lib.initialize !== 'function') return;
+            var _orig = lib.initialize.bind(lib);
+            lib.initialize = function (cfg) {
+              if (cfg && typeof cfg.themeCSS === 'string') {
+                cfg.themeCSS = cfg.themeCSS
+                  .replace('.label{color:var(--md-mermaid-label-fg-color);', '.label{color:inherit;')
+                  .replace('.nodeLabel,.nodeLabel p{color:var(--md-mermaid-label-fg-color);', '.nodeLabel,.nodeLabel p{color:inherit;');
+              }
+              return _orig(cfg);
+            };
+          }
+        });
+      } catch (e) { /* mermaid already defined — patch directly if possible */ }
+    })();
+  </script>
   
       <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
@@ -2745,43 +2761,6 @@ Windows Components → Windows PowerShell</code></p>
       });
     })();
 
-    // Mermaid node contrast fix (JS safety-net — CSS .md-typeset rule is the primary fix).
-    // KB rule: all classDef fills are dark (lum ≤ 0.25), so white text is always correct.
-    // fillLum removed: fill may come from SVG-internal CSS class, not inline style,
-    // making getComputedStyle unreliable — skip the check and force white unconditionally.
-    (function () {
-      function fixSvg(svg) {
-        if (document.body.getAttribute('data-md-color-scheme') !== 'default') return;
-        // Force white on all node label content; skip edge labels
-        svg.querySelectorAll('foreignObject').forEach(function(fo) {
-          if (fo.closest('.edgeLabel') || fo.closest('[class*="edge"]')) return;
-          fo.querySelectorAll('div, p, span').forEach(function(el) {
-            el.style.setProperty('color', '#fff', 'important');
-          });
-        });
-        svg.querySelectorAll('g.node text, g.node tspan').forEach(function(el) {
-          el.style.setProperty('fill', '#fff', 'important');
-        });
-        // Restore dark on edge labels
-        svg.querySelectorAll('.edgeLabel foreignObject div, .edgeLabel foreignObject p').forEach(function(el) {
-          el.style.setProperty('color', '#374151', 'important');
-        });
-      }
-      function fixAll() {
-        document.querySelectorAll('.md-typeset svg').forEach(fixSvg);
-      }
-      var obs = new MutationObserver(function(mutations) {
-        mutations.forEach(function(m) {
-          m.addedNodes.forEach(function(n) {
-            if (n.nodeType !== 1) return;
-            if (n.tagName && n.tagName.toLowerCase() === 'svg') fixSvg(n);
-            else if (n.querySelectorAll) n.querySelectorAll('svg').forEach(fixSvg);
-          });
-        });
-      });
-      obs.observe(document.body, { childList: true, subtree: true });
-      [200, 600, 1200, 2500].forEach(function(d) { setTimeout(fixAll, d); });
-    })();
 
     // Service Worker registration
     if ('serviceWorker' in navigator) {
