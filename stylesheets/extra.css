@@ -1432,17 +1432,20 @@ body,
 /* ── Mermaid diagrams ── */
 
 /* Node label text — light mode only.
-   Material for MkDocs replaces pre.mermaid with the SVG element directly,
-   so there is NO .mermaid ancestor in the DOM. Target g.node (the <g> that
-   Mermaid generates for every flowchart node) without requiring .mermaid. */
-[data-md-color-scheme="default"] g.node .nodeLabel,
-[data-md-color-scheme="default"] g.node .nodeLabel p,
-[data-md-color-scheme="default"] g.node .nodeLabel span,
-[data-md-color-scheme="default"] g.node .label div,
-[data-md-color-scheme="default"] g.node .label div p,
-[data-md-color-scheme="default"] g.node foreignObject > div,
-[data-md-color-scheme="default"] g.node foreignObject > div > p {
+   The only inline SVGs with <foreignObject> HTML on this site are Mermaid
+   diagrams. Icon SVGs use <path> only. Targeting svg foreignObject directly
+   bypasses any uncertainty about .mermaid or g.node ancestor matching. */
+[data-md-color-scheme="default"] svg foreignObject div,
+[data-md-color-scheme="default"] svg foreignObject p,
+[data-md-color-scheme="default"] svg foreignObject span {
   color: #fff !important;
+}
+
+/* Edge labels sit on a transparent/white background → need dark text */
+[data-md-color-scheme="default"] svg .edgeLabel foreignObject div,
+[data-md-color-scheme="default"] svg .edgeLabel foreignObject p,
+[data-md-color-scheme="default"] svg .edgeLabel foreignObject span {
+  color: #374151 !important;
 }
 
 /* SVG text fallback (non-HTML-label renders) — light mode only */
@@ -1460,11 +1463,10 @@ g.edgeLabel rect {
   opacity: 0 !important;
 }
 
-/* Edge label text */
-g.edgeLabel span {
-  color: #374151 !important;
-}
-[data-md-color-scheme="slate"] g.edgeLabel span {
+/* Edge label text — dark mode */
+[data-md-color-scheme="slate"] svg .edgeLabel foreignObject div,
+[data-md-color-scheme="slate"] svg .edgeLabel foreignObject p,
+[data-md-color-scheme="slate"] svg .edgeLabel foreignObject span {
   color: #e2e8f0 !important;
 }
 
