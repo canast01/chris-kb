@@ -11,28 +11,28 @@
       
       
       
-        <link rel="prev" href="../scenarios/vxrail-lcm-upgrade-failure/">
+        <link rel="prev" href="../vcf-sddc-manager-upgrade-stalled/">
       
       
-        <link rel="next" href="../storage-latency-troubleshooting/">
+        <link rel="next" href="../vm-inaccessible-ha-failover/">
       
       
         
       
       
-      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Snapshot Performance Impact - Chris KB</title>
+        <title>VM CPU and Memory Contention — Balloon and Swap - Chris KB</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -45,9 +45,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Snapshot Performance Impact · Chris KB">
+  <meta property="og:title" content="VM CPU and Memory Contention — Balloon and Swap · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Snapshot Performance Impact · Chris KB">
+  <meta name="twitter:title" content="VM CPU and Memory Contention — Balloon and Swap · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -92,7 +92,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#snapshot-performance-impact" class="md-skip">
+        <a href="#vm-cpu-and-memory-contention-balloon-and-swap" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
+    <a href="../../../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -128,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Snapshot Performance Impact
+              VM CPU and Memory Contention — Balloon and Swap
             
           </span>
         </div>
@@ -228,7 +228,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../.." class="md-tabs__link">
+      <a href="../../../../.." class="md-tabs__link">
         
   
   
@@ -260,7 +260,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../../" class="md-tabs__link">
+        <a href="../../../../" class="md-tabs__link">
           
   
   
@@ -283,7 +283,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../site-map/" class="md-tabs__link">
+      <a href="../../../../../site-map/" class="md-tabs__link">
         
   
   
@@ -324,7 +324,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
+    <a href="../../../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -342,7 +342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
+      <a href="../../../../.." class="md-nav__link">
         
   
   
@@ -485,7 +485,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../" class="md-nav__link ">
+            <a href="../../../../" class="md-nav__link ">
               
   
   
@@ -563,7 +563,7 @@
   
   
   
-    <a href="../../../openshift/" class="md-nav__link">
+    <a href="../../../../openshift/" class="md-nav__link">
       
   
   
@@ -627,7 +627,7 @@
   
   
   
-    <a href="../../../operations/" class="md-nav__link">
+    <a href="../../../../operations/" class="md-nav__link">
       
   
   
@@ -703,7 +703,7 @@
   
   
   
-    <a href="../../../reference/" class="md-nav__link">
+    <a href="../../../../reference/" class="md-nav__link">
       
   
   
@@ -806,7 +806,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../" class="md-nav__link ">
               
   
   
@@ -884,7 +884,7 @@
   
   
   
-    <a href="../../aria-automation/" class="md-nav__link">
+    <a href="../../../aria-automation/" class="md-nav__link">
       
   
   
@@ -952,7 +952,7 @@
   
   
   
-    <a href="../../aria-operations/" class="md-nav__link">
+    <a href="../../../aria-operations/" class="md-nav__link">
       
   
   
@@ -1020,7 +1020,7 @@
   
   
   
-    <a href="../../aria-operations-for-logs/" class="md-nav__link">
+    <a href="../../../aria-operations-for-logs/" class="md-nav__link">
       
   
   
@@ -1088,7 +1088,7 @@
   
   
   
-    <a href="../../aria-operations-for-networks/" class="md-nav__link">
+    <a href="../../../aria-operations-for-networks/" class="md-nav__link">
       
   
   
@@ -1156,7 +1156,7 @@
   
   
   
-    <a href="../../aria-suite-lifecycle/" class="md-nav__link">
+    <a href="../../../aria-suite-lifecycle/" class="md-nav__link">
       
   
   
@@ -1226,7 +1226,7 @@
   
   
   
-    <a href="../../certifications/" class="md-nav__link">
+    <a href="../../../certifications/" class="md-nav__link">
       
   
   
@@ -1300,7 +1300,7 @@
   
   
   
-    <a href="../../concepts/" class="md-nav__link">
+    <a href="../../../concepts/" class="md-nav__link">
       
   
   
@@ -1368,7 +1368,7 @@
   
   
   
-    <a href="../../esxi/" class="md-nav__link">
+    <a href="../../../esxi/" class="md-nav__link">
       
   
   
@@ -1436,7 +1436,7 @@
   
   
   
-    <a href="../../horizon/" class="md-nav__link">
+    <a href="../../../horizon/" class="md-nav__link">
       
   
   
@@ -1510,7 +1510,7 @@
   
   
   
-    <a href="../../internals/" class="md-nav__link">
+    <a href="../../../internals/" class="md-nav__link">
       
   
   
@@ -1578,7 +1578,7 @@
   
   
   
-    <a href="../../nsx/" class="md-nav__link">
+    <a href="../../../nsx/" class="md-nav__link">
       
   
   
@@ -1638,7 +1638,7 @@
   
   
   
-    <a href="../../operations/" class="md-nav__link">
+    <a href="../../../operations/" class="md-nav__link">
       
   
   
@@ -1706,7 +1706,7 @@
   
   
   
-    <a href="../../powercli/" class="md-nav__link">
+    <a href="../../../powercli/" class="md-nav__link">
       
   
   
@@ -1770,7 +1770,7 @@
   
   
   
-    <a href="../../reference/" class="md-nav__link">
+    <a href="../../../reference/" class="md-nav__link">
       
   
   
@@ -1838,7 +1838,7 @@
   
   
   
-    <a href="../../srm/" class="md-nav__link">
+    <a href="../../../srm/" class="md-nav__link">
       
   
   
@@ -1906,7 +1906,7 @@
   
   
   
-    <a href="../../tanzu/" class="md-nav__link">
+    <a href="../../../tanzu/" class="md-nav__link">
       
   
   
@@ -1995,7 +1995,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   
@@ -2063,7 +2063,7 @@
   
   
   
-    <a href="../cluster-failure-domains/" class="md-nav__link">
+    <a href="../../cluster-failure-domains/" class="md-nav__link">
       
   
   
@@ -2121,7 +2121,7 @@
   
   
   
-    <a href="../cluster-state-validation/" class="md-nav__link">
+    <a href="../../cluster-state-validation/" class="md-nav__link">
       
   
   
@@ -2179,7 +2179,7 @@
   
   
   
-    <a href="../drs-vmotion-behavior/" class="md-nav__link">
+    <a href="../../drs-vmotion-behavior/" class="md-nav__link">
       
   
   
@@ -2237,7 +2237,7 @@
   
   
   
-    <a href="../ha-admission-control/" class="md-nav__link">
+    <a href="../../ha-admission-control/" class="md-nav__link">
       
   
   
@@ -2295,7 +2295,7 @@
   
   
   
-    <a href="../host-isolation-response/" class="md-nav__link">
+    <a href="../../host-isolation-response/" class="md-nav__link">
       
   
   
@@ -2353,7 +2353,7 @@
   
   
   
-    <a href="../learning-path/" class="md-nav__link">
+    <a href="../../learning-path/" class="md-nav__link">
       
   
   
@@ -2411,7 +2411,7 @@
   
   
   
-    <a href="../maintenance-risk-validation/" class="md-nav__link">
+    <a href="../../maintenance-risk-validation/" class="md-nav__link">
       
   
   
@@ -2469,7 +2469,7 @@
   
   
   
-    <a href="../network-packet-loss/" class="md-nav__link">
+    <a href="../../network-packet-loss/" class="md-nav__link">
       
   
   
@@ -2527,7 +2527,7 @@
   
   
   
-    <a href="../recovery-behavior/" class="md-nav__link">
+    <a href="../../recovery-behavior/" class="md-nav__link">
       
   
   
@@ -2585,7 +2585,7 @@
   
   
   
-    <a href="../resource-contention/" class="md-nav__link">
+    <a href="../../resource-contention/" class="md-nav__link">
       
   
   
@@ -2615,6 +2615,8 @@
               
                 
   
+  
+    
   
   
   
@@ -2707,6 +2709,73 @@
     
     
       
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_5_18_12" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenarios
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_5_18_12" id="__nav_2_1_5_18_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_5_18_12_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_5_18_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenarios
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
         
         
       
@@ -2717,14 +2786,1522 @@
   
   
   
-    <a href="../scenarios/" class="md-nav__link">
+    <a href="../add-esxi-host-to-cluster/" class="md-nav__link">
       
   
   
   <span class="md-ellipsis">
     
   
-    Scenarios
+    Add ESXi Host to Cluster
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../aria-ops-alert-storm/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Ops Alert Storm
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../capacity-planning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacity Planning
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../certificate-expiry-rotation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Certificate Expiry Rotation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../datastore-full-capacity-alarm/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datastore Full Capacity Alarm
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../dr-test-planned-failover/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DR Test Planned Failover
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../enable-vsan-encryption/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enable vSAN Encryption
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../esxi-host-disconnected/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESXi Host Disconnected
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../expand-vxrail-cluster/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expand VxRail Cluster
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../ha-admission-control-breach/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HA Admission Control Breach
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../host-maintenance-patching/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Host Maintenance Patching
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../host-profile-compliance-drift/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Host Profile Compliance Drift
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../nsx-connectivity-broken/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSX Connectivity Broken
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../nsx-dfw-blocking-application-traffic/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSX Dfw Blocking Application Traffic
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../nsx-edge-failure-bgp-down/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSX Edge Failure BGP Down
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../nsx-microsegmentation-rollout/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSX Microsegmentation Rollout
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../nsx-transport-node-prep-failed/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSX Transport Node Prep Failed
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../ntp-drift-sso-certificate/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NTP Drift SSO Certificate
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../provision-new-workload/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provision New Workload
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../psod-esxi-kernel-panic/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Psod ESXi Kernel Panic
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../srm-replication-lag-rpo-violation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRM Replication Lag RPO Violation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../storage-apd-datastore-inaccessible/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Apd Datastore Inaccessible
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../storage-vmotion-datastore-migration/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Vmotion Datastore Migration
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vcenter-down/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vCenter Down
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vcenter-ha-failover/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vCenter HA Failover
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vcenter-upgrade-failure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vCenter Upgrade Failure
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vcf-sddc-manager-upgrade-stalled/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VCF Sddc Manager Upgrade Stalled
   
 
     
@@ -2772,7 +4349,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_5_18_13" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_5_18_12_29" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -2783,7 +4360,7 @@
   <span class="md-ellipsis">
     
   
-    Snapshot Impact
+    VM CPU Memory Contention
   
 
     
@@ -2795,12 +4372,12 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_5_18_13_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_5_18_13">
+        <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_2_1_5_18_12_29_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_5_18_12_29">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Snapshot Impact
+    VM CPU Memory Contention
   
 
           </label>
@@ -2847,7 +4424,595 @@
   
   
   
-    <a href="../storage-latency-troubleshooting/" class="md-nav__link">
+    <a href="../vm-inaccessible-ha-failover/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VM Inaccessible HA Failover
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vm-performance-degraded/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VM Performance Degraded
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vm-snapshot-consolidation-required/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VM Snapshot Consolidation Required
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vmotion-failing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vmotion Failing
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsan-capacity-alarm/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSAN Capacity Alarm
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsan-disk-component-failure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSAN Disk Component Failure
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsan-stretched-cluster-split-brain/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSAN Stretched Cluster Split Brain
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsan-witness-unreachable/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSAN Witness Unreachable
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vxrail-lcm-upgrade-failure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VxRail LCM Upgrade Failure
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../snapshot-impact/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Snapshot Impact
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../storage-latency-troubleshooting/" class="md-nav__link">
       
   
   
@@ -2905,7 +5070,7 @@
   
   
   
-    <a href="../time-dns-validation/" class="md-nav__link">
+    <a href="../../time-dns-validation/" class="md-nav__link">
       
   
   
@@ -2963,7 +5128,7 @@
   
   
   
-    <a href="../upgrade-sequence-reference/" class="md-nav__link">
+    <a href="../../upgrade-sequence-reference/" class="md-nav__link">
       
   
   
@@ -3039,7 +5204,7 @@
   
   
   
-    <a href="../../vcenter/" class="md-nav__link">
+    <a href="../../../vcenter/" class="md-nav__link">
       
   
   
@@ -3107,7 +5272,7 @@
   
   
   
-    <a href="../../vmware-cloud-foundation/" class="md-nav__link">
+    <a href="../../../vmware-cloud-foundation/" class="md-nav__link">
       
   
   
@@ -3175,7 +5340,7 @@
   
   
   
-    <a href="../../vsan/" class="md-nav__link">
+    <a href="../../../vsan/" class="md-nav__link">
       
   
   
@@ -3243,7 +5408,7 @@
   
   
   
-    <a href="../../vsphere-replication/" class="md-nav__link">
+    <a href="../../../vsphere-replication/" class="md-nav__link">
       
   
   
@@ -3281,108 +5446,6 @@
       
         
           
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    <a href="../../vxrail/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    VxRail
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
         
       
         
@@ -3467,6 +5530,36 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -3485,7 +5578,79 @@
   
   
   
-    <a href="../../../../cloud/" class="md-nav__link">
+    <a href="../../../../vxrail/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VxRail
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../../cloud/" class="md-nav__link">
       
   
   
@@ -3557,7 +5722,7 @@
   
   
   
-    <a href="../../../../storage/" class="md-nav__link">
+    <a href="../../../../../storage/" class="md-nav__link">
       
   
   
@@ -3619,7 +5784,7 @@
   
   
   
-    <a href="../../../../san/" class="md-nav__link">
+    <a href="../../../../../san/" class="md-nav__link">
       
   
   
@@ -3683,7 +5848,7 @@
   
   
   
-    <a href="../../../../compute/" class="md-nav__link">
+    <a href="../../../../../compute/" class="md-nav__link">
       
   
   
@@ -3755,7 +5920,7 @@
   
   
   
-    <a href="../../../../networking/" class="md-nav__link">
+    <a href="../../../../../networking/" class="md-nav__link">
       
   
   
@@ -3821,7 +5986,7 @@
   
   
   
-    <a href="../../../../backup/" class="md-nav__link">
+    <a href="../../../../../backup/" class="md-nav__link">
       
   
   
@@ -3911,7 +6076,7 @@
   
   
   
-    <a href="../../../../security/" class="md-nav__link">
+    <a href="../../../../../security/" class="md-nav__link">
       
   
   
@@ -3979,7 +6144,7 @@
   
   
   
-    <a href="../../../../automation/" class="md-nav__link">
+    <a href="../../../../../automation/" class="md-nav__link">
       
   
   
@@ -4041,7 +6206,7 @@
   
   
   
-    <a href="../../../../certifications/" class="md-nav__link">
+    <a href="../../../../../certifications/" class="md-nav__link">
       
   
   
@@ -4107,7 +6272,7 @@
   
   
   
-    <a href="../../../../itsm/" class="md-nav__link">
+    <a href="../../../../../itsm/" class="md-nav__link">
       
   
   
@@ -4148,7 +6313,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../site-map/" class="md-nav__link">
+      <a href="../../../../../site-map/" class="md-nav__link">
         
   
   
@@ -4195,10 +6360,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-snapshots-work" class="md-nav__link">
+  <a href="#symptoms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How Snapshots Work
+        Symptoms
       
     </span>
   </a>
@@ -4206,10 +6371,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-impact-by-chain-depth" class="md-nav__link">
+  <a href="#1-identify-balloon-and-swap-in-esxtop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance Impact by Chain Depth
+        1. Identify Balloon and Swap in ESXtop
       
     </span>
   </a>
@@ -4217,10 +6382,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#detecting-snapshot-issues" class="md-nav__link">
+  <a href="#2-collect-host-level-statistics-via-powercli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Detecting Snapshot Issues
+        2. Collect Host-Level Statistics via PowerCLI
       
     </span>
   </a>
@@ -4228,10 +6393,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consolidation-warnings" class="md-nav__link">
+  <a href="#3-check-drs-migration-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consolidation Warnings
+        3. Check DRS Migration History
       
     </span>
   </a>
@@ -4239,10 +6404,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#esxtop-identifying-snapshot-latency" class="md-nav__link">
+  <a href="#4-identify-a-specific-vms-memory-profile" class="md-nav__link">
     <span class="md-ellipsis">
       
-        esxtop — Identifying Snapshot Latency
+        4. Identify a Specific VM's Memory Profile
       
     </span>
   </a>
@@ -4250,10 +6415,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-induced-snapshots" class="md-nav__link">
+  <a href="#5-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Backup-Induced Snapshots
+        5. Resolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Resolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#short-term-drs-rebalance-or-manual-vmotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short-Term — DRS Rebalance or Manual vMotion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-memory-reservation-on-critical-vms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Memory Reservation on Critical VMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduce-vram-allocation-right-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reduce vRAM Allocation (Right-Sizing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve-cpu-ready-reduce-vcpu-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolve CPU Ready — Reduce vCPU Count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emergency-suspend-non-critical-vms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emergency — Suspend Non-Critical VMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Verification
       
     </span>
   </a>
@@ -4261,10 +6498,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-impact" class="md-nav__link">
+  <a href="#7-prevention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage Impact
+        7. Prevention
       
     </span>
   </a>
@@ -4272,10 +6509,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#policy-and-remediation" class="md-nav__link">
+  <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Policy and Remediation
+        Related Scenarios
       
     </span>
   </a>
@@ -4307,7 +6544,7 @@
   
   
     <li class="md-path__item">
-      <a href="../../../.." class="md-path__link">
+      <a href="../../../../.." class="md-path__link">
         
   <span class="md-ellipsis">
     Home
@@ -4330,7 +6567,7 @@
     
     
       <li class="md-path__item">
-        <a href="../../../" class="md-path__link">
+        <a href="../../../../" class="md-path__link">
           
   <span class="md-ellipsis">
     Platforms
@@ -4351,7 +6588,7 @@
     
     
       <li class="md-path__item">
-        <a href="../../../" class="md-path__link">
+        <a href="../../../../" class="md-path__link">
           
   <span class="md-ellipsis">
     Virtualization
@@ -4369,7 +6606,7 @@
     
     
       <li class="md-path__item">
-        <a href="../../" class="md-path__link">
+        <a href="../../../" class="md-path__link">
           
   <span class="md-ellipsis">
     VMware
@@ -4387,7 +6624,7 @@
     
     
       <li class="md-path__item">
-        <a href="../" class="md-path__link">
+        <a href="../../" class="md-path__link">
           
   <span class="md-ellipsis">
     Topics
@@ -4405,10 +6642,28 @@
     
     
       <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Scenarios
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
         <a href="./" class="md-path__link">
           
   <span class="md-ellipsis">
-    Snapshot Impact
+    VM CPU Memory Contention
   </span>
 
         </a>
@@ -4428,20 +6683,20 @@
   
   <nav class="kb-topnav" aria-label="Page navigation">
     
-    <a href="../scenarios/vxrail-lcm-upgrade-failure/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
+    <a href="../vcf-sddc-manager-upgrade-stalled/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">VxRail LCM Upgrade Failure</span>
+      <span class="kb-topnav__title">VCF SDDC Manager Upgrade Stalled</span>
     </a>
     
 
-    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+    <a href="../../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       <span class="kb-topnav__home-label">Home</span>
     </a>
 
     
-    <a href="../storage-latency-troubleshooting/" class="kb-topnav__link kb-topnav__link--next" id="kb-next-link">
-      <span class="kb-topnav__title">Storage Latency Troubleshooting (VMware)</span>
+    <a href="../vm-inaccessible-ha-failover/" class="kb-topnav__link kb-topnav__link--next" id="kb-next-link">
+      <span class="kb-topnav__title">VM Inaccessible / HA Failover</span>
       <span class="kb-topnav__arrow">&#8594;</span>
     </a>
     
@@ -4452,180 +6707,289 @@
 
 
 
-<h1 id="snapshot-performance-impact">Snapshot Performance Impact<a class="headerlink" href="#snapshot-performance-impact" title="Permanent link">&para;</a></h1>
+<h1 id="vm-cpu-and-memory-contention-balloon-and-swap">VM CPU and Memory Contention — Balloon and Swap<a class="headerlink" href="#vm-cpu-and-memory-contention-balloon-and-swap" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Snapshots are a write-redirect mechanism — they do not freeze data, they redirect writes to a delta disk. This has measurable performance and operational consequences.
+VMs on a host or cluster experience degraded performance. ESXtop shows balloon memory inflated and swap
+activity. This scenario covers identifying which VMs are consuming excess memory, distinguishing balloon
+from swap pressure, resolving the immediate contention via DRS or vMotion, and right-sizing VM
+allocations to prevent recurrence. CPU ready time analysis is included because high I/O swap latency
+is frequently misread as a CPU bottleneck.
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                         Vmware: Virtualization Vmware Topics platform                         │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │                                  Protocols: Various protocols                                 │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                  Management: Virtualization Vmware Topics management console                  │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             Core            │  │       Primary service       │  │        Main function        │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: Virtualization Vmware Topics infrastructure · management network · monitoring            │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Vmware             = Virtualization Vmware Topics platform overview and core concepts              │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Management         = management console and command-line interface for administration              │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Security           = access control, authentication, and encryption configuration                  │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Backup             = backup and recovery procedures and schedule configuration                     │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Upgrade            = software version upgrades and firmware patching procedures                    │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Escalation         = vendor support escalation path and severity triage process                    │
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Documentation      = vendor knowledge base and official product documentation                      │
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Change management  = change ticket requirements for production modifications                       │
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Audit log          = admin action logging for compliance and security review                       │
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="how-snapshots-work">How Snapshots Work<a class="headerlink" href="#how-snapshots-work" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Base VMDK (read-only once snapshot exists)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  └── Delta disk (-000001.vmdk) — all new writes go here
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        └── Delta disk (-000002.vmdk) — if a second snapshot is taken
-</code></pre></div>
-<p>Every read must check whether the block exists in the delta chain before falling back to the base disk. Chain depth increases read latency.</p>
-<h2 id="performance-impact-by-chain-depth">Performance Impact by Chain Depth<a class="headerlink" href="#performance-impact-by-chain-depth" title="Permanent link">&para;</a></h2>
+
+<pre class="mermaid"><code>graph TD
+    classDef pressure fill:#991b1b,color:#fff
+    classDef symptom fill:#7c3aed,color:#fff
+    classDef action fill:#b45309,color:#fff
+    classDef ok fill:#15803d,color:#fff
+    classDef check fill:#1e3a5f,color:#fff
+
+    PRESS[Host memory overcommitted&lt;br/&gt;Active memory &gt; physical RAM]:::pressure
+    PRESS --&gt; BALLOON[VMkernel inflates balloon driver&lt;br/&gt;inside guest OS]:::symptom
+    BALLOON --&gt;|guest frees pages| BRELIEF[Memory returned to host pool&lt;br/&gt;moderate performance impact]:::check
+    BALLOON --&gt;|guest cannot free enough| SWAP[Host swaps VM pages to .vswp file&lt;br/&gt;severe performance impact]:::pressure
+
+    PRESS2[Host CPU overcommitted&lt;br/&gt;more vCPUs scheduled than pCPUs]:::pressure
+    PRESS2 --&gt; READY[VMs queue in CPU ready state&lt;br/&gt;%RDY rises &gt; 5% per vCPU]:::symptom
+
+    SWAP --&gt; ACTION[Identify top balloon/swap VMs&lt;br/&gt;esxtop → m view → MCTLSZ / SWPRD]:::action
+    READY --&gt; ACTION2[Identify top CPU ready VMs&lt;br/&gt;esxtop → v view → %RDY column]:::action
+    ACTION --&gt; RESOLVE[vMotion to less-loaded host&lt;br/&gt;or reduce vRAM allocation]:::ok
+    ACTION2 --&gt; RESOLVE2[Reduce vCPU count&lt;br/&gt;or migrate VM]:::ok</code></pre>
+<h2 id="symptoms">Symptoms<a class="headerlink" href="#symptoms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Snapshot Depth</th>
-<th>Typical IOPS Impact</th>
-<th>Typical Latency Impact</th>
+<th>Indicator</th>
+<th>Detail</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1 snapshot</td>
-<td>5–10% overhead</td>
-<td>Minimal</td>
+<td>Application response time elevated</td>
+<td>Guest OS shows high I/O wait or slow response; application team reports latency</td>
 </tr>
 <tr>
-<td>2–3 snapshots</td>
-<td>10–25% overhead</td>
-<td>Noticeable on I/O-intensive VMs</td>
+<td>ESXtop <code>%RDY</code> &gt; 5%</td>
+<td>CPU ready time per vCPU exceeds threshold; VM is waiting for physical CPU time</td>
 </tr>
 <tr>
-<td>4+ snapshots</td>
-<td>25–50%+ overhead</td>
-<td>Significant; backup tools may create multi-snapshot chains</td>
+<td>ESXtop <code>MCTLSZ</code> &gt; 0 MB</td>
+<td>Balloon driver is inflated inside the guest VM</td>
 </tr>
 <tr>
-<td>32 snapshots</td>
-<td>VMware-imposed maximum</td>
-<td>Near-unusable for write-heavy workloads</td>
+<td>ESXtop <code>SWPRD</code> / <code>SWPWT</code> &gt; 0</td>
+<td>Host is reading from or writing to the <code>.vswp</code> file — most severe form of memory pressure</td>
+</tr>
+<tr>
+<td>vSphere Performance chart</td>
+<td>Host-level <code>Memory Balloon</code> counter rising; <code>Memory Swap In Rate</code> &gt; 0</td>
+</tr>
+<tr>
+<td>DRS recommendations pending</td>
+<td>Cluster DRS is suggesting migrations due to resource imbalance</td>
 </tr>
 </tbody>
 </table>
-<h2 id="detecting-snapshot-issues">Detecting Snapshot Issues<a class="headerlink" href="#detecting-snapshot-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List all VMs with snapshots, sorted by snapshot count</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Snapshot</span> <span class="o">-ne</span> <span class="nv">$null</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SnapCount&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span> <span class="p">}},</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;OldestSnap&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="p">(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Created</span> <span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Sort-Object</span> <span class="n">SnapCount</span> <span class="n">-Descending</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Flag snapshots older than 3 days</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeGB</span>
+<hr />
+<h2 id="1-identify-balloon-and-swap-in-esxtop">1. Identify Balloon and Swap in ESXtop<a class="headerlink" href="#1-identify-balloon-and-swap-in-esxtop" title="Permanent link">&para;</a></h2>
+<p>Connect to the ESXi host via SSH and launch esxtop:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>esxtop
 </code></pre></div>
-<h2 id="consolidation-warnings">Consolidation Warnings<a class="headerlink" href="#consolidation-warnings" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find VMs needing consolidation (orphaned delta files present)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span> <span class="o">-eq</span> <span class="nv">$true</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Trigger consolidation</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-View</span> <span class="p">|</span> <span class="nb">Invoke-Method</span> <span class="n">-Name</span> <span class="n">ConsolidateVMDisks_Task</span>
-</code></pre></div>
-<h2 id="esxtop-identifying-snapshot-latency">esxtop — Identifying Snapshot Latency<a class="headerlink" href="#esxtop-identifying-snapshot-latency" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Connect to host, run esxtop in disk mode</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxtop
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Press &#39;u&#39; for disk view</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Look for GAVG (guest average latency) &gt; 25ms and DAVG (device latency) &gt; 15ms</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Compare VMs with/without snapshots for correlation</span>
-</code></pre></div>
-<h2 id="backup-induced-snapshots">Backup-Induced Snapshots<a class="headerlink" href="#backup-induced-snapshots" title="Permanent link">&para;</a></h2>
-<p>Backup tools (Veeam, NBU, Commvault) create and delete a snapshot per job run. If the delta disk grows large during backup and consolidation is slow:</p>
-<ul>
-<li>I/O is redirected to the delta for the entire backup window.</li>
-<li>Consolidation after backup can cause a "stun" (VM pause of 1–30 seconds) while delta is merged.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Monitor consolidation task progress</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Task</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s2">&quot;ConsolidateVM&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Select-Object</span> <span class="n">ObjectId</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">PercentComplete</span><span class="p">,</span> <span class="n">StartTime</span>
-</code></pre></div>
-<h2 id="storage-impact">Storage Impact<a class="headerlink" href="#storage-impact" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check total snapshot disk consumption per datastore</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="nv">$snaps</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="n">Datastore</span>     <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="n">FreeSpaceGB</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">SnapshotCount</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        <span class="n">SnapshotSizeGB</span><span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$snaps</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">SizeGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="p">}</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">}</span>
-</code></pre></div>
-<h2 id="policy-and-remediation">Policy and Remediation<a class="headerlink" href="#policy-and-remediation" title="Permanent link">&para;</a></h2>
+<p>Press <code>m</code> to switch to memory view. Key columns:</p>
 <table>
 <thead>
 <tr>
+<th>Column</th>
+<th>Meaning</th>
 <th>Threshold</th>
-<th>Action</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Snapshot &gt; 3 days old</td>
-<td>Alert; review with VM owner</td>
+<td><code>MCTLSZ</code></td>
+<td>Balloon size in MB — memory reclaimed from guest</td>
+<td>&gt; 0 MB indicates pressure</td>
 </tr>
 <tr>
-<td>Snapshot &gt; 7 days old</td>
-<td>Escalate; delete unless exception approved</td>
+<td><code>SWPRD</code></td>
+<td>Swap read rate MB/s — host reading from .vswp</td>
+<td>&gt; 0 indicates active swap</td>
 </tr>
 <tr>
-<td>Snapshot chain &gt; 3 deep</td>
-<td>Immediate remediation</td>
+<td><code>SWPWT</code></td>
+<td>Swap write rate MB/s — host writing to .vswp</td>
+<td>&gt; 0 indicates active swap</td>
 </tr>
 <tr>
-<td>Consolidation needed flag</td>
-<td>Schedule consolidation in next maintenance window</td>
+<td><code>GRANT</code></td>
+<td>Memory granted to VM in MB</td>
+<td>Below configured size = constrained</td>
 </tr>
 <tr>
-<td>Delta disk &gt; 50% of base disk</td>
-<td>Emergency — consolidate immediately</td>
+<td><code>SZTGT</code></td>
+<td>Target balloon size — how much VMkernel wants to reclaim</td>
+<td>Rising = increasing pressure</td>
 </tr>
 </tbody>
 </table>
+<p>Sort by <code>MCTLSZ</code> descending (press <code>F</code> then select column, then <code>R</code> to reverse sort) to identify the
+top balloon consumers.</p>
+<p>Press <code>v</code> to switch to VM CPU view. Key column:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Meaning</th>
+<th>Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%RDY</code></td>
+<td>CPU ready time as percentage — time VM waited for a physical CPU</td>
+<td>&gt; 5% per vCPU is contention</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-collect-host-level-statistics-via-powercli">2. Collect Host-Level Statistics via PowerCLI<a class="headerlink" href="#2-collect-host-level-statistics-via-powercli" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Memory pressure indicators — last 5 samples (20-second intervals)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">swapinRate</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">balloonRate</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-MaxSamples</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Identify top balloon consumers across cluster</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">overhead</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">-MaxSamples</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
+</code></pre></div>
+<hr />
+<h2 id="3-check-drs-migration-history">3. Check DRS Migration History<a class="headerlink" href="#3-check-drs-migration-history" title="Permanent link">&para;</a></h2>
+<p>In vSphere Client: <strong>Cluster → Monitor → DRS → Migration History</strong></p>
+<p>If DRS is moving VMs frequently, the cluster is genuinely overcommitted and individual VM remediation
+will not resolve the root cause — capacity must be added or VMs powered off.</p>
+<p>Check DRS recommendations not yet executed (if DRS is in Manual mode):</p>
+<p>vSphere Client → <strong>Cluster → Monitor → DRS → Recommendations</strong> — apply pending recommendations
+immediately if cluster is in active contention.</p>
+<hr />
+<h2 id="4-identify-a-specific-vms-memory-profile">4. Identify a Specific VM's Memory Profile<a class="headerlink" href="#4-identify-a-specific-vms-memory-profile" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="p">`</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">overhead</span><span class="p">.</span><span class="n">average</span><span class="p">,</span> <span class="n">mem</span><span class="p">.</span><span class="n">consumed</span><span class="p">.</span><span class="n">average</span> <span class="p">`</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-MaxSamples</span> <span class="n">60</span> <span class="p">|</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="nb">Sort-Object</span> <span class="n">Timestamp</span> <span class="p">|</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  <span class="nb">Format-Table</span> <span class="n">Timestamp</span><span class="p">,</span> <span class="n">MetricId</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
+</code></pre></div>
+<p>Active memory below 60% of configured vRAM indicates the VM is over-provisioned and is a candidate
+for right-sizing. Overhead memory above 5% of configured vRAM indicates the hypervisor itself is
+consuming excessive memory for VM metadata — this increases with higher vCPU counts.</p>
+<hr />
+<h2 id="5-resolution">5. Resolution<a class="headerlink" href="#5-resolution" title="Permanent link">&para;</a></h2>
+<h3 id="short-term-drs-rebalance-or-manual-vmotion">Short-Term — DRS Rebalance or Manual vMotion<a class="headerlink" href="#short-term-drs-rebalance-or-manual-vmotion" title="Permanent link">&para;</a></h3>
+<p>If the cluster has DRS in Manual or Partially Automated mode, switch to Fully Automated temporarily:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;&lt;cluster-name&gt;&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigureComputeResource</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  <span class="p">(</span><span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterConfigSpecEx</span> <span class="n">-Property</span> <span class="p">@{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">DrsConfig</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">ClusterDrsConfigInfo</span> <span class="n">-Property</span> <span class="p">@{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>      <span class="n">DefaultVmBehavior</span> <span class="p">=</span> <span class="s2">&quot;fullyAutomated&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      <span class="n">Enabled</span> <span class="p">=</span> <span class="nv">$true</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="p">}</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="p">}),</span> <span class="nv">$true</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">)</span>
+</code></pre></div>
+<p>Or manually vMotion the highest balloon-consumer VMs to less-loaded hosts:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Identify least-loaded host by memory usage</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">MemoryUsageGB</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">3</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Format-Table</span> <span class="n">Name</span><span class="p">,</span> <span class="n">MemoryUsageGB</span><span class="p">,</span> <span class="n">MemoryTotalGB</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Move top balloon VM to least-loaded host</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="n">-Destination</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="p">&lt;</span><span class="n">target-host</span><span class="p">&gt;)</span>
+</code></pre></div>
+<h3 id="set-memory-reservation-on-critical-vms">Set Memory Reservation on Critical VMs<a class="headerlink" href="#set-memory-reservation-on-critical-vms" title="Permanent link">&para;</a></h3>
+<p>Prevents balloon and swap for tier-1 workloads, at the cost of reduced DRS flexibility:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="n">-MemoryReservationGB</span> <span class="p">&lt;</span><span class="n">reservation-GB</span><span class="p">&gt;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
+<p>Do not set reservations on all VMs — this eliminates the overcommit benefit entirely.</p>
+<h3 id="reduce-vram-allocation-right-sizing">Reduce vRAM Allocation (Right-Sizing)<a class="headerlink" href="#reduce-vram-allocation-right-sizing" title="Permanent link">&para;</a></h3>
+<p>For VMs where active memory is consistently below 60% of configured vRAM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check active vs configured</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vm-name</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ConfiguredGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryGB</span><span class="p">}},</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;ActiveGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">average</span> <span class="n">-MaxSamples</span> <span class="n">5</span> <span class="p">|</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">}}</span>
+</code></pre></div>
+<p>Power off the VM, reduce vRAM to 110% of peak active memory, power back on.</p>
+<h3 id="resolve-cpu-ready-reduce-vcpu-count">Resolve CPU Ready — Reduce vCPU Count<a class="headerlink" href="#resolve-cpu-ready-reduce-vcpu-count" title="Permanent link">&para;</a></h3>
+<p>VMs with <code>%RDY</code> &gt; 5% and configured vCPUs significantly exceeding the workload thread count:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Check per-VM CPU ready summation (ms per 20s interval — divide by 200 for %)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-MaxSamples</span> <span class="n">3</span> <span class="p">|</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="nb">Format-Table</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">Unit</span>
+</code></pre></div>
+<p>Reduce vCPU count for over-vCPUd VMs — more vCPUs create more scheduling pressure on the host,
+not less. A single-threaded application gains nothing from 8 vCPUs but creates 7 extra scheduling
+units the host must satisfy.</p>
+<h3 id="emergency-suspend-non-critical-vms">Emergency — Suspend Non-Critical VMs<a class="headerlink" href="#emergency-suspend-non-critical-vms" title="Permanent link">&para;</a></h3>
+<p>If all hosts in the cluster are memory-pressured and vMotion cannot solve it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Suspend non-critical VMs to release memory immediately</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;&lt;dev-vm-*&gt;&quot;</span> <span class="p">|</span> <span class="nb">Suspend-VM</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
+<hr />
+<h2 id="6-verification">6. Verification<a class="headerlink" href="#6-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># ESXtop — confirm balloon and swap cleared on host</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Press m in esxtop → check MCTLSZ = 0 and SWPRD = 0 for all VMs</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>esxtop
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># PowerCLI — confirm host memory usage below 90%</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">Host</span>     <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">UsedPct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MemoryUsageGB</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">MemoryTotalGB</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  <span class="p">}</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">UsedPct</span> <span class="o">-gt</span> <span class="n">85</span> <span class="p">}</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c"># Confirm CPU ready below 5% for top VMs</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="n">-MaxSamples</span> <span class="n">3</span> <span class="p">|</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>  <span class="nb">Sort-Object</span> <span class="n">Value</span> <span class="n">-Descending</span> <span class="p">|</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>      <span class="n">VM</span>      <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Entity</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>      <span class="n">ReadyPct</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Value</span> <span class="p">/</span> <span class="n">200</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    <span class="p">}</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>  <span class="p">}</span>
+</code></pre></div>
+<p>Validate with the application team that response times have normalised. For database workloads, run a
+synthetic transaction test (e.g., <code>sysbench</code> or application-specific benchmark) before closing the
+incident.</p>
+<hr />
+<h2 id="7-prevention">7. Prevention<a class="headerlink" href="#7-prevention" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory overcommit ratio</td>
+<td>Keep host memory overcommit below 1.2× for production clusters; measure as <code>sum(VM configured RAM) / host physical RAM</code></td>
+</tr>
+<tr>
+<td>Tier-1 reservations</td>
+<td>Set memory reservations for database and middleware VMs; prevents balloon at the cost of reduced overcommit benefit</td>
+</tr>
+<tr>
+<td>Monitoring — swap alert</td>
+<td>Alert on <code>mem.swapinRate.average &gt; 100 KBps</code> per host; swap indicates severe pressure requiring immediate action</td>
+</tr>
+<tr>
+<td>Monitoring — CPU ready alert</td>
+<td>Alert on <code>cpu.ready.summation</code> equivalent to &gt; 5% per vCPU; sample every 5 minutes</td>
+</tr>
+<tr>
+<td>Quarterly right-sizing</td>
+<td>Review VM active memory vs configured memory quarterly; reclaim unused vRAM; typical overprovision factor is 30–40% for general workloads</td>
+</tr>
+<tr>
+<td>DRS automation level</td>
+<td>Keep production clusters on Fully Automated DRS; Manual mode allows imbalances to accumulate silently</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../vm-performance-degraded/">VM Performance Degraded</a> — broader VM performance triage
+  including storage and network latency contributors.</li>
+<li><a href="../vsan-capacity-alarm/">vSAN Capacity Alarm</a> — swap file growth can rapidly consume vSAN
+  datastore capacity on HCI deployments.</li>
+<li><a href="../storage-apd-datastore-inaccessible/">Storage APD — Datastore Inaccessible</a> — <code>.vswp</code>
+  files on an APD datastore cause immediate VM freeze; distinguish from memory contention.</li>
+</ul>
 
 
 
@@ -4643,20 +7007,20 @@ Snapshots are a write-redirect mechanism — they do not freeze data, they redir
   
   <nav class="kb-topnav kb-bottomnav" aria-label="Page navigation (bottom)">
     
-    <a href="../scenarios/vxrail-lcm-upgrade-failure/" class="kb-topnav__link kb-topnav__link--prev">
+    <a href="../vcf-sddc-manager-upgrade-stalled/" class="kb-topnav__link kb-topnav__link--prev">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">VxRail LCM Upgrade Failure</span>
+      <span class="kb-topnav__title">VCF SDDC Manager Upgrade Stalled</span>
     </a>
     
 
-    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+    <a href="../../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       <span class="kb-topnav__home-label">Home</span>
     </a>
 
     
-    <a href="../storage-latency-troubleshooting/" class="kb-topnav__link kb-topnav__link--next">
-      <span class="kb-topnav__title">Storage Latency Troubleshooting (VMware)</span>
+    <a href="../vm-inaccessible-ha-failover/" class="kb-topnav__link kb-topnav__link--next">
+      <span class="kb-topnav__title">VM Inaccessible / HA Failover</span>
       <span class="kb-topnav__arrow">&#8594;</span>
     </a>
     
@@ -4665,17 +7029,17 @@ Snapshots are a write-redirect mechanism — they do not freeze data, they redir
   
   <nav class="kb-mobile-nav" aria-label="Mobile navigation">
     
-    <a href="../scenarios/vxrail-lcm-upgrade-failure/" class="kb-mobile-nav__btn" title="Previous: VxRail LCM Upgrade Failure">
+    <a href="../vcf-sddc-manager-upgrade-stalled/" class="kb-mobile-nav__btn" title="Previous: VCF SDDC Manager Upgrade Stalled">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     </a>
     
 
-    <a href="../../../.." class="kb-mobile-nav__btn kb-mobile-nav__btn--home" title="Home">
+    <a href="../../../../.." class="kb-mobile-nav__btn kb-mobile-nav__btn--home" title="Home">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     </a>
 
     
-    <a href="../storage-latency-troubleshooting/" class="kb-mobile-nav__btn" title="Next: Storage Latency Troubleshooting (VMware)">
+    <a href="../vm-inaccessible-ha-failover/" class="kb-mobile-nav__btn" title="Next: VM Inaccessible / HA Failover">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
     </a>
     
@@ -4722,7 +7086,7 @@ Snapshots are a write-redirect mechanism — they do not freeze data, they redir
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
   <script>
@@ -4756,7 +7120,7 @@ Snapshots are a write-redirect mechanism — they do not freeze data, they redir
     })();
   </script>
   
-      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   <script>
