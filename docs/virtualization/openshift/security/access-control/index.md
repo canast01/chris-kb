@@ -110,36 +110,6 @@ oc create rolebinding read-pods-group \
   -n my-project
 ```
 
-```yaml
-# Declarative: namespace-scoped role with multiple resource groups
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: pod-reader
-  namespace: my-project
-rules:
-- apiGroups: [""]
-  resources: ["pods", "pods/log"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: pod-reader-binding
-  namespace: my-project
-subjects:
-- kind: User
-  name: bob
-  apiGroup: rbac.authorization.k8s.io
-roleRef:
-  kind: Role
-  name: pod-reader
-  apiGroup: rbac.authorization.k8s.io
-```
-
 ## Security Context Constraints (SCC)
 
 SCCs are an OpenShift-specific admission controller that enforces pod security configuration before a pod is created. Every pod must match at least one SCC granted to its service account.

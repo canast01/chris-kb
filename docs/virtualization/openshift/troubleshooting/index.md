@@ -4,39 +4,52 @@
 OpenShift troubleshooting: pod failures, node issues, cluster operator problems, must-gather collection, and Red Hat support escalation.
 </div>
 
-```text
-┌────────────────────────────────────── OpenShift Troubleshooting ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               OpenShift Troubleshooting Overview                              │   │
-│   │       Three sub-sections: Common Issues, Diagnostics (must-gather), Escalation (Red Hat)      │   │
-│   │       First step: oc get events -A and oc logs <pod> --previous; resolves 90% of issues       │   │
-│   │         Escalation: always attach must-gather; Sev 1 = call Red Hat after opening case        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │       Common Issues        │  │        Diagnostics         │  │           Escalation          │   │
-│   │       CrashLoopBackOff     │  │      must-gather bundle    │  │       Sev 1–4 definitions     │   │
-│   │       ImagePullBackOff     │  │        oc adm inspect      │  │       SOS report per node     │   │
-│   │        Node NotReady       │  │       etcd diagnostics     │  │       Case data checklist     │   │
-│   │          OOMKilled         │  │        Network debug       │  │       TAM escalation path     │   │
-│   │      Operator Degraded     │  │     Node crictl/kubelet    │  │        access.redhat.com      │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
+```mermaid
+graph TD
+    A([Start: Issue Reported]) --> B{Check CVO\noc get clusterversion}
+    B -->|Upgrade stuck| C[Review CO conditions\noc get co]
+    B -->|No upgrade issue| D{Check Operators\noc get co}
+    D -->|Degraded CO found| E[Review operator pod logs\noc describe co and oc logs]
+    D -->|All operators OK| F{Check Nodes\noc get nodes}
+    F -->|NotReady node| G[kubelet / CRI-O / disk\noc debug node]
+    F -->|All nodes Ready| H{Check Pods\noc get pods -A}
+    H -->|CrashLoop / Pending| I[oc logs --previous\noc describe pod]
+    H -->|All pods running| J{Check Networking\nDNS / connectivity}
+    J -->|DNS failure| K[Check openshift-dns pods\nnslookup from debug pod]
+    J -->|Network timeout| L[OVN-K status\nNetworkPolicy review]
+    E --> M([Open support case\nwith must-gather])
+    G --> M
+    I --> M
+    K --> M
+    L --> M
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,D,F,H,J dark
+    class C,E,G,I,K,L action
+    class M escalate
 ```
+
+## Sub-Page Index
+
+| Symptom | Go To |
+|---|---|
+| CrashLoopBackOff, ImagePullBackOff, Pending, OOMKilled, node NotReady, operator Degraded | [Common Issues](common-issues/) |
+| Collecting must-gather, etcd diagnostics, network traces, node-level logs | [Diagnostics](diagnostics/) |
+| Opening a Red Hat support case, SOS report, severity levels, escalation path | [Escalation](escalation/) |
+
 <div class="kb-grid">
   <a class="kb-card" href="common-issues/">
     <span class="kb-card-title">Common Issues</span>
-    <span class="kb-card-desc">CrashLoopBackOff, ImagePullBackOff, node NotReady, pending pods, OOMKilled</span>
+    <span class="kb-card-desc">CrashLoopBackOff, ImagePullBackOff, node NotReady, pending pods, OOMKilled, etcd latency, DNS failures</span>
   </a>
   <a class="kb-card" href="diagnostics/">
     <span class="kb-card-title">Diagnostics</span>
-    <span class="kb-card-desc">must-gather, oc adm inspect, log collection, and etcd diagnostics</span>
+    <span class="kb-card-desc">must-gather, oc adm inspect, Prometheus queries, OVN flow trace, log collection, etcd diagnostics</span>
   </a>
   <a class="kb-card" href="escalation/">
     <span class="kb-card-title">Escalation</span>
-    <span class="kb-card-desc">Red Hat support case process, SOS report, and severity levels</span>
+    <span class="kb-card-desc">Red Hat support case process, SOS report, severity levels, KCS solutions, escalation path</span>
   </a>
 </div>
