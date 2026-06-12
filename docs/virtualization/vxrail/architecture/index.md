@@ -18,7 +18,6 @@ VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk 
 │  └──────────┬───────────┘   └───────────────────────────────┘                                         │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ![VxRail Architecture](../../../assets/vxrail-architecture-overview.svg)
 
@@ -39,8 +38,6 @@ VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk 
 | Stretched cluster | 2 data sites + 1 witness; requires stretched vSAN |
 
 ## HCI Node Cluster
-
-```
 
 ```mermaid
 graph TB
