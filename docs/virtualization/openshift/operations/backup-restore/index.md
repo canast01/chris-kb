@@ -1,7 +1,7 @@
 # OpenShift — Backup & Restore
 
 <div class="kb-summary">
-etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for application workloads, and recovery from common failure scenarios.
+etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for application workloads, PV snapshot backup, and recovery from common failure scenarios.
 </div>
 
 ```text
@@ -34,54 +34,141 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## etcd Backup
+```mermaid
+graph TD
+    E["etcd Backup<br/>(daily)"]:::bk --> R["Restore etcd<br/>cluster-restore.sh"]:::rs
+    P["PV Snapshots<br/>(app-level, CSI)"]:::bk --> RP["Restore PVs<br/>PVC from snapshot"]:::rs
+    M["Manifest Export<br/>(git / oc get -o yaml)"]:::bk --> RA["Redeploy Apps<br/>oc apply -f"]:::rs
 
-```bash
-# Run on a master node (SSH or oc debug)
-oc debug node/<master-node>
-chroot /host
+    R --> H["Healthy<br/>Control Plane"]:::ok
+    RP --> H
+    RA --> H
 
-# Run the backup script (ships with OCP)
-/usr/local/bin/cluster-backup.sh /home/core/assets/backup
-
-# Output:
-# /home/core/assets/backup/snapshot_<timestamp>.db
-# /home/core/assets/backup/static_kuberesources_<timestamp>.tar.gz
-
-# Verify backup size (should be several hundred MB)
-ls -lh /home/core/assets/backup/
-
-# Copy off-node to secure storage
-# From your workstation:
-oc rsync <master-node>:/home/core/assets/backup/ ./etcd-backup-$(date +%F)/
-# Or: scp core@<master-ip>:/home/core/assets/backup/* /backup/etcd/
+    classDef bk fill:#1e3a5f,color:#fff
+    classDef rs fill:#15803d,color:#fff
+    classDef ok fill:#2563eb,color:#fff
 ```
 
-## etcd Restore (Quorum Lost)
+## What etcd Backup Covers
+
+| Covered | NOT Covered |
+|---|---|
+| All Kubernetes resources (Deployments, ConfigMaps, Secrets, CRDs) | Persistent volume data |
+| RBAC policies, ServiceAccounts | Container images in registry |
+| Custom Resource instances (MachineConfigs, ClusterOperators) | Node OS state (RHCOS filesystem) |
+| etcd cluster membership state | Application-level databases inside PVs |
+| Static pod manifests | External secrets (Vault, AWS SSM) |
+
+## Backup Methods Comparison
+
+| Method | Scope | RPO | RTO | Tooling |
+|---|---|---|---|---|
+| etcd snapshot | Cluster state (all K8s objects) | Daily / pre-change | 1–2 hours | cluster-backup.sh |
+| OADP / Velero | Namespaces, PVCs, resources | Hourly (scheduled) | 30–60 min | OADP operator |
+| PV CSI snapshot | Persistent volume data | Per schedule | Minutes | VolumeSnapshot CR |
+| GitOps manifest export | Resource definitions only | Continuous | Redeploy time | oc get -o yaml / git |
+
+## etcd Backup Procedure
+
+Full numbered procedure. Run before every upgrade and weekly at minimum.
 
 ```bash
-# ONLY USE when etcd quorum is lost and cluster is unrecoverable
-# This procedure deletes all nodes and rebuilds from snapshot
+# 1. SSH to a master node
+ssh core@<master-node-ip>
 
-# 1. Stop all master nodes except the one you'll restore from
+# 2. Become root
+sudo -i
 
-# 2. SSH to the recovery master
-ssh core@<master-ip>
+# 3. Run the backup script (included with OCP, ships on every master)
+/usr/local/bin/cluster-backup.sh /home/core/assets/backup
 
-# 3. Run restore script with backup files
+# Output produced:
+#   /home/core/assets/backup/snapshot_<timestamp>.db            (etcd snapshot)
+#   /home/core/assets/backup/static_kuberesources_<timestamp>.tar.gz  (static pod manifests)
+
+# 4. Verify the snapshot was created and is non-trivially sized
+ls -lh /home/core/assets/backup/
+# snapshot file should be several hundred MB on a healthy cluster
+
+# 5. Copy off-node to durable storage (run from your workstation)
+scp core@<master-ip>:/home/core/assets/backup/snapshot_*.db /backup/etcd/
+scp core@<master-ip>:/home/core/assets/backup/static_kuberesources_*.tar.gz /backup/etcd/
+
+# Alternative: oc rsync (if oc debug was used to run the backup)
+oc rsync <master-pod>:/home/core/assets/backup/ ./etcd-backup-$(date +%F)/
+```
+
+## Automate etcd Backup with CronJob
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etcd-backup
+  namespace: openshift-etcd
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          hostPID: true
+          hostNetwork: true
+          serviceAccountName: etcd-backup
+          restartPolicy: OnFailure
+          containers:
+          - name: etcd-backup
+            image: registry.redhat.io/openshift4/ose-cli:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              oc debug node/$(oc get nodes -l node-role.kubernetes.io/master \
+                -o name | head -1 | cut -d/ -f2) -- \
+                chroot /host /usr/local/bin/cluster-backup.sh /home/core/backup
+```
+
+## etcd Restore Procedure (Full DR — Quorum Lost)
+
+**Warning:** Only use when etcd quorum is lost and the cluster API is inaccessible. This procedure is destructive — all three masters are involved.
+
+```bash
+# 1. Stop the static API server pods on ALL masters
+#    SSH to each master and move the manifests out of the static pod directory
+ssh core@master-0
+sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml /tmp/
+sudo mv /etc/kubernetes/manifests/kube-controller-manager.yaml /tmp/
+sudo mv /etc/kubernetes/manifests/kube-scheduler.yaml /tmp/
+
+# Repeat on master-1 and master-2
+
+# 2. On the recovery master (master-0), place the backup files
+sudo mkdir -p /home/core/assets/backup
+sudo cp /backup/etcd/snapshot_*.db /home/core/assets/backup/
+sudo cp /backup/etcd/static_kuberesources_*.tar.gz /home/core/assets/backup/
+
+# 3. Run the restore script on the recovery master only
 sudo /usr/local/bin/cluster-restore.sh /home/core/assets/backup
 
-# 4. Verify etcd members
-sudo crictl ps | grep etcd
+# 4. Restore static pod manifests on the recovery master
+sudo mv /tmp/kube-apiserver.yaml /etc/kubernetes/manifests/
+sudo mv /tmp/kube-controller-manager.yaml /etc/kubernetes/manifests/
+sudo mv /tmp/kube-scheduler.yaml /etc/kubernetes/manifests/
 
-# 5. Restart remaining masters one by one
-# Power on master-2, master-3 — they will rejoin the restored etcd
+# 5. Wait for API server to come up on master-0
+until oc get nodes; do sleep 10; done
 
-# 6. Delete stale etcd members and approve CSRs
+# 6. Restart remaining masters — move manifests back on master-1 and master-2
+# They will rejoin the restored etcd automatically
+
+# 7. Delete stale etcd pods to force re-sync
+oc delete pod -n openshift-etcd --selector=app=etcd
+
+# 8. Approve CSRs for any nodes that need re-joining
 oc get csr | grep Pending
-oc adm certificate approve <csr>
+oc get csr -o name | xargs oc adm certificate approve
 
-# 7. Verify cluster health
+# 9. Verify cluster health
 oc get nodes
 oc get co
 ```
@@ -135,7 +222,7 @@ spec:
     key: cloud
 EOF
 
-# 3. Create backup
+# 3. Create on-demand backup
 oc create -f - <<EOF
 apiVersion: velero.io/v1
 kind: Backup
@@ -177,8 +264,60 @@ spec:
   - my-app
 EOF
 
-# Monitor
+# Monitor backup and restore status
 oc get backup -n openshift-adp
 oc get restore -n openshift-adp
 velero backup logs my-app-backup -n openshift-adp
+```
+
+## PV Snapshot Backup (CSI)
+
+CSI-based snapshots are independent of OADP and operate at the storage driver level. Use alongside OADP for complete application protection.
+
+```bash
+# 1. Create a VolumeSnapshotClass for your CSI driver
+cat <<EOF | oc apply -f -
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: csi-snapclass
+driver: ebs.csi.aws.com        # replace with your CSI driver
+deletionPolicy: Retain
+EOF
+
+# 2. Take a snapshot of a PVC
+cat <<EOF | oc apply -f -
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: myapp-data-snap-$(date +%F)
+  namespace: my-app
+spec:
+  volumeSnapshotClassName: csi-snapclass
+  source:
+    persistentVolumeClaimName: myapp-data
+EOF
+
+# 3. Verify snapshot is ready
+oc get volumesnapshot -n my-app
+
+# 4. Restore: create PVC from snapshot
+cat <<EOF | oc apply -f -
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myapp-data-restored
+  namespace: my-app
+spec:
+  storageClassName: gp3-csi
+  dataSource:
+    name: myapp-data-snap-<date>
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+EOF
 ```

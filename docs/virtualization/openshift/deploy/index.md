@@ -1,7 +1,7 @@
 # OpenShift — Deploy
 
 <div class="kb-summary">
-IPI vs UPI installation methods, install-config.yaml structure, RHCOS bootstrap, air-gap mirror setup, and post-install validation checklist.
+IPI vs UPI vs agent-based installation methods, install-config.yaml structure for vSphere IPI, RHCOS bootstrap sequence, air-gap mirror setup with oc-mirror, DNS requirements, and post-install validation checklist.
 </div>
 
 ```text
@@ -33,46 +33,93 @@ IPI vs UPI installation methods, install-config.yaml structure, RHCOS bootstrap,
 │                                                                                                       │
 ```
 
-## Prerequisites Checklist
+## IPI Install Sequence
 
-```bash
-# DNS requirements (MUST exist before install)
-# api.<cluster>.<base-domain>        → load balancer / VIP for masters port 6443
-# api-int.<cluster>.<base-domain>    → same (internal)
-# *.apps.<cluster>.<base-domain>     → wildcard for router (port 80/443)
+```mermaid
+graph TD
+    A["install-config.yaml\ncreated by operator"]:::dark --> B["openshift-install\ncreate manifests"]:::dark
+    B --> C["openshift-install\ncreate ignition-configs"]:::blue
+    C --> D["Bootstrap node boots\nfrom RHCOS ignition"]:::green
+    D --> E["Bootstrap hosts\ntemporary API + etcd"]:::green
+    E --> F["Master nodes join\nfetch master.ign"]:::orange
+    F --> G["Bootstrap removed\nby installer"]:::orange
+    G --> H["Worker nodes boot\nfetch worker.ign"]:::purple
+    H --> I["Worker CSRs submitted\noperator approves"]:::purple
+    I --> J["Cluster Operators\nbecome Available"]:::teal
+    J --> K["install-complete\nkubeconfig written"]:::teal
 
-# Validate DNS
-nslookup api.ocp.example.com
-nslookup test.apps.ocp.example.com
-dig +short api.ocp.example.com
-
-# NTP (etcd requires <1s drift between masters)
-chronyc tracking        # or timedatectl status
-
-# Port requirements on load balancer
-# Master API:  6443 (from workers + clients)
-# Machine config: 22623 (from nodes, bootstrap phase only)
-# Router HTTP:  80 → infra/worker nodes
-# Router HTTPS: 443 → infra/worker nodes
+    classDef dark fill:#374151,color:#fff
+    classDef blue fill:#2563eb,color:#fff
+    classDef green fill:#15803d,color:#fff
+    classDef orange fill:#b45309,color:#fff
+    classDef purple fill:#7c3aed,color:#fff
+    classDef teal fill:#164e63,color:#fff
 ```
 
-## install-config.yaml
+## DNS Requirements
+
+Required DNS records must exist **before** running `openshift-install`. The installer validates DNS early and aborts if records are missing.
+
+| Record | Type | Target | Port | Required By |
+|--------|------|--------|------|-------------|
+| `api.<cluster>.<base>` | A | Load balancer VIP | 6443 | All clients, workers |
+| `api-int.<cluster>.<base>` | A | Load balancer VIP (internal) | 6443 | Nodes (internal) |
+| `*.apps.<cluster>.<base>` | A (wildcard) | Ingress router VIP | 80/443 | All app routes |
+| `etcd-0.<cluster>.<base>` | A | Master-0 IP | — | Bootstrap/etcd peer |
+| `etcd-1.<cluster>.<base>` | A | Master-1 IP | — | Bootstrap/etcd peer |
+| `etcd-2.<cluster>.<base>` | A | Master-2 IP | — | Bootstrap/etcd peer |
+| `_etcd-server-ssl._tcp.<cluster>.<base>` | SRV | etcd-{0,1,2} | 2380 | etcd peer discovery |
+
+```bash
+# Validate DNS before install
+nslookup api.ocp.example.com
+nslookup test.apps.ocp.example.com
+dig +short _etcd-server-ssl._tcp.ocp.example.com SRV
+
+# NTP — etcd requires < 1 s clock drift between masters
+chronyc tracking
+timedatectl status
+
+# Load balancer port requirements
+# 6443   → kube-apiserver (masters + bootstrap)
+# 22623  → machine-config server (nodes, bootstrap phase only)
+# 80/443 → ingress router (infra or worker nodes)
+```
+
+## install-config.yaml (vSphere IPI — Full Example)
 
 ```yaml
 apiVersion: v1
 baseDomain: example.com
 metadata:
-  name: ocp                # cluster name; combined: ocp.example.com
+  name: ocp                        # cluster name → ocp.example.com
+
 compute:
 - architecture: amd64
   hyperthreading: Enabled
   name: worker
   replicas: 3
+  platform:
+    vsphere:
+      cpus: 4
+      coresPerSocket: 2
+      memoryMB: 16384
+      osDisk:
+        diskSizeGB: 120
+
 controlPlane:
   architecture: amd64
   hyperthreading: Enabled
   name: master
-  replicas: 3              # Always 3 for production
+  replicas: 3                      # Always 3 for production
+  platform:
+    vsphere:
+      cpus: 4
+      coresPerSocket: 2
+      memoryMB: 16384
+      osDisk:
+        diskSizeGB: 120
+
 platform:
   vsphere:
     vcenter: vcenter.example.com
@@ -80,106 +127,230 @@ platform:
     password: "VMware1!"
     datacenter: Datacenter
     defaultDatastore: vsanDatastore
-    folder: /Datacenter/vm/ocp
-    network: "VM Network"
+    cluster: OCP-Cluster            # vSphere compute cluster
+    folder: /Datacenter/vm/ocp      # VM folder for OCP VMs
+    network: "OCP-VLAN-100"         # Port group name (exact match)
     diskType: thin
-pullSecret: '{"auths":{"cloud.redhat.com":{"auth":"..."}}}'
+
+networking:
+  networkType: OVNKubernetes
+  clusterNetwork:
+  - cidr: 10.128.0.0/14            # Pod network
+    hostPrefix: 23                  # /23 per node = 512 pod IPs
+  serviceNetwork:
+  - 172.30.0.0/16                  # ClusterIP service range
+  machineNetwork:
+  - cidr: 192.168.100.0/24         # Node network (must match actual subnet)
+
+fips: false                        # Set true for FIPS-compliant environments
+
+pullSecret: '{"auths":{"cloud.redhat.com":{"auth":"<base64>"},"registry.redhat.io":{"auth":"<base64>"}}}'
 sshKey: 'ssh-rsa AAAA... admin@example.com'
+
+# For air-gap installs add:
+# additionalTrustBundle: |
+#   -----BEGIN CERTIFICATE-----
+#   <mirror CA cert>
+#   -----END CERTIFICATE-----
+# imageContentSources: [...]
 ```
 
-## IPI Installation
+## IPI Installation Procedure
 
 ```bash
-# Download installer from Red Hat Console or mirror
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
+# 1. Download installer binary
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.14.5/openshift-install-linux.tar.gz
+tar xf openshift-install-linux.tar.gz
 
-# Create install dir (preserves install state)
-mkdir ocp-install && cp install-config.yaml ocp-install/
+# 2. Create install directory (NEVER run install from same dir as install-config.yaml directly)
+mkdir ocp-install
+cp install-config.yaml ocp-install/
 
-# Run full install
+# 3. Run install (consumes install-config.yaml — keep a backup)
 ./openshift-install create cluster --dir ocp-install --log-level=info
 
-# Monitor progress
-./openshift-install wait-for bootstrap-complete --dir ocp-install
+# 4. Watch specific phases
+./openshift-install wait-for bootstrap-complete --dir ocp-install --log-level=debug
 ./openshift-install wait-for install-complete --dir ocp-install
 
-# Credentials written to:
-cat ocp-install/auth/kubeconfig
-cat ocp-install/auth/kubeadmin-password
+# 5. Credentials output
+cat ocp-install/auth/kubeconfig          # Set as KUBECONFIG
+cat ocp-install/auth/kubeadmin-password  # Rotate or remove post-install
+
+# Installer log for troubleshooting
+tail -f ocp-install/.openshift_install.log
 ```
 
-## UPI Installation (vSphere)
+## UPI Bare-Metal Procedure
+
+Ordered steps — do not skip or reorder.
+
+1. **Generate manifests** — review and optionally patch before ignition generation.
+2. **Remove machines/machinesets** from manifests if not using MachineAPI (bare-metal UPI).
+3. **Generate ignition configs** — produces `bootstrap.ign`, `master.ign`, `worker.ign`.
+4. **Serve ignition via HTTP** — nodes fetch configs at first boot; URL must be reachable from nodes.
+5. **Boot bootstrap** from RHCOS ISO/PXE; pass `coreos.inst.ignition_url=http://<server>/bootstrap.ign`.
+6. **Boot masters** with `master.ign`; wait for API to become available.
+7. **Monitor bootstrap** completion; remove bootstrap node from load balancer.
+8. **Approve worker CSRs** in two rounds (node CSR then client CSR).
+9. **Wait for install-complete**; validate all operators.
 
 ```bash
-# 1. Generate manifests and ignition configs
+# Steps 1-3
 ./openshift-install create manifests --dir ocp-install
+# Optional: set mastersSchedulable=false in cluster-scheduler-02-config.yml
 ./openshift-install create ignition-configs --dir ocp-install
+# Files: bootstrap.ign  master.ign  worker.ign  auth/
 
-# 2. Host ignition files via HTTP (nodes fetch on first boot)
-# bootstrap.ign, master.ign, worker.ign
+# Step 4 — serve ignition (Python example)
+cd ocp-install && python3 -m http.server 8080
 
-# 3. Create VMs from RHCOS OVA; pass ignition via guestinfo:
-#    guestinfo.ignition.config.data = base64(ignition file)
-#    guestinfo.ignition.config.data.encoding = base64
+# Step 5/6 — RHCOS kernel args (PXE)
+# coreos.inst=yes
+# coreos.inst.install_dev=/dev/sda
+# coreos.inst.image_url=http://<server>/rhcos.raw.gz
+# coreos.inst.ignition_url=http://<server>/bootstrap.ign
 
-# 4. Monitor bootstrap
-./openshift-install wait-for bootstrap-complete
+# Step 7 — monitor bootstrap
+./openshift-install wait-for bootstrap-complete --dir ocp-install
 
-# 5. Approve worker CSRs
+# Step 8 — approve worker CSRs (run twice: node CSR then client CSR)
 oc get csr | grep Pending
-oc adm certificate approve <csr-name>
-# Or approve all:
+oc get csr -o name | xargs oc adm certificate approve
+# Wait ~2 min; repeat for second CSR wave
+oc get csr | grep Pending
 oc get csr -o name | xargs oc adm certificate approve
 
-# 6. Confirm install
-./openshift-install wait-for install-complete
+# Step 9
+./openshift-install wait-for install-complete --dir ocp-install
+```
+
+## Agent-Based Install
+
+Agent-based install (`openshift-install agent create image`) generates a bootable ISO that combines ignition, networking config, and the install agent. Use when: bare-metal without PXE infrastructure, disconnected/air-gap environments, single-node OCP (SNO).
+
+**Differences from IPI/UPI:**
+
+| Aspect | IPI | UPI | Agent-Based |
+|--------|-----|-----|-------------|
+| Infrastructure provisioning | Installer | Operator | N/A (bare-metal only) |
+| PXE/HTTP server needed | No | Yes | No |
+| Disconnected support | Partial | Yes | Yes (full) |
+| SNO support | No | Yes | Yes |
+| MachineAPI post-install | Yes | Optional | Optional |
+
+```yaml
+# agent-config.yaml
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: ocp
+rendezvousIP: 192.168.100.10        # Bootstrap/rendezvous node IP
+hosts:
+- hostname: master-0
+  role: master
+  interfaces:
+  - name: ens3
+    macAddress: "AA:BB:CC:DD:EE:01"
+  networkConfig:
+    interfaces:
+    - name: ens3
+      type: ethernet
+      state: up
+      ipv4:
+        enabled: true
+        address:
+        - ip: 192.168.100.10
+          prefix-length: 24
+        dhcp: false
+    dns-resolver:
+      config:
+        server:
+        - 192.168.100.1
+    routes:
+      config:
+      - destination: 0.0.0.0/0
+        next-hop-address: 192.168.100.1
+        next-hop-interface: ens3
+```
+
+```bash
+# Generate agent ISO (requires install-config.yaml + agent-config.yaml)
+./openshift-install agent create image --dir ocp-install
+# Outputs: ocp-install/agent.x86_64.iso
+
+# Boot all nodes from ISO; agent coordinates rendezvous automatically
+# Monitor
+./openshift-install agent wait-for bootstrap-complete --dir ocp-install
+./openshift-install agent wait-for install-complete --dir ocp-install
 ```
 
 ## Air-Gap Mirror Setup
 
-```bash
-# 1. Create mirror registry (Quay mirror or oc-mirror)
-oc-mirror --config imageset-config.yaml docker://quay.local:8443/ocp
-
-# 2. Add ImageContentSourcePolicy to install-config.yaml
-imageContentSources:
-- mirrors:
-  - quay.local:8443/ocp/openshift/release-images
-  source: quay.io/openshift-release-dev/ocp-release
-- mirrors:
-  - quay.local:8443/ocp/openshift/release
-  source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
-
-# 3. Add CA cert to additionalTrustBundle in install-config.yaml
-additionalTrustBundle: |
-  -----BEGIN CERTIFICATE-----
-  <mirror registry CA>
-  -----END CERTIFICATE-----
+```yaml
+# imageset-config.yaml (oc-mirror v2)
+kind: ImageSetConfiguration
+apiVersion: mirror.openshift.io/v2alpha1
+mirror:
+  platform:
+    channels:
+    - name: stable-4.14
+      minVersion: 4.14.0
+      maxVersion: 4.14.5
+      type: ocp
+    graph: true                      # Include Cincinnati graph for disconnected upgrades
+  operators:
+  - catalog: registry.redhat.io/redhat/redhat-operator-index:v4.14
+    packages:
+    - name: local-storage-operator
+    - name: odf-operator
+  additionalImages:
+  - name: registry.redhat.io/ubi9/ubi:latest
 ```
 
-## Post-Install Validation
+```bash
+# 1. Mirror to internal registry
+oc mirror --config imageset-config.yaml docker://quay.local:8443/ocp4 --dest-skip-tls
+
+# 2. After mirroring — apply generated CRs
+ls oc-mirror-workspace/results-*/
+# Contains: imageContentSourcePolicy.yaml, catalogSource.yaml, updateService.yaml
+
+oc apply -f oc-mirror-workspace/results-*/imageContentSourcePolicy.yaml
+oc apply -f oc-mirror-workspace/results-*/catalogSource.yaml
+
+# 3. Validate ICSP applied and nodes are not degraded
+oc get imagecontentsourcepolicy
+oc get mcp                         # Nodes will reboot to apply ICSP
+
+# 4. Verify image pull from mirror
+oc debug node/<node> -- chroot /host crictl pull quay.local:8443/ocp4/openshift/release:4.14.5-x86_64
+```
+
+## Post-Install Validation Checklist
+
+| Check | Command | Expected Result |
+|-------|---------|-----------------|
+| Cluster version | `oc get clusterversion` | `True False False` on ClusterVersion |
+| All operators healthy | `oc get co \| grep -v "True.*False.*False"` | No output (all healthy) |
+| All nodes Ready | `oc get nodes` | All `Ready`, no `NotReady` |
+| etcd cluster healthy | `oc rsh -n openshift-etcd etcd-<master> etcdctl endpoint health --cluster` | All endpoints healthy |
+| No unhealthy pods | `oc get pods -A \| grep -vE "Running\|Completed\|Succeeded"` | Empty or expected only |
+| Ingress reachable | `curl -k https://console-openshift-console.apps.<cluster>.<base>` | HTTP 200/302 |
+| Image registry configured | `oc get configs.imageregistry.operator.openshift.io cluster -o jsonpath='{.spec.managementState}'` | `Managed` |
+| Default StorageClass | `oc get sc` | At least one `(default)` |
+| Machine API healthy | `oc get machines -A` | All `Running` phase |
+| kubeadmin removed | `oc get secret kubeadmin -n kube-system` | `Error: not found` (after IDP configured) |
 
 ```bash
 export KUBECONFIG=ocp-install/auth/kubeconfig
 
-# 1. All nodes Ready
+# Quick all-green check
+oc get clusterversion
+oc get co | grep -v "True.*False.*False" | grep -v "^NAME"
 oc get nodes
+oc get pods -A | grep -vE "Running|Completed|Succeeded" | grep -v "^NAMESPACE"
 
-# 2. All cluster operators Available, none Degraded
-oc get co | grep -v "True.*False.*False"
-
-# 3. All pods running
-oc get pods --all-namespaces | grep -v "Running\|Completed"
-
-# 4. Default StorageClass exists
-oc get sc | grep default
-
-# 5. Router accessible
-curl -k https://console-openshift-console.apps.ocp.example.com
-
-# 6. Image registry functional
-oc get configs.imageregistry.operator.openshift.io cluster -o jsonpath='{.spec.managementState}'
-
-# 7. etcd healthy
-oc rsh -n openshift-etcd etcd-<master-node> etcdctl endpoint health --cluster
+# Rotate kubeadmin after configuring identity provider
+oc delete secret kubeadmin -n kube-system
 ```

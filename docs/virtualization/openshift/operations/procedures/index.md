@@ -1,7 +1,7 @@
 # OpenShift — Procedures
 
 <div class="kb-summary">
-Common operational procedures: node drain and maintenance mode, scaling MachineSets, adding node roles, rotating certificates, and managing cluster configuration.
+Common operational procedures: node drain and maintenance mode, scaling MachineSets, adding node roles, rotating certificates, etcd member recovery, kubeadmin rotation, and deployment rollout management.
 </div>
 
 ```text
@@ -33,33 +33,64 @@ Common operational procedures: node drain and maintenance mode, scaling MachineS
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Node Drain (Maintenance Mode)
+```mermaid
+graph TD
+    NM["Node Maintenance"]:::cat --> C["1. cordon node"]:::step
+    C --> D["2. drain --ignore-daemonsets"]:::step
+    D --> V["3. verify pods migrated"]:::step
+    V --> W["4. perform maintenance"]:::step
+    W --> U["5. uncordon"]:::step
+    U --> RD["6. verify Ready + rescheduled"]:::step
+
+    OU["Operator Update"]:::cat --> PM["pause MachineConfigPool"]:::step2
+    PM --> UP["trigger update"]:::step2
+    UP --> RM["resume MachineConfigPool"]:::step2
+    RM --> WC["watch MCP UPDATED"]:::step2
+
+    CR["Certificate Rotation"]:::cat --> CE["check expiry dates"]:::step3
+    CE --> RN["renew / approve CSRs"]:::step3
+    RN --> VR["verify new cert dates"]:::step3
+
+    classDef cat fill:#1e3a5f,color:#fff
+    classDef step fill:#2563eb,color:#fff
+    classDef step2 fill:#15803d,color:#fff
+    classDef step3 fill:#7c3aed,color:#fff
+```
+
+## Node Maintenance Procedure
+
+Full sequence for taking a node offline without losing workloads.
 
 ```bash
-# 1. Pre-check — ensure cluster is healthy
+# 1. Pre-check — ensure cluster is healthy before touching any node
 oc get co | grep -v "True.*False.*False"
 oc get nodes
 
-# 2. Cordon (mark unschedulable)
+# 2. Cordon — mark node unschedulable (no new pods land here)
 oc adm cordon <node-name>
 
-# 3. Drain (evict pods)
+# 3. Drain — evict all evictable pods
 oc adm drain <node-name> \
   --ignore-daemonsets \
   --delete-emptydir-data \
   --grace-period=60 \
   --timeout=300s
-# --ignore-daemonsets: skip DaemonSet pods (they'll restart on the node)
-# --delete-emptydir-data: allow pods with emptyDir volumes to be evicted
+# --ignore-daemonsets: DaemonSet pods are not evicted (they restart on uncordon)
+# --delete-emptydir-data: allows pods using emptyDir volumes to be evicted
 
-# 4. Verify workloads rescheduled
-oc get pods --all-namespaces | grep <node-name>
+# 4. Verify — confirm no non-DaemonSet pods remain on the node
+oc get pods --all-namespaces -o wide | grep <node-name> | grep -v "DaemonSet\|Completed"
 
-# 5. Perform maintenance
+# 5. Perform maintenance (reboot, firmware update, disk swap, etc.)
 
-# 6. Uncordon
+# 6. Uncordon — allow new scheduling
 oc adm uncordon <node-name>
-oc get nodes   # verify Ready
+
+# 7. Verify node returns Ready
+oc get node <node-name>
+
+# 8. Verify pods reschedule back if needed
+oc get pods --all-namespaces -o wide | grep <node-name>
 ```
 
 ## Scale Workers via MachineSet
@@ -139,6 +170,129 @@ data:
       - key: node-role.kubernetes.io/infra
         effect: NoSchedule
 EOF
+```
+
+## Scale Deployment and Rollout Management
+
+```bash
+# Scale a deployment
+oc scale deploy/<name> -n <ns> --replicas=3
+
+# Watch rollout progress
+oc rollout status deploy/<name> -n <ns>
+
+# Rollout history
+oc rollout history deploy/<name> -n <ns>
+
+# Undo last rollout (revert to previous ReplicaSet)
+oc rollout undo deploy/<name> -n <ns>
+
+# Undo to a specific revision
+oc rollout undo deploy/<name> -n <ns> --to-revision=2
+
+# Pause / resume a rolling update
+oc rollout pause deploy/<name> -n <ns>
+oc rollout resume deploy/<name> -n <ns>
+
+# Force a restart of all pods in a deployment (e.g. to pick up new secrets)
+oc rollout restart deploy/<name> -n <ns>
+```
+
+## Emergency etcd Member Recovery
+
+Use when one etcd member has failed but quorum (2 of 3) is still intact.
+
+```bash
+# 1. Check etcd pod status
+oc get pods -n openshift-etcd
+
+# 2. Identify failed member — exec into a healthy etcd pod
+oc rsh -n openshift-etcd etcd-<healthy-master>
+etcdctl member list \
+  --endpoints=https://localhost:2379 \
+  --cacert=/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/ca-bundle.crt \
+  --cert=/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-<node>.crt \
+  --key=/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-<node>.key
+
+# 3. Remove the failed member (using the ID from step 2)
+etcdctl member remove <member-id> \
+  --endpoints=https://localhost:2379 \
+  --cacert=... --cert=... --key=...
+
+# 4. Delete the etcd pod on the failed node — MCO will re-add the member
+oc delete pod -n openshift-etcd etcd-<failed-node>
+
+# 5. Monitor new pod starting and member re-joining
+oc get pods -n openshift-etcd -w
+
+# 6. Confirm three members
+oc rsh -n openshift-etcd etcd-<healthy-master> \
+  etcdctl member list --endpoints=https://localhost:2379 ...
+```
+
+## Certificate Expiry Check
+
+```bash
+# Check kube-controller-manager client cert expiry
+oc get secret kube-controller-manager-client-cert-key \
+  -n openshift-config-managed \
+  -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -dates
+
+# Check all API server certs
+oc -n openshift-kube-apiserver-operator get secret kube-apiserver-to-kubelet-signer \
+  -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -enddate
+
+# Decode a cert from a file
+openssl x509 -in cert.pem -noout -dates
+
+# Check pending CSRs (nodes needing cert approval)
+oc get csr
+oc get csr | grep Pending
+
+# Approve all pending CSRs
+oc get csr -o name | xargs oc adm certificate approve
+
+# After cert rotation: verify new expiry
+oc -n openshift-kube-apiserver-operator get secret kube-apiserver-to-kubelet-signer \
+  -o jsonpath='{.data.tls\.crt}' | base64 -d | openssl x509 -noout -enddate
+```
+
+## Rotating kubeadmin
+
+Remove the kubeadmin emergency credential after configuring a proper identity provider with at least one cluster-admin user. This is a one-way operation.
+
+```bash
+# 1. Confirm you have cluster-admin access via another identity (NOT kubeadmin)
+oc login -u <your-idp-admin> -p <password>
+oc whoami    # must NOT be kubeadmin
+
+# 2. Verify the IDP-backed user has cluster-admin
+oc get clusterrolebinding cluster-admin -o yaml | grep -A5 subjects
+
+# 3. Delete the kubeadmin secret
+oc delete secret kubeadmin -n kube-system
+
+# 4. Verify deletion
+oc get secret kubeadmin -n kube-system
+# Expected: Error from server (NotFound): secrets "kubeadmin" not found
+```
+
+## Image Pull Secret Rotation
+
+```bash
+# 1. Obtain new pull secret JSON from console.redhat.com (OpenShift cluster manager)
+
+# 2. Update the global pull secret
+oc set data secret/pull-secret \
+  -n openshift-config \
+  --from-file=.dockerconfigjson=<path-to-new-pull-secret.json>
+
+# 3. Verify the update was applied
+oc get secret pull-secret -n openshift-config \
+  -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d | jq .
+
+# 4. MCO will roll out the change to all nodes (monitor MCP)
+oc get mcp -w
 ```
 
 ## Certificate Rotation
