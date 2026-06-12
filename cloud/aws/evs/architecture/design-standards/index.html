@@ -3480,7 +3480,22 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │  Scale: add 1 host at time │  │  Avoid overlap with on-prem  │  │  AZ: DR isolation           │   │
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  i4i.metal    = EVS bare-metal host; 128 vCPU, 1 TB RAM, 30 TB NVMe — standard choice                 │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  i3en.metal   = Storage-heavy EVS host; 96 vCPU, 768 GB RAM, 60 TB NVMe                               │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  FTT          = Failures to Tolerate; FTT=1 (RAID-1) needs 3 hosts; FTT=2 needs 5 hosts               │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  vSAN ESA     = Express Storage Architecture; NVMe-optimised single tier; no cache/capacity split     │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  HCI          = Hyper-Converged Infrastructure; compute + storage on the same bare-metal hosts        │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  AZ           = Availability Zone; physically isolated AWS data center with independent power         │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Stretched cluster = vSAN across 2 AZs; requires witness VM in a third AZ for quorum                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Witness VM   = Lightweight t3.medium EC2 in 3rd AZ; holds tiebreaker vote; no data stored            │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  VTEP subnet  = Dedicated /20 for NSX-T Geneve overlay tunnel endpoints on each host ENI              │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Direct Connect = Private dedicated link from on-prem to AWS; required for HCX production use         │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  CIDR         = Plan 3 non-overlapping IP ranges: management / VTEP overlay / workload VMs            │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Admission control = vSphere HA policy reserving cluster capacity for host failure recovery           │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="host-type-selection">Host Type Selection<a class="headerlink" href="#host-type-selection" title="Permanent link">&para;</a></h2>
 <table>

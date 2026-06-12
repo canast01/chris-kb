@@ -3645,7 +3645,22 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T upgrade sequence, 
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   ESXi patches: AWS manages OS-level host AMI; VCF LCM manages ESXi version within VCF       │    │
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  VCF LCM      = Lifecycle Manager in VCF; orchestrates all component upgrades via SDDC Manager        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  SDDC Manager = Must be upgraded first in every VCF cycle; before vCenter and NSX-T                   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Upgrade bundle = VCF update package downloaded from VMware depot; contains all installers            │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Rolling upgrade = ESXi hosts patched one at a time; vSAN evacuates data before each host             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Remediation  = vLCM action applying an image to a host; automatically enters maintenance mode        │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  NSX-T upgrade = Manager → Edge nodes → host transport nodes; never skip order                        │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  EUS          = Extended Update Support; allows version jumps between select VCF releases             │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  HCX upgrade  = Upgrade last in the VCF stack; both sites must run same HCX version                   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Bundle download = SDDC Manager → Lifecycle → Available Updates → Download before scheduling          │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Host AMI     = AWS-managed OS image for EVS bare-metal hosts; AWS handles OS-level updates           │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Pre-check    = SDDC Manager automated compatibility validation run before upgrade starts             │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Brownfield   = Existing EVS environment being upgraded; follow supported upgrade path matrix         │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="vcf-upgrade-sequence">VCF Upgrade Sequence<a class="headerlink" href="#vcf-upgrade-sequence" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Correct upgrade order for VCF (must not be skipped):

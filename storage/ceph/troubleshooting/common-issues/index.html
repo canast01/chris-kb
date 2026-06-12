@@ -2548,7 +2548,22 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   Nearfull/Full: add capacity or delete data; full cluster stops ALL writes including repair  │   │
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  HEALTH_ERR    = Critical cluster condition requiring immediate action; may block all writes          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  OSD_DOWN      = Health code: one or more OSDs not responding; check disk and network first           │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  PG_DEGRADED   = Health code: PGs have fewer replicas than required; data still accessible            │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  PG_INACTIVE   = Health code: PG cannot serve I/O; primary OSD down; investigate immediately          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  SLOW_OPS      = Health code: operations queued more than 30s; indicates disk or network saturation   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  OSD_NEARFULL  = Health code: OSD disk usage approaching full ratio; add capacity soon                │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  OSD_FULL      = All I/O including recovery halted; must free space or add capacity immediately       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  clock skew    = NTP drift exceeding 0.05s between MON nodes; triggers HEALTH_WARN                    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  ceph health detail = Lists all active health codes with per-OSD/PG explanation and context           │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  BytesToResync = Remaining bytes to replicate after OSD change; wait for 0 before disk replacement    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  CRUSH         = Data placement algorithm; incorrect CRUSH map causes PG stuck states                 │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  noout flag    = Prevents OSDs being marked out during maintenance; set before host reboot            │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="osd-down">OSD Down<a class="headerlink" href="#osd-down" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Identify down OSD</span>

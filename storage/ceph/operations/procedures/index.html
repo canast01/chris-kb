@@ -2737,15 +2737,22 @@
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  CRUSH weight adjusts automatically; monitor rebalance via ceph -s until clean                        │
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Manual reweight: ceph osd crush reweight osd.&lt;id&gt; &lt;float&gt; — adjust placement if needed               │
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  GLOSSARY                                                                                             │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  OSD       — Object Storage Daemon; one per disk; stores, replicates, and recovers data               │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  PG        — Placement Group; logical shard unit; PGs map to OSDs via CRUSH                           │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  cephadm   — Ceph&#39;s orchestrator for deploying and managing cluster daemons via containers            │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  CRUSH     — Controlled Replication Under Scalable Hashing; Ceph&#39;s data distribution algorithm        │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  reweight  — adjusting an OSD&#39;s relative capacity share in CRUSH map                                  │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  scrub     — data integrity scan; deep-scrub includes checksum verification of stored objects         │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  OSD          = Object Storage Daemon; one per disk; stores, replicates, and recovers data            │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  PG           = Placement Group; logical shard unit; PGs map to OSD sets via CRUSH algorithm          │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  cephadm      = Ceph&#39;s orchestrator; deploys and manages cluster daemons via containers               │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  CRUSH        = Controlled Replication Under Scalable Hashing; Ceph&#39;s data distribution algorithm     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  reweight     = Adjusting an OSD&#39;s relative capacity share in the CRUSH map                           │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  scrub        = Data integrity scan; deep-scrub adds checksum verification of stored objects          │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  ceph osd out = Marks OSD as out of the cluster; triggers data migration to remaining OSDs            │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  ceph osd in  = Marks OSD back in; triggers data rebalancing back onto the OSD                        │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  BytesToResync= Remaining bytes to replicate after OSD change; wait for 0 before physical swap        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  noout flag   = Prevents OSDs being marked out automatically during planned maintenance               │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  CRUSH rule   = Policy defining fault domain (host, rack) for data placement in a pool                │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  ceph orch    = Orchestration commands: apply osds, add hosts, remove daemons via cephadm             │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="kb-summary">
 Ceph operational procedures: OSD replacement, adding new nodes, reweighting for load balance, scrub scheduling, pool PG count adjustment, and controlled cluster maintenance.

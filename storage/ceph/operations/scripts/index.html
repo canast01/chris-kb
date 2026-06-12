@@ -2714,14 +2714,22 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Scripts use set -euo pipefail for safe error propagation; non-zero exit = check required             │
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Output format: [OK] / [WARN] / [FAIL] prefixed lines + summary count at bottom                       │
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  GLOSSARY                                                                                             │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  ceph -s      — cluster status: health, OSD count, PG summary, I/O rate, capacity                     │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  ceph osd tree— visual tree of hosts, buckets, OSDs, and their weights                                │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  ceph df      — per-pool capacity: stored, objects, used, available, quota                            │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  ceph pg stat — aggregate PG count by state (active+clean, degraded, etc.)                            │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  PASS/WARN/FAIL— script exit convention: all PASS = 0, any WARN = 1, any FAIL = 2                     │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  ceph -s      = Cluster status: health, OSD up/in counts, PG summary, I/O rate, capacity              │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  ceph osd tree= Visual tree of hosts, buckets, OSDs, and their weights and up/in state                │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  ceph df      = Per-pool capacity: stored objects, data used, available, and quota                    │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  ceph pg stat = Aggregate PG count by state (active+clean, degraded, recovering, etc.)                │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  PASS/WARN/FAIL= Script exit convention: all PASS = exit 0, any WARN = exit 1, any FAIL = exit 2      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  admin keyring= /etc/ceph/ceph.client.admin.keyring; required on execution host for all scripts       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  ceph.conf    = Cluster config file; must point to correct monitors for scripts to connect            │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  set -euo pipefail = Bash safe mode: exit on error, unset var, or pipe failure in scripts             │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  nearfull ratio= Configurable OSD full threshold (default 85%); script alerts when exceeded           │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  OSD_DOWN     = Health code raised when OSD is not responding; scripts parse this for alerting        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  ceph health detail = Enumerates health codes with per-item detail; parsed by health-check script     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  cron         = Linux task scheduler; used to run health-check and capacity scripts daily             │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="kb-summary">
 Operational scripts for Ceph: daily health check, OSD replacement workflow, capacity report, and PG status summary.

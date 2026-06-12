@@ -2642,7 +2642,22 @@ Daily cluster health routine: cluster operators, node status, etcd health, monit
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│    etcd P99 commit latency &gt; 10ms → investigate disk IOPS; db &gt; 8 GB → compact immediately            │
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│    Certificate &lt; 30 days → schedule rotation; &lt; 7 days → emergency rotation                           │
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Cluster Operator  = OCP component controller; Available=True + Degraded=False = healthy              │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  DEGRADED          = Cluster Operator condition: component has a configuration or runtime error       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  NotReady node     = Node not accepting workloads; check kubelet, disk, and network on that node      │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  CrashLoopBackOff  = Pod restart loop; check logs with oc logs &lt;pod&gt; --previous for root cause        │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  etcd              = Distributed KV store; OCP control plane database; must have 3 healthy members    │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  etcd db size      = etcd on-disk database size; compact and defrag if exceeds 8 GB                   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  P99 commit latency= 99th percentile etcd write latency; above 10ms indicates storage I/O issue       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  certificate expiry= TLS cert validity; OCP auto-rotates most; monitor for &lt; 30 days remaining        │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  MachineConfigPool = Groups nodes by config profile; Degraded MCP means a node failed to apply        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  PVC               = PersistentVolumeClaim; Pending PVCs indicate storage provisioner failure         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  oc adm top nodes  = Shows per-node CPU and memory usage; identify resource pressure early            │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Prometheus        = OCP built-in monitoring stack; verify its pods are Running before trusting alerts│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <p>Run in order — each check gates the next.</p>

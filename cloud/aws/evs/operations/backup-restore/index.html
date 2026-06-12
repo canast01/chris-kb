@@ -3634,7 +3634,22 @@ EVS backup strategy: SDDC Manager configuration backup to S3, vCenter database b
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   VM backups: Veeam with vStorage API (VADP); backup datastores on-prem or S3/EBS            │    │
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  SDDC Manager backup = VCF configuration backup covering domains, hosts, and topology data            │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  vCenter VCSA backup = VCSA file-based backup to SFTP/NFS; does not include VM disk data              │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  VADP         = vStorage APIs for Data Protection; enables agentless VM backup via Veeam              │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  S3           = AWS object storage; primary backup destination for EVS configuration data             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Transfer Family = AWS managed SFTP service with S3 backend; acts as SFTP target for VCF              │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  RTO          = Recovery Time Objective; max acceptable downtime; drives backup frequency             │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  RPO          = Recovery Point Objective; max acceptable data loss; drives retention count            │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Veeam        = Backup software using VADP to quiesce and snapshot VMs inside EVS cluster             │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  AWS Backup   = Native AWS backup service; can protect EVS VMs via integration agents                 │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Retention    = Number of backup copies kept; minimum 3 for production environments                   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  SFTP bridge  = EC2 instance running OpenSSH proxy to S3; alternative to Transfer Family              │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Encryption token = Password protecting the VCSA backup; required for restore — store in vault        │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="sddc-manager-configuration-backup">SDDC Manager Configuration Backup<a class="headerlink" href="#sddc-manager-configuration-backup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SDDC Manager backs up its configuration (domains, hosts, VCF topology) to an SFTP server.</span>

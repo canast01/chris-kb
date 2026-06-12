@@ -2711,7 +2711,22 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   Pre-upgrade: ensure HEALTH_OK + all OSDs up+in + no active recovery                         │   │
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  cephadm      = Container-based Ceph orchestrator; manages daemon lifecycle across nodes              │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  MON          = Monitor daemon; maintains cluster maps and quorum; upgraded first in sequence         │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  MGR          = Manager daemon; metrics, dashboard, orchestrator APIs; upgraded second                │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  OSD          = Object Storage Daemon; upgraded third; cephadm upgrades one OSD at a time             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  MDS          = Metadata Server; manages CephFS namespace; upgraded after OSD upgrade completes       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  RGW          = RADOS Gateway; object storage frontend; upgraded last in standard sequence            │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  HEALTH_OK    = Required pre-upgrade cluster state; do not start upgrade while cluster degraded       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  major version= Named release (Reef, Squid, etc.); never skip a major version during upgrades         │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  noout flag   = Prevents OSDs being marked out during upgrade; cephadm sets this automatically        │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  ceph versions= Shows daemon versions currently running; all should match after upgrade completes     │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  upgrade start= ceph orch upgrade start --ceph-version x.y.z; orchestrates rolling container upgrade  │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  rollback     = Not automatic; requires re-running old container image; complex for major version     │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="release-calendar">Release Calendar<a class="headerlink" href="#release-calendar" title="Permanent link">&para;</a></h2>
 <table>

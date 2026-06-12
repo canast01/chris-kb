@@ -2546,7 +2546,22 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │  RAM: 4-6 GB per OSD        │  │  25 GbE+ cluster recommended│  │  RGW: 2+ if object storage  │   │
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  OSD          = Object Storage Daemon; one per physical disk; minimum 3 OSD nodes for production      │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  MON          = Monitor daemon; maintains cluster maps; 3 MONs required (5 for large clusters)        │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  MGR          = Manager daemon; runs metrics, dashboard, orchestrator; always deploy 2 (active/standby)│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  MDS          = Metadata Server; required only if using CephFS; deploy 1+ per CephFS filesystem       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  RGW          = RADOS Gateway; deploy 2+ for object storage HA; requires separate pool config         │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  CRUSH        = Controlled Replication Under Scalable Hashing; data placement algorithm               │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Failure domain = CRUSH hierarchy level for fault isolation; host (default), rack, AZ                 │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  WAL/DB SSD   = NVMe device used as BlueStore WAL and RocksDB metadata store; boosts OSD performance  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Public network = Client-facing network; minimum 10 GbE; 25 GbE+ recommended for production           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Cluster network= OSD-to-OSD replication network; separate from public network; no client access      │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  FTT          = Failure To Tolerate; replication size 3 = FTT 1; requires min 3 OSD nodes             │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  BlueStore    = Default Ceph OSD storage backend; stores data directly on block device via RocksDB    │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="node-sizing">Node Sizing<a class="headerlink" href="#node-sizing" title="Permanent link">&para;</a></h2>
 <table>

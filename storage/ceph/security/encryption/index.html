@@ -2607,16 +2607,22 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Keys stored in Ceph monitor key-value store; no external KMS required for OSD encryption             │
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Performance impact: modern CPUs with AES-NI hardware acceleration ~1–3% overhead typical             │
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  GLOSSARY                                                                                             │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  dmcrypt    — Linux kernel dm-crypt: transparent block device encryption layer                        │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  LUKS       — Linux Unified Key Setup: key management standard used by dm-crypt                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  RBD encrypt— per-image client-side encryption; key managed via LUKS passphrase in keyring            │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  SSE-KMS   — Server-Side Encryption with Key Management Service (external Vault integration)          │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  SSE-S3    — Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)          │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  msgr2     — Ceph messenger protocol v2; supports secure mode (encrypted) and crc mode                │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  AES-NI    — Intel/AMD hardware instruction set for accelerated AES encryption operations             │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  dmcrypt    = Linux kernel dm-crypt; transparent block device encryption layer for OSD disks          │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  LUKS       = Linux Unified Key Setup; key management standard used by dm-crypt                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  RBD encrypt= Per-image client-side encryption; LUKS key managed via LUKS passphrase in keyring       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  SSE-KMS    = Server-Side Encryption with external KMS (Vault); per-object or per-bucket in RGW       │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  SSE-S3     = Server-Side Encryption with Ceph-managed keys (S3-compatible object encryption)         │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  msgr2      = Ceph messenger protocol v2; supports secure (encrypted) and crc (checksummed) modes     │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  AES-NI     = Intel/AMD hardware AES instruction set; ~1–3% overhead with modern CPUs                 │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  KMS        = Key Management Service; external secret store (e.g. HashiCorp Vault) for SSE-KMS        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  DEK        = Data Encryption Key; per-object key used by RGW SSE; wrapped by KEK from KMS            │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  KEK        = Key Encryption Key; master key stored in KMS; wraps DEKs; rotate to re-protect data     │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  ms_encrypt_dispatch = Ceph config option enabling msgr2 encryption on all messenger traffic          │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  --encrypt  = cephadm OSD option; applies dmcrypt to all OSDs created by that apply command           │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="kb-summary">
 Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-image, RGW server-side encryption with KMS, and in-transit encryption via messenger v2.

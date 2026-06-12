@@ -2611,6 +2611,21 @@ CephX shared-secret authentication protocol, how clients authenticate to MONs an
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  - Keys stored at: /etc/ceph/ceph.client.&lt;name&gt;.keyring (clients)
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                     /var/lib/ceph/osd/ceph-N/keyring (OSDs)
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                     /var/lib/ceph/mon/ceph-&lt;host&gt;/keyring (MONs)
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Key terms:
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  CephX          = Ceph&#39;s shared-secret mutual authentication protocol; required for all access
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  shared secret  = Pre-shared 128-bit key; stored in keyring files; never transmitted in clear
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  session ticket = Time-limited auth token issued by MON; client presents to OSD to prove identity
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  HMAC           = Hash-based Message Authentication Code; used to sign all CephX challenges
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  nonce          = One-time random value preventing replay attacks in CephX challenge flow
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  client.admin   = Default superuser identity; full cluster access; created during cephadm bootstrap
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  keyring        = File holding CephX identity and shared secret; chmod 600 required on all nodes
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>  capability     = Permission string granted per identity: allow r/rw/* per service and pool
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  bootstrap key  = Temporary key used during OSD/MDS initialization; replaced by permanent key
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>  ceph auth get  = Retrieves key and capabilities for a given CephX identity
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>  key rotation   = Replacing an existing CephX key; requires update on all clients using that key
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>  auth DB        = MON-maintained key-value store mapping identity names to keys and capabilities
 </code></pre></div>
 <h2 id="key-distribution">Key Distribution<a class="headerlink" href="#key-distribution" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On a new client node that needs to access Ceph:</span>

@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="750" font-family="'Segoe UI',Arial,sans-serif">
+  <rect width="820" height="750" fill="#f4f6f9"/>
+  <!-- TITLE -->
+  <rect x="0" y="0" width="820" height="58" fill="#1a2744"/>
+  <text x="410" y="36" text-anchor="middle" fill="white" font-size="20" font-weight="700" letter-spacing="0.5">PostgreSQL — Process Model &amp; Replication Architecture</text>
+  <text x="410" y="52" text-anchor="middle" fill="#7a8fbb" font-size="11">Process-per-connection · WAL · MVCC · Streaming Replication</text>
+
+  <!-- COLUMN 1: Process Model -->
+  <rect x="20" y="72" width="250" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="20" y="72" width="250" height="42" fill="#1565c0" rx="6"/>
+  <rect x="20" y="100" width="250" height="14" fill="#1565c0"/>
+  <text x="145" y="97" text-anchor="middle" fill="white" font-size="13" font-weight="700">Process Model</text>
+  <text x="145" y="111" text-anchor="middle" fill="#90caf9" font-size="9">One backend per connection</text>
+  <rect x="30" y="126" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="141" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">postmaster (supervisor / listener)</text>
+  <rect x="30" y="152" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="167" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">backend (one per client session)</text>
+  <rect x="30" y="178" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="193" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">autovacuum launcher + workers</text>
+  <rect x="30" y="204" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="219" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">bgwriter (dirty page flush)</text>
+  <rect x="30" y="230" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="245" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">checkpointer (WAL sync + fsync)</text>
+  <text x="145" y="282" text-anchor="middle" fill="#78909c" font-size="9">postmaster forks backend per client</text>
+  <text x="145" y="300" text-anchor="middle" fill="#78909c" font-size="9">Backend crash: other sessions unaffected</text>
+  <text x="145" y="318" text-anchor="middle" fill="#78909c" font-size="9">autovacuum: reclaims dead tuples + stats</text>
+  <text x="145" y="336" text-anchor="middle" fill="#78909c" font-size="9">bgwriter: prevents checkpoint I/O spike</text>
+  <text x="145" y="354" text-anchor="middle" fill="#78909c" font-size="9">checkpointer: writes at checkpoint_timeout</text>
+  <text x="145" y="372" text-anchor="middle" fill="#78909c" font-size="9">PgBouncer / pgpool: connection poolers</text>
+  <text x="145" y="390" text-anchor="middle" fill="#78909c" font-size="9">max_connections: default 100; size carefully</text>
+  <text x="145" y="408" text-anchor="middle" fill="#78909c" font-size="9">wal_writer: flushes WAL buffers to disk</text>
+
+  <!-- COLUMN 2: Storage & MVCC -->
+  <rect x="285" y="72" width="250" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="285" y="72" width="250" height="42" fill="#00695c" rx="6"/>
+  <rect x="285" y="100" width="250" height="14" fill="#00695c"/>
+  <text x="410" y="97" text-anchor="middle" fill="white" font-size="13" font-weight="700">Storage &amp; MVCC</text>
+  <text x="410" y="111" text-anchor="middle" fill="#80cbc4" font-size="9">Heap · WAL · MVCC · TOAST</text>
+  <rect x="295" y="126" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="141" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">Heap files (8 KB pages, MVCC tuples)</text>
+  <rect x="295" y="152" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="167" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">WAL / pg_wal (16 MB segments)</text>
+  <rect x="295" y="178" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="193" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">shared_buffers (in-memory page cache)</text>
+  <rect x="295" y="204" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="219" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">TOAST (large value side table)</text>
+  <rect x="295" y="230" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="245" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">Dead tuples → VACUUM cleanup</text>
+  <text x="410" y="282" text-anchor="middle" fill="#78909c" font-size="9">Each row version (tuple) kept for MVCC</text>
+  <text x="410" y="300" text-anchor="middle" fill="#78909c" font-size="9">VACUUM: reclaims space; prevents bloat</text>
+  <text x="410" y="318" text-anchor="middle" fill="#78909c" font-size="9">TOAST: values &gt;2 KB compressed + stored</text>
+  <text x="410" y="336" text-anchor="middle" fill="#78909c" font-size="9">shared_buffers: 25% of RAM starting point</text>
+  <text x="410" y="354" text-anchor="middle" fill="#78909c" font-size="9">pg_wal: base for replication + crash recovery</text>
+  <text x="410" y="372" text-anchor="middle" fill="#78909c" font-size="9">XID wraparound: VACUUM prevents freeze</text>
+  <text x="410" y="390" text-anchor="middle" fill="#78909c" font-size="9">FILLFACTOR: leave space for HOT updates</text>
+  <text x="410" y="408" text-anchor="middle" fill="#78909c" font-size="9">work_mem: per sort / hash join operation</text>
+
+  <!-- COLUMN 3: Replication -->
+  <rect x="550" y="72" width="250" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="550" y="72" width="250" height="42" fill="#6a1b9a" rx="6"/>
+  <rect x="550" y="100" width="250" height="14" fill="#6a1b9a"/>
+  <text x="675" y="97" text-anchor="middle" fill="white" font-size="13" font-weight="700">Replication</text>
+  <text x="675" y="111" text-anchor="middle" fill="#ce93d8" font-size="9">Physical · Logical · Synchronous</text>
+  <rect x="560" y="126" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="141" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">WAL sender process (primary)</text>
+  <rect x="560" y="152" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="167" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">WAL receiver (standby)</text>
+  <rect x="560" y="178" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="193" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">Physical streaming (byte-identical)</text>
+  <rect x="560" y="204" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="219" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">Logical replication (row-level changes)</text>
+  <rect x="560" y="230" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="245" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">Synchronous commit (standby flush wait)</text>
+  <text x="675" y="282" text-anchor="middle" fill="#78909c" font-size="9">Physical: byte-identical; standby read-only</text>
+  <text x="675" y="300" text-anchor="middle" fill="#78909c" font-size="9">Logical: row-level; selective tables; writable</text>
+  <text x="675" y="318" text-anchor="middle" fill="#78909c" font-size="9">Synchronous: primary waits for standby flush</text>
+  <text x="675" y="336" text-anchor="middle" fill="#78909c" font-size="9">pg_basebackup: initial standby base backup</text>
+  <text x="675" y="354" text-anchor="middle" fill="#78909c" font-size="9">Patroni / repmgr: common HA managers</text>
+  <text x="675" y="372" text-anchor="middle" fill="#78909c" font-size="9">Cascading: standby can replicate downstream</text>
+  <text x="675" y="390" text-anchor="middle" fill="#78909c" font-size="9">Replication slots: prevent WAL deletion</text>
+  <text x="675" y="408" text-anchor="middle" fill="#78909c" font-size="9">pg_stat_replication: monitor lag (bytes/time)</text>
+
+  <!-- COMPARISON TABLE -->
+  <rect x="20" y="480" width="780" height="222" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="20" y="480" width="780" height="36" fill="#1a2744" rx="6"/>
+  <rect x="20" y="504" width="780" height="12" fill="#1a2744"/>
+  <text x="410" y="504" text-anchor="middle" fill="white" font-size="13" font-weight="700">Replication Type Comparison</text>
+  <rect x="20" y="516" width="780" height="28" fill="#eceff1"/>
+  <text x="100" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Type</text>
+  <text x="250" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Standby Writable</text>
+  <text x="395" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Table Selective</text>
+  <text x="530" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Data Loss</text>
+  <text x="680" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Use Case</text>
+  <line x1="170" y1="516" x2="170" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="325" y1="516" x2="325" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="460" y1="516" x2="460" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="595" y1="516" x2="595" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <rect x="20" y="544" width="780" height="26" fill="#f7f9fb"/>
+  <text x="100" y="562" text-anchor="middle" fill="#455a64" font-size="9">Physical streaming</text>
+  <text x="250" y="562" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="395" y="562" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="530" y="562" text-anchor="middle" fill="#546e7a" font-size="9">Async: seconds</text>
+  <text x="680" y="562" text-anchor="middle" fill="#546e7a" font-size="9">Standard HA standby</text>
+  <text x="100" y="587" text-anchor="middle" fill="#455a64" font-size="9">Logical replication</text>
+  <text x="250" y="587" text-anchor="middle" fill="#2e7d32" font-size="13" font-weight="700">✓</text>
+  <text x="395" y="587" text-anchor="middle" fill="#2e7d32" font-size="13" font-weight="700">✓</text>
+  <text x="530" y="587" text-anchor="middle" fill="#546e7a" font-size="9">Async: seconds</text>
+  <text x="680" y="587" text-anchor="middle" fill="#546e7a" font-size="9">Cross-version / selective</text>
+  <rect x="20" y="596" width="780" height="26" fill="#f7f9fb"/>
+  <text x="100" y="614" text-anchor="middle" fill="#455a64" font-size="9">Synchronous commit</text>
+  <text x="250" y="614" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="395" y="614" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="530" y="614" text-anchor="middle" fill="#546e7a" font-size="9">None</text>
+  <text x="680" y="614" text-anchor="middle" fill="#546e7a" font-size="9">Zero data loss HA</text>
+  <text x="100" y="639" text-anchor="middle" fill="#455a64" font-size="9">Cascading replication</text>
+  <text x="250" y="639" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="395" y="639" text-anchor="middle" fill="#c62828" font-size="13" font-weight="700">✗</text>
+  <text x="530" y="639" text-anchor="middle" fill="#546e7a" font-size="9">Upstream lag</text>
+  <text x="680" y="639" text-anchor="middle" fill="#546e7a" font-size="9">Geo replicas / fan-out</text>
+  <rect x="20" y="648" width="780" height="26" fill="#f7f9fb"/>
+  <text x="100" y="665" text-anchor="middle" fill="#455a64" font-size="9">Patroni (HA manager)</text>
+  <text x="250" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Promotes on failover</text>
+  <text x="395" y="665" text-anchor="middle" fill="#546e7a" font-size="9">N/A</text>
+  <text x="530" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Replication lag</text>
+  <text x="680" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Automated HA with etcd/consul</text>
+  <line x1="20" y1="700" x2="800" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <!-- FOOTER -->
+  <rect x="0" y="720" width="820" height="30" fill="#1a2744"/>
+  <text x="410" y="739" text-anchor="middle" fill="#7a8fbb" font-size="9">PostgreSQL Reference · Process Model · WAL · MVCC · Physical / Logical Replication · Patroni</text>
+</svg>
