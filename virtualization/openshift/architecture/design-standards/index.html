@@ -2229,10 +2229,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#cluster-sizing-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Sizing Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#node-sizing-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
         Node Sizing Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure Nodes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etcd-disk-sizing-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        etcd Disk Sizing and Validation
       
     </span>
   </a>
@@ -2266,17 +2299,6 @@
     <span class="md-ellipsis">
       
         MachineSet Design
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#infra-node-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Infra Node Configuration
       
     </span>
   </a>
@@ -2487,6 +2509,63 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<pre class="mermaid"><code>graph TB
+    A[Cluster Sizing Tiers] --&gt; B[Compact\n3 control-plane\n0 dedicated workers]
+    A --&gt; C[Standard\n3 control-plane\n2+ workers]
+    A --&gt; D[Large\n3 control-plane\n100+ workers\n+ infra nodes]
+
+    C --&gt; C1[Worker MachineSet\ngeneral compute]
+    D --&gt; D1[Worker MachineSet\ncompute]
+    D --&gt; D2[Infra MachineSet\nrouter / monitoring / registry]
+    D --&gt; D3[Storage MachineSet\nODF / Ceph OSDs]
+
+    classDef tier fill:#1e3a5f,color:#fff
+    classDef compact fill:#7c3aed,color:#fff
+    classDef standard fill:#15803d,color:#fff
+    classDef large fill:#2563eb,color:#fff
+    classDef pool fill:#374151,color:#fff
+    class A tier
+    class B compact
+    class C standard
+    class D large
+    class C1,D1,D2,D3 pool</code></pre>
+<h2 id="cluster-sizing-tiers">Cluster Sizing Tiers<a class="headerlink" href="#cluster-sizing-tiers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Control plane</th>
+<th>Workers</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compact</td>
+<td>3 (masters run workloads)</td>
+<td>0</td>
+<td>Lab, CI, edge; masters schedulable</td>
+</tr>
+<tr>
+<td>Standard</td>
+<td>3</td>
+<td>2–10</td>
+<td>Small production; no dedicated infra nodes</td>
+</tr>
+<tr>
+<td>Standard + Infra</td>
+<td>3</td>
+<td>2–10 + 3 infra</td>
+<td>Production; platform components isolated</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>3</td>
+<td>100+</td>
+<td>Enterprise; separate storage, infra, compute pools</td>
+</tr>
+</tbody>
+</table>
 <h2 id="node-sizing-reference">Node Sizing Reference<a class="headerlink" href="#node-sizing-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2500,11 +2579,25 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 </thead>
 <tbody>
 <tr>
-<td>Master</td>
+<td>Master (small)</td>
 <td>8</td>
 <td>32 GB</td>
 <td>120 GB SSD</td>
-<td>etcd IOPS-sensitive; no workloads</td>
+<td>Minimum; supports ≤25 workers</td>
+</tr>
+<tr>
+<td>Master (medium)</td>
+<td>12</td>
+<td>48 GB</td>
+<td>120 GB SSD</td>
+<td>Supports 25–100 workers</td>
+</tr>
+<tr>
+<td>Master (large)</td>
+<td>16</td>
+<td>64 GB</td>
+<td>120 GB SSD</td>
+<td>Supports 100+ workers</td>
 </tr>
 <tr>
 <td>Infra</td>
@@ -2525,140 +2618,333 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 <td>10</td>
 <td>24 GB</td>
 <td>120 GB + OSD disks</td>
-<td>ODF minimum per node</td>
+<td>ODF minimum 3 nodes × 3 disks</td>
 </tr>
 </tbody>
 </table>
+<h2 id="infrastructure-nodes">Infrastructure Nodes<a class="headerlink" href="#infrastructure-nodes" title="Permanent link">&para;</a></h2>
+<p>Infrastructure nodes run platform components (ingress router, image registry, cluster monitoring, logging) and keep those workloads off general worker nodes. This reduces licensing impact (infra nodes do not consume OpenShift worker entitlements in some scenarios).</p>
+<p><strong>Workloads that belong on infra nodes:</strong></p>
+<ul>
+<li>OpenShift Router (<code>openshift-ingress</code>)</li>
+<li>Internal Image Registry (<code>openshift-image-registry</code>)</li>
+<li>Cluster Monitoring stack (<code>openshift-monitoring</code>)</li>
+<li>Cluster Logging / Loki (<code>openshift-logging</code>)</li>
+<li>OAuth server (<code>openshift-authentication</code>)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># MachineSet spec for infra pool (vSphere example)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machine.openshift.io/v1beta1</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MachineSet</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-infra-0</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift-machine-api</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">machine.openshift.io/cluster-api-machineset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-infra-0</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="nt">machine.openshift.io/cluster-api-machineset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-infra-0</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">      </span><span class="nt">taints</span><span class="p">:</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node-role.kubernetes.io/infra</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span><span class="nt">effect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NoSchedule</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">          </span><span class="nt">node-role.kubernetes.io/infra</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">          </span><span class="nt">node-role.kubernetes.io/worker</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">      </span><span class="nt">providerSpec</span><span class="p">:</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">          </span><span class="nt">numCPUs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">          </span><span class="nt">memoryMiB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32768</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">          </span><span class="nt">diskGiB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">120</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Label and taint infra nodes (manual, non-MachineSet path)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>reserved:NoSchedule
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Move ingress controller to infra nodes</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>ingresscontroller<span class="w"> </span>default<span class="w"> </span>-n<span class="w"> </span>openshift-ingress-operator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;nodePlacement&quot;:{&quot;nodeSelector&quot;:{&quot;matchLabels&quot;:{&quot;node-role.kubernetes.io/infra&quot;:&quot;&quot;}},&quot;tolerations&quot;:[{&quot;key&quot;:&quot;node-role.kubernetes.io/infra&quot;,&quot;effect&quot;:&quot;NoSchedule&quot;}]}}}&#39;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Move monitoring stack to infra nodes (cluster-monitoring-config ConfigMap)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>oc<span class="w"> </span>-n<span class="w"> </span>openshift-monitoring<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">apiVersion: v1</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">kind: ConfigMap</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">metadata:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s">  name: cluster-monitoring-config</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s">  namespace: openshift-monitoring</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s">data:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s">  config.yaml: |</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s">    prometheusOperator:</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s">      nodeSelector:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s">        node-role.kubernetes.io/infra: &quot;&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s">      tolerations:</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="s">      - key: node-role.kubernetes.io/infra</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="s">        effect: NoSchedule</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="s">    prometheusK8s:</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="s">      nodeSelector:</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="s">        node-role.kubernetes.io/infra: &quot;&quot;</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="s">      tolerations:</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="s">      - key: node-role.kubernetes.io/infra</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="s">        effect: NoSchedule</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s">EOF</span>
+</code></pre></div>
+<h2 id="etcd-disk-sizing-and-validation">etcd Disk Sizing and Validation<a class="headerlink" href="#etcd-disk-sizing-and-validation" title="Permanent link">&para;</a></h2>
+<p>etcd is the most I/O-sensitive component. Slow disk causes fsync latency, leader elections, and cluster instability.</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum IOPS</td>
+<td>500 sustained</td>
+<td>For 4K random writes (fdatasync)</td>
+</tr>
+<tr>
+<td>Recommended IOPS</td>
+<td>2,000+</td>
+<td>NVMe preferred</td>
+</tr>
+<tr>
+<td>Minimum capacity</td>
+<td>10 GB</td>
+<td>Practical baseline; 50 GB for large clusters</td>
+</tr>
+<tr>
+<td>Recommended capacity</td>
+<td>50 GB</td>
+<td>Handles compaction and defrag headroom</td>
+</tr>
+<tr>
+<td>Max fsync latency</td>
+<td>10 ms</td>
+<td>Above this threshold triggers leader re-elections</td>
+</tr>
+<tr>
+<td>Disk type</td>
+<td>SSD or NVMe</td>
+<td>Spinning disk causes guaranteed instability</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Validate etcd disk performance with fio (run on each master before install)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fio<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--rw<span class="o">=</span>write<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--ioengine<span class="o">=</span>sync<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--fdatasync<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--directory<span class="o">=</span>/var/lib/etcd<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--size<span class="o">=</span>22m<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--bs<span class="o">=</span><span class="m">2300</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--name<span class="o">=</span>etcd-fio
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Target: 99th-percentile fsync latency &lt; 10ms</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Look for &quot;fsync/fdatasync/sync_file_range&quot; latency in output</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># If p99 &gt; 10ms — do not use that disk for etcd</span>
+</code></pre></div>
 <h2 id="network-cidr-planning">Network CIDR Planning<a class="headerlink" href="#network-cidr-planning" title="Permanent link">&para;</a></h2>
-<p>Set at install time — cannot change after cluster creation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># install-config.yaml snippet</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">networking</span><span class="p">:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">clusterNetwork</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cidr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.128.0.0/14</span><span class="w">       </span><span class="c1"># Pod network — must not overlap with node/service</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">hostPrefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">23</span><span class="w">             </span><span class="c1"># /23 per node = 512 pod IPs per node</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">serviceNetwork</span><span class="p">:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.0/16</span><span class="w">             </span><span class="c1"># Service ClusterIP range</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">machineNetwork</span><span class="p">:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cidr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.0/24</span><span class="w">   </span><span class="c1"># Node network (your infrastructure)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">networkType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OVNKubernetes</span>
+<p>Set at install time — cannot change after cluster creation without reinstalling.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># install-config.yaml networking section</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">networking</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">clusterNetwork</span><span class="p">:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cidr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.128.0.0/14</span><span class="w">       </span><span class="c1"># Pod network; /14 = ~262,144 addresses</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">hostPrefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">23</span><span class="w">             </span><span class="c1"># /23 per node = 510 pod IPs per node</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">serviceNetwork</span><span class="p">:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">172.30.0.0/16</span><span class="w">             </span><span class="c1"># Service ClusterIP range; ~65,534 services</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nt">machineNetwork</span><span class="p">:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cidr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.100.0/24</span><span class="w">   </span><span class="c1"># Node network — must match your infrastructure</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="nt">networkType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OVNKubernetes</span>
 </code></pre></div>
 <table>
 <thead>
 <tr>
 <th>Network</th>
 <th>Default CIDR</th>
-<th>Notes</th>
+<th>Purpose</th>
+<th>Overlap risk</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Pod (clusterNetwork)</td>
-<td>10.128.0.0/14</td>
-<td>Avoid overlap with infra; change if conflicting</td>
+<td><code>10.128.0.0/14</code></td>
+<td>Pod IP allocation across all nodes</td>
+<td>Must not overlap node or service network</td>
 </tr>
 <tr>
 <td>Service (serviceNetwork)</td>
-<td>172.30.0.0/16</td>
-<td>ClusterIP range; kube-dns uses this</td>
+<td><code>172.30.0.0/16</code></td>
+<td>ClusterIP / headless service IPs</td>
+<td>Must not overlap pod or node network</td>
 </tr>
 <tr>
 <td>Node (machineNetwork)</td>
 <td>site-specific</td>
-<td>Must match your VM/bare-metal network</td>
+<td>VM / bare-metal NIC addresses</td>
+<td>Must be routable from your infrastructure</td>
 </tr>
 </tbody>
 </table>
+<p><strong>OVN-Kubernetes MTU considerations:</strong></p>
+<p>OVN uses Geneve encapsulation for cross-node traffic. Geneve header overhead is ~100 bytes. Set cluster MTU to: <code>physical NIC MTU − 100</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Physical MTU</th>
+<th>OVN cluster MTU to configure</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1500 (standard Ethernet)</td>
+<td>1400</td>
+<td>Default; works everywhere</td>
+</tr>
+<tr>
+<td>9000 (jumbo frames)</td>
+<td>8900</td>
+<td>Requires jumbo frames end-to-end</td>
+</tr>
+<tr>
+<td>1600 (cloud)</td>
+<td>1500</td>
+<td>Check cloud provider MTU</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check current network MTU setting</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>get<span class="w"> </span>network.operator<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.spec.defaultNetwork.ovnKubernetesConfig.mtu}&#39;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify pod interface MTU on a node</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>oc<span class="w"> </span>debug<span class="w"> </span>node/&lt;node&gt;<span class="w"> </span>--<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0
+</code></pre></div>
+<p><strong>VLAN segmentation recommendation:</strong></p>
+<p>Separate VLANs for: (1) machine/node network, (2) storage network (iSCSI/NFS/ODF replication), (3) cluster API/management. Avoids broadcast domain pollution and simplifies firewall rules.</p>
 <h2 id="storageclass-standards">StorageClass Standards<a class="headerlink" href="#storageclass-standards" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Default StorageClass (must exist for dynamic PVC binding)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thin-csi</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">storageclass.kubernetes.io/is-default-class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csi.vsphere.volume.vmware.com</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nt">parameters</span><span class="p">:</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">datastoreurl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ds:///vmfs/volumes/&lt;uuid&gt;/&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nt">allowVolumeExpansion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Default StorageClass (must exist for dynamic PVC binding)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StorageClass</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thin-csi</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nt">storageclass.kubernetes.io/is-default-class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">csi.vsphere.volume.vmware.com</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nt">parameters</span><span class="p">:</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nt">datastoreurl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ds:///vmfs/volumes/&lt;uuid&gt;/&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nt">reclaimPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nt">volumeBindingMode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WaitForFirstConsumer</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nt">allowVolumeExpansion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <table>
 <thead>
 <tr>
 <th>Storage Class</th>
-<th>Use case</th>
+<th>Provisioner</th>
+<th>Access mode</th>
 <th>Reclaim</th>
-<th>Binding mode</th>
+<th>Use case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>thin-csi</code> (default)</td>
-<td>General workloads on vSphere</td>
+<td>vSphere CSI</td>
+<td>RWO</td>
 <td>Delete</td>
-<td>WaitForFirstConsumer</td>
+<td>General workloads on vSphere</td>
 </tr>
 <tr>
 <td><code>thick-csi</code></td>
-<td>Databases, etcd snapshots</td>
+<td>vSphere CSI</td>
+<td>RWO</td>
 <td>Retain</td>
-<td>Immediate</td>
+<td>Databases, etcd snapshots</td>
 </tr>
 <tr>
 <td><code>ocs-storagecluster-ceph-rbd</code></td>
-<td>ODF block (RWO)</td>
+<td>ODF / Ceph RBD</td>
+<td>RWO</td>
 <td>Delete</td>
-<td>Immediate</td>
+<td>High-performance block storage</td>
 </tr>
 <tr>
 <td><code>ocs-storagecluster-cephfs</code></td>
-<td>ODF shared filesystem (RWX)</td>
+<td>ODF / CephFS</td>
+<td>RWX</td>
 <td>Delete</td>
-<td>Immediate</td>
+<td>Shared filesystems, NFS replacement</td>
+</tr>
+<tr>
+<td><code>nfs-client</code></td>
+<td>NFS subdir</td>
+<td>RWX</td>
+<td>Delete</td>
+<td>Simple shared storage, legacy workloads</td>
 </tr>
 </tbody>
 </table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check StorageClasses and which is default</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>oc<span class="w"> </span>get<span class="w"> </span>sc
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># NAME             PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># thin-csi (default) csi.vsphere.volume.vmware.com Delete         WaitForFirstConsumer</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Check PVC provisioning status</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-A<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Bound
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Test PVC creation</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s">apiVersion: v1</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s">kind: PersistentVolumeClaim</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s">metadata:</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s">  name: test-pvc</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s">  namespace: default</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="s">spec:</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="s">  accessModes: [ReadWriteOnce]</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="s">  resources:</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="s">    requests:</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="s">      storage: 1Gi</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="s">EOF</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>oc<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>test-pvc
+</code></pre></div>
 <h2 id="machineset-design">MachineSet Design<a class="headerlink" href="#machineset-design" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># MachineSet template (vSphere example)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machine.openshift.io/v1beta1</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MachineSet</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-worker-0</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift-machine-api</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="nt">machine.openshift.io/cluster-api-machineset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-worker-0</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="nt">taints</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w">          </span><span class="c1"># Add infra taint for infra nodes</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">      </span><span class="nt">metadata</span><span class="p">:</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">          </span><span class="nt">node-role.kubernetes.io/worker</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># MachineSet template (vSphere example)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">machine.openshift.io/v1beta1</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MachineSet</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-worker-0</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openshift-machine-api</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">      </span><span class="nt">machine.openshift.io/cluster-api-machineset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster-worker-0</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">      </span><span class="nt">taints</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w">          </span><span class="c1"># Add infra taint for infra nodes</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">      </span><span class="nt">metadata</span><span class="p">:</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">          </span><span class="nt">node-role.kubernetes.io/worker</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Scale MachineSet</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>scale<span class="w"> </span>machineset<span class="w"> </span>cluster-worker-0<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List MachineSets</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Add ClusterAutoscaler</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>clusterautoscaler.yaml
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>machineautoscaler.yaml<span class="w">   </span><span class="c1"># References MachineSet + min/max</span>
-</code></pre></div>
-<h2 id="infra-node-configuration">Infra Node Configuration<a class="headerlink" href="#infra-node-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Label and taint infra nodes</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>oc<span class="w"> </span>adm<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>reserved:NoSchedule<span class="w"> </span>NoExecute
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Move ingress controller to infra nodes</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>oc<span class="w"> </span>patch<span class="w"> </span>ingresscontroller<span class="w"> </span>default<span class="w"> </span>-n<span class="w"> </span>openshift-ingress-operator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--type<span class="o">=</span>merge<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;{&quot;spec&quot;:{&quot;nodePlacement&quot;:{&quot;nodeSelector&quot;:{&quot;matchLabels&quot;:{&quot;node-role.kubernetes.io/infra&quot;:&quot;&quot;}},&quot;tolerations&quot;:[{&quot;key&quot;:&quot;node-role.kubernetes.io/infra&quot;,&quot;effect&quot;:&quot;NoSchedule&quot;}]}}}&#39;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Move monitoring to infra nodes</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>cluster-monitoring-config.yaml<span class="w">   </span><span class="c1"># configMap: cluster-monitoring-config</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Scale MachineSet</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>oc<span class="w"> </span>scale<span class="w"> </span>machineset<span class="w"> </span>cluster-worker-0<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># List MachineSets and replica counts</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>oc<span class="w"> </span>get<span class="w"> </span>machineset<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check machine provisioning status</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>oc<span class="w"> </span>get<span class="w"> </span>machine<span class="w"> </span>-n<span class="w"> </span>openshift-machine-api
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Add ClusterAutoscaler + MachineAutoscaler</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>clusterautoscaler.yaml<span class="w">        </span><span class="c1"># Global autoscaler config</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>oc<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>machineautoscaler.yaml<span class="w">        </span><span class="c1"># References MachineSet + min/max replicas</span>
 </code></pre></div>
 
 

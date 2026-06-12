@@ -2248,6 +2248,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="etcd Quorum Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etcd-operational-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        etcd Operational Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2259,13 +2276,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Operator Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clusteroperator-crd-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ClusterOperator CRD Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#node-types" class="md-nav__link">
+  <a href="#machineconfig-and-mco" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Node Types
+        MachineConfig and MCO
       
     </span>
   </a>
@@ -2273,10 +2307,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#networking-ovn-kubernetes" class="md-nav__link">
+  <a href="#networking-ovn-kubernetes-internals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Networking (OVN-Kubernetes)
+        Networking — OVN-Kubernetes Internals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Types
       
     </span>
   </a>
@@ -2490,62 +2535,94 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│                                                                                                       │
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<pre class="mermaid"><code>graph TD
+    A[oc / kubectl] --&gt; B[kube-apiserver\nAuthN + AuthZ + Admission]
+    B --&gt; C[etcd\npersist to Raft log]
+    C --&gt; D[kube-controller-manager\nreconcile desired state]
+    D --&gt; E[kube-scheduler\nassign pod to node]
+    E --&gt; F[kubelet\nexecute pod spec]
+    F --&gt; G[CRI-O\npull image + run container]
+
+    classDef client fill:#374151,color:#fff
+    classDef api fill:#2563eb,color:#fff
+    classDef store fill:#7c3aed,color:#fff
+    classDef ctrl fill:#15803d,color:#fff
+    classDef node fill:#b45309,color:#fff
+    classDef runtime fill:#164e63,color:#fff
+    class A client
+    class B api
+    class C store
+    class D,E ctrl
+    class F node
+    class G runtime</code></pre>
 <h2 id="control-plane-components">Control Plane Components<a class="headerlink" href="#control-plane-components" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Component</th>
-<th>Role</th>
-<th>Notes</th>
+<th>Pod namespace</th>
+<th>Restart behavior</th>
+<th>Health check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>kube-apiserver</code></td>
-<td>REST gateway; all operations go through it</td>
-<td>Front-end for etcd; validates, persists</td>
+<td><code>openshift-kube-apiserver</code></td>
+<td>Static pod — kubelet restarts on crash</td>
+<td><code>oc get co kube-apiserver</code></td>
 </tr>
 <tr>
 <td><code>etcd</code></td>
-<td>Distributed KV store; cluster state</td>
-<td>3-node Raft quorum; must have majority</td>
+<td><code>openshift-etcd</code></td>
+<td>Static pod on each master</td>
+<td><code>oc get co etcd</code></td>
 </tr>
 <tr>
 <td><code>kube-scheduler</code></td>
-<td>Assigns pods to nodes</td>
-<td>Considers resources, taints, affinity</td>
+<td><code>openshift-kube-scheduler</code></td>
+<td>Static pod — leader-elected across 3 masters</td>
+<td><code>oc get co kube-scheduler</code></td>
 </tr>
 <tr>
 <td><code>kube-controller-manager</code></td>
-<td>Runs built-in controllers (Deployment, Node, etc.)</td>
-<td>Reconciliation loop per resource type</td>
+<td><code>openshift-kube-controller-manager</code></td>
+<td>Static pod — leader-elected</td>
+<td><code>oc get co kube-controller-manager</code></td>
 </tr>
 <tr>
 <td><code>openshift-apiserver</code></td>
-<td>Extends kube-apiserver for OCP-specific resources</td>
-<td>Routes, BuildConfigs, DeploymentConfigs</td>
+<td><code>openshift-apiserver</code></td>
+<td>Deployment managed by CVO</td>
+<td><code>oc get co openshift-apiserver</code></td>
 </tr>
 <tr>
 <td><code>cluster-version-operator</code></td>
-<td>Manages OCP version and cluster operator lifecycle</td>
-<td>Drives upgrades, reports ClusterVersion</td>
+<td><code>openshift-cluster-version</code></td>
+<td>Deployment; manages all other COs</td>
+<td><code>oc get clusterversion</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="etcd-quorum-rules">etcd Quorum Rules<a class="headerlink" href="#etcd-quorum-rules" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># etcd needs majority to accept writes
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># 3-node cluster: need 2/3 alive
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># 5-node cluster: need 3/5 alive (can lose 2)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># Never run 2 or 4 etcd members — split-brain risk
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Masters ARE the etcd nodes in standard OCP (co-located)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify all control plane static pods are running</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-etcd
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-kube-scheduler
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-kube-controller-manager
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Tail logs for a specific component</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-kube-apiserver<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>kube-apiserver<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-etcd<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>etcd<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span>
 </code></pre></div>
+<h2 id="etcd-quorum-rules">etcd Quorum Rules<a class="headerlink" href="#etcd-quorum-rules" title="Permanent link">&para;</a></h2>
+<p>etcd uses the Raft consensus algorithm. A cluster requires a strict majority (quorum) of members to be alive before it accepts writes. In OpenShift, master nodes are the etcd members.</p>
 <table>
 <thead>
 <tr>
 <th>Cluster size</th>
 <th>Can tolerate failure of</th>
 <th>Write quorum</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
@@ -2553,34 +2630,241 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <td>3 members</td>
 <td>1 member</td>
 <td>2</td>
+<td>Standard production minimum</td>
 </tr>
 <tr>
 <td>5 members</td>
 <td>2 members</td>
 <td>3</td>
+<td>Required for simultaneous AZ failure tolerance</td>
+</tr>
+<tr>
+<td>1 member</td>
+<td>0 members</td>
+<td>1</td>
+<td>Non-HA only; never use in production</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Raft quorum formula
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>quorum = floor(N/2) + 1
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>3-node: floor(3/2)+1 = 2   → tolerate 1 failure
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>5-node: floor(5/2)+1 = 3   → tolerate 2 failures
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Never run 2 or 4 members — split-brain risk on exactly-half failure
+</code></pre></div>
+<h3 id="etcd-operational-maintenance">etcd Operational Maintenance<a class="headerlink" href="#etcd-operational-maintenance" title="Permanent link">&para;</a></h3>
+<p>etcd accumulates revisions. By default it compacts at 10,000 revisions and defragments automatically, but high-churn clusters need manual defrag.</p>
+<p><strong>Disk IOPS requirement:</strong> etcd requires ≥500 IOPS sustained. Latency &gt;10ms on fsync causes leader elections. Use NVMe or SSD — never spinning disk.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check etcd member health</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">ETCDCTL_API</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>etcdctl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--endpoints<span class="o">=</span>https://127.0.0.1:2379<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--cacert<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/ca-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--cert<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-master-0.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--key<span class="o">=</span>/etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/etcd-peer-master-0.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>member<span class="w"> </span>list
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Defrag — run one member at a time; never all simultaneously</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>etcdctl<span class="w"> </span>defrag<span class="w"> </span>--endpoints<span class="o">=</span>https://&lt;member-ip&gt;:2379<span class="w"> </span><span class="o">[</span>--cacert<span class="w"> </span>--cert<span class="w"> </span>--key<span class="o">]</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Check DB size (fragmented vs allocated)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--write-out<span class="o">=</span>table
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Compact manually if needed</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">ETCDCTL_API</span><span class="o">=</span><span class="m">3</span><span class="w"> </span>etcdctl<span class="w"> </span>compact<span class="w"> </span><span class="k">$(</span>etcdctl<span class="w"> </span>endpoint<span class="w"> </span>status<span class="w"> </span>--write-out<span class="o">=</span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[0].Status.header.revision&#39;</span><span class="k">)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Snapshot backup</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>etcdctl<span class="w"> </span>snapshot<span class="w"> </span>save<span class="w"> </span>/var/home/core/etcd-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.db
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>etcdctl<span class="w"> </span>snapshot<span class="w"> </span>status<span class="w"> </span>/var/home/core/etcd-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.db
+</code></pre></div>
+<p><strong>Compaction defaults (OCP 4.x):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auto-compaction mode</td>
+<td><code>periodic</code></td>
+<td>Compacts every 5 minutes</td>
+</tr>
+<tr>
+<td>Auto-compaction retention</td>
+<td><code>1h</code></td>
+<td>Keeps 1 hour of revision history</td>
+</tr>
+<tr>
+<td>Defrag interval</td>
+<td>Not automatic</td>
+<td>Must be triggered manually</td>
+</tr>
+<tr>
+<td>Snapshot count</td>
+<td>10,000</td>
+<td>Revisions between snapshots</td>
+</tr>
+<tr>
+<td>DB size warning threshold</td>
+<td>8 GB</td>
+<td>Alert fires; defrag required</td>
 </tr>
 </tbody>
 </table>
 <h2 id="operator-pattern">Operator Pattern<a class="headerlink" href="#operator-pattern" title="Permanent link">&para;</a></h2>
-<p>Every OpenShift component is managed by a cluster operator. The pattern:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. CRD defines desired state (spec)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Operator watches CRD instances
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Operator reconciles actual → desired
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. Operator reports status via Conditions
+<p>Every OpenShift platform component is managed by a Cluster Operator (CO). The reconciliation loop:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. CRD defines desired state (spec)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Operator watches CRD instances via informer cache
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Operator reconciles actual → desired (idempotent)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Operator updates status.conditions
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>5. CVO aggregates CO conditions into ClusterVersion
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check cluster operator health</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>oc<span class="w"> </span>get<span class="w"> </span>clusteroperators
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>oc<span class="w"> </span>get<span class="w"> </span>co<span class="w">                          </span><span class="c1"># short form</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Example output</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>NAME<span class="w">                    </span>VERSION<span class="w">   </span>AVAILABLE<span class="w">   </span>PROGRESSING<span class="w">   </span>DEGRADED
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>authentication<span class="w">          </span><span class="m">4</span>.14.5<span class="w">    </span>True<span class="w">        </span>False<span class="w">         </span>False
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>dns<span class="w">                     </span><span class="m">4</span>.14.5<span class="w">    </span>True<span class="w">        </span>False<span class="w">         </span>False
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>etcd<span class="w">                    </span><span class="m">4</span>.14.5<span class="w">    </span>True<span class="w">        </span>False<span class="w">         </span>False
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>kube-apiserver<span class="w">          </span><span class="m">4</span>.14.5<span class="w">    </span>True<span class="w">        </span>False<span class="w">         </span>False
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Any DEGRADED=True is a problem</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>&lt;operator-name&gt;<span class="w">     </span><span class="c1"># Conditions, message, and events</span>
+<h3 id="clusteroperator-crd-conditions">ClusterOperator CRD Conditions<a class="headerlink" href="#clusteroperator-crd-conditions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Meaning</th>
+<th>Action required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Available=True</code></td>
+<td>Component is functional</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>Available=False</code></td>
+<td>Component is non-functional</td>
+<td>Check operator pod logs immediately</td>
+</tr>
+<tr>
+<td><code>Progressing=True</code></td>
+<td>Upgrade or rollout in progress</td>
+<td>Wait; monitor for completion</td>
+</tr>
+<tr>
+<td><code>Degraded=True</code></td>
+<td>Component degraded but not fully down</td>
+<td>Investigate; may block upgrades</td>
+</tr>
+<tr>
+<td><code>Upgradeable=False</code></td>
+<td>Blocks cluster upgrade</td>
+<td>Must resolve before upgrading</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check cluster operator health — all COs</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>oc<span class="w"> </span>get<span class="w"> </span>co
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># NAME                    VERSION   AVAILABLE   PROGRESSING   DEGRADED</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># authentication          4.14.5    True        False         False</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># etcd                    4.14.5    True        False         False</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># kube-apiserver          4.14.5    True        False         False</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Any DEGRADED=True requires investigation</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>oc<span class="w"> </span>describe<span class="w"> </span>co<span class="w"> </span>&lt;operator-name&gt;<span class="w">     </span><span class="c1"># Full conditions with message and lastTransitionTime</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Find operator pod in its namespace (openshift-&lt;name&gt;)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-authentication
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-dns
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ingress-operator
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Tail operator logs</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-&lt;name&gt;<span class="w"> </span>deployment/&lt;operator-deployment&gt;<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span><span class="w"> </span>-f
+</code></pre></div>
+<h2 id="machineconfig-and-mco">MachineConfig and MCO<a class="headerlink" href="#machineconfig-and-mco" title="Permanent link">&para;</a></h2>
+<p>The Machine Config Operator (MCO) manages OS-level configuration on RHCOS nodes. Configuration is expressed as <code>MachineConfig</code> objects that render into Ignition configs.</p>
+<p><strong>Render order:</strong> base config → layered configs → custom configs. Later configs win on key conflicts.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all MachineConfigPools</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># NAME     CONFIG                    UPDATED   UPDATING   DEGRADED</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># master   rendered-master-abc123    True      False      False</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># worker   rendered-worker-def456    True      False      False</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># List all MachineConfig objects</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>oc<span class="w"> </span>get<span class="w"> </span>mc
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Shows: 00-master, 00-worker, 01-master-kubelet, 99-custom-chrony, rendered-master-abc123, ...</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Pool selectors determine which nodes receive which configs</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>oc<span class="w"> </span>get<span class="w"> </span>mcp<span class="w"> </span>worker<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>machineConfigSelector
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Check MCO pod logs when a node fails to update</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>oc<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>openshift-machine-config-operator<span class="w"> </span>-l<span class="w"> </span>k8s-app<span class="o">=</span>machine-config-operator<span class="w"> </span>--tail<span class="o">=</span><span class="m">200</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Force a node to re-apply its config (drain first)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>oc<span class="w"> </span>adm<span class="w"> </span>drain<span class="w"> </span>&lt;node&gt;<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># MCO applies config then cordons/uncordons automatically during rolling update</span>
+</code></pre></div>
+<p><strong>MachineConfig spec fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config.storage.files</code></td>
+<td>Drop files onto node filesystem</td>
+<td><code>/etc/chrony.conf</code></td>
+</tr>
+<tr>
+<td><code>config.systemd.units</code></td>
+<td>Manage systemd units</td>
+<td><code>kubelet.service</code> drop-ins</td>
+</tr>
+<tr>
+<td><code>kernelArguments</code></td>
+<td>Append kernel command-line args</td>
+<td><code>processor.max_cstate=1</code></td>
+</tr>
+<tr>
+<td><code>extensions</code></td>
+<td>Install RHCOS extensions (RPMs)</td>
+<td><code>usbguard</code>, <code>kerberos</code></td>
+</tr>
+<tr>
+<td><code>osImageURL</code></td>
+<td>Pin node to specific RHCOS image</td>
+<td>Used by CVO during upgrades</td>
+</tr>
+</tbody>
+</table>
+<h2 id="networking-ovn-kubernetes-internals">Networking — OVN-Kubernetes Internals<a class="headerlink" href="#networking-ovn-kubernetes-internals" title="Permanent link">&para;</a></h2>
+<p>OVN-Kubernetes replaced OpenShift SDN as the default CNI in OCP 4.6+. It implements a two-database logical/physical separation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>OVN Architecture:
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  OVN Northbound DB (logical topology)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    → ovn-northd (translation daemon)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  OVN Southbound DB (physical topology / flow tables)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    → ovn-controller per node (programs OVS)
+</code></pre></div>
+<p><strong>Pod-to-pod same node:</strong> packet stays in OVS on the host; no encapsulation; sub-microsecond latency.</p>
+<p><strong>Pod-to-pod cross-node:</strong> OVN programs Geneve tunnels (VXLAN-like, but with Geneve metadata). Packet: <code>pod NIC → OVS → Geneve tunnel → remote OVS → destination pod NIC</code>.</p>
+<p><strong>North-south (pod → external):</strong> Traffic exits via the node's gateway bridge (<code>br-ex</code>); masqueraded with node IP (or via LoadBalancer service using MetalLB/cloud LB).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Inspect OVN-K components</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># ovnkube-master-*     (runs ovn-northd + nbdb + sbdb on control plane nodes)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># ovnkube-node-*       (runs ovn-controller + ovs-vswitchd on every node)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># View OVN logical switch topology</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span><span class="k">$(</span>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>ovnkube-master<span class="w"> </span>-o<span class="w"> </span>name<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>ovn-nbctl<span class="w"> </span>show
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># View OVN flow table for a node</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>oc<span class="w"> </span>rsh<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes<span class="w"> </span>ovnkube-node-&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>ovs-ofctl<span class="w"> </span>dump-flows<span class="w"> </span>br-int
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Check network operator config</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>oc<span class="w"> </span>get<span class="w"> </span>network.operator<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;type:|clusterNetwork|serviceNetwork&quot;</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>oc<span class="w"> </span>get<span class="w"> </span>network.config<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml
 </code></pre></div>
 <h2 id="node-types">Node Types<a class="headerlink" href="#node-types" title="Permanent link">&para;</a></h2>
 <table>
@@ -2589,6 +2873,7 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <th>Type</th>
 <th>Role</th>
 <th>Typical labels</th>
+<th>Schedulable</th>
 </tr>
 </thead>
 <tbody>
@@ -2596,44 +2881,38 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 <td>Master</td>
 <td>Control plane (etcd + API + scheduler)</td>
 <td><code>node-role.kubernetes.io/master</code></td>
+<td>No (tainted by default)</td>
 </tr>
 <tr>
 <td>Worker</td>
 <td>General compute</td>
 <td><code>node-role.kubernetes.io/worker</code></td>
+<td>Yes</td>
 </tr>
 <tr>
 <td>Infra</td>
 <td>Monitoring, router, registry</td>
 <td><code>node-role.kubernetes.io/infra</code></td>
+<td>Infra workloads only</td>
 </tr>
 <tr>
 <td>Storage</td>
 <td>ODF/Ceph OSDs</td>
 <td><code>cluster.ocs.openshift.io/openshift-storage</code></td>
+<td>ODF pods only</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View node roles</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--show-labels<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>node-role
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Move infra workloads off worker nodes</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;infra-node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>oc<span class="w"> </span>adm<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;infra-node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>reserved:NoSchedule
-</code></pre></div>
-<h2 id="networking-ovn-kubernetes">Networking (OVN-Kubernetes)<a class="headerlink" href="#networking-ovn-kubernetes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Pod traffic flow:
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Pod → OVS (host) → OVN Logical Switch → OVN Router → external
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  East-west: OVN handles pod-to-pod routing on the logical network
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  North-south: via OpenShift Router (HAProxy) or LoadBalancer service
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check network operator</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>oc<span class="w"> </span>get<span class="w"> </span>network.operator<span class="w"> </span>cluster<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;type:|clusterNetwork&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Inspect OVN-K components</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-ovn-kubernetes
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>oc<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>openshift-multus
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># View node roles and status</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>oc<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>--show-labels<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>node-role
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check node conditions (MemoryPressure, DiskPressure, PIDPressure)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>oc<span class="w"> </span>describe<span class="w"> </span>node<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A10<span class="w"> </span>Conditions
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Move infra workloads off worker nodes</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>oc<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>&lt;infra-node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>oc<span class="w"> </span>adm<span class="w"> </span>taint<span class="w"> </span>node<span class="w"> </span>&lt;infra-node&gt;<span class="w"> </span>node-role.kubernetes.io/infra<span class="o">=</span>reserved:NoSchedule
 </code></pre></div>
 
 
