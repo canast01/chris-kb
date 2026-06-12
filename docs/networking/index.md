@@ -4,6 +4,8 @@
 Networking knowledge base covering switching, routing, security, and network services. Includes design references, configuration procedures, connectivity troubleshooting, and validation guides for enterprise network environments.
 </div>
 
+![Networking Platform Landscape](../assets/networking-landscape-overview.svg)
+
 ```text
 ┌──────────────────────── Networking — Switching, Routing, Security & Services ─────────────────────────┐
 │                                                                                                       │

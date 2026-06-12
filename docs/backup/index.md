@@ -4,6 +4,8 @@
 Enterprise backup and disaster recovery — Veeam, Commvault, and NetBackup backup products, plus DR design, runbooks, recovery testing, Isolated Recovery Environment (IRE), backup validation, and health checks.
 </div>
 
+![Backup & DR Platform Landscape](../assets/backup-landscape-overview.svg)
+
 ```text
 ┌───────────────────────────────── Backup & Disaster Recovery Platform ─────────────────────────────────┐
 │                                                                                                       │

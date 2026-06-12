@@ -4,6 +4,9 @@
 <div class="kb-summary">
 Security reference: Standard LDAP Integration, Standard SAML Configuration, Active Directory, CyberArk, and 4 more.
 </div>
+
+![Security Platform Landscape](../assets/security-landscape-overview.svg)
+
 ```text
 ┌───────────────────────────────────────── Security — Security ─────────────────────────────────────────┐
 │                                                                                                       │
