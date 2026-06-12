@@ -4184,10 +4184,9 @@ Exam Tracking reference covering Purpose, Common checks, Incident notes, Change 
       });
     })();
 
-    // Mermaid node contrast fix
-    // classDef color:#fff is an SVG attribute and does NOT cascade into
-    // <foreignObject> HTML labels. After Mermaid renders we read each node's
-    // actual fill and apply white or dark text accordingly.
+    // Mermaid node contrast fix (JS safety-net — CSS g.node rule is the primary fix).
+    // Material for MkDocs replaces pre.mermaid with the raw SVG; no .mermaid ancestor
+    // exists. Target g.node directly and poll after render in case observer fires early.
     (function () {
       function lum(hex) {
         hex = hex.replace(/^#/, '');
@@ -4199,17 +4198,12 @@ Exam Tracking reference covering Purpose, Common checks, Incident notes, Change 
         });
         return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
       }
-      function fillLum(shape) {
-        // Mermaid v10 applies classDef as inline style="fill:#xxx", not as
-        // a bare fill="" attribute, so we must check both paths.
-        var raw = shape.getAttribute('fill') ||
-                  (shape.style && shape.style.fill) || '';
-        if (!raw || raw === 'none' || raw === 'transparent') {
-          // Fall back to computed fill (returns rgb(...) string)
-          raw = window.getComputedStyle(shape).fill || '';
-        }
-        if (raw.startsWith('#')) return lum(raw);
-        var m = raw.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      function parseFill(raw) {
+        if (!raw) return null;
+        raw = raw.trim();
+        if (raw === 'none' || raw === 'transparent') return null;
+        if (raw.charAt(0) === '#') return lum(raw);
+        var m = raw.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
         if (m) {
           var ch = [+m[1], +m[2], +m[3]].map(function(v) {
             v /= 255;
@@ -4217,10 +4211,17 @@ Exam Tracking reference covering Purpose, Common checks, Incident notes, Change 
           });
           return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
         }
-        return null; // unknown format — skip
+        return null;
+      }
+      function fillLum(shape) {
+        var l = parseFill(shape.getAttribute('fill'));
+        if (l !== null) return l;
+        l = parseFill(shape.style.fill);
+        if (l !== null) return l;
+        return parseFill(window.getComputedStyle(shape).fill || '');
       }
       function fixSvg(svg) {
-        svg.querySelectorAll('.node').forEach(function(node) {
+        svg.querySelectorAll('g.node').forEach(function(node) {
           var shape = node.querySelector('rect, circle, polygon, path');
           if (!shape) return;
           var l = fillLum(shape);
@@ -4234,17 +4235,21 @@ Exam Tracking reference covering Purpose, Common checks, Incident notes, Change 
           });
         });
       }
+      function fixAll() {
+        document.querySelectorAll('svg').forEach(fixSvg);
+      }
       var obs = new MutationObserver(function(mutations) {
         mutations.forEach(function(m) {
           m.addedNodes.forEach(function(n) {
             if (n.nodeType !== 1) return;
-            if (n.tagName === 'svg') fixSvg(n);
+            if (n.tagName && n.tagName.toLowerCase() === 'svg') fixSvg(n);
             else if (n.querySelectorAll) n.querySelectorAll('svg').forEach(fixSvg);
           });
         });
       });
       obs.observe(document.body, { childList: true, subtree: true });
-      document.querySelectorAll('.mermaid svg').forEach(fixSvg);
+      // Polling safety net: Mermaid renders async; retry after it settles
+      [200, 600, 1200, 2500].forEach(function(d) { setTimeout(fixAll, d); });
     })();
 
     // Service Worker registration

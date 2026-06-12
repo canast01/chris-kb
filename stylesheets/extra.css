@@ -1431,39 +1431,40 @@ body,
 
 /* ── Mermaid diagrams ── */
 
-/* Node label text.
-   classDef color:#fff is an SVG attribute and does NOT cascade into HTML
-   inside <foreignObject>. We cover every HTML path Mermaid v9/v10 may use. */
-.mermaid .node .nodeLabel,
-.mermaid .node .nodeLabel p,
-.mermaid .node .nodeLabel span,
-.mermaid .node .label div,
-.mermaid .node .label div p,
-.mermaid .node foreignObject > div,
-.mermaid .node foreignObject > div > p {
+/* Node label text — light mode only.
+   Material for MkDocs replaces pre.mermaid with the SVG element directly,
+   so there is NO .mermaid ancestor in the DOM. Target g.node (the <g> that
+   Mermaid generates for every flowchart node) without requiring .mermaid. */
+[data-md-color-scheme="default"] g.node .nodeLabel,
+[data-md-color-scheme="default"] g.node .nodeLabel p,
+[data-md-color-scheme="default"] g.node .nodeLabel span,
+[data-md-color-scheme="default"] g.node .label div,
+[data-md-color-scheme="default"] g.node .label div p,
+[data-md-color-scheme="default"] g.node foreignObject > div,
+[data-md-color-scheme="default"] g.node foreignObject > div > p {
   color: #fff !important;
 }
 
-/* SVG text fallback (non-HTML-label renders) */
-.mermaid .node text,
-.mermaid .node tspan {
+/* SVG text fallback (non-HTML-label renders) — light mode only */
+[data-md-color-scheme="default"] g.node text,
+[data-md-color-scheme="default"] g.node tspan {
   fill: #fff !important;
 }
 
-/* Edge label: remove the white background box that floats on dark canvas */
-.mermaid .edgeLabel .label {
+/* Edge label: remove the white background box */
+g.edgeLabel .label {
   background: transparent !important;
 }
-.mermaid .edgeLabel rect {
+g.edgeLabel rect {
   fill: transparent !important;
   opacity: 0 !important;
 }
 
-/* Edge label text: dark-readable in light mode, light in dark mode */
-.mermaid .edgeLabel span {
+/* Edge label text */
+g.edgeLabel span {
   color: #374151 !important;
 }
-[data-md-color-scheme="slate"] .mermaid .edgeLabel span {
+[data-md-color-scheme="slate"] g.edgeLabel span {
   color: #e2e8f0 !important;
 }
 
