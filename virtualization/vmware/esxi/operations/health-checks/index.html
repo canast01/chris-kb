@@ -3950,6 +3950,173 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#hardware-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Health
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware Health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sensor-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sensor Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-connection-and-service-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Connection and Service Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Health
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#uplink-and-vmkernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uplink and VMkernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mtu-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MTU Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Health
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-and-datastore-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path and Datastore Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apdpdl-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APD/PDL Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity and Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capacity and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cpu-and-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU and Memory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vib-and-patch-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VIB and Patch Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4140,7 +4307,7 @@
 
 <h1 id="esxi-health-checks">ESXi — Health Checks<a class="headerlink" href="#esxi-health-checks" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Health Checks reference covering Health Checklist.
+Daily and weekly health runbook for ESXi hosts: hardware sensors, service status, storage paths, network uplinks, NTP sync, VIB compliance, and capacity thresholds — with a runnable command sequence and per-area deep-dive checks.
 </div>
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
@@ -4197,76 +4364,222 @@ Health Checks reference covering Health Checklist.
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Host hardware summary — vendor, model, serial</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>platform<span class="w"> </span>get
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. List all running services and processes</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>system<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Network adapter (vmnic) status — check link state and speed</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Network adapter (vmnic) status — check link state and speed</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. VMkernel adapter list — IPs, MTU, enabled services</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 5. VMkernel adapter list — IPs, MTU, enabled services</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 5. Storage adapter health — HBAs, iSCSI, NVMe controllers</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># 6. Storage adapter health — HBAs, iSCSI, NVMe controllers</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># 6. Storage paths — look for &#39;dead&#39; state</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dead
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># 7. Datastore accessibility — mount state and capacity</span>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 8. NTP sync status — current host clock and sync source</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># 8. NTP sync status</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>esxcli<span class="w"> </span>system<span class="w"> </span><span class="nb">time</span><span class="w"> </span>get
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># 9. Recent critical events — last 50 syslog entries</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>mark<span class="w"> </span>--message<span class="o">=</span><span class="s2">&quot;health-check-</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/syslog.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|critical|warning&quot;</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># 10. Installed VIB count — baseline for patch drift detection</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># 9. Host services — verify hostd, vpxa, fdm running</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>esxcli<span class="w"> </span>system<span class="w"> </span>process<span class="w"> </span>stats<span class="w"> </span>load<span class="w"> </span>get
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>/etc/init.d/fdm<span class="w"> </span>status
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># 10. Recent syslog errors</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/syslog.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|critical|warning&quot;</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="c1"># 11. Installed VIB count — baseline for patch drift detection</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ESXi Health Check — Decision Flow
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                           │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>           ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>           │  Host Connection State?        │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>           │  Get-VMHost | Select ...       │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>           └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                  │ Connected    │ Disconnected / NotResponding
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>                  │              └──► restart hostd/vpxa or IPMI
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>           ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>           │  Hardware Health?           │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>           │  esxcli hardware health get │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>           └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>                  │ Green        │ Warning/Error → alert ticket
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>           ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>           │  Storage Paths?             │
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>           │  esxcli storage core path   │
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>           │  list | grep dead           │
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>           └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>                  │ 0 dead paths │ Dead paths → rescan / escalate
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>           ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>           │  NTP Running &amp; Synced?      │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>           │  esxcli system ntp get      │
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>           └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>                  │ Running=true │ Not synced → fix NTP config
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>           ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>           │  vmnic Uplinks Up?          │
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>           │  esxcli network nic list    │
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>           └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>                  │ All up       │ Down links → check switch/cable
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>           ┌────────────────────────────────────────────────── ▼ ──────────────────────────────────────────────────┐
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>           │  PASS — host healthy │
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>           └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<h2 id="hardware-health">Hardware Health<a class="headerlink" href="#hardware-health" title="Permanent link">&para;</a></h2>
+<h3 id="sensor-status">Sensor Status<a class="headerlink" href="#sensor-status" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full hardware health summary (CPU, memory, fan, PSU, temperature)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>ipmi<span class="w"> </span>sdr<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;critical|warning|nc&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Specific component checks</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>cpu<span class="w"> </span>list<span class="w">          </span><span class="c1"># CPU package info</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>memory<span class="w"> </span>get<span class="w">        </span><span class="c1"># RAM installed</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>pci<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;hba\|nic\|nvme&quot;</span><span class="w">   </span><span class="c1"># PCI devices</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Boot media S.M.A.R.T. check (USB/SD boot media or local SSD)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>smart<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>&lt;device-name&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>## Health Checklist
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- [ ] All hosts Connected and PoweredOn
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- [ ] No hardware health warnings or critical alerts
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- [ ] All storage paths active — no dead paths
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>- [ ] All vmnic uplinks connected
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>- [ ] NTP running and synchronized
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>- [ ] No vmkernel errors in recent log entries
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>- [ ] PowerCLI hardware summary clean
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>- [ ] No unexpected maintenance mode hosts
-</code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th>Sensor category</th>
+<th>Alert threshold</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU temperature</td>
+<td>&gt; 80°C</td>
+<td>Check datacenter cooling, BIOS throttling</td>
+</tr>
+<tr>
+<td>Memory ECC errors</td>
+<td>Any correctable/uncorrectable</td>
+<td>Replace DIMM; plan maintenance</td>
+</tr>
+<tr>
+<td>Fan failure</td>
+<td>Any fan speed = 0 or critical</td>
+<td>Replace fan, monitor temperature</td>
+</tr>
+<tr>
+<td>PSU redundancy</td>
+<td>Redundancy lost</td>
+<td>Replace failed PSU before primary fails</td>
+</tr>
+<tr>
+<td>Boot media health</td>
+<td>S.M.A.R.T. reallocated sectors &gt; 0</td>
+<td>Schedule boot media replacement</td>
+</tr>
+</tbody>
+</table>
+<h3 id="host-connection-and-service-health">Host Connection and Service Health<a class="headerlink" href="#host-connection-and-service-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check hostd (management daemon) — restart if unresponsive</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>/etc/init.d/hostd<span class="w"> </span>restart<span class="w">        </span><span class="c1"># only if genuinely unresponsive</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check vpxa (vCenter agent) — needed for vCenter connectivity</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/etc/init.d/vpxa<span class="w"> </span>status
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check fdm (HA agent) — needed for vSphere HA</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>/etc/init.d/fdm<span class="w"> </span>status
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Confirm host is Connected in vCenter via PowerCLI</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>ConnectionState,<span class="w"> </span>PowerState
+</code></pre></div>
+<h2 id="network-health">Network Health<a class="headerlink" href="#network-health" title="Permanent link">&para;</a></h2>
+<h3 id="uplink-and-vmkernel">Uplink and VMkernel<a class="headerlink" href="#uplink-and-vmkernel" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check all vmnic uplinks — Speed/Duplex should show link speed, not 0/Half</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check for packet errors and drops on each vmnic</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic1
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Look for: RX/TX errors &gt; 0 or drops incrementing under load</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># VMkernel adapter ping test — verify vMotion and vSAN vmk reachability</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>&lt;vmotion-gateway&gt;
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;vsan-gateway&gt;<span class="w">   </span><span class="c1"># jumbo frame test for vSAN (MTU 9000)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Check CDP/LLDP for physical switch confirmation</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list<span class="w">     </span><span class="c1"># DVS attached uplinks</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list<span class="w">       </span><span class="c1"># standard vSwitch uplinks</span>
+</code></pre></div>
+<h3 id="mtu-validation">MTU Validation<a class="headerlink" href="#mtu-validation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test MTU end-to-end on vSAN VMkernel (9000 MTU required)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;peer-vsan-vmk-ip&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># -d = don&#39;t fragment; -s 8972 = payload (8972 + 28 bytes header = 9000 MTU)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Failure = MTU mismatch somewhere in the path</span>
+</code></pre></div>
+<h2 id="storage-health">Storage Health<a class="headerlink" href="#storage-health" title="Permanent link">&para;</a></h2>
+<h3 id="path-and-datastore-status">Path and Datastore Status<a class="headerlink" href="#path-and-datastore-status" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List all storage paths — dead paths require immediate attention</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;State|Name&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B1<span class="w"> </span>-i<span class="w"> </span>dead
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Rescan storage adapters (if paths are stale)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># VMFS datastore health — check for ATS heartbeat errors</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check datastore capacity (alert if &lt; 20% free)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>filesystem<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1, $4, $5}&#39;</span>
+</code></pre></div>
+<h3 id="apdpdl-detection">APD/PDL Detection<a class="headerlink" href="#apdpdl-detection" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check vmkernel log for APD/PDL events in last 24 hours</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;APD|PDL|LostDevice&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check for SCSI sense codes (reservation conflicts, path errors)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;H:0x0 D:0x2\|reservation&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
+<h2 id="capacity-and-performance">Capacity and Performance<a class="headerlink" href="#capacity-and-performance" title="Permanent link">&para;</a></h2>
+<h3 id="cpu-and-memory">CPU and Memory<a class="headerlink" href="#cpu-and-memory" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Host CPU and memory usage via esxtop (batch mode, 1 sample)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Via PowerCLI — all hosts in cluster</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>CpuUsageMhz,<span class="w"> </span>CpuTotalMhz,<span class="w"> </span>MemoryUsageGB,<span class="w"> </span>MemoryTotalGB<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>Format-Table<span class="w"> </span>-AutoSize
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check for balloon/swap activity across all VMs on host</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Stat<span class="w"> </span>-Stat<span class="w"> </span>mem.balloon.average,mem.swapped.average<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Value<span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Entity,<span class="w"> </span>MetricId,<span class="w"> </span>Value
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Alert threshold</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host CPU utilization</td>
+<td>&gt; 70% sustained (5 min avg)</td>
+<td>Migrate VMs via DRS, add capacity</td>
+</tr>
+<tr>
+<td>Host memory utilization</td>
+<td>&gt; 80%</td>
+<td>Check balloon/swap; migrate or add RAM</td>
+</tr>
+<tr>
+<td>VM balloon &gt; 0</td>
+<td>Any VM ballooning</td>
+<td>Host under memory pressure; migrate VM</td>
+</tr>
+<tr>
+<td>VM swap &gt; 0</td>
+<td>Any VM swapping</td>
+<td>Critical — immediate VM migration needed</td>
+</tr>
+<tr>
+<td>Datastore free space</td>
+<td>&lt; 20%</td>
+<td>Extend datastore or migrate VMs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vib-and-patch-compliance">VIB and Patch Compliance<a class="headerlink" href="#vib-and-patch-compliance" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all installed VIBs with version</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Compare against baseline (requires vCenter with vLCM or VUM)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># vCenter → Lifecycle Manager → Hosts → select host → Check Compliance</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check acceptance level (should be PartnerSupported or higher for production)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>esxcli<span class="w"> </span>software<span class="w"> </span>acceptance<span class="w"> </span>get
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Check for any VIBs installed outside of vLCM baseline</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;VMware\|Broadcom\|Dell\|HPE\|Cisco&quot;</span>
+</code></pre></div>
+<h2 id="health-checklist">Health Checklist<a class="headerlink" href="#health-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] All hosts Connected and PoweredOn in vCenter</li>
+<li>[ ] No hardware health warnings or critical sensor alerts</li>
+<li>[ ] All storage paths active — no dead paths (<code>grep -i dead</code> returns empty)</li>
+<li>[ ] All vmnic uplinks connected and running at expected speed</li>
+<li>[ ] NTP running and synchronized (<code>esxcli system ntp get</code> shows enabled=true, server reachable)</li>
+<li>[ ] No APD/PDL events in vmkernel.log in past 24 hours</li>
+<li>[ ] hostd, vpxa, fdm services all running</li>
+<li>[ ] Host CPU utilization &lt; 70% sustained</li>
+<li>[ ] Host memory utilization &lt; 80%; no VM balloon or swap</li>
+<li>[ ] All datastores &gt; 20% free space</li>
+<li>[ ] No unexpected maintenance mode hosts</li>
+<li>[ ] VIB compliance matches vLCM baseline (no patch drift)</li>
+</ul>
 
 
 
