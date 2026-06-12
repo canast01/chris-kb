@@ -252,6 +252,11 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
   <span>Deep-dive references on cluster behavior, HA/DRS edge cases, storage latency, scenarios, and learning paths.</span>
 </a>
 
+<a class="kb-card" href="concepts/">
+  <strong>Concepts</strong>
+  <span>Cross-product platform internals: VCHA, DRS scoring, HA admission control, DVS networking, vSAN cluster health, certificate chain, NSX data plane, and vLCM.</span>
+</a>
+
 <a class="kb-card" href="internals/">
   <strong>Internals</strong>
   <span>How vSphere works internally — cluster services, resource management, permissions, networking, and storage architecture.</span>
