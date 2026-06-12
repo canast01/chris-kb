@@ -2118,6 +2118,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-os-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported OS Platforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssh-key-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH Key Distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bootstrap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2151,10 +2201,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-initial-pools" class="md-nav__link">
+  <a href="#enable-rbd-pool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Create Initial Pools
+        Enable RBD Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-cephfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable CephFS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-rgw-object-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable RGW (Object Gateway)
       
     </span>
   </a>
@@ -2331,6 +2403,20 @@
 Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create initial pools, configure network, and validate cluster health before production use.
 </div>
 
+<pre class="mermaid"><code>graph TD
+    A([Prerequisites&lt;br&gt;OS · Network · NTP · SSH keys]) --&gt; B([Install cephadm&lt;br&gt;on bootstrap node])
+    B --&gt; C([cephadm bootstrap&lt;br&gt;first MON + MGR])
+    C --&gt; D([Add hosts&lt;br&gt;ceph orch host add])
+    D --&gt; E([Add OSDs&lt;br&gt;ceph orch apply osd])
+    E --&gt; F([Enable RBD pool&lt;br&gt;ceph osd pool create rbd])
+    F --&gt; G([Enable CephFS&lt;br&gt;ceph fs volume create])
+    G --&gt; H([Enable RGW&lt;br&gt;ceph orch apply rgw])
+    H --&gt; I([Post-deploy validation&lt;br&gt;health · OSDs · PGs · bench])
+
+    classDef default fill:#1e3a5f,color:#fff,stroke:#2563eb
+    classDef done fill:#15803d,color:#fff,stroke:#15803d
+    class A,B default
+    class C,D,E,F,G,H,I done</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────── Ceph Deployment ───────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -2347,89 +2433,312 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│    noout flag= Prevent OSDs from being marked out during maintenance                                  │
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
 </code></pre></div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h3 id="supported-os-platforms">Supported OS Platforms<a class="headerlink" href="#supported-os-platforms" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Min Version</th>
+<th>Python</th>
+<th>Container Runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RHEL / Rocky / AlmaLinux</td>
+<td>9.x</td>
+<td>3.9+</td>
+<td>Podman 4+ (default)</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>22.04 LTS</td>
+<td>3.10+</td>
+<td>Docker or Podman</td>
+</tr>
+<tr>
+<td>CentOS Stream</td>
+<td>9</td>
+<td>3.9+</td>
+<td>Podman 4+</td>
+</tr>
+<tr>
+<td>Debian</td>
+<td>12 (Bookworm)</td>
+<td>3.11+</td>
+<td>Docker or Podman</td>
+</tr>
+</tbody>
+</table>
+<h3 id="firewall-ports">Firewall Ports<a class="headerlink" href="#firewall-ports" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Service</th>
+<th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6789</td>
+<td>TCP</td>
+<td>MON (client/peer)</td>
+<td>All nodes ↔ all nodes</td>
+</tr>
+<tr>
+<td>3300</td>
+<td>TCP</td>
+<td>MON (v2 protocol)</td>
+<td>All nodes ↔ all nodes</td>
+</tr>
+<tr>
+<td>6800–7300</td>
+<td>TCP</td>
+<td>OSD (replication, heartbeat)</td>
+<td>OSD nodes ↔ OSD nodes</td>
+</tr>
+<tr>
+<td>8443</td>
+<td>TCP</td>
+<td>Ceph Dashboard (HTTPS)</td>
+<td>Admin → bootstrap node</td>
+</tr>
+<tr>
+<td>9283</td>
+<td>TCP</td>
+<td>Prometheus exporter (MGR)</td>
+<td>Prometheus → MGR nodes</td>
+</tr>
+<tr>
+<td>8080</td>
+<td>TCP</td>
+<td>RGW (object gateway)</td>
+<td>Clients → RGW nodes</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># RHEL/Rocky — open required ports</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-port<span class="o">=</span><span class="m">6789</span>/tcp
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-port<span class="o">=</span><span class="m">3300</span>/tcp
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-port<span class="o">=</span><span class="m">6800</span>-7300/tcp
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-port<span class="o">=</span><span class="m">8443</span>/tcp
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-port<span class="o">=</span><span class="m">9283</span>/tcp
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>firewall-cmd<span class="w"> </span>--reload
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify NTP synchronisation before bootstrapping</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;System time&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>timedatectl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>synchronized
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Maximum tolerated drift between nodes: 0.05 s</span>
+</code></pre></div>
+<h3 id="ssh-key-distribution">SSH Key Distribution<a class="headerlink" href="#ssh-key-distribution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate keypair on bootstrap node (if not present)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-f<span class="w"> </span>~/.ssh/ceph_deploy<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Copy to all nodes that will join the cluster</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>ceph-node1<span class="w"> </span>ceph-node2<span class="w"> </span>ceph-node3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/ceph_deploy.pub<span class="w"> </span>root@<span class="si">${</span><span class="nv">host</span><span class="si">}</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">done</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Verify passwordless access</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>ceph-node1<span class="w"> </span>ceph-node2<span class="w"> </span>ceph-node3<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/ceph_deploy<span class="w"> </span>root@<span class="si">${</span><span class="nv">host</span><span class="si">}</span><span class="w"> </span>hostname
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">done</span>
+</code></pre></div>
 <h2 id="bootstrap">Bootstrap<a class="headerlink" href="#bootstrap" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Prerequisites:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># - All nodes: Python 3, Docker or Podman, NTP sync, cluster + public networks configured</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># - SSH key-based root access from bootstrap node to all other nodes</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Install cephadm on bootstrap node (Reef/Quincy)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>--silent<span class="w"> </span>--remote-name<span class="w"> </span>--location<span class="w"> </span>https://download.ceph.com/rpm-reef/el9/noarch/cephadm
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>chmod<span class="w"> </span>+x<span class="w"> </span>cephadm
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>./cephadm<span class="w"> </span>install
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Bootstrap first MON + MGR</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>cephadm<span class="w"> </span>bootstrap<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--mon-ip<span class="w"> </span><span class="m">10</span>.0.1.10<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--cluster-network<span class="w"> </span><span class="m">10</span>.0.2.0/24<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--initial-dashboard-user<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--initial-dashboard-password<span class="w"> </span><span class="s1">&#39;ChangeMe!&#39;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Access Ceph Dashboard: https://10.0.1.10:8443</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the first host (becomes initial MON + MGR)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Download cephadm for the target release (Reef = current stable)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>--silent<span class="w"> </span>--remote-name<span class="w"> </span>--location<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>https://github.com/ceph/ceph/raw/quincy/src/cephadm/cephadm
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>chmod<span class="w"> </span>+x<span class="w"> </span>cephadm
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>./cephadm<span class="w"> </span>install<span class="w">   </span><span class="c1"># installs cephadm into /usr/sbin/cephadm</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Bootstrap first MON + MGR</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># --mon-ip        : IP on the public (client-facing) network</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># --cluster-network: OSD replication CIDR (separate from public network)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>cephadm<span class="w"> </span>bootstrap<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--mon-ip<span class="w"> </span><span class="m">10</span>.0.1.10<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--cluster-network<span class="w"> </span><span class="m">10</span>.0.2.0/24<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--initial-dashboard-user<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--initial-dashboard-password<span class="w"> </span><span class="s1">&#39;ChangeMe!&#39;</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Output includes:</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1">#   Ceph Dashboard: https://10.0.1.10:8443</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1">#   Grafana:        https://10.0.1.10:3000</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1">#   Prometheus:     http://10.0.1.10:9095</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Shell completion and ceph.conf are written to /etc/ceph/</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>ls<span class="w"> </span>/etc/ceph/
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># ceph.conf  ceph.client.admin.keyring  ceph.pub</span>
 </code></pre></div>
 <h2 id="add-hosts">Add Hosts<a class="headerlink" href="#add-hosts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Copy SSH public key to each new node</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@ceph-node2
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@ceph-node3
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Add hosts to cluster</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>ceph-node2<span class="w"> </span><span class="m">10</span>.0.1.11
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>ceph-node3<span class="w"> </span><span class="m">10</span>.0.1.12
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Verify hosts</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>ls
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Add MONs (3 minimum; 5 for large clusters)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span><span class="m">3</span><span class="w">  </span><span class="c1"># or: ceph orch apply mon --placement &quot;host1 host2 host3&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Verify MON quorum</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Copy the cluster&#39;s SSH public key to each new node</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@ceph-node2
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ssh-copy-id<span class="w"> </span>-f<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/ceph.pub<span class="w"> </span>root@ceph-node3
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Add hosts — labels control which daemons are placed here</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>ceph-node2<span class="w"> </span><span class="m">10</span>.0.1.11<span class="w"> </span>--labels<span class="w"> </span>mon,mgr,osd
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>ceph-node3<span class="w"> </span><span class="m">10</span>.0.1.12<span class="w"> </span>--labels<span class="w"> </span>mon,mgr,osd
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Verify all hosts are visible and reachable</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>ls
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Expected columns: HOST  ADDR  LABELS  STATUS</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Add MONs — 3 minimum; 5 for clusters &gt; 10 nodes</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Or pin to specific hosts:</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span>--placement<span class="w"> </span><span class="s2">&quot;ceph-node1 ceph-node2 ceph-node3&quot;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Verify MON quorum — all 3 (or 5) must be in quorum</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>ceph<span class="w"> </span>mon<span class="w"> </span>stat
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Expected: 3 mons at ..., election epoch N, quorum 0,1,2 ...</span>
 </code></pre></div>
 <h2 id="add-osds">Add OSDs<a class="headerlink" href="#add-osds" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Option A: Auto-detect and add all available disks</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Option B: Specify devices per host</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node1:/dev/sdb
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node1:/dev/sdc
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node2:/dev/sdb
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify OSDs are up+in</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat<span class="w">  </span><span class="c1"># Expected: X osds, X up, X in</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Check OSD status in detail</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Option A — auto-detect and claim all available (empty, unpartitioned) devices</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>osd<span class="w"> </span>--all-available-devices
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Option B — add specific devices per host</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node1:/dev/sdb
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node1:/dev/sdc
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node2:/dev/sdb
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node2:/dev/sdc
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>ceph-node3:/dev/sdb
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># List devices cephadm can see (available = not yet used)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ceph<span class="w"> </span>orch<span class="w"> </span>device<span class="w"> </span>ls
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Verify OSDs appear with correct weight (1 TB ≈ weight 1.0)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span>tree
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Expected: all OSDs show &quot;up  in&quot; state</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>stat
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Expected: X osds: X up (since epoch N), X in (since epoch N)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Check OSD utilisation and weight</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df
 </code></pre></div>
-<h2 id="create-initial-pools">Create Initial Pools<a class="headerlink" href="#create-initial-pools" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># RBD pool (block storage)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>rbd<span class="w"> </span><span class="m">64</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>application<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>rbd
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>rbd<span class="w"> </span>pool<span class="w"> </span>init<span class="w"> </span>rbd
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># CephFS pools (if deploying filesystem)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>cephfs-data<span class="w"> </span><span class="m">64</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>cephfs-meta<span class="w"> </span><span class="m">16</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ceph<span class="w"> </span>fs<span class="w"> </span>new<span class="w"> </span>myfs<span class="w"> </span>cephfs-meta<span class="w"> </span>cephfs-data
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># RGW pool (if deploying object storage)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># cephadm creates pools automatically when RGW is deployed</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>rgw<span class="w"> </span>myorg<span class="w"> </span>--realm<span class="o">=</span>default<span class="w"> </span>--zone<span class="o">=</span>default<span class="w"> </span>--placement<span class="o">=</span><span class="s2">&quot;2 ceph-node1 ceph-node2&quot;</span>
+<h2 id="enable-rbd-pool">Enable RBD Pool<a class="headerlink" href="#enable-rbd-pool" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create dedicated RBD block storage pool</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># PG count: start with 128 for &lt; 5 OSDs; scale up later with autoscale</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>create<span class="w"> </span>rbd<span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="m">128</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>application<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbd<span class="w"> </span>rbd
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>rbd<span class="w"> </span>pool<span class="w"> </span>init<span class="w"> </span>rbd
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify pool exists and is healthy</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>lspools<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rbd
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>stats<span class="w"> </span>rbd
+</code></pre></div>
+<h2 id="enable-cephfs">Enable CephFS<a class="headerlink" href="#enable-cephfs" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Create a CephFS volume (creates data + metadata pools automatically)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>fs<span class="w"> </span>volume<span class="w"> </span>create<span class="w"> </span>myfs
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Place MDS daemons (at least 2: 1 active, 1 standby)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mds<span class="w"> </span>myfs<span class="w"> </span>--placement<span class="w"> </span><span class="s2">&quot;3 ceph-node1 ceph-node2 ceph-node3&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify filesystem and MDS daemons</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ceph<span class="w"> </span>fs<span class="w"> </span>status
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Expected: active MDS count = 1, standby count ≥ 1</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ceph<span class="w"> </span>mds<span class="w"> </span>stat
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Active: myfs:1 {0=myfs.ceph-node1=up:active} standby: 2</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Mount via kernel client (test)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>mount<span class="w"> </span>-t<span class="w"> </span>ceph<span class="w"> </span><span class="m">10</span>.0.1.10:6789:/<span class="w"> </span>/mnt/cephfs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">name</span><span class="o">=</span>admin,secretfile<span class="o">=</span>/etc/ceph/ceph.client.admin.keyring
+</code></pre></div>
+<h2 id="enable-rgw-object-gateway">Enable RGW (Object Gateway)<a class="headerlink" href="#enable-rgw-object-gateway" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Deploy RGW daemons — two for HA</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># realm and zone are logical groupings for multi-site; &quot;default&quot; works for single-site</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>rgw<span class="w"> </span>default<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--placement<span class="w"> </span><span class="s2">&quot;2 ceph-node1 ceph-node2&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">8080</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Verify RGW daemons are running</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rgw
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rgw
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Expected: rgw.default.default.ceph-node1  running</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># RGW creates its pools automatically; verify</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>lspools<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>default
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># default.rgw.buckets.index  default.rgw.buckets.data  etc.</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Quick S3 connectivity test (requires s3cmd or awscli configured)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>radosgw-admin<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>--uid<span class="o">=</span><span class="nb">test</span><span class="w"> </span>--display-name<span class="o">=</span><span class="s2">&quot;Test User&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span>--access-key<span class="o">=</span>TESTKEY<span class="w"> </span>--secret<span class="o">=</span>TESTSECRET
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>s3cmd<span class="w"> </span>--access_key<span class="o">=</span>TESTKEY<span class="w"> </span>--secret_key<span class="o">=</span>TESTSECRET<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span>--host<span class="o">=</span><span class="m">10</span>.0.1.10:8080<span class="w"> </span>--no-ssl<span class="w"> </span>ls
 </code></pre></div>
 <h2 id="post-deploy-validation">Post-Deploy Validation<a class="headerlink" href="#post-deploy-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Full cluster health check</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ceph<span class="w"> </span>status
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Expected: HEALTH_OK, all OSDs up+in, MON quorum established</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Performance test (pre-production baseline)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ceph<span class="w"> </span>osd<span class="w"> </span>bench<span class="w"> </span><span class="m">1073741824</span><span class="w"> </span><span class="m">4096</span><span class="w">   </span><span class="c1"># 1 GB test, 4 KB I/O</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># RBD test</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>rbd<span class="w"> </span>bench<span class="w"> </span>--io-type<span class="w"> </span>write<span class="w"> </span>--io-size<span class="w"> </span>4K<span class="w"> </span>--io-threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--io-total<span class="w"> </span>1G<span class="w"> </span>rbd/test-image
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Verify CRUSH is placing data correctly</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span>perf
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span>pools<span class="w">   </span><span class="c1"># check distribution</span>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster health</td>
+<td><code>ceph health</code></td>
+<td><code>HEALTH_OK</code></td>
+</tr>
+<tr>
+<td>OSD count</td>
+<td><code>ceph osd stat</code></td>
+<td>All OSDs <code>up</code> and <code>in</code></td>
+</tr>
+<tr>
+<td>PG state</td>
+<td><code>ceph pg stat</code></td>
+<td>All PGs <code>active+clean</code></td>
+</tr>
+<tr>
+<td>MON quorum</td>
+<td><code>ceph mon stat</code></td>
+<td>All MONs in quorum</td>
+</tr>
+<tr>
+<td>Capacity visible</td>
+<td><code>ceph df</code></td>
+<td>Total capacity matches disk inventory</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>https://&lt;mon-ip&gt;:8443</code></td>
+<td>Login works, graphs populate</td>
+</tr>
+<tr>
+<td>Prometheus</td>
+<td><code>http://&lt;mon-ip&gt;:9095</code></td>
+<td>Metrics endpoint responds</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Full cluster health</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ceph<span class="w"> </span>health<span class="w"> </span>detail
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ceph<span class="w"> </span>status
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Must be HEALTH_OK with all OSDs up+in and MON quorum established</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Baseline I/O performance test with rados bench</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Write test — 30 s, 4 MB objects</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>rados<span class="w"> </span>bench<span class="w"> </span>-p<span class="w"> </span>rbd<span class="w"> </span><span class="m">30</span><span class="w"> </span>write<span class="w"> </span>--no-cleanup
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Read test (sequential)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>rados<span class="w"> </span>bench<span class="w"> </span>-p<span class="w"> </span>rbd<span class="w"> </span><span class="m">30</span><span class="w"> </span>seq
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Cleanup bench objects</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>rados<span class="w"> </span>bench<span class="w"> </span>-p<span class="w"> </span>rbd<span class="w"> </span><span class="m">30</span><span class="w"> </span>cleanup
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># RBD block I/O test</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>rbd<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>10G<span class="w"> </span>rbd/bench-test
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>rbd<span class="w"> </span>bench<span class="w"> </span>--io-type<span class="w"> </span>write<span class="w"> </span>--io-size<span class="w"> </span>4K<span class="w"> </span>--io-threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--io-total<span class="w"> </span>1G<span class="w"> </span>rbd/bench-test
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>rbd<span class="w"> </span>bench<span class="w"> </span>--io-type<span class="w"> </span><span class="nb">read</span><span class="w">  </span>--io-size<span class="w"> </span>4K<span class="w"> </span>--io-threads<span class="w"> </span><span class="m">16</span><span class="w"> </span>--io-total<span class="w"> </span>1G<span class="w"> </span>rbd/bench-test
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>rbd<span class="w"> </span>rm<span class="w"> </span>rbd/bench-test
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># Verify CRUSH is placing data across all hosts (no single-host concentration)</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>ceph<span class="w"> </span>osd<span class="w"> </span>perf
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>ceph<span class="w"> </span>pg<span class="w"> </span>dump<span class="w"> </span>pools<span class="w">   </span><span class="c1"># check per-pool distribution</span>
 </code></pre></div>
 
 

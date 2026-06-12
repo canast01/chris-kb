@@ -2369,10 +2369,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#network-firewall-rules" class="md-nav__link">
+  <a href="#network-isolation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Network Firewall Rules
+        Network Isolation
       
     </span>
   </a>
@@ -2380,10 +2380,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dashboard-hardening" class="md-nav__link">
+  <a href="#firewall-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dashboard Hardening
+        Firewall Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disable-insecure-msgr1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable Insecure msgr1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboard-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard Security
       
     </span>
   </a>
@@ -2402,10 +2424,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cis-hardening-checklist" class="md-nav__link">
+  <a href="#audit-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CIS Hardening Checklist
+        Audit Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#least-privilege-key-hygiene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege: Key Hygiene
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cis-hardening-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIS Hardening Controls
       
     </span>
   </a>
@@ -2584,7 +2628,7 @@
 
 <h1 id="ceph-hardening">Ceph — Hardening<a class="headerlink" href="#ceph-hardening" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Ceph security hardening: network firewall rules for cluster isolation, disabling unused mgr modules, alert configuration, dashboard access control, and CIS-aligned controls.
+Ceph security hardening: network isolation, msgr2 encryption, cephx least-privilege, OSD encryption, RGW HTTPS, dashboard TLS, audit logging, and CIS-aligned controls.
 </div>
 
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── Ceph — Hardening ───────────────────────────────────────────┐
@@ -2606,113 +2650,261 @@ Ceph security hardening: network firewall rules for cluster isolation, disabling
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  crash module   = Captures daemon crash dumps; keep enabled for diagnostic visibility                 │
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  admin socket   = Unix socket for per-daemon runtime info; restrict file permissions on all hosts     │
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  msgr2 secure   = Ceph messenger v2 encryption mode; encrypts all OSD-to-OSD and client traffic       │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  ceph config    = Central config database; use to set security options without editing ceph.conf      │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  nomonmap       = Prevents unauthenticated MON map enumeration; enforced by CephX by default          │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  CIS benchmark  = Center for Internet Security hardening guide; reference for Ceph compliance audits  │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  nomonmap       = Prevents unauthenticated MON map enumeration; enforced by CephX by default          │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  CIS benchmark  = Center for Internet Security hardening guide; reference for Ceph compliance audits  │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="network-firewall-rules">Network Firewall Rules<a class="headerlink" href="#network-firewall-rules" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Ports used by Ceph daemons:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># MON:      6789 (msgr1), 3300 (msgr2)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># OSD:      6800-7568 (each OSD uses 2 ports)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># MGR:      8443 (dashboard), 9283 (Prometheus metrics)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># RGW:      7480 (HTTP), 443 (HTTPS)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># MDS:      6800+ (communication with MON + clients)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># firewalld example for OSD nodes (cluster network must be internal-only)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>internal<span class="w"> </span>--add-source<span class="o">=</span><span class="m">10</span>.0.2.0/24<span class="w">  </span><span class="c1"># cluster network CIDR</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>internal<span class="w"> </span>--add-port<span class="o">=</span><span class="m">6800</span>-7568/tcp
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Public network (client access)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-source<span class="o">=</span><span class="m">10</span>.0.1.0/24<span class="w">   </span><span class="c1"># public network CIDR</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-port<span class="o">=</span><span class="m">6789</span>/tcp<span class="w">          </span><span class="c1"># MON</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-port<span class="o">=</span><span class="m">3300</span>/tcp<span class="w">          </span><span class="c1"># MON msgr2</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-port<span class="o">=</span><span class="m">6800</span>-7568/tcp<span class="w">     </span><span class="c1"># OSD</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>firewall-cmd<span class="w"> </span>--reload
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Block all other inbound on cluster network</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># (cluster network should not be reachable from outside Ceph nodes)</span>
+<pre class="mermaid"><code>graph TD
+    classDef layer fill:#1e3a5f,color:#fff
+    classDef ctrl fill:#2563eb,color:#fff
+    classDef detail fill:#374151,color:#fff
+
+    A([Network isolation\ncluster / public separation]):::layer --&gt; B[msgr2 secure mode\nin-transit encryption]:::ctrl
+    B --&gt; C[CephX auth\nper-entity keys + caps]:::ctrl
+    C --&gt; D[OSD encryption\ndm-crypt at rest]:::ctrl
+    D --&gt; E[RGW HTTPS / TLS\nobject gateway hardening]:::ctrl
+    E --&gt; F[Dashboard TLS + MFA\nrestrict admin access]:::ctrl
+    F --&gt; G[Audit logging\nauth_debug + ops log]:::detail</code></pre>
+<h2 id="network-isolation">Network Isolation<a class="headerlink" href="#network-isolation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify cluster network is configured (OSD replication stays on dedicated network)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>cluster_network
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>public_network
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Set if not configured</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>cluster_network<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>public_network<span class="w"> </span><span class="m">10</span>.0.0.0/24
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify separation took effect on a running OSD</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ceph<span class="w"> </span>daemon<span class="w"> </span>osd.0<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;cluster_network|public_network&quot;</span>
 </code></pre></div>
-<h2 id="dashboard-hardening">Dashboard Hardening<a class="headerlink" href="#dashboard-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Change default admin password</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>ac-user-set-password<span class="w"> </span>admin<span class="w"> </span>--password-policy-check-enabled<span class="w"> </span>NewSecurePassword123!
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable TLS (use custom cert)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mgr<span class="w"> </span>mgr/dashboard/ssl<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>set-ssl-certificate<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/dashboard.crt
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>set-ssl-certificate-key<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/dashboard.key
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Create read-only monitoring user (instead of using admin)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>ac-user-create<span class="w"> </span>monitoring<span class="w"> </span>viewer<span class="w"> </span>viewer
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Roles: administrator, read-only, block-manager, rgw-manager, cluster-manager, pool-manager, cephfs-manager</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Disable dashboard if not needed</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>dashboard
-</code></pre></div>
-<h2 id="disable-unnecessary-mgr-modules">Disable Unnecessary MGR Modules<a class="headerlink" href="#disable-unnecessary-mgr-modules" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List enabled modules</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>enabled
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Disable modules not in use</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>telemetry<span class="w">      </span><span class="c1"># disables opt-in telemetry</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>insights<span class="w">       </span><span class="c1"># workload analytics (if not using)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>rbd_support<span class="w">    </span><span class="c1"># if not using RBD monitoring hooks</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># pg_autoscaler: useful but review if you want manual PG control</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>pg_autoscaler<span class="w">  </span><span class="c1"># if you manage PGs manually</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># List currently active module plugins</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>services
-</code></pre></div>
-<h2 id="cis-hardening-checklist">CIS Hardening Checklist<a class="headerlink" href="#cis-hardening-checklist" title="Permanent link">&para;</a></h2>
+<h2 id="firewall-rules">Firewall Rules<a class="headerlink" href="#firewall-rules" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Control</th>
-<th>Action</th>
+<th>Port</th>
+<th>Protocol</th>
+<th>From</th>
+<th>To</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Change default admin keyring location</td>
-<td>Move client.admin keyring out of /etc/ceph/ on non-admin nodes</td>
+<td>6789</td>
+<td>TCP</td>
+<td>Client hosts</td>
+<td>MON nodes</td>
+<td>MON msgr1 (legacy)</td>
 </tr>
 <tr>
-<td>Disable SSH root login on Ceph nodes</td>
-<td>Use cephadm SSH key only; disable PasswordAuthentication</td>
+<td>3300</td>
+<td>TCP</td>
+<td>All Ceph nodes + clients</td>
+<td>MON nodes</td>
+<td>MON msgr2</td>
 </tr>
 <tr>
-<td>Enable NTP on all nodes</td>
-<td>Clock skew &gt; 500ms causes MON election failures</td>
+<td>6800–7300</td>
+<td>TCP</td>
+<td>Ceph nodes only</td>
+<td>OSD nodes</td>
+<td>OSD replication + client I/O</td>
 </tr>
 <tr>
-<td>Enable msgr2 secure mode</td>
-<td>Encrypt client and inter-daemon traffic</td>
+<td>8080</td>
+<td>TCP</td>
+<td>Admin hosts</td>
+<td>MGR node</td>
+<td>Dashboard HTTP (disable; use 8443)</td>
 </tr>
 <tr>
-<td>Enable OSD encryption</td>
-<td>Configure dmcrypt at OSD creation time</td>
+<td>8443</td>
+<td>TCP</td>
+<td>Admin hosts</td>
+<td>MGR node</td>
+<td>Dashboard HTTPS</td>
 </tr>
 <tr>
-<td>Restrict dashboard access</td>
-<td>Use TLS; non-admin roles for monitoring users</td>
+<td>9283</td>
+<td>TCP</td>
+<td>Prometheus host</td>
+<td>MGR node</td>
+<td>Prometheus metrics exporter</td>
 </tr>
 <tr>
-<td>Enable Prometheus auth</td>
-<td>Configure basic auth or mTLS for Prometheus scrape endpoint</td>
+<td>7480</td>
+<td>TCP</td>
+<td>Client hosts</td>
+<td>RGW nodes</td>
+<td>RGW HTTP default (prefer 443)</td>
 </tr>
 <tr>
-<td>Disable unused mgr modules</td>
-<td>Reduce attack surface; disable telemetry, insights if unused</td>
+<td>443</td>
+<td>TCP</td>
+<td>Client hosts</td>
+<td>RGW nodes</td>
+<td>RGW HTTPS</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># firewalld example for OSD nodes (cluster network must be internal-only)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>internal<span class="w"> </span>--add-source<span class="o">=</span><span class="m">10</span>.0.1.0/24<span class="w">  </span><span class="c1"># cluster network CIDR</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>internal<span class="w"> </span>--add-port<span class="o">=</span><span class="m">6800</span>-7300/tcp
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Public network (client access to MON and OSD)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-source<span class="o">=</span><span class="m">10</span>.0.0.0/24
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-port<span class="o">=</span><span class="m">3300</span>/tcp<span class="w">          </span><span class="c1"># MON msgr2</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>public<span class="w"> </span>--add-port<span class="o">=</span><span class="m">6800</span>-7300/tcp<span class="w">     </span><span class="c1"># OSD client I/O</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>firewall-cmd<span class="w"> </span>--reload
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Block all other inbound on cluster network from outside Ceph nodes</span>
+</code></pre></div>
+<h2 id="disable-insecure-msgr1">Disable Insecure msgr1<a class="headerlink" href="#disable-insecure-msgr1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Force all connections to use msgr2 (prevents protocol downgrade attacks)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_bind_msgr1<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable encrypted mode on all connection types</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_cluster_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># OSD-to-OSD</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_service_mode<span class="w"> </span>secure<span class="w">    </span><span class="c1"># client-to-OSD / MON</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>ms_client_mode<span class="w"> </span>secure<span class="w">     </span><span class="c1"># outgoing client connections</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Verify</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>mon<span class="w"> </span>ms_cluster_mode<span class="w">   </span><span class="c1"># expected: secure</span>
+</code></pre></div>
+<h2 id="dashboard-security">Dashboard Security<a class="headerlink" href="#dashboard-security" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Change default admin password</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>ac-user-set-password<span class="w"> </span>admin<span class="w"> </span>--password-policy-check-enabled<span class="w"> </span>NewSecurePassword123!
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Enable HTTPS with a signed certificate</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>set-ssl-certificate<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/dashboard.crt
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>set-ssl-certificate-key<span class="w"> </span>-i<span class="w"> </span>/etc/ceph/dashboard.key
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>mgr<span class="w"> </span>mgr/dashboard/ssl<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Create self-signed cert for internal use (testing only)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>create-self-signed-cert
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Verify HTTPS is active</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>services<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dashboard<span class="w">   </span><span class="c1"># URL should show https://</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Create read-only monitoring user (never use admin account for monitoring)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ceph<span class="w"> </span>dashboard<span class="w"> </span>ac-user-create<span class="w"> </span>monitoring<span class="w"> </span>--roles<span class="o">=</span>read-only
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># List available roles</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># administrator, read-only, block-manager, rgw-manager, cluster-manager, pool-manager, cephfs-manager</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Disable dashboard entirely if not needed</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>dashboard
+</code></pre></div>
+<h2 id="disable-unnecessary-mgr-modules">Disable Unnecessary MGR Modules<a class="headerlink" href="#disable-unnecessary-mgr-modules" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List enabled modules</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>enabled
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Disable modules not in use</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>telemetry<span class="w">      </span><span class="c1"># anonymous usage data sent to Ceph project</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>insights<span class="w">       </span><span class="c1"># workload analytics</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>rbd_support<span class="w">    </span><span class="c1"># RBD monitoring hooks (if not using)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Review pg_autoscaler (disable for manual PG control in production)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>module<span class="w"> </span>disable<span class="w"> </span>pg_autoscaler
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># List currently exposed services</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ceph<span class="w"> </span>mgr<span class="w"> </span>services
+</code></pre></div>
+<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable auth debug logging for incident investigation</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># WARNING: verbose — disable after investigation; not for permanent production use</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>auth_debug<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Log slow ops (threshold in seconds — log ops slower than this)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>osd<span class="w"> </span>osd_op_log_threshold<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Enable cluster-level audit log (records all config changes and auth events)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>log_to_file<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>log_file<span class="w"> </span>/var/log/ceph/ceph.log
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Verify audit log is capturing events</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/ceph/ceph.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;auth|audit&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Reset debug logging after investigation</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>ceph<span class="w"> </span>config<span class="w"> </span>rm<span class="w"> </span>global<span class="w"> </span>auth_debug
+</code></pre></div>
+<h2 id="least-privilege-key-hygiene">Least Privilege: Key Hygiene<a class="headerlink" href="#least-privilege-key-hygiene" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Never use client.admin in application configuration</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Create a pool-scoped service account per application</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.myapp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=myapp-pool&#39;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check which hosts have the admin keyring (should be admin workstations only)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>ceph<span class="w"> </span>orch<span class="w"> </span>host<span class="w"> </span>ls<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="s2">&quot;import sys,json; [print(h[&#39;hostname&#39;]) for h in json.load(sys.stdin)]&quot;</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">: &quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>ssh<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$host</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;ls /etc/ceph/ceph.client.admin.keyring 2&gt;/dev/null &amp;&amp; echo PRESENT || echo absent&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">done</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Rotate keyrings quarterly: create new entity, distribute, verify, delete old</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>ceph<span class="w"> </span>auth<span class="w"> </span>del<span class="w"> </span>client.myapp<span class="w">        </span><span class="c1"># delete old</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>ceph<span class="w"> </span>auth<span class="w"> </span>get-or-create<span class="w"> </span>client.myapp<span class="w"> </span>mon<span class="w"> </span><span class="s1">&#39;allow r&#39;</span><span class="w"> </span>osd<span class="w"> </span><span class="s1">&#39;allow rw pool=myapp-pool&#39;</span>
+</code></pre></div>
+<h2 id="cis-hardening-controls">CIS Hardening Controls<a class="headerlink" href="#cis-hardening-controls" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network separation</td>
+<td>Dedicated cluster network, firewall OSD ports</td>
+<td><code>ceph config set global cluster_network 10.0.1.0/24</code></td>
 </tr>
 <tr>
-<td>Log audit trail</td>
-<td>Enable Ceph audit log: <code>ceph config set global log_to_file true</code></td>
+<td>In-transit encryption</td>
+<td>msgr2 secure mode, disable msgr1</td>
+<td><code>ceph config set global ms_cluster_mode secure</code></td>
 </tr>
 <tr>
-<td>Firewall cluster network</td>
-<td>Only Ceph nodes should reach OSD replication ports</td>
+<td>Authentication</td>
+<td>CephX enabled (default); pool-scoped keys</td>
+<td><code>ceph auth get-or-create client.app ...</code></td>
+</tr>
+<tr>
+<td>At-rest encryption</td>
+<td>OSD dm-crypt enabled at creation</td>
+<td><code>ceph orch apply osd ... --data-encrypt</code></td>
+</tr>
+<tr>
+<td>Dashboard access</td>
+<td>HTTPS only, non-admin roles for monitoring</td>
+<td><code>ceph config set mgr mgr/dashboard/ssl true</code></td>
+</tr>
+<tr>
+<td>Audit logging</td>
+<td>Ceph audit log + OS audit (auditd)</td>
+<td><code>ceph config set global log_to_file true</code></td>
+</tr>
+<tr>
+<td>SSH hardening</td>
+<td>Disable password auth; cephadm SSH key only</td>
+<td><code>/etc/ssh/sshd_config: PasswordAuthentication no</code></td>
+</tr>
+<tr>
+<td>NTP enforced</td>
+<td>Clock skew &gt; 50 ms causes MON warnings</td>
+<td><code>systemctl enable --now chronyd</code></td>
+</tr>
+<tr>
+<td>Prometheus auth</td>
+<td>mTLS or basic auth on scrape endpoint</td>
+<td><code>ceph dashboard set-prometheus-credentials</code></td>
+</tr>
+<tr>
+<td>Unused modules</td>
+<td>Disable telemetry, insights, rbd_support</td>
+<td><code>ceph mgr module disable telemetry</code></td>
 </tr>
 </tbody>
 </table>

@@ -2311,10 +2311,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#node-sizing" class="md-nav__link">
+  <a href="#cluster-sizing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Node Sizing
+        Cluster Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node-hardware-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Hardware Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replication-vs-erasure-coding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replication vs Erasure Coding
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crush-map-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRUSH Map Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pg-count-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PG Count Formula
       
     </span>
   </a>
@@ -2333,6 +2377,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#capacity-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity Planning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#crush-hierarchy-design" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2344,10 +2399,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capacity-planning" class="md-nav__link">
+  <a href="#upgrade-and-maintenance-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Capacity Planning
+        Upgrade and Maintenance Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cephadm-orchestration-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cephadm Orchestration Commands
       
     </span>
   </a>
@@ -2563,96 +2629,437 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="node-sizing">Node Sizing<a class="headerlink" href="#node-sizing" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    classDef nvme fill:#2563eb,color:#fff
+    classDef hybrid fill:#15803d,color:#fff
+    classDef hdd fill:#b45309,color:#fff
+    classDef ec fill:#7c3aed,color:#fff
+
+    TIERS([Cluster Storage Tiers])
+
+    TIERS --&gt; NVMe[All-NVMe\nLatency-sensitive workloads\nVM boot disks, databases\nHighest cost per TB]:::nvme
+    TIERS --&gt; HYB[Hybrid — NVMe cache + HDD capacity\nMixed workloads\nNVMe BlueStore WAL/DB\nHDD object data]:::hybrid
+    TIERS --&gt; HDD[All-HDD\nCold / bulk storage\nArchive, backup targets\nLowest cost per TB]:::hdd
+    TIERS --&gt; EC[Erasure Coded\nCost-efficient bulk\nk=4 m=2 → 1.5x overhead\nNo RBD overwrite support]:::ec</code></pre>
+<h2 id="cluster-sizing">Cluster Sizing<a class="headerlink" href="#cluster-sizing" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Role</th>
-<th>Min Nodes</th>
-<th>RAM Per Node</th>
+<th>Scale</th>
+<th>OSD Nodes</th>
+<th>Total OSDs</th>
+<th>MONs</th>
+<th>MGRs</th>
 <th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>OSD nodes</td>
+<td>Small</td>
 <td>3</td>
-<td>4–6 GB per OSD</td>
-<td>1 OSD per data disk; NVMe for WAL/DB</td>
-</tr>
-<tr>
-<td>MON nodes</td>
+<td>10–30</td>
 <td>3</td>
-<td>16–32 GB</td>
-<td>Separate nodes from OSD in production</td>
-</tr>
-<tr>
-<td>MGR nodes</td>
 <td>2</td>
-<td>16 GB</td>
-<td>Run on MON nodes acceptable for small clusters</td>
+<td>All daemons may share nodes; separate MON/OSD recommended</td>
 </tr>
 <tr>
-<td>MDS nodes</td>
-<td>2+</td>
-<td>32 GB+</td>
-<td>Memory scales with number of open files</td>
+<td>Medium</td>
+<td>6–10</td>
+<td>60–120</td>
+<td>3–5</td>
+<td>2</td>
+<td>Dedicated MON/MGR nodes; rack-level failure domain</td>
 </tr>
 <tr>
-<td>RGW nodes</td>
-<td>2+</td>
-<td>16 GB</td>
-<td>Stateless; load-balance with HAProxy or DNS</td>
+<td>Large</td>
+<td>12+</td>
+<td>200+</td>
+<td>5</td>
+<td>2</td>
+<td>Dedicated MON/MGR nodes mandatory; consider multi-site</td>
 </tr>
 </tbody>
 </table>
-<h2 id="network-design">Network Design<a class="headerlink" href="#network-design" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Two networks required:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Public network:   10.0.1.0/24   → client-to-OSD traffic (reads, writes)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Cluster network:  10.0.2.0/24   → OSD-to-OSD replication and recovery
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Why separate?
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Without a cluster network, recovery/replication traffic consumes client I/O bandwidth.
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Recovery after a disk failure can generate 100–500 Mbps per OSD.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Bandwidth guidelines:
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Public:  10 GbE minimum per OSD node; 25 GbE for NVMe-heavy clusters
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Cluster: 25 GbE minimum; 100 GbE for dense NVMe nodes (50+ OSDs per node)
+<p><strong>MON/MGR placement rules:</strong>
+- Small clusters (≤ 5 nodes): MON and MGR may share OSD nodes.
+- Medium+ clusters: dedicate at least 3 nodes for MON + MGR to prevent MON quorum loss during OSD node failure.
+- Never place more than 1 MON on the same physical host (violates quorum fault tolerance).
+- MGR active/standby must be on different hosts. Both must be running at all times.</p>
+<h2 id="node-hardware-recommendations">Node Hardware Recommendations<a class="headerlink" href="#node-hardware-recommendations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>NIC</th>
+<th>Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MON / MGR node</td>
+<td>4+</td>
+<td>32 GB</td>
+<td>1× 10 GbE (public)</td>
+<td>100 GB OS + 100 GB MON DB SSD</td>
+</tr>
+<tr>
+<td>OSD node (HDD)</td>
+<td>2 per OSD</td>
+<td>4–6 GB per OSD + 16 GB base</td>
+<td>2× 25 GbE (public + cluster)</td>
+<td>1× NVMe WAL/DB per 4–6 HDDs; HDDs for data</td>
+</tr>
+<tr>
+<td>OSD node (NVMe)</td>
+<td>4 per OSD</td>
+<td>4 GB per OSD + 16 GB base</td>
+<td>2× 25 GbE or 1× 100 GbE</td>
+<td>1 NVMe per OSD; no separate WAL/DB device needed</td>
+</tr>
+<tr>
+<td>MDS node</td>
+<td>8+</td>
+<td>64 GB+</td>
+<td>1× 10 GbE</td>
+<td>100 GB OS SSD</td>
+</tr>
+<tr>
+<td>RGW node</td>
+<td>8+</td>
+<td>32 GB</td>
+<td>2× 10 GbE</td>
+<td>100 GB OS SSD</td>
+</tr>
+</tbody>
+</table>
+<h2 id="replication-vs-erasure-coding">Replication vs Erasure Coding<a class="headerlink" href="#replication-vs-erasure-coding" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Replicated (size=3)</th>
+<th>Erasure Coded (k=4, m=2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raw overhead</td>
+<td>3×</td>
+<td>1.5×</td>
+</tr>
+<tr>
+<td>Minimum OSDs</td>
+<td>3</td>
+<td>k+m = 6</td>
+</tr>
+<tr>
+<td>Write IOPS impact</td>
+<td>Low</td>
+<td>Higher (encoding CPU cost)</td>
+</tr>
+<tr>
+<td>Read IOPS</td>
+<td>Full random read from any replica</td>
+<td>Decode overhead on partial reads</td>
+</tr>
+<tr>
+<td>RBD support</td>
+<td>Full (including overwrites)</td>
+<td>Partial (requires BlueStore + EC overwrites enabled)</td>
+</tr>
+<tr>
+<td>CephFS support</td>
+<td>Yes</td>
+<td>Data pool only (metadata pool must be replicated)</td>
+</tr>
+<tr>
+<td>Recovery cost</td>
+<td>Copy full objects</td>
+<td>Rebuild from k shards — less data transferred</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>VM disks, databases, latency-sensitive</td>
+<td>Cold storage, backups, bulk object store</td>
+</tr>
+</tbody>
+</table>
+<h2 id="crush-map-design">CRUSH Map Design<a class="headerlink" href="#crush-map-design" title="Permanent link">&para;</a></h2>
+<p><strong>Failure domain selection:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cluster size</th>
+<th>Recommended failure domain</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3 nodes</td>
+<td><code>host</code></td>
+<td>Only 3 failure domains available</td>
+</tr>
+<tr>
+<td>6–12 nodes (2–4 per rack)</td>
+<td><code>rack</code></td>
+<td>Rack power/switch failure isolated</td>
+</tr>
+<tr>
+<td>12+ nodes, multi-AZ</td>
+<td><code>datacenter</code></td>
+<td>AZ-level fault tolerance</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create rack-level CRUSH rule</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>rack_replicated<span class="w"> </span>default<span class="w"> </span>rack<span class="w"> </span>firstn
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Assign pool to rack rule</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>crush_rule<span class="w"> </span>rack_replicated
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Mixed media — separate CRUSH roots for SSD and HDD pools</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Add SSD OSDs to a separate root</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>add-bucket<span class="w"> </span>ssd-root<span class="w"> </span>root
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>set-bucket-item<span class="w"> </span>ssd-root<span class="w"> </span>ssd-host1
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>ssd_rule<span class="w"> </span>ssd-root<span class="w"> </span>host<span class="w"> </span>firstn
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Assign weight (in TB) to each OSD</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>reweight<span class="w"> </span>osd.5<span class="w"> </span><span class="m">3</span>.64<span class="w">      </span><span class="c1"># 4 TB HDD = 3.64 usable TB</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># View full CRUSH tree with weights</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree<span class="w"> </span>--show-shadow
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
 </code></pre></div>
-<h2 id="crush-hierarchy-design">CRUSH Hierarchy Design<a class="headerlink" href="#crush-hierarchy-design" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Standard CRUSH hierarchy: datacenter → room → rack → host → OSD</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Minimum failure domain: host (3 hosts = 3 failure domains for replica=3)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Example CRUSH rule for host-level failure domain</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>replicated_rule<span class="w"> </span>default<span class="w"> </span>host<span class="w"> </span>firstn
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Rack-level failure domain (better fault isolation)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>rack_rule<span class="w"> </span>default<span class="w"> </span>rack<span class="w"> </span>firstn
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Assign pool to rack-level rule</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>crush_rule<span class="w"> </span>rack_rule
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Verify OSD placement</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
+<h2 id="pg-count-formula">PG Count Formula<a class="headerlink" href="#pg-count-formula" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>PGs per pool = (Total OSDs × 100) / pool_size
+</code></pre></div>
+<p>Round the result up to the next power of 2. Keep total PGs per OSD ≤ 250 across all pools.</p>
+<table>
+<thead>
+<tr>
+<th>OSDs</th>
+<th>Pool size</th>
+<th>Raw result</th>
+<th>Rounded (power of 2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30</td>
+<td>3</td>
+<td>1000</td>
+<td>1024</td>
+</tr>
+<tr>
+<td>60</td>
+<td>3</td>
+<td>2000</td>
+<td>2048</td>
+</tr>
+<tr>
+<td>120</td>
+<td>3</td>
+<td>4000</td>
+<td>4096</td>
+</tr>
+<tr>
+<td>30</td>
+<td>2</td>
+<td>1500</td>
+<td>2048</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PG autoscaler</strong> (default on in Octopus+) handles PG count automatically:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check autoscaler status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span>autoscale-status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable autoscaler on a specific pool</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>pg_autoscale_mode<span class="w"> </span>on
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Set target ratio (autoscaler calculates PGs based on % of cluster)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>target_size_ratio<span class="w"> </span><span class="m">0</span>.4<span class="w">   </span><span class="c1"># 40% of cluster capacity</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Disable autoscaler globally (use manual PG counts)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>osd_pool_default_pg_autoscale_mode<span class="w"> </span>off
+</code></pre></div>
+<h2 id="network-design">Network Design<a class="headerlink" href="#network-design" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Two networks required:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Public network:   10.0.1.0/24   → client-to-OSD traffic (reads, writes)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Cluster network:  10.0.2.0/24   → OSD-to-OSD replication and recovery
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Why separate?
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Without a cluster network, recovery/replication traffic consumes client I/O bandwidth.
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  Recovery after a disk failure can generate 100–500 Mbps per OSD.
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Bandwidth guidelines:
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Public:  10 GbE minimum per OSD node; 25 GbE for NVMe-heavy clusters
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  Cluster: 25 GbE minimum; 100 GbE for dense NVMe nodes (50+ OSDs per node)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Minimum</th>
+<th>Recommended</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public (client I/O)</td>
+<td>10 GbE</td>
+<td>25 GbE</td>
+<td>Carries client reads/writes to OSDs</td>
+</tr>
+<tr>
+<td>Cluster (replication)</td>
+<td>10 GbE</td>
+<td>25 GbE; 100 GbE for NVMe nodes</td>
+<td>Carries OSD-to-OSD replication; no client traffic</td>
+</tr>
+<tr>
+<td>MTU</td>
+<td>1500</td>
+<td>9000 (jumbo frames)</td>
+<td>Enable jumbo frames on cluster network for replication throughput</td>
+</tr>
+<tr>
+<td>Bonding</td>
+<td>Optional</td>
+<td>Recommended (LACP)</td>
+<td>2× NICs bonded for redundancy on both networks</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify Ceph is using separate networks (from ceph.conf or cephadm config)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>public_network
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ceph<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>osd<span class="w"> </span>cluster_network
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Set cluster network (if not already configured)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>public_network<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>cluster_network<span class="w"> </span><span class="m">10</span>.0.2.0/24
 </code></pre></div>
 <h2 id="capacity-planning">Capacity Planning<a class="headerlink" href="#capacity-planning" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Replicated pool (size=3):
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Raw capacity needed = usable × 3
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Safety threshold: never exceed 85% full (ceph warns at nearfull ratio)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Full threshold: cluster stops writes at 95% (full ratio)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Erasure-coded pool (k=4, m=2):
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Raw capacity needed = usable × 1.5
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Better efficiency but slightly more complex recovery
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>OSD count formula:
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  OSDs = Usable capacity target (TB) × replication factor / disk size (TB)
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Example: 100 TB usable, replica=3, 8 TB disks: (100 × 3) / 8 = 37.5 → 40 OSDs
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>PG count formula:
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>  PGs per pool = (Total OSDs × 100) / pool size (round to power of 2)
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  Total PGs across all pools: aim for 100–200 per OSD
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Replicated pool (size=3):
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Raw capacity needed = usable × 3
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Safety threshold: never exceed 85% full (ceph warns at nearfull ratio)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Full threshold: cluster stops writes at 95% (full ratio)
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Erasure-coded pool (k=4, m=2):
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>  Raw capacity needed = usable × 1.5
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  Better efficiency but slightly more complex recovery
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>OSD count formula:
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>  OSDs = Usable capacity target (TB) × replication factor / disk size (TB)
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  Example: 100 TB usable, replica=3, 8 TB disks: (100 × 3) / 8 = 37.5 → 40 OSDs
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>PG count formula:
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>  PGs per pool = (Total OSDs × 100) / pool size (round to power of 2)
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>  Total PGs across all pools: aim for 100–200 per OSD
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check cluster capacity and usage</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ceph<span class="w"> </span>df
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ceph<span class="w"> </span>df<span class="w"> </span>detail
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check per-OSD usage</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Adjust nearfull and full thresholds</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_nearfull_ratio<span class="w"> </span><span class="m">0</span>.80
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_full_ratio<span class="w"> </span><span class="m">0</span>.90
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ceph<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>global<span class="w"> </span>mon_osd_backfillfull_ratio<span class="w"> </span><span class="m">0</span>.85
+</code></pre></div>
+<h2 id="crush-hierarchy-design">CRUSH Hierarchy Design<a class="headerlink" href="#crush-hierarchy-design" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Standard CRUSH hierarchy: datacenter → room → rack → host → OSD</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Minimum failure domain: host (3 hosts = 3 failure domains for replica=3)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Example CRUSH rule for host-level failure domain</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>replicated_rule<span class="w"> </span>default<span class="w"> </span>host<span class="w"> </span>firstn
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Rack-level failure domain (better fault isolation)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>rule<span class="w"> </span>create-replicated<span class="w"> </span>rack_rule<span class="w"> </span>default<span class="w"> </span>rack<span class="w"> </span>firstn
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Assign pool to rack-level rule</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span>pool<span class="w"> </span><span class="nb">set</span><span class="w"> </span>rbd-pool<span class="w"> </span>crush_rule<span class="w"> </span>rack_rule
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Verify OSD placement</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span>crush<span class="w"> </span>tree
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span>df<span class="w"> </span>tree
+</code></pre></div>
+<h2 id="upgrade-and-maintenance-standards">Upgrade and Maintenance Standards<a class="headerlink" href="#upgrade-and-maintenance-standards" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check cluster compatibility before upgrade</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ceph<span class="w"> </span>versions<span class="w">                     </span><span class="c1"># lists all daemon versions in cluster</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>ceph<span class="w"> </span>osd<span class="w"> </span>require-osd-release<span class="w"> </span>quincy<span class="w">  </span><span class="c1"># set minimum OSD release gate</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Drain OSDs on a node before maintenance (graceful)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>noout<span class="w">               </span><span class="c1"># prevent OSDs from being marked out during maint</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># --- perform maintenance ---</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>noout<span class="w">             </span><span class="c1"># re-enable after returning node to service</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Full set of maintenance flags</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norecover<span class="w">           </span><span class="c1"># pause all recovery</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>norebalance<span class="w">         </span><span class="c1"># pause rebalancing</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">set</span><span class="w"> </span>nobackfill<span class="w">          </span><span class="c1"># pause backfill</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norecover
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>norebalance
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>ceph<span class="w"> </span>osd<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>nobackfill
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noout</code></td>
+<td>Prevents OSDs from being marked out</td>
+<td>Node maintenance, short outages</td>
+</tr>
+<tr>
+<td><code>norecover</code></td>
+<td>Stops recovery operations</td>
+<td>Prevents I/O saturation during maintenance</td>
+</tr>
+<tr>
+<td><code>norebalance</code></td>
+<td>Stops rebalancing after OSD addition</td>
+<td>Adding multiple OSDs in a batch</td>
+</tr>
+<tr>
+<td><code>nobackfill</code></td>
+<td>Stops backfill to new OSDs</td>
+<td>Controlled rollout of new nodes</td>
+</tr>
+<tr>
+<td><code>pause</code></td>
+<td>Pauses all client I/O</td>
+<td>Emergency cluster freeze</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cephadm-orchestration-commands">cephadm Orchestration Commands<a class="headerlink" href="#cephadm-orchestration-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># View all running daemons</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ps
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Deploy additional MON</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ceph<span class="w"> </span>orch<span class="w"> </span>apply<span class="w"> </span>mon<span class="w"> </span>--placement<span class="o">=</span><span class="s2">&quot;host1,host2,host3&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Add OSDs from a specific host/device</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>ceph<span class="w"> </span>orch<span class="w"> </span>daemon<span class="w"> </span>add<span class="w"> </span>osd<span class="w"> </span>host1:/dev/sdb
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Remove an OSD gracefully (marks out, waits for clean, then removes)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>ceph<span class="w"> </span>orch<span class="w"> </span>osd<span class="w"> </span>rm<span class="w"> </span>osd.12<span class="w"> </span>--replace
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Check orchestrator status</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>ceph<span class="w"> </span>orch<span class="w"> </span>status
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>ceph<span class="w"> </span>orch<span class="w"> </span>ls
 </code></pre></div>
 
 
