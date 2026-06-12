@@ -201,3 +201,66 @@ ceph auth get-or-create client.myapp mon 'allow r' osd 'allow rw pool=myapp-pool
 | NTP enforced | Clock skew > 50 ms causes MON warnings | `systemctl enable --now chronyd` |
 | Prometheus auth | mTLS or basic auth on scrape endpoint | `ceph dashboard set-prometheus-credentials` |
 | Unused modules | Disable telemetry, insights, rbd_support | `ceph mgr module disable telemetry` |
+
+## Prometheus Exporter Hardening
+
+The MGR Prometheus exporter (port 9283) exposes detailed cluster metrics. Restrict access and enable authentication to prevent information disclosure.
+
+```bash
+# Restrict Prometheus scrape to specific IP (use firewall zone or Prometheus credentials)
+firewall-cmd --permanent --zone=internal --add-source=<prometheus-host-ip>
+firewall-cmd --permanent --zone=internal --add-port=9283/tcp
+firewall-cmd --reload
+
+# Enable basic auth for Prometheus endpoint
+ceph dashboard set-prometheus-credentials <username> <password>
+
+# Verify exporter is only listening on expected interface
+ss -tlnp | grep 9283
+```
+
+## Admin Socket Permissions
+
+Each Ceph daemon creates a Unix domain socket for runtime queries. Restrict these to prevent local privilege escalation.
+
+```bash
+# Admin sockets are located at /var/run/ceph/
+ls -la /var/run/ceph/
+
+# Verify sockets are owned by ceph user only (no world-readable sockets)
+find /var/run/ceph -name "*.asok" -exec ls -la {} \;
+# Expected: srwxr-x--- (owner: ceph, group: ceph or cephadm)
+
+# Set socket permissions explicitly if incorrect
+ceph config set global admin_socket_mode 0660
+```
+
+## Hardening Verification Commands
+
+Run these after applying hardening controls to confirm the state matches intent.
+
+```bash
+# Verify msgr2 secure mode
+ceph config get mon ms_cluster_mode    # expect: secure
+ceph config get osd ms_service_mode    # expect: secure
+ceph config get global ms_bind_msgr1   # expect: false
+
+# Verify network config
+ceph config get osd public_network
+ceph config get osd cluster_network
+
+# Verify dashboard TLS
+ceph mgr services | grep dashboard     # URL must be https://
+
+# Verify OSD encryption in spec
+ceph orch ls --service-type osd -f yaml | grep -i encrypt
+
+# Verify no over-privileged entities
+ceph auth ls | grep "allow \*"         # should show only client.admin and bootstrap keys
+
+# Verify NTP on all nodes
+for host in $(ceph orch host ls -f json | python3 -c \
+  "import sys,json; [print(h['hostname']) for h in json.load(sys.stdin)]"); do
+  echo -n "$host: "; ssh "$host" chronyc tracking | grep "System time"
+done
+```

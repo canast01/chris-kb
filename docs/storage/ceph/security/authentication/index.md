@@ -223,3 +223,59 @@ ceph config set global ms_bind_msgr1 false
 ```
 
 > **Performance note**: `secure` mode adds ~5–10% throughput overhead on the cluster network. On hardware with AES-NI, overhead is typically 3–5%. Enable on cluster network at minimum; the public (client) network is lower priority if clients are on a trusted VLAN.
+
+## Authentication Troubleshooting
+
+```bash
+# Client fails with "EACCES Permission denied"
+# Cause: capabilities too restrictive for the operation
+ceph auth get client.<name>   # check caps
+# Fix: widen caps with ceph auth caps
+
+# Client fails with "ENOENT" or "auth: unable to find a keyring"
+# Cause: keyring file missing or wrong path
+ls /etc/ceph/ceph.client.<name>.keyring
+# Fix: copy keyring from admin node
+
+# "clock skew detected" errors on client
+chronyc tracking
+# Fix: synchronise client clock with NTP before retrying
+
+# Authentication debugging (produces verbose auth log)
+ceph --debug-auth 10 --id <name> -s 2>&1 | head -40
+# Shows: key lookup, challenge/response, ticket grant or denial
+```
+
+## Authentication Reference Table
+
+| Item | Default value | Notes |
+|---|---|---|
+| Session ticket TTL | 12 hours (43200 s) | Set via `auth_service_ticket_ttl` |
+| MON auth DB backend | LevelDB (MON KV) | Keys persist through MON restarts |
+| Keyring default path | `/etc/ceph/ceph.client.<name>.keyring` | Override with `--keyring` flag |
+| Admin keyring path | `/etc/ceph/ceph.client.admin.keyring` | Created by cephadm bootstrap |
+| OSD keyring path | `/var/lib/ceph/osd/ceph-<id>/keyring` | Per-OSD unique key |
+| MON keyring path | `/var/lib/ceph/mon/ceph-<host>/keyring` | Never copy to client hosts |
+| msgr2 default mode | `crc` (integrity only) | Change to `secure` for encryption |
+| Key algorithm | AES-128 / HMAC-SHA1 | Shared-secret symmetric key |
+
+## Keyring File Format
+
+Understanding the keyring file format helps when scripting key distribution.
+
+```ini
+# /etc/ceph/ceph.client.myapp.keyring
+[client.myapp]
+        key = AQBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxA==
+        caps mon = "allow r"
+        caps osd = "allow rw pool=myapp-pool"
+```
+
+```bash
+# Extract just the key value (for environment variables or scripts)
+ceph auth get-key client.myapp
+# Returns: AQBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxA==
+
+# Use in environment variable for containerised workloads
+export CEPH_KEY=$(ceph auth get-key client.myapp)
+```

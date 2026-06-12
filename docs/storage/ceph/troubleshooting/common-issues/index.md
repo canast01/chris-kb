@@ -1,7 +1,7 @@
 # Ceph — Common Issues
 
 <div class="kb-summary">
-Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and stuck, slow requests, nearfull/full cluster, clock skew, and recovery that won't complete.
+Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and stuck, slow requests, nearfull/full cluster, clock skew, MON quorum loss, and recovery that won't complete.
 </div>
 
 ```text
@@ -31,10 +31,33 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    classDef start fill:#2563eb,color:#fff
+    classDef check fill:#374151,color:#fff
+    classDef warn fill:#b45309,color:#fff
+    classDef err fill:#991b1b,color:#fff
+    classDef ok fill:#15803d,color:#fff
+
+    A([Start: ceph -s shows unhealthy]):::start --> B{Down OSDs?}:::check
+    B -- Yes --> C[Check OSD log\nsmartctl + journalctl]:::warn
+    C --> D([Restart OSD or\nreplace disk]):::warn
+    B -- No --> E{Inactive / stuck PGs?}:::check
+    E -- Yes --> F[ceph pg dump_stuck\nFind affected OSDs]:::err
+    F --> G([Bring OSD back up\nor replace]):::err
+    E -- No --> H{Nearfull or full?}:::check
+    H -- Yes --> I[ceph osd set nofull\nor delete/expand]:::err
+    H -- No --> J{MON quorum issues?}:::check
+    J -- Yes --> K([SSH to MON hosts\nrestart failed MONs]):::err
+    J -- No --> L{Slow ops?}:::check
+    L -- Yes --> M[ceph osd perf\niostat on OSD host]:::warn
+    L -- No --> N([Escalate to diagnostics/]):::ok
+```
+
 ## OSD Down
 
 ```bash
-# Identify down OSD
+# Identify down OSDs
 ceph health detail | grep OSD_DOWN
 ceph osd tree | grep down
 
@@ -60,103 +83,154 @@ dmesg | grep -i oom | tail -20
 ceph config set osd osd_memory_target 6G  # adjust per available RAM
 ```
 
-## PG Degraded / Stuck
+## HEALTH_ERR: OSD Full
+
+When the cluster hits the `full ratio` (default 95%), all writes are blocked including replication and recovery.
+
+```bash
+# Confirm full state
+ceph health detail | grep -E "OSD_FULL|FULL"
+ceph osd df | sort -k8 -rn | head -20  # find highest-utilisation OSDs
+
+# Immediate override — allows writes past 100% temporarily (DANGEROUS)
+# Only use to free space, then unset immediately
+ceph osd set nofull
+
+# Buy time by raising the full threshold
+ceph osd set-full-ratio 0.97          # temporary; reset after fix
+ceph osd set-nearfull-ratio 0.92
+
+# Find large objects contributing to usage
+rados df | sort -k2 -rn | head -20
+
+# Find large RBD images
+rbd ls rbd | while read img; do
+  SIZE=$(rbd info rbd/$img | grep disk_usage | awk '{print $2}')
+  echo "$SIZE $img"
+done | sort -h -r | head -20
+
+# Permanent fix options:
+# 1. Delete data or expired snapshots
+# 2. Add more OSDs (see Procedures)
+# 3. Increase pool min_size temporarily only in genuine emergency
+
+# After freeing space: unset override flags
+ceph osd unset nofull
+ceph osd set-full-ratio 0.95   # reset to default
+```
+
+## Slow Ops / High Latency
+
+```bash
+# Symptoms: HEALTH_WARN "X requests are blocked"
+ceph health detail | grep SLOW_OPS
+ceph osd perf | sort -k3 -rn | head -10  # sort by commit_latency; high value = disk issue
+
+# Check disk I/O on OSD host (await > 50 ms = disk saturated)
+iostat -dx 5 3 | grep -E "^sd|Device"
+
+# Test cluster network bandwidth (expect ≥ 10 Gbps on 10 GbE)
+iperf3 -c ceph-node2 -t 10 -P 4
+
+# Check BlueStore WAL/DB usage
+ceph daemon osd.5 perf dump | grep -E "wal|db|commit"
+
+# Temporarily disable scrubbing if it is contributing to latency
+ceph osd set noscrub
+ceph osd set nodeep-scrub
+# Re-enable after resolving: ceph osd unset noscrub
+
+# Limit recovery I/O to reduce impact on client ops
+ceph config set osd osd_max_backfills 1
+ceph config set osd osd_recovery_max_active_hdd 2
+
+# Check slow op details (shows which object and which client)
+ceph daemon osd.5 dump_ops_in_flight
+ceph daemon osd.5 dump_historic_ops
+```
+
+## PG Degraded / Undersized / Stuck
 
 ```bash
 # Check PG status
 ceph pg stat
-ceph pg dump_stuck   # all stuck PGs
+ceph pg dump_stuck                    # all stuck PGs
+ceph pg dump_stuck unclean | head -20  # identify PGs and their OSDs
 
 # PG states requiring action:
 # active+degraded   = Some replicas missing; cluster recovering; usually self-resolves
 # inactive          = No primary OSD; I/O blocked; urgent — check which OSD is down
 # stale             = Primary OSD hasn't reported in; check MON-OSD connectivity
 # incomplete        = Not enough OSDs to form a quorum for the PG; data at risk
+# active+undersized = Replica count below min_size (one or more OSDs down)
 
 # Find which OSDs are mapped to a specific PG
 ceph pg map 1.5a    # shows: osd.[primary] [osd.secondary, ...]
 
-# Force recovery on a specific PG
+# Force repair on a specific PG
 ceph pg repair 1.5a
 
-# If PG is stuck active+undersized (not enough OSDs to meet min_size):
-# Check if any OSDs are down and bring them back, OR
-# Temporarily reduce min_size (risky — only for emergency)
-# ceph osd pool set rbd min_size 1   # DANGEROUS — data loss risk; temporary only
-```
+# Identify which OSDs are down causing undersized PGs
+ceph osd tree | grep -E "down|out"
 
-## Slow Requests
+# If one OSD is permanently lost: reweight to 0 and let cluster rebalance
+ceph osd reweight osd.5 0
 
-```bash
-# Symptoms: HEALTH_WARN "X requests are blocked"
-ceph health detail | grep SLOW_OPS
-ceph osd perf | sort -k2 -n -r | head -10  # highest commit latency
-
-# Common causes:
-# 1. Disk I/O saturation on specific OSDs → check iostat on OSD nodes
-iostat -x 1 5 | grep -E "^sd|Device"
-
-# 2. Network congestion on cluster network → check throughput
-iperf3 -c ceph-node2 -t 10 -P 4   # between OSD nodes
-
-# 3. OSD journal/WAL full → check BlueStore WAL usage
-ceph daemon osd.5 perf dump | grep -i "wal\|db\|commit"
-
-# 4. Scrubbing causing latency → temporarily disable
-ceph osd set noscrub
-# Re-enable during maintenance: ceph osd unset noscrub
-
-# 5. Recovery consuming I/O bandwidth → limit recovery speed
-ceph config set osd osd_max_backfills 1
-ceph config set osd osd_recovery_max_active_hdd 2
-```
-
-## Nearfull / Full Cluster
-
-```bash
-# Check thresholds and current usage
-ceph df
-ceph health detail | grep -E "NEARFULL|FULL"
-
-# Default thresholds:
-# nearfull ratio: 0.85 (85%) → HEALTH_WARN
-# backfillfull ratio: 0.90 (90%) → stops backfill
-# full ratio: 0.95 (95%) → stops ALL writes
-
-# Emergency: increase full ratio temporarily (buy time)
-ceph osd set-full-ratio 0.97   # temporary only
-ceph osd set-nearfull-ratio 0.90
-
-# Permanent fix options:
-# 1. Add more nodes/OSDs
-# 2. Delete data or expired snapshots
-# 3. Move data to another pool/cluster
-
-# Find large RBD images consuming space
-rbd ls rbd | while read img; do
-    SIZE=$(rbd info rbd/$img | grep disk_usage | awk '{print $2}')
-    echo "$SIZE $img"
-done | sort -h -r | head -20
+# Emergency only: temporarily reduce min_size (DANGEROUS — data loss risk)
+# ceph osd pool set rbd min_size 1   # use only if you have no other option, unset immediately
 ```
 
 ## Clock Skew
 
 ```bash
-# Ceph MONs require clock sync within 0.05 seconds
-# Clock skew > 50ms triggers HEALTH_WARN; > 1s can cause MON election failures
-
+# MONs require clock sync within 0.05 s (50 ms); > 1 s can cause MON election failures
 ceph health detail | grep CLOCK_SKEW
+
+# Show per-MON skew values
+ceph time-sync-status
 
 # Check NTP on affected nodes
 chronyc tracking
 chronyc sources -v
 
-# Fix: ensure NTP is configured and syncing
+# Fix: restart chrony if drifted
 systemctl status chronyd
 systemctl restart chronyd
 
 # Check clock difference between MON nodes
 for host in $(ceph mon dump | awk '/^[0-9]/{print $3}' | cut -d: -f1); do
-    echo -n "$host: "; ssh $host date -u +%T
+  echo -n "$host: "; ssh $host date -u +%T
 done
+
+# Verify MON clock skew after fix
+ceph health detail | grep -E "CLOCK|TIME"
+```
+
+## MON Quorum Lost
+
+A MON quorum loss blocks all writes and most reads. Minimum 2 of 3 MONs (or 3 of 5) must be up.
+
+```bash
+# Symptoms: ceph -s hangs or returns Error ENOENT
+# All writes blocked
+
+# 1. SSH to each MON host and check daemon status
+systemctl status ceph-mon@<id>
+
+# 2. Restart failed MONs
+systemctl restart ceph-mon@<id>
+# Or via cephadm:
+ceph orch daemon restart mon.<hostname>
+
+# 3. Verify quorum restored
+ceph quorum_status
+# Output shows: "quorum_names" containing all expected MON hostnames
+
+# 4. If one MON host permanently failed:
+ceph mon rm <id>    # run from a healthy MON host
+# Then deploy a replacement MON:
+ceph orch apply mon --placement="host1,host2,host3-new"
+
+# 5. Check MON log for split-brain or election issues
+journalctl -u ceph-mon@<id> -n 200 | grep -E "election|quorum|paxos"
 ```

@@ -212,3 +212,44 @@ ceph config set global ms_bind_msgr1 false
 ceph config get mon ms_cluster_mode
 # Expected: secure
 ```
+
+## Encryption Deployment Checklist
+
+| Step | Check | Command |
+|---|---|---|
+| OSD encryption enabled at creation | `--data-encrypt` flag in OSD spec | `ceph orch ls --service-type osd -f yaml \| grep encrypted` |
+| LUKS key backup exists | dm-crypt keys exported to escrow | `ceph config-key dump \| grep dm-crypt` |
+| LUKS headers present on devices | `isLuks` check on OSD disks | `cryptsetup isLuks /dev/sdb` |
+| msgr2 secure mode active | All modes set to secure | `ceph config get mon ms_cluster_mode` |
+| msgr1 disabled | No legacy port binding | `ceph config get global ms_bind_msgr1` |
+| RGW HTTPS enforced | `rgw_crypt_require_ssl true` | `ceph config get client.rgw rgw_crypt_require_ssl` |
+| RGW SSE configured | Backend set for object encryption | `ceph config get client.rgw rgw_crypt_s3_kms_backend` |
+
+## Key Management Recommendations
+
+For clusters processing regulated data (PCI-DSS, HIPAA, FedRAMP):
+
+- **OSD keys**: back up MON KV store dm-crypt keys offline in addition to the cluster; loss of all MONs = unrecoverable OSD data.
+- **RGW SSE-KMS**: use HashiCorp Vault with HSM-backed keys; enable Vault audit logging for all key access events.
+- **Key rotation schedule**: rotate `client.admin` and service account keys quarterly; rotate RGW KMS KEK annually or after any suspected compromise.
+- **Backup encryption**: if backing up with Ceph snapshots, ensure backup destination also uses encryption at rest.
+
+```bash
+# Verify Vault connectivity for RGW SSE-KMS
+curl -s -H "X-Vault-Token: $(cat /etc/ceph/vault-token)" \
+  https://vault.example.com:8200/v1/sys/health | python3 -m json.tool | grep initialized
+
+# Check RGW encryption config
+ceph config get client.rgw rgw_crypt_vault_addr
+ceph config get client.rgw rgw_crypt_s3_kms_backend
+```
+
+## Performance Impact Reference
+
+| Encryption type | CPU overhead | Throughput impact | Notes |
+|---|---|---|---|
+| OSD dm-crypt (AES-NI) | ~1–3% | Negligible on modern CPUs | Always on once configured |
+| RBD image encrypt (LUKS2) | ~3–5% | Small; per-image overhead | Client CPU bears the cost |
+| RGW SSE-S3 | ~2–4% | Per-object encrypt/decrypt | CPU overhead on RGW nodes |
+| RGW SSE-KMS | ~2–4% + KMS latency | KMS RTT adds per-object latency | Keep KMS co-located |
+| msgr2 secure (AES-GCM) | ~5–10% | Most impactful on cluster network | Enable on cluster net first |

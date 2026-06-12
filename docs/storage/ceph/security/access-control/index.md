@@ -201,3 +201,51 @@ oc create secret generic ceph-app-keyring \
   --from-file=keyring=/etc/ceph/ceph.client.myapp.keyring \
   -n rook-ceph
 ```
+
+## Capability Audit
+
+Regularly audit which entities exist and what capabilities they hold. Remove unused entities; tighten capabilities that are wider than needed.
+
+```bash
+# Show all entities with capabilities (review for over-privileged accounts)
+ceph auth ls
+
+# Find any entity with allow * (should only be client.admin and bootstrap keys)
+ceph auth ls | grep -B1 "allow \*"
+
+# Export full auth state for offline review
+ceph auth export > /tmp/ceph-auth-audit-$(date +%F).txt
+
+# Check for entities with rw on all pools (should be pool-scoped)
+ceph auth ls | grep "allow rw$"   # flag: no pool restriction
+```
+
+## Access Control Checklist
+
+| Check | Expected state | Command |
+|---|---|---|
+| No app uses client.admin | client.admin absent from all app configs | `grep -r client.admin /etc/` |
+| All keyring files mode 600 | `-rw-------` on all keyring files | `ls -la /etc/ceph/*.keyring` |
+| Per-pool scoping | All app accounts have `pool=` in osd caps | `ceph auth ls \| grep osd` |
+| Unused entities removed | No orphaned service accounts | `ceph auth ls` |
+| Bootstrap keys restricted | No bootstrap key with `allow *` | `ceph auth get client.bootstrap-osd` |
+| Keyring rotation log | All rotations logged with date and owner | Maintain a rotation register |
+
+## Profile-Based Capabilities (Pre-Defined)
+
+Ceph ships with pre-defined capability profiles that bundle common permissions. Prefer profiles over raw capability strings to reduce misconfiguration risk.
+
+| Profile | Target service | What it grants |
+|---|---|---|
+| `profile rbd` | mon + osd | RBD client: pool access, class methods |
+| `profile rbd-read-only` | osd | RBD read-only access to a named pool |
+| `profile osd` | mon | OSD daemon identity (used by OSD daemons) |
+| `profile mds` | mon | MDS daemon identity |
+| `profile bootstrap-osd` | mon | Provision new OSD keyrings; limited scope |
+
+```bash
+# Use profile rbd for OpenStack Cinder/Nova/Glance
+ceph auth get-or-create client.cinder \
+  mon 'profile rbd' \
+  osd 'profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images'
+```
