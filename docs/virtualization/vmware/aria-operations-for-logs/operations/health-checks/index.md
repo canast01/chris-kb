@@ -113,3 +113,156 @@ grep -i "error\|drop\|fail" /var/log/loginsight/ingestion.log | tail -50
 # Check Cassandra storage health
 tail -100 /var/log/loginsight/cassandra/system.log | grep -i "error\|warn"
 ```
+
+---
+
+## Cluster Node Health
+
+```bash
+# SSH to vRLI master node
+ssh root@<vrli-master-fqdn>
+
+# Show cluster config: mode, master/worker roles, VIP, node count
+/usr/lib/loginsight/application/bin/loginsight-cli config
+
+# Confirm keepalived VIP is active on the master (HA deployments)
+ip addr show | grep <vrli-vip>
+
+# Verify cluster node states via API
+curl -sk -u 'admin:<password>' \
+  "https://<vrli-master-fqdn>/api/v2/cluster/nodes" | \
+  jq '.nodes[] | {host: .hostname, role: .role, state: .state}'
+# All nodes must return state: "ACTIVE"
+```
+
+vRLI UI: **Administration → Cluster** — verify all nodes show **Status: Connected**. Any node in **Disconnected** or **Degraded** state must be investigated before the next change window.
+
+---
+
+## Ingestion Rate and Backpressure
+
+vRLI UI → **Administration** → **Cluster** → check **Events Per Second** counter per node.
+
+- Healthy sustained rate: **< 15,000 EPS per node**
+- A sudden drop to 0 EPS indicates sources stopped sending or a network path is down
+- Sustained rate > 15,000 EPS per node: add a worker node to distribute load
+
+**Detect UDP drop on the vRLI appliance:**
+```bash
+# SSH to vRLI master or affected worker
+netstat -s | grep -i "receive buffer errors\|packets received\|errors"
+# Non-zero "receive buffer errors" indicates the kernel is dropping inbound UDP
+
+# Check disk I/O saturation (ingest > write capacity causes in-memory buffering then drops)
+iostat -dx 5 3
+# await > 20ms on the /storage device warrants investigation
+```
+
+If backpressure is confirmed: syslog senders receive TCP RST (TCP) or silent UDP drop. Reduce ingest rate by filtering at source, adding worker nodes, or temporarily reducing retention to free disk I/O.
+
+---
+
+## Disk Usage and Retention
+
+```bash
+# SSH to vRLI master
+df -h /storage/var/loginsight
+# Alert threshold: > 75% used — trigger manual archive or reduce retention period
+# Data is partitioned per node at:
+# /storage/var/loginsight/loginsight-<node-id>/
+
+# Check all storage mounts
+df -h | grep storage
+```
+
+vRLI UI → **Administration** → **General** → **Storage** — shows current **Retention Period (days)** and **Disk Usage** per partition.
+
+Actions when disk > 75%:
+1. Trigger immediate archive: **Administration → Archive → Archive Now**
+2. Reduce retention: **Administration → General → Storage → Log Retention Period** → lower by 5-day increments and monitor reclaim
+3. If disk > 90%: vRLI begins dropping inbound events — treat as P1
+
+---
+
+## Certificate Expiry Check
+
+Run monthly or integrate with a certificate monitoring tool.
+
+```bash
+# Check vRLI API/cluster certificate (port 9543 = VAMI, port 9000 = API)
+echo | openssl s_client -connect $(hostname):9543 2>/dev/null \
+  | openssl x509 -noout -dates
+# notAfter= must be > 60 days from today
+
+# Check UI certificate (port 443)
+echo | openssl s_client -connect $(hostname):443 2>/dev/null \
+  | openssl x509 -noout -dates
+
+# Check encrypted syslog certificate (port 1514)
+echo | openssl s_client -connect $(hostname):1514 2>/dev/null \
+  | openssl x509 -noout -dates
+
+# One-liner to show days remaining on UI cert
+echo | openssl s_client -connect $(hostname):443 2>/dev/null \
+  | openssl x509 -noout -enddate \
+  | awk -F= '{print $2}' \
+  | xargs -I{} date -d "{}" +%s \
+  | xargs -I{} bash -c 'echo $(( ({} - $(date +%s)) / 86400 )) days remaining'
+```
+
+If expiry < 60 days: follow the **Rotate the vRLI Certificate** procedure. Certificate expiry on port 1514 silently breaks encrypted syslog sources without UI warning.
+
+---
+
+## Log Source Activity Check
+
+Verify all expected sources are actively sending logs — a silent source is often the first sign of a network or agent failure.
+
+**vSphere integration sources:**
+- vRLI UI → **Administration** → **Agents** → verify each vSphere Integration source shows **Last Received** within the expected interval (ESXi hosts: ≤ 5 minutes; vCenter: ≤ 1 minute)
+
+**Syslog sources:**
+```bash
+# Filter in Explore Logs by source hostname and check most recent event timestamp
+# Query bar:
+hostname = <source-fqdn>
+# Sort by time descending — most recent event should be within the normal log interval
+```
+
+**Silent source alert rule (create once, run as ongoing alert):**
+- Build a query: `hostname = <critical-source>` with time range = last 15 minutes
+- Create alert: **count < 1 in 15-minute window** → fires when no events received
+- Apply to all critical syslog sources: NSX Manager nodes, SDDC Manager, vCenter
+
+If a critical syslog source (NSX Manager, SDDC Manager) shows no events > 15 minutes:
+1. Confirm syslog config on the source device is intact
+2. Confirm network path: `nc -zv <vrli-vip> 514` from the source host
+3. Check vRLI ingestion.log for connection errors from that source IP
+
+---
+
+## Alert Pipeline Health
+
+Verify the full notification chain — query → alert firing → delivery — is functional.
+
+**Check for stale firing alerts:**
+- vRLI UI → **Alerts** → **User Alerts** → sort by **Last Fired** — any alert stuck in "Firing" for > 48 hours without a notification delivery record indicates a broken notification channel
+
+**Test SMTP delivery:**
+1. **Administration** → **General** → **SMTP** → **Send Test Email**
+2. Verify email arrives at the configured recipient within 2 minutes
+3. If not received: check SMTP relay logs for bounce/reject and confirm port 25/587 is open from vRLI outbound
+
+**Test webhook delivery:**
+```bash
+# Trigger test from UI
+# Administration → General → Webhooks → select channel → Send Test
+
+# Or via API
+curl -sk -X POST -u admin:<password> \
+  "https://<vrli-fqdn>/api/v1/notification/channels/<channel-id>/test"
+# Confirm HTTP 200 response and verify the external endpoint received the payload
+```
+
+**Check alert history for gaps:**
+- vRLI UI → **Alerts** → select an alert → **Alert History** → confirm expected firing events appear; a gap > 2× the alert evaluation window indicates the alert evaluation engine may have restarted
