@@ -3994,6 +3994,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#environment-deployment-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Deployment Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Health Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-usage-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Usage Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Health
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4370,6 +4425,102 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ls<span class="w"> </span>-lth<span class="w"> </span>/var/log/vmware/vrlcm/upgrade/
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/vrlcm/upgrade/&lt;latest-upgrade-log&gt;
 </code></pre></div>
+<hr />
+<h2 id="environment-deployment-health">Environment Deployment Health<a class="headerlink" href="#environment-deployment-health" title="Permanent link">&para;</a></h2>
+<p>Check managed product service health via LCM UI and logs.</p>
+<p><strong>Product status check (UI):</strong>
+Navigate to <strong>Environments → select environment → Products</strong> — the Status column should show green / Available for every product. Any product showing yellow (Warning) or red (Error) requires investigation before any change window.</p>
+<p><strong>Task queue check:</strong>
+Navigate to <strong>LCM → Lifecycle Operations → Requests → Active Requests</strong> — if any task has been in RUNNING state for more than 30 minutes without progress, it is likely stuck. Collect the request ID and check the LCM application log:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Tail LCM log and filter for a specific request ID</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tail<span class="w"> </span>-500<span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;&lt;request-id&gt;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check for generic workflow errors in the last 200 lines</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tail<span class="w"> </span>-200<span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ERROR\|WARN\|exception&quot;</span>
+</code></pre></div>
+<p>Common causes of stuck tasks: expired certificates mid-workflow, vCenter connectivity loss, NFS mount dropped, or a product VM that lost its management IP.</p>
+<p><strong>LCM service log</strong> — primary location: <code>/var/log/vmware/lcm/lcm.log</code> on the LCM appliance. Tail this file for real-time ERROR entries during any active operation.</p>
+<hr />
+<h2 id="certificate-expiry-check">Certificate Expiry Check<a class="headerlink" href="#certificate-expiry-check" title="Permanent link">&para;</a></h2>
+<p>Run weekly. Alert on any certificate expiring within 60 days; critical below 30 days.</p>
+<p><strong>UI check:</strong>
+LCM → <strong>Locker → Certificates</strong> — review the Expiry Date column. Sort ascending to surface the nearest expiries first.</p>
+<p><strong>CLI check — LCM appliance cert (SSH to LCM):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>localhost:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-servername<span class="w"> </span><span class="k">$(</span>hostname<span class="w"> </span>-f<span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># notAfter= line shows expiry; calculate days remaining manually or with:</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>localhost:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-servername<span class="w"> </span><span class="k">$(</span>hostname<span class="w"> </span>-f<span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-checkend<span class="w"> </span><span class="m">5184000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: &gt;60 days&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARN: &lt;60 days&quot;</span>
+</code></pre></div>
+<p><strong>CLI check — each managed product (run from any host with network access):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Replace &lt;product-fqdn&gt; with the product&#39;s FQDN (e.g., vrops-prod-01.example.local)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;product-fqdn&gt;:443<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-servername<span class="w"> </span>&lt;product-fqdn&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Batch check for multiple products</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">for</span><span class="w"> </span>fqdn<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrops-prod-01.example.local<span class="w"> </span>vra-prod-01.example.local<span class="w"> </span>vidm-prod-01.example.local<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nv">expiry</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="si">${</span><span class="nv">fqdn</span><span class="si">}</span>:443<span class="w"> </span>-servername<span class="w"> </span><span class="si">${</span><span class="nv">fqdn</span><span class="si">}</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">fqdn</span><span class="si">}</span><span class="s2">: </span><span class="si">${</span><span class="nv">expiry</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">done</span>
+</code></pre></div>
+<p>Renew any certificate expiring within 60 days using the procedure in the Procedures page (Request and Install Product Certificates via LCM).</p>
+<hr />
+<h2 id="backup-health-check">Backup Health Check<a class="headerlink" href="#backup-health-check" title="Permanent link">&para;</a></h2>
+<p>Run daily (automated) and manually before any major change.</p>
+<p><strong>UI check:</strong>
+Navigate to <strong>Settings → Backup and Restore</strong> — confirm the <strong>Last Successful Backup</strong> timestamp. Alert if the last successful backup is more than 24 hours old.</p>
+<p><strong>Target verification (SSH to backup target):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SFTP/NFS target — verify backup file exists and is recent</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/backup/lcm-backup-*
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Most recent file should be timestamped within the last 24 hours</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check file size — a valid LCM backup is typically 50 MB–2 GB depending on Locker content</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>du<span class="w"> </span>-sh<span class="w"> </span>/backup/lcm-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>*
+</code></pre></div>
+<p>If no backup file exists for today: check LCM → Settings → Backup and Restore → review error messages; common causes are SFTP credential expiry, NFS connectivity loss, or insufficient disk space on the target.</p>
+<hr />
+<h2 id="disk-usage-check">Disk Usage Check<a class="headerlink" href="#disk-usage-check" title="Permanent link">&para;</a></h2>
+<p>LCM accumulates product binaries, upgrade logs, and temp files. Monitor weekly; clean proactively.</p>
+<p><strong>SSH to LCM appliance:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>df<span class="w"> </span>-h
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Key partitions to check:</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># /                     — root; keep &lt; 75% used</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># /dev/mapper/data      — LCM data volume; keep &lt; 80% used</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># /data/lcm             — product binaries and working files; largest consumer</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Show top disk consumers under /data</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>du<span class="w"> </span>-sh<span class="w"> </span>/data/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
+<p><strong>Clean unused binaries (UI):</strong>
+Navigate to <strong>Locker → Binary Mappings</strong> — identify product versions that are no longer needed (older than two versions back from current). Select the binary mapping and click <strong>Delete</strong> — this removes the binary from <code>/data/</code> and frees disk space.</p>
+<p>Failed upgrade cleanup: if an upgrade failed mid-process, temp files may remain in <code>/data/lcm/upgrade/</code>. Review and delete directories older than 7 days:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>find<span class="w"> </span>/data/lcm/upgrade/<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-exec<span class="w"> </span>ls<span class="w"> </span>-lhd<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># If confirmed safe to remove:</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># find /data/lcm/upgrade/ -maxdepth 1 -type d -mtime +7 -exec rm -rf {} \;</span>
+</code></pre></div>
+<hr />
+<h2 id="integration-health">Integration Health<a class="headerlink" href="#integration-health" title="Permanent link">&para;</a></h2>
+<p>Verify all external system connections LCM depends on.</p>
+<p><strong>vCenter connectivity:</strong>
+Navigate to <strong>LCM → Settings → vCenter Servers</strong> (or <strong>Lifecycle Operations → Data Centers</strong>) — each registered vCenter should show as <strong>Connected</strong>. If a vCenter shows Disconnected:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From LCM appliance — verify network reachability</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vcenter-fqdn&gt;/rest/com/vmware/cis/session<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;svc-lcm@vsphere.local:&lt;password&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Expect a session ID in the response; 401 = credential issue; timeout = network issue</span>
+</code></pre></div>
+<p><strong>VIDM (Workspace ONE Access) connectivity:</strong>
+Navigate to <strong>LCM → Settings → VIDM</strong> — click <strong>Test Connection</strong>. A successful test returns a green indicator; failure means either the VIDM service is down or the LCM-to-VIDM network path is blocked (TCP 443).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># From LCM appliance — test VIDM reachability</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vidm-fqdn&gt;/SAAS/API/1.0/REST/system/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Expect {&quot;allOk&quot;:true} or equivalent health indicator</span>
+</code></pre></div>
+<p><strong>Depot connectivity (online depot):</strong>
+Navigate to <strong>LCM → Settings → My VMware / Broadcom Support Portal</strong> — verify the depot status shows as Connected. If offline: check proxy settings under <strong>Settings → Proxy</strong> and verify outbound HTTPS to <code>depot.vmware.com</code> is permitted by the firewall.</p>
 
 
 

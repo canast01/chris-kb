@@ -4060,6 +4060,94 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#upgrade-the-aria-suite-lifecycle-appliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade the Aria Suite Lifecycle Appliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-custom-ssl-certificates-for-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Custom SSL Certificates for LCM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-and-install-product-certificates-via-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request and Install Product Certificates via LCM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-global-environment-multi-vcenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Global Environment (Multi-vCenter)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-lcm-backup-file-based" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure LCM Backup (File-Based)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-environment-compliance-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Environment Compliance Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-lcm-from-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore LCM from Backup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-ha-for-lcm-active-passive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure HA for LCM (Active-Passive)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4442,6 +4530,116 @@ Provide:
 <li>LCM powers off and deletes product VMs from the linked vCenter</li>
 <li>Verify in vCenter that all product VMs are deleted and datastores freed</li>
 <li>Clean up: remove DNS records, IP reservations from IPAM, and firewall rules for the decommissioned environment</li>
+</ol>
+<hr />
+<h2 id="upgrade-the-aria-suite-lifecycle-appliance">Upgrade the Aria Suite Lifecycle Appliance<a class="headerlink" href="#upgrade-the-aria-suite-lifecycle-appliance" title="Permanent link">&para;</a></h2>
+<p>Prerequisites: take a snapshot of the LCM VM before starting; verify the target version is supported in the Broadcom compatibility matrix at <code>https://interopmatrix.broadcom.com</code>.</p>
+<ol>
+<li>Log in to the LCM UI as <code>admin@local</code></li>
+<li>Navigate to <strong>Settings → Lifecycle Management</strong></li>
+<li>Click <strong>Check for Updates</strong> — LCM queries the depot for available appliance updates</li>
+<li>Select the target update and click <strong>Download</strong> — wait for the download to complete (progress shown in <strong>Tasks</strong>)</li>
+<li>Click <strong>Apply Update</strong> — the appliance will restart; the UI will be unavailable for 5–15 minutes</li>
+<li>Monitor upgrade progress via <strong>Settings → Lifecycle Management → Tasks</strong></li>
+<li>After restart, log back in and navigate to <strong>Settings → About</strong> — confirm the new version is displayed</li>
+<li>Verify all managed environments: <strong>Lifecycle Operations → Environments</strong> — all product cards should return to green within 5 minutes of LCM restart</li>
+</ol>
+<p>Rollback: if the update fails, revert to the pre-upgrade snapshot from vCenter and raise a Broadcom support case with the upgrade log from <code>/var/log/vmware/vrlcm/lcm-install.log</code>.</p>
+<hr />
+<h2 id="configure-custom-ssl-certificates-for-lcm">Configure Custom SSL Certificates for LCM<a class="headerlink" href="#configure-custom-ssl-certificates-for-lcm" title="Permanent link">&para;</a></h2>
+<p>Changing the LCM appliance certificate affects all browser sessions and all managed-product trust anchors. Plan a maintenance window and notify all users.</p>
+<ol>
+<li>Generate a CSR: <strong>Settings → Certificate Management → Generate CSR</strong> — provide the LCM FQDN as the Common Name; add SANs for any additional hostnames or IPs</li>
+<li>Download the CSR and submit to your internal CA; obtain a signed certificate in PEM format</li>
+<li>Import the signed cert: <strong>Settings → Certificate Management → Import Certificate</strong> — paste the signed cert, intermediate chain, and private key into the respective fields</li>
+<li>Apply the certificate — LCM restarts the web service; verify the browser shows the new cert via the padlock icon</li>
+<li>After cert replacement: all managed Aria products lose trust with LCM; navigate to each product's trust configuration and re-import the new LCM certificate or re-register the products via LCM</li>
+<li>Test authentication flows (VIDM SSO, vCenter connectivity) after the cert change is complete</li>
+</ol>
+<hr />
+<h2 id="request-and-install-product-certificates-via-lcm">Request and Install Product Certificates via LCM<a class="headerlink" href="#request-and-install-product-certificates-via-lcm" title="Permanent link">&para;</a></h2>
+<p>LCM can push CA-signed certificates to managed Aria products, replacing self-signed certificates issued at deployment.</p>
+<ol>
+<li>Add your CA certificate to the LCM Locker: <strong>Locker → Certificates → Import</strong> — import the CA root and intermediate chain; give it a descriptive alias (e.g., <code>internal-ca-2026</code>)</li>
+<li>Navigate to <strong>Lifecycle Operations → Environments</strong> → select the target environment</li>
+<li>On the product card, click <strong>Request Certificate</strong> → select the CA alias from the Locker → fill in the certificate template (SAN entries, validity period) → click <strong>Submit</strong></li>
+<li>LCM generates the CSR, submits it to the CA, retrieves the signed certificate, and pushes it to all product nodes</li>
+<li>Monitor via <strong>Lifecycle Operations → Requests</strong> — each node cert push is a separate subtask</li>
+<li>For products that require a service restart after cert installation (Aria Automation, Aria Operations for Networks): LCM will prompt to restart; confirm to complete the push</li>
+<li>Validate by opening the product URL in a browser and inspecting the certificate — subject and SAN should match the requested values</li>
+</ol>
+<hr />
+<h2 id="add-a-global-environment-multi-vcenter">Add a Global Environment (Multi-vCenter)<a class="headerlink" href="#add-a-global-environment-multi-vcenter" title="Permanent link">&para;</a></h2>
+<p>A Global Environment in LCM spans multiple vCenter deployments, enabling a single LCM instance to manage Aria products across sites.</p>
+<ol>
+<li>Navigate to <strong>Lifecycle Operations → Environments → New Environment</strong></li>
+<li>Set environment type to <strong>Global</strong></li>
+<li>Add vCenter registrations for each site: for each vCenter provide the FQDN, service account credentials, and accept the SSL thumbprint — LCM stores credentials in the Locker automatically</li>
+<li>Configure cross-site networking: ensure the LCM appliance has routable connectivity to management networks in each site (firewall rules: TCP 443 and TCP 22 from LCM to each vCenter and ESXi management)</li>
+<li>Deploy products to site-specific vCenters by selecting the target vCenter during the product wizard; product VMs are deployed locally at each site</li>
+<li>Verify global environment health: <strong>Lifecycle Operations → Environments → select the global environment</strong> — each site's vCenter should show as Connected and each deployed product should show green</li>
+<li>If a site vCenter shows Disconnected: re-validate credentials via <strong>Settings → vCenter Servers → select vCenter → Test Connection</strong></li>
+</ol>
+<hr />
+<h2 id="configure-lcm-backup-file-based">Configure LCM Backup (File-Based)<a class="headerlink" href="#configure-lcm-backup-file-based" title="Permanent link">&para;</a></h2>
+<p>LCM supports scheduled file-based backups to SFTP or NFS. The backup captures the LCM database, Locker contents, and configuration.</p>
+<ol>
+<li>Navigate to <strong>Settings → Backup and Restore → File Based Backup</strong></li>
+<li>Enable the backup toggle</li>
+<li>Configure the destination:</li>
+<li><strong>SFTP</strong>: provide hostname, port (default 22), remote path, username, and password</li>
+<li><strong>NFS</strong>: provide the NFS server and export path (LCM mounts it automatically)</li>
+<li>Set a schedule — daily at a low-activity time (e.g., 02:00); set retention to 7 days minimum</li>
+<li>Click <strong>Backup Now</strong> to trigger an immediate test backup</li>
+<li>After the backup completes, SSH to the backup target and verify the file exists:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/backup/lcm-backup-*
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Expect a file timestamped within the last few minutes</span>
+</code></pre></div></li>
+<li>Confirm the backup size is non-zero and the filename includes the LCM version and timestamp</li>
+</ol>
+<hr />
+<h2 id="run-environment-compliance-check">Run Environment Compliance Check<a class="headerlink" href="#run-environment-compliance-check" title="Permanent link">&para;</a></h2>
+<p>Compliance checks detect version drift — managed products that have diverged from the LCM-tracked baseline, typically due to manual upgrades or patches applied outside LCM.</p>
+<ol>
+<li>Navigate to <strong>Lifecycle Operations → Environments</strong> → select the target environment</li>
+<li>Click <strong>Compliance → Run Compliance Check</strong></li>
+<li>LCM compares the installed version of each product against the versions recorded in its database and against the latest available in the Locker</li>
+<li>Review the compliance report:</li>
+<li><strong>Compliant</strong>: product version matches LCM baseline — no action required</li>
+<li><strong>Non-Compliant</strong>: version mismatch detected — product was upgraded outside LCM or LCM baseline is stale</li>
+<li><strong>Unknown</strong>: LCM cannot reach the product to determine version — investigate connectivity</li>
+<li>Remediate non-compliant products: if the product is ahead of LCM's record, update the LCM inventory entry; if behind, initiate an upgrade via LCM</li>
+<li>Schedule compliance checks monthly or after any change freeze ends</li>
+</ol>
+<hr />
+<h2 id="restore-lcm-from-backup">Restore LCM from Backup<a class="headerlink" href="#restore-lcm-from-backup" title="Permanent link">&para;</a></h2>
+<p>Use this procedure when the LCM appliance is unrecoverable and no snapshot is available.</p>
+<ol>
+<li>Deploy a fresh LCM OVA from the Broadcom portal — use the same version as the backup was taken from (version mismatch will cause restore failure)</li>
+<li>Assign the same IP address and FQDN as the original LCM appliance; update DNS if needed</li>
+<li>Complete initial setup (set admin password, accept EULA) — do not configure any environments or vCenters at this stage</li>
+<li>Log in to the restored LCM UI → navigate to <strong>Settings → Backup and Restore → Restore</strong></li>
+<li>Specify the backup location (SFTP or NFS) and credentials matching the backup destination</li>
+<li>Select the target backup file and click <strong>Restore</strong> — LCM will restart multiple times during the restore process; this may take 20–40 minutes</li>
+<li>After restore completes, log in and verify the environment inventory is repopulated: <strong>Lifecycle Operations → Environments</strong> — all environments and products should be visible</li>
+<li>Run a health check against each environment: <strong>Environments → select env → Health Check</strong> — resolve any connectivity issues caused by IP or certificate changes during the rebuild</li>
+</ol>
+<hr />
+<h2 id="configure-ha-for-lcm-active-passive">Configure HA for LCM (Active-Passive)<a class="headerlink" href="#configure-ha-for-lcm-active-passive" title="Permanent link">&para;</a></h2>
+<p>LCM does not include built-in clustering. HA is achieved using vSphere HA for automatic restart and a standby clone with a documented manual failover procedure.</p>
+<ol>
+<li>Take a snapshot of the active LCM VM (label: <code>lcm-ha-standby-base</code>)</li>
+<li>Clone the LCM VM to a standby VM on a different ESXi host or cluster; keep the standby VM powered off</li>
+<li>Configure vSphere HA on the cluster hosting the active LCM VM — this covers automatic restart on host failure (RTO: 3–5 minutes)</li>
+<li>For faster RTO with a VIP: configure a load-balancer VIP (F5 or NSX ALB) pointing to the active LCM IP; update DNS to resolve the LCM FQDN to the VIP</li>
+<li>Document the manual failover procedure:</li>
+<li>Power off the active LCM VM (or confirm it is already down)</li>
+<li>Power on the standby clone</li>
+<li>If using DNS (no VIP): update the A record for the LCM FQDN to point to the standby IP; wait for TTL to propagate</li>
+<li>If using VIP: update the VIP pool member to point to the standby IP</li>
+<li>Verify LCM UI is accessible at the FQDN</li>
+<li>Run environment health checks to confirm all managed products reconnect</li>
+<li>Test failover in a maintenance window every 6 months; resync the standby clone from a fresh snapshot of the active LCM after each test</li>
 </ol>
 
 

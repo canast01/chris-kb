@@ -4072,6 +4072,94 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#add-an-nsx-syslog-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add an NSX Syslog Source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-event-forwarding-to-siem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Event Forwarding to SIEM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-custom-extracted-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Custom Extracted Field
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-role-based-access-user-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Role-Based Access (User Management)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-high-availability-cluster-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure High Availability (Cluster Mode)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-vrli-via-aria-suite-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade vRLI via Aria Suite Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-custom-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a Custom Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#back-up-and-restore-vrli-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Back Up and Restore vRLI Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-search-queries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4473,24 +4561,193 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 </code></pre></div>
 <p>After configuration, alerts in vRLI that match the integration criteria create corresponding events in Aria Operations, visible in the <strong>Workbench</strong> and alert timeline.</p>
 <hr />
-<h2 id="common-search-queries">Common Search Queries<a class="headerlink" href="#common-search-queries" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Host disconnect events</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;hostd&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;disconnected&quot;</span>
+<h2 id="add-an-nsx-syslog-source">Add an NSX Syslog Source<a class="headerlink" href="#add-an-nsx-syslog-source" title="Permanent link">&para;</a></h2>
+<p>Configure each NSX Manager and Edge node to forward syslog to the vRLI VIP or master IP.</p>
+<ol>
+<li>NSX Manager UI → <strong>System</strong> → <strong>Fabric</strong> → <strong>Nodes</strong> → <strong>NSX Managers</strong> tab</li>
+<li>Select an NSX Manager node → <strong>Actions</strong> → <strong>Set Syslog Servers</strong></li>
+<li>Click <strong>Add</strong> → enter:</li>
+<li><strong>Server</strong>: vRLI VIP (cluster mode) or master node IP</li>
+<li><strong>Port</strong>: <code>514</code></li>
+<li><strong>Protocol</strong>: <code>UDP</code></li>
+<li><strong>Log Level</strong>: <code>INFO</code></li>
+<li>Click <strong>Save</strong> → repeat for every NSX Manager node and every Edge node (Edge nodes: <strong>System → Fabric → Nodes → Edge Transport Nodes → select node → Actions → Set Syslog Servers</strong>)</li>
+<li>Verify: vRLI → <strong>Dashboards</strong> → <strong>Content Packs</strong> → <strong>VMware NSX-T</strong> → check "Last Received" timestamp on key widgets (Firewall Events, DFW Drops); events should appear within 60 seconds of syslog config save</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm NSX is reaching vRLI — run on vRLI master</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;nsx\|tnc\|edge&quot;</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># vMotion failures</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;vmotion&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpxd&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># HA events</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;HA failover&quot;</span><span class="w"> </span>OR<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;HA heartbeat&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># vSAN component errors</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;LSOM&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">loglevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ERROR
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># NSX DFW drops</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DENY&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;nsx&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DROP&quot;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Failed logins (SSH brute force detection)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span>AND<span class="w"> </span>hostname<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;prod-&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Quick EPS check from NSX source in vRLI Explore:</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># hostname contains &quot;nsx&quot; AND _source = syslog</span>
+</code></pre></div>
+<hr />
+<h2 id="configure-event-forwarding-to-siem">Configure Event Forwarding to SIEM<a class="headerlink" href="#configure-event-forwarding-to-siem" title="Permanent link">&para;</a></h2>
+<p>Forward filtered vRLI events to an external SIEM (Splunk, QRadar, ArcSight) via syslog.</p>
+<ol>
+<li>vRLI UI → <strong>Administration</strong> → <strong>General</strong> → <strong>Forwarding</strong> → <strong>Add Destination</strong></li>
+<li>Set <strong>Destination Type</strong>: <code>Syslog</code></li>
+<li>Enter SIEM <strong>Host</strong> and <strong>Port</strong> (default Splunk syslog: TCP 1514; QRadar: UDP 514)</li>
+<li>Set <strong>Protocol</strong>: <code>TCP</code> (preferred — prevents UDP loss on high-volume bursts)</li>
+<li>Optional — restrict forwarding to matching events only:</li>
+<li>Toggle <strong>Filter by Query</strong> → enter or select a saved query (e.g., <code>loglevel = ERROR AND appname = vpxd</code>)</li>
+<li>Toggle <strong>Enable</strong> → click <strong>Save</strong></li>
+<li>Verify: generate a matching event on the source system; confirm receipt in the SIEM raw event viewer within 30 seconds</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test TCP reachability to SIEM from vRLI appliance</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;siem-host&gt;<span class="w"> </span>&lt;siem-port&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Monitor forwarding errors</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;forward\|destination\|connect&quot;</span><span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+</code></pre></div>
+<hr />
+<h2 id="create-a-custom-extracted-field">Create a Custom Extracted Field<a class="headerlink" href="#create-a-custom-extracted-field" title="Permanent link">&para;</a></h2>
+<p>Extract structured field values from unstructured log text using regex, enabling filter-by-field queries.</p>
+<ol>
+<li>vRLI → <strong>Explore Logs</strong> → run a query returning the log events that contain the value to extract</li>
+<li>Click any log entry to expand it → locate the value to capture</li>
+<li>Click <strong>Extract Field</strong> next to the value → the field extraction dialog opens</li>
+<li>Enter a <strong>Field Name</strong> (lowercase, no spaces; e.g., <code>vm_name</code>)</li>
+<li>Write a regex with a named capture group matching the value:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>   vm\s+&#39;(?P&lt;vm_name&gt;[^&#39;]+)&#39;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>   ```
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>6. Click **Test** — verify the capture group matches across the sample events shown
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>7. Click **Save** → the field is registered globally and applies to all new incoming events
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Use the extracted field in queries:
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>```text
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>vm_name = prod-web-01
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>vm_name contains &quot;db-&quot;
+</code></pre></div>
+The field appears in the filter suggestion dropdown after the first event containing it is indexed.</li>
+</ol>
+<hr />
+<h2 id="configure-role-based-access-user-management">Configure Role-Based Access (User Management)<a class="headerlink" href="#configure-role-based-access-user-management" title="Permanent link">&para;</a></h2>
+<p>vRLI supports four roles: <strong>Viewer</strong> (read-only dashboards), <strong>User</strong> (explore + alerts), <strong>Admin</strong> (full config), <strong>Super Admin</strong> (multi-tenant admin). LDAP/AD group sync avoids per-user provisioning.</p>
+<p><strong>Add a local user:</strong>
+1. vRLI → <strong>Administration</strong> → <strong>Access Control</strong> → <strong>Users</strong> → <strong>Add User</strong>
+2. Enter username, email address, and assign role (Viewer / User / Admin / Super Admin)
+3. Click <strong>Save</strong> → user receives a password-set email if SMTP is configured</p>
+<p><strong>Configure LDAP/AD integration:</strong>
+1. vRLI → <strong>Administration</strong> → <strong>Access Control</strong> → <strong>Authentication</strong> → <strong>LDAP</strong>
+2. Enter:
+   - <strong>Domain</strong>: <code>corp.local</code>
+   - <strong>Connection</strong>: <code>ldap://&lt;dc-fqdn&gt;:389</code> or <code>ldaps://&lt;dc-fqdn&gt;:636</code>
+   - <strong>Bind DN</strong>: <code>CN=svc-vrli,OU=Service Accounts,DC=corp,DC=local</code>
+   - <strong>Bind Password</strong>: service account password
+   - <strong>User Base DN</strong>: <code>OU=Users,DC=corp,DC=local</code>
+   - <strong>Group Base DN</strong>: <code>OU=Groups,DC=corp,DC=local</code>
+3. Click <strong>Test Connection</strong> → confirm green
+4. Click <strong>Import Groups</strong> → search for the AD group → select → assign role
+5. Verify: log in as a member of the imported group; confirm the assigned role is enforced (e.g., Viewer cannot access Administration menu)</p>
+<hr />
+<h2 id="configure-high-availability-cluster-mode">Configure High Availability (Cluster Mode)<a class="headerlink" href="#configure-high-availability-cluster-mode" title="Permanent link">&para;</a></h2>
+<p>vRLI HA requires a minimum of 3 nodes (1 master + 2 workers). Workers must already be joined to the cluster (see <strong>Add a Worker Node</strong> above). HA adds a Virtual IP that survives master node failure.</p>
+<ol>
+<li>vRLI → <strong>Administration</strong> → <strong>Cluster</strong> → <strong>Enable High Availability</strong></li>
+<li>Enter the <strong>Virtual IP</strong> (VIP) — a free IP on the same management network segment as the vRLI nodes; must be reserved in IPAM/DNS</li>
+<li>Click <strong>Save</strong> — vRLI configures keepalived across all cluster nodes</li>
+<li>After HA is enabled, update all log sources and SIEM forwarders to point to the VIP:</li>
+<li>Syslog: UDP/TCP port 514 → VIP</li>
+<li>Encrypted syslog: TCP port 1514 → VIP</li>
+<li>vRLI API: HTTPS port 9000 → VIP</li>
+<li>UI: HTTPS port 443 → VIP</li>
+<li>Verify VIP is active:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From a management host — confirm VIP is responding on syslog and API ports</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;vrli-vip&gt;<span class="w"> </span><span class="m">514</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://&lt;vrli-vip&gt;:9000/api/v1/version<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.version
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># On vRLI master — confirm keepalived is holding the VIP</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vrli-vip&gt;
+</code></pre></div>
+<ol>
+<li>Test HA failover: power off the master VM → confirm VIP moves to a worker (now promoted master) within ~30 seconds</li>
+</ol>
+<hr />
+<h2 id="upgrade-vrli-via-aria-suite-lifecycle">Upgrade vRLI via Aria Suite Lifecycle<a class="headerlink" href="#upgrade-vrli-via-aria-suite-lifecycle" title="Permanent link">&para;</a></h2>
+<p>Preferred upgrade path for LCM-managed deployments. LCM orchestrates node-by-node upgrade with rollback support.</p>
+<p><strong>Pre-upgrade checks:</strong>
+1. Snapshot all vRLI nodes (master + all workers) — label with date and current vRLI version
+2. Verify LCM has downloaded the upgrade bundle: LCM → <strong>Lifecycle Operations</strong> → <strong>Settings</strong> → <strong>Binary Mapping</strong> → confirm target vRLI version listed
+3. Confirm all cluster nodes are <strong>ACTIVE</strong> (see Health Checks) before proceeding</p>
+<p><strong>Upgrade steps:</strong>
+1. LCM → <strong>Environments</strong> → select the environment containing vRLI
+2. <strong>Products</strong> → <strong>Aria Operations for Logs</strong> → <strong>Upgrade</strong>
+3. Select the <strong>Target Version</strong> from the dropdown
+4. Click <strong>Run Precheck</strong> — LCM validates disk space, node connectivity, and product version compatibility
+5. Resolve any precheck findings; re-run precheck until all pass
+6. Click <strong>Proceed</strong> → monitor progress in LCM → <strong>Requests</strong>
+7. LCM upgrades master first, then workers sequentially; total time: 30–60 minutes for a 3-node cluster</p>
+<p><strong>Post-upgrade verification:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm version on master</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/version<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.version
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check all cluster nodes rejoined</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v2/cluster/nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, state: .state, version: .version}&#39;</span>
+</code></pre></div>
+- vRLI UI → <strong>Administration</strong> → <strong>Content Packs</strong> → confirm all installed packs still active
+- vRLI UI → <strong>Administration</strong> → <strong>Cluster</strong> → confirm all nodes <strong>ACTIVE</strong>
+- Delete node snapshots after a 48-hour burn-in period</p>
+<hr />
+<h2 id="configure-a-custom-dashboard">Configure a Custom Dashboard<a class="headerlink" href="#configure-a-custom-dashboard" title="Permanent link">&para;</a></h2>
+<p>Build a dashboard combining event trend widgets, field distribution charts, and saved query results.</p>
+<ol>
+<li>vRLI → <strong>Dashboards</strong> → <strong>+ New Dashboard</strong> → enter a name and optional description</li>
+<li>Click <strong>Add Widget</strong> → select widget type:</li>
+<li><strong>Event Trends</strong>: line chart of event count over time matching a query</li>
+<li><strong>Field Trends</strong>: bar chart of top values for a specific extracted field</li>
+<li><strong>Events</strong>: live table of matching log events</li>
+<li><strong>Text</strong>: static markdown notes or section headers</li>
+<li><strong>URL</strong>: embed an external iframe (e.g., Grafana panel)</li>
+<li>For each widget: enter the filter query, set the time range, and configure the field or chart parameters</li>
+<li>Drag to resize and arrange widgets on the canvas</li>
+<li>Click <strong>Save to Dashboard</strong></li>
+</ol>
+<p><strong>Export/Import a dashboard:</strong>
+1. <strong>Dashboards</strong> → select the dashboard → <strong>Actions</strong> → <strong>Export</strong> → save the JSON file
+2. On the target vRLI instance: <strong>Dashboards</strong> → <strong>Actions</strong> → <strong>Import</strong> → upload the JSON
+3. After import, verify widget queries execute without field-not-found errors (custom extracted fields must also exist on the target instance)</p>
+<hr />
+<h2 id="back-up-and-restore-vrli-configuration">Back Up and Restore vRLI Configuration<a class="headerlink" href="#back-up-and-restore-vrli-configuration" title="Permanent link">&para;</a></h2>
+<p>Configuration backup covers: alert definitions, content packs, user accounts, saved queries, forwarding rules, and SMTP/webhook settings. <strong>Log data is not included.</strong></p>
+<p><strong>Backup:</strong>
+1. vRLI → <strong>Administration</strong> → <strong>General</strong> → <strong>Configuration Backup</strong>
+2. Click <strong>Download Backup</strong> → a JSON file is saved to the browser download directory
+3. Store the JSON in a versioned location (Git, object storage) — recommended frequency: weekly or before any major change</p>
+<p><strong>Restore:</strong>
+1. Deploy a fresh vRLI appliance (same or newer version than the backup source)
+2. Complete initial setup (network, admin password) but do not configure anything further
+3. vRLI → <strong>Administration</strong> → <strong>General</strong> → <strong>Configuration Backup</strong> → <strong>Restore</strong>
+4. Upload the JSON backup file → click <strong>Restore</strong> → vRLI applies all configuration objects
+5. Verify: check alert definitions, forwarding rules, and user accounts are present
+6. Reconnect log sources (sources must be reconfigured to point to the new appliance FQDN/IP; log data is not restored)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Automate backup via API (run weekly from a management host)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/configuration/backup&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;vrli-backup-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.json&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="common-search-queries">Common Search Queries<a class="headerlink" href="#common-search-queries" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Host disconnect events</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;hostd&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;disconnected&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># vMotion failures</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;vmotion&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;failed&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpxd&quot;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># HA events</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;HA failover&quot;</span><span class="w"> </span>OR<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;HA heartbeat&quot;</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># vSAN component errors</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;LSOM&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">loglevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ERROR
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># NSX DFW drops</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DENY&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;nsx&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DROP&quot;</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Failed logins (SSH brute force detection)</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span>AND<span class="w"> </span>hostname<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;prod-&quot;</span>
 </code></pre></div>
 <p>Time-range tips: always set a time range — start with last 1 hour for active incidents; expand to 7 days for intermittent issues. Use the timeline histogram to identify event spikes before filtering further.</p>
 

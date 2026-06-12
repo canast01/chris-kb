@@ -4676,6 +4676,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#remote-collector-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote Collector Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adapter-collection-status-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adapter Collection Status Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-health-cassandra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Health (Cassandra)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capacity-and-scaling-indicators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacity and Scaling Indicators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-queue-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Queue Health
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5001,6 +5056,98 @@ Health checks for Aria Operations — cluster node status, adapter collection he
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name}&#39;</span>
 </code></pre></div>
 <p>Also verify alert definitions are active: <strong>Administration → Alert Settings → Alert Definitions</strong> — confirm no policies are disabled unexpectedly.</p>
+<hr />
+<h2 id="remote-collector-health">Remote Collector Health<a class="headerlink" href="#remote-collector-health" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>UI status</strong>: Aria Ops → <strong>Administration</strong> → <strong>Remote Collectors</strong> — every collector must show <strong>State: OK</strong>; any showing <strong>Offline</strong> or <strong>Error</strong> needs immediate investigation</li>
+<li><strong>Service check</strong> — SSH to each remote collector node:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ssh<span class="w"> </span>admin@vrops-rc-01.example.local
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vrops-collector
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Expected: active (running); if inactive — start with: systemctl start vmware-vrops-collector</span>
+</code></pre></div></li>
+<li><strong>Collector log review</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check for collection failure entries in the last 30 minutes</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|exception&quot;</span><span class="w"> </span>/usr/lib/vmware-vcops/user/log/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Check connectivity log for adapter reach failures</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;connection refused\|timeout\|unreachable&quot;</span><span class="w"> </span>/usr/lib/vmware-vcops/user/log/adapters/*/adapter.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+</code></pre></div></li>
+<li><strong>Verify adapters assigned to the collector are collecting</strong>: Administration → Remote Collectors → select collector → <strong>Assigned Adapters</strong> — all must show green last-collection timestamps</li>
+</ol>
+<hr />
+<h2 id="adapter-collection-status-check">Adapter Collection Status Check<a class="headerlink" href="#adapter-collection-status-check" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>UI scan</strong>: Aria Ops → <strong>Administration</strong> → <strong>Solutions</strong> → review the <strong>Last Collection Time</strong> column for every adapter instance</li>
+<li>Stale &gt; 15 minutes: investigate immediately — indicates collection failure</li>
+<li>Stale &gt; 60 minutes: high likelihood of service or network fault</li>
+<li><strong>Check credential validity</strong>: if an adapter shows <code>Authentication failed</code> in its status message → update credentials:</li>
+<li><strong>Data Sources</strong> → select adapter → <strong>Edit</strong> → update <strong>Credentials</strong> → <strong>Test Connection</strong> → <strong>Save</strong></li>
+<li><strong>Bulk collection status query via API</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.adapterInstancesInfoDto[] | {name: .resourceKey.name, lastCollection: .lastCollectionTimeUTC, status: .adapterStatus}&#39;</span>
+</code></pre></div></li>
+<li><strong>Confirm object count stability</strong>: Administration → Inventory → total object count; a sudden drop (&gt;5%) indicates an adapter or credential failure causing object deletion</li>
+</ol>
+<hr />
+<h2 id="database-health-cassandra">Database Health (Cassandra)<a class="headerlink" href="#database-health-cassandra" title="Permanent link">&para;</a></h2>
+<p>Cassandra is the primary metrics store; node failures cause metric gaps and eventually alert misfires.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># SSH to the master node</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check Cassandra cluster membership</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>su<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>vcops-svc<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;cd /usr/lib/vmware-vcops/cassandra/bin &amp;&amp; ./nodetool status&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># All nodes must show: UN (Up/Normal)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># DN = node down (critical); UJ = joining/rebuilding (normal post-recovery)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Check Cassandra data disk usage</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>df<span class="w"> </span>-h<span class="w"> </span>/dev/sdb
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Alert threshold: &gt; 80% full; Cassandra needs headroom for compaction</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Check Cassandra repair status (run weekly)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>su<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>vcops-svc<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;cd /usr/lib/vmware-vcops/cassandra/bin &amp;&amp; ./nodetool repair --full&quot;</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># Check for Cassandra errors in the last hour</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception&quot;</span><span class="w"> </span>/storage/db/cassandra/logs/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+<span class="s1">&#39;%Y-%m-%d %H&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+</code></pre></div>
+<p>If a node shows <code>DN</code>: check VM power state → if powered on, check service: <code>systemctl status vmware-vcops-cassandra</code> → if service is stopped, start it and monitor rejoining (nodetool status transitions <code>DN → UJ → UN</code> over 10–30 minutes).</p>
+<hr />
+<h2 id="capacity-and-scaling-indicators">Capacity and Scaling Indicators<a class="headerlink" href="#capacity-and-scaling-indicators" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Node resource utilisation</strong>: Aria Ops → <strong>Administration</strong> → <strong>Cluster Management</strong> → review each node's CPU and memory usage bar</li>
+<li>CPU &gt; 85% sustained: add a data node or remote collector to distribute load</li>
+<li>Memory &gt; 90%: check for memory leak in analytics service — <code>systemctl restart vmware-vcops-analytics</code> as a short-term fix; engage VMware support if recurring</li>
+<li><strong>Object count vs. license limit</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources/count&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.count&#39;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Compare against licensed object count (Administration → Licenses)</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Alert if object count &gt; 90% of licensed capacity</span>
+</code></pre></div></li>
+<li><strong>Disk growth trend</strong>: check <code>/storage/db</code> growth over the last 7 days:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/cassandra/data/
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Compare to previous week; if growing &gt; 5 GB/day, review retention settings or add disk</span>
+</code></pre></div></li>
+<li><strong>Collection cycle time</strong>: if dashboards show metric freshness degrading (data &gt; 10 minutes old), the analytics cluster is under-provisioned — check node CPU and consider scaling</li>
+</ol>
+<hr />
+<h2 id="alert-queue-health">Alert Queue Health<a class="headerlink" href="#alert-queue-health" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Stale alert detection</strong>: Aria Ops → <strong>Alerts</strong> → <strong>All Alerts</strong> → sort by <strong>Start Time</strong> ascending</li>
+<li>Any alert in <strong>Active</strong> state older than 7 days without acknowledgement indicates policy or notification failure</li>
+<li>Investigate: check if the triggering condition still exists; if resolved but alert persists, cancel the alert manually</li>
+<li><strong>Notification delivery verification</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Test SMTP outbound plugin</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># UI: Administration → Outbound Settings → select SMTP plugin → Test</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Check SMTP relay logs for delivery confirmation or bounce</span>
+</code></pre></div></li>
+<li><strong>Notification queue check</strong>: Aria Ops → <strong>Administration</strong> → <strong>Notifications</strong> → <strong>Outbound Settings</strong> → select each plugin → click <strong>Test</strong> → confirm delivery</li>
+<li><strong>Alert definition integrity</strong>: <strong>Configure → Alert Definitions</strong> — confirm no definitions are in <strong>Draft</strong> state (draft definitions do not fire alerts); publish any that should be active</li>
+<li><strong>Alert count trend</strong>: compare today's active alert count to the 30-day rolling average using the Alert API:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.pageInfo.totalCount&#39;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Sudden spike (&gt;2x normal) indicates a broad infrastructure event or a misconfigured policy firing excessively</span>
+</code></pre></div></li>
+</ol>
 
 
 
