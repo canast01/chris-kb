@@ -31,6 +31,81 @@ EVS diagnostic data collection: AWS CloudTrail, VPC Flow Logs, NSX-T support bun
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Log Locations Reference
+
+| Component | Log Location | How to Access |
+|---|---|---|
+| SDDC Manager | `/var/log/vmware/vcf/` | SSH to SDDC Manager appliance (`sddc-manager.vcf.internal`) |
+| vCenter | `/var/log/vmware/vpxd/vpxd.log` | SSH to VCSA appliance, or VAMI → Monitoring → Logs |
+| NSX-T Manager | `/var/log/vmware/nsx/` | SSH to NSX Manager node |
+| ESXi host | `/var/log/vmware/` (hostd.log, vmkernel.log, auth.log) | SSH to host, or vCenter → Host → Monitor → Logs |
+| HCX Manager | `/opt/vmware/log/` | SSH to HCX Manager VM, or HCX UI → Support → Download Log Bundle |
+| AWS CloudTrail | S3 bucket (configured) or CloudTrail console | `aws cloudtrail lookup-events` or Athena SQL query |
+| AWS CloudWatch | EVS namespace metrics | `aws cloudwatch get-metric-statistics` |
+| VPC Flow Logs | CloudWatch Logs group or S3 bucket | CloudWatch Logs Insights or S3 + Athena |
+
+Key log files per component:
+
+| Component | File | Content |
+|---|---|---|
+| vCenter | `vpxd.log` | vCenter API requests, task failures, authentication events |
+| vCenter | `sps.log` | Storage Policy (SPBM) operations; VM encryption policy errors |
+| ESXi | `hostd.log` | Host daemon; VM power operations, vSphere API calls to host |
+| ESXi | `vmkernel.log` | Kernel-level events; NIC errors, storage errors, PSOD precursors |
+| ESXi | `auth.log` | SSH logins, DCUI sessions, lockdown mode events |
+| NSX-T | `nsx-manager.log` | NSX Manager control plane operations |
+| NSX-T | `nsx-controller.log` | Data plane programming; DFW rule push events |
+| SDDC Manager | `lcm.log` | Lifecycle management; upgrade and patch workflow events |
+| SDDC Manager | `domainmanager.log` | Workload domain operations; cluster expansion events |
+
+## AWS Diagnostic Commands
+
+```bash
+# CloudTrail: look up all EVS API calls in the last 24 hours
+aws cloudtrail lookup-events \
+  --lookup-attributes AttributeKey=EventSource,AttributeValue=evs.amazonaws.com \
+  --start-time $(date -u -v-24H +%Y-%m-%dT%H:%M:%SZ) \
+  --query 'Events[*].[EventTime,EventName,Username,ErrorCode]' \
+  --output table
+
+# CloudTrail: filter for failed EVS API calls only
+aws cloudtrail lookup-events \
+  --lookup-attributes AttributeKey=EventSource,AttributeValue=evs.amazonaws.com \
+  --start-time $(date -u -v-24H +%Y-%m-%dT%H:%M:%SZ) | \
+  python3 -c "
+import sys, json
+events = json.load(sys.stdin).get('Events', [])
+for e in events:
+    ct = json.loads(e.get('CloudTrailEvent','{}'))
+    if ct.get('errorCode'):
+        print(f\"{e['EventTime']} {e['EventName']}: {ct['errorCode']} - {ct.get('errorMessage','')}\")
+"
+```
+
+```bash
+# CloudWatch: get EVS host metrics
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/EVS \
+  --metric-name HostState \
+  --dimensions Name=EnvironmentId,Value=$ENV_ID \
+  --start-time $(date -u -v-1H +%Y-%m-%dT%H:%M:%SZ) \
+  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
+  --period 300 --statistics Average
+
+# EC2: describe all ENIs in EVS subnet — useful to see ENI attachment status
+aws ec2 describe-network-interfaces \
+  --filters Name=subnet-id,Values=$EVS_MGMT_SUBNET_ID \
+  --query 'NetworkInterfaces[*].[NetworkInterfaceId,Status,Attachment.Status,Description]' \
+  --output table
+
+# EC2: check for ENIs not attached (may indicate a host that lost its ENI)
+aws ec2 describe-network-interfaces \
+  --filters Name=subnet-id,Values=$EVS_MGMT_SUBNET_ID \
+             Name=status,Values=available \
+  --query 'NetworkInterfaces[*].[NetworkInterfaceId,Description]' \
+  --output table
+```
+
 ## AWS CloudTrail
 
 ```bash
@@ -76,6 +151,35 @@ aws logs start-query \
   --query-string 'fields @timestamp, srcAddr, dstAddr, dstPort, action | filter action = "REJECT" | limit 50'
 ```
 
+## vSphere Diagnostic Bundle
+
+The vSphere support bundle collects all component logs, configuration exports, and system state snapshots into a single archive. When opening a case with VMware/Broadcom support, this is the primary artifact they will request.
+
+```bash
+# Generate vCenter support bundle via VAMI (vCenter Appliance Management Interface)
+# Browser: https://<vcenter-ip>:5480 → Monitoring → Create Support Bundle
+# The bundle is stored on the VCSA appliance and available for SFTP download
+
+# Via SSH on the VCSA appliance:
+# /usr/lib/vmware-vmafd/bin/vdcrepadmin -f showpartners -h localhost -u administrator
+# vc-support.sh -L /tmp/vc-support
+# SCP the generated .zip from /var/tmp/vc-support-*.zip
+
+# Alternative: vm-support command on ESXi host
+# SSH to ESXi host:
+# vm-support -w /tmp
+# SCP: /tmp/esx-<hostname>-<timestamp>.tgz
+```
+
+The vCenter support bundle contains:
+- `vpxd.log` and all vCenter service logs
+- vSAN health export (XML)
+- vCenter configuration backup
+- Task and event history export
+- SSO and certificate state
+
+Share the bundle by uploading to the VMware SFTP site provided in the support request. For large bundles (2-5 GB is normal), use the SFTP method rather than portal upload.
+
 ## NSX-T Support Bundle
 
 ```bash
@@ -94,6 +198,12 @@ curl -sk -u "admin:$NSX_PASSWORD" \
   "$NSX_URL/api/v1/support-bundles?action=collect&$TASK_ID" -o nsxt-support-bundle.tar.gz
 ```
 
+When opening an NSX-T case, always include:
+- NSX-T version (`GET /api/v1/node/version`)
+- Upgrade history (NSX Manager → Lifecycle Management → Upgrade History)
+- The support bundle
+- A description of which DFW policies, T0/T1 gateways, or segments are affected
+
 ## vSAN Support Bundle
 
 ```powershell
@@ -110,6 +220,67 @@ $hclSvc = Get-VsanView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system
 $hclResult = $hclSvc.QueryVsanClusterHealthSummary($cluster.Id, $null, @("vsanHclDbUpToDate","vSanHclHostBadState"), $true, $null, $null, "defaultView")
 $hclResult.Groups | ForEach-Object { Write-Host "$($_.GroupName): $($_.GroupHealth)" }
 ```
+
+## Systematic Triage Order
+
+Diagnose EVS issues in this order to avoid chasing symptoms at the wrong layer:
+
+**Layer 1: AWS infrastructure**
+```bash
+# Check host state
+aws evs list-environment-hosts --environment-id $ENV_ID \
+  --query 'hostSummaries[*].[hostId,state]' --output table
+
+# Check EC2 instance status for EVS hosts
+aws ec2 describe-instance-status \
+  --filters Name=instance-state-name,Values=running \
+  --query 'InstanceStatuses[?SystemStatus.Status!=`ok` || InstanceStatus.Status!=`ok`]'
+
+# Check VPC route tables — missing routes cause NSX-T BGP failure
+aws ec2 describe-route-tables \
+  --filters Name=vpc-id,Values=$EVS_VPC_ID \
+  --query 'RouteTables[*].Routes[*].[DestinationCidrBlock,State,GatewayId,NetworkInterfaceId]' \
+  --output table
+
+# Check ENI attachment status for EVS hosts
+aws ec2 describe-network-interfaces \
+  --filters Name=subnet-id,Values=$EVS_MGMT_SUBNET_ID \
+  --query 'NetworkInterfaces[*].[NetworkInterfaceId,Status,Attachment.Status]' --output table
+```
+
+**Layer 2: VMware platform**
+```powershell
+# Check vCenter connectivity and vSAN health
+Connect-VIServer -Server $VCENTER -User administrator@vsphere.local -Password $PASS
+
+# vSAN cluster health summary
+$vsanHealth = Get-VsanView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system"
+$summary = $vsanHealth.QueryVsanClusterHealthSummary(
+    (Get-Cluster).Id, $null, $null, $true, $null, $null, "defaultView")
+$summary.OverallHealth
+
+# Host connectivity
+Get-VMHost | Select Name, ConnectionState, PowerState
+```
+
+**Layer 3: NSX-T**
+```bash
+# Check NSX Manager cluster health
+curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/cluster/status" | \
+  python3 -c "import sys,json; d=json.load(sys.stdin); print(f\"Cluster: {d['mgmt_cluster_status']['status']}\")"
+
+# Check T0 BGP neighbor state
+curl -sk -u "admin:$NSX_PASSWORD" \
+  "$NSX_URL/policy/api/v1/infra/tier-0s/<t0-id>/locale-services/<svc-id>/bgp/neighbors/status" | \
+  python3 -c "
+import sys,json
+for n in json.load(sys.stdin).get('results',[]):
+    print(f\"{n['neighbor_address']}: {n['connection_state']}\")"
+```
+
+**Layer 4: Application**
+
+After confirming layers 1-3 are healthy, investigate application-layer connectivity using standard tools: ping, traceroute, telnet to port, curl. Capture VPC Flow Logs to confirm whether traffic is reaching the ENI. Check NSX-T DFW logs for deny hits on the relevant workload.
 
 ## Log Locations
 
