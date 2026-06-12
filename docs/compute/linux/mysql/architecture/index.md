@@ -4,6 +4,8 @@
 Architecture overview, design standards, and integrations.
 </div>
 
+![MySQL Architecture Overview](../../../../assets/mysql-architecture-overview.svg)
+
 ```text
 ┌─────────────────────────────────── MySQL — Architecture Reference ────────────────────────────────────┐
 │                                                                                                       │

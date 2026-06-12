@@ -6,6 +6,8 @@
 EVS architecture: bare-metal EC2 instances running VCF, VPC-native networking, vSAN HCI storage, NSX-T overlay, and on-premises connectivity via Direct Connect or HCX.
 </div>
 
+![Amazon EVS Architecture Overview](../../../../assets/evs-architecture-overview.svg)
+
 ```text
 ┌─────────────────────────────────────── Amazon EVS Architecture ───────────────────────────────────────┐
 │                                                                                                       │

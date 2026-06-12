@@ -4,6 +4,8 @@
 Architecture overview, design standards, and integrations.
 </div>
 
+![PostgreSQL Architecture Overview](../../../../assets/postgresql-architecture-overview.svg)
+
 ```text
 ┌───────────────────────────────── PostgreSQL — Architecture Reference ─────────────────────────────────┐
 │                                                                                                       │

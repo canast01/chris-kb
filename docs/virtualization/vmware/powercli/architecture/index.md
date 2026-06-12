@@ -4,6 +4,8 @@
 PowerCLI module architecture, vSphere API connectivity model, credential management, and integration with vCenter, ESXi, NSX, and vSAN.
 </div>
 
+![PowerCLI Architecture Overview](../../../../assets/powercli-architecture-overview.svg)
+
 ```text
 ┌─────────────────────────────────── PowerCLI — Module Architecture ────────────────────────────────────┐
 │                                                                                                       │

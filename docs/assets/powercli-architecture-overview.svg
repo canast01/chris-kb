@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="750" font-family="'Segoe UI',Arial,sans-serif">
+  <rect width="820" height="750" fill="#f4f6f9"/>
+  <!-- TITLE -->
+  <rect x="0" y="0" width="820" height="58" fill="#1a2744"/>
+  <text x="410" y="36" text-anchor="middle" fill="white" font-size="20" font-weight="700" letter-spacing="0.5">PowerCLI — Module Architecture</text>
+  <text x="410" y="52" text-anchor="middle" fill="#7a8fbb" font-size="11">PowerShell Modules · vSphere API · Multi-Product Connectivity</text>
+
+  <!-- COLUMN 1: Module Stack -->
+  <rect x="20" y="72" width="250" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="20" y="72" width="250" height="42" fill="#1565c0" rx="6"/>
+  <rect x="20" y="100" width="250" height="14" fill="#1565c0"/>
+  <text x="145" y="97" text-anchor="middle" fill="white" font-size="13" font-weight="700">Module Stack</text>
+  <text x="145" y="111" text-anchor="middle" fill="#90caf9" font-size="9">One meta-package · modular sub-modules</text>
+  <rect x="30" y="126" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="141" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">VMware.PowerCLI (meta-package)</text>
+  <rect x="30" y="152" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="167" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">VimAutomation.Core (vCenter / ESXi)</text>
+  <rect x="30" y="178" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="193" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">VimAutomation.Storage (vSAN / SPBM)</text>
+  <rect x="30" y="204" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="219" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">VimAutomation.Nsxt (NSX-T)</text>
+  <rect x="30" y="230" width="230" height="22" fill="#e3f2fd" rx="3" stroke="#90caf9" stroke-width="1"/>
+  <text x="145" y="245" text-anchor="middle" fill="#1565c0" font-size="9" font-weight="700">VimAutomation.Vds (distributed switch)</text>
+  <text x="145" y="282" text-anchor="middle" fill="#78909c" font-size="9">Install-Module VMware.PowerCLI installs all</text>
+  <text x="145" y="300" text-anchor="middle" fill="#78909c" font-size="9">Core covers &gt;80% of vSphere use cases</text>
+  <text x="145" y="318" text-anchor="middle" fill="#78909c" font-size="9">NSX module: separate Connect-NsxtServer</text>
+  <text x="145" y="336" text-anchor="middle" fill="#78909c" font-size="9">Storage module: SPBM + storage policies</text>
+  <text x="145" y="354" text-anchor="middle" fill="#78909c" font-size="9">VimAutomation.Sdk: base; not used directly</text>
+  <text x="145" y="372" text-anchor="middle" fill="#78909c" font-size="9">Requires PowerShell 5.1+ or PS Core 7+</text>
+  <text x="145" y="390" text-anchor="middle" fill="#78909c" font-size="9">Cross-platform: Windows, Linux, macOS</text>
+  <text x="145" y="408" text-anchor="middle" fill="#78909c" font-size="9">PSGallery: Update-Module to stay current</text>
+
+  <!-- COLUMN 2: Connection Model -->
+  <rect x="285" y="72" width="250" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="285" y="72" width="250" height="42" fill="#00695c" rx="6"/>
+  <rect x="285" y="100" width="250" height="14" fill="#00695c"/>
+  <text x="410" y="97" text-anchor="middle" fill="white" font-size="13" font-weight="700">Connection Model</text>
+  <text x="410" y="111" text-anchor="middle" fill="#80cbc4" font-size="9">Per-session auth · multi-server support</text>
+  <rect x="295" y="126" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="141" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">Connect-VIServer (auth entry point)</text>
+  <rect x="295" y="152" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="167" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">$global:DefaultVIServers (active sessions)</text>
+  <rect x="295" y="178" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="193" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">VIServer object (session handle)</text>
+  <rect x="295" y="204" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="219" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">Credential Store (encrypted on disk)</text>
+  <rect x="295" y="230" width="230" height="22" fill="#e0f2f1" rx="3" stroke="#80cbc4" stroke-width="1"/>
+  <text x="410" y="245" text-anchor="middle" fill="#004d40" font-size="9" font-weight="700">-Server param (target per-cmdlet)</text>
+  <text x="410" y="282" text-anchor="middle" fill="#78909c" font-size="9">Multiple vCenters connected simultaneously</text>
+  <text x="410" y="300" text-anchor="middle" fill="#78909c" font-size="9">-Server targets specific vCenter per cmdlet</text>
+  <text x="410" y="318" text-anchor="middle" fill="#78909c" font-size="9">Disconnect-VIServer: clean session close</text>
+  <text x="410" y="336" text-anchor="middle" fill="#78909c" font-size="9">Store-VICredentialStoreItem: saves creds</text>
+  <text x="410" y="354" text-anchor="middle" fill="#78909c" font-size="9">InvalidCertAction: Ignore / Fail / Warn</text>
+  <text x="410" y="372" text-anchor="middle" fill="#78909c" font-size="9">Session: SOAP cookie or REST Bearer token</text>
+  <text x="410" y="390" text-anchor="middle" fill="#78909c" font-size="9">$DefaultVIServers: used when -Server omitted</text>
+  <text x="410" y="408" text-anchor="middle" fill="#78909c" font-size="9">MFA: use -Credential or pass-through SSO</text>
+
+  <!-- COLUMN 3: Product Targets -->
+  <rect x="550" y="72" width="250" height="390" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="550" y="72" width="250" height="42" fill="#6a1b9a" rx="6"/>
+  <rect x="550" y="100" width="250" height="14" fill="#6a1b9a"/>
+  <text x="675" y="97" text-anchor="middle" fill="white" font-size="13" font-weight="700">Product Targets</text>
+  <text x="675" y="111" text-anchor="middle" fill="#ce93d8" font-size="9">vCenter · ESXi · NSX-T · vSAN · SRM</text>
+  <rect x="560" y="126" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="141" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">vCenter Server (primary target)</text>
+  <rect x="560" y="152" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="167" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">ESXi host (direct / standalone only)</text>
+  <rect x="560" y="178" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="193" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">NSX-T Manager (Connect-NsxtServer)</text>
+  <rect x="560" y="204" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="219" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">vSAN (via Core + Storage modules)</text>
+  <rect x="560" y="230" width="230" height="22" fill="#f3e5f5" rx="3" stroke="#ce93d8" stroke-width="1"/>
+  <text x="675" y="245" text-anchor="middle" fill="#4a148c" font-size="9" font-weight="700">SRM / vCD / HCX (specialist modules)</text>
+  <text x="675" y="282" text-anchor="middle" fill="#78909c" font-size="9">vCenter: all cluster, VM, host, storage ops</text>
+  <text x="675" y="300" text-anchor="middle" fill="#78909c" font-size="9">Direct ESXi: use only for standalone hosts</text>
+  <text x="675" y="318" text-anchor="middle" fill="#78909c" font-size="9">NSX-T: segment, gateway, DFW policy</text>
+  <text x="675" y="336" text-anchor="middle" fill="#78909c" font-size="9">vSAN: health, SPBM, disk management</text>
+  <text x="675" y="354" text-anchor="middle" fill="#78909c" font-size="9">SRM: protection groups, test failover</text>
+  <text x="675" y="372" text-anchor="middle" fill="#78909c" font-size="9">vCD: cloud director tenant/provider ops</text>
+  <text x="675" y="390" text-anchor="middle" fill="#78909c" font-size="9">HCX: migration plan + replication status</text>
+  <text x="675" y="408" text-anchor="middle" fill="#78909c" font-size="9">REST API modules use OAuth 2.0 tokens</text>
+
+  <!-- COMPARISON TABLE -->
+  <rect x="20" y="480" width="780" height="222" fill="#fff" rx="6" stroke="#dde2ec" stroke-width="1.2"/>
+  <rect x="20" y="480" width="780" height="36" fill="#1a2744" rx="6"/>
+  <rect x="20" y="504" width="780" height="12" fill="#1a2744"/>
+  <text x="410" y="504" text-anchor="middle" fill="white" font-size="13" font-weight="700">Module API Reference</text>
+  <rect x="20" y="516" width="780" height="28" fill="#eceff1"/>
+  <text x="120" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Module</text>
+  <text x="300" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">API Protocol</text>
+  <text x="470" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Auth Cmdlet</text>
+  <text x="660" y="534" text-anchor="middle" fill="#37474f" font-size="10" font-weight="700">Common Cmdlets</text>
+  <line x1="210" y1="516" x2="210" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="390" y1="516" x2="390" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <line x1="545" y1="516" x2="545" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <rect x="20" y="544" width="780" height="26" fill="#f7f9fb"/>
+  <text x="120" y="562" text-anchor="middle" fill="#455a64" font-size="9">VimAutomation.Core</text>
+  <text x="300" y="562" text-anchor="middle" fill="#546e7a" font-size="9">SOAP (VIM API)</text>
+  <text x="470" y="562" text-anchor="middle" fill="#546e7a" font-size="9">Connect-VIServer</text>
+  <text x="660" y="562" text-anchor="middle" fill="#546e7a" font-size="9">Get-VM, Get-VMHost, Set-VM</text>
+  <text x="120" y="587" text-anchor="middle" fill="#455a64" font-size="9">VimAutomation.Storage</text>
+  <text x="300" y="587" text-anchor="middle" fill="#546e7a" font-size="9">SOAP (VIM API)</text>
+  <text x="470" y="587" text-anchor="middle" fill="#546e7a" font-size="9">same vCenter session</text>
+  <text x="660" y="587" text-anchor="middle" fill="#546e7a" font-size="9">Get-SpbmStoragePolicy</text>
+  <rect x="20" y="596" width="780" height="26" fill="#f7f9fb"/>
+  <text x="120" y="614" text-anchor="middle" fill="#455a64" font-size="9">VimAutomation.Nsxt</text>
+  <text x="300" y="614" text-anchor="middle" fill="#546e7a" font-size="9">REST (NSX-T API)</text>
+  <text x="470" y="614" text-anchor="middle" fill="#546e7a" font-size="9">Connect-NsxtServer</text>
+  <text x="660" y="614" text-anchor="middle" fill="#546e7a" font-size="9">Get-NsxtSegment, Get-NsxtFirewall</text>
+  <text x="120" y="639" text-anchor="middle" fill="#455a64" font-size="9">VimAutomation.Vds</text>
+  <text x="300" y="639" text-anchor="middle" fill="#546e7a" font-size="9">SOAP (VIM API)</text>
+  <text x="470" y="639" text-anchor="middle" fill="#546e7a" font-size="9">same vCenter session</text>
+  <text x="660" y="639" text-anchor="middle" fill="#546e7a" font-size="9">Get-VDSwitch, New-VDPortgroup</text>
+  <rect x="20" y="648" width="780" height="26" fill="#f7f9fb"/>
+  <text x="120" y="665" text-anchor="middle" fill="#455a64" font-size="9">VimAutomation.Cloud</text>
+  <text x="300" y="665" text-anchor="middle" fill="#546e7a" font-size="9">REST (vCloud Director)</text>
+  <text x="470" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Connect-CIServer</text>
+  <text x="660" y="665" text-anchor="middle" fill="#546e7a" font-size="9">Get-CIVApp, Get-CIOrg</text>
+  <line x1="20" y1="700" x2="800" y2="700" stroke="#dde2ec" stroke-width="1"/>
+  <!-- FOOTER -->
+  <rect x="0" y="720" width="820" height="30" fill="#1a2744"/>
+  <text x="410" y="739" text-anchor="middle" fill="#7a8fbb" font-size="9">VMware PowerCLI Reference · Module Stack · Connection Model · vCenter · NSX-T · vSAN · SRM</text>
+</svg>

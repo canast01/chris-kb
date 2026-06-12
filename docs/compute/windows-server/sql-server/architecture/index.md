@@ -4,6 +4,8 @@
 Architecture overview, design standards, and integrations.
 </div>
 
+![SQL Server Architecture Overview](../../../../assets/sql-server-architecture-overview.svg)
+
 ```text
 ┌────────────────────────────────────── SQL Server — Architecture ──────────────────────────────────────┐
 │                                                                                                       │
