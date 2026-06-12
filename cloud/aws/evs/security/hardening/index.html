@@ -3285,10 +3285,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vpc-security-groups" class="md-nav__link">
+  <a href="#vpc-security-group-hardening" class="md-nav__link">
     <span class="md-ellipsis">
       
-        VPC Security Groups
+        VPC Security Group Hardening
       
     </span>
   </a>
@@ -3300,6 +3300,28 @@
     <span class="md-ellipsis">
       
         ESXi Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sddc-manager-and-vcenter-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SDDC Manager and vCenter Hardening
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-and-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance and Audit
       
     </span>
   </a>
@@ -3536,75 +3558,326 @@ EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS V
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <h2 id="nsx-t-micro-segmentation">NSX-T Micro-segmentation<a class="headerlink" href="#nsx-t-micro-segmentation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create security groups for workload tiers</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/ns-groups&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;display_name&quot;: &quot;web-tier&quot;,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;members&quot;: [{&quot;resource_type&quot;: &quot;NSGroupTagExpression&quot;,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">                 &quot;tag&quot;: &quot;tier&quot;, &quot;scope&quot;: &quot;app&quot;, &quot;op&quot;: &quot;CONTAINS&quot;, &quot;tag_op&quot;: &quot;EQUALS&quot;}]</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Create default-deny firewall section at bottom of rule list</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/firewall/sections?operation=insert_bottom&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">    &quot;display_name&quot;: &quot;Default Deny All&quot;,</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">    &quot;section_type&quot;: &quot;LAYER3&quot;,</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">    &quot;stateful&quot;: true,</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s1">    &quot;rules&quot;: [{</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="s1">      &quot;display_name&quot;: &quot;Deny All&quot;,</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s1">      &quot;action&quot;: &quot;DROP&quot;,</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s1">      &quot;logged&quot;: true,</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s1">      &quot;sources_excluded&quot;: false,</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s1">      &quot;destinations_excluded&quot;: false,</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s1">      &quot;ip_protocol&quot;: &quot;IPV4_IPV6&quot;,</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="s1">      &quot;direction&quot;: &quot;IN_OUT&quot;</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="s1">    }]</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="c1"># Create explicit allow rule above the default-deny section</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># NSX-T UI → Security → Distributed Firewall → Add rule above &quot;Default Deny All&quot;</span>
+<p>NSX-T DFW rules are evaluated top-to-bottom. The first matching rule wins. The default-deny rule placed at the bottom acts as a catch-all for any traffic not explicitly permitted by rules above it. This means you must explicitly allow every required traffic flow — the burden of proof is on the allow, not the deny.</p>
+<p>Concrete three-tier DFW rule set (web → app → db pattern):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create security groups for workload tiers using tag-based membership</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Tag VMs in vCenter with scope=tier, tag=web | app | db</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create NSX-T security groups</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">for</span><span class="w"> </span>TIER<span class="w"> </span><span class="k">in</span><span class="w"> </span>web<span class="w"> </span>app<span class="w"> </span>db<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/ns-groups&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">      \&quot;display_name\&quot;: \&quot;sg-</span><span class="si">${</span><span class="nv">TIER</span><span class="si">}</span><span class="s2">-tier\&quot;,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">      \&quot;members\&quot;: [{</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">        \&quot;resource_type\&quot;: \&quot;NSGroupTagExpression\&quot;,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s2">        \&quot;scope\&quot;: \&quot;tier\&quot;,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s2">        \&quot;tag\&quot;: \&quot;</span><span class="si">${</span><span class="nv">TIER</span><span class="si">}</span><span class="s2">\&quot;,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s2">        \&quot;scope_op\&quot;: \&quot;EQUALS\&quot;,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s2">        \&quot;tag_op\&quot;: \&quot;EQUALS\&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s2">      }]</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s2">    }&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(f\&quot;Created: {d[&#39;id&#39;]}\&quot;)&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">done</span>
 </code></pre></div>
-<h2 id="vpc-security-groups">VPC Security Groups<a class="headerlink" href="#vpc-security-groups" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restrict EVS management SG — only allow from management bastion or Direct Connect CIDR</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-evs-management<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">443</span><span class="w"> </span>--cidr<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w">  </span><span class="c1"># corporate range via DX</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-evs-management<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">902</span><span class="w"> </span>--cidr<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w">  </span><span class="c1"># ESXi host access</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Deny internet-bound traffic from EVS VPC (no IGW attached by default)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Verify: no Internet Gateway attached to EVS VPC</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>attachment.vpc-id,Values<span class="o">=</span><span class="nv">$EVS_VPC_ID</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Enable VPC Flow Logs for EVS VPC (security audit requirement)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-flow-logs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--resource-ids<span class="w"> </span><span class="nv">$EVS_VPC_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>--resource-type<span class="w"> </span>VPC<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>--traffic-type<span class="w"> </span>ALL<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span>--log-destination-type<span class="w"> </span>s3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>--log-destination<span class="w"> </span><span class="s2">&quot;arn:aws:s3:::evs-flow-logs-bucket&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create the explicit-allow firewall section ABOVE the default-deny section</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/firewall/sections?operation=insert_top&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;display_name&quot;: &quot;Three-Tier App Policy&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;section_type&quot;: &quot;LAYER3&quot;,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;stateful&quot;: true,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;rules&quot;: [</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">      {</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">        &quot;display_name&quot;: &quot;Allow internet to web tier (HTTPS)&quot;,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">        &quot;action&quot;: &quot;ALLOW&quot;,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">        &quot;logged&quot;: true,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s1">        &quot;destinations&quot;: [{&quot;target_type&quot;: &quot;NSGroup&quot;, &quot;target_id&quot;: &quot;&lt;sg-web-tier-id&gt;&quot;}],</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s1">        &quot;services&quot;: [{&quot;target_type&quot;: &quot;NSService&quot;, &quot;target_display_name&quot;: &quot;HTTPS&quot;}],</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s1">        &quot;direction&quot;: &quot;IN&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s1">      },</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s1">      {</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s1">        &quot;display_name&quot;: &quot;Allow web tier to app tier&quot;,</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s1">        &quot;action&quot;: &quot;ALLOW&quot;,</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="s1">        &quot;logged&quot;: false,</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="s1">        &quot;sources&quot;: [{&quot;target_type&quot;: &quot;NSGroup&quot;, &quot;target_id&quot;: &quot;&lt;sg-web-tier-id&gt;&quot;}],</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="s1">        &quot;destinations&quot;: [{&quot;target_type&quot;: &quot;NSGroup&quot;, &quot;target_id&quot;: &quot;&lt;sg-app-tier-id&gt;&quot;}],</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="s1">        &quot;services&quot;: [{&quot;target_type&quot;: &quot;NSService&quot;, &quot;target_display_name&quot;: &quot;HTTP&quot;}],</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="s1">        &quot;direction&quot;: &quot;IN_OUT&quot;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="s1">      },</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="s1">      {</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="s1">        &quot;display_name&quot;: &quot;Allow app tier to db tier&quot;,</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="s1">        &quot;action&quot;: &quot;ALLOW&quot;,</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="s1">        &quot;logged&quot;: false,</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="s1">        &quot;sources&quot;: [{&quot;target_type&quot;: &quot;NSGroup&quot;, &quot;target_id&quot;: &quot;&lt;sg-app-tier-id&gt;&quot;}],</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="s1">        &quot;destinations&quot;: [{&quot;target_type&quot;: &quot;NSGroup&quot;, &quot;target_id&quot;: &quot;&lt;sg-db-tier-id&gt;&quot;}],</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="s1">        &quot;services&quot;: [{&quot;target_type&quot;: &quot;NSService&quot;, &quot;target_display_name&quot;: &quot;MySQL&quot;}],</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="s1">        &quot;direction&quot;: &quot;IN_OUT&quot;</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="s1">      }</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="s1">    ]</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="c1"># Create default-deny section at bottom of rule list</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/firewall/sections?operation=insert_bottom&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="s1">    &quot;display_name&quot;: &quot;Default Deny All&quot;,</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="s1">    &quot;section_type&quot;: &quot;LAYER3&quot;,</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="s1">    &quot;stateful&quot;: true,</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="s1">    &quot;rules&quot;: [{</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="s1">      &quot;display_name&quot;: &quot;Deny All&quot;,</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="s1">      &quot;action&quot;: &quot;DROP&quot;,</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="s1">      &quot;logged&quot;: true,</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="s1">      &quot;sources_excluded&quot;: false,</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="s1">      &quot;destinations_excluded&quot;: false,</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="s1">      &quot;ip_protocol&quot;: &quot;IPV4_IPV6&quot;,</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="s1">      &quot;direction&quot;: &quot;IN_OUT&quot;</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="s1">    }]</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>Enable logging on all deny hits. Denied traffic logs are essential for identifying misconfigured applications and for security incident investigation. Store DFW logs in a syslog target (CloudWatch or SIEM) with at least 90 days retention.</p>
+<h2 id="vpc-security-group-hardening">VPC Security Group Hardening<a class="headerlink" href="#vpc-security-group-hardening" title="Permanent link">&para;</a></h2>
+<p>EVS management ENIs (those connecting the VMkernel adapters and management components to the VPC) should be locked down to specific source CIDRs. The common mistake is allowing <code>0.0.0.0/0</code> for management ports — this exposes vCenter and NSX-T management to any VPC resource.</p>
+<p>Required ports per VMkernel type and component:</p>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>vCenter HTTPS, NSX-T HTTPS, SDDC Manager HTTPS</td>
+<td>Management CIDR only</td>
+</tr>
+<tr>
+<td>902</td>
+<td>TCP/UDP</td>
+<td>ESXi host management (hostd)</td>
+<td>vCenter ENI CIDR</td>
+</tr>
+<tr>
+<td>8301</td>
+<td>TCP/UDP</td>
+<td>SDDC Manager internal</td>
+<td>Management subnet</td>
+</tr>
+<tr>
+<td>2377</td>
+<td>TCP</td>
+<td>ESXi vSAN cluster communication</td>
+<td>ESXi host CIDRs only</td>
+</tr>
+<tr>
+<td>4500</td>
+<td>UDP</td>
+<td>HCX IPSEC (service mesh VTEP)</td>
+<td>HCX peer CIDR</td>
+</tr>
+<tr>
+<td>500</td>
+<td>UDP</td>
+<td>HCX IKE (IPSEC key exchange)</td>
+<td>HCX peer CIDR</td>
+</tr>
+<tr>
+<td>6081</td>
+<td>UDP</td>
+<td>NSX-T Geneve tunnel (TEP)</td>
+<td>ESXi host CIDRs only</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restrict EVS management SG — only allow from management bastion or Direct Connect CIDR</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-evs-management<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">443</span><span class="w"> </span>--cidr<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w">  </span><span class="c1"># corporate range via DX</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-evs-management<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">902</span><span class="w"> </span>--cidr<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w">  </span><span class="c1"># ESXi host access</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Deny internet-bound traffic from EVS VPC (no IGW attached by default)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Verify: no Internet Gateway attached to EVS VPC</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>attachment.vpc-id,Values<span class="o">=</span><span class="nv">$EVS_VPC_ID</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Enable VPC Flow Logs for EVS VPC (security audit requirement)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-flow-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--resource-ids<span class="w"> </span><span class="nv">$EVS_VPC_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--resource-type<span class="w"> </span>VPC<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--traffic-type<span class="w"> </span>ALL<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--log-destination-type<span class="w"> </span>s3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--log-destination<span class="w"> </span><span class="s2">&quot;arn:aws:s3:::evs-flow-logs-bucket&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Audit current SG rules for EVS management ENIs</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-network-interfaces<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>subnet-id,Values<span class="o">=</span><span class="nv">$EVS_MGMT_SUBNET_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;NetworkInterfaces[*].[NetworkInterfaceId,Groups[*].GroupId]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check for overly permissive rules (0.0.0.0/0 or ::/0 sources)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--group-ids<span class="w"> </span>sg-evs-management<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[*].IpPermissions[?IpRanges[?CidrIp==`0.0.0.0/0`]]&#39;</span>
 </code></pre></div>
 <h2 id="esxi-hardening">ESXi Hardening<a class="headerlink" href="#esxi-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Disable SSH after deployment (SSH should only be enabled during maintenance)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Via PowerCLI:</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>Get-VMHostService<span class="w"> </span>-VMHost<span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Stop-VMHostService<span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span>Set-VMHostService<span class="w"> </span>-HostService<span class="w"> </span><span class="o">(</span>Get-VMHostService<span class="w"> </span>-VMHost<span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span><span class="o">})</span><span class="w"> </span>-Policy<span class="w"> </span><span class="s2">&quot;off&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="o">}</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Enable Lockdown Mode (Normal) — prevents direct ESXi access, requires vCenter</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Foreach<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.ExtensionData.EnterLockdownMode<span class="o">()</span><span class="w"> </span><span class="o">}</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Verify NTP sync on all hosts</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostNtpServer
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">(</span>Get-View<span class="w"> </span><span class="nv">$_</span>.Id<span class="o">)</span>.Runtime.DasHostState<span class="w"> </span><span class="o">}</span>
+<p>CIS benchmark items specific to EVS deployments:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable SSH after deployment (SSH should only be enabled during maintenance)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Via PowerCLI:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>Get-VMHostService<span class="w"> </span>-VMHost<span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Stop-VMHostService<span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>Set-VMHostService<span class="w"> </span>-HostService<span class="w"> </span><span class="o">(</span>Get-VMHostService<span class="w"> </span>-VMHost<span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-eq<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span><span class="o">})</span><span class="w"> </span>-Policy<span class="w"> </span><span class="s2">&quot;off&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="o">}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Enable Lockdown Mode (Normal) — prevents direct ESXi access, requires vCenter</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Normal lockdown: DCUI + vCenter; Strict lockdown: vCenter only (no DCUI)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Foreach<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.ExtensionData.EnterLockdownMode<span class="o">()</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Verify NTP sync on all hosts</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostNtpServer
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="o">(</span>Get-View<span class="w"> </span><span class="nv">$_</span>.Id<span class="o">)</span>.Runtime.DasHostState<span class="w"> </span><span class="o">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Set DCUI.Access to restrict DCUI access to root only</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nv">$adv</span> <span class="p">=</span> <span class="nb">Get-AdvancedSetting</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-Name</span> <span class="s2">&quot;DCUI.Access&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="nb">Set-AdvancedSetting</span> <span class="n">-AdvancedSetting</span> <span class="nv">$adv</span> <span class="n">-Value</span> <span class="s2">&quot;root&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">}</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Configure syslog on all ESXi hosts to ship to SIEM/CloudWatch</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="nv">$adv</span> <span class="p">=</span> <span class="nb">Get-AdvancedSetting</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="n">-Name</span> <span class="s2">&quot;Syslog.global.logHost&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="nb">Set-AdvancedSetting</span> <span class="n">-AdvancedSetting</span> <span class="nv">$adv</span> <span class="n">-Value</span> <span class="s2">&quot;udp://syslog.internal.example.com:514&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">}</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Apply ESXi firewall rule to restrict management network access</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># Allow only specific source CIDR for vCenter/DCUI communication</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="nv">$esxcli</span> <span class="p">=</span> <span class="nb">Get-EsxCli</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="n">-V2</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="nv">$esxcli</span><span class="p">.</span><span class="n">network</span><span class="p">.</span><span class="n">firewall</span><span class="p">.</span><span class="n">ruleset</span><span class="p">.</span><span class="n">allowedip</span><span class="p">.</span><span class="n">add</span><span class="p">.</span><span class="n">Invoke</span><span class="p">(@{</span><span class="n">rulesetid</span><span class="p">=</span><span class="s2">&quot;webAccess&quot;</span><span class="p">;</span> <span class="n">ipaddress</span><span class="p">=</span><span class="s2">&quot;10.0.0.0/8&quot;</span><span class="p">})</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="p">}</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c"># Verify host lockdown mode and SSH status across all hosts</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;LockdownMode&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">LockdownMode</span><span class="p">}},</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SSH&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nb">Get-VMHostService</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Where </span><span class="n">Key</span> <span class="o">-eq</span> <span class="s2">&quot;TSM-SSH&quot;</span><span class="p">).</span><span class="n">Running</span><span class="p">}}</span>
+</code></pre></div>
+<h2 id="sddc-manager-and-vcenter-hardening">SDDC Manager and vCenter Hardening<a class="headerlink" href="#sddc-manager-and-vcenter-hardening" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check TLS versions accepted by vCenter (VCF 5.x defaults to TLS 1.2+ only)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$VCENTER</span>:443<span class="w"> </span>-tls1<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;handshake|Protocol&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$VCENTER</span>:443<span class="w"> </span>-tls1_1<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;handshake|Protocol&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="nv">$VCENTER</span>:443<span class="w"> </span>-tls1_2<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;handshake|Protocol&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># TLS 1.0 and 1.1 should show handshake failure; TLS 1.2 should succeed</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Reduce vCenter session timeout from default 120 min to 30 min</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$settingMgr</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="s2">&quot;OptionManager-VpxSettings&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">$option</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">OptionValue</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">$option</span><span class="p">.</span><span class="n">Key</span> <span class="p">=</span> <span class="s2">&quot;config.vpxd.sessionTimeout&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">$option</span><span class="p">.</span><span class="n">Value</span> <span class="p">=</span> <span class="s2">&quot;30&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">$settingMgr</span><span class="p">.</span><span class="n">UpdateValues</span><span class="p">(@(</span><span class="nv">$option</span><span class="p">))</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Verify current session timeout</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nv">$settingMgr</span><span class="p">.</span><span class="n">QueryOptions</span><span class="p">(</span><span class="s2">&quot;config.vpxd.sessionTimeout&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Key</span><span class="p">,</span> <span class="n">Value</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Enable vCenter Audit Event Logging to syslog</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># vCenter UI → Administration → vCenter Server Settings → Syslog</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Via vCenter REST API:</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://</span><span class="nv">$VCENTER</span><span class="s2">/api/appliance/logging/forwarding&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;[{</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s1">    &quot;hostname&quot;: &quot;syslog.internal.example.com&quot;,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="s1">    &quot;port&quot;: 514,</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="s1">    &quot;protocol&quot;: &quot;UDP&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="s1">  }]&#39;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Verify syslog forwarding configuration</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;administrator@vsphere.local:</span><span class="nv">$PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$VCENTER</span><span class="s2">/api/appliance/logging/forwarding&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<h2 id="compliance-and-audit">Compliance and Audit<a class="headerlink" href="#compliance-and-audit" title="Permanent link">&para;</a></h2>
+<p>VCF generates audit logs from multiple components. Ship all of these to a centralized location for SIEM correlation and compliance evidence.</p>
+<table>
+<thead>
+<tr>
+<th>Log Source</th>
+<th>Content</th>
+<th>Ship To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter events</td>
+<td>VM create/delete, permission changes, admin logins</td>
+<td>Syslog → SIEM</td>
+</tr>
+<tr>
+<td>NSX-T audit log</td>
+<td>DFW rule changes, gateway changes, role assignments</td>
+<td>Syslog → SIEM</td>
+</tr>
+<tr>
+<td>SDDC Manager audit log</td>
+<td>Host commissioning, cluster operations, password rotation</td>
+<td>Syslog → SIEM</td>
+</tr>
+<tr>
+<td>ESXi auth.log</td>
+<td>SSH logins, DCUI access, lockdown mode changes</td>
+<td>Syslog → SIEM</td>
+</tr>
+<tr>
+<td>AWS CloudTrail</td>
+<td>All evs:<em>, ec2:</em>, iam:* API calls</td>
+<td>CloudWatch Logs → SIEM</td>
+</tr>
+<tr>
+<td>VPC Flow Logs</td>
+<td>Accept/reject decisions on all EVS ENI traffic</td>
+<td>S3 or CloudWatch Logs</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Configure NSX-T audit log shipping to syslog</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/node/services/syslog/exporters&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s1">    &quot;server&quot;: &quot;syslog.internal.example.com&quot;,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">    &quot;port&quot;: 514,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    &quot;protocol&quot;: &quot;UDP&quot;,</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">    &quot;level&quot;: &quot;INFO&quot;,</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s1">    &quot;exporter_name&quot;: &quot;central-syslog&quot;</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Verify NSX-T syslog exporter</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/node/services/syslog/exporters&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Set up CloudWatch Logs subscription for EVS-related CloudTrail events</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Create CloudWatch Logs metric filter for EVS destructive actions</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>aws<span class="w"> </span>logs<span class="w"> </span>put-metric-filter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--log-group-name<span class="w"> </span>CloudTrail<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>--filter-name<span class="w"> </span>EVSDestructiveActions<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>--filter-pattern<span class="w"> </span><span class="s1">&#39;{ $.eventSource = &quot;evs.amazonaws.com&quot; &amp;&amp; ($.eventName = &quot;DeleteEnvironment*&quot; || $.eventName = &quot;DeleteEnvironmentHost*&quot;) }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>--metric-transformations<span class="w"> </span><span class="nv">metricName</span><span class="o">=</span>EVSDestructiveActions,metricNamespace<span class="o">=</span>SecurityAlerts,metricValue<span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Create alarm on that metric</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>--alarm-name<span class="w"> </span>EVS-Destructive-Action-Alert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>--metric-name<span class="w"> </span>EVSDestructiveActions<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span>--namespace<span class="w"> </span>SecurityAlerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistic<span class="w"> </span>Sum<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">1</span><span class="w"> </span>--comparison-operator<span class="w"> </span>GreaterThanOrEqualToThreshold<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:us-east-1:123456789012:security-alerts
 </code></pre></div>
 <h2 id="cis-vcf-hardening-checklist">CIS VCF Hardening Checklist<a class="headerlink" href="#cis-vcf-hardening-checklist" title="Permanent link">&para;</a></h2>
 <table>
@@ -3654,6 +3927,22 @@ EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS V
 <tr>
 <td>Rotate Secrets Manager credentials</td>
 <td>Rotate SDDC Manager + vCenter passwords quarterly</td>
+</tr>
+<tr>
+<td>Reduce vCenter session timeout</td>
+<td>Set to 30 minutes; default 120 is too long</td>
+</tr>
+<tr>
+<td>DCUI.Access = root only</td>
+<td>Restrict DCUI to root; remove any extra accounts</td>
+</tr>
+<tr>
+<td>Ship all audit logs to SIEM</td>
+<td>vCenter, NSX-T, SDDC Manager, ESXi auth.log</td>
+</tr>
+<tr>
+<td>CloudWatch alarm on EVS deletions</td>
+<td>Alert on any evs:Delete* CloudTrail event</td>
 </tr>
 </tbody>
 </table>

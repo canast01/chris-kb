@@ -3260,6 +3260,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vcf-management-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VCF Management Stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vcf-component-versions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3505,13 +3516,97 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 <a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<pre class="mermaid"><code>graph LR
+    classDef prem fill:#1e3a5f,color:#fff
+    classDef aws fill:#b45309,color:#fff
+    classDef vcf fill:#15803d,color:#fff
+    classDef nsx fill:#7c3aed,color:#fff
+
+    ONPREM["On-Premises DC"]:::prem
+    DX["Direct Connect\n(Private VIF)"]:::aws
+    VPC["AWS VPC\n(EVS Region)"]:::aws
+    MGMT["Management Subnet\nvCenter · SDDC Mgr · NSX Mgr"]:::vcf
+    VTEP["VTEP Subnet\nGeneve Tunnels (ENI per host)"]:::nsx
+    T0["T0 Router\n(BGP to VPC)"]:::nsx
+    T1["T1 Routers\n(per segment)"]:::nsx
+    WL["Workload Segments\n(NSX-T Logical Networks)"]:::nsx
+
+    ONPREM --&gt; DX --&gt; VPC
+    VPC --&gt; MGMT
+    VPC --&gt; VTEP
+    VPC --&gt; T0
+    T0 --&gt; T1
+    T1 --&gt; WL</code></pre>
 <h2 id="bare-metal-host-model">Bare-Metal Host Model<a class="headerlink" href="#bare-metal-host-model" title="Permanent link">&para;</a></h2>
-<p>EVS allocates dedicated physical EC2 bare-metal instances (i3en.metal or i4i.metal) to the cluster. Each host:
-- Runs ESXi directly on hardware (no hypervisor underneath)
-- Has multiple ENIs: one for management/vMotion/vSAN, one or more for NSX-T VTEP overlay
-- Contributes local NVMe disks to a vSAN cluster (HCI model, same as on-premises)
-- Is billed per-hour; minimum 3 hosts required</p>
+<p>EVS allocates dedicated physical EC2 bare-metal instances (i3en.metal or i4i.metal) to the cluster. These instances use the AWS dedicated tenancy model — the physical server is never shared with another AWS customer, which satisfies VMware's bare-metal licensing and hypervisor certification requirements.</p>
+<table>
+<thead>
+<tr>
+<th>Instance</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>NVMe Storage</th>
+<th>vSAN Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i3en.metal</td>
+<td>96</td>
+<td>768 GB</td>
+<td>60 TB (15 × 4 TB)</td>
+<td>OSA (cache + capacity tiers)</td>
+</tr>
+<tr>
+<td>i4i.metal</td>
+<td>128</td>
+<td>1024 GB</td>
+<td>30 TB (8 × 3.75 TB)</td>
+<td>ESA (single NVMe tier, preferred)</td>
+</tr>
+</tbody>
+</table>
+<p>When you create an EVS cluster, AWS provisions ESXi on each selected bare-metal instance automatically. You never interact with a bare-metal console or install an OS. By the time the cluster reaches the CREATED state, you have a fully-formed vCenter cluster visible in vSphere Client — hosts joined, vSAN configured, and NSX-T Manager reachable. Each host:</p>
+<ul>
+<li>Runs ESXi directly on hardware (no hypervisor underneath)</li>
+<li>Has multiple ENIs: one per VMkernel type, one or more for NSX-T VTEP overlay</li>
+<li>Contributes local NVMe disks to a vSAN cluster (HCI model, same as on-premises)</li>
+<li>Is billed per-hour; minimum 3 hosts required</li>
+</ul>
 <h2 id="vpc-integration">VPC Integration<a class="headerlink" href="#vpc-integration" title="Permanent link">&para;</a></h2>
+<p>Each VMkernel on an EVS host is attached to its own Elastic Network Interface (ENI). AWS attaches ENIs directly to the bare-metal instance; the ENI is just another NIC from ESXi's perspective. This means VPC-native features — security groups, route tables, flow logs — apply to each VMkernel individually.</p>
+<table>
+<thead>
+<tr>
+<th>VMkernel</th>
+<th>Purpose</th>
+<th>Subnet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>ESXi host management, DCUI access, vCenter communication</td>
+<td>Management /20</td>
+</tr>
+<tr>
+<td>vMotion</td>
+<td>Live VM migration traffic between hosts</td>
+<td>vMotion /20</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>vSAN storage traffic between disk group contributors</td>
+<td>vSAN /20</td>
+</tr>
+<tr>
+<td>VTEP</td>
+<td>NSX-T Geneve tunnel endpoints for overlay traffic</td>
+<td>VTEP /20</td>
+</tr>
+</tbody>
+</table>
+<p>The VPC route table is the underlay. It controls how bare-metal ENIs reach other subnets, Direct Connect, or Transit Gateway. NSX-T is a pure overlay that tunnels workload traffic inside Geneve frames on top of the VPC underlay — you never configure VPC routes for individual workload VM IPs; you only route the T0 uplink ENI.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VPC → Subnet per VMkernel type:
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Management subnet: vCenter, SDDC Manager, ESXi DCUI, vSAN management VMkernel
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  VTEP subnet:       NSX-T Geneve tunnel traffic between hosts
@@ -3519,6 +3614,46 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Transit Gateway:   Connect EVS VPC to other VPCs or on-premises via Direct Connect
 </code></pre></div>
 <h2 id="vsan-architecture">vSAN Architecture<a class="headerlink" href="#vsan-architecture" title="Permanent link">&para;</a></h2>
+<p>EVS supports two vSAN storage architectures. The choice depends on host type and workload profile.</p>
+<p><strong>OSA (Original Storage Architecture)</strong> — used on i3en.metal hosts. Storage is split into two tiers: a cache tier (fast NVMe or SSD for read/write acceleration) and a capacity tier (bulk storage). OSA is the classical vSAN model and is well-suited to mixed read/write workloads where cache absorption is important.</p>
+<p><strong>ESA (Express Storage Architecture)</strong> — used on i4i.metal hosts. All NVMe drives form a single storage pool; there is no separate cache tier. Compression and deduplication are built into the I/O path and run inline. ESA delivers lower latency and higher throughput than OSA for the same raw capacity, and is the recommended choice for new EVS deployments.</p>
+<p>vSAN protection is governed by Storage Policy Based Management (SPBM) policies:</p>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Method</th>
+<th>Min Hosts</th>
+<th>Failure Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID-1 FTT=1</td>
+<td>Mirroring (2 copies)</td>
+<td>3</td>
+<td>1 host failure</td>
+</tr>
+<tr>
+<td>RAID-5 FTT=1</td>
+<td>Erasure coding (4+1P)</td>
+<td>4</td>
+<td>1 host failure, less capacity used</td>
+</tr>
+<tr>
+<td>RAID-6 FTT=2</td>
+<td>Erasure coding (4+2P)</td>
+<td>6</td>
+<td>2 host failures</td>
+</tr>
+<tr>
+<td>RAID-1 FTT=2</td>
+<td>Mirroring (3 copies)</td>
+<td>5</td>
+<td>2 host failures</td>
+</tr>
+</tbody>
+</table>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># EVS uses vSAN OSA (Original Storage Architecture) or vSAN ESA (Express Storage Architecture)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># i4i.metal hosts with NVMe: recommended for vSAN ESA</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Minimum cluster: 3 hosts (RF=1 FTT) — production: 4+ hosts (RF=1, FTT=1 or FTT=2)</span>
@@ -3528,6 +3663,12 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># For stretched cluster: RAID-1 FTT=1 site + FTT=0 host (vSAN Stretched Cluster)</span>
 </code></pre></div>
 <h2 id="nsx-t-overlay-network">NSX-T Overlay Network<a class="headerlink" href="#nsx-t-overlay-network" title="Permanent link">&para;</a></h2>
+<p>NSX-T on EVS uses the Geneve tunneling protocol. Each ESXi host has a dedicated VTEP ENI attached in the VTEP subnet. Geneve frames encapsulate workload VM traffic and are forwarded between hosts through VPC routing — the VPC treats the frames as ordinary IP packets.</p>
+<p>The logical router topology follows a two-tier model:</p>
+<ul>
+<li><strong>T0 Gateway (Tier-0)</strong>: the north-south perimeter router. It has one or more uplink interfaces connected to ENIs in the VPC. The T0 peers with the VPC subnet router via BGP. When BGP is established, the T0 advertises workload segment CIDRs to the VPC, and AWS automatically adds routes in the VPC route table pointing those prefixes to the T0 uplink ENI. This is how on-premises hosts or other VPC resources reach EVS workload VMs.</li>
+<li><strong>T1 Gateways (Tier-1)</strong>: one per tenant, application, or network zone. T1 routers connect to logical segments on the south side and peer with the T0 on the north side. Distributed routing happens at the hypervisor level; inter-segment traffic never leaves the host for east-west flows.</li>
+</ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>NSX-T on EVS uses Geneve tunnels over dedicated ENIs:
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  On-premises DC → Direct Connect → AWS → VPC ENI (T0 uplink)
@@ -3539,6 +3680,40 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Key difference from on-prem: No physical switches managed by you.
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>AWS VPC routing tables = underlay network. NSX-T is pure overlay on top.
 </code></pre></div>
+<h2 id="vcf-management-stack">VCF Management Stack<a class="headerlink" href="#vcf-management-stack" title="Permanent link">&para;</a></h2>
+<p>All VCF management components run as VMs on the EVS cluster itself — they consume vSAN storage and ESXi compute from the same cluster they manage. AWS provisions these VMs as part of cluster creation.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>HA Model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDDC Manager</td>
+<td>Host lifecycle, patching, upgrades, VCF domain management</td>
+<td>Single VM; protected by vSphere HA</td>
+</tr>
+<tr>
+<td>vCenter Server</td>
+<td>VM inventory, DRS, vSphere HA, vSAN cluster management</td>
+<td>Single VM; VCHA optional for active-passive HA</td>
+</tr>
+<tr>
+<td>NSX Manager (3-node)</td>
+<td>SDN control plane, policy API, distributed firewall enforcement</td>
+<td>3-node active-active cluster; N+1 resilience</td>
+</tr>
+<tr>
+<td>NSX Edge nodes</td>
+<td>T0/T1 data plane for north-south traffic, BGP peering</td>
+<td>2+ VMs in Edge cluster</td>
+</tr>
+</tbody>
+</table>
+<p>SDDC Manager controls the entire VCF domain lifecycle: host commissioning, decommissioning, VCF bundle downloads, and coordinated upgrades across vCenter, NSX, and ESXi. Because SDDC Manager runs inside the cluster, you access it through the management subnet — the same ENI used for vCenter access.</p>
 <h2 id="vcf-component-versions">VCF Component Versions<a class="headerlink" href="#vcf-component-versions" title="Permanent link">&para;</a></h2>
 <p>EVS runs a specific VCF version aligned with the AWS service launch. AWS manages:
 - ESXi host OS provisioning (you do not install ESXi)

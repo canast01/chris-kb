@@ -3488,6 +3488,32 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<pre class="mermaid"><code>graph TD
+    A([Issue Reported]) --&gt; B{Host FAILED\nor CREATE_FAILED?}
+    B -- Yes --&gt; C([Contact AWS Support\nwith host-id + env-id])
+    B -- No --&gt; D{vSAN degraded\nor inaccessible?}
+    D -- Yes --&gt; E{BytesToSync\nnon-zero?}
+    E -- Yes --&gt; F([Wait for resync\ndo not remove hosts])
+    E -- No --&gt; G([Check vSAN health\ncheck ENI MTU])
+    D -- No --&gt; H{HCX service\nmesh down?}
+    H -- Yes --&gt; I([Check DX path\nCheck HCX appliance\nhealth + certs])
+    H -- No --&gt; J{NSX-T routing\nfailure?}
+    J -- Yes --&gt; K([Check T0 BGP state\nCheck VPC route table])
+    J -- No --&gt; L([Check vCenter\nand SDDC Manager logs])
+
+    classDef issue fill:#1e3a5f,color:#fff
+    classDef host fill:#7c3aed,color:#fff
+    classDef vsan fill:#b45309,color:#fff
+    classDef hcx fill:#15803d,color:#fff
+    classDef nsx fill:#1d4ed8,color:#fff
+    classDef support fill:#374151,color:#fff
+
+    class A issue
+    class B,C host
+    class D,E,F,G vsan
+    class H,I hcx
+    class J,K nsx
+    class L support</code></pre>
 <h2 id="host-stuck-or-failed-state">Host Stuck or FAILED State<a class="headerlink" href="#host-stuck-or-failed-state" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check host state</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>evs<span class="w"> </span>list-environment-hosts<span class="w"> </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span><span class="se">\</span>
@@ -3509,93 +3535,286 @@ Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN de
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># 4. Open AWS support case with host-id and environment-id</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Provide: environment ID, host ID, approximate failure timestamp, CloudTrail export</span>
 </code></pre></div>
+<p>Get the host's event history to understand the sequence of state transitions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get recent EVS API events for a specific host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>cloudtrail<span class="w"> </span>lookup-events<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--lookup-attributes<span class="w"> </span><span class="nv">AttributeKey</span><span class="o">=</span>ResourceName,AttributeValue<span class="o">=</span><span class="nv">$HOST_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-72H<span class="w"> </span>+%Y-%m-%dT%H:%M:%SZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Events[*].[EventTime,EventName,ErrorCode]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check if the host&#39;s ENIs are still attached to the instance</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">INSTANCE_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>evs<span class="w"> </span>get-environment-host<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--environment-id<span class="w"> </span><span class="nv">$ENV_ID</span><span class="w"> </span>--host-id<span class="w"> </span><span class="nv">$HOST_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;host.instanceId&#39;</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-network-interfaces<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>attachment.instance-id,Values<span class="o">=</span><span class="nv">$INSTANCE_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;NetworkInterfaces[*].[NetworkInterfaceId,Status,Attachment.Status]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<p>Determining recovery vs replacement:
+- If ENIs are detached or the EC2 instance status shows a system failure, the host needs replacement — AWS support will coordinate.
+- If the host's EC2 instance is running and ENIs are attached, the issue may be in the EVS control plane reporting — the host may be recoverable without replacement.
+- Never attempt to manually delete and re-add a FAILED host without AWS guidance. The EVS control plane may not cleanly deregister the host, leaving orphaned state.</p>
 <h2 id="vsan-degraded-health">vSAN Degraded Health<a class="headerlink" href="#vsan-degraded-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Get vSAN health status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;EVS-Management-Cluster&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$vsanHealth</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">$summary</span> <span class="p">=</span> <span class="nv">$vsanHealth</span><span class="p">.</span><span class="n">QueryVsanClusterHealthSummary</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">&quot;defaultView&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$summary</span><span class="p">.</span><span class="n">Groups</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">GroupHealth</span> <span class="o">-ne</span> <span class="s2">&quot;green&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;DEGRADED: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupName</span><span class="p">)</span><span class="s2"> - </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupHealth</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">Tests</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TestHealth</span> <span class="o">-ne</span> <span class="s2">&quot;green&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Test: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestName</span><span class="p">)</span><span class="s2"> - </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestHealth</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">}</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Common vSAN issues:</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># &quot;Performance Service&quot; degraded → enable vSAN Performance Service</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c">#   Set-VsanClusterConfiguration -VsanClusterConfiguration $vsanConfig -PerformanceServiceEnabled $true</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c"># &quot;vSAN HCL DB up-to-date&quot; → update HCL database in vCenter</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c">#   vCenter → Cluster → vSAN → Skyline Health → Download HCL DB</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c"># &quot;Network misconfiguration&quot; → check VTEP VMkernel on all hosts</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c">#   Get-VMHostNetworkAdapter -VMHost * | Where { $_.VsanTrafficEnabled }</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Get vSAN health status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;EVS-Management-Cluster&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$vsanHealth</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$summary</span> <span class="p">=</span> <span class="nv">$vsanHealth</span><span class="p">.</span><span class="n">QueryVsanClusterHealthSummary</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">&quot;defaultView&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">$summary</span><span class="p">.</span><span class="n">Groups</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">GroupHealth</span> <span class="o">-ne</span> <span class="s2">&quot;green&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;DEGRADED: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupName</span><span class="p">)</span><span class="s2"> - </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GroupHealth</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">Tests</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TestHealth</span> <span class="o">-ne</span> <span class="s2">&quot;green&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;  Test: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestName</span><span class="p">)</span><span class="s2"> - </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestHealth</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Common vSAN issues:</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># &quot;Performance Service&quot; degraded → enable vSAN Performance Service</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c">#   Set-VsanClusterConfiguration -VsanClusterConfiguration $vsanConfig -PerformanceServiceEnabled $true</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c"># &quot;vSAN HCL DB up-to-date&quot; → update HCL database in vCenter</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c">#   vCenter → Cluster → vSAN → Skyline Health → Download HCL DB</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c"># &quot;Network misconfiguration&quot; → check VTEP VMkernel on all hosts</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c">#   Get-VMHostNetworkAdapter -VMHost * | Where { $_.VsanTrafficEnabled }</span>
+</code></pre></div>
+<p>Common vSAN health check failures in EVS and their causes:</p>
+<table>
+<thead>
+<tr>
+<th>Health Check</th>
+<th>Failure Cause</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network Latency Checks</td>
+<td>ENI MTU mismatch; EVS requires jumbo frames (MTU 9000)</td>
+<td>Verify VMkernel adapters have MTU 9000; check VPC subnet MTU</td>
+</tr>
+<tr>
+<td>Operation Health</td>
+<td>vSAN disk group capacity &gt;75%</td>
+<td>Expand cluster or migrate VMs off</td>
+</tr>
+<tr>
+<td>Hardware Compatibility</td>
+<td>NVMe firmware not on HCL</td>
+<td>Update HCL DB in vCenter; AWS manages firmware on EVS hosts</td>
+</tr>
+<tr>
+<td>vSAN Build Recommendation</td>
+<td>VCF patch available</td>
+<td>Apply via SDDC Manager lifecycle management</td>
+</tr>
+<tr>
+<td>Component Metadata Health</td>
+<td>Objects have missing components</td>
+<td>Check BytesToSync; wait for resync to complete</td>
+</tr>
+<tr>
+<td>ESXi vSAN Health</td>
+<td>Host not contributing storage</td>
+<td>Check ESXi host state; check disk group status</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Get degraded vSAN object details</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vsanDisk</span> <span class="p">=</span> <span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$objHealth</span> <span class="p">=</span> <span class="nv">$vsanDisk</span><span class="p">.</span><span class="n">QueryVsanClusterHealthSummary</span><span class="p">(</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nv">$cluster</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="p">@(</span><span class="s2">&quot;vsanObjectHealth&quot;</span><span class="p">),</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">&quot;defaultView&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">$objHealth</span><span class="p">.</span><span class="n">Groups</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">Tests</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestName</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestHealth</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestDetails</span><span class="p">)</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;  Details: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TestDetails</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">}</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="p">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Check BytesToSync across all disk groups</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Get-VsanDiskGroup</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="nv">$resync</span> <span class="p">=</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-VsanResyncingComponent</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$resync</span><span class="p">)</span> <span class="p">{</span> <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">VMHost</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: BytesToSync=</span><span class="p">$(</span><span class="nv">$resync</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Sum</span> <span class="n">BytesToSync</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-Expand</span> <span class="n">Sum</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">}</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="hcx-service-mesh-down">HCX Service Mesh Down<a class="headerlink" href="#hcx-service-mesh-down" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify HCX interconnect status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$HCX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$HCX_MANAGER_IP</span><span class="s2">/hybridity/api/interconnect/links&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">for link in json.load(sys.stdin).get(&#39;items&#39;, []):</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s2">    print(f\&quot;{link[&#39;label&#39;]}: {link[&#39;status&#39;]}\&quot;)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s2">&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Common causes:</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># a) Direct Connect down → check DX connection in AWS console</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-connections<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;connections[*].[connectionName,connectionState]&#39;</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># b) HCX appliance IP unreachable → verify SG rules on VTEP subnet allow UDP 4500, UDP 500</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>sg-hcx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[*].IpPermissions&#39;</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># c) Certificate expired → regenerate service mesh certificates</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1">#    HCX Manager UI → Interconnect → Service Mesh → Actions → Redeploy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify HCX interconnect status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$HCX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://</span><span class="nv">$HCX_MANAGER_IP</span><span class="s2">/hybridity/api/interconnect/links&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">for link in json.load(sys.stdin).get(&#39;items&#39;, []):</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">    print(f\&quot;{link[&#39;label&#39;]}: {link[&#39;status&#39;]}\&quot;)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Common causes:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># a) Direct Connect down → check DX connection in AWS console</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-connections<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;connections[*].[connectionName,connectionState]&#39;</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># b) HCX appliance IP unreachable → verify SG rules on VTEP subnet allow UDP 4500, UDP 500</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>sg-hcx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[*].IpPermissions&#39;</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># c) Certificate expired → regenerate service mesh certificates</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1">#    HCX Manager UI → Interconnect → Service Mesh → Actions → Redeploy</span>
 </code></pre></div>
+<p>To restart individual HCX appliances without redeploying the entire service mesh:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From vCenter, power cycle the specific HCX appliance VM</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># HCX appliance VMs are named: HCX-IX-*, HCX-NE-*, HCX-WO-*</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Via PowerCLI:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$hcxVm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$_</span>.Name<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;HCX-IX-*&quot;</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Stop-VM<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$hcxVm</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Start-Sleep<span class="w"> </span>-Seconds<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Start-VM<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$hcxVm</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Monitor HCX service mesh recovery (takes 3-5 min after appliance restart)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;curl -sk -u admin:</span><span class="nv">$HCX_PASSWORD</span><span class="s2"> https://</span><span class="nv">$HCX_MANAGER_IP</span><span class="s2">/hybridity/api/interconnect/links | python3 -c \&quot;import sys,json; [print(f&#39;{l[\\\&quot;label\\\&quot;]}: {l[\\\&quot;status\\\&quot;]}&#39;) for l in json.load(sys.stdin).get(&#39;items&#39;,[])]\&quot; &quot;</span>
+</code></pre></div>
+<p>Common HCX outage causes:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stale NTP (clock drift &gt; 5 min)</td>
+<td>Service mesh stuck "Connecting"</td>
+<td>Sync NTP on HCX Manager and cloud-side VMs</td>
+</tr>
+<tr>
+<td>Certificate expiry</td>
+<td>Service mesh shows "Certificate error"</td>
+<td>HCX UI → Interconnect → Service Mesh → Redeploy</td>
+</tr>
+<tr>
+<td>VCF password rotation</td>
+<td>HCX cloud credentials rejected</td>
+<td>Update HCX cloud site credentials after vCenter password change</td>
+</tr>
+<tr>
+<td>DX circuit down</td>
+<td>All tunnels show "Down"</td>
+<td>Check DX in AWS console; failover to backup circuit</td>
+</tr>
+</tbody>
+</table>
 <h2 id="nsx-t-routing-failure-vm-connectivity">NSX-T Routing Failure (VM Connectivity)<a class="headerlink" href="#nsx-t-routing-failure-vm-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Symptoms: VMs on NSX-T segments can&#39;t communicate with VPC resources or on-premises</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># 1. Check T0 router BGP status (should be Established for DX/TGW)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/logical-routers?router_type=TIER0&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(f\&quot;{r[&#39;display_name&#39;]}: {r[&#39;id&#39;]}\&quot;) for r in json.load(sys.stdin)[&#39;results&#39;]]&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Get T0 BGP neighbors</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/logical-routers/&lt;t0-id&gt;/routing/bgp/neighbors/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">import sys,json</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">for n in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">    print(f\&quot;{n[&#39;neighbor_address&#39;]}: {n[&#39;connection_state&#39;]}\&quot;)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">&quot;</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># 2. Verify ENI routing in VPC route table</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>vpc-id,Values<span class="o">=</span><span class="nv">$EVS_VPC_ID</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[*].Routes[?DestinationCidrBlock!=`local`]&#39;</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># 3. Ping from NSX-T Edge node to VPC gateway</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># NSX-T UI → Networking → Tier-0 Gateways → Edge node → Test Connectivity</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Symptoms: VMs on NSX-T segments can&#39;t communicate with VPC resources or on-premises</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># 1. Check T0 router BGP status (should be Established for DX/TGW)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/logical-routers?router_type=TIER0&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(f\&quot;{r[&#39;display_name&#39;]}: {r[&#39;id&#39;]}\&quot;) for r in json.load(sys.stdin)[&#39;results&#39;]]&quot;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Get T0 BGP neighbors</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/api/v1/logical-routers/&lt;t0-id&gt;/routing/bgp/neighbors/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s2">import sys,json</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s2">for n in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s2">    print(f\&quot;{n[&#39;neighbor_address&#39;]}: {n[&#39;connection_state&#39;]}\&quot;)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s2">&quot;</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># 2. Verify ENI routing in VPC route table</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>vpc-id,Values<span class="o">=</span><span class="nv">$EVS_VPC_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[*].Routes[?DestinationCidrBlock!=`local`]&#39;</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c1"># 3. Ping from NSX-T Edge node to VPC gateway</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="c1"># NSX-T UI → Networking → Tier-0 Gateways → Edge node → Test Connectivity</span>
+</code></pre></div>
+<p>Check T0 BGP neighbor state via the NSX-T Policy API (preferred for NSX-T 3.x+):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List T0 gateways</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/policy/api/v1/infra/tier-0s&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(f\&quot;{g[&#39;id&#39;]}: {g[&#39;display_name&#39;]}\&quot;) for g in json.load(sys.stdin)[&#39;results&#39;]]&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Get BGP neighbor state for a T0 gateway</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:</span><span class="nv">$NSX_PASSWORD</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NSX_URL</span><span class="s2">/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/locale-services/&lt;locale-svc-id&gt;/bgp/neighbors/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="s2">for n in d.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="s2">    print(f\&quot;Neighbor: {n[&#39;neighbor_address&#39;]} | State: {n[&#39;connection_state&#39;]} | AS: {n[&#39;remote_as_number&#39;]}\&quot;)&quot;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># Check VPC route table — workload CIDR must point to T0 uplink ENI</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># If the route is missing, NSX-T may have lost the ENI attachment</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span>--filters<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>vpc-id,Values<span class="o">=</span><span class="nv">$EVS_VPC_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;RouteTables[*].Routes[?contains(DestinationCidrBlock, `172.16`) || contains(DestinationCidrBlock, `10.`)]&#39;</span>
 </code></pre></div>
 <h2 id="aws-evs-api-errors">AWS EVS API Errors<a class="headerlink" href="#aws-evs-api-errors" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Common API error: AccessDeniedException</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Fix: verify IAM role has elasticvmwareservice:* on the specific environment ARN</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Common API error: ResourceInUseException when deleting host</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Cause: host still in maintenance mode with vSAN evacuation incomplete</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Fix: wait for vSAN BytesToSync = 0, then retry delete</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Common API error: LimitExceededException</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check current quota</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>get-service-quota<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--service-code<span class="w"> </span>elasticvmwareservice<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--quota-code<span class="w"> </span>L-XXXXXXXX<span class="w">   </span><span class="c1"># check quota name in console</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Request quota increase</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>request-service-quota-increase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--service-code<span class="w"> </span>elasticvmwareservice<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span>--quota-code<span class="w"> </span>L-XXXXXXXX<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--desired-value<span class="w"> </span><span class="m">10</span>
+<table>
+<thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccessDeniedException</code></td>
+<td>IAM role lacks required evs:* permission</td>
+<td>Verify IAM policy includes the specific action and resource ARN</td>
+</tr>
+<tr>
+<td><code>ResourceInUseException</code></td>
+<td>Host still has vSAN evacuation in progress</td>
+<td>Wait for BytesToSync = 0, then retry delete</td>
+</tr>
+<tr>
+<td><code>LimitExceededException</code></td>
+<td>Account quota for EVS hosts reached</td>
+<td>Request quota increase via Service Quotas console</td>
+</tr>
+<tr>
+<td><code>ResourceNotFoundException</code></td>
+<td>Environment ID or host ID does not exist</td>
+<td>Verify IDs with <code>aws evs list-environments</code></td>
+</tr>
+<tr>
+<td><code>ValidationException</code></td>
+<td>Request parameters malformed</td>
+<td>Check AWS CLI version; verify JSON structure of request body</td>
+</tr>
+<tr>
+<td><code>InternalServerException</code></td>
+<td>AWS-side EVS control plane error</td>
+<td>Retry with exponential backoff; open support case if persistent</td>
+</tr>
+<tr>
+<td><code>ThrottlingException</code></td>
+<td>API call rate exceeded</td>
+<td>Add jitter and backoff to automation scripts; EVS API limit is low</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Common API error: AccessDeniedException</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Fix: verify IAM role has elasticvmwareservice:* on the specific environment ARN</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Common API error: ResourceInUseException when deleting host</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Cause: host still in maintenance mode with vSAN evacuation incomplete</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Fix: wait for vSAN BytesToSync = 0, then retry delete</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Common API error: LimitExceededException</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Check current quota</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>get-service-quota<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>--service-code<span class="w"> </span>elasticvmwareservice<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>--quota-code<span class="w"> </span>L-XXXXXXXX<span class="w">   </span><span class="c1"># check quota name in console</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Request quota increase</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>aws<span class="w"> </span>service-quotas<span class="w"> </span>request-service-quota-increase<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span>--service-code<span class="w"> </span>elasticvmwareservice<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span>--quota-code<span class="w"> </span>L-XXXXXXXX<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span>--desired-value<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 
 
