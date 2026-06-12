@@ -4,6 +4,8 @@
 Study notes, practice exam materials, review plans, and weak-area trackers for SAN and storage vendor certifications.
 </div>
 
+![Certifications Landscape](../assets/certifications-landscape-overview.svg)
+
 ```text
 ┌───────────────────────────────────── Certifications — Study Hub ──────────────────────────────────────┐
 │                                                                                                       │

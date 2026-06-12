@@ -4,6 +4,8 @@
 Automation reference: Ansible, PowerShell, Python, Terraform, and 1 more.
 </div>
 
+![Automation Platform Landscape](../assets/automation-landscape-overview.svg)
+
 ```text
 ┌──────────────────────────── Automation — Infrastructure Automation Tools ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

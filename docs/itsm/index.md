@@ -4,6 +4,8 @@
 Operational tooling reference covering version control, project tracking, documentation, and ITSM — Git, Jira, Confluence, and ServiceNow.
 </div>
 
+![ITSM & Collaboration Landscape](../assets/itsm-landscape-overview.svg)
+
 ```text
 ┌─────────────────────────────────────── Tools Platform Overview ───────────────────────────────────────┐
 │                                                                                                       │

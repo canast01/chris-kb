@@ -4,6 +4,8 @@
 Cloud infrastructure knowledge base covering AWS, Azure, and cloud AI services (Bedrock, Azure OpenAI, OpenAI API). Includes architecture, IAM, networking, compute, storage, monitoring, backup, security, governance, and cost management — with CLI references and operational procedures.
 </div>
 
+![Cloud Platform Landscape](../assets/cloud-landscape-overview.svg)
+
 ```text
 ┌──────────────────────────────────────── Cloud Infrastructure ─────────────────────────────────────────┐
 │                                                                                                       │

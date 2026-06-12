@@ -4,6 +4,8 @@
 Block, file, and object storage platforms used across enterprise infrastructure — Dell PowerMax, PowerScale, PowerStore, Unity, VPLEX, Data Domain, and ECS; Pure Storage FlashArray and FlashBlade; NetApp ONTAP; and Ceph distributed storage. Coverage includes architecture, configuration, performance tuning, multipathing, and troubleshooting.
 </div>
 
+![Storage Platform Landscape](../assets/storage-landscape-overview.svg)
+
 ```text
 ┌──────────────────────────────────── Enterprise Storage Landscape ─────────────────────────────────────┐
 │                                                                                                       │
