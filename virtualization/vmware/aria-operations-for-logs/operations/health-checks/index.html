@@ -3994,6 +3994,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cluster-node-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Node Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingestion-rate-and-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingestion Rate and Backpressure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-usage-and-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Usage and Retention
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-expiry-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Expiry Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-source-activity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Source Activity Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alert-pipeline-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert Pipeline Health
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4282,6 +4348,121 @@ Notification channel test: <strong>Administration → Notification Channels → 
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check Cassandra storage health</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/loginsight/cassandra/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
 </code></pre></div>
+<hr />
+<h2 id="cluster-node-health">Cluster Node Health<a class="headerlink" href="#cluster-node-health" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to vRLI master node</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>root@&lt;vrli-master-fqdn&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show cluster config: mode, master/worker roles, VIP, node count</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>/usr/lib/loginsight/application/bin/loginsight-cli<span class="w"> </span>config
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Confirm keepalived VIP is active on the master (HA deployments)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ip<span class="w"> </span>addr<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vrli-vip&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Verify cluster node states via API</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-master-fqdn&gt;/api/v2/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.nodes[] | {host: .hostname, role: .role, state: .state}&#39;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># All nodes must return state: &quot;ACTIVE&quot;</span>
+</code></pre></div>
+<p>vRLI UI: <strong>Administration → Cluster</strong> — verify all nodes show <strong>Status: Connected</strong>. Any node in <strong>Disconnected</strong> or <strong>Degraded</strong> state must be investigated before the next change window.</p>
+<hr />
+<h2 id="ingestion-rate-and-backpressure">Ingestion Rate and Backpressure<a class="headerlink" href="#ingestion-rate-and-backpressure" title="Permanent link">&para;</a></h2>
+<p>vRLI UI → <strong>Administration</strong> → <strong>Cluster</strong> → check <strong>Events Per Second</strong> counter per node.</p>
+<ul>
+<li>Healthy sustained rate: <strong>&lt; 15,000 EPS per node</strong></li>
+<li>A sudden drop to 0 EPS indicates sources stopped sending or a network path is down</li>
+<li>Sustained rate &gt; 15,000 EPS per node: add a worker node to distribute load</li>
+</ul>
+<p><strong>Detect UDP drop on the vRLI appliance:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to vRLI master or affected worker</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>netstat<span class="w"> </span>-s<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;receive buffer errors\|packets received\|errors&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Non-zero &quot;receive buffer errors&quot; indicates the kernel is dropping inbound UDP</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check disk I/O saturation (ingest &gt; write capacity causes in-memory buffering then drops)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>iostat<span class="w"> </span>-dx<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># await &gt; 20ms on the /storage device warrants investigation</span>
+</code></pre></div></p>
+<p>If backpressure is confirmed: syslog senders receive TCP RST (TCP) or silent UDP drop. Reduce ingest rate by filtering at source, adding worker nodes, or temporarily reducing retention to free disk I/O.</p>
+<hr />
+<h2 id="disk-usage-and-retention">Disk Usage and Retention<a class="headerlink" href="#disk-usage-and-retention" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to vRLI master</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/var/loginsight
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Alert threshold: &gt; 75% used — trigger manual archive or reduce retention period</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Data is partitioned per node at:</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># /storage/var/loginsight/loginsight-&lt;node-id&gt;/</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check all storage mounts</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>storage
+</code></pre></div>
+<p>vRLI UI → <strong>Administration</strong> → <strong>General</strong> → <strong>Storage</strong> — shows current <strong>Retention Period (days)</strong> and <strong>Disk Usage</strong> per partition.</p>
+<p>Actions when disk &gt; 75%:
+1. Trigger immediate archive: <strong>Administration → Archive → Archive Now</strong>
+2. Reduce retention: <strong>Administration → General → Storage → Log Retention Period</strong> → lower by 5-day increments and monitor reclaim
+3. If disk &gt; 90%: vRLI begins dropping inbound events — treat as P1</p>
+<hr />
+<h2 id="certificate-expiry-check">Certificate Expiry Check<a class="headerlink" href="#certificate-expiry-check" title="Permanent link">&para;</a></h2>
+<p>Run monthly or integrate with a certificate monitoring tool.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check vRLI API/cluster certificate (port 9543 = VAMI, port 9000 = API)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="k">$(</span>hostname<span class="k">)</span>:9543<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># notAfter= must be &gt; 60 days from today</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Check UI certificate (port 443)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="k">$(</span>hostname<span class="k">)</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check encrypted syslog certificate (port 1514)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="k">$(</span>hostname<span class="k">)</span>:1514<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># One-liner to show days remaining on UI cert</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span><span class="k">$(</span>hostname<span class="k">)</span>:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="o">=</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;{}&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;echo $(( ({} - $(date +%s)) / 86400 )) days remaining&#39;</span>
+</code></pre></div>
+<p>If expiry &lt; 60 days: follow the <strong>Rotate the vRLI Certificate</strong> procedure. Certificate expiry on port 1514 silently breaks encrypted syslog sources without UI warning.</p>
+<hr />
+<h2 id="log-source-activity-check">Log Source Activity Check<a class="headerlink" href="#log-source-activity-check" title="Permanent link">&para;</a></h2>
+<p>Verify all expected sources are actively sending logs — a silent source is often the first sign of a network or agent failure.</p>
+<p><strong>vSphere integration sources:</strong>
+- vRLI UI → <strong>Administration</strong> → <strong>Agents</strong> → verify each vSphere Integration source shows <strong>Last Received</strong> within the expected interval (ESXi hosts: ≤ 5 minutes; vCenter: ≤ 1 minute)</p>
+<p><strong>Syslog sources:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Filter in Explore Logs by source hostname and check most recent event timestamp</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Query bar:</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;source-fqdn&gt;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Sort by time descending — most recent event should be within the normal log interval</span>
+</code></pre></div></p>
+<p><strong>Silent source alert rule (create once, run as ongoing alert):</strong>
+- Build a query: <code>hostname = &lt;critical-source&gt;</code> with time range = last 15 minutes
+- Create alert: <strong>count &lt; 1 in 15-minute window</strong> → fires when no events received
+- Apply to all critical syslog sources: NSX Manager nodes, SDDC Manager, vCenter</p>
+<p>If a critical syslog source (NSX Manager, SDDC Manager) shows no events &gt; 15 minutes:
+1. Confirm syslog config on the source device is intact
+2. Confirm network path: <code>nc -zv &lt;vrli-vip&gt; 514</code> from the source host
+3. Check vRLI ingestion.log for connection errors from that source IP</p>
+<hr />
+<h2 id="alert-pipeline-health">Alert Pipeline Health<a class="headerlink" href="#alert-pipeline-health" title="Permanent link">&para;</a></h2>
+<p>Verify the full notification chain — query → alert firing → delivery — is functional.</p>
+<p><strong>Check for stale firing alerts:</strong>
+- vRLI UI → <strong>Alerts</strong> → <strong>User Alerts</strong> → sort by <strong>Last Fired</strong> — any alert stuck in "Firing" for &gt; 48 hours without a notification delivery record indicates a broken notification channel</p>
+<p><strong>Test SMTP delivery:</strong>
+1. <strong>Administration</strong> → <strong>General</strong> → <strong>SMTP</strong> → <strong>Send Test Email</strong>
+2. Verify email arrives at the configured recipient within 2 minutes
+3. If not received: check SMTP relay logs for bounce/reject and confirm port 25/587 is open from vRLI outbound</p>
+<p><strong>Test webhook delivery:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Trigger test from UI</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Administration → General → Webhooks → select channel → Send Test</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Or via API</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/notification/channels/&lt;channel-id&gt;/test&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Confirm HTTP 200 response and verify the external endpoint received the payload</span>
+</code></pre></div></p>
+<p><strong>Check alert history for gaps:</strong>
+- vRLI UI → <strong>Alerts</strong> → select an alert → <strong>Alert History</strong> → confirm expected firing events appear; a gap &gt; 2× the alert evaluation window indicates the alert evaluation engine may have restarted</p>
 
 
 
