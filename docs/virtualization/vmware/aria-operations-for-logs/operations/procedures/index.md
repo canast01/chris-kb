@@ -238,6 +238,211 @@ After configuration, alerts in vRLI that match the integration criteria create c
 
 ---
 
+## Add an NSX Syslog Source
+
+Configure each NSX Manager and Edge node to forward syslog to the vRLI VIP or master IP.
+
+1. NSX Manager UI → **System** → **Fabric** → **Nodes** → **NSX Managers** tab
+2. Select an NSX Manager node → **Actions** → **Set Syslog Servers**
+3. Click **Add** → enter:
+   - **Server**: vRLI VIP (cluster mode) or master node IP
+   - **Port**: `514`
+   - **Protocol**: `UDP`
+   - **Log Level**: `INFO`
+4. Click **Save** → repeat for every NSX Manager node and every Edge node (Edge nodes: **System → Fabric → Nodes → Edge Transport Nodes → select node → Actions → Set Syslog Servers**)
+5. Verify: vRLI → **Dashboards** → **Content Packs** → **VMware NSX-T** → check "Last Received" timestamp on key widgets (Firewall Events, DFW Drops); events should appear within 60 seconds of syslog config save
+
+```bash
+# Confirm NSX is reaching vRLI — run on vRLI master
+grep -i "nsx\|tnc\|edge" /var/log/loginsight/ingestion.log | tail -20
+
+# Quick EPS check from NSX source in vRLI Explore:
+# hostname contains "nsx" AND _source = syslog
+```
+
+---
+
+## Configure Event Forwarding to SIEM
+
+Forward filtered vRLI events to an external SIEM (Splunk, QRadar, ArcSight) via syslog.
+
+1. vRLI UI → **Administration** → **General** → **Forwarding** → **Add Destination**
+2. Set **Destination Type**: `Syslog`
+3. Enter SIEM **Host** and **Port** (default Splunk syslog: TCP 1514; QRadar: UDP 514)
+4. Set **Protocol**: `TCP` (preferred — prevents UDP loss on high-volume bursts)
+5. Optional — restrict forwarding to matching events only:
+   - Toggle **Filter by Query** → enter or select a saved query (e.g., `loglevel = ERROR AND appname = vpxd`)
+6. Toggle **Enable** → click **Save**
+7. Verify: generate a matching event on the source system; confirm receipt in the SIEM raw event viewer within 30 seconds
+
+```bash
+# Test TCP reachability to SIEM from vRLI appliance
+nc -zv <siem-host> <siem-port>
+
+# Monitor forwarding errors
+grep -i "forward\|destination\|connect" /var/log/loginsight/runtime.log | tail -30
+```
+
+---
+
+## Create a Custom Extracted Field
+
+Extract structured field values from unstructured log text using regex, enabling filter-by-field queries.
+
+1. vRLI → **Explore Logs** → run a query returning the log events that contain the value to extract
+2. Click any log entry to expand it → locate the value to capture
+3. Click **Extract Field** next to the value → the field extraction dialog opens
+4. Enter a **Field Name** (lowercase, no spaces; e.g., `vm_name`)
+5. Write a regex with a named capture group matching the value:
+```text
+   vm\s+'(?P<vm_name>[^']+)'
+   ```
+6. Click **Test** — verify the capture group matches across the sample events shown
+7. Click **Save** → the field is registered globally and applies to all new incoming events
+
+Use the extracted field in queries:
+```text
+vm_name = prod-web-01
+vm_name contains "db-"
+```
+The field appears in the filter suggestion dropdown after the first event containing it is indexed.
+
+---
+
+## Configure Role-Based Access (User Management)
+
+vRLI supports four roles: **Viewer** (read-only dashboards), **User** (explore + alerts), **Admin** (full config), **Super Admin** (multi-tenant admin). LDAP/AD group sync avoids per-user provisioning.
+
+**Add a local user:**
+1. vRLI → **Administration** → **Access Control** → **Users** → **Add User**
+2. Enter username, email address, and assign role (Viewer / User / Admin / Super Admin)
+3. Click **Save** → user receives a password-set email if SMTP is configured
+
+**Configure LDAP/AD integration:**
+1. vRLI → **Administration** → **Access Control** → **Authentication** → **LDAP**
+2. Enter:
+   - **Domain**: `corp.local`
+   - **Connection**: `ldap://<dc-fqdn>:389` or `ldaps://<dc-fqdn>:636`
+   - **Bind DN**: `CN=svc-vrli,OU=Service Accounts,DC=corp,DC=local`
+   - **Bind Password**: service account password
+   - **User Base DN**: `OU=Users,DC=corp,DC=local`
+   - **Group Base DN**: `OU=Groups,DC=corp,DC=local`
+3. Click **Test Connection** → confirm green
+4. Click **Import Groups** → search for the AD group → select → assign role
+5. Verify: log in as a member of the imported group; confirm the assigned role is enforced (e.g., Viewer cannot access Administration menu)
+
+---
+
+## Configure High Availability (Cluster Mode)
+
+vRLI HA requires a minimum of 3 nodes (1 master + 2 workers). Workers must already be joined to the cluster (see **Add a Worker Node** above). HA adds a Virtual IP that survives master node failure.
+
+1. vRLI → **Administration** → **Cluster** → **Enable High Availability**
+2. Enter the **Virtual IP** (VIP) — a free IP on the same management network segment as the vRLI nodes; must be reserved in IPAM/DNS
+3. Click **Save** — vRLI configures keepalived across all cluster nodes
+4. After HA is enabled, update all log sources and SIEM forwarders to point to the VIP:
+   - Syslog: UDP/TCP port 514 → VIP
+   - Encrypted syslog: TCP port 1514 → VIP
+   - vRLI API: HTTPS port 9000 → VIP
+   - UI: HTTPS port 443 → VIP
+5. Verify VIP is active:
+
+```bash
+# From a management host — confirm VIP is responding on syslog and API ports
+nc -zv <vrli-vip> 514
+curl -sk https://<vrli-vip>:9000/api/v1/version | jq .version
+
+# On vRLI master — confirm keepalived is holding the VIP
+ip addr show | grep <vrli-vip>
+```
+
+6. Test HA failover: power off the master VM → confirm VIP moves to a worker (now promoted master) within ~30 seconds
+
+---
+
+## Upgrade vRLI via Aria Suite Lifecycle
+
+Preferred upgrade path for LCM-managed deployments. LCM orchestrates node-by-node upgrade with rollback support.
+
+**Pre-upgrade checks:**
+1. Snapshot all vRLI nodes (master + all workers) — label with date and current vRLI version
+2. Verify LCM has downloaded the upgrade bundle: LCM → **Lifecycle Operations** → **Settings** → **Binary Mapping** → confirm target vRLI version listed
+3. Confirm all cluster nodes are **ACTIVE** (see Health Checks) before proceeding
+
+**Upgrade steps:**
+1. LCM → **Environments** → select the environment containing vRLI
+2. **Products** → **Aria Operations for Logs** → **Upgrade**
+3. Select the **Target Version** from the dropdown
+4. Click **Run Precheck** — LCM validates disk space, node connectivity, and product version compatibility
+5. Resolve any precheck findings; re-run precheck until all pass
+6. Click **Proceed** → monitor progress in LCM → **Requests**
+7. LCM upgrades master first, then workers sequentially; total time: 30–60 minutes for a 3-node cluster
+
+**Post-upgrade verification:**
+```bash
+# Confirm version on master
+curl -sk -u 'admin:<password>' \
+  https://<vrli-fqdn>/api/v1/version | jq .version
+
+# Check all cluster nodes rejoined
+curl -sk -u 'admin:<password>' \
+  https://<vrli-fqdn>/api/v2/cluster/nodes | \
+  jq '.nodes[] | {host: .hostname, state: .state, version: .version}'
+```
+- vRLI UI → **Administration** → **Content Packs** → confirm all installed packs still active
+- vRLI UI → **Administration** → **Cluster** → confirm all nodes **ACTIVE**
+- Delete node snapshots after a 48-hour burn-in period
+
+---
+
+## Configure a Custom Dashboard
+
+Build a dashboard combining event trend widgets, field distribution charts, and saved query results.
+
+1. vRLI → **Dashboards** → **+ New Dashboard** → enter a name and optional description
+2. Click **Add Widget** → select widget type:
+   - **Event Trends**: line chart of event count over time matching a query
+   - **Field Trends**: bar chart of top values for a specific extracted field
+   - **Events**: live table of matching log events
+   - **Text**: static markdown notes or section headers
+   - **URL**: embed an external iframe (e.g., Grafana panel)
+3. For each widget: enter the filter query, set the time range, and configure the field or chart parameters
+4. Drag to resize and arrange widgets on the canvas
+5. Click **Save to Dashboard**
+
+**Export/Import a dashboard:**
+1. **Dashboards** → select the dashboard → **Actions** → **Export** → save the JSON file
+2. On the target vRLI instance: **Dashboards** → **Actions** → **Import** → upload the JSON
+3. After import, verify widget queries execute without field-not-found errors (custom extracted fields must also exist on the target instance)
+
+---
+
+## Back Up and Restore vRLI Configuration
+
+Configuration backup covers: alert definitions, content packs, user accounts, saved queries, forwarding rules, and SMTP/webhook settings. **Log data is not included.**
+
+**Backup:**
+1. vRLI → **Administration** → **General** → **Configuration Backup**
+2. Click **Download Backup** → a JSON file is saved to the browser download directory
+3. Store the JSON in a versioned location (Git, object storage) — recommended frequency: weekly or before any major change
+
+**Restore:**
+1. Deploy a fresh vRLI appliance (same or newer version than the backup source)
+2. Complete initial setup (network, admin password) but do not configure anything further
+3. vRLI → **Administration** → **General** → **Configuration Backup** → **Restore**
+4. Upload the JSON backup file → click **Restore** → vRLI applies all configuration objects
+5. Verify: check alert definitions, forwarding rules, and user accounts are present
+6. Reconnect log sources (sources must be reconfigured to point to the new appliance FQDN/IP; log data is not restored)
+
+```bash
+# Automate backup via API (run weekly from a management host)
+curl -sk -u 'admin:<password>' \
+  "https://<vrli-fqdn>/api/v1/configuration/backup" \
+  -o "vrli-backup-$(date +%Y%m%d).json"
+```
+
+---
+
 ## Common Search Queries
 
 ```bash

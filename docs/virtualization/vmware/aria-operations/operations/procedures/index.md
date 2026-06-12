@@ -292,3 +292,142 @@ ls -lh /storage/log/support-bundle/
 # Download to local machine
 scp admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip .
 ```
+
+---
+
+## Upgrade Aria Operations (via Aria Suite Lifecycle)
+
+1. **Pre-upgrade snapshot** — take VM snapshots of all Aria Operations nodes (master, data, remote collectors) before starting
+2. Verify LCM has the upgrade bundle: LCM UI → **Lifecycle Operations** → **Settings** → **Binary Mapping** → confirm the target Aria Operations version is listed with status **Available**
+3. LCM UI → **Environments** → select the environment containing Aria Operations → **Products** → click **Aria Operations**
+4. Click **Upgrade** → select the target version from the dropdown
+5. Click **Run Precheck** — all checks must pass before proceeding; resolve any failures (NTP drift, disk space, credential expiry)
+6. Click **Upgrade** → confirm the upgrade plan → click **Proceed**
+7. Monitor progress: LCM shows per-product upgrade stages; expect 45–90 minutes depending on cluster size
+8. **Post-upgrade validation:**
+   - Verify all adapters collecting: **Administration → Solutions** — all adapter instances must show green
+   - Verify alert policies: **Configure → Policies** — confirm custom policies are intact and applied to correct object groups
+   - Check Cassandra health: SSH to master node → `su -s /bin/bash vcops-svc -c "cd /usr/lib/vmware-vcops/cassandra/bin && ./nodetool status"` — all nodes show `UN`
+9. Delete VM snapshots after 48 hours of confirmed stable operation
+
+---
+
+## Add a Remote Collector Group
+
+Remote Collector Groups (RCGs) pin adapter collection to a specific set of remote collectors — essential for isolated network segments (DMZ, remote sites, cloud VPCs).
+
+1. Aria Ops → **Administration** → **Remote Collectors** → **Remote Collector Groups** → **Add Group**
+2. Enter a group name (e.g., `rcg-dmz-segment`, `rcg-site-london`)
+3. From the **Available Collectors** list, select the remote collectors to add → move to **Selected Collectors**
+4. Click **Save** — the group is immediately available for adapter assignment
+5. Assign adapters to the group: **Data Sources** (or **Integrations**) → edit each adapter instance → set **Collector/Group** to the new RCG
+6. Verify: **Administration → Remote Collector Groups** → select the group → confirm all assigned adapters show green collection status
+
+When an adapter is pinned to an RCG, Aria Operations load-balances collection across all collectors in that group; removing a collector from the group immediately shifts load to remaining collectors.
+
+---
+
+## Configure Alert Criticality and Business Hours
+
+1. Aria Ops → **Alerts** → **Alert Policies** → select the target policy → **Edit**
+2. Under the **Alerts** tab, locate the alert definition → set **Criticality** from the dropdown: `Critical`, `Immediate`, `Warning`, or `Information`
+3. To configure Business Hours: **Edit Policy** → **Business Hours** tab → enable Business Hours → define the schedule (days, start time, end time, timezone)
+4. Set **Non-Business Hours Behavior**: choose `Defer notifications` (Aria Ops holds alerts until the next business window opens) or `Suppress alerts entirely`
+5. Click **Save**
+6. Verify: trigger a test condition outside business hours → confirm the notification is deferred and fires at the next business window open time
+
+Business hours apply per-policy; assign different policies to production vs. non-production object groups to reduce off-hours alert noise without silencing critical production alerts.
+
+---
+
+## Create a Custom Alert Definition
+
+1. Aria Ops → **Configure** → **Alerts** → **Alert Definitions** → **Add**
+2. Enter **Name** and **Description**; set **Impact**: select the object type this alert targets (e.g., `VirtualMachine`, `Datastore`)
+3. **Symptoms tab** → **Add Symptom** → **Metric / Property Symptom**:
+   - Select metric (e.g., `cpu|usage_average`)
+   - Operator: `>` value: `90`, duration: `15` minutes → set symptom criticality: `Critical`
+   - Add additional symptoms as needed; set **Condition** to `ANY` (alert fires on first match) or `ALL`
+4. **Recommendations tab** → **Add Recommendation** → enter remediation instructions (supports links to KB articles)
+5. Click **Save**
+6. Activate: assign the alert definition to a policy — **Configure → Policies → edit policy → Alert/Symptom Definitions → enable the new definition**
+7. **Test**: reproduce the threshold condition on a test object; confirm the alert fires in **Alerts → All Alerts** with the correct severity within two collection cycles
+
+---
+
+## Configure LDAP / Identity Source Integration
+
+1. Aria Ops → **Administration** → **Access Control** → **Identity Sources** → **Add**
+2. Select type: **LDAP** or **Active Directory** (Integrated Windows Auth)
+3. Enter LDAP connection details:
+   - **LDAP URL**: `ldap://ad.example.local:389` (or `ldaps://` for TLS, port 636)
+   - **Base DN**: `DC=example,DC=local`
+   - **Bind DN**: `CN=svc-vrops,OU=Service Accounts,DC=example,DC=local`
+   - **Bind Password**: service account password
+   - **User Search Base** and **Group Search Base** if non-standard
+4. Click **Test** — confirm the bind succeeds and user/group search returns results
+5. Click **Save** → **Import Groups**: search for and import the AD groups that need Aria Ops access
+6. Assign roles to groups: **Access Control → Groups** → select imported group → **Edit** → assign role (`Administrator`, `Content Admin`, `Read Only`, or a custom role)
+7. **Verify**: log out → log in using an AD user in the imported group → confirm the correct role is applied and object visibility matches the role scope
+
+---
+
+## Configure Data Retention (Rollup Periods)
+
+Default retention: raw metrics 6 months, hourly rollup 1 year, daily rollup 5 years. Reduce raw retention to save disk; extend daily rollup for long-term capacity trending.
+
+1. Aria Ops → **Administration** → **Global Settings** → **Data Retention**
+2. Edit the retention periods:
+   - **Raw data**: 1–6 months (reduce to 3 months on disk-constrained clusters)
+   - **Hourly rollup**: 6–18 months
+   - **Daily rollup**: 1–5 years
+3. Click **Save**
+4. If prompted, restart the analytics service: SSH to master → `systemctl restart vmware-vcops-analytics`; the service restarts in ~3–5 minutes
+5. Verify the new settings applied: **Administration → Global Settings → Data Retention** → confirm saved values
+
+Reducing raw retention triggers a background purge of older data; disk reclamation appears within 24–48 hours as Cassandra compaction completes.
+
+---
+
+## Configure a Cost Metric (Aria Cost Integration)
+
+1. Aria Ops → **Administration** → **Configuration** → **Cost Drivers** (or **Cost Settings** depending on version)
+2. Define rates per unit:
+   - **CPU rate**: cost per GHz per month (e.g., `$0.012`)
+   - **Memory rate**: cost per GB per month (e.g., `$0.008`)
+   - **Disk rate**: cost per GB per month (e.g., `$0.0003`)
+3. Assign rates to scopes: select cloud accounts or vSphere clusters → apply the rate card
+4. Click **Save**
+5. Wait for the next collection cycle (typically 5 minutes) → verify cost data appears in:
+   - **Optimize → Cost** → select a VM or cluster → confirm **Cost** tab shows calculated values
+   - Built-in **VM Cost** and **Cluster Cost** dashboards populate
+
+For Cloudhealth integration: **Administration → Integrations → Cloudhealth** → enter API key → map cloud accounts; cost data flows into Aria Ops dashboards after the first Cloudhealth sync (up to 24 hours).
+
+---
+
+## Restart a Failed Adapter Service
+
+When an adapter shows "Not Collecting" in the Solutions page:
+
+1. **UI restart**: **Administration → Solutions** → select the adapter instance → **Actions → Restart Adapter Instance** → wait one collection cycle → verify status returns to green
+2. **Service-level restart** (if UI restart fails):
+   ```bash
+   ssh admin@vrops-prod-01.example.local
+   # Restart watchdog — it detects and restarts all failed services
+   sudo systemctl restart vmware-vcops-watchdog
+   # Monitor service recovery (~2 minutes)
+   sudo systemctl list-units 'vmware-*' --state=active
+   ```
+3. **Check adapter logs** for root cause:
+   ```bash
+   # Adapter logs are in per-adapter subdirectories
+   ls /usr/lib/vmware-vcops/user/log/adapters/
+   # Tail the log for the failing adapter (example: vSphere adapter)
+   tail -200 /usr/lib/vmware-vcops/user/log/adapters/VMwareVim25Adapter/adapter.log | grep -i "ERROR\|exception\|authentication"
+   ```
+4. **Common causes and fixes:**
+   - `Authentication failed` → update credentials: **Data Sources → edit adapter → update password → Test Connection**
+   - `Connection refused` / `timeout` → verify network path from collector to target; check firewall rules
+   - `Certificate validation failed` → add target cert to Aria Ops trust store or disable SSL verification for internal hosts
+5. After fixing root cause, re-run UI restart and confirm green status within one collection cycle

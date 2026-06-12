@@ -153,3 +153,112 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 Also verify alert definitions are active: **Administration → Alert Settings → Alert Definitions** — confirm no policies are disabled unexpectedly.
+
+---
+
+## Remote Collector Health
+
+1. **UI status**: Aria Ops → **Administration** → **Remote Collectors** — every collector must show **State: OK**; any showing **Offline** or **Error** needs immediate investigation
+2. **Service check** — SSH to each remote collector node:
+   ```bash
+   ssh admin@vrops-rc-01.example.local
+   systemctl status vmware-vrops-collector
+   # Expected: active (running); if inactive — start with: systemctl start vmware-vrops-collector
+   ```
+3. **Collector log review**:
+   ```bash
+   # Check for collection failure entries in the last 30 minutes
+   grep -i "error\|fail\|exception" /usr/lib/vmware-vcops/user/log/collector.log | tail -50
+   # Check connectivity log for adapter reach failures
+   grep -i "connection refused\|timeout\|unreachable" /usr/lib/vmware-vcops/user/log/adapters/*/adapter.log | tail -30
+   ```
+4. **Verify adapters assigned to the collector are collecting**: Administration → Remote Collectors → select collector → **Assigned Adapters** — all must show green last-collection timestamps
+
+---
+
+## Adapter Collection Status Check
+
+1. **UI scan**: Aria Ops → **Administration** → **Solutions** → review the **Last Collection Time** column for every adapter instance
+   - Stale > 15 minutes: investigate immediately — indicates collection failure
+   - Stale > 60 minutes: high likelihood of service or network fault
+2. **Check credential validity**: if an adapter shows `Authentication failed` in its status message → update credentials:
+   - **Data Sources** → select adapter → **Edit** → update **Credentials** → **Test Connection** → **Save**
+3. **Bulk collection status query via API**:
+   ```bash
+   curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
+     "https://vrops-prod-01.example.local/suite-api/api/adapters" | \
+     jq '.adapterInstancesInfoDto[] | {name: .resourceKey.name, lastCollection: .lastCollectionTimeUTC, status: .adapterStatus}'
+   ```
+4. **Confirm object count stability**: Administration → Inventory → total object count; a sudden drop (>5%) indicates an adapter or credential failure causing object deletion
+
+---
+
+## Database Health (Cassandra)
+
+Cassandra is the primary metrics store; node failures cause metric gaps and eventually alert misfires.
+
+```bash
+# SSH to the master node
+ssh admin@vrops-prod-01.example.local
+
+# Check Cassandra cluster membership
+su -s /bin/bash vcops-svc -c "cd /usr/lib/vmware-vcops/cassandra/bin && ./nodetool status"
+# All nodes must show: UN (Up/Normal)
+# DN = node down (critical); UJ = joining/rebuilding (normal post-recovery)
+
+# Check Cassandra data disk usage
+df -h /dev/sdb
+# Alert threshold: > 80% full; Cassandra needs headroom for compaction
+
+# Check Cassandra repair status (run weekly)
+su -s /bin/bash vcops-svc -c "cd /usr/lib/vmware-vcops/cassandra/bin && ./nodetool repair --full"
+
+# Check for Cassandra errors in the last hour
+grep -i "error\|exception" /storage/db/cassandra/logs/system.log | grep "$(date +'%Y-%m-%d %H')" | tail -30
+```
+
+If a node shows `DN`: check VM power state → if powered on, check service: `systemctl status vmware-vcops-cassandra` → if service is stopped, start it and monitor rejoining (nodetool status transitions `DN → UJ → UN` over 10–30 minutes).
+
+---
+
+## Capacity and Scaling Indicators
+
+1. **Node resource utilisation**: Aria Ops → **Administration** → **Cluster Management** → review each node's CPU and memory usage bar
+   - CPU > 85% sustained: add a data node or remote collector to distribute load
+   - Memory > 90%: check for memory leak in analytics service — `systemctl restart vmware-vcops-analytics` as a short-term fix; engage VMware support if recurring
+2. **Object count vs. license limit**:
+   ```bash
+   curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
+     "https://vrops-prod-01.example.local/suite-api/api/resources/count" | jq '.count'
+   # Compare against licensed object count (Administration → Licenses)
+   # Alert if object count > 90% of licensed capacity
+   ```
+3. **Disk growth trend**: check `/storage/db` growth over the last 7 days:
+   ```bash
+   du -sh /storage/db/cassandra/data/
+   # Compare to previous week; if growing > 5 GB/day, review retention settings or add disk
+   ```
+4. **Collection cycle time**: if dashboards show metric freshness degrading (data > 10 minutes old), the analytics cluster is under-provisioned — check node CPU and consider scaling
+
+---
+
+## Alert Queue Health
+
+1. **Stale alert detection**: Aria Ops → **Alerts** → **All Alerts** → sort by **Start Time** ascending
+   - Any alert in **Active** state older than 7 days without acknowledgement indicates policy or notification failure
+   - Investigate: check if the triggering condition still exists; if resolved but alert persists, cancel the alert manually
+2. **Notification delivery verification**:
+   ```bash
+   # Test SMTP outbound plugin
+   # UI: Administration → Outbound Settings → select SMTP plugin → Test
+   # Check SMTP relay logs for delivery confirmation or bounce
+   ```
+3. **Notification queue check**: Aria Ops → **Administration** → **Notifications** → **Outbound Settings** → select each plugin → click **Test** → confirm delivery
+4. **Alert definition integrity**: **Configure → Alert Definitions** — confirm no definitions are in **Draft** state (draft definitions do not fire alerts); publish any that should be active
+5. **Alert count trend**: compare today's active alert count to the 30-day rolling average using the Alert API:
+   ```bash
+   curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
+     "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true" | \
+     jq '.pageInfo.totalCount'
+   # Sudden spike (>2x normal) indicates a broad infrastructure event or a misconfigured policy firing excessively
+   ```
