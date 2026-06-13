@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - netbackup
+---
 # NetBackup — Initial Deployment
 
 This guide covers deploying Veritas NetBackup from bare metal through a fully

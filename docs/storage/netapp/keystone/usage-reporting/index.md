@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # Keystone Usage Reporting
 
 <div class="kb-summary">

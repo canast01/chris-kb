@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - troubleshooting
+  - vmware
+---
 # Aria Operations for Logs — Common Issues
 
 ```bash

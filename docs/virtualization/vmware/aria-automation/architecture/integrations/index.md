@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-automation
+  - vmware
+---
 # Aria Automation — Integrations
 
 ```bash

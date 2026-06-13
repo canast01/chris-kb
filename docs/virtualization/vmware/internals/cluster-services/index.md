@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vSphere Cluster Services — DRS, HA, FT, and vCLS
 
 vSphere cluster services are the group of features that collectively make a cluster of ESXi hosts behave as a resilient, self-managing compute platform. vSphere High Availability (HA), Distributed Resource Scheduler (DRS), Fault Tolerance (FT), and vSphere Cluster Services (vCLS) are complementary — each addresses a different failure scenario or resource management goal. Understanding how they interact is essential for both day-to-day administration and for the VCP-DCV 8 exam.

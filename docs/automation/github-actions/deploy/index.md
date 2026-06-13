@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - github-actions
+---
 # GitHub Actions — Environment Setup
 
 This guide walks through the initial setup of GitHub Actions for a repository: enabling

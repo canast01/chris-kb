@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell VPLEX
 
 <div class="kb-summary">

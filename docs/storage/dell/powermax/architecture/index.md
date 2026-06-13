@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # PowerMax — Architecture
 
 <div class="kb-summary">

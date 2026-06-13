@@ -1,5 +1,8 @@
 ---
 title: PowerPath — Install & Upgrade
+tags:
+  - dell
+  - operations
 ---
 
 # PowerPath — Install & Upgrade

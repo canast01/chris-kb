@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - deployment
+  - vmware
+---
 # Aria Operations for Networks — Deploy
 
 <div class="kb-summary">

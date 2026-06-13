@@ -1,3 +1,7 @@
+---
+tags:
+  - linux
+---
 # PostgreSQL
 
 <div class="kb-summary">

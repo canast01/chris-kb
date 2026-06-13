@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - pure
+---
 # Pure1 Cloud Management
 
 

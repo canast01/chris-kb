@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # PowerMax — Operations
 
 <div class="kb-summary">

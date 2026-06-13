@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - security
+  - vmware
+---
 # vRNI Security Hardening
 
 ```bash

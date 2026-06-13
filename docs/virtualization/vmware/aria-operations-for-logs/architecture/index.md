@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-logs
+  - vmware
+---
 # Aria Operations for Logs — Architecture
 
 <div class="kb-summary">

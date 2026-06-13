@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Policy and Initiative Assignments
 
 

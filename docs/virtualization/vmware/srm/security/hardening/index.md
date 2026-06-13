@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - srm
+  - vmware
+---
 # SRM — Hardening
 
 

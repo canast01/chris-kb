@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS Compute
 
 <div class="kb-summary">

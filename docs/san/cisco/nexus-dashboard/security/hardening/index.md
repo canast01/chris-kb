@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - security
+---
 # Cisco Nexus Dashboard — Security Hardening
 
 ```bash

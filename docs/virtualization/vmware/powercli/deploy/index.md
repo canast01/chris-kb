@@ -1,3 +1,9 @@
+---
+tags:
+  - deployment
+  - powercli
+  - vmware
+---
 # PowerCLI — Deploy
 
 <div class="kb-summary">

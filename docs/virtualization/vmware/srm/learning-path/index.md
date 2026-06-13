@@ -1,3 +1,9 @@
+---
+tags:
+  - learning-path
+  - srm
+  - vmware
+---
 # Site Recovery Manager — Learning Path
 
 <div class="kb-summary">

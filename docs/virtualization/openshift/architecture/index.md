@@ -1,3 +1,7 @@
+---
+tags:
+  - architecture
+---
 # OpenShift — Architecture
 
 <div class="kb-summary">

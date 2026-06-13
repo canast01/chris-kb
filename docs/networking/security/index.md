@@ -1,3 +1,8 @@
+---
+tags:
+  - networking
+  - security
+---
 # Networking — Network Security
 
 ```bash

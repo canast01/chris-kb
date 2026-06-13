@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # SRDF/S — Install & Upgrade
 
 ```bash

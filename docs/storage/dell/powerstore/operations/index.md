@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # PowerStore — Operations
 
 <div class="kb-summary">

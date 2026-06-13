@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # Dell Unity XT — Initial Deployment
 
 ```text

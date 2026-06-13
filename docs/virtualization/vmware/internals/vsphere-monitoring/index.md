@@ -1,5 +1,8 @@
 ---
 title: vSphere Monitoring
+tags:
+  - internals
+  - vmware
 ---
 
 # vSphere Monitoring — Performance, Logs, and Skyline

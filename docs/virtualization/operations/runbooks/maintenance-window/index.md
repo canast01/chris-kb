@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # Maintenance Window Runbook
 
 

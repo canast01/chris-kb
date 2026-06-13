@@ -1,5 +1,7 @@
 ---
 title: LDAP
+tags:
+  - networking
 ---
 
 # LDAP

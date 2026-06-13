@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Incident Handling — Standard Procedures
 
 <div class="kb-summary">

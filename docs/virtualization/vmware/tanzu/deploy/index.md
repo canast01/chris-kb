@@ -1,3 +1,9 @@
+---
+tags:
+  - deployment
+  - tanzu
+  - vmware
+---
 # Tanzu — Deploy
 
 <div class="kb-summary">

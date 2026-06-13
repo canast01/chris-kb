@@ -1,3 +1,7 @@
+---
+tags:
+  - certifications
+---
 # AI Practice Notes
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - python
+  - troubleshooting
+---
 # Python Automation — Diagnostics
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # Pure1 — Design Standards
 
 <div class="kb-summary">

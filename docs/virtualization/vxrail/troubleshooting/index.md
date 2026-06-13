@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - vxrail
+---
 # VxRail Troubleshooting
 
 

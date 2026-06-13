@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # Flex on Demand — Architecture
 
 <div class="kb-summary">

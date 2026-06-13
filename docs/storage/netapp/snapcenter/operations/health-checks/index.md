@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - operations
+---
 # SnapCenter — Health Checks
 
 

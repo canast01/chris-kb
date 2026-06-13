@@ -1,3 +1,7 @@
+---
+tags:
+  - linux
+---
 # Integration — Directory Integration (LDAP / Active Directory)
 
 ```bash

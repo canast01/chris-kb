@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - windows
+---
 # SQL Server — Design Standards
 
 <div class="kb-summary">

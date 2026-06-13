@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - troubleshooting
+  - vmware
+---
 # vRNI Escalation
 
 ```bash

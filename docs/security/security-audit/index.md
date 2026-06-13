@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Security Audit Procedure
 
 <div class="kb-summary">

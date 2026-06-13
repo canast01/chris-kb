@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # MySQL / MariaDB — CLI Reference
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - windows
+---
 # SQL Server — Authentication
 
 <div class="kb-summary">

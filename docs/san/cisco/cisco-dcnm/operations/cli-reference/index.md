@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Cisco DCNM — CLI Reference
 
 ```bash

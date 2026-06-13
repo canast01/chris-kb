@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # OpenShift — Access Control
 
 <div class="kb-summary">

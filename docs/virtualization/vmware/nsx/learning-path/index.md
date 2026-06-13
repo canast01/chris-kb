@@ -1,3 +1,10 @@
+---
+tags:
+  - learning-path
+  - nsx
+  - nsx-4
+  - vmware
+---
 # NSX — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - azure
+---
 # Azure Integration
 
 <div class="kb-summary">

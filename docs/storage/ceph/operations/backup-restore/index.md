@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - operations
+---
 # Ceph — Backup & Restore
 
 ```text

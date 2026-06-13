@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - aws
+---
 # AWS — How It Works
 
 

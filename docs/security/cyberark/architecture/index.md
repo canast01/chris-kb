@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - security
+---
 # CyberArk — Architecture
 
 <div class="kb-summary">

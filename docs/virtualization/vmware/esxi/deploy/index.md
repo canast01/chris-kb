@@ -1,3 +1,10 @@
+---
+tags:
+  - deployment
+  - esxi
+  - vmware
+  - vsphere-8
+---
 # ESXi Host Deployment
 
 <div class="kb-summary">

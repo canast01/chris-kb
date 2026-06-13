@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-operations
+  - troubleshooting
+  - vmware
+---
 # Aria Operations — Troubleshooting
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vcf
+  - vmware
+---
 # VCF — Operations
 
 <div class="kb-summary">

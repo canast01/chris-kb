@@ -1,3 +1,7 @@
+---
+tags:
+  - certifications
+---
 # Certifications
 
 <div class="kb-summary">

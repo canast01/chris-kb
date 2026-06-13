@@ -1,3 +1,8 @@
+---
+tags:
+  - reference
+  - vmware
+---
 # VMware Editions
 
 <div class="kb-summary">

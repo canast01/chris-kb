@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vmware
+  - vxrail
+---
 # VxRail Appliance — Scripts
 
 <div class="kb-summary">

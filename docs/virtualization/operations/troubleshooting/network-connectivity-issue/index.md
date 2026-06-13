@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - troubleshooting
+---
 # Network Connectivity Issues
 
 

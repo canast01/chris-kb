@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - vmware
+---
 # vCenter Certificate Rotation Runbook
 
 <div class="kb-summary">

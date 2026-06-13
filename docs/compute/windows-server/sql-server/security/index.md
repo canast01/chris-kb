@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - windows
+---
 # SQL Server — Security
 
 <div class="kb-summary">

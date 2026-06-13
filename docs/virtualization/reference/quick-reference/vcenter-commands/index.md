@@ -1,3 +1,9 @@
+---
+tags:
+  - reference
+  - vcenter
+  - vsphere-8
+---
 # vCenter Service Commands
 
 

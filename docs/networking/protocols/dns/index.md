@@ -1,5 +1,7 @@
 ---
 title: DNS
+tags:
+  - networking
 ---
 
 # DNS

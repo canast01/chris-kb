@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # APEX Storage as a Service — Encryption
 
 

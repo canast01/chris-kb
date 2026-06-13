@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - operations
+---
 # Amazon EVS — Lifecycle & Upgrades
 
 <div class="kb-summary">

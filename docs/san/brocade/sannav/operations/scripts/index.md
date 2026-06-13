@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Brocade SANnav — Operations Scripts
 
 ```bash

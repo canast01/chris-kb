@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # Resource Contention Modeling
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - powershell
+---
 # PowerShell — Scripts
 
 <div class="kb-summary">

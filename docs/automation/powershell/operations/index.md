@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - powershell
+---
 # PowerShell — Operations
 
 

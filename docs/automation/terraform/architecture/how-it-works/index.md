@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - terraform
+---
 # Terraform — How It Works
 
 

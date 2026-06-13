@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - security
+---
 # Venafi — Learning Path
 
 <div class="kb-summary">

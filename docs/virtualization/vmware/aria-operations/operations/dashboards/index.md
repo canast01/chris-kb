@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-operations
+  - operations
+  - vmware
+---
 # Aria Operations: Dashboards — Creating, Editing, and Sharing
 
 

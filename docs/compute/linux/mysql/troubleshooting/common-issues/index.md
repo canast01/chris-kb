@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - troubleshooting
+---
 # MySQL / MariaDB — Common Issues
 
 <div class="kb-summary">

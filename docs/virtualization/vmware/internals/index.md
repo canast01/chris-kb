@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # VMware Internals
 
 <div class="kb-summary">

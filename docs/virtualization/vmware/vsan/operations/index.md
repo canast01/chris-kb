@@ -1,3 +1,10 @@
+---
+tags:
+  - operations
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN — Operations
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - security
+---
 # Venafi — How It Works
 
 

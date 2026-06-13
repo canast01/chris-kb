@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 
 # Host Isolation Response
 

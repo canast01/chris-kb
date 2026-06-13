@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - troubleshooting
+---
 # Cisco Nexus Dashboard — Troubleshooting Common Issues
 
 ```bash

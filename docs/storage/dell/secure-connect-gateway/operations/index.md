@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # Secure Connect Gateway — Operations
 
 

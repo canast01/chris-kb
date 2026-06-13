@@ -1,3 +1,7 @@
+---
+tags:
+  - powershell
+---
 # PowerShell
 
 <div class="kb-summary">

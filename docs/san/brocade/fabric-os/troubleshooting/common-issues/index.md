@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - troubleshooting
+---
 # FabricOS — Common Issues
 
 

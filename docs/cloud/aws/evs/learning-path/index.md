@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - learning-path
+---
 # Amazon EVS — Learning Path
 
 <div class="kb-summary">

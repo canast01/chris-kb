@@ -1,3 +1,7 @@
+---
+tags:
+  - dr
+---
 # Service Level Objectives (SLO)
 
 

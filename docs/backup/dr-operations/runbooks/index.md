@@ -1,3 +1,7 @@
+---
+tags:
+  - dr
+---
 # DR Runbooks
 
 <div class="kb-summary">

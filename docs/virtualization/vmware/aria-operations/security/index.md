@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-operations
+  - security
+  - vmware
+---
 # Aria Operations — Security
 
 <div class="kb-summary">

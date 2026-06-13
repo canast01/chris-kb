@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Pure Evergreen//One CLI Reference
 
 

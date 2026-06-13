@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # NTP Firewall Rules
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Cisco DCNM — Health Checks
 
 ```bash

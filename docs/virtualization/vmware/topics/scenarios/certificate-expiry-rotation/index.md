@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Certificate Expiry and Rotation
 
 <div class="kb-summary">

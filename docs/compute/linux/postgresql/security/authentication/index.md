@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - security
+---
 # PostgreSQL — Authentication
 
 <div class="kb-summary">

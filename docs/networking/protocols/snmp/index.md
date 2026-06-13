@@ -1,5 +1,7 @@
 ---
 title: SNMP
+tags:
+  - networking
 ---
 
 # SNMP

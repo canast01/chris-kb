@@ -1,3 +1,7 @@
+---
+tags:
+  - python
+---
 # Python Automation
 
 <div class="kb-summary">

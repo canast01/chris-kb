@@ -1,3 +1,9 @@
+---
+tags:
+  - deployment
+  - srm
+  - vmware
+---
 # SRM — Deploy
 
 <div class="kb-summary">

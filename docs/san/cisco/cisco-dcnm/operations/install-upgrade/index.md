@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Cisco DCNM — Install and Upgrade
 
 ```bash

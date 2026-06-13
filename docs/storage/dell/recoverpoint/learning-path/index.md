@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell RecoverPoint — Learning Path
 
 <div class="kb-summary">

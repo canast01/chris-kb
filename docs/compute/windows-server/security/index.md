@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - windows
+---
 # Windows Server — Security
 
 

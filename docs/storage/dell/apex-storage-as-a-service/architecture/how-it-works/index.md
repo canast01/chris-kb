@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # APEX Storage as a Service — How It Works
 
 

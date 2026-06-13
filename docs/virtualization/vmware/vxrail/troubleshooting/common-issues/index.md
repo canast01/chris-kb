@@ -1,3 +1,9 @@
+---
+tags:
+  - troubleshooting
+  - vmware
+  - vxrail
+---
 # VxRail — Common Issues
 
 <div class="kb-summary">

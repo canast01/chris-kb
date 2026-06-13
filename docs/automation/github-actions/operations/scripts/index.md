@@ -1,3 +1,8 @@
+---
+tags:
+  - github-actions
+  - operations
+---
 # GitHub Actions — Scripts
 
 ```bash

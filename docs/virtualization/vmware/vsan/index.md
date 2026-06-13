@@ -1,5 +1,9 @@
 ---
 title: vSAN
+tags:
+  - vmware
+  - vsan
+  - vsphere-8
 ---
 
 # vSAN

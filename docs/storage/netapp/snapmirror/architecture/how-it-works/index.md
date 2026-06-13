@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # SnapMirror — How It Works
 
 

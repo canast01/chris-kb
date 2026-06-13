@@ -1,5 +1,7 @@
 ---
 title: Standard LDAP Integration
+tags:
+  - security
 ---
 
 # Standard LDAP Integration

@@ -1,5 +1,7 @@
 ---
 title: TLS (LDAP)
+tags:
+  - networking
 ---
 
 # TLS (LDAP)

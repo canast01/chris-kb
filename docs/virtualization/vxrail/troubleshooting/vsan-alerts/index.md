@@ -1,3 +1,10 @@
+---
+tags:
+  - troubleshooting
+  - vsan
+  - vsphere-8
+  - vxrail
+---
 # VxRail vSAN Alerts
 
 <div class="kb-summary">

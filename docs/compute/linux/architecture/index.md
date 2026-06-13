@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # Linux — Architecture
 
 <div class="kb-summary">

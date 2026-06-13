@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # FOD — Troubleshooting
 
 <div class="kb-summary">

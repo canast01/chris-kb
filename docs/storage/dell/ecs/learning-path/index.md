@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell ECS (Elastic Cloud Storage) — Learning Path
 
 <div class="kb-summary">

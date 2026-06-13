@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # CloudIQ — Initial Setup
 
 ```text

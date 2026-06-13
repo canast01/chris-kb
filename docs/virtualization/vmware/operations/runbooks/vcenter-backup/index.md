@@ -1,3 +1,10 @@
+---
+tags:
+  - operations
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter File-Based Backup Runbook
 
 <div class="kb-summary">

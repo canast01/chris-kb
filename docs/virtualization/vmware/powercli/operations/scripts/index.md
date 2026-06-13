@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - powercli
+  - vmware
+---
 # PowerCLI — Scripts
 
 <div class="kb-summary">

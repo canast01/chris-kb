@@ -1,3 +1,8 @@
+---
+tags:
+  - aria-automation
+  - vmware
+---
 # Aria Automation
 
 <div class="kb-summary">

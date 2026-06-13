@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Virtualization — Exam Tracking
 
 <div class="kb-summary">

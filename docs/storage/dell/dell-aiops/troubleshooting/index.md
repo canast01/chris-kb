@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # Dell AIOps — Troubleshooting
 
 ```bash

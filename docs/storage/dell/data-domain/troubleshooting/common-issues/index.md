@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # Dell Data Domain Common Issues
 
 ```bash

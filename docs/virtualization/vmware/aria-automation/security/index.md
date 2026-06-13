@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - security
+  - vmware
+---
 # Aria Automation — Security
 
 <div class="kb-summary">

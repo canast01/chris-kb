@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - troubleshooting
+---
 # Certificates — Troubleshooting
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - netbackup
+  - security
+---
 # NetBackup — Authentication
 
 ```bash

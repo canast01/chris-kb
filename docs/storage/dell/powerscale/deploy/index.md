@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # Dell PowerScale — Initial Deployment
 
 ```text

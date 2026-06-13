@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Pre-Change Health Validation
 
 

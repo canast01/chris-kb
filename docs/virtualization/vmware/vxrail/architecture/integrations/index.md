@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vxrail
+---
 # VxRail — Integrations
 
 <div class="kb-summary">

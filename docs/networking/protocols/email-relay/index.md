@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # Integration — Email Relay (SMTP)
 
 ```bash

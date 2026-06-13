@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # Keystone — Architecture
 
 <div class="kb-summary">

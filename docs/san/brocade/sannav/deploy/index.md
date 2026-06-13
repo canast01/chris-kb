@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - san
+---
 # SANnav — Initial Deployment
 
 ```text

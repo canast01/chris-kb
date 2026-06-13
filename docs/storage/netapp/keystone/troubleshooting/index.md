@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - troubleshooting
+---
 # NetApp Keystone Troubleshooting
 
 <div class="kb-summary">

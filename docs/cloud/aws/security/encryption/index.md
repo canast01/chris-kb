@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - security
+---
 # AWS Encryption — At Rest & In Transit
 
 ```bash

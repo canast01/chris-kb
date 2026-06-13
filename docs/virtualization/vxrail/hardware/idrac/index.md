@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail iDRAC
 
 <div class="kb-summary">

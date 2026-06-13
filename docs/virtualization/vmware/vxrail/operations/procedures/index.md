@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vmware
+  - vxrail
+---
 # VxRail — Procedures
 
 <div class="kb-summary">

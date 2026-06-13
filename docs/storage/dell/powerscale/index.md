@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell PowerScale
 
 <div class="kb-summary">

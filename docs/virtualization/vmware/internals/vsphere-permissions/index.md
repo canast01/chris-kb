@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vSphere Permissions Model — SSO, Roles, Inheritance, and Least Privilege
 
 <div class="kb-summary">

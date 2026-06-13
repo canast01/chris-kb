@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - operations
+  - vmware
+---
 # VMware Horizon — Health Checks
 
 <div class="kb-summary">

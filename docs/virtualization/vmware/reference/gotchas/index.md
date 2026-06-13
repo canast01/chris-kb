@@ -1,3 +1,8 @@
+---
+tags:
+  - reference
+  - vmware
+---
 # VMware Gotchas
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - san
+---
 # Brocade Fabric OS — Learning Path
 
 <div class="kb-summary">

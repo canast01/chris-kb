@@ -1,3 +1,10 @@
+---
+tags:
+  - troubleshooting
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter — Troubleshooting
 
 <div class="kb-summary">

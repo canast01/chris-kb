@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - san
+---
 # Brocade SANnav — Learning Path
 
 <div class="kb-summary">

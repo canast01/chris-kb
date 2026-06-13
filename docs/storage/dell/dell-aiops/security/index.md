@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # Dell AIOps Security
 
 <div class="kb-summary">

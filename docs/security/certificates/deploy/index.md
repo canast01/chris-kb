@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - security
+---
 # Certificates — Deploy
 
 <div class="kb-summary">

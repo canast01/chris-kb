@@ -1,3 +1,8 @@
+---
+tags:
+  - networking
+  - troubleshooting
+---
 # Networking — Troubleshooting
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # InsightIQ — How It Works
 
 

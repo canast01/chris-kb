@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - windows
+---
 # Windows Server — Escalation
 
 

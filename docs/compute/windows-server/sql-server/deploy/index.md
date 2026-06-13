@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - windows
+---
 # SQL Server — Initial Deployment
 
 <div class="kb-summary">

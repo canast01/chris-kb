@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Compliance Standards
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # VMware Platform Design Decisions
 
 This page documents key architectural design decisions made for the VMware platform environment. Each entry captures what was chosen, why it was chosen over the alternatives, and what trade-offs were accepted. This serves as institutional memory — a record of intent that should inform future changes and prevent decisions from being revisited without cause.

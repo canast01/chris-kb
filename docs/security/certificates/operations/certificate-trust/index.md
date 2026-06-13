@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Certificate Trust Store Management
 
 <div class="kb-summary">

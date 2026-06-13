@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - scenarios
+  - vmware
+---
 # NSX Connectivity Broken
 
 <div class="kb-summary">

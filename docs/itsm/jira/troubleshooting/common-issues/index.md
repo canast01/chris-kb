@@ -1,3 +1,8 @@
+---
+tags:
+  - jira
+  - troubleshooting
+---
 # Jira — Common Issues
 
 ```bash

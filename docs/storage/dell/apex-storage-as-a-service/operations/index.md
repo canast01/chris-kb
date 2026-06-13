@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # APEX Storage as a Service — Operations
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - powercli
+  - vmware
+---
 # PowerCLI — Lifecycle
 
 <div class="kb-summary">

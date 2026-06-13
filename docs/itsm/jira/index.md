@@ -1,3 +1,7 @@
+---
+tags:
+  - jira
+---
 # Jira
 
 <div class="kb-summary">

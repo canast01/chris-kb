@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - powercli
+  - vmware
+---
 # PowerCLI — Architecture
 
 <div class="kb-summary">

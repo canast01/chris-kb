@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - operations
+  - vmware
+---
 # Horizon (VDI) — Operations
 
 <div class="kb-summary">

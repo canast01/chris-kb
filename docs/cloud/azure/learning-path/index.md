@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - learning-path
+---
 # Azure — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # VMware Platform
 
 <div class="kb-summary">

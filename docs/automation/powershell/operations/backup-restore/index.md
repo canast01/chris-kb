@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - powershell
+---
 # PowerShell — Backup & Restore
 
 ```powershell

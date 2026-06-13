@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # NetApp SnapMirror
 
 <div class="kb-summary">

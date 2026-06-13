@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - networking
+---
 # AWS Subnets
 
 

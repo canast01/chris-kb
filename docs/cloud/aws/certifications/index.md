@@ -1,5 +1,8 @@
 ---
 title: AWS — Certifications
+tags:
+  - aws
+  - certifications
 ---
 
 # AWS — Certifications

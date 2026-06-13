@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # VM Lifecycle Runbook
 
 

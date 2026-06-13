@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - srm
+  - vmware
+---
 # Site Recovery Manager — Security
 
 <div class="kb-summary">

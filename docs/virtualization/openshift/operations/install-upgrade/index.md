@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # OpenShift — Install & Upgrade
 
 <div class="kb-summary">

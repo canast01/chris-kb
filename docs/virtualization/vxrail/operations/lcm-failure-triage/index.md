@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - vxrail
+---
 # VxRail LCM Failure Triage
 
 

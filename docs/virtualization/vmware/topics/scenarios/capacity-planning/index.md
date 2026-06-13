@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Capacity Planning
 
 <div class="kb-summary">

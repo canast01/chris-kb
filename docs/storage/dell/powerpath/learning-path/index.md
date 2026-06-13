@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell PowerPath — Learning Path
 
 <div class="kb-summary">

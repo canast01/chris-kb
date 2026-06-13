@@ -1,3 +1,10 @@
+---
+tags:
+  - architecture
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter — Integrations
 
 

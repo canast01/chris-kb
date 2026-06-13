@@ -1,3 +1,10 @@
+---
+tags:
+  - internals
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN Cluster Health
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # MySQL / MariaDB — Install & Upgrade
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # PostgreSQL — How It Works
 
 <div class="kb-summary">

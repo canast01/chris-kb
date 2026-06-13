@@ -1,3 +1,10 @@
+---
+tags:
+  - esxi
+  - operations
+  - vmware
+  - vsphere-8
+---
 # ESXi Host Maintenance Mode Runbook
 
 <div class="kb-summary">

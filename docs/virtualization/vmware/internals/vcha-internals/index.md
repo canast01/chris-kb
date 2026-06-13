@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vCenter HA Internals
 
 <div class="kb-summary">

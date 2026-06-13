@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - srm
+  - vmware
+---
 # SRM — Procedures
 
 

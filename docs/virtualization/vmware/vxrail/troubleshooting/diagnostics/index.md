@@ -1,3 +1,9 @@
+---
+tags:
+  - troubleshooting
+  - vmware
+  - vxrail
+---
 # VxRail — Diagnostics
 
 <div class="kb-summary">

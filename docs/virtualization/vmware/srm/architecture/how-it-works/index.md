@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - srm
+  - vmware
+---
 # SRM — How It Works (VMware Platform)
 
 

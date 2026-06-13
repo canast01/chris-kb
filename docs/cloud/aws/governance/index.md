@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS Governance
 
 <div class="kb-summary">

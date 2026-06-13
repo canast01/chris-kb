@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # PowerStore — Troubleshooting
 
 <div class="kb-summary">

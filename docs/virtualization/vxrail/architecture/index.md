@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - vxrail
+---
 # VxRail — Architecture
 
 <div class="kb-summary">

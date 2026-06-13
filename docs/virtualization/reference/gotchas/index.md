@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # VMware Platform Gotchas
 
 Known pitfalls, unexpected behaviours, and non-obvious operational traps across the VMware platform. Each entry documents the symptom, root cause, and corrective or preventive action.

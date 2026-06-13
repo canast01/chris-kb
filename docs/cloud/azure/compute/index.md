@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Azure Compute
 
 <div class="kb-summary">

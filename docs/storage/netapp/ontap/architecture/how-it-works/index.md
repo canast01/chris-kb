@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # NetApp ONTAP — How It Works
 
 

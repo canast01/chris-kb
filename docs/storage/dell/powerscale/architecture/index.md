@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # PowerScale — Architecture
 
 <div class="kb-summary">

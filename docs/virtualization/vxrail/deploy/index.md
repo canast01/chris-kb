@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - vxrail
+---
 # VxRail — Initial Deployment
 
 Dell VxRail is a hyperconverged infrastructure (HCI) appliance that ships as a pre-racked, pre-validated set of nodes combining compute, storage (vSAN), and networking in a single Dell-engineered and Dell-supported stack. The First Run Wizard automates cluster formation, vCenter deployment, and vSAN configuration. This page covers a greenfield deployment from physical rack to a fully validated, support-registered VxRail cluster.

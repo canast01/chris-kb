@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - srm
+  - vmware
+---
 # Site Recovery Manager — Architecture
 
 <div class="kb-summary">

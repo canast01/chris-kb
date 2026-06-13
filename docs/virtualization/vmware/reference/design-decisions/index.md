@@ -1,3 +1,8 @@
+---
+tags:
+  - reference
+  - vmware
+---
 # VMware Design Decisions
 
 <div class="kb-summary">

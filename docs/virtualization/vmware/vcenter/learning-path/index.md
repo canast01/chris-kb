@@ -1,3 +1,10 @@
+---
+tags:
+  - learning-path
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter Server — Learning Path
 
 <div class="kb-summary">

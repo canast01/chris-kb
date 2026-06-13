@@ -1,5 +1,8 @@
 ---
 title: vSphere Networking
+tags:
+  - internals
+  - vmware
 ---
 
 # vSphere Networking — VSS, VDS, VMkernel, and NIOC

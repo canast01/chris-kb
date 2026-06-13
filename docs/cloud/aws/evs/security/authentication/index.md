@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - security
+---
 # Amazon EVS — Authentication
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vSphere Networking Internals
 
 <div class="kb-summary">

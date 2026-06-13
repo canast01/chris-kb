@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # COD — Troubleshooting
 
 <div class="kb-summary">

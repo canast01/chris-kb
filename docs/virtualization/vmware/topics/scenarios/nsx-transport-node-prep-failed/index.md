@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - scenarios
+  - vmware
+---
 # NSX Transport Node Preparation Failed
 
 <div class="kb-summary">

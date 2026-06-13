@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS Identity
 
 <div class="kb-summary">

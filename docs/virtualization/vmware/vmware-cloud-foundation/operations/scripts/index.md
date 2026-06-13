@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vcf
+  - vmware
+---
 # VMware Cloud Foundation — Operational Scripts
 
 ```text

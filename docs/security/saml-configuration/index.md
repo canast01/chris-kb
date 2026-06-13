@@ -1,5 +1,7 @@
 ---
 title: Standard SAML Configuration
+tags:
+  - security
 ---
 
 # Standard SAML Configuration

@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - vxrail
+---
 # VxRail Security
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - terraform
+---
 # Terraform — Install & Upgrade
 
 ```bash

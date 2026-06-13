@@ -1,3 +1,8 @@
+---
+tags:
+  - git
+  - learning-path
+---
 # Git — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - operations
+---
 # Amazon EVS — CLI Reference
 
 <div class="kb-summary">

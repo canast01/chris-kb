@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # Certificate Chain
 
 <div class="kb-summary">

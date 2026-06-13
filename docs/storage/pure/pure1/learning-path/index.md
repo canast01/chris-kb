@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - pure
+---
 # Pure1 — Learning Path
 
 <div class="kb-summary">

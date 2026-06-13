@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - veeam
+---
 # Veeam — Diagnostics
 
 

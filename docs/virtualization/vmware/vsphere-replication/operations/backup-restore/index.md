@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication — Backup and Restore
 
 

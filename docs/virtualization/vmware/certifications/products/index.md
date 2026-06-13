@@ -1,3 +1,8 @@
+---
+tags:
+  - certifications
+  - vmware
+---
 # Products
 
 

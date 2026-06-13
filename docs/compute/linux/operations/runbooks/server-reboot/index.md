@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # Server Reboot Runbook
 
 

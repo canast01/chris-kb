@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # Maintenance Risk Validation
 
 

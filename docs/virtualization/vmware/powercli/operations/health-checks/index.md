@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - powercli
+  - vmware
+---
 # PowerCLI — Health Checks
 
 <div class="kb-summary">

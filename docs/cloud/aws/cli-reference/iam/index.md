@@ -1,5 +1,7 @@
 ---
 title: AWS CLI — IAM
+tags:
+  - aws
 ---
 
 # AWS CLI — IAM

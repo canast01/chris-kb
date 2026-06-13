@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Lifecycle Management
 
 <div class="kb-summary">

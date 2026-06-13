@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Cisco MDS 9000 — Common Operational Issues
 
 ```bash

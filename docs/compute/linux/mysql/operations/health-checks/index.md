@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # MySQL / MariaDB — Health Checks
 
 <div class="kb-summary">

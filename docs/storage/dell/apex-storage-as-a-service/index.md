@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # APEX Storage as a Service
 
 <div class="kb-summary">

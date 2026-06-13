@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-lcm
+  - deployment
+  - vmware
+---
 # Aria Suite Lifecycle — Deploy
 
 <div class="kb-summary">

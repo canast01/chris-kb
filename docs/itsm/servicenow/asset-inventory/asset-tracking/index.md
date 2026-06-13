@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # Inventory — Asset Tracking
 
 ```bash

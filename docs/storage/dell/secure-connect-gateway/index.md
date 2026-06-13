@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell Secure Connect Gateway
 
 <div class="kb-summary">

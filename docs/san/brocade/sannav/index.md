@@ -1,3 +1,7 @@
+---
+tags:
+  - san
+---
 # SANnav
 
 <div class="kb-summary">

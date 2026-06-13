@@ -1,3 +1,9 @@
+---
+tags:
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter
 
 <div class="kb-summary">

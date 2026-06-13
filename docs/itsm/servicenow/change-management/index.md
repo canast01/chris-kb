@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Change Management
 
 <div class="kb-summary">

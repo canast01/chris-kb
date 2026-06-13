@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-automation
+  - vmware
+---
 # Aria Automation — Architecture
 
 <div class="kb-summary">

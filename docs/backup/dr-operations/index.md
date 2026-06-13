@@ -1,3 +1,7 @@
+---
+tags:
+  - dr
+---
 # DR Operations
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - windows
+---
 # Windows Server — Initial Deployment
 
 This guide covers deploying a new Windows Server from OS install through network configuration, NTP, Windows Update, domain join, firewall, WinRM, and security baseline application.

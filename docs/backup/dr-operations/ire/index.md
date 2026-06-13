@@ -1,3 +1,7 @@
+---
+tags:
+  - dr
+---
 # Isolated Recovery Environment Ire
 
 

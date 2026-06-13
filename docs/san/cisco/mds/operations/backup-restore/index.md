@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Cisco MDS 9000 — Backup and Restore
 
 ```bash

@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Evergreen//One — Scripts
 
 

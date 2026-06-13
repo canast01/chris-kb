@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # SnapMirror — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # Networking — Load Balancer & Services
 
 <div class="kb-summary">

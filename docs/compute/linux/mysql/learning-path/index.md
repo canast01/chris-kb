@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - linux
+---
 # MySQL — Learning Path
 
 <div class="kb-summary">

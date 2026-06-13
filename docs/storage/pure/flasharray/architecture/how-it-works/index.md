@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # Pure FlashArray — How It Works
 
 

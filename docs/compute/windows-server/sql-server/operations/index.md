@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - windows
+---
 # SQL Server — Operations
 
 <div class="kb-summary">

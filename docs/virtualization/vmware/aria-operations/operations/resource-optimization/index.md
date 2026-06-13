@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-operations
+  - operations
+  - vmware
+---
 # Performance — Resource Optimisation
 
 ```bash

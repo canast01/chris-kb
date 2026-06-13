@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - security
+---
 # Amazon EVS — Hardening
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - pure
+  - security
+---
 # FlashBlade — Authentication
 
 

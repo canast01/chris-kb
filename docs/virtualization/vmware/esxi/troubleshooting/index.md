@@ -1,3 +1,10 @@
+---
+tags:
+  - esxi
+  - troubleshooting
+  - vmware
+  - vsphere-8
+---
 # ESXi — Troubleshooting
 
 <div class="kb-summary">

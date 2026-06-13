@@ -1,3 +1,9 @@
+---
+tags:
+  - learning-path
+  - vcf
+  - vmware
+---
 # VMware Cloud Foundation — Learning Path
 
 <div class="kb-summary">

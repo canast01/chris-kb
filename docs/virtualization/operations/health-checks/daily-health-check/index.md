@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # Daily Health Check
 
 

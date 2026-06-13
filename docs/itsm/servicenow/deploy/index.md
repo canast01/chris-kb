@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - servicenow
+---
 # ServiceNow — Initial Instance Setup
 
 <div class="kb-summary">

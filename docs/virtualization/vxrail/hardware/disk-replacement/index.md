@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Disk Replacement
 
 <div class="kb-summary">

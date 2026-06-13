@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - netbackup
+---
 # Veritas NetBackup — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - tanzu
+  - vmware
+---
 # Tanzu — Encryption
 
 

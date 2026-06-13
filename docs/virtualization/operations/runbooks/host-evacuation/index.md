@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # ESXi Host Failure Runbook
 
 

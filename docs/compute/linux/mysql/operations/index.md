@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # MySQL / MariaDB — Operations
 
 <div class="kb-summary">

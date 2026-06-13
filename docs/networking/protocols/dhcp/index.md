@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # DHCP
 
 <div class="kb-summary">

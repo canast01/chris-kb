@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell SRDF/A (Asynchronous) — Learning Path
 
 <div class="kb-summary">

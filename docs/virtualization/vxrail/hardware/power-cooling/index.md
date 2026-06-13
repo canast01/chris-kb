@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Power and Cooling
 
 <div class="kb-summary">

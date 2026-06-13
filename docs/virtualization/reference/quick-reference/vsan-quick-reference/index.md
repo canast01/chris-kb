@@ -1,3 +1,9 @@
+---
+tags:
+  - reference
+  - vsan
+  - vsphere-8
+---
 # vSAN Quick Reference
 
 

@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter HA — Passive Node Failover
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - jira
+  - learning-path
+---
 # Jira — Learning Path
 
 <div class="kb-summary">

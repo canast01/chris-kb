@@ -1,3 +1,8 @@
+---
+tags:
+  - ansible
+  - security
+---
 # Ansible — Encryption
 
 

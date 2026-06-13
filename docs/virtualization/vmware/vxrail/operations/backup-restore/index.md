@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vmware
+  - vxrail
+---
 # VxRail — Backup & Restore
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # PowerPath — Known Issues
 
 

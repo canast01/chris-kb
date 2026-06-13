@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Aria Ops Alert Storm
 
 <div class="kb-summary">

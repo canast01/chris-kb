@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - jira
+---
 # Jira — Architecture
 
 <div class="kb-summary">

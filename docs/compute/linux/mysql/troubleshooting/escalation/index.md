@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - troubleshooting
+---
 # MySQL / MariaDB — Escalation
 
 <div class="kb-summary">

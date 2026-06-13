@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN Capacity Alarm
 
 <div class="kb-summary">

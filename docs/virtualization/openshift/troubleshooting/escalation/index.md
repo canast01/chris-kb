@@ -1,3 +1,7 @@
+---
+tags:
+  - troubleshooting
+---
 # OpenShift — Escalation
 
 <div class="kb-summary">

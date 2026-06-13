@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - security
+---
 # Ceph — Access Control
 
 <div class="kb-summary">

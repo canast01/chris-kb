@@ -1,5 +1,7 @@
 ---
 title: SAN
+tags:
+  - san
 ---
 
 # SAN

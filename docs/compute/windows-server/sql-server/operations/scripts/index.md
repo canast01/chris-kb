@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - windows
+---
 # SQL Server — Scripts
 
 <div class="kb-summary">

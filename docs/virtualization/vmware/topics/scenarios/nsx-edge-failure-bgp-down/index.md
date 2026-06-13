@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - scenarios
+  - vmware
+---
 # NSX Edge Failure / BGP Down
 
 <div class="kb-summary">

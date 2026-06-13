@@ -1,3 +1,8 @@
+---
+tags:
+  - confluence
+  - operations
+---
 # Confluence — Operations Scripts
 
 ```bash

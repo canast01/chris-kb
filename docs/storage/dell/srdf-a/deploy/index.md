@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # SRDF/A — Initial Deployment
 
 ```text

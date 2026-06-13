@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN Stretched Cluster Split-Brain
 
 <div class="kb-summary">

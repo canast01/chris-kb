@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # PowerPath — Security
 
 <div class="kb-summary">

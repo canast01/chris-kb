@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - operations
+  - vmware
+---
 # vRNI Scripts
 
 ```python

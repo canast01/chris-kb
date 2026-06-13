@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # Dell COD Scripts
 
 ```bash

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # Brocade Fabric OS — How It Works
 
 

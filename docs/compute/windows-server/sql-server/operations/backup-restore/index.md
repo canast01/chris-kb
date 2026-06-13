@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - windows
+---
 # SQL Server — Backup Restore
 
 <div class="kb-summary">

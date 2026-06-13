@@ -1,3 +1,10 @@
+---
+tags:
+  - esxi
+  - scenarios
+  - vmware
+  - vsphere-8
+---
 # Add ESXi Host to Cluster
 
 <div class="kb-summary">

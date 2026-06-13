@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Patch Compliance — Procedures
 
 <div class="kb-summary">

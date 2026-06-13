@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - windows
+---
 # SQL Server — Install & Upgrade
 
 <div class="kb-summary">

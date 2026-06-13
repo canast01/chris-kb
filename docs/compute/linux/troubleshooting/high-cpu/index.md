@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - troubleshooting
+---
 # High CPU Troubleshooting
 
 

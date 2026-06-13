@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - python
+---
 # Python Automation — Environment Setup
 
 This guide covers installing Python, isolating dependencies with a virtual environment,

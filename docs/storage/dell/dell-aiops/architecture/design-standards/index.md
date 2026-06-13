@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # Dell AIOps — Design Standards
 
 <div class="kb-summary">

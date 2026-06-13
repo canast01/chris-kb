@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell AIOps — Reporting
 
 ```bash

@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Logs
 
 <div class="kb-summary">

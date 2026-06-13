@@ -1,3 +1,7 @@
+---
+tags:
+  - linux
+---
 # MySQL / MariaDB
 
 <div class="kb-summary">

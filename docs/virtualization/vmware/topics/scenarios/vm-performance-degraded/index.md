@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # VM Performance Degraded
 
 <div class="kb-summary">

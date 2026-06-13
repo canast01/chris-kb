@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Incident Templates
 
 <div class="kb-summary">

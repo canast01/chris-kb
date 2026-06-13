@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Tagging Standards
 
 

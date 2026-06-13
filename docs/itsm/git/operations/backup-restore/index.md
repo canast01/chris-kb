@@ -1,3 +1,8 @@
+---
+tags:
+  - git
+  - operations
+---
 # Git — Backup and Restore
 
 ```bash

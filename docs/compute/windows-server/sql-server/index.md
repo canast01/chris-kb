@@ -1,3 +1,7 @@
+---
+tags:
+  - windows
+---
 # SQL Server
 
 <div class="kb-summary">

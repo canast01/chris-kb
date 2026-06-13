@@ -1,3 +1,9 @@
+---
+tags:
+  - deployment
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication — Deploy
 
 <div class="kb-summary">

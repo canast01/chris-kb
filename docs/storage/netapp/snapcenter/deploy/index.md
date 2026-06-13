@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - netapp
+---
 # SnapCenter — Initial Deployment
 
 ```text

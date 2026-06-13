@@ -1,3 +1,7 @@
+---
+tags:
+  - veeam
+---
 # Veeam
 
 <div class="kb-summary">

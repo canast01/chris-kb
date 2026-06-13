@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - troubleshooting
+  - vmware
+---
 # Horizon (VDI) — Troubleshooting
 
 <div class="kb-summary">

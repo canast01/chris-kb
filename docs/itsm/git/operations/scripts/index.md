@@ -1,3 +1,8 @@
+---
+tags:
+  - git
+  - operations
+---
 # Git — Operations Scripts
 
 ```bash

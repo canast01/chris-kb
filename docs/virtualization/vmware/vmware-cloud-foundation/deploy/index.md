@@ -1,3 +1,9 @@
+---
+tags:
+  - deployment
+  - vcf
+  - vmware
+---
 # VMware Cloud Foundation — Deploy
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - windows
+---
 # Active Directory — How It Works
 
 

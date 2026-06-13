@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - pure
+---
 # FlashBlade — Health Checks
 
 

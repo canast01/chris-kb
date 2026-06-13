@@ -1,3 +1,9 @@
+---
+tags:
+  - tanzu
+  - troubleshooting
+  - vmware
+---
 # Tanzu — Troubleshooting
 
 <div class="kb-summary">

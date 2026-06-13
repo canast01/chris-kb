@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - networking
+---
 # Azure CLI — Networking
 
 

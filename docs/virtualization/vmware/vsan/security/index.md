@@ -1,3 +1,10 @@
+---
+tags:
+  - security
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN — Security
 
 <div class="kb-summary">

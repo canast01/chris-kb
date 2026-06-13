@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - ceph
+---
 # Ceph — Design Standards
 
 <div class="kb-summary">

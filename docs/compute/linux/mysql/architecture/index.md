@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # MySQL / MariaDB — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # NetApp Keystone Vendor Support
 
 <div class="kb-summary">

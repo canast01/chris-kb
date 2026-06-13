@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # Dell AIOps — Architecture
 
 <div class="kb-summary">

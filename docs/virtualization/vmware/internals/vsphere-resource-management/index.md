@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vSphere Resource Management — Scheduling, Reservations, Pools, and NUMA
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # Inventory — Environment Mapping
 
 ```markdown

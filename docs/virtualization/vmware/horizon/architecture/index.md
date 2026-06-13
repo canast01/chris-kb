@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - horizon
+  - vmware
+---
 # Horizon (VDI) — Architecture
 
 <div class="kb-summary">

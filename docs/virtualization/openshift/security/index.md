@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # OpenShift — Security
 
 <div class="kb-summary">

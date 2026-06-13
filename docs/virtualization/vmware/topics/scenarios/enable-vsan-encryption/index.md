@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # Enable vSAN Encryption
 
 <div class="kb-summary">

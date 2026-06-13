@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - powercli
+  - vmware
+---
 # PowerCLI — CLI Reference
 
 <div class="kb-summary">

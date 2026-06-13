@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # MySQL / MariaDB — Backup Restore
 
 <div class="kb-summary">

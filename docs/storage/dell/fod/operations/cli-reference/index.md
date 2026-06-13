@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # Flex on Demand (FOD) — CLI Reference
 
 

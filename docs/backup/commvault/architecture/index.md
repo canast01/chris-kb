@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - commvault
+---
 # Commvault — Architecture
 
 <div class="kb-summary">

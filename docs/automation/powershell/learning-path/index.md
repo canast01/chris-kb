@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - powershell
+---
 # PowerShell — Learning Path
 
 <div class="kb-summary">

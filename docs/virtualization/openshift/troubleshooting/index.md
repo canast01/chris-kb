@@ -1,3 +1,7 @@
+---
+tags:
+  - troubleshooting
+---
 # OpenShift — Troubleshooting
 
 <div class="kb-summary">

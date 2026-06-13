@@ -1,3 +1,9 @@
+---
+tags:
+  - learning-path
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication — Learning Path
 
 <div class="kb-summary">

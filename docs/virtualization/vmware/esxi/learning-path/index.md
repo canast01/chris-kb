@@ -1,3 +1,10 @@
+---
+tags:
+  - esxi
+  - learning-path
+  - vmware
+  - vsphere-8
+---
 # ESXi — Learning Path
 
 <div class="kb-summary">

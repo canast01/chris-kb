@@ -1,3 +1,7 @@
+---
+tags:
+  - architecture
+---
 # OpenShift — How It Works
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # Dell ECS — Operations
 
 <div class="kb-summary">

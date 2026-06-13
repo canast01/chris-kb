@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # CloudIQ: Proactive Recommendations and Implementation Tracking
 
 

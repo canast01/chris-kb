@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Security — Operational Runbooks
 
 <div class="kb-summary">

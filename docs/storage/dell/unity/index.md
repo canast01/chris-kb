@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell Unity XT
 
 <div class="kb-summary">

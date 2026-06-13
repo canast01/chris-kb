@@ -1,3 +1,9 @@
+---
+tags:
+  - tanzu
+  - troubleshooting
+  - vmware
+---
 # Virtualization Vmware Tanzu — Common Issues
 
 ```text

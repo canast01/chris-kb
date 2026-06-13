@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-operations
+  - deployment
+  - vmware
+---
 # Aria Operations — Deploy
 
 <div class="kb-summary">

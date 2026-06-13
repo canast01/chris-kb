@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - operations
+  - vmware
+---
 # NSX — Operations
 
 <div class="kb-summary">

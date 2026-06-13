@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Change Templates
 
 <div class="kb-summary">

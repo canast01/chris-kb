@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - netapp
+---
 # NetApp Keystone — Learning Path
 
 <div class="kb-summary">

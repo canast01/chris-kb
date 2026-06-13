@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Storage APD — Datastore Inaccessible
 
 <div class="kb-summary">

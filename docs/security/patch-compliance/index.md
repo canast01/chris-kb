@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Patch Compliance Monitoring
 
 <div class="kb-summary">

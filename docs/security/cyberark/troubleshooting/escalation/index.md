@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - troubleshooting
+---
 # CyberArk Vendor Support
 
 

@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # VMware / Broadcom Licensing Reference
 
 Quick reference for determining which licence tier is required to enable a specific capability. Use this page to answer "do I need to buy more licences to enable X?" before raising a change or procurement request.

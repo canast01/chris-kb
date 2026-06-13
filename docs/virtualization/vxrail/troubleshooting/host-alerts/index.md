@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - vxrail
+---
 # VxRail Host Alerts
 
 <div class="kb-summary">

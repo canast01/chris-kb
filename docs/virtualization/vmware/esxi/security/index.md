@@ -1,3 +1,10 @@
+---
+tags:
+  - esxi
+  - security
+  - vmware
+  - vsphere-8
+---
 # ESXi — Security
 
 <div class="kb-summary">

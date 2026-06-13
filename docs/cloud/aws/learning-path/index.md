@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - learning-path
+---
 # AWS — Learning Path
 
 <div class="kb-summary">

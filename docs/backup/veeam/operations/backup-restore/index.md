@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - veeam
+---
 # Veeam — Backup & Restore
 
 

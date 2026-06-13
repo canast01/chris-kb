@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - vxrail
+---
 # VxRail — Cluster Software Stack and Data Plane
 
 ```text

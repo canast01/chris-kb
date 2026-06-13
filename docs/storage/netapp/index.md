@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # NetApp Storage
 
 <div class="kb-summary">

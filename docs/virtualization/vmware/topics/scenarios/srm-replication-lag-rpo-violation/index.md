@@ -1,3 +1,9 @@
+---
+tags:
+  - scenarios
+  - srm
+  - vmware
+---
 # SRM Replication Lag / RPO Violation
 
 <div class="kb-summary">

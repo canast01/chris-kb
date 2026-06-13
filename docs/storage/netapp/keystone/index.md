@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # NetApp Keystone
 
 <div class="kb-summary">

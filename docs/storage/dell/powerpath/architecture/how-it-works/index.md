@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # PowerPath — How It Works
 
 

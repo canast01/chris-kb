@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Host Profile Compliance Drift
 
 <div class="kb-summary">

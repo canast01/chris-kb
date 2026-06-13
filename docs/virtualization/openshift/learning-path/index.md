@@ -1,3 +1,7 @@
+---
+tags:
+  - learning-path
+---
 # Red Hat OpenShift Container Platform — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # HA Admission Control Breach / Failover Storm
 
 <div class="kb-summary">

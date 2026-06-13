@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Evergreen — Scripts
 
 

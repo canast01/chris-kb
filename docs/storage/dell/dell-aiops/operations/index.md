@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # Dell AIOps Operations
 
 <div class="kb-summary">

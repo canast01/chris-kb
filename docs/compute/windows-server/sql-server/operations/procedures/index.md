@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - windows
+---
 # SQL Server — Procedures
 
 <div class="kb-summary">

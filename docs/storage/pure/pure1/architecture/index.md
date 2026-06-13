@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # Pure1 — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - learning-path
+  - vmware
+---
 # Aria Operations for Logs — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vmware
+  - vxrail
+---
 # VxRail — Install & Upgrade
 
 <div class="kb-summary">

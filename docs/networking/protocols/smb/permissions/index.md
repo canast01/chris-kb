@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # SMB Share Permissions
 
 

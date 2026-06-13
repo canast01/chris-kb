@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - pure
+---
 # Pure Storage Evergreen//One — Learning Path
 
 <div class="kb-summary">

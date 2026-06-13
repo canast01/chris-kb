@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - security
+---
 # PKI & Certificates — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - deployment
+---
 # Azure — Subscription and Landing Zone Setup
 
 This guide covers building an Azure Landing Zone from scratch: Management Group hierarchy, Azure Policy, Defender for Cloud, Log Analytics, Sentinel, Entra ID baseline, Hub VNet, Azure Backup, and deployment validation.

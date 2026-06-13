@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail — Bundle Management
 
 ```text

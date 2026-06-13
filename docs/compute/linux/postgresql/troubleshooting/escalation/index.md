@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - troubleshooting
+---
 # PostgreSQL — Escalation
 
 <div class="kb-summary">

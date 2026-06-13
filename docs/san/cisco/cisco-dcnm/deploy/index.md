@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - san
+---
 # Cisco DCNM — Initial Deployment
 
 ```text

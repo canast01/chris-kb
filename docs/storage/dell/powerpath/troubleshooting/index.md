@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # PowerPath — Troubleshooting
 
 <div class="kb-summary">

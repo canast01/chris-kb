@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # RecoverPoint
 
 <div class="kb-summary">

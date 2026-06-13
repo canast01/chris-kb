@@ -1,3 +1,8 @@
+---
+tags:
+  - ansible
+  - architecture
+---
 # Ansible — Architecture
 
 <div class="kb-summary">

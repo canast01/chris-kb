@@ -1,3 +1,8 @@
+---
+tags:
+  - terraform
+  - troubleshooting
+---
 # Terraform — Common Issues
 
 

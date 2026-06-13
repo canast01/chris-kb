@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # PostgreSQL — Design Standards
 
 <div class="kb-summary">

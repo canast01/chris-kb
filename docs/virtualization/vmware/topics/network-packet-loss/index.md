@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # Network Packet Loss Validation
 
 

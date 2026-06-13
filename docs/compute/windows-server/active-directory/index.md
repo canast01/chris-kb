@@ -1,3 +1,7 @@
+---
+tags:
+  - windows
+---
 # Active Directory
 
 <div class="kb-summary">

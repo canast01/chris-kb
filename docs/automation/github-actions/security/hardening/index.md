@@ -1,3 +1,8 @@
+---
+tags:
+  - github-actions
+  - security
+---
 # GitHub Actions — Hardening
 
 

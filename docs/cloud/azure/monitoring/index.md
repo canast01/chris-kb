@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Azure Monitoring
 
 <div class="kb-summary">

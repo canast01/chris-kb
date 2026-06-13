@@ -1,3 +1,8 @@
+---
+tags:
+  - pure
+  - security
+---
 # Pure1 Security
 
 <div class="kb-summary">

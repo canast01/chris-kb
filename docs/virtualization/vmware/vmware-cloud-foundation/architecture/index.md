@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vcf
+  - vmware
+---
 # VCF — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - windows
+---
 # SQL Server — Common Issues
 
 <div class="kb-summary">

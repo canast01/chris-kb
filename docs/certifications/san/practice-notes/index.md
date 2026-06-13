@@ -1,3 +1,8 @@
+---
+tags:
+  - certifications
+  - san
+---
 # SAN Practice Notes
 
 

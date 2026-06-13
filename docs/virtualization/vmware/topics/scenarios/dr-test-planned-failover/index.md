@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # DR Test and Planned Failover
 
 <div class="kb-summary">

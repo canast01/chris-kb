@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-lcm
+  - troubleshooting
+  - vmware
+---
 # Aria Suite Lifecycle — Troubleshooting
 
 <div class="kb-summary">

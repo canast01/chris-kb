@@ -1,3 +1,10 @@
+---
+tags:
+  - architecture
+  - nsx
+  - nsx-4
+  - vmware
+---
 # NSX — How It Works
 
 

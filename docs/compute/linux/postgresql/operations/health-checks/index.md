@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # PostgreSQL — Health Checks
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - netapp
+---
 # Superna Eyeglass — Initial Deployment
 
 ```text

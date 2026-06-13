@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - windows
+---
 # SQL Server — Access Control
 
 <div class="kb-summary">

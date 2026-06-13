@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vLCM Mechanics
 
 <div class="kb-summary">

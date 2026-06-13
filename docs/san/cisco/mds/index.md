@@ -1,3 +1,7 @@
+---
+tags:
+  - san
+---
 # Cisco MDS
 
 <div class="kb-summary">

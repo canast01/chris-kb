@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Templates
 
 <div class="kb-summary">

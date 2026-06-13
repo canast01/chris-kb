@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - security
+---
 # Azure — Security
 
 <div class="kb-summary">

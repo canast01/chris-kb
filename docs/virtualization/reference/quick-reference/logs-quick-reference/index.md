@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # VMware Logs Quick Reference
 
 

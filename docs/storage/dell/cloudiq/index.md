@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # CloudIQ
 
 <div class="kb-summary">

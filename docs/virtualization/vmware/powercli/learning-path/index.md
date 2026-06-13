@@ -1,3 +1,9 @@
+---
+tags:
+  - learning-path
+  - powercli
+  - vmware
+---
 # VMware PowerCLI — Learning Path
 
 <div class="kb-summary">

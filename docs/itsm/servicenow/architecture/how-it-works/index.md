@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - servicenow
+---
 # ServiceNow — How It Works
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Security — Operations
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Security Audit — Procedures
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - windows
+---
 # Windows Server
 
 <div class="kb-summary">

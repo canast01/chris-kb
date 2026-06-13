@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN 2-Node — Witness Host Unreachable
 
 <div class="kb-summary">

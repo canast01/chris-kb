@@ -1,5 +1,8 @@
 ---
 title: Jira — Access Control
+tags:
+  - jira
+  - security
 ---
 
 # Jira — Access Control

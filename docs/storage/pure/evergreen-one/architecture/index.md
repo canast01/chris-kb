@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # Evergreen//One — Architecture
 
 <div class="kb-summary">

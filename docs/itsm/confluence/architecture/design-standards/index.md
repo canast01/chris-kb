@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - confluence
+---
 # Confluence — Design Standards
 
 ```bash

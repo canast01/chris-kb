@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # Operations
 
 <div class="kb-summary">

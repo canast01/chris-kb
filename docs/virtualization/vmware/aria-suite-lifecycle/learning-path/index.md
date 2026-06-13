@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-lcm
+  - learning-path
+  - vmware
+---
 # Aria Suite Lifecycle — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # NetApp SnapCenter
 
 <div class="kb-summary">

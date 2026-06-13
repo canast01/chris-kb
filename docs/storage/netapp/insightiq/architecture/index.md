@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # InsightIQ — Architecture
 
 <div class="kb-summary">

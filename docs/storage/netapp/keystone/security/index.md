@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - security
+---
 # NetApp Keystone Security
 
 <div class="kb-summary">

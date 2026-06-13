@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - operations
+  - vmware
+---
 # Aria Automation — Install & Upgrade
 
 

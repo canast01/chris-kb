@@ -1,3 +1,8 @@
+---
+tags:
+  - reference
+  - vmware
+---
 # VMware Licensing
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - learning-path
+---
 # Ceph Distributed Storage — Learning Path
 
 <div class="kb-summary">

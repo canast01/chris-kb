@@ -1,3 +1,9 @@
+---
+tags:
+  - powercli
+  - security
+  - vmware
+---
 # PowerCLI — Security
 
 <div class="kb-summary">

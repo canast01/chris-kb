@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Security Monitoring
 
 <div class="kb-summary">

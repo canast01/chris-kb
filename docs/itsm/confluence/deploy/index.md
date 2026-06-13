@@ -1,3 +1,8 @@
+---
+tags:
+  - confluence
+  - deployment
+---
 # Confluence — Initial Deployment
 
 <div class="kb-summary">

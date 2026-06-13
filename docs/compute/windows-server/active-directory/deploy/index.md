@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - windows
+---
 # Active Directory — Initial Deployment
 
 <div class="kb-summary">

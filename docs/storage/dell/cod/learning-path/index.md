@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell Capacity on Demand (COD) — Learning Path
 
 <div class="kb-summary">

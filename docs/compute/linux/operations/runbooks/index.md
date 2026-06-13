@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # Linux — Operational Runbooks
 
 <div class="kb-summary">

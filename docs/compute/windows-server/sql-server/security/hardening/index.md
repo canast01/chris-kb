@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - windows
+---
 # SQL Server — Hardening
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # VPLEX — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - horizon
+  - vmware
+---
 # Horizon (VDI)
 
 <div class="kb-summary">

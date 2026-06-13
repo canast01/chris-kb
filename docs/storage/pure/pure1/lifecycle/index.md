@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Pure1 — Lifecycle Management
 
 ```bash

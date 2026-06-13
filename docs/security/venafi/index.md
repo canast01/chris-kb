@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Venafi
 
 <div class="kb-summary">

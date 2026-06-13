@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - troubleshooting
+---
 # Amazon EVS — Troubleshooting
 
 <!-- diagram:evs-troubleshooting -->

@@ -1,3 +1,9 @@
+---
+tags:
+  - troubleshooting
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication — Common Issues
 
 ```text

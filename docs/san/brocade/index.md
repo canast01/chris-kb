@@ -1,3 +1,7 @@
+---
+tags:
+  - san
+---
 # Brocade SAN
 
 <div class="kb-summary">

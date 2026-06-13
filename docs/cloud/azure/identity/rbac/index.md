@@ -1,5 +1,7 @@
 ---
 title: RBAC
+tags:
+  - azure
 ---
 
 # Azure — RBAC

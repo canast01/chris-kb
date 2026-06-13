@@ -1,3 +1,7 @@
+---
+tags:
+  - san
+---
 # Nexus Dashboard
 
 <div class="kb-summary">

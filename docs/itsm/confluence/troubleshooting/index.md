@@ -1,3 +1,8 @@
+---
+tags:
+  - confluence
+  - troubleshooting
+---
 # Confluence — Troubleshooting
 
 

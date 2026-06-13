@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Service Health
 
 <div class="kb-summary">

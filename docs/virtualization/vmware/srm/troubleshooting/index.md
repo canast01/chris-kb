@@ -1,3 +1,9 @@
+---
+tags:
+  - srm
+  - troubleshooting
+  - vmware
+---
 # Site Recovery Manager — Troubleshooting
 
 <div class="kb-summary">

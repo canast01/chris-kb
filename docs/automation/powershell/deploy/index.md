@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - powershell
+---
 # PowerShell — Environment Setup
 
 This guide covers the initial setup of a PowerShell automation environment: installing

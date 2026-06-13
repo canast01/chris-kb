@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - tanzu
+  - vmware
+---
 # Tanzu — Backup and Restore
 
 

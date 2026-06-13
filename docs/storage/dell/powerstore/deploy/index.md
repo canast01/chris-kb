@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # Dell PowerStore — Initial Deployment
 
 ```text

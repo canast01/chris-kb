@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - networking
+---
 # AWS Networking
 
 <div class="kb-summary">

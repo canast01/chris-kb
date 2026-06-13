@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - servicenow
+---
 # ServiceNow — Operations Scripts
 
 ```bash

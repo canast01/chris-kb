@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell Storage
 
 <div class="kb-summary">

@@ -1,5 +1,8 @@
 ---
 title: SAN — Certifications
+tags:
+  - certifications
+  - san
 ---
 
 # SAN — Certifications

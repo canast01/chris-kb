@@ -1,5 +1,7 @@
 ---
 title: AWS
+tags:
+  - aws
 ---
 
 # AWS

@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # PowerScale — Hardening
 
 

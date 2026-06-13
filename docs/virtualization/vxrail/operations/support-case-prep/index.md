@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - vxrail
+---
 # VxRail Support Case Prep
 
 <div class="kb-summary">

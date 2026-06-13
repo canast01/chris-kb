@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # RecoverPoint — Initial Deployment
 
 ```text

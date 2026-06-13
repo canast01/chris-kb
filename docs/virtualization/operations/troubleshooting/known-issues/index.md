@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - troubleshooting
+---
 # Known Issues and Fix Patterns
 
 

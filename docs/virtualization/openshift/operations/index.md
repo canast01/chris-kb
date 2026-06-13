@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # OpenShift — Operations
 
 <div class="kb-summary">

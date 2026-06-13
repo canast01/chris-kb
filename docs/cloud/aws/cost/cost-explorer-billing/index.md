@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS Cost Explorer / Billing
 
 

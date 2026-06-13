@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - windows
+---
 # Active Directory — Access Control
 
 

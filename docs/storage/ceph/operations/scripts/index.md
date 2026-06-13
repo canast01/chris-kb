@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - operations
+---
 # Ceph — Scripts
 
 ```text

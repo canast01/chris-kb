@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - security
+  - vmware
+---
 # Aria Ops for Logs — Authentication
 
 

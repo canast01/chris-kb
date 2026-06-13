@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Virtualization — Weak Areas
 
 <div class="kb-summary">

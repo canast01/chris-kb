@@ -1,3 +1,8 @@
+---
+tags:
+  - commvault
+  - operations
+---
 # Commvault Backup and Restore — Procedures
 
 ```bash

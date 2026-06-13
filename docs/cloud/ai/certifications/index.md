@@ -1,5 +1,7 @@
 ---
 title: AI — Certifications
+tags:
+  - certifications
 ---
 
 # AI — Certifications

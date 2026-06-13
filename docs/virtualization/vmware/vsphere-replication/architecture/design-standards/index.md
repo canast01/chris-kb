@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication — Design Standards
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netbackup
+---
 # NetBackup — Architecture
 
 <div class="kb-summary">

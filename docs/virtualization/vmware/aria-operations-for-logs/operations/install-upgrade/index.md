@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - operations
+  - vmware
+---
 # Aria Operations for Logs — Install and Upgrade
 
 ```bash

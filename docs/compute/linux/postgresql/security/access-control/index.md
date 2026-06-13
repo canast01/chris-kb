@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - security
+---
 # PostgreSQL — Access Control
 
 <div class="kb-summary">

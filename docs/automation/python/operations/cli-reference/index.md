@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - python
+---
 # Python Automation — CLI Reference
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - security
+---
 # Venafi — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # LDAP Integration — Procedures
 
 <div class="kb-summary">

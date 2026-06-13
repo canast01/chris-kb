@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vSphere Storage Architecture — Datastores, Policies, and Advanced Features
 
 vSphere supports a broad set of storage protocols and datastore types. Choosing the right combination depends on performance requirements, existing hardware, budget, and operational complexity. This page covers the full vSphere storage stack from protocols through SPBM policies, multipathing, and advanced features such as NVMe-oF and PMem — all areas covered on the VCP-DCV 8 exam.

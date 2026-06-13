@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - windows
+---
 # SQL Server — Diagnostics
 
 <div class="kb-summary">

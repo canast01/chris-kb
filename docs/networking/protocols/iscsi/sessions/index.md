@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # iSCSI — Sessions
 
 ```text

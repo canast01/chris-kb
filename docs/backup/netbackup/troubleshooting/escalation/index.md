@@ -1,3 +1,8 @@
+---
+tags:
+  - netbackup
+  - troubleshooting
+---
 # NetBackup — Escalation
 
 

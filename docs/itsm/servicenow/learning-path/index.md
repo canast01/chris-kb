@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - servicenow
+---
 # ServiceNow — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # FlashArray — Integrations
 
 

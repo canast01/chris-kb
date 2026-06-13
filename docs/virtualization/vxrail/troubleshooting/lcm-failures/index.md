@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - vxrail
+---
 # VxRail LCM Failures
 
 <div class="kb-summary">

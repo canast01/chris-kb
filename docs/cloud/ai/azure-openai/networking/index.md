@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # Azure OpenAI Networking
 
 

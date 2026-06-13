@@ -1,5 +1,7 @@
 ---
 title: iSCSI
+tags:
+  - networking
 ---
 
 # iSCSI

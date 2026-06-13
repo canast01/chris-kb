@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - windows
+---
 # SQL Server — Encryption
 
 <div class="kb-summary">

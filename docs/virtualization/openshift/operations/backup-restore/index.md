@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # OpenShift — Backup & Restore
 
 <div class="kb-summary">

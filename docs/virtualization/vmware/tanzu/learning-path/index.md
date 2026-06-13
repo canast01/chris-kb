@@ -1,3 +1,9 @@
+---
+tags:
+  - learning-path
+  - tanzu
+  - vmware
+---
 # Tanzu — Learning Path
 
 <div class="kb-summary">

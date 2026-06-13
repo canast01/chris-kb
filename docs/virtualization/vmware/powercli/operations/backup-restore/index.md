@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - powercli
+  - vmware
+---
 # PowerCLI — Backup & Restore
 
 <div class="kb-summary">

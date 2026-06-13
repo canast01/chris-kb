@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - operations
+---
 # Amazon EVS — Health Checks
 
 <div class="kb-summary">

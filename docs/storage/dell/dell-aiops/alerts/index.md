@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation
 
 

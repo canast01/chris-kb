@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - operations
+---
 # NetApp Keystone — Install & Upgrade
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # APEX Storage as a Service — Architecture
 
 <div class="kb-summary">

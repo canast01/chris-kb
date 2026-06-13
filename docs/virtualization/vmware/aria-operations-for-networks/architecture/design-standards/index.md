@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-networks
+  - vmware
+---
 # Aria Operations for Networks — Design Standards
 
 

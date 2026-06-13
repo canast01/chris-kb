@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # Brocade Fabric OS — Architecture
 
 <div class="kb-summary">

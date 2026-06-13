@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - troubleshooting
+  - vmware
+---
 # NSX — Common Issues
 
 ```bash

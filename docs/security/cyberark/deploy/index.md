@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - security
+---
 # CyberArk PAM — Initial Deployment
 
 This guide covers deploying a CyberArk Privileged Access Management environment from scratch, including the Digital Vault, CPM, PVWA, PSM, initial account onboarding, LDAP integration, and deployment validation.

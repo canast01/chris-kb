@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # VM Inaccessible / HA Failover
 
 <div class="kb-summary">

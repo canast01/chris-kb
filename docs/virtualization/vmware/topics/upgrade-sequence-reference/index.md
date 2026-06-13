@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # Upgrade Sequence Reference
 
 

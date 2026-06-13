@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - windows
+---
 # Active Directory — Install & Upgrade
 
 

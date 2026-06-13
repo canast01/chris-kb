@@ -1,3 +1,8 @@
+---
+tags:
+  - git
+  - operations
+---
 # Git — Install and Upgrade
 
 ```bash

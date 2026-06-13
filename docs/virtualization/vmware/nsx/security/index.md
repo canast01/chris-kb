@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - security
+  - vmware
+---
 # NSX — Security
 
 <div class="kb-summary">

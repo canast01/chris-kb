@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - troubleshooting
+---
 # Azure — Common Issues
 
 

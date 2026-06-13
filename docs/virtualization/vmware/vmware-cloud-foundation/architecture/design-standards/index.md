@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vcf
+  - vmware
+---
 # VMware Cloud Foundation — Design Standards
 
 ```text

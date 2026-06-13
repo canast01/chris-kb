@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # Syslog and Centralized Logging
 
 

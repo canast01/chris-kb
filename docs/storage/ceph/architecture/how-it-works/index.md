@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - ceph
+---
 # Ceph — How It Works
 
 <div class="kb-summary">

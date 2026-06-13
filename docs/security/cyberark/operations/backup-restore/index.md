@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # CyberArk — Backup & Restore
 
 

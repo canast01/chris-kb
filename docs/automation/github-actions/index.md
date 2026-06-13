@@ -1,3 +1,7 @@
+---
+tags:
+  - github-actions
+---
 # GitHub Actions
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - operations
+  - vmware
+---
 # Aria Ops for Networks — Operations
 
 <div class="kb-summary">

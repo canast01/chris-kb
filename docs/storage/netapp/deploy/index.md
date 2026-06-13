@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - netapp
+---
 # NetApp ONTAP — Getting Started
 
 This guide covers the initial setup of a NetApp ONTAP cluster from first boot through validated host connectivity and replication. Applies to AFF A-series, C-series, and FAS platforms running ONTAP 9.12 and later.

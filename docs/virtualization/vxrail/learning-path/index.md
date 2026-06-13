@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - vxrail
+---
 # VxRail — Learning Path
 
 <div class="kb-summary">

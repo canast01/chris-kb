@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - pure
+---
 # Pure Operations
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - git
+---
 # Git
 
 <div class="kb-summary">

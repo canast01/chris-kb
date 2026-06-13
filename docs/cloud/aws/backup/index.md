@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS Backup
 
 <div class="kb-summary">

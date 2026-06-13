@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # Superna Eyeglass — How It Works
 
 

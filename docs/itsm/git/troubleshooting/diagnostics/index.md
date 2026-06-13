@@ -1,3 +1,8 @@
+---
+tags:
+  - git
+  - troubleshooting
+---
 # Git — Diagnostics
 
 ```bash

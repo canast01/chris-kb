@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # Storage Latency Troubleshooting (VMware)
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - aws
+---
 # Amazon EVS — Design Standards
 
 <div class="kb-summary">

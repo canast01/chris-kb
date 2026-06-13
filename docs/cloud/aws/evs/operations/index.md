@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - operations
+---
 # Amazon EVS — Operations
 
 <!-- diagram:evs-operations -->

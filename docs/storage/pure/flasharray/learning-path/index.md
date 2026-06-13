@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - pure
+---
 # Pure Storage FlashArray — Learning Path
 
 <div class="kb-summary">

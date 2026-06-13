@@ -1,3 +1,8 @@
+---
+tags:
+  - reference
+  - vmware
+---
 # VMware Platform Upgrade Procedure
 
 

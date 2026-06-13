@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - jira
+---
 # Jira — How It Works
 
 

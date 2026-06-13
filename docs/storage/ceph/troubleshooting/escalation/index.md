@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - troubleshooting
+---
 # Ceph — Escalation
 
 <div class="kb-summary">

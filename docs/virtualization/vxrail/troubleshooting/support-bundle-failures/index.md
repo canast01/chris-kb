@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - vxrail
+---
 # VxRail Support Bundle Failures
 
 <div class="kb-summary">

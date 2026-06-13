@@ -1,3 +1,9 @@
+---
+tags:
+  - scenarios
+  - vmware
+  - vxrail
+---
 # VxRail LCM Upgrade Failure
 
 <div class="kb-summary">

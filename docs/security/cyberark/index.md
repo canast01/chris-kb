@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # CyberArk
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - troubleshooting
+---
 # Cisco DCNM — Diagnostics
 
 ```bash

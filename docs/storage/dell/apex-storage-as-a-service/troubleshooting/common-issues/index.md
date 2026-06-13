@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # APEX Storage as a Service — Common Issues
 
 

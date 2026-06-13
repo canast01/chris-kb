@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - horizon
+  - vmware
+---
 # Horizon — How It Works
 
 

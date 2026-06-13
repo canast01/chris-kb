@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - troubleshooting
+  - vmware
+---
 # Aria Ops for Logs — Escalation
 
 

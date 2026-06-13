@@ -1,3 +1,7 @@
+---
+tags:
+  - netbackup
+---
 # NetBackup
 
 <div class="kb-summary">

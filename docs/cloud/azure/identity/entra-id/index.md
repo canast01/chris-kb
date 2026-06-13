@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Microsoft Entra ID
 
 

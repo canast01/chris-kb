@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail — Rapid Appliance Self Recovery (RASR)
 
 <div class="kb-summary">

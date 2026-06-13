@@ -1,3 +1,8 @@
+---
+tags:
+  - pure
+  - troubleshooting
+---
 # FlashArray — Common Issues
 
 

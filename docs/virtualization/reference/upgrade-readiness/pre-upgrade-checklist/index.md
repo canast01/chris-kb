@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Pre-Upgrade Checklist
 
 

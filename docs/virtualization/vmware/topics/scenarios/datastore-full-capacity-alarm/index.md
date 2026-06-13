@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Datastore Full / Capacity Alarm
 
 <div class="kb-summary">

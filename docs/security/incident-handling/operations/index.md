@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Incident Handling — Operations
 
 <div class="kb-summary">

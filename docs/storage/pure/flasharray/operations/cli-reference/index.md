@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - pure
+---
 # FlashArray — CLI Reference
 
 

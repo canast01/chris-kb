@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # InsightIQ Lifecycle
 
 <div class="kb-summary">

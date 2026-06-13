@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # InsightIQ — Design Standards
 
 <div class="kb-summary">

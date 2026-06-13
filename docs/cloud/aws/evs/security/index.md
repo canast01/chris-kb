@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - security
+---
 # Amazon EVS — Security
 
 <!-- diagram:evs-security -->

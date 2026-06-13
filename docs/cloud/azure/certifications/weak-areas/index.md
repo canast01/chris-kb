@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - certifications
+---
 # Azure Weak Areas
 
 

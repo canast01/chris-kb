@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - vmware
+  - vxrail
+---
 # VxRail — Encryption
 
 <div class="kb-summary">

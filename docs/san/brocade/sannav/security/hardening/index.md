@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - security
+---
 # Brocade SANnav — Security Hardening
 
 ```bash

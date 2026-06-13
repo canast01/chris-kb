@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-logs
+  - vmware
+---
 # Aria Ops for Logs — Standards
 
 

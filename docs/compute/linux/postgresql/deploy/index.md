@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - linux
+---
 # PostgreSQL — Initial Deployment
 
 <div class="kb-summary">

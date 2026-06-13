@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Support Bundles
 
 <div class="kb-summary">

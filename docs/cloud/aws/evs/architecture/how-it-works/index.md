@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - aws
+---
 # Amazon EVS — How It Works
 
 <div class="kb-summary">

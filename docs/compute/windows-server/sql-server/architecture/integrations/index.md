@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - windows
+---
 # SQL Server — Integrations
 
 <div class="kb-summary">

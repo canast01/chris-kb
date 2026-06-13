@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # FlashArray — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - security
+---
 # PostgreSQL — Encryption
 
 <div class="kb-summary">

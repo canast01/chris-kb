@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - git
+---
 # Git — Environment Setup
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - netapp
+---
 # NetApp ONTAP — Learning Path
 
 <div class="kb-summary">

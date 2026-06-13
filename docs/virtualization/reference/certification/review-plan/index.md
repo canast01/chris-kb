@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Virtualization — Review Plan
 
 <div class="kb-summary">

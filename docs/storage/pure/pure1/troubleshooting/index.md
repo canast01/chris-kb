@@ -1,3 +1,8 @@
+---
+tags:
+  - pure
+  - troubleshooting
+---
 # Pure1 — Troubleshooting
 
 ```bash

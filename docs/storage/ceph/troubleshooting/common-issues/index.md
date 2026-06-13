@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - troubleshooting
+---
 # Ceph — Common Issues
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # VMware Snapshot Standards
 
 

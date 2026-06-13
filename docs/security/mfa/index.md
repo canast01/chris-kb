@@ -1,5 +1,7 @@
 ---
 title: MFA
+tags:
+  - security
 ---
 
 # Multi-Factor Authentication (MFA)

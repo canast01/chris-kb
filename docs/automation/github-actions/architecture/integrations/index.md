@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - github-actions
+---
 # GitHub Actions — Integrations
 
 ```yaml

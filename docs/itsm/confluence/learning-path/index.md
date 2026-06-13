@@ -1,3 +1,8 @@
+---
+tags:
+  - confluence
+  - learning-path
+---
 # Confluence — Learning Path
 
 <div class="kb-summary">

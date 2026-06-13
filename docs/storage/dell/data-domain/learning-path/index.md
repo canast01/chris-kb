@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell Data Domain (PowerProtect DD) — Learning Path
 
 <div class="kb-summary">

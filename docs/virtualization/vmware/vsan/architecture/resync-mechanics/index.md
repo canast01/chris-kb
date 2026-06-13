@@ -1,3 +1,10 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN — Resync Mechanics
 
 <div class="kb-summary">

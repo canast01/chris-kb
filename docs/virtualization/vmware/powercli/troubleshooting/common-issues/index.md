@@ -1,3 +1,9 @@
+---
+tags:
+  - powercli
+  - troubleshooting
+  - vmware
+---
 # PowerCLI — Common Issues
 
 <div class="kb-summary">

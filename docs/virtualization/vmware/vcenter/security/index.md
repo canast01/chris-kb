@@ -1,3 +1,10 @@
+---
+tags:
+  - security
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter — Security
 
 <div class="kb-summary">

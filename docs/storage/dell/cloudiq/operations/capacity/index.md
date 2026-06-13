@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # CloudIQ: Capacity Forecasting and Pool Utilisation
 
 

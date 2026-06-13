@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - horizon
+  - vmware
+---
 # VMware Horizon — Integrations
 
 ```powershell

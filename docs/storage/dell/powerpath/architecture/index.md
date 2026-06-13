@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # PowerPath — Architecture
 
 <div class="kb-summary">

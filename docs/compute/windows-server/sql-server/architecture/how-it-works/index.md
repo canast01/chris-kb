@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - windows
+---
 # SQL Server — How It Works
 
 <div class="kb-summary">

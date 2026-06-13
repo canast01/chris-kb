@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - windows
+---
 # Windows Server — Learning Path
 
 <div class="kb-summary">

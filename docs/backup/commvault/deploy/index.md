@@ -1,3 +1,8 @@
+---
+tags:
+  - commvault
+  - deployment
+---
 # CommVault — Initial Deployment
 
 This guide covers deploying a CommVault CommCell environment from scratch — from

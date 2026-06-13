@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Daily VMware Operations Workflow
 
 

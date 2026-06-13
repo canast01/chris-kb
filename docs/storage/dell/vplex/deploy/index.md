@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # Dell VPLEX — Initial Deployment
 
 This guide covers the initial deployment of a Dell VPLEX (Local or Metro) from physical installation through validated host access to virtual volumes. VPLEX provides storage federation — presenting storage from backend arrays as virtual volumes to hosts, with optional Metro mirroring across two sites.

@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - security
+---
 # Azure — Key Vault Keys
 
 

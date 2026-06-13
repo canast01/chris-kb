@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - aws
+---
 # Amazon EVS — Integrations
 
 <div class="kb-summary">

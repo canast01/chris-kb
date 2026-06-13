@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # VM Performance Quick Checks
 
 

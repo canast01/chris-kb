@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Change Management Procedures
 
 <div class="kb-summary">

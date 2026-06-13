@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - san
+---
 # Cisco Nexus Dashboard — Learning Path
 
 <div class="kb-summary">

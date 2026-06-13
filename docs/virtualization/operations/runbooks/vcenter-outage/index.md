@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - vcenter
+  - vsphere-8
+---
 # vCenter Outage Runbook
 
 ```bash

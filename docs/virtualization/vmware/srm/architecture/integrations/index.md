@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - srm
+  - vmware
+---
 # SRM — Integrations
 
 

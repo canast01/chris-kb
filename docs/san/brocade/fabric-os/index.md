@@ -1,3 +1,7 @@
+---
+tags:
+  - san
+---
 # Brocade Fabric OS
 
 <div class="kb-summary">

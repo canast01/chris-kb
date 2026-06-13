@@ -1,3 +1,9 @@
+---
+tags:
+  - srm
+  - troubleshooting
+  - vmware
+---
 # VMware SRM — Common Issues
 
 ```text

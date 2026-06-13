@@ -1,5 +1,7 @@
 ---
 title: RCA Template
+tags:
+  - operations
 ---
 
 # RCA Template

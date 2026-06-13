@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - troubleshooting
+---
 # AWS Troubleshooting — Common Issues
 
 ```bash

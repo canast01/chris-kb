@@ -1,3 +1,7 @@
+---
+tags:
+  - troubleshooting
+---
 # OpenAI API — Troubleshooting
 
 

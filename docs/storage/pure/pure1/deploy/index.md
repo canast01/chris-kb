@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - pure
+---
 # Pure1 — Initial Setup
 
 <div class="kb-summary">

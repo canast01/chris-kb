@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Multi-Factor Authentication — Procedures
 
 <div class="kb-summary">

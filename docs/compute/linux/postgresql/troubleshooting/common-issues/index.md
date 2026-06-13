@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - troubleshooting
+---
 # PostgreSQL — Common Issues
 
 <div class="kb-summary">

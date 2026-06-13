@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - pure
+---
 # FlashBlade — Initial Deployment
 
 ```text

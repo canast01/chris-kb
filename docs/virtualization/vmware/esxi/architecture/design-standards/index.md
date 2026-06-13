@@ -1,3 +1,10 @@
+---
+tags:
+  - architecture
+  - esxi
+  - vmware
+  - vsphere-8
+---
 # ESXi — Design Standards
 
 

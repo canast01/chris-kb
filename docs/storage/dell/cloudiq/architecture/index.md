@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # CloudIQ — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # Pure1 — Integrations
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - security
+  - vmware
+---
 # Aria Automation — Encryption
 
 

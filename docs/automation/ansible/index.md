@@ -1,3 +1,7 @@
+---
+tags:
+  - ansible
+---
 # Ansible
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - confluence
+---
 # Confluence — Integrations
 
 

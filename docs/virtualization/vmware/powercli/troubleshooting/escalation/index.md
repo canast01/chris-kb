@@ -1,3 +1,9 @@
+---
+tags:
+  - powercli
+  - troubleshooting
+  - vmware
+---
 # PowerCLI — Escalation
 
 <div class="kb-summary">

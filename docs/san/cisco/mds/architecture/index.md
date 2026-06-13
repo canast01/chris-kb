@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # Cisco MDS — Architecture
 
 <div class="kb-summary">

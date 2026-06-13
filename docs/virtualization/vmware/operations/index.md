@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - vmware
+---
 # VMware Operations
 
 <div class="kb-summary">

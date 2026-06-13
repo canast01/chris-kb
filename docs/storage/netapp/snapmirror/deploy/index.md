@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - netapp
+---
 # SnapMirror — Initial Configuration
 
 ```text

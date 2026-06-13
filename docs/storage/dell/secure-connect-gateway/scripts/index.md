@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Secure Connect Gateway — Scripts
 
 

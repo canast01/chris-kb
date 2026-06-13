@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - troubleshooting
+---
 # SnapCenter — Diagnostics
 
 

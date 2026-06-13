@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-lcm
+  - operations
+  - vmware
+---
 # Aria Suite Lifecycle — Install & Upgrade
 
 

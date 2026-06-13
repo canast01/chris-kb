@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # PowerScale — Troubleshooting
 
 <div class="kb-summary">

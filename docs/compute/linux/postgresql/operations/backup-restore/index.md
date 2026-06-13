@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # PostgreSQL — Backup Restore
 
 <div class="kb-summary">

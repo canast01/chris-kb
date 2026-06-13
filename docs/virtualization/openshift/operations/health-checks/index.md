@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # OpenShift — Health Checks
 
 <div class="kb-summary">

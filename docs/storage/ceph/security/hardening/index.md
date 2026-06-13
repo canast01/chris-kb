@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - security
+---
 # Ceph — Hardening
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication
 
 <div class="kb-summary">

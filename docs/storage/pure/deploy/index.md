@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - pure
+---
 # Pure Storage — Getting Started
 
 ```text

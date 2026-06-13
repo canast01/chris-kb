@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # Data Domain — Architecture
 
 <div class="kb-summary">

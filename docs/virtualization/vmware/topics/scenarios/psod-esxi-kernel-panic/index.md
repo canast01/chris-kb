@@ -1,3 +1,10 @@
+---
+tags:
+  - esxi
+  - scenarios
+  - vmware
+  - vsphere-8
+---
 # PSOD — ESXi Kernel Panic (Purple Screen of Death)
 
 <div class="kb-summary">

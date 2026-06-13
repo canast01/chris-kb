@@ -1,3 +1,8 @@
+---
+tags:
+  - confluence
+  - security
+---
 # Confluence — Encryption
 
 ```nginx

@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - security
+---
 # Amazon EVS — Encryption
 
 <div class="kb-summary">

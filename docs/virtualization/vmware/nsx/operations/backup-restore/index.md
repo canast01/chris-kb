@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - operations
+  - vmware
+---
 # NSX — Backup and Restore
 
 ```bash

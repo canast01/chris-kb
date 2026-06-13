@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell PowerMax
 
 <div class="kb-summary">

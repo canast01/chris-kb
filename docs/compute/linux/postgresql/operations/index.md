@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # PostgreSQL — Operations
 
 <div class="kb-summary">

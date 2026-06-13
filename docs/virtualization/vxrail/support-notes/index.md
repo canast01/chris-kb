@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Support Notes
 
 <div class="kb-summary">

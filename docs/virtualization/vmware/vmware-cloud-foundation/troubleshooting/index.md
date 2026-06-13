@@ -1,3 +1,9 @@
+---
+tags:
+  - troubleshooting
+  - vcf
+  - vmware
+---
 # VCF — Troubleshooting
 
 <div class="kb-summary">

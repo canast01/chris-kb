@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # PowerScale — Operations
 
 <div class="kb-summary">

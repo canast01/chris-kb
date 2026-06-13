@@ -1,3 +1,7 @@
+---
+tags:
+  - deployment
+---
 # OpenShift — Deploy
 
 <div class="kb-summary">

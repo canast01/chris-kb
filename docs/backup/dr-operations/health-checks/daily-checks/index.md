@@ -1,3 +1,7 @@
+---
+tags:
+  - dr
+---
 # Daily Infrastructure Health Checks
 
 

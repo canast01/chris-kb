@@ -1,3 +1,8 @@
+---
+tags:
+  - github-actions
+  - troubleshooting
+---
 # GitHub Actions — Common Issues
 
 

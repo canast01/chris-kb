@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # CyberArk — Access Control
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell APEX Storage as a Service — Learning Path
 
 <div class="kb-summary">

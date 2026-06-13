@@ -1,5 +1,8 @@
 ---
 title: vSphere Lifecycle Management
+tags:
+  - internals
+  - vmware
 ---
 
 # vSphere Lifecycle Management — vLCM, Host Profiles, and Upgrades

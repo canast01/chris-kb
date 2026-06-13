@@ -1,5 +1,7 @@
 ---
 title: VxRail
+tags:
+  - vxrail
 ---
 
 # VxRail

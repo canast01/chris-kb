@@ -1,5 +1,7 @@
 ---
 title: SNMPv3
+tags:
+  - networking
 ---
 
 # SNMPv3

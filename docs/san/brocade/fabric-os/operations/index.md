@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # FabricOS — Operations
 
 

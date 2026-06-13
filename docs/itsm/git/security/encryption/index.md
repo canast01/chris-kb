@@ -1,3 +1,8 @@
+---
+tags:
+  - git
+  - security
+---
 # Git — Encryption
 
 ```bash

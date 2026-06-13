@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - vmware
+---
 # VMware Learning Path
 
 <div class="kb-summary">

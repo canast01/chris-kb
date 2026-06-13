@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - netapp
+---
 # NetApp SnapCenter — Learning Path
 
 <div class="kb-summary">

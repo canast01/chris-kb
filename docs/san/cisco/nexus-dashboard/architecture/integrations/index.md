@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # Cisco Nexus Dashboard — Architecture Integrations
 
 ```bash

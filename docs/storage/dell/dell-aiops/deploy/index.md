@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - deployment
+---
 # Dell APEX AIOps — Initial Setup
 
 ```text

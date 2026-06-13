@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # OpenShift — Hardening
 
 <div class="kb-summary">

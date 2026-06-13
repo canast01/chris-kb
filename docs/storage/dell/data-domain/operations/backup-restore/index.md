@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # Data Domain — Backup & Restore
 
 

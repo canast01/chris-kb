@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # COD — Operations
 
 <div class="kb-summary">

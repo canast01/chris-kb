@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - san
+---
 # Cisco DCNM — Learning Path
 
 <div class="kb-summary">

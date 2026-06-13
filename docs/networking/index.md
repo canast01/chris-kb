@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # Networking
 
 <div class="kb-summary">

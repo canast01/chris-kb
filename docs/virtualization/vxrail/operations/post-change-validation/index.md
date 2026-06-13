@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - vxrail
+---
 # VxRail Post-Change Validation
 
 <div class="kb-summary">

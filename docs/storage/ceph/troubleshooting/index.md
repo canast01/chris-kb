@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - troubleshooting
+---
 # Ceph — Troubleshooting
 
 <!-- diagram:ceph-troubleshooting -->

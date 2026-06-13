@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Security Incident Handling
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # Dell VPLEX — Integrations
 
 

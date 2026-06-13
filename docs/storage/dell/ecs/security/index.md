@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # Dell ECS — Security
 
 <div class="kb-summary">

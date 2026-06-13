@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - learning-path
+  - vmware
+---
 # Aria Automation — Learning Path
 
 <div class="kb-summary">

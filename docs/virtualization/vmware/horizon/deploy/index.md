@@ -1,3 +1,9 @@
+---
+tags:
+  - deployment
+  - horizon
+  - vmware
+---
 # Horizon — Deploy
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Host Maintenance and Patching
 
 <div class="kb-summary">

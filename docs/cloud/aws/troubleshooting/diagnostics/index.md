@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - troubleshooting
+---
 # AWS Diagnostics — Investigation Toolset
 
 ```bash

@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - tanzu
+  - vmware
+---
 # Tanzu — How It Works
 
 

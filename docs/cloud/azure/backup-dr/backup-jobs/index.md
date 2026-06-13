@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Azure — Backup Jobs
 
 ```text

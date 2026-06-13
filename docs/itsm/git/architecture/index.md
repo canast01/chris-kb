@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - git
+---
 # Git — Architecture
 
 <div class="kb-summary">

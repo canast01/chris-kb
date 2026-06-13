@@ -1,3 +1,8 @@
+---
+tags:
+  - jira
+  - security
+---
 # Jira — Security
 
 

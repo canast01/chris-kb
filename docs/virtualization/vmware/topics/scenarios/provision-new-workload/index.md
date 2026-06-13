@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Provision a New Workload
 
 <div class="kb-summary">

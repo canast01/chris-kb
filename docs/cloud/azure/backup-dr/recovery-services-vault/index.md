@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Recovery Services Vault
 
 

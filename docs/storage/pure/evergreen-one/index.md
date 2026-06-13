@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Pure Storage Evergreen//One
 
 <div class="kb-summary">

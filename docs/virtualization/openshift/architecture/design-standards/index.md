@@ -1,3 +1,7 @@
+---
+tags:
+  - architecture
+---
 # OpenShift — Design Standards
 
 <div class="kb-summary">

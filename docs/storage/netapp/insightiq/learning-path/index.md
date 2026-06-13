@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - netapp
+---
 # NetApp InsightIQ — Learning Path
 
 <div class="kb-summary">

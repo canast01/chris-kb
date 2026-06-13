@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - troubleshooting
+  - vmware
+---
 # VMware Horizon — Common Issues
 
 ```text

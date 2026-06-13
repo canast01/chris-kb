@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - python
+---
 # Python Automation — Integrations
 
 

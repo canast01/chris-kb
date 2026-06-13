@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Azure Identity
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Connectivity
 
 <div class="kb-summary">

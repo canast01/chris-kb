@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # Inventory — Hardware Lifecycle
 
 ```bash

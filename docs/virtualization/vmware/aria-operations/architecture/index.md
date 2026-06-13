@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-operations
+  - vmware
+---
 # Aria Operations — Architecture
 
 <div class="kb-summary">

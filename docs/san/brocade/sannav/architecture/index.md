@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # SANnav — Architecture
 
 <div class="kb-summary">

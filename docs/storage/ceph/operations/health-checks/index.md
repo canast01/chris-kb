@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - operations
+---
 # Ceph — Health Checks
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Cost Management and Billing
 
 

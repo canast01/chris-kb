@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # EC2 — Images, Volumes & Snapshots
 
 

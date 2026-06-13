@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # VPC & Networking
 
 

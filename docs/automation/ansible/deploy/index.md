@@ -1,3 +1,8 @@
+---
+tags:
+  - ansible
+  - deployment
+---
 # Ansible — Environment Setup
 
 <div class="kb-summary">

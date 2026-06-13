@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - veeam
+---
 # Veeam — Initial Deployment
 
 This guide walks through deploying Veeam Backup & Replication from bare metal to a

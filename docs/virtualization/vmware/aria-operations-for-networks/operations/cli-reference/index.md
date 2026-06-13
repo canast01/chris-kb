@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - operations
+  - vmware
+---
 # vRNI CLI Reference
 
 ```bash

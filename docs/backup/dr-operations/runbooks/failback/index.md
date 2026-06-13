@@ -1,3 +1,7 @@
+---
+tags:
+  - dr
+---
 # DR Failback Procedure
 
 ```bash

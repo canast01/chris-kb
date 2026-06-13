@@ -1,3 +1,8 @@
+---
+tags:
+  - certifications
+  - security
+---
 # AI Security and Responsible AI
 
 

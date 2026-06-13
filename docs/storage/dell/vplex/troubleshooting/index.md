@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # Dell VPLEX — Troubleshooting
 
 <div class="kb-summary">

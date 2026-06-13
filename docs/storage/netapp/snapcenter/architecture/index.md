@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netapp
+---
 # SnapCenter — Architecture
 
 <div class="kb-summary">

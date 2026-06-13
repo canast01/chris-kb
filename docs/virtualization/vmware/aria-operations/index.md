@@ -1,3 +1,8 @@
+---
+tags:
+  - aria-operations
+  - vmware
+---
 # Aria Operations
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # RecoverPoint — Architecture
 
 <div class="kb-summary">

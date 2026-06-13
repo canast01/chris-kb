@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - operations
+---
 # Amazon EVS — Backup & Restore
 
 <div class="kb-summary">

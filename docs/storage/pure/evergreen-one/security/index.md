@@ -1,3 +1,8 @@
+---
+tags:
+  - pure
+  - security
+---
 # Pure Storage Evergreen//One Security
 
 

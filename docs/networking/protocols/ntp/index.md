@@ -1,5 +1,7 @@
 ---
 title: NTP
+tags:
+  - networking
 ---
 
 # NTP

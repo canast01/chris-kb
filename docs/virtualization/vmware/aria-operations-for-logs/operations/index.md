@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - operations
+  - vmware
+---
 # Aria Ops for Logs — Operations
 
 <div class="kb-summary">

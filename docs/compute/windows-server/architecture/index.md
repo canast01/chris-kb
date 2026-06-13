@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - windows
+---
 # Windows Server — Architecture
 
 <div class="kb-summary">

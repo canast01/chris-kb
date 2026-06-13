@@ -1,3 +1,10 @@
+---
+tags:
+  - troubleshooting
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter Troubleshooting — Common Issues
 
 

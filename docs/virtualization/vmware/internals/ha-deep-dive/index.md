@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # HA Deep Dive
 
 <div class="kb-summary">

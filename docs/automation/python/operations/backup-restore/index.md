@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - python
+---
 # Python — Backup & Restore
 
 ```bash

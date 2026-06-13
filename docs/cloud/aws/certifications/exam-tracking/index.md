@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - certifications
+---
 # AWS Exam Tracking
 
 

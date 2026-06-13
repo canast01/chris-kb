@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # FOD — Operations
 
 <div class="kb-summary">

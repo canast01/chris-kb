@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Virtualization — Certifications
 
 <div class="kb-summary">

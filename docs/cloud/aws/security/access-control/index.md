@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - security
+---
 # AWS Access Control — Least-Privilege IAM Design
 
 ```json

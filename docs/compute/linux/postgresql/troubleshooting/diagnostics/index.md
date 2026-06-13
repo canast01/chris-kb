@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - troubleshooting
+---
 # PostgreSQL — Diagnostics
 
 <div class="kb-summary">

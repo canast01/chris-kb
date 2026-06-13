@@ -1,3 +1,8 @@
+---
+tags:
+  - ansible
+  - learning-path
+---
 # Ansible — Learning Path
 
 <div class="kb-summary">

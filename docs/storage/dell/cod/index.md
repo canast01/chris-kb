@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell Capacity on Demand
 
 <div class="kb-summary">

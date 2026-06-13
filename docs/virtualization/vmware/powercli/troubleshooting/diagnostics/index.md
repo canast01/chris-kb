@@ -1,3 +1,9 @@
+---
+tags:
+  - powercli
+  - troubleshooting
+  - vmware
+---
 # PowerCLI — Diagnostics
 
 <div class="kb-summary">

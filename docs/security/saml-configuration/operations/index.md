@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # SAML Configuration — Procedures
 
 <div class="kb-summary">

@@ -1,5 +1,9 @@
 ---
 title: ESXi
+tags:
+  - esxi
+  - vmware
+  - vsphere-8
 ---
 
 # ESXi

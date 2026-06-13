@@ -1,3 +1,8 @@
+---
+tags:
+  - aria-lcm
+  - vmware
+---
 # Aria Suite Lifecycle
 
 <div class="kb-summary">

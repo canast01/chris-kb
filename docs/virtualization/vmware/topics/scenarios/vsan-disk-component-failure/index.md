@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN Disk or Component Failure
 
 <div class="kb-summary">

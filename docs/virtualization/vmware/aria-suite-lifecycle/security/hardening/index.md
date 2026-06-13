@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-lcm
+  - security
+  - vmware
+---
 # Aria Suite Lifecycle — Hardening
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - windows
+---
 # Active Directory — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,10 @@
+---
+tags:
+  - learning-path
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN — Learning Path
 
 <div class="kb-summary">

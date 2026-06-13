@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # FlashBlade — How It Works
 
 

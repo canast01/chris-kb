@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # Inventory — Configuration Management (CMDB)
 
 ```bash

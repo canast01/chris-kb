@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - servicenow
+---
 # ServiceNow — Architecture
 
 <div class="kb-summary">

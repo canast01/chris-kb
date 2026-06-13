@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - troubleshooting
+---
 # MySQL / MariaDB — Diagnostics
 
 <div class="kb-summary">

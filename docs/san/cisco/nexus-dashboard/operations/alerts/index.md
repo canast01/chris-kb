@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies
 
 

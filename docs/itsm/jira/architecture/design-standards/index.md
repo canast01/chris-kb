@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - jira
+---
 # Jira — Architecture Standards
 
 

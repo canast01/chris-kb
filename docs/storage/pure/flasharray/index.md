@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Pure FlashArray
 
 <div class="kb-summary">

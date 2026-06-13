@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell AIOps (APEX AIOps) — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,10 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - scenarios
+  - vmware
+---
 # NSX DFW Blocking Application Traffic
 
 <div class="kb-summary">

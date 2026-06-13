@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - security
+---
 # Ceph — Security
 
 <!-- diagram:ceph-security -->

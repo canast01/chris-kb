@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Azure Site Recovery
 
 

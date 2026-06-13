@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - security
+  - vmware
+---
 # Horizon — Access Control
 
 

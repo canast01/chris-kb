@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter Down / Unreachable
 
 <div class="kb-summary">

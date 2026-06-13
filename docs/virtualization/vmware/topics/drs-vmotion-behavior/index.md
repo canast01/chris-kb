@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # DRS and vMotion Behavior
 
 

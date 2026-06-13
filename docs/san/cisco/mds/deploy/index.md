@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - san
+---
 # Cisco MDS — Initial Deployment
 
 This guide covers deploying a Cisco MDS 9000 series SAN switch from physical installation through validated host connectivity. Applies to Cisco MDS 9132T, 9148T, 9396T fixed-port switches and MDS 9706/9710/9718 directors running NX-OS 8.x or 9.x.

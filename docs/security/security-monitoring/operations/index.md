@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Security Monitoring — Procedures
 
 <div class="kb-summary">

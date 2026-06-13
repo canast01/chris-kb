@@ -1,5 +1,8 @@
 ---
 title: VxRail Appliance
+tags:
+  - vmware
+  - vxrail
 ---
 
 # VxRail Appliance

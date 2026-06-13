@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vxrail
+---
 # VxRail — Design Standards
 
 <div class="kb-summary">

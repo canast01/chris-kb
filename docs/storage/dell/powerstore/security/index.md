@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # PowerStore — Security
 
 <div class="kb-summary">

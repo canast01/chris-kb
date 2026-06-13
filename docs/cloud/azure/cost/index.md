@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Azure Cost
 
 <div class="kb-summary">

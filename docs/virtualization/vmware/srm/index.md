@@ -1,5 +1,8 @@
 ---
 title: SRM (VMware Platform)
+tags:
+  - srm
+  - vmware
 ---
 
 # SRM (VMware Platform)

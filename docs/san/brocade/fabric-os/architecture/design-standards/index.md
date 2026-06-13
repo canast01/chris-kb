@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # FabricOS — Standards
 
 

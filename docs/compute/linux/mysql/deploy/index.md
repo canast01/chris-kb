@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - linux
+---
 # MySQL / MariaDB — Initial Deployment
 
 <div class="kb-summary">

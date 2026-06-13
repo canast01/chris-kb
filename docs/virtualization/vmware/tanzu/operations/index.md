@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - tanzu
+  - vmware
+---
 # Tanzu — Operations
 
 <div class="kb-summary">

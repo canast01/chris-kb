@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # Dell Data Domain CLI Reference
 
 ```bash

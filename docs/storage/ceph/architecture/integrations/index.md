@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - ceph
+---
 # Ceph — Integrations
 
 <div class="kb-summary">

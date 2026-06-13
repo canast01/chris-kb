@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # VCF SDDC Manager Upgrade Stalled
 
 <div class="kb-summary">

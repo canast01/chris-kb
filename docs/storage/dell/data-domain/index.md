@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell Data Domain
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # PowerStore — Architecture
 
 <div class="kb-summary">

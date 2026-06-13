@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vxrail
+---
 # VxRail — Architecture (VMware Platform)
 
 <div class="kb-summary">

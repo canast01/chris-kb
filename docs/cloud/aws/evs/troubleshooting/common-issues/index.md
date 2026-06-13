@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - troubleshooting
+---
 # Amazon EVS — Common Issues
 
 <div class="kb-summary">

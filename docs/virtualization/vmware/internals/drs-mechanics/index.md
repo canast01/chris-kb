@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # DRS Mechanics
 
 <div class="kb-summary">

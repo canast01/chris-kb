@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - san
+---
 # Cisco MDS 9000 — Learning Path
 
 <div class="kb-summary">

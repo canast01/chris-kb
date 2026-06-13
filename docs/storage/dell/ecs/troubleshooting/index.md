@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # Dell ECS — Troubleshooting
 
 <div class="kb-summary">

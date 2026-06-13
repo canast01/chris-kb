@@ -1,5 +1,7 @@
 ---
 title: Azure Backup and DR
+tags:
+  - azure
 ---
 
 # Azure Backup and DR

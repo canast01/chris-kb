@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - operations
+  - vmware
+---
 # Aria Operations for Logs — CLI Reference
 
 ```bash

@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail NIC Health
 
 <div class="kb-summary">

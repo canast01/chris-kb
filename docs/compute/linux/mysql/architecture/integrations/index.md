@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # MySQL / MariaDB — Integrations
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS Monitoring
 
 <div class="kb-summary">

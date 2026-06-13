@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - certifications
+---
 # AWS Cloud Practitioner CLF-C02 — 14-Day Study Plan
 
 

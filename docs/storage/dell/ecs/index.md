@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell ECS
 
 <div class="kb-summary">

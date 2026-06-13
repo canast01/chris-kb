@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - operations
+---
 # NetApp Operations — Alerts
 
 <div class="kb-summary">

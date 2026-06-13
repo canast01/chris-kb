@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - veeam
+---
 # Veeam — Architecture
 
 <div class="kb-summary">

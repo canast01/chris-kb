@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # Capacity on Demand — How It Works
 
 

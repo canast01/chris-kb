@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # PostgreSQL — Architecture
 
 <div class="kb-summary">

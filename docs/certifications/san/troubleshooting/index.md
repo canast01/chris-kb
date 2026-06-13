@@ -1,3 +1,9 @@
+---
+tags:
+  - certifications
+  - san
+  - troubleshooting
+---
 # SAN Troubleshooting
 
 

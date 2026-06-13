@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Brocade SANnav — Operations Procedures
 
 SANnav Management Portal is the Brocade web-based tool for SAN fabric discovery, zoning, health monitoring, firmware management, and reporting across Brocade FC switch fabrics.

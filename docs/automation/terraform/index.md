@@ -1,3 +1,7 @@
+---
+tags:
+  - terraform
+---
 # Terraform
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - tanzu
+  - vmware
+---
 # Tanzu
 
 <div class="kb-summary">

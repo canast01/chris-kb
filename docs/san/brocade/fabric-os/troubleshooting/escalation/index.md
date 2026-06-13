@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - troubleshooting
+---
 # Brocade Fabric OS — Troubleshooting Escalation
 
 ```bash

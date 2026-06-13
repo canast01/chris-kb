@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - security
+  - vmware
+---
 # Aria Ops for Networks — Security
 
 <div class="kb-summary">

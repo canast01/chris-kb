@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Standard Changes
 
 <div class="kb-summary">

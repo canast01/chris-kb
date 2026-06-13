@@ -1,5 +1,8 @@
 ---
 title: VCP-DCV 8 Exam Reference
+tags:
+  - certifications
+  - vmware
 ---
 
 # VCP-DCV 8 — Exam Reference (2V0-21.23)

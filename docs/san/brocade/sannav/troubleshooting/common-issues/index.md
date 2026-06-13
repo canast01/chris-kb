@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - troubleshooting
+---
 # Brocade SANnav — Troubleshooting Common Issues
 
 ```bash

@@ -1,3 +1,10 @@
+---
+tags:
+  - deployment
+  - nsx
+  - nsx-4
+  - vmware
+---
 # NSX — Deploy
 
 <div class="kb-summary">

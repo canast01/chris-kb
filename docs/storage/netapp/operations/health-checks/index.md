@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - operations
+---
 # NetApp Operations — Health Checks
 
 <div class="kb-summary">

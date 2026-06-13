@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - security
+---
 # Ceph — Authentication
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - azure
+---
 # Azure Governance
 
 <div class="kb-summary">

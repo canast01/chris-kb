@@ -1,3 +1,7 @@
+---
+tags:
+  - troubleshooting
+---
 # OpenShift — Common Issues
 
 <div class="kb-summary">

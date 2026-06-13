@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # NTP Drift Causing SSO or Certificate Errors
 
 <div class="kb-summary">

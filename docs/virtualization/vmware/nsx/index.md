@@ -1,5 +1,9 @@
 ---
 title: NSX
+tags:
+  - nsx
+  - nsx-4
+  - vmware
 ---
 
 # NSX

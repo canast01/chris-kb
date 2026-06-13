@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - windows
+---
 # SQL Server — Architecture
 
 <div class="kb-summary">

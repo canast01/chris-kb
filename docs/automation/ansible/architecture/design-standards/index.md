@@ -1,3 +1,8 @@
+---
+tags:
+  - ansible
+  - architecture
+---
 # Ansible — Standards
 
 

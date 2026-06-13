@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - azure
+---
 # Azure — How It Works
 
 

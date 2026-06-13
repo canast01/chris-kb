@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell PowerScale (Isilon) — Learning Path
 
 <div class="kb-summary">

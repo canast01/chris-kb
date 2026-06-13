@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # SRDF/S
 
 <div class="kb-summary">

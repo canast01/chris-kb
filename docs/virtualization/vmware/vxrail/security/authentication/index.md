@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - vmware
+  - vxrail
+---
 # VxRail — Authentication
 
 <div class="kb-summary">

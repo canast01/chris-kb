@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Security — Data Protection
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - confluence
+---
 # Confluence
 
 <div class="kb-summary">

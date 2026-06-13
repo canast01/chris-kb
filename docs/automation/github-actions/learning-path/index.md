@@ -1,3 +1,8 @@
+---
+tags:
+  - github-actions
+  - learning-path
+---
 # GitHub Actions — Learning Path
 
 <div class="kb-summary">

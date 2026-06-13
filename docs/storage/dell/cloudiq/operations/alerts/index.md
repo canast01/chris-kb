@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # CloudIQ: Alert Types, Severity, and Notification Configuration
 
 

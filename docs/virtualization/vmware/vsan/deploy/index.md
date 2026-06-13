@@ -1,3 +1,10 @@
+---
+tags:
+  - deployment
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN — Deploy
 
 <div class="kb-summary">

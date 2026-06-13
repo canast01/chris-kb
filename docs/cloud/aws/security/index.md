@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - security
+---
 # AWS — Security
 
 <div class="kb-summary">

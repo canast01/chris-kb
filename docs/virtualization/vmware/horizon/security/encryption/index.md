@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - security
+  - vmware
+---
 # VMware Horizon — Encryption
 
 ```text

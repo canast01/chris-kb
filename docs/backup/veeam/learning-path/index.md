@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - veeam
+---
 # Veeam Backup & Replication — Learning Path
 
 <div class="kb-summary">

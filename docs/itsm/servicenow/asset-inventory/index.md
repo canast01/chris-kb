@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Asset Inventory
 
 <div class="kb-summary">

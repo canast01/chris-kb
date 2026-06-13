@@ -1,3 +1,8 @@
+---
+tags:
+  - jira
+  - operations
+---
 # Jira — CLI Reference
 
 ```bash

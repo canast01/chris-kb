@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - operations
+  - vmware
+---
 # Aria Automation — Operations
 
 <div class="kb-summary">

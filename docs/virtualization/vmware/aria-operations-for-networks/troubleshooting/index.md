@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - troubleshooting
+  - vmware
+---
 # Aria Ops for Networks — Troubleshooting
 
 <div class="kb-summary">

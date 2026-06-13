@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # PowerStore
 
 <div class="kb-summary">

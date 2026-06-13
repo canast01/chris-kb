@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # MySQL / MariaDB — How It Works
 
 <div class="kb-summary">

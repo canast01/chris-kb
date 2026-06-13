@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # Brocade SANnav — Design Standards
 
 ```bash

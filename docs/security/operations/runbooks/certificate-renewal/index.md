@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Certificate Renewal Runbook
 
 

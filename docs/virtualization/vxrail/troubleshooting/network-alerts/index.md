@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - vxrail
+---
 # VxRail Network Alerts
 
 <div class="kb-summary">

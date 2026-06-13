@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # DNS and NTP Validation
 
 

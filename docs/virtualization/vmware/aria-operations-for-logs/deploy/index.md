@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-logs
+  - deployment
+  - vmware
+---
 # Aria Operations for Logs — Deploy
 
 <div class="kb-summary">

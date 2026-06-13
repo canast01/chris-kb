@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - san
+---
 # Brocade FabricOS — Initial Deployment
 
 ```text

@@ -1,3 +1,10 @@
+---
+tags:
+  - internals
+  - nsx
+  - nsx-4
+  - vmware
+---
 # NSX Data Plane
 
 <div class="kb-summary">

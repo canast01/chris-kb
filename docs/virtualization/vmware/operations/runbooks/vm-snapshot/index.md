@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - vmware
+---
 # VM Snapshot Runbook
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # Storage vMotion / Datastore Migration
 
 <div class="kb-summary">

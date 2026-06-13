@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - operations
+  - vmware
+---
 # AON Operational Procedures
 
 <div class="kb-summary">

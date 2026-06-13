@@ -1,3 +1,8 @@
+---
+tags:
+  - security
+  - troubleshooting
+---
 # Security — Troubleshooting
 
 <div class="kb-summary">

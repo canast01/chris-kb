@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - deployment
+---
 # Amazon EVS — Deploy
 
 <!-- diagram:evs-deploy -->

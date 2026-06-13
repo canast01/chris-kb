@@ -1,3 +1,10 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN — Component States
 
 <div class="kb-summary">

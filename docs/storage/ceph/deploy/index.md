@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - deployment
+---
 # Ceph — Deploy
 
 <!-- diagram:ceph-deploy -->

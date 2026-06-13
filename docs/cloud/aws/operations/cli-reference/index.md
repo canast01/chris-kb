@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - operations
+---
 # AWS — CLI Reference
 
 

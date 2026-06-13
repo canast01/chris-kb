@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Compliance Standards — Procedures
 
 <div class="kb-summary">

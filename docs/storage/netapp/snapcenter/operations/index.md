@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - operations
+---
 # NetApp SnapCenter — Operations
 
 

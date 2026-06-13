@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # PowerScale — Security
 
 <div class="kb-summary">

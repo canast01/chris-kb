@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell PowerMax — Learning Path
 
 <div class="kb-summary">

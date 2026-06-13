@@ -1,3 +1,7 @@
+---
+tags:
+  - san
+---
 # Cisco DCNM
 
 <div class="kb-summary">

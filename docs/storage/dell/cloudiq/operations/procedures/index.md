@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # CloudIQ — Procedures
 
 

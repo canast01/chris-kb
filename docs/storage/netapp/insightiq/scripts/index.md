@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # InsightIQ — Scripts Reference
 
 ```python

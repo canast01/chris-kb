@@ -1,3 +1,7 @@
+---
+tags:
+  - servicenow
+---
 # ServiceNow — Emergency Changes
 
 <div class="kb-summary">

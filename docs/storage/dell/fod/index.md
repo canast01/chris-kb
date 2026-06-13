@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell Flex on Demand
 
 <div class="kb-summary">

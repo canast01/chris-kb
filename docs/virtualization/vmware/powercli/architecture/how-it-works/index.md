@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - powercli
+  - vmware
+---
 # PowerCLI — How It Works
 
 <div class="kb-summary">

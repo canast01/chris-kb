@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - netapp
+---
 # Superna Eyeglass — Learning Path
 
 <div class="kb-summary">

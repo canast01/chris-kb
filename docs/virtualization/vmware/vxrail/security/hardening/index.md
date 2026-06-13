@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - vmware
+  - vxrail
+---
 # VxRail — Hardening
 
 <div class="kb-summary">

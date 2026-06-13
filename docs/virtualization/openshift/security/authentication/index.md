@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # OpenShift — Authentication
 
 <div class="kb-summary">

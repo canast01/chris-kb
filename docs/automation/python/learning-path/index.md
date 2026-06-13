@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - python
+---
 # Python — Learning Path
 
 <div class="kb-summary">

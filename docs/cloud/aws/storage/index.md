@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS Storage
 
 <div class="kb-summary">

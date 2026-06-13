@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # VM Snapshot Consolidation Required
 
 <div class="kb-summary">

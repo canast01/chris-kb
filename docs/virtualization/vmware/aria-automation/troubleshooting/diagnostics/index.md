@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - troubleshooting
+  - vmware
+---
 # Aria Automation — Diagnostics
 
 ```yaml

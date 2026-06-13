@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-lcm
+  - vmware
+---
 # Aria Suite Lifecycle — Integrations
 
 

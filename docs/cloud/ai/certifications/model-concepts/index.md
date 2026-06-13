@@ -1,3 +1,7 @@
+---
+tags:
+  - certifications
+---
 # AI Model Concepts
 
 

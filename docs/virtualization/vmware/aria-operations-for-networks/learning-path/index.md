@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-networks
+  - learning-path
+  - vmware
+---
 # Aria Operations for Networks — Learning Path
 
 <div class="kb-summary">

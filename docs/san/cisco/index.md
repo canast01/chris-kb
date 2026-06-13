@@ -1,3 +1,7 @@
+---
+tags:
+  - san
+---
 # Cisco SAN
 
 <div class="kb-summary">

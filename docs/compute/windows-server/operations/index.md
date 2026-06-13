@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - windows
+---
 # Windows Server — Operations
 
 

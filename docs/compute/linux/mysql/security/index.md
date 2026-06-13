@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - security
+---
 # MySQL / MariaDB — Security
 
 <div class="kb-summary">

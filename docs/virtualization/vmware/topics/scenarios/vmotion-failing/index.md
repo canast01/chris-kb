@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # vMotion Failing
 
 <div class="kb-summary">

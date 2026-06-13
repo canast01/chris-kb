@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # Disk Space Cleanup Runbook
 
 

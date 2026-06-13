@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Pure FlashBlade
 
 <div class="kb-summary">

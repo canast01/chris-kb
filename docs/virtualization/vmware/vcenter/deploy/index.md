@@ -1,3 +1,10 @@
+---
+tags:
+  - deployment
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter — Deploy
 
 <div class="kb-summary">

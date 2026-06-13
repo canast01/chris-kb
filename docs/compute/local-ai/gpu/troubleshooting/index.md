@@ -1,3 +1,7 @@
+---
+tags:
+  - troubleshooting
+---
 # GPU Workload Troubleshooting
 
 

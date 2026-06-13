@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - san
+---
 # Cisco Nexus Dashboard — Operations Scripts
 
 ```bash

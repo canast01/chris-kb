@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - security
+---
 # Data Domain — Authentication
 
 

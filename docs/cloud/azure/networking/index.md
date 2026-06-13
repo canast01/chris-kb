@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - networking
+---
 # Azure Networking
 
 <div class="kb-summary">

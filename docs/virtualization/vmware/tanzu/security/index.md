@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - tanzu
+  - vmware
+---
 # Tanzu — Security
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - internals
+  - vmware
+---
 # vSphere Security — Encryption, Identity, and VM Hardening
 
 vSphere security covers a wide range of features from encrypting VM data at rest and in flight, to attestation of ESXi host integrity, to locking down administrative access. This page covers the security features tested on the VCP-DCV 8 exam — including VM Encryption, vSphere Trust Authority, vTPM, VBS, identity federation, lockdown mode, and Secure Boot.

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # Capacity on Demand — Architecture
 
 <div class="kb-summary">

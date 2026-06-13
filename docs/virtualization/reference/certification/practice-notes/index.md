@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Virtualization — Practice Notes
 
 <div class="kb-summary">

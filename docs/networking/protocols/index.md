@@ -1,3 +1,7 @@
+---
+tags:
+  - networking
+---
 # Protocols
 
 <div class="kb-summary">

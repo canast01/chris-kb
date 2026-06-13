@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - azure
+---
 # Azure — Architecture
 
 <div class="kb-summary">

@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell AIOps Lifecycle
 
 <div class="kb-summary">

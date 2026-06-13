@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - security
+---
 # Cisco MDS — Security Hardening
 
 ```bash

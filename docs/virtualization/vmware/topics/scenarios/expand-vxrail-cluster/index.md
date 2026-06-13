@@ -1,3 +1,9 @@
+---
+tags:
+  - scenarios
+  - vmware
+  - vxrail
+---
 # Expand VxRail Cluster (Add Node)
 
 <div class="kb-summary">

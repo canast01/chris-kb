@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - san
+---
 # Nexus Dashboard — Architecture
 
 <div class="kb-summary">

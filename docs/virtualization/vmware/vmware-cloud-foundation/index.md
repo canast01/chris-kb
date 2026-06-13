@@ -1,3 +1,8 @@
+---
+tags:
+  - vcf
+  - vmware
+---
 # VMware Cloud Foundation
 
 <div class="kb-summary">

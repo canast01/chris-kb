@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # SRDF/S — How It Works
 
 

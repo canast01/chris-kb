@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - operations
+---
 # InsightIQ Operations
 
 <div class="kb-summary">

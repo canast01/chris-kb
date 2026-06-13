@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - learning-path
+  - vmware
+---
 # Horizon — Learning Path
 
 <div class="kb-summary">

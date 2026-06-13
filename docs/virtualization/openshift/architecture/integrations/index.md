@@ -1,3 +1,7 @@
+---
+tags:
+  - architecture
+---
 # OpenShift — Integrations
 
 <div class="kb-summary">

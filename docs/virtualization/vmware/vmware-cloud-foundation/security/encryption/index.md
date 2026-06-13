@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - vcf
+  - vmware
+---
 # VMware Cloud Foundation — Encryption
 
 ```text

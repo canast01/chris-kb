@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - pure
+---
 # FlashArray — Initial Deployment
 
 ```text

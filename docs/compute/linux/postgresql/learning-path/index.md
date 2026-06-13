@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - linux
+---
 # PostgreSQL — Learning Path
 
 <div class="kb-summary">

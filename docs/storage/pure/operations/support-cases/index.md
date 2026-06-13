@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - pure
+---
 # Pure Storage Support Cases
 
 

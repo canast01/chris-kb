@@ -1,3 +1,7 @@
+---
+tags:
+  - netapp
+---
 # InsightIQ
 
 <div class="kb-summary">

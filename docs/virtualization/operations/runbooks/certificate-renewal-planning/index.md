@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # VMware Certificate Renewal Runbook
 
 

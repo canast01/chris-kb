@@ -1,3 +1,8 @@
+---
+tags:
+  - scenarios
+  - vmware
+---
 # VM CPU and Memory Contention — Balloon and Swap
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - troubleshooting
+  - vxrail
+---
 # VxRail Manager Unavailable
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # MySQL / MariaDB — Design Standards
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # Evergreen — Integrations
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - netbackup
+---
 # NetBackup Integration
 
 

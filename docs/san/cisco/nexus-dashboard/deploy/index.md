@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - san
+---
 # Nexus Dashboard — Initial Deployment
 
 ```text

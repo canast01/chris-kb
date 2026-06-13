@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - troubleshooting
+---
 # Cisco MDS — Troubleshooting Common Issues
 
 ```bash

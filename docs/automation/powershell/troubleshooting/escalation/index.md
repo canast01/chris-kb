@@ -1,3 +1,8 @@
+---
+tags:
+  - powershell
+  - troubleshooting
+---
 # PowerShell — Escalation
 
 ```powershell

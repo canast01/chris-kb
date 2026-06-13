@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - security
+---
 # Venafi — Operations
 
 

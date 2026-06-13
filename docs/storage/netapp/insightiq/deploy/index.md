@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - netapp
+---
 # InsightIQ — Initial Deployment
 
 ```text

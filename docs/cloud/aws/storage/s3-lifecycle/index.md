@@ -1,3 +1,7 @@
+---
+tags:
+  - aws
+---
 # AWS S3 Lifecycle
 
 

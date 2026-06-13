@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell VPLEX — Learning Path
 
 <div class="kb-summary">

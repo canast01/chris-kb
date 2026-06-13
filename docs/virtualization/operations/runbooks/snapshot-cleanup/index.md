@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # vSAN Degraded Object Runbook
 
 

@@ -1,3 +1,7 @@
+---
+tags:
+  - pure
+---
 # Pure Storage
 
 <div class="kb-summary">

@@ -1,3 +1,10 @@
+---
+tags:
+  - troubleshooting
+  - vmware
+  - vsan
+  - vsphere-8
+---
 # vSAN — Troubleshooting
 
 <div class="kb-summary">

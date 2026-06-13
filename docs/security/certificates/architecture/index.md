@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - security
+---
 # Certificates — Architecture
 
 <div class="kb-summary">

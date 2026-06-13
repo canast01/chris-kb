@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - terraform
+---
 # Terraform CLI Reference
 
 

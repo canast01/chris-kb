@@ -1,3 +1,9 @@
+---
+tags:
+  - deployment
+  - vmware
+  - vxrail
+---
 # VxRail — Deploy
 
 <div class="kb-summary">

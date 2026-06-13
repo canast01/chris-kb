@@ -1,3 +1,7 @@
+---
+tags:
+  - security
+---
 # Data Protection — Data Classification
 
 ```powershell

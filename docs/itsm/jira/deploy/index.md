@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - jira
+---
 # Jira — Initial Deployment
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - troubleshooting
+---
 # Data Domain — Troubleshooting
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - dr
+  - troubleshooting
+---
 # DR Troubleshooting
 
 <div class="kb-summary">

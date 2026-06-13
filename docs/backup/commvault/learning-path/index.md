@@ -1,3 +1,8 @@
+---
+tags:
+  - commvault
+  - learning-path
+---
 # Commvault — Learning Path
 
 <div class="kb-summary">

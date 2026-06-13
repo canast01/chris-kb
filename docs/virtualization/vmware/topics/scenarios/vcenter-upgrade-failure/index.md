@@ -1,3 +1,10 @@
+---
+tags:
+  - scenarios
+  - vcenter
+  - vmware
+  - vsphere-8
+---
 # vCenter Upgrade Failure / Rollback
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - operations
+---
 # PostgreSQL — Install & Upgrade
 
 <div class="kb-summary">

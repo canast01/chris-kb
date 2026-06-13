@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication — Security
 
 <div class="kb-summary">

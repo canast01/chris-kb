@@ -1,3 +1,9 @@
+---
+tags:
+  - nsx
+  - nsx-4
+  - reference
+---
 # NSX Upgrade Readiness Checklist
 
 

@@ -1,5 +1,7 @@
 ---
 title: NFS
+tags:
+  - networking
 ---
 
 # NFS

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - pure
+---
 # FlashBlade — Architecture
 
 <div class="kb-summary">

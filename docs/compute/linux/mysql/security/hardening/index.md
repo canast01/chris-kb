@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - security
+---
 # MySQL / MariaDB — Hardening
 
 <div class="kb-summary">

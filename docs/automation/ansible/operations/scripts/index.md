@@ -1,3 +1,8 @@
+---
+tags:
+  - ansible
+  - operations
+---
 # Ansible — Scripts
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - ceph
+---
 # Ceph — Architecture
 
 <!-- diagram:ceph-architecture -->

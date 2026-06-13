@@ -1,3 +1,7 @@
+---
+tags:
+  - vxrail
+---
 # VxRail Technical Deep Dive
 
 <div class="kb-summary">

@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vxrail
+---
 # VxRail — How It Works (VMware Platform)
 
 

@@ -1,3 +1,7 @@
+---
+tags:
+  - linux
+---
 # Linux Server
 
 <div class="kb-summary">

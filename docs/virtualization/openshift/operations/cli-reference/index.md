@@ -1,3 +1,7 @@
+---
+tags:
+  - operations
+---
 # OpenShift — CLI Reference
 
 <div class="kb-summary">

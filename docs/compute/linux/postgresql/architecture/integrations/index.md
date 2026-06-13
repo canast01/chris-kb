@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - linux
+---
 # PostgreSQL — Integrations
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - dell
+---
 # SRDF/S — Architecture
 
 <div class="kb-summary">

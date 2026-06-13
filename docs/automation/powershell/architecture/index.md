@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - powershell
+---
 # PowerShell — Architecture
 
 <div class="kb-summary">

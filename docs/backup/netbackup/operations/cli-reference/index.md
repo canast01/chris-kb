@@ -1,3 +1,8 @@
+---
+tags:
+  - netbackup
+  - operations
+---
 # NetBackup CLI Reference
 
 

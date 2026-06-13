@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-logs
+  - vmware
+---
 # Aria Operations for Logs — How It Works
 
 

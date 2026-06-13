@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - operations
+---
 # PowerPath — Operations
 
 <div class="kb-summary">

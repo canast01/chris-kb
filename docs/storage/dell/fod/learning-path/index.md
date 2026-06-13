@@ -1,3 +1,8 @@
+---
+tags:
+  - dell
+  - learning-path
+---
 # Dell Features on Demand (FOD) — Learning Path
 
 <div class="kb-summary">

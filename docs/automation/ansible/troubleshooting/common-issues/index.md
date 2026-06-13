@@ -1,3 +1,8 @@
+---
+tags:
+  - ansible
+  - troubleshooting
+---
 # Ansible — Common Issues
 
 

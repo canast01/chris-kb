@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - vmware
+  - vsphere-replication
+---
 # vSphere Replication — Architecture
 
 <div class="kb-summary">

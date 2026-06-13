@@ -1,3 +1,7 @@
+---
+tags:
+  - certifications
+---
 # AI Certification Review Plan
 
 

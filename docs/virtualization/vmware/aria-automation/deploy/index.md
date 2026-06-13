@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - deployment
+  - vmware
+---
 # Aria Automation — Deploy
 
 <div class="kb-summary">

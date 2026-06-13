@@ -1,3 +1,7 @@
+---
+tags:
+  - dell
+---
 # Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 
 

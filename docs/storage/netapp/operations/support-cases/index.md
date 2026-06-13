@@ -1,3 +1,8 @@
+---
+tags:
+  - netapp
+  - operations
+---
 # NetApp Operations — Support Cases
 
 <div class="kb-summary">

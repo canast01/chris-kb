@@ -1,3 +1,8 @@
+---
+tags:
+  - san
+  - security
+---
 # Cisco DCNM — Authentication
 
 ```bash

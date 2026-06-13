@@ -1,3 +1,9 @@
+---
+tags:
+  - horizon
+  - operations
+  - vmware
+---
 # Horizon — Install and Upgrade
 
 

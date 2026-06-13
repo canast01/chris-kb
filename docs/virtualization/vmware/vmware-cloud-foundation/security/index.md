@@ -1,3 +1,9 @@
+---
+tags:
+  - security
+  - vcf
+  - vmware
+---
 # VCF — Security
 
 <div class="kb-summary">

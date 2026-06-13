@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - vmware
+---
 # VMware Runbooks
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - ceph
+  - operations
+---
 # Ceph — Lifecycle & Upgrades
 
 <div class="kb-summary">

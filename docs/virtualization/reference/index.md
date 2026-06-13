@@ -1,3 +1,7 @@
+---
+tags:
+  - reference
+---
 # Reference
 
 <div class="kb-summary">

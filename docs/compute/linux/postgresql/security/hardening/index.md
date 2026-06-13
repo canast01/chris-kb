@@ -1,3 +1,8 @@
+---
+tags:
+  - linux
+  - security
+---
 # PostgreSQL — Hardening
 
 <div class="kb-summary">

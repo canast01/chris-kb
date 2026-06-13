@@ -1,3 +1,8 @@
+---
+tags:
+  - powershell
+  - security
+---
 # PowerShell — Hardening
 
 

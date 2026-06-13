@@ -1,3 +1,8 @@
+---
+tags:
+  - networking
+  - troubleshooting
+---
 # LDAP Troubleshooting
 
 

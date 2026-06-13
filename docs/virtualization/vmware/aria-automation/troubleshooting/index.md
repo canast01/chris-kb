@@ -1,3 +1,9 @@
+---
+tags:
+  - aria-automation
+  - troubleshooting
+  - vmware
+---
 # Aria Automation — Troubleshooting
 
 <div class="kb-summary">

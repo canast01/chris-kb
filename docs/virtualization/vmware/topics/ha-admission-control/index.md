@@ -1,3 +1,7 @@
+---
+tags:
+  - vmware
+---
 # HA Admission Control
 
 

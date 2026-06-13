@@ -1,5 +1,7 @@
 ---
 title: AWS Identity — IAM
+tags:
+  - aws
 ---
 
 # AWS Identity — IAM

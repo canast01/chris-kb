@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - security
+---
 # CyberArk PAM — Learning Path
 
 <div class="kb-summary">

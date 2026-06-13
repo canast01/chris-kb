@@ -1,3 +1,8 @@
+---
+tags:
+  - powercli
+  - vmware
+---
 # VMware PowerCLI
 
 <div class="kb-summary">

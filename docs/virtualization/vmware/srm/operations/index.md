@@ -1,3 +1,9 @@
+---
+tags:
+  - operations
+  - srm
+  - vmware
+---
 # Site Recovery Manager — Operations
 
 <div class="kb-summary">

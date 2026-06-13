@@ -1,3 +1,10 @@
+---
+tags:
+  - esxi
+  - scenarios
+  - vmware
+  - vsphere-8
+---
 # ESXi Host Disconnected from vCenter
 
 <div class="kb-summary">

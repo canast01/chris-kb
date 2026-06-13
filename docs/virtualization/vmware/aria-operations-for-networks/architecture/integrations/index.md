@@ -1,3 +1,9 @@
+---
+tags:
+  - architecture
+  - aria-networks
+  - vmware
+---
 # vRNI Integrations
 
 ```bash

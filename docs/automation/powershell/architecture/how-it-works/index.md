@@ -1,3 +1,8 @@
+---
+tags:
+  - architecture
+  - powershell
+---
 # PowerShell — How It Works
 
 

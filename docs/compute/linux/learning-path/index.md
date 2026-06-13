@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - linux
+---
 # Linux — Learning Path
 
 <div class="kb-summary">

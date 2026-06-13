@@ -1,3 +1,8 @@
+---
+tags:
+  - operations
+  - powershell
+---
 # PowerShell — Install & Upgrade
 
 ```powershell

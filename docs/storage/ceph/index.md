@@ -1,3 +1,7 @@
+---
+tags:
+  - ceph
+---
 # Ceph Distributed Storage
 
 <!-- diagram:ceph -->

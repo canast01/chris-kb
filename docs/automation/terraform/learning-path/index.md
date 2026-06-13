@@ -1,3 +1,8 @@
+---
+tags:
+  - learning-path
+  - terraform
+---
 # Terraform — Learning Path
 
 <div class="kb-summary">

@@ -1,3 +1,8 @@
+---
+tags:
+  - deployment
+  - security
+---
 # PKI — CA Hierarchy Initial Deployment
 
 This guide covers deploying a two-tier PKI hierarchy: an offline standalone Root CA and a domain-joined Enterprise Issuing CA. This is the recommended Microsoft PKI pattern for enterprise environments.
