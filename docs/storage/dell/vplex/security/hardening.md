@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Security baseline for VPLEX deployments. Apply all items before production go-live and validate against this checklist after any significant configuration change or GeoSynchrony upgrade.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌─────────────────────────────────── Dell VPLEX — Security Hardening ───────────────────────────────────┐

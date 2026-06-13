@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 High-end all-flash enterprise array — SRDF synchronous and asynchronous replication, NVMe-oF, SnapVX snapshots, FAST VP tiering, and Solutions Enabler management for mission-critical block workloads.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CyberArk integrates with AD, MFA, ticketing, VMware, Linux, and automation tooling to enforce privileged access controls across all platforms. AD group membership drives safe entitlements without requiring manual PVWA user management.
+
+*Applies to: CyberArk PAM*
 </div>
 ```text
 ┌──────────────────────────── Security Cyberark Architecture — Integrations ────────────────────────────┐

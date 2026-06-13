@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Pure Storage Pure1 cloud-based management and analytics — SaaS architecture, AI-driven health scoring, capacity forecasting, and fleet management via REST API.
+
+*Applies to: Pure1*
 </div>
 
 ```text

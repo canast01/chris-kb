@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Backout Plan reference covering Overview, Backout Criteria, Backout Steps Template, Backout Checklist, Validation After Backout and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌────────────────────────── Project Management Change Management Backout Plan ──────────────────────────┐

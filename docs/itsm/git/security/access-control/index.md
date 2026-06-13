@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access control in Git hosting platforms governs who can read, write, and administer repositories. Poor access control is the primary vector for insider threats and supply-chain attacks in software development.
+
+*Applies to: Git 2.x*
 </div>
 
 ---

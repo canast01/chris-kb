@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Microsoft Azure knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management. Includes architecture references, operational procedures, CLI commands, and troubleshooting guides.
+
+*Applies to: Azure*
 </div>
 
 ```text

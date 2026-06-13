@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell VPLEX — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: VPLEX*
 </div>
 
 ```text

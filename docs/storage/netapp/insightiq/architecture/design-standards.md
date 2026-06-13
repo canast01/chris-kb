@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VM sizing, data retention policy, network access requirements, naming conventions, and configuration baselines for InsightIQ deployments.
+
+*Applies to: InsightIQ*
 </div>
 
 ```text

@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing script failures, module conflicts, remoting errors, execution policy issues, and common PowerShell problems.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ```text

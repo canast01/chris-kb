@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌───────────────────────────────── Virtualization Reference Inventory ──────────────────────────────────┐

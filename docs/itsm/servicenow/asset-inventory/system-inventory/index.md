@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 System Inventory Management reference covering Overview, Required Fields, Daily Checks, Workflow.
+
+*Applies to: ServiceNow*
 </div>
 
 ```text

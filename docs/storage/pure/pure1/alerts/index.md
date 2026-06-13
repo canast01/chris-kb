@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Alerts reference covering Viewing Alerts in Pure1, Alerts via CLI, Alerts via Pure1 API, Alert Severity Definitions, Common Alert Types and 2 more sections.
+
+*Applies to: Pure1*
 </div>
 
 ```text

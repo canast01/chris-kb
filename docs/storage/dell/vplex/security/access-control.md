@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VPLEX access control operates at two layers: management plane access (who can change configuration) and data plane access (which hosts can access which volumes).
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌───────────────────────────────────── Dell VPLEX — Access Control ─────────────────────────────────────┐

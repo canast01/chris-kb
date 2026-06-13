@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps: Actionable Recommendations and Implementation Tracking reference covering Implementing Recommendations, Implementation Tracking Dashboard, Firmware Recommendation Workflow, Common Recommendation Issues.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

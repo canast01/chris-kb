@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Filesystem Cleaning.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## Before you begin

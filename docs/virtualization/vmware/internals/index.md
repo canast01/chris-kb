@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Deep-dive articles on how core vSphere components work internally — cluster services, compute scheduling, networking, storage, security, lifecycle, and cross-product mechanisms. Use these pages to build the mental model before working on procedures or troubleshooting.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

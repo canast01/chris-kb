@@ -12,6 +12,8 @@ is more than X minutes behind the production VM. If the production site fails du
 violation, more data will be lost than your SLA allows. This scenario covers identifying which VMs
 are lagging, diagnosing the cause (bandwidth, change rate, or appliance health), and restoring
 replication to within RPO before verifying with an SRM test recovery.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

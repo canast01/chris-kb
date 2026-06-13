@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Escalation Path.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

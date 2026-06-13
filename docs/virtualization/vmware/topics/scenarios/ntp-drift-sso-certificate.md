@@ -10,6 +10,8 @@ Time synchronisation failures across VMware products cause a cascade of symptoms
 SSL handshake errors, vCenter showing hosts as "Not Responding", and vSAN health warnings. This scenario
 covers identifying which components have drifted, correcting NTP on ESXi hosts, VCSA, and NSX Manager,
 and recovering SSO and certificate services after time is fixed.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

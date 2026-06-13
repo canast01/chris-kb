@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 NetApp SnapCenter knowledge base — architecture, operations, security, and troubleshooting for application-consistent backup and recovery on ONTAP.
+
+*Applies to: SnapCenter 5.x*
 </div>
 ```text
 ┌────────────────────────────────────────── NetApp SnapCenter ──────────────────────────────────────────┐

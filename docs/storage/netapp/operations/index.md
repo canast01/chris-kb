@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Use this section for practical notes, checks, commands, troubleshooting, design references, and change validation.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌─────────────────────────────────── NetApp Operations — Operations ────────────────────────────────────┐

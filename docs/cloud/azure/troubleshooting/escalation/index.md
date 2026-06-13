@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 What to collect before opening a support case and how to engage Microsoft support.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────── Cloud Azure Troubleshooting — Escalation ───────────────────────────────┐

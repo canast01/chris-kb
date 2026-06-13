@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 ```text
 ┌────────────────────────────────── Pure FlashArray — Access Control ───────────────────────────────────┐

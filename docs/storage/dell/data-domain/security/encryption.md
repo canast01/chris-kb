@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode, Encryption in Transit (TLS) and 3 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## Before you begin

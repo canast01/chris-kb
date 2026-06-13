@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure Storage Evergreen Standards reference covering Naming Conventions, Build Baseline, Subscription Checklist.
+
+*Applies to: Evergreen*
 </div>
 
 Evergreen Standards — Object Naming and Design

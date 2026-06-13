@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure daily health checks — runnable CLI routine covering service health incidents, VM power states and provisioning failures, load balancer backend pool health, storage capacity, NSG flow log validation, and Monitor alert review.
+
+*Applies to: Azure*
 </div>
 
 ## Before you begin

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 NetApp Keystone Security reference covering Shared Responsibility, Keystone Collector Security, Storage Security, Access Control, Compliance.
+
+*Applies to: Keystone STaaS*
 </div>
 ```text
 ┌───────────────────────────────────── NetApp Keystone — Security ──────────────────────────────────────┐

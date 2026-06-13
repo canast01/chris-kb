@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 APEX Storage as a Service — Install & Upgrade reference.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Dell VPLEX](../index.md) reference.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌───────────────────────────────── Dell VPLEX — Scripts and Automation ─────────────────────────────────┐

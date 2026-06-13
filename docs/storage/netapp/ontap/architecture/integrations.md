@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering VMware, SnapCenter Plugin, Active Directory / CIFS Authentication, Veeam Storage Integration (VeeamON / Direct Storage Access), ONTAP REST API and 2 more sections.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌───────────────────────────────────── NetApp ONTAP — Integrations ─────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [NetApp Keystone](../index.md) reference.
+
+*Applies to: Keystone STaaS*
 </div>
 ```text
 ┌────────────────────────────── NetApp Keystone — Scripts and Automation ───────────────────────────────┐

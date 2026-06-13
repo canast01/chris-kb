@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing Confluence performance issues, indexing failures, login problems, macro errors, and sync failures.
+
+*Applies to: Confluence Cloud / Data Center*
 </div>
 
 ```text

@@ -59,6 +59,8 @@ search:
 
 <div class="kb-summary">
 Step-by-step guide to connecting Dell storage systems to CloudIQ via the Secure Connect Gateway, verifying telemetry, and configuring alerts and notifications.
+
+*Applies to: CloudIQ*
 </div>
 
 ## Prerequisites

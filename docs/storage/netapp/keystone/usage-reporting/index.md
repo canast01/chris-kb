@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Keystone Usage Reporting reference covering BlueXP Digital Wallet, Keystone Collector, Monthly Consumption Reports, Identifying High-Consuming Volumes (ONTAP CLI), Reporting Discrepancies and 1 more sections.
+
+*Applies to: Keystone STaaS*
 </div>
 ```text
 ┌─────────────────────────────────────────── NetApp Keystone ───────────────────────────────────────────┐

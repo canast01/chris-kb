@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Metering Model, Supported Platforms, Use Cases, Best Practices.
+
+*Applies to: Dell FOD*
 </div>
 ```text
 ┌─────────────────────────────────────── Dell FoD — How It Works ───────────────────────────────────────┐

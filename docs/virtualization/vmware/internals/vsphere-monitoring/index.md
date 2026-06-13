@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Reference for vSphere observability. Covers performance chart metrics (CPU Ready, memory balloon, disk latency), log file locations on ESXi and vCenter, support bundle collection, vSphere Cluster Services retreat mode, VMware Skyline proactive monitoring, and hands-on tools including ESXTOP, RESXTOP, and PowerCLI Get-Stat.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

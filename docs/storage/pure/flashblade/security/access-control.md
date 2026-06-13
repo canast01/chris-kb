@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [FlashBlade Security](index.md) reference.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌────────────────────────────────── Pure FlashBlade — Access Control ───────────────────────────────────┐

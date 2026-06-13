@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Manager (vLCM) image-based and baseline-based management, cluster images, Quick Boot, Secure Boot, host profiles and compliance, Content Library for VM templates, and the Cluster Quickstart workflow. Includes upgrade planning with Update Planner.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Transit, Encryption Compliance Summary.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerStore — Encryption ─────────────────────────────────────┐

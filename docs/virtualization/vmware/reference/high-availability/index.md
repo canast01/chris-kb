@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 ![High Availability Design Overview](../../../../assets/high-availability-design-overview.svg)
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ## Overview

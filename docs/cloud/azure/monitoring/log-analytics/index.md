@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Log Analytics is the primary platform for collecting, querying, and alerting on log data in Azure Monitor. Data is stored in a Log Analytics workspace and queried using KQL (Kusto Query Language).
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Monitoring ────────────────────────────────────────┐

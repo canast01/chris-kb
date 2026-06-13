@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scale-out NAS clusters. All commands run from the cluster CLI — log in via SSH to any node. > Use `isi --help` or `isi <subcommand> --help` for full option lists.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerScale — CLI Reference ───────────────────────────────────┐

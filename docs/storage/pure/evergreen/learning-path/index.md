@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for Pure Storage Evergreen subscription model. Follow these stages in order to build a complete mental model before managing Evergreen assets in production.
+
+*Applies to: Evergreen*
 </div>
 
 ```text

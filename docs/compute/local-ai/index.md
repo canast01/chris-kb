@@ -2,6 +2,8 @@
 
 <div class="kb-summary">
 On-premises AI/ML compute — GPU hardware management, driver configuration, and running large language models locally with Ollama. Covers sizing, performance, and operational procedures for GPU-accelerated infrastructure.
+
+*Applies to: Local AI*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Incident Resolution reference covering Overview, Resolution vs Workaround, Resolution Steps Process, RCA Triggers, Post-Resolution Monitoring and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌────────────────────────── Project Management Incident Management Resolution ──────────────────────────┐

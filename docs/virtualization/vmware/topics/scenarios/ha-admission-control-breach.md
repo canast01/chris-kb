@@ -11,6 +11,8 @@ capacity. VMs cannot be restarted because no surviving host has sufficient CPU a
 Ops fires cascading alerts as powered-off VMs pile up. This scenario covers confirming the admission
 control breach, making hard decisions about which VMs to restart first, temporarily adjusting HA policy
 to allow restarts, recovering the cluster, and preventing a recurrence through proper headroom design.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

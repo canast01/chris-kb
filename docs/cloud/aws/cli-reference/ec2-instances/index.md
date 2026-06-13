@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 AWS CLI commands for EC2 — describe-instances, start/stop, resize, AMI creation, metadata queries, and user data operations.
+
+*Applies to: AWS*
 </div>
 
 ```text

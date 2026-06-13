@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Cisco MDS day-to-day operations — VSAN management, zoning, port administration, and fabric health monitoring.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

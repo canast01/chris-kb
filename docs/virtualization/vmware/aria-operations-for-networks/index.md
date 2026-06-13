@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware Aria Operations for Networks. Covers network visibility, flow analytics, topology mapping, path analysis, and security exposure analysis.
+
+*Applies to: Aria Operations for Networks 6.x*
 </div>
 
 ```text

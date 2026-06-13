@@ -2,6 +2,8 @@
 
 <div class="kb-summary">
 Ollama runs open-weight LLMs locally, exposing an OpenAI-compatible REST API with automatic model download, quantisation, and GPU offloading (NVIDIA CUDA and Apple Silicon Metal). Coverage includes VRAM sizing, quantisation selection, network binding, model management, and troubleshooting.
+
+*Applies to: Ollama*
 </div>
 ```text
 ┌───────────────────────────────────────── Ai Local Ai Ollama ──────────────────────────────────────────┐

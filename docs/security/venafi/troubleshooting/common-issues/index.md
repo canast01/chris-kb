@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Known issues and resolution steps for frequent Venafi problems.
+
+*Applies to: Venafi TLS Protect*
 </div>
 ```text
 ┌─────────────────────────── Security Venafi Troubleshooting — Common Issues ───────────────────────────┐

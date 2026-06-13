@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Change Approval Process reference covering Change Types and Approval Requirements, CAB Approval Workflow, Risk Classification Matrix, ITSM Approval Fields, Approval Checklist and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 
 ```text

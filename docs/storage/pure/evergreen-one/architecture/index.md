@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Evergreen//One is Pure's Storage-as-a-Service model. Pure owns and manages the hardware on-premises or in colocation. The customer pays for consumed capacity against a committed reserve, with a 99.9999% availability SLA and guaranteed performance tiers.
+
+*Applies to: Evergreen//One*
 </div>
 
 ![Evergreen//One Architecture](../../../../assets/evergreen-one-architecture-overview.svg)

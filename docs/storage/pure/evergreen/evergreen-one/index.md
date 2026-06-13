@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Works, Subscription Components, Pure1 Monitoring (Customer View), SLA Reporting, Capacity Management and 2 more sections.
+
+*Applies to: Evergreen*
 </div>
 
 ```text

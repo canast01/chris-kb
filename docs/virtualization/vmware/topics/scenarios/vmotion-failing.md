@@ -9,6 +9,8 @@ tags:
 A vMotion or Storage vMotion operation fails before completing. This scenario maps the most common failure
 modes — MTU mismatch, CPU incompatibility, VMkernel routing gaps, and NSX segment availability — and gives
 the exact CLI commands and vCenter checks to isolate and fix each one.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

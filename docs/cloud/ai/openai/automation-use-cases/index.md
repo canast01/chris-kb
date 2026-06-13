@@ -3,6 +3,8 @@
 
 <div class="kb-summary">
 Practical patterns for using the OpenAI API in automation pipelines: summarisation, classification, code generation, and embeddings-based search.
+
+*Applies to: OpenAI API*
 </div>
 ```text
 ┌─────────────────────────────────── Ai Openai Automation Use Cases ────────────────────────────────────┐

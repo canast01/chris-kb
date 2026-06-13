@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vSphere Lifecycle Manager (vLCM) introduces image-based management as the replacement for VUM baselines. A cluster image defines the complete ESXi software bill of materials; drift detection, compliance scanning, and rolling remediation are coordinated with DRS for zero-disruption patching.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

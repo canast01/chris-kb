@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CloudIQ: Proactive Recommendations and Implementation Tracking reference covering Implementing a Recommendation, Energy Savings Recommendations, Tracking Recommendation History, Common Recommendation Issues.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

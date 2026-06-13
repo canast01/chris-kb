@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Superna Eyeglass DR orchestration for NetApp PowerScale — automates SyncIQ failover, SMB/NFS share reconfiguration, quota migration, and DNS cutover in 5–15 minutes.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ![Superna Eyeglass Architecture](../../../../assets/superna-eyeglass-architecture-overview.svg)

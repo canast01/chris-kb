@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 GitHub Actions — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more.
+
+*Applies to: GitHub Actions*
 </div>
 
 ```text

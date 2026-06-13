@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Sizing guidelines, design standards, and best practices.
+
+*Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
 
 ## Naming Convention

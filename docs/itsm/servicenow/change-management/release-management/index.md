@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Coordinates planning, scheduling, and execution of software and infrastructure releases to minimise risk and ensure controlled delivery.
+
+*Applies to: ServiceNow*
 </div>
 
 ## Release Types

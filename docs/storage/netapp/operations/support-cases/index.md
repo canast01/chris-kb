@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Support Cases reference covering Opening a Support Case, Case Severity Levels, Generating a Support Bundle, Information to Include in a Case, Keystone-Specific Cases and 2 more sections.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌────────────────────────────────────────── NetApp Operations ──────────────────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerShell is a cross-platform task automation shell built on .NET. This page covers the execution engine, pipeline model, remoting, module system, and runspace architecture.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ---

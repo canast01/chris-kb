@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Sizing and Capacity Model, Naming Conventions, Build and Deployment Baseline, Configuration Checklist.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

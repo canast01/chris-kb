@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Deployment Models, Data Center Reference Architecture, Clustering, Port Reference, Cloud Architecture (Reference).
+
+*Applies to: Jira Cloud / Data Center*
 </div>
 
 ## Deployment Models

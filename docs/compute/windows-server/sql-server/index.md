@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Microsoft SQL Server for Windows Server — Always On AG, failover clustering, backup/restore.
+
+*Applies to: SQL Server 2019 / 2022*
 </div>
 
 ```text

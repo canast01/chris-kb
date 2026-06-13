@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance with inline global deduplication via the SISL engine. DDBoost integration with backup software reduces network traffic by ~50% via source-side deduplication. Typical dedup ratios: 20:1 or greater.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ![Data Domain Architecture](../../../../assets/data-domain-architecture-overview.svg)

@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Systematic diagnostic procedures for ONTAP. Start with cluster-level health, then narrow to the affected subsystem. Always collect an AutoSupport bundle before calling NetApp support.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌───────────────────────────────────── NetApp ONTAP — Diagnostics ──────────────────────────────────────┐

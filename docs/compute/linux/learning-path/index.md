@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for Linux server administration. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
 
 ```text

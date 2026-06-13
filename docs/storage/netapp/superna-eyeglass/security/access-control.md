@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Superna Eyeglass role-based access — user management, RBAC configuration, and access policy enforcement.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

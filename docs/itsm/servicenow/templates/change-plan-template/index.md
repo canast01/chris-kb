@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Change Plan Template reference covering Overview, Change Summary, Pre-Change Checklist, Implementation Steps, Validation Steps and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌─────────────────────────────── Project Management Change Plan Template ───────────────────────────────┐

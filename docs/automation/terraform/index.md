@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Terraform infrastructure-as-code knowledge base covering provider plugin architecture, state backend configuration, workspace model, module design, CI/CD integration, and troubleshooting for multi-cloud and on-premises environments.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ```text

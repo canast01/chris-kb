@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EC2 — Images, Volumes & Snapshots reference.
+
+*Applies to: AWS*
 </div>
 
 ```text

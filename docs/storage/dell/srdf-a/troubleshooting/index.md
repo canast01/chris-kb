@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing SRDF/A cycle failures, delta set overflow, link errors, and async RPO violations.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

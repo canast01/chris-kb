@@ -13,6 +13,8 @@ the NSX fabric. This scenario covers reading the exact error from NSX Manager, r
 NSX-V VIBs or stale NSX-T state, validating port reachability between the host and NSX Manager, and
 retrying preparation cleanly. A staged rollout process prevents cascading failures across an entire
 host cluster.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 NetApp SnapMirror — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+
+*Applies to: SnapMirror*
 </div>
 ```text
 ┌─────────────────────────────────── NetApp SnapMirror — Operations ────────────────────────────────────┐

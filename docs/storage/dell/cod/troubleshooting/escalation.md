@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Information to Collect, Escalation Path.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

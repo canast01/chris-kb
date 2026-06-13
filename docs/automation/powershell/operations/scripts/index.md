@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 General-purpose PowerShell automation patterns — ITSM scripts for daily checks, incident triage, change management, and health validation. Platform-specific scripts live with their product sections.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Features on Demand integration with PowerMax/Unity management platforms and storage orchestration tools.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

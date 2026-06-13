@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Credential Flow — API Authentication, .env Files with python-dotenv, OAuth 2.0 (Client Credentials), Credential Management Reference.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

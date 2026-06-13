@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Cross-platform automation language with virtual environment isolation, poetry/venv dependency management, asyncio for concurrent API calls, and Docker container execution; targets cloud APIs, infrastructure APIs, SSH, and databases.
+
+*Applies to: Python 3.x*
 </div>
 
 ![Python Architecture](../../../assets/python-architecture-overview.svg)

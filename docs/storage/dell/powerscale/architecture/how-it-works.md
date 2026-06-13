@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, OneFS Distributed File System, HA and Protection Levels, Node Pool and Tier Architecture and 4 more sections.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerScale — How It Works ────────────────────────────────────┐

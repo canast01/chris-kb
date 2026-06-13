@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Pure Storage Evergreen](../index.md) reference.
+
+*Applies to: Evergreen*
 </div>
 ```text
 ┌─────────────────────────── Storage Pure Evergreen — Scripts and Automation ───────────────────────────┐

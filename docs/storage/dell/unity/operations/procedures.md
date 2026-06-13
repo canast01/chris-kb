@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, LUN Management, NAS Server Management.
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌─────────────────────────────── Dell Unity XT — Operational Procedures ────────────────────────────────┐

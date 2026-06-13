@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 ServiceNow templates — change request, incident, and CMDB entry templates for consistent record quality.
+
+*Applies to: ServiceNow*
 </div>
 
 ```text

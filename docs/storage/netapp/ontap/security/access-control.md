@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Login Management, Audit Logging.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌──────────────────────────────────── NetApp ONTAP — Access Control ────────────────────────────────────┐

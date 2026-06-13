@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 ServiceNow is a multi-instance SaaS platform with fully isolated per-customer stacks. On-premises integration is handled via MID Servers — outbound-only Java agents that eliminate inbound firewall requirements.
+
+*Applies to: ServiceNow*
 </div>
 
 ![ServiceNow Architecture](../../../assets/servicenow-architecture-overview.svg)

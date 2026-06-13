@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Confluence is Atlassian's enterprise wiki and collaboration platform, available in three deployment models: **Server** (EOL), **Data Center** (self-managed, HA-capable), and **Cloud** (SaaS).
+
+*Applies to: Confluence Cloud / Data Center*
 </div>
 
  This page covers the internal component architecture and deployment topology for on-premises Data Center deployments.

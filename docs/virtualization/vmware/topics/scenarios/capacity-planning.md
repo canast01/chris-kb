@@ -11,6 +11,8 @@ or space runs out — not after. Aria Operations is the primary tool: it provide
 projections, reclaimable waste identification, and what-if modelling. This scenario walks through
 the full capacity review workflow, from checking raw headroom to making a justified hardware
 procurement decision.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

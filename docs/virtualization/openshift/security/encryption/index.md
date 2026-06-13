@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certificate management, Vault integration, image signature verification, and custom PKI for OpenShift clusters.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text

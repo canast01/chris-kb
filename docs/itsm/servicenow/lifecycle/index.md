@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 System onboarding, upgrade readiness, migration, post-upgrade validation, rollback, and decommission procedures.
+
+*Applies to: ServiceNow*
 </div>
 
 ```text

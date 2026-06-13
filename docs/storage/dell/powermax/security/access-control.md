@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Overview, Unisphere Role-Based Access Control (RBAC), Solutions Enabler CLI Access Control, Data Plane Access Control — Masking Views, Access Control Reviews and 1 more sections.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerMax — Access Control ────────────────────────────────────┐

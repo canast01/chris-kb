@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Use Cases, How It Works, Underlying Platforms, Best Practices.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

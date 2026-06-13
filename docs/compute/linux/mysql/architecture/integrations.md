@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL integration points — application connectors (JDBC, ODBC, Python, PHP), ProxySQL, Percona Monitoring, replication to replica sets, and backup tool integration.
+
+*Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
 
 ## Application Connectors

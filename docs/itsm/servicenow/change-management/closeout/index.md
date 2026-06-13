@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Change Closeout reference covering Overview, Closeout Checklist, Change Outcome Classification, PIR (Post-Implementation Review), Lessons Learned and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌──────────────────────────── Project Management Change Management Closeout ────────────────────────────┐

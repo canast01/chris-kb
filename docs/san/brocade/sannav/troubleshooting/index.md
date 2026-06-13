@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing SANnav connectivity issues, fabric discovery failures, certificate errors, and alert configuration problems.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

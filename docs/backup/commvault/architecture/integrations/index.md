@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Commvault integration with VMware vSphere, storage arrays, LDAP, SMTP, and third-party monitoring platforms.
+
+*Applies to: Commvault 11.x*
 </div>
 
 ```text

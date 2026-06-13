@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 DRS evaluates cluster imbalance every 5 minutes using a per-host demand score against fair-share entitlement. Migrations are proposed or executed based on automation level and migration priority band. Predictive DRS extends this with Aria Operations forecasts.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

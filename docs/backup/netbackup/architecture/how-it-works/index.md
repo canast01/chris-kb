@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Three-Tier Topology, Domain Sizing Guidelines.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

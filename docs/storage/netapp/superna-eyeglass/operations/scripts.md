@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Automation scripts for Superna Eyeglass — DR test operations, configuration reporting, and SyncIQ health monitoring.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

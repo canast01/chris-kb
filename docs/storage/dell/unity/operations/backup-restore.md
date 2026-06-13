@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup & Restore reference covering Overview, Protection Method Selection, Native Snapshots, Snapshot Schedules, Veeam Backup & Replication Integration and 6 more sections.
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌───────────────────────────────── Dell Unity XT — Backup and Restore ──────────────────────────────────┐

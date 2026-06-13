@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Account, Subscriptions & Resource Groups reference.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

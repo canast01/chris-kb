@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Build and operating standards for virtualization platforms.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌───────────────────────────────── Virtualization Reference Standards ──────────────────────────────────┐

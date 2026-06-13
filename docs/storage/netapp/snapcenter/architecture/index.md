@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SnapCenter architecture reference — topology, HA options, components, connectivity ports, plugin model, and sizing guidelines.
+
+*Applies to: SnapCenter 5.x*
 </div>
 
 ![SnapCenter Architecture](../../../../assets/snapcenter-architecture-overview.svg)

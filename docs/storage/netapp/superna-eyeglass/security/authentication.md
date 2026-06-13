@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Superna Eyeglass authentication — LDAP/AD integration, SSO configuration, and MFA enforcement.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

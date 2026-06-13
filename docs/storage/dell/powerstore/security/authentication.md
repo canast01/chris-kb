@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Authentication Methods, Local Account Management, LDAP / Active Directory Integration, REST API Token Authentication, Certificate-Based API Access and 4 more sections.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌────────────────────────────────── Dell PowerStore — Authentication ───────────────────────────────────┐

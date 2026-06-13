@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [SnapCenter Architecture](index.md) reference.
+
+*Applies to: SnapCenter 5.x*
 </div>
 ```text
 ┌────────────────────────── NetApp SnapCenter — Architecture Design Standards ──────────────────────────┐

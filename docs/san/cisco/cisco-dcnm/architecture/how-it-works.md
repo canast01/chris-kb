@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Deployment Models, Management Flow, Network Requirements, VM Sizing (Standalone, 11.x) and 1 more sections.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

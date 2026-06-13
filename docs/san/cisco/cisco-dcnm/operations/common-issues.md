@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Quick reference for common problems and resolutions.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ## Before you begin

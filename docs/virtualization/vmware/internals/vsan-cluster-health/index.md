@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 vSAN health is tracked at the component level through a state machine: ACTIVE → ABSENT → DEGRADED → REBUILDING → ACTIVE. CLOM manages rebuild scheduling; resync throttle and proactive rebalance are tunable for operational control.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

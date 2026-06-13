@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Brings a new physical server, VM, or cloud instance into full production management — covering identity, networking, security, monitoring, backup, and documentation.
+
+*Applies to: ServiceNow*
 </div>
 
 ## Onboarding Stages

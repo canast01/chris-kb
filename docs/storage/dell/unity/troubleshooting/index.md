@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing Unity replication failures, host connectivity issues, LUN/share provisioning errors, and drive faults.
+
+*Applies to: Unity XT*
 </div>
 
 ```text

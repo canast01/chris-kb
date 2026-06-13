@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Asset tracking, CMDB, environment mapping, lifecycle, and license management procedures within ServiceNow.
+
+*Applies to: ServiceNow*
 </div>
 
 ```text

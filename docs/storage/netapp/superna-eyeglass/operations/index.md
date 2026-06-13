@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Superna Eyeglass day-to-day operations — DR orchestration, configuration sync monitoring, and SyncIQ policy management.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

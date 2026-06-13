@@ -13,6 +13,8 @@ observe a vSphere Client session drop lasting approximately 4 minutes, then a su
 ESXi hosts and running VMs are unaffected — this is a control-plane event only. This scenario covers
 confirming the failover completed cleanly, re-adding the old active as a new passive node, and handling
 edge cases where VCHA gets stuck in Isolated state.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

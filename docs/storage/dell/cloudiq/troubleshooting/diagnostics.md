@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Log Locations, Before Calling Support.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

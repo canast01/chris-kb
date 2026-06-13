@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerStore day-to-day operations — volume/file provisioning, native replication, snapshots, and host connectivity.
+
+*Applies to: PowerStore 3.x*
 </div>
 
 ```text

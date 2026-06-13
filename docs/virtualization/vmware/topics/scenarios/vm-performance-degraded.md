@@ -9,6 +9,8 @@ tags:
 A VM is slow or unresponsive. This scenario walks through a layered investigation across Aria Operations,
 ESXi host metrics, vSAN storage performance, and NSX Distributed Firewall overhead to pinpoint the root
 cause and apply the correct fix — CPU, memory, storage, or network.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

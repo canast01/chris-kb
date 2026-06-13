@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Commonly used Azure CLI (`az`) commands for managing compute, storage, networking, identity, and monitoring. The Azure CLI is a cross-platform tool that talks directly to Azure APIs — everything you can do in the portal, you can automate with `az`.
+
+*Applies to: Azure*
 </div>
 
 > Requires `az login` or service principal credentials. Use `az account set --subscription <id>` to target a specific subscription.

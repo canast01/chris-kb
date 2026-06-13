@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Runner Health, Workflow Failures, Secrets and Credentials, Runner Resources.
+
+*Applies to: GitHub Actions*
 </div>
 
 ## Before you begin

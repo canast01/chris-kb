@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, SAN Fabric Topology.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ## Overview

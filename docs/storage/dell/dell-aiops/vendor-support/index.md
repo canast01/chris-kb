@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps Vendor Support reference.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Workflow secrets management, OIDC token auth, permission scoping, branch protection, and GitHub Actions runner hardening.
+
+*Applies to: GitHub Actions*
 </div>
 
 ```text

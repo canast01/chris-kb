@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Cost Management budgets let you set spending thresholds and trigger alerts or automated actions when spending approaches or exceeds those thresholds. Budgets are scoped to a management group, subscription, or resource group.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────────────── Cloud Azure Cost ───────────────────────────────────────────┐

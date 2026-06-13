@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 FOD — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

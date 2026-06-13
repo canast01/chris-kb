@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Incident Escalation reference covering Overview, Priority Definitions, Escalation Matrix, P1/P2 Escalation Checklist, Vendor Escalation and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌─────────────────── Project Management Incident Management Escalation — Escalation ────────────────────┐

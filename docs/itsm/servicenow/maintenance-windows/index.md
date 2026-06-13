@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Maintenance Windows operational notes and deep-dive references.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌─────────────────────────────── Project Management Maintenance Windows ────────────────────────────────┐

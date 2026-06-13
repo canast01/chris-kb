@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Cross-product VMware scenarios: reactive troubleshooting and planned operational workflows. Each scenario traces an issue or task across multiple products, showing how vCenter, ESXi, vSAN, NSX, Aria, and VxRail interact.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

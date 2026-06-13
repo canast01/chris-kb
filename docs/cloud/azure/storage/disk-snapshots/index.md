@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating Snapshots, Snapshot vs Full Backup Comparison, Restoring from Snapshot and 3 more sections.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────────────────── Cloud Azure Storage ─────────────────────────────────────────┐

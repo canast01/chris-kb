@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common FOD activation errors, feature entitlement failures, and troubleshooting unlicensed features.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

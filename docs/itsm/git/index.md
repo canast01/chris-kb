@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Git knowledge base covering the distributed object model, GitHub Enterprise and GitLab self-managed architecture, branching workflows, authentication, and troubleshooting.
+
+*Applies to: Git 2.x*
 </div>
 
 ```text

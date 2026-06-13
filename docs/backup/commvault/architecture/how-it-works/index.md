@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Component Topology, MediaAgent and Deduplication, Storage Library Types, Port Requirements and 1 more sections.
+
+*Applies to: Commvault 11.x*
 </div>
 
 ## Overview

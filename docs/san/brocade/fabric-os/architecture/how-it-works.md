@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, SAN Fabric Topology, Principal Switch and Domain ID, Name Server and Fabric Services, Zoning and 4 more sections.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ## Overview

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering API Call and Retry Flow.
+
+*Applies to: Python 3.x*
 </div>
 
 ## API Call and Retry Flow

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering RBAC, Sudoers Configuration, Audit Logging.
+
+*Applies to: PowerPath*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerPath — Access Control ───────────────────────────────────┐

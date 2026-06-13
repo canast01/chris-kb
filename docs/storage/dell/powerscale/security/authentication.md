@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌────────────────────────────────── Dell PowerScale — Authentication ───────────────────────────────────┐

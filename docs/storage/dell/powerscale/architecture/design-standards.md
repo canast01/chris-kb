@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Sizing Guidelines, Naming Conventions, Build Baseline, Configuration Checklist.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 
 ```text

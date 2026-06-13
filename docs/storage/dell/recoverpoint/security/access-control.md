@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Role-Based Access Control.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ```text

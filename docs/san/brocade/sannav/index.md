@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Brocade SANnav management platform knowledge base covering fabric discovery, monitoring, inventory, alerts, reports, and troubleshooting for Brocade Fibre Channel environments.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

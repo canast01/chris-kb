@@ -10,6 +10,8 @@ All storage paths to a VMFS or NFS datastore are lost. VMs freeze or become inac
 the datastore as unavailable, and ESXi enters the APD (All Paths Down) path-loss state. This scenario
 covers identifying the scope of path loss, distinguishing APD from PDL, responding to the VMCP timeout,
 restoring paths, and recovering VMs that were force-powered-off by VMCP.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

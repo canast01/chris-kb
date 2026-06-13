@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Host-based multipath I/O software — automatic path failover, dynamic load balancing, and LUN path management for Dell/EMC arrays across Linux, Windows, AIX, HP-UX, and Solaris.
+
+*Applies to: PowerPath*
 </div>
 
 ```text

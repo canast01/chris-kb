@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerScale day-to-day operations — SMB/NFS share management, SyncIQ replication, snapshots, and quota administration.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 
 ```text

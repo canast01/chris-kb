@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for Pure1 (SaaS management and AI-driven operations). Follow these stages in order to build a complete mental model before using Pure1 to manage a production fleet.
+
+*Applies to: Pure1*
 </div>
 
 ```text

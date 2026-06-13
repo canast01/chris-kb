@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Nexus Dashboard hardening — RBAC, TLS certificate management, user access controls, and secure API configuration.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

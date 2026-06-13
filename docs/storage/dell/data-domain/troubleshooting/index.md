@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Data Domain — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ```text

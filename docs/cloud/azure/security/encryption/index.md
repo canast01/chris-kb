@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure encrypts all data at rest by default using platform-managed keys (PMK). Customer-managed keys (CMK) in Azure Key Vault give you control over the encryption key lifecycle. Data in transit is protected by TLS 1.2+ for all Azure service endpoints.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────── Cloud Azure Security — Encryption ──────────────────────────────────┐

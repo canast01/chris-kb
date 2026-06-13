@@ -13,6 +13,8 @@ firmware, ESXi installation, vCenter onboarding, vSAN disk claim, NSX transport 
 LCM patch baseline compliance, and post-join monitoring in Aria Operations. Each step must be
 completed in order — skipping or reordering steps causes network, storage, or security gaps that
 are difficult to diagnose after the fact.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

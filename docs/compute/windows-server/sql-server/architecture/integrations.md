@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server integration points — application drivers (JDBC, ODBC, ADO.NET, pyodbc), linked servers, SSRS/SSIS/SSAS, monitoring via DMVs and third-party tools.
+
+*Applies to: SQL Server 2019 / 2022*
 </div>
 
 ```text

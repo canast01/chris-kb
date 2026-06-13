@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Ansible is an agentless IT automation engine that automates provisioning, configuration management, application deployment, orchestration, and many other IT processes.
+
+*Applies to: Ansible 2.x*
 </div>
 
  It uses SSH (or WinRM for Windows) to communicate with managed nodes, pushing small programs called modules to execute tasks, then removing them when complete. No agent daemon is required on any managed node.

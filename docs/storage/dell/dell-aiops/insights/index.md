@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection reference covering Performance Predictions, Bottleneck Detection, Noisy Neighbour Detection, Common Insight Issues.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

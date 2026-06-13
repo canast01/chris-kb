@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure Network Watcher provides tools for monitoring, diagnosing, and gaining insights into network traffic in Azure. It is region-scoped and must be enabled in each region where you want to use it.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐

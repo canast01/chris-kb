@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps Security reference covering Access Control (RBAC), SSO Integration, Audit Logging, Data Sovereignty, Network Security and 1 more sections.
+
+*Applies to: Dell AIOps*
 </div>
 
 ## Before you begin

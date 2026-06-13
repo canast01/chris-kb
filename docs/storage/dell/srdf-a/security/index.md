@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 SRDF/A security controls — management access restrictions, SRDF encryption, and Unisphere for PowerMax hardening.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

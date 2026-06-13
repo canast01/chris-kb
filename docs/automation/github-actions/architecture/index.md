@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Event-driven CI/CD platform embedded in GitHub repositories; workflows defined in YAML trigger on push, PR, schedule, or API call; jobs run in parallel on hosted or self-hosted runners; artifacts and outputs bridge job data.
+
+*Applies to: GitHub Actions*
 </div>
 
 ![GitHub Actions Architecture](../../../assets/github-actions-architecture-overview.svg)

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Windows Server Active Directory knowledge base covering forest and domain architecture, FSMO roles, Kerberos authentication, replication topology, GPO management, and troubleshooting for enterprise directory environments.
+
+*Applies to: Active Directory (Windows Server 2019 / 2022)*
 </div>
 ```text
 ┌────────────────────────────────────── Security Active Directory ──────────────────────────────────────┐

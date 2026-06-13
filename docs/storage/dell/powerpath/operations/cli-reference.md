@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Commonly used `powermt` commands for managing Dell PowerPath multipathing on Linux and Windows hosts. PowerPath is a multipathing driver — it sits between the OS and the storage array, managing multiple physical paths to each disk to ensure high availability and load balancing.
+
+*Applies to: PowerPath*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerPath — CLI Reference ────────────────────────────────────┐

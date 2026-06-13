@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check, Array Health, Blade Health, Drive / Media Health and 4 more sections.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌─────────────────────────────────── Pure FlashBlade — Health Checks ───────────────────────────────────┐

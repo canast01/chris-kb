@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering APEX Console RBAC Roles, API Token Management, SSO and SAML Integration, SCG Access Controls, General Controls.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Integration reference covering Azure VM Deployment Flow, Azure AD Connect (Hybrid Identity), Azure Monitor → SIEM, GitHub Actions + OIDC Federation, Terraform Remote State and 2 more sections.
+
+*Applies to: Azure*
 </div>
 
 ## Azure VM Deployment Flow

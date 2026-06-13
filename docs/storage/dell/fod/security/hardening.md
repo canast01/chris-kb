@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Requirements Summary.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

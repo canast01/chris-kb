@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 COD — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Microsoft Entra ID (formerly Azure Active Directory) is the cloud-based identity and access management service. It provides authentication, authorisation, and directory services for Azure resources, Microsoft 365, and integrated SaaS applications.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────────────────── Cloud Azure Identity ─────────────────────────────────────────┐

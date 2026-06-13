@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Solutions Enabler RBAC.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

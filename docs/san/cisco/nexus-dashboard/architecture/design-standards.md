@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Overview, Cluster Naming, Network Interface Standards, Sizing Guidelines, Site Registration Standards and 6 more sections.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

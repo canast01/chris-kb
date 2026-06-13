@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Sizing and Capacity Model, Sizing by Workload, Network Sizing, Naming Conventions, Build and Deployment Baseline and 4 more sections.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌────────────────────────────── Dell ECS — Architecture Design Standards ───────────────────────────────┐

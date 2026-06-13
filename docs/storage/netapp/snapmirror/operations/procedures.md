@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [SnapMirror Operations](index.md) reference.
+
+*Applies to: SnapMirror*
 </div>
 ```text
 ┌───────────────────────────── NetApp SnapMirror — Operational Procedures ──────────────────────────────┐

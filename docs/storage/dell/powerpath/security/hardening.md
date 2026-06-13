@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Compliance.
+
+*Applies to: PowerPath*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure1 Security reference covering Access Control (RBAC), SSO Configuration (SAML 2.0), Authentication Flow (RSA Key), Audit Logging, Data Security and 1 more sections.
+
+*Applies to: Pure1*
 </div>
 
 ## Before you begin

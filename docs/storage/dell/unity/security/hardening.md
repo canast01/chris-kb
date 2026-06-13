@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Overview, Hardening Checklist, Credentials, Transport Security, Protocol Restrictions and 5 more sections.
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌───────────────────────────────── Dell Unity XT — Security Hardening ──────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL architecture — process model, shared buffer cache, WAL, MVCC, autovacuum, streaming replication, and query planner internals.
+
+*Applies to: PostgreSQL 15.x / 16.x*
 </div>
 
 ## Process Model

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Tanzu knowledge base — deploy, architecture, operations, CLI references, security, and troubleshooting for VMware Tanzu Kubernetes Grid on vSphere.
+
+*Applies to: Tanzu 2.x*
 </div>
 
 ```text

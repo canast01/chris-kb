@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Scripts reference covering Available Scripts, Script Pattern — State Check.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

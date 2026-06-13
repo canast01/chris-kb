@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 NetApp Keystone Troubleshooting reference covering Common Issues, Diagnostic, Log Locations, Before Calling Support.
+
+*Applies to: Keystone STaaS*
 </div>
 ```text
 ┌────────────────────────────────── NetApp Keystone — Troubleshooting ──────────────────────────────────┐

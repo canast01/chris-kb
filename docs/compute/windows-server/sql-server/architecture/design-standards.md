@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server design standards — HA topology (Always On AG, FCI), edition selection, disk layout, memory sizing, tempdb configuration, and naming conventions.
+
+*Applies to: SQL Server 2019 / 2022*
 </div>
 
 ```text

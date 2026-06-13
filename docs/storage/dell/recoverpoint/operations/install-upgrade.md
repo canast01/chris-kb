@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [RecoverPoint](../index.md) > [Operations](index.md) reference. Dell RecoverPoint (RP/CL) provides continuous data protection and replication using dedicated RecoverPoint Appliances (RPAs) at each site.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 > Part of the [RecoverPoint](../index.md) > [Operations](index.md) reference.

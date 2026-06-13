@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerStore hardening — RBAC, local user management, encryption key management, and management interface security.
+
+*Applies to: PowerStore 3.x*
 </div>
 
 ```text

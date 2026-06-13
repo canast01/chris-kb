@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Dell Unity](../index.md) reference.
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌─────────────────────────────── Dell Unity XT — Scripts and Automation ────────────────────────────────┐

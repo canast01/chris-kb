@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring reference covering Protocol-Level Capacity Breakdown, Quota Monitoring, Common Capacity Issues.
+
+*Applies to: InsightIQ*
 </div>
 
 ```text

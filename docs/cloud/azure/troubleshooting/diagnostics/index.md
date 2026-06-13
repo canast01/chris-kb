@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostic commands, log locations, and data collection procedures.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────── Cloud Azure Troubleshooting — Diagnostics ──────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Topology, Journal Sizing, Journal Monitoring Thresholds, High Availability.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ## Overview

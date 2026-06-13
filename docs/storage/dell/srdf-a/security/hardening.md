@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Network Port Requirements, Audit Logging.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

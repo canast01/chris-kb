@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Operational procedures for account management, password rotation, session management, and audit tasks.
+
+*Applies to: CyberArk PAM*
 </div>
 ```text
 ┌──────────────────────── Security Cyberark Operations — Operational Procedures ────────────────────────┐

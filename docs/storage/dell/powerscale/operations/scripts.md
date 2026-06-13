@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Automation scripts and reusable code for Dell PowerScale operations.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌────────────────────────────── Dell PowerScale — Scripts and Automation ───────────────────────────────┐

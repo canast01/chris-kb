@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Audit Log Forwarding, Appliance Patching.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

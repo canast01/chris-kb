@@ -13,6 +13,8 @@ vCenter in a partially upgraded, non-functional, or non-booting state. This scen
 stages, where failures occur, how to use the auto-snapshot rollback built into the VCSA upgrade process,
 how to fall back to the source appliance when rollback is not available, and what to fix before retrying.
 ESXi hosts and running VMs are unaffected during a vCenter upgrade — only management is disrupted.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

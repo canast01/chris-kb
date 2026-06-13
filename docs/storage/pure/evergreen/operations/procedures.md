@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Evergreen Operations](index.md) reference.
+
+*Applies to: Evergreen*
 </div>
 
 ---

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Array naming standards, team access model, alert threshold configuration, and operational baselines for Pure1.
+
+*Applies to: Pure1*
 </div>
 
 ```text

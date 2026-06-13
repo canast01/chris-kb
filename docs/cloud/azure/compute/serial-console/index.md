@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Serial Console provides out-of-band terminal access to a VM's serial port.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────────────────── Cloud Azure Compute ─────────────────────────────────────────┐

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 ServiceNow change management procedures — change request lifecycle, CAB process, standard changes, and post-implementation review.
+
+*Applies to: ServiceNow*
 </div>
 
 ```text

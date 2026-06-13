@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing DCNM fabric sync issues, template deployment failures, connectivity errors, and common DCNM problems.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

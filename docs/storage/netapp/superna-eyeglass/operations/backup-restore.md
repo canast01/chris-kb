@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share/export configurations, access zone mappings, and SmartConnect zone settings. Without a current backup, DR failover configuration must be manually re-created.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ---

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Structured validation procedure to confirm system health and application functionality after any upgrade, patch, or configuration change. Complete within the maintenance window before declaring success.
+
+*Applies to: ServiceNow*
 </div>
 
 ## Validation Flow

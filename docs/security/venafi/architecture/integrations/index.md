@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Venafi TPP integrates with Microsoft ADCS as the primary internal CA backend, with DigiCert and Entrust for external and public certificate issuance.
+
+*Applies to: Venafi TLS Protect*
 </div>
 ```text
 ┌───────────────────────────── Security Venafi Architecture — Integrations ─────────────────────────────┐

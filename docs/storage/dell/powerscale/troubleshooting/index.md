@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing PowerScale replication failures, protocol errors, quota violations, node faults, and cluster health issues.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 
 ```text

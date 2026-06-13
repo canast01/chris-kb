@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Practical runbooks for incidents, maintenance, lifecycle work, validation, evidence collection, and RCA follow-up.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

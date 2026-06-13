@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 APEX Storage as a Service — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

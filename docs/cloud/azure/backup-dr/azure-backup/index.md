@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Backup is a cloud-native backup service that provides simple, secure, and cost-effective solutions for protecting VMs, SQL databases, file shares, and on-premises workloads.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────────────────── Cloud Azure Backup Dr ────────────────────────────────────────┐

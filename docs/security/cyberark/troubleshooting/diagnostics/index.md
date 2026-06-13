@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Use this page for practical CyberArk troubleshooting notes, checks, commands, change notes, and field references.
+
+*Applies to: CyberArk PAM*
 </div>
 ```text
 ┌─────────────────────────── Security Cyberark Troubleshooting — Diagnostics ───────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Incident Triage, Maintenance Window, Operational Tasks.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

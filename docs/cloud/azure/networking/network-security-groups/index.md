@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Network Security Groups (NSGs) are stateful packet filters that control inbound and outbound traffic to Azure resources. They can be associated with subnets or individual network interfaces. Rules are evaluated by priority — the lowest number wins.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐

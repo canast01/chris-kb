@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Authentication Mechanisms Summary, Local Account Management, Active Directory Integration, LDAP Integration (Non-AD), SAML SSO Configuration and 3 more sections.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌────────────────────────────────── Pure FlashBlade — Authentication ───────────────────────────────────┐

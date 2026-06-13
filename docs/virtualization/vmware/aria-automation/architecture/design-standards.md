@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Blueprint / Template Standards, Project Standards and 1 more sections.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ```text

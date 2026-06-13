@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure access control is built on Azure Role-Based Access Control (RBAC).
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────────── Cloud Azure Security — Access Control ────────────────────────────────┐

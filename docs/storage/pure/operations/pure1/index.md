@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Pure1 Cloud Management reference covering Accessing Pure1, Key Navigation Areas, Capacity Planning, Pure1 AI (Copilot), Phone-Home Connectivity and 2 more sections.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

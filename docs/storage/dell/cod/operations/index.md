@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 COD — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

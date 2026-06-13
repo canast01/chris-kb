@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Step-by-step guide to enabling Phone Home on Pure Storage FlashArray and FlashBlade, verifying array registration in the Pure1 cloud portal, and configuring access and alerting.
+
+*Applies to: Pure1*
 </div>
 
 ## Prerequisites

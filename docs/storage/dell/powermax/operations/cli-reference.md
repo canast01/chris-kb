@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. The CLI tool is SYMCLI (Solutions Enabler CLI) — commands follow a `sym<object> <action> -sid <SymmID>` pattern. Every command requires the array's SID (Symmetrix ID).
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerMax — CLI Reference ────────────────────────────────────┐

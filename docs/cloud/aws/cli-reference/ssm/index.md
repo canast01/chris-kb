@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenance Windows, Patch Management, Inventory and 2 more sections.
+
+*Applies to: AWS*
 </div>
 
 ```text

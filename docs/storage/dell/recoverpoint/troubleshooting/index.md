@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing RecoverPoint replication failures, consistency group errors, splitter connectivity, and RPO violations.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ```text

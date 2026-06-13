@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Dell ECS](../index.md) reference.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌────────────────────────────────── Dell ECS — Scripts and Automation ──────────────────────────────────┐

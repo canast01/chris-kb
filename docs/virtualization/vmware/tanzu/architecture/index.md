@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VMware Tanzu provides Kubernetes-based application platform capabilities on top of vSphere, including Supervisor clusters, workload clusters, and namespace-based multi-tenancy.
+
+*Applies to: Tanzu 2.x*
 </div>
 
 ![Tanzu Architecture](../../../../assets/tanzu-architecture-overview.svg)

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Evergreen — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+
+*Applies to: Evergreen*
 </div>
 ```text
 ┌───────────────────────────────── Storage Pure Evergreen — Operations ─────────────────────────────────┐

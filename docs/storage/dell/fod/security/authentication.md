@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Related Reference.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

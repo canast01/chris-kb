@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, STaaS Consumption Model, Capacity Management Thresholds.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ## Overview

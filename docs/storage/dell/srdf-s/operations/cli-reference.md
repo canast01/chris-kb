@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [SRDF/S Operations](index.md) reference. All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array.
+
+*Applies to: SRDF/S*
 </div>
 
 > Part of the [SRDF/S Operations](index.md) reference.

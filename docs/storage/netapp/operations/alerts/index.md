@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Alerts reference covering ONTAP EMS Alerts, AutoSupport Notifications, SNMP Alerting, BlueXP Alerts (Keystone / Cloud Manager), Alert Triage Priority and 2 more sections.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌────────────────────────────────────────── NetApp Operations ──────────────────────────────────────────┐

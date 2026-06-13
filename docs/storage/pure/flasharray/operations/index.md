@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 FlashArray Day-to-Day Operations Flow

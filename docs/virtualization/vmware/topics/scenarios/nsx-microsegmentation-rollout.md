@@ -14,6 +14,8 @@ learn-then-enforce pattern: observe real traffic flows with Aria Networks first,
 in monitor mode to catch gaps, then switch to enforce. Skipping the observation phase and going
 straight to enforce is the most common cause of application outages during microsegmentation
 projects.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

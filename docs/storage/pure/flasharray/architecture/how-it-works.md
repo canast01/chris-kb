@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Internal architecture and data-path reference: controller pair, NVRAM write path, Purity data reduction pipeline, read/write paths, Protection Groups, ActiveDR, ActiveCluster, and host connectivity.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ## Architecture Overview

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, Supported Platforms, Retention Schedule, Sizing Guidelines and 1 more sections.
+
+*Applies to: Veeam Backup & Replication 12.x*
 </div>
 
 ```text

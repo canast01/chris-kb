@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell PowerMax SRDF/S synchronous replication — every host write is committed to both R1 and R2 before acknowledgement, guaranteeing RPO = 0; requires ≤10ms inter-site RTT.
+
+*Applies to: SRDF/S*
 </div>
 
 ![SRDF/S Architecture](../../../../assets/srdf-s-architecture-overview.svg)

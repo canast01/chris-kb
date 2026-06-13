@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Unity OE Version Matrix, Upgrade Paths, Hardware Refresh, EOL Tracking.
+
+*Applies to: Unity XT*
 </div>
 
 ```text

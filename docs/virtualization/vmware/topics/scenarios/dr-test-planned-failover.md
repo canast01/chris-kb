@@ -12,6 +12,8 @@ migration with graceful shutdown at the primary site, used for site maintenance 
 migrations. Both operations are orchestrated by SRM, but they differ significantly in scope,
 risk, and required preparation. This scenario covers both paths and the common mistakes that cause
 them to fail.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

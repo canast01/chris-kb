@@ -11,6 +11,8 @@ activity. This scenario covers identifying which VMs are consuming excess memory
 from swap pressure, resolving the immediate contention via DRS or vMotion, and right-sizing VM
 allocations to prevent recurrence. CPU ready time analysis is included because high I/O swap latency
 is frequently misread as a CPU bottleneck.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

@@ -10,6 +10,8 @@ VMware licensing changed significantly in 2024 following the Broadcom acquisitio
 licences were discontinued and replaced with subscription-only, per-core pricing. This page
 covers the current edition structure — vSphere Foundation (VVF) and VMware Cloud Foundation (VCF)
 — what each includes, the add-on bundles, and key considerations when migrating from legacy licences.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Data Domain — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ```text

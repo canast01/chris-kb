@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Scale-out NAS platform running OneFS — multi-protocol access (NFS, SMB, S3, HDFS), SmartQuotas, SyncIQ replication, SmartPools tiering, and cluster-wide management for unstructured data at scale.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 
 ```text

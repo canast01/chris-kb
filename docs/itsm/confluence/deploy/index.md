@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Step-by-step guide to installing Confluence Data Center, configuring the database, setting up LDAP authentication, and validating the deployment.
+
+*Applies to: Confluence Cloud / Data Center*
 </div>
 
 ```text

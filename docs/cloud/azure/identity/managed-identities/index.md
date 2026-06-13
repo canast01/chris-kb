@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Managed identities give Azure resources an identity in Entra ID without requiring credentials in code or config.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────────────────── Cloud Azure Identity ─────────────────────────────────────────┐

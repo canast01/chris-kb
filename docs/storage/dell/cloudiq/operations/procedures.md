@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Maintenance Window.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FOD — Backup & Restore reference.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

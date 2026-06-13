@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing Nexus Dashboard site onboarding failures, fabric health alerts, flow collection gaps, and connectivity issues.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

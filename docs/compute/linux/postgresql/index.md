@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL open-source object-relational database — MVCC, streaming replication, autovacuum.
+
+*Applies to: PostgreSQL 15.x / 16.x*
 </div>
 
 ```text

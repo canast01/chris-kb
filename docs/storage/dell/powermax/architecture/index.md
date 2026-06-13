@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell PowerMax is an enterprise all-flash NVMe-oF array with an active-active director-pair architecture and global memory mirroring. It supports SRDF synchronous (zero RPO) and asynchronous replication for metro and long-distance DR.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 
 ![PowerMax Architecture](../../../../assets/powermax-architecture-overview.svg)

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Management API Security, Operational Hardening Checklist.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

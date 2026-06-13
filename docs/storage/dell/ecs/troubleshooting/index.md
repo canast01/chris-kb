@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Dell ECS — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: ECS 3.x*
 </div>
 
 ```text

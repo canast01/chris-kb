@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Pure1 Operations reference.
+
+*Applies to: Pure1*
 </div>
 
 ```text

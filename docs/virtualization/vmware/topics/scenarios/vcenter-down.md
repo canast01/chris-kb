@@ -12,6 +12,8 @@ vCenter is unreachable via browser or API. This scenario covers confirming the o
 and SSH to diagnose VCSA service failures, resolving the most common cause (full disk partitions), and
 restoring from a file-based backup when the appliance cannot be recovered in place. ESXi hosts and vSAN
 continue operating without vCenter — VMs keep running throughout.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

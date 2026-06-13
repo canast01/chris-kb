@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Day-to-day PowerShell administration — script execution, module management, remoting, scheduled jobs, and runbook maintenance.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ```text

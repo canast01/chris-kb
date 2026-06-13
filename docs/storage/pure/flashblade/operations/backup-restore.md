@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Management, File Restore Procedures, Object Store Restore Procedures, Veeam Backup & Replication Integration and 4 more sections.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 ```text

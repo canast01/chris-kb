@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps Operations reference covering Daily Checklist, Alert Triage Workflow, Health Score Decline Investigation.
+
+*Applies to: Dell AIOps*
 </div>
 
 ## Before you begin

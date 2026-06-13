@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerMax hardening — user access control, audit logging, encryption at rest, and Unisphere management interface security.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 
 ```text

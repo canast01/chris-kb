@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerPath — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: PowerPath*
 </div>
 
 ```text

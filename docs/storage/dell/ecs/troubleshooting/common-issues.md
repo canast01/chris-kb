@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common Issues reference covering Incident Triage, Common Symptoms and Resolutions.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌────────────────────────────────────── Dell ECS — Common Issues ───────────────────────────────────────┐

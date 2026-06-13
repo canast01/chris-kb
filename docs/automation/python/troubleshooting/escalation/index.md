@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Escalation Workflow, When to Escalate, What to Capture Before Escalating, Escalation Checklist, Raising the Escalation.
+
+*Applies to: Python 3.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Incident Triage, Maintenance Window, Post-Change Validation, PowerShell Error Handling Flow.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ## Before you begin

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Sizing, Collector Placement Guidelines, Network Requirements, High Availability, Certificate Requirements and 3 more sections.
+
+*Applies to: Aria Operations for Networks 6.x*
 </div>
 
 ```text

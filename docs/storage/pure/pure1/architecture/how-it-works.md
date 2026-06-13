@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Architecture, High Availability.
+
+*Applies to: Pure1*
 </div>
 
 ```text

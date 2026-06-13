@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common Issues reference covering Common Issues, Incident Triage.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerMax — Common Issues ────────────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Overview, Active Directory Integration, Disable Local Admin When LDAP/AD Is Operational, Local User Management, Password Policy and 6 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## Before you begin

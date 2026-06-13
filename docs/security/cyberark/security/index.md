@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 CyberArk hardening — vault access controls, DR configuration, MFA enforcement, PSM hardening, and audit logging.
+
+*Applies to: CyberArk PAM*
 </div>
 ```text
 ┌──────────────────────────────── Security Cyberark Security — Security ────────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Operational procedures for certificate renewal, automation, and reporting.
+
+*Applies to: Venafi TLS Protect*
 </div>
 ```text
 ┌───────────────────────── Security Venafi Operations — Operational Procedures ─────────────────────────┐

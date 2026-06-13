@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for Dell APEX Storage as a Service. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

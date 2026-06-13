@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Architecture reference for Pure Storage FlashBlade. Covers the scale-out blade model, Purity//FB data services, NFS/SMB/S3/HDFS protocol support, HA through blade redundancy, ActiveDR and ActiveCluster replication, and design standards.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 ![FlashBlade Architecture](../../../../assets/flashblade-architecture-overview.svg)

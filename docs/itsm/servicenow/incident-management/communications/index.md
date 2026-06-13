@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Incident Communications reference covering Overview, Communication Principles, Update Cadence, Communication Templates, Stakeholder Distribution and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌──────────────────────── Project Management Incident Management Communications ────────────────────────┐

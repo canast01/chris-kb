@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Consumption-based capacity model on PowerMax, PowerStore, and PowerScale. Additional capacity is pre-installed in the array and metered monthly — billing is based on peak-hour consumption above the committed baseline, not physical installation.
+
+*Applies to: Dell FOD*
 </div>
 
 ![Flex on Demand Architecture](../../../../assets/fod-architecture-overview.svg)

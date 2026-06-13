@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Nexus Dashboard and NDFC procedures — site registration, SAN fabric discovery, VSAN management, host zoning, MDS firmware upgrade via NDFC, fabric health monitoring, and configuration compliance.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

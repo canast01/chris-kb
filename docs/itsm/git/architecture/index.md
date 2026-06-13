@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Git is a distributed version control system where every clone is a complete repository. Enterprise deployments use GitHub Enterprise Server or GitLab Self-Managed as the integration point, with Gitaly handling all repository I/O.
+
+*Applies to: Git 2.x*
 </div>
 
 ![Git Architecture](../../../assets/git-architecture-overview.svg)

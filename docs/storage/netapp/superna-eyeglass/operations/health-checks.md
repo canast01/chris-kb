@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale Cluster Health, Weekly DR Readiness Check, Health Check Summary Table and 1 more sections.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ## Before you begin

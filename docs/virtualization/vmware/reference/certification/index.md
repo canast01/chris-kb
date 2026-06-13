@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 VMware certification study notes — exam tracking, weak areas, and review plans.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

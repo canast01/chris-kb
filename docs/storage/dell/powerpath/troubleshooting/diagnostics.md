@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Overview, Initial Diagnostic Commands, Linux-Specific Diagnostics, Windows-Specific Diagnostics, SAN Fabric Diagnostics and 3 more sections.
+
+*Applies to: PowerPath*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerPath — Diagnostics ─────────────────────────────────────┐

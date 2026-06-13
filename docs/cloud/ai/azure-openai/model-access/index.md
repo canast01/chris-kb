@@ -3,6 +3,8 @@
 
 <div class="kb-summary">
 Azure OpenAI model availability varies by region and subscription tier. Some models require explicit access approval. This page covers checking availability, requesting quota, and managing rate limits.
+
+*Applies to: Azure OpenAI*
 </div>
 ```text
 ┌──────────────────────────────────── Ai Azure Openai Model Access ─────────────────────────────────────┐

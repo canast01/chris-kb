@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps monitoring platform — architecture, anomaly detection, recommendations, alerting, and operational runbooks.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

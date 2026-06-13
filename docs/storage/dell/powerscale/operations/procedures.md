@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot operations, quota management, SmartConnect zone configuration, replication, node maintenance, and change readiness.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌────────────────────────────── Dell PowerScale — Operational Procedures ───────────────────────────────┐

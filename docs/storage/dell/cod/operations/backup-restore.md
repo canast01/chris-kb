@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 COD — Backup & Restore reference.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

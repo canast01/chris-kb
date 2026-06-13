@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 Veeam Backup & Replication — Backup Server scheduling, Proxy data movement via VADP or agent, and Scale-Out Backup Repository with immutable object storage offload.
+
+*Applies to: Veeam Backup & Replication 12.x*
 </div>
 
 ```text

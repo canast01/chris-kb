@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Architecture reference for Pure Storage FlashArray. Covers the dual-controller HA model, product lines (//X/C/E), host connectivity protocols (FC, iSCSI, NVMe-oF), Purity data services, ActiveCluster synchronous replication, and design standards.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ![FlashArray Architecture Models](../../../../assets/flasharray-architecture-overview.svg)

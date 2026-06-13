@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 InsightIQ Operations reference covering Daily Checklist, Cluster Connection Troubleshooting, Capacity Review (Weekly), Appliance Health Checks, Alert Threshold Review (Monthly) and 2 more sections.
+
+*Applies to: InsightIQ*
 </div>
 
 ## Before you begin

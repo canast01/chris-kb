@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering COD Activation Procedure, Incident Triage.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

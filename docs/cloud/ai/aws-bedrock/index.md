@@ -2,6 +2,8 @@
 
 <div class="kb-summary">
 AWS Bedrock is a fully managed serverless service for invoking foundation models (Anthropic, Meta, Mistral, Amazon) without managing inference infrastructure. Coverage includes model access enablement, IAM policy design, Provisioned Throughput vs on-demand pricing, Knowledge Bases (RAG), Agents, and monitoring.
+
+*Applies to: AWS Bedrock*
 </div>
 ```text
 ┌─────────────────────────────────────────── Ai Aws Bedrock ────────────────────────────────────────────┐

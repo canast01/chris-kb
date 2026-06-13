@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 PowerShell hardening — execution policy, JEA, script signing, constrained language mode, and script block logging.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ```text

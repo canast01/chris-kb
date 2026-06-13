@@ -3,6 +3,8 @@
 
 <div class="kb-summary">
 Security considerations when integrating the OpenAI API into production systems: data retention policies, prompt injection, PII handling, compliance frameworks, and hardening API usage.
+
+*Applies to: OpenAI API*
 </div>
 ```text
 ┌────────────────────────────────────── Ai Openai Security Review ──────────────────────────────────────┐

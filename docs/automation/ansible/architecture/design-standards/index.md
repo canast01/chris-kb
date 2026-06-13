@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Ansible Architecture](../index.md) reference.
+
+*Applies to: Ansible 2.x*
 </div>
 
 ## Project Layout

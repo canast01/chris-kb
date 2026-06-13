@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for Dell SRDF/A. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

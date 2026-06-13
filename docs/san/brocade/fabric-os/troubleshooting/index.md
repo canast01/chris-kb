@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing FabricOS fabric errors, port faults, FLOGI failures, zone conflicts, and principal switch elections.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

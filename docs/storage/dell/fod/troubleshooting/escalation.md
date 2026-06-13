@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Escalation Path.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

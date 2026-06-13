@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 PowerPath — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: PowerPath*
 </div>
 
 ```text

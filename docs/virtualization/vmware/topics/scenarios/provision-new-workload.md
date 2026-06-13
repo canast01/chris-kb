@@ -11,6 +11,8 @@ accepting defaults. Default settings give the VM no storage policy (zero redunda
 security group membership (DFW rules don't apply), and no tagging (invisible to Aria Operations).
 This scenario covers the full provisioning workflow: right-sizing, storage policy selection, NSX
 segment assignment, tagging, and post-provision compliance verification.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

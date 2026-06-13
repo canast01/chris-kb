@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Known Issues reference covering Quick Reference, Incident Triage, Performance Issues, Latency Targets.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

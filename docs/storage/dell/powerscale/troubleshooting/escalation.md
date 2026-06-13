@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Procedure.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerScale — Escalation ─────────────────────────────────────┐

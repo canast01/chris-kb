@@ -14,6 +14,8 @@ search:
 
 <div class="kb-summary">
 Start-of-shift health check sequence for a VMware SDDC environment. Run these checks in order — vCenter → ESXi cluster → vSAN → NSX → Aria Operations. Each section takes 2–5 minutes. The full routine should complete in under 20 minutes.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

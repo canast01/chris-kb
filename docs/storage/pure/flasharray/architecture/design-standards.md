@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FlashArray design standards — host group naming conventions, volume layout, protection group design, and replication architecture.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 FlashArray Design Checklist — Key Areas

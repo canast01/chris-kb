@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CloudIQ role-based access control — user management, RBAC configuration, and access policy enforcement.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

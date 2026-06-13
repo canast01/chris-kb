@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelines, Configuration Checklist.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌──────────────────────────── NetApp ONTAP — Architecture Design Standards ─────────────────────────────┐

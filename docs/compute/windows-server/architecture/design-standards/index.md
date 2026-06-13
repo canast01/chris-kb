@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Sizing guidelines, design standards, and best practices.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## Group Policy Processing Order

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check, Cluster Health Commands, Health Check Summary.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerScale — Health Checks ───────────────────────────────────┐

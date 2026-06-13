@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Data Domain — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ```text

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Ansible automation knowledge base covering agentless architecture, inventory and playbook design, role and collection management, AWX/AAP deployment, and troubleshooting for Linux, Windows, network, and cloud targets.
+
+*Applies to: Ansible 2.x*
 </div>
 
 ```text

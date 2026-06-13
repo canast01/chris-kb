@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Restore testing validates that backup data is usable and that recovery procedures work as documented.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────────────────── Cloud Azure Backup Dr ────────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Incident Triage reference covering Overview, Triage Process Flow, Initial Diagnosis Checklist, Priority Assignment Guide, Ticket Creation at Triage and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌──────────────────────────── Project Management Incident Management Triage ────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Encryption Layers, TLS Configuration, Data at Rest Encryption, Certificate Expiry Monitoring.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌──────────────────────────────────────── Dell ECS — Encryption ────────────────────────────────────────┐

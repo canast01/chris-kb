@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Day-to-day Git operations — branching strategy, merging, rebase, stash, hooks, and repository maintenance procedures.
+
+*Applies to: Git 2.x*
 </div>
 
 ```text

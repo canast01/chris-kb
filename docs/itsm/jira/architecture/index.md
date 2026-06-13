@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Jira Data Center runs as an active-active Java cluster backed by a shared PostgreSQL database, shared NFS home, and distributed Hazelcast cache. Load balancer sticky sessions are mandatory.
+
+*Applies to: Jira Cloud / Data Center*
 </div>
 
 ![Jira Architecture](../../../assets/jira-architecture-overview.svg)

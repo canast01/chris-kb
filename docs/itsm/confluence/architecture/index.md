@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Confluence Data Center runs as an active-active Java cluster sharing a single PostgreSQL database, a distributed NFS/EFS home, and Hazelcast for cache invalidation. Sticky sessions are mandatory at the load balancer.
+
+*Applies to: Confluence Cloud / Data Center*
 </div>
 
 ![Confluence Architecture](../../../assets/confluence-architecture-overview.svg)

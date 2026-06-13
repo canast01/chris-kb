@@ -11,6 +11,8 @@ powered on and serving workloads. It is the correct tool for rebalancing vSAN ca
 from traditional SAN to vSAN, and decommissioning old datastores. The migration uses the ESXi
 storage I/O path and has a measurable performance cost — plan migrations during off-peak hours for
 large VMDKs and always verify destination capacity and storage policy before starting.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Dell VPLEX common issues — path and virtual volume failures, backend LUN errors, Metro cluster connectivity problems, Witness quorum events, and authentication failures. Symptom-to-resolution quick reference with diagnostic steps and escalation path.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌───────────────────────────────────── Dell VPLEX — Common Issues ──────────────────────────────────────┐

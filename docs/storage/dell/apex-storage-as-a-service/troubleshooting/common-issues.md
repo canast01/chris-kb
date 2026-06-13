@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common APEX Storage as a Service issues — provisioning failures, connectivity errors, and service-level degradation.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

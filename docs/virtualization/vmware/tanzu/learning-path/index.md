@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for VMware Tanzu (Kubernetes on vSphere). Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: Tanzu 2.x*
 </div>
 
 ```text

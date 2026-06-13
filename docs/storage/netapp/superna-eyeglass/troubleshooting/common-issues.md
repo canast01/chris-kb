@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common Superna Eyeglass issues — sync failures, DR test errors, configuration drift, and SyncIQ job problems.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

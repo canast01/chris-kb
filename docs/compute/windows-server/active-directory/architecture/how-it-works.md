@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Forest and Domain Hierarchy, Core Components, FSMO Role Placement, Key Services and Ports, Replication Topology and 4 more sections.
+
+*Applies to: Active Directory (Windows Server 2019 / 2022)*
 </div>
 ```text
 ┌──────────────────────── Security Active Directory Architecture — How It Works ────────────────────────┐

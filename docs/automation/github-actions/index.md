@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 GitHub Actions knowledge base covering event-driven workflow architecture, runner management, secrets and OIDC authentication, self-hosted runners, concurrency, and CI/CD pipeline design for GitHub-hosted repositories.
+
+*Applies to: GitHub Actions*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering ActiveIQ Digital Advisor, Keystone Collector, REST API, ITSM Integration, CloudOps Integration.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ```text

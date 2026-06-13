@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Dell EMC InsightIQ performance analytics for PowerScale clusters — architecture, data collection, capacity trending, and operational runbooks.
+
+*Applies to: InsightIQ*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Validates that infrastructure is in a safe state before any upgrade or patching activity begins. Complete all checks and obtain explicit go/no-go sign-off before proceeding.
+
+*Applies to: ServiceNow*
 </div>
 
 ## Pre-Upgrade Gate Criteria

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering COD License Naming, COD Inventory Tracking, Threshold Alerting, Change Management Process for COD Activation, Post-Activation Checklist.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

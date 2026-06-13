@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Monitor Workbooks are interactive, parameterised reports that combine text, queries, metrics, and visualisations in a single pane.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Monitoring ────────────────────────────────────────┐

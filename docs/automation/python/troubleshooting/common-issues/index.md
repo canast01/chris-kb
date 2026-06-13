@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common Issues reference covering Python Error Triage Flow, API and Network Timeouts, Common Errors Reference.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Diagnostic Flow

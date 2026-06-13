@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, Step 1: Identify Affected VMs and Datastores, Step 2: Check Storage Paths, Step 3: Check for vSAN Resync or Rebuild, Step 4: Queue Depth and Congestion and 3 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐

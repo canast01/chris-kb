@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Overview, Encryption Responsibility Matrix.
+
+*Applies to: PowerPath*
 </div>
 
 ```text

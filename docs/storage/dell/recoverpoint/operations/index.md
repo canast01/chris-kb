@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 RecoverPoint day-to-day operations — consistency group management, RPO monitoring, journal sizing, and test failover procedures.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ```text

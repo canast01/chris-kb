@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Connectivity Health — Phone Home, Health Monitoring Integration, Common Health Issues.
+
+*Applies to: Pure1*
 </div>
 
 ```text

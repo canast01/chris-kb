@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerShell is Microsoft's cross-platform command shell and scripting language. Unlike the old CMD prompt, PowerShell works with objects — every command outputs structured data you can pipe, filter, sort, and transform.
+
+*Applies to: PowerShell 7.x*
 </div>
 
  The `VMware.PowerCLI` module extends PowerShell with hundreds of cmdlets for managing vSphere, making it the primary automation tool for VMware infrastructure.

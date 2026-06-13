@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell ECS — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+
+*Applies to: ECS 3.x*
 </div>
 
 ```text

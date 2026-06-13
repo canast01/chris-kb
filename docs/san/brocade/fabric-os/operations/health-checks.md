@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check Checklist, Post-Change Validation.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

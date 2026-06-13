@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing PowerStore replication failures, host connectivity issues, provisioning errors, and performance degradation.
+
+*Applies to: PowerStore 3.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Retention Schedule, VMware vSphere Standards, Encryption Standard.
+
+*Applies to: Commvault 11.x*
 </div>
 
 ```text

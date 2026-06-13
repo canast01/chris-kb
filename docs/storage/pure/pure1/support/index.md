@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Support reference covering Diagnostic Bundle Collection, Severity Definitions, Evergreen Support — What's Covered, Proactive Support Features, Escalation Path and 1 more sections.
+
+*Applies to: Pure1*
 </div>
 
 ```text

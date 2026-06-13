@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Account Structure, IAM Structure, High Availability, Disaster Recovery.
+
+*Applies to: AWS*
 </div>
 
 ## Overview

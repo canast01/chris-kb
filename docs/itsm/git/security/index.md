@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Git security controls — SSH key management, GPG commit signing, repository access control, and secret scanning.
+
+*Applies to: Git 2.x*
 </div>
 
 ```text

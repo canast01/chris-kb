@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Sizing Guidelines.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 
 ```text

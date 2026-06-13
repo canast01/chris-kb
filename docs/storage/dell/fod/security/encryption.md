@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Encryption Controls, Key Points.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

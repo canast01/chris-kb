@@ -10,6 +10,8 @@ Host maintenance and patching is the most common planned task in VMware operatio
 it produces zero VM downtime — DRS vMotions all VMs off the host before any disruption occurs.
 Done incorrectly it causes vSAN data unavailability, stuck resync queues, or VM outages. This
 scenario covers the full procedure from pre-flight checks through post-patch validation.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

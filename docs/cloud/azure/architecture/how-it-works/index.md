@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Management Group Hierarchy, Identity Architecture.
+
+*Applies to: Azure*
 </div>
 
 ## Overview

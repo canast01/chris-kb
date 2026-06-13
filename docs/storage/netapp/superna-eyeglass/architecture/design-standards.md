@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover Test Frequency, Operational Standards, Policy Configuration.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ## SyncIQ Policy Naming

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FlashArray — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 FlashArray Security Layers

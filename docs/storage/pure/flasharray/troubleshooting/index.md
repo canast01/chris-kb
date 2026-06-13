@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 FlashArray — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 ```text
 ┌────────────────────────────────── Pure FlashArray — Troubleshooting ──────────────────────────────────┐

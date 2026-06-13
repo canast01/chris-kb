@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Scale-Out Architecture, HA Topology, Connectivity, File Services and 3 more sections.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌─────────────────────────────────── Pure FlashBlade — How It Works ────────────────────────────────────┐

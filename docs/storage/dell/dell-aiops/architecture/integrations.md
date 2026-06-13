@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps is embedded in CloudIQ — integrations are shared. Supported Dell array types, notification channels, and the APEX Console API are the key integration surfaces.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

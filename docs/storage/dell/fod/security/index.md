@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 FOD — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

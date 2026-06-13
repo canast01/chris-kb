@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common COD issues — capacity activation failures, allocation errors, and licensing troubleshooting.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

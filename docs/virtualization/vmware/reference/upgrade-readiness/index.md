@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌───────────────────────────── Virtualization Reference Upgrade Readiness ──────────────────────────────┐

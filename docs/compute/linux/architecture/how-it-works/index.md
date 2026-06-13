@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Stack, Storage Stack, Network Stack and 1 more sections.
+
+*Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
 
 ## Overview

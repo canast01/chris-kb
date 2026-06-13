@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerMax day-to-day operations — SRDF management, storage group provisioning, performance monitoring, and host connectivity.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 
 ```text

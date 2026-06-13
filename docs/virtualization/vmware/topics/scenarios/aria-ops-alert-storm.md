@@ -10,6 +10,8 @@ An alert storm is when Aria Operations fires dozens or hundreds of alerts in a s
 triggered by a single root cause that cascades across child objects. Treating each alert individually
 misses the real cause. This scenario walks through grouping, correlating, and resolving the storm at
 source — then tuning alert definitions to prevent recurrence.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

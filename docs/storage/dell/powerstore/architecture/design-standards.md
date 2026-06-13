@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Protection Policy Standards, Host Configuration Standards, Software Version Matrix and 2 more sections.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌─────────────────────────── Dell PowerStore — Architecture Design Standards ───────────────────────────┐

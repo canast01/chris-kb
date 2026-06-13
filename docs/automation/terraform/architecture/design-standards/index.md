@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Consistent Terraform standards prevent state corruption, make code reviewable, and enable teams to manage infrastructure at scale without heroics.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ---

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Declarative IaC tool with Go provider plugins for 1000+ APIs; single CLI binary drives init/plan/apply/destroy workflow; remote state backend with locking prevents concurrent mutations; modules package reusable infrastructure components.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ![Terraform Architecture](../../../assets/terraform-architecture-overview.svg)

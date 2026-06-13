@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 NetApp ONTAP knowledge base — architecture, operations, security, and troubleshooting for AFF, FAS, and ONTAP Select platforms.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌──────────────────────────────────────────── NetApp ONTAP ─────────────────────────────────────────────┐

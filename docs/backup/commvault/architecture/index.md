@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Commvault architecture reference — CommServe topology, MediaAgent deduplication, storage library types, multi-site design, and port requirements.
+
+*Applies to: Commvault 11.x*
 </div>
 
 ![Commvault Architecture](../../../assets/commvault-architecture-overview.svg)

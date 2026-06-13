@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Notes on APEX Management Boundaries.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

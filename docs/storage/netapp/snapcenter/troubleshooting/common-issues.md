@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Part of the [SnapCenter Troubleshooting](index.md) reference.
+
+*Applies to: SnapCenter 5.x*
 </div>
 ```text
 ┌────────────────────────────────── NetApp SnapCenter — Common Issues ──────────────────────────────────┐

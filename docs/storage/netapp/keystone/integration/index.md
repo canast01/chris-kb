@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 NetApp Keystone Integration reference covering ActiveIQ Digital Advisor, Keystone Collector, REST API, ITSM Integration, CloudOps Integration.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ```text

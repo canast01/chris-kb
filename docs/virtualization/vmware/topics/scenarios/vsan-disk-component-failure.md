@@ -12,6 +12,8 @@ A vSAN disk fails or a component becomes absent, leaving one or more VMs with re
 This scenario covers how to identify the failed component, assess the risk window based on FTT policy,
 initiate or monitor rebuild after disk replacement, and use VxRail Manager for hardware-assisted workflows
 on HCI deployments.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

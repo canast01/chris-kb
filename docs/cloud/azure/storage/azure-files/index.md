@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Files reference covering Overview, Azure Files Architecture, Creating File Shares, Mounting on Linux, Mounting on Windows and 3 more sections.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────────────────── Cloud Azure Storage ─────────────────────────────────────────┐

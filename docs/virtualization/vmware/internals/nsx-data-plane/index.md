@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 NSX-T data plane consists of per-host kernel modules — N-VDS, Distributed Router, and Distributed Firewall — connected via Geneve-encapsulated tunnels between TEPs. Edge nodes handle N-S traffic. All forwarding is in fast path, bypassing the host TCP/IP stack.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

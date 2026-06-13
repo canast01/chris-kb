@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FlashBlade — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌──────────────────────────────────── Pure FlashBlade — Operations ─────────────────────────────────────┐

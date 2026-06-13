@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Port Reference.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ```text

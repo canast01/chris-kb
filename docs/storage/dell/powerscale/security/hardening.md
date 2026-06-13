@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Security baselines and compliance configuration for Dell PowerScale.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌──────────────────────────────── Dell PowerScale — Security Hardening ─────────────────────────────────┐

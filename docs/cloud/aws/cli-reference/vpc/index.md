@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VPC & Networking reference.
+
+*Applies to: AWS*
 </div>
 
 ```text

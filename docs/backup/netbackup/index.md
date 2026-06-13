@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Veritas NetBackup enterprise backup — three-tier architecture with Primary Server catalog, Media Servers for data movement, and MSDP deduplication with AIR image replication.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

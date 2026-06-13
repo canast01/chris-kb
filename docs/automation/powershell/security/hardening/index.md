@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [PowerShell Security](../index.md) reference.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ---

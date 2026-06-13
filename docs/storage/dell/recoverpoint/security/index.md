@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 RecoverPoint hardening — management access control, user roles, TLS configuration, and audit logging.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ```text

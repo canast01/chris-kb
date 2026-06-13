@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for Aria Operations for Networks (vRNI). Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: Aria Operations for Networks 6.x*
 </div>
 
 ```text

@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 RecoverPoint case creation, log collection, and Dell EMC support escalation procedures for unresolved replication failures.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Known Issues reference covering Incident Triage, Common Issues Reference.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 ```text

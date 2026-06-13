@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Maintenance Window Closeout reference covering Overview, Closeout Sequence, Closeout Checklist, Deferred Task Handling, Debrief and Lessons Learned and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌─────────────────────────── Project Management Maintenance Windows Closeout ───────────────────────────┐

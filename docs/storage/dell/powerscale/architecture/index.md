@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell PowerScale (formerly Isilon) is a scale-out NAS platform running the OneFS distributed operating system. All nodes are peers sharing a single global namespace under <code>/ifs</code>. Clusters scale from 3 to 252 nodes across NFS, SMB, HDFS, and S3 protocols.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 
 ![PowerScale Architecture](../../../../assets/powerscale-architecture-overview.svg)

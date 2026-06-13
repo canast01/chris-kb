@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure1 Vendor Support reference.
+
+*Applies to: Pure1*
 </div>
 
 ```text

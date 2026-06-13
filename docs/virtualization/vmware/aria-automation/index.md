@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware Aria Automation. Covers infrastructure automation, service catalogue, blueprint design, deployment management, and IaC pipeline integration across the vSphere and cloud platforms.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ```text

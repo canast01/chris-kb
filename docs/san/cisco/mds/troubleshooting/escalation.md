@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Opening a Support Case, Collecting show tech-support (Diagnostic Bundle), Required Information for SR, Support Contract Verification, Severity Levels and 2 more sections.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

@@ -12,6 +12,8 @@ through vCenter. VxRail Manager validates firmware, enforces the bundle version,
 the full join sequence: network configuration, vSAN disk claim, NSX transport node registration,
 and vCenter cluster join. Bypassing VxRail Manager causes firmware mismatches that break future
 LCM upgrades and voids the support configuration.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

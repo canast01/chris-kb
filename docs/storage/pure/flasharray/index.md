@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC, NVMe/RoCE, snapshots, protection groups, and Pure1 cloud management for tier-1 and mission-critical block workloads.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

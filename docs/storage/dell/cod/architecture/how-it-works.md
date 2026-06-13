@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Capacity Model, Object Storage Data Model, Data Protection Architecture, Multi-Site and Geo Replication, Access Control and Authentication, Namespace and Metadata Service, HA and Redundancy, Activation Flow, DR Site COD Architecture.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ## Overview

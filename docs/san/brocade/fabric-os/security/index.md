@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FabricOS hardening — RBAC, RADIUS/TACACS+, SSH configuration, SCC/DCC policies, and secure fabric practices.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Incident Management operational notes and deep-dive references.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌─────────────────────────────── Project Management Incident Management ────────────────────────────────┐

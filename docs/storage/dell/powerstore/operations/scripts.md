@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Scripts reference covering Authentication Helper, Daily Health Check Script, Volume Inventory Report, Replication Status Reporter, Snapshot Cleanup Script and 2 more sections.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌────────────────────────────── Dell PowerStore — Scripts and Automation ───────────────────────────────┐

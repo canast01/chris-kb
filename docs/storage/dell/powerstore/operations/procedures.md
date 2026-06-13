@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerStore operational procedures — block volume and NAS file system provisioning, snapshot management, host management, replication configuration, Metro volume operations, and performance monitoring.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌────────────────────────────── Dell PowerStore — Operational Procedures ───────────────────────────────┐

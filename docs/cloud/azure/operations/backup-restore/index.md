@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure Backup and Restore — Recovery Services vault management, VM backup policies, snapshot schedules (hourly/daily/weekly), volume-level and file-level restore procedures, replication to DR site, and quarterly test restore cadence.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────── Cloud Azure Operations — Backup and Restore ─────────────────────────────┐

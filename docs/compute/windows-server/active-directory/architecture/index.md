@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Windows Server Active Directory forest with multi-site domain controllers, Kerberos authentication, LDAP directory services, and FSMO role delegation across primary and replica DCs.
+
+*Applies to: Active Directory (Windows Server 2019 / 2022)*
 </div>
 
 ![Active Directory Architecture](../../../../assets/active-directory-architecture-overview.svg)

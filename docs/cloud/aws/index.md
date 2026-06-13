@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Amazon Web Services knowledge base covering compute, storage, networking, identity, monitoring, backup, security, governance, and cost management — plus Amazon EVS (Elastic VMware Service) for running VCF workloads on bare-metal EC2. Includes architecture references, operational procedures, CLI commands, and troubleshooting guides.
+
+*Applies to: AWS*
 </div>
 
 ```text

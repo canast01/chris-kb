@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Confluence day-to-day operations — space administration, permissions, content maintenance, and user management.
+
+*Applies to: Confluence Cloud / Data Center*
 </div>
 
 ```text

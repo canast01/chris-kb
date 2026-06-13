@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Cisco Nexus Dashboard knowledge base covering fabric health, flow telemetry, policy compliance, integrations, and multi-site management for Cisco data centre environments.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

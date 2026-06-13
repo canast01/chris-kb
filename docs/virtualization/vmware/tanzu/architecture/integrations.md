@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering vCenter Integration, NSX-T Integration, AVI (NSX Advanced Load Balancer) Integration, vSAN Integration, Active Directory / LDAP Integration and 3 more sections.
+
+*Applies to: Tanzu 2.x*
 </div>
 ```text
 ┌───────────────────────────── Virtualization Vmware Tanzu — Integrations ──────────────────────────────┐

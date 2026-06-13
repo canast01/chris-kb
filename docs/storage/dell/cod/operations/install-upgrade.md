@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Lifecycle reference covering Entitlement Lifecycle, COD Entitlement Review Cadence, Frame Decommission — COD Implications, COD vs. Standard Capacity Purchase.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ## Before you begin

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 
 ```text

@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing import errors, dependency conflicts, version incompatibilities, and Python automation script failures.
+
+*Applies to: Python 3.x*
 </div>
 
 ```text

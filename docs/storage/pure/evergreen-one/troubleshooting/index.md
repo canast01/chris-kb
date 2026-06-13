@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Pure Storage Evergreen//One Troubleshooting reference covering Common Issues, Diagnostic Commands, Log Locations, Before Calling Support.
+
+*Applies to: Evergreen//One*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 ONTAP — Security reference: Access Control, Encryption, Authentication, Hardening.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌─────────────────────────────────────── NetApp ONTAP — Security ───────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vSphere access control is built on a layered permission model: SSO handles authentication, roles define what actions are allowed, and permissions bind a role to a user or group on a specific inventory object. This page covers the full stack — SSO domains and identity sources, built-in and custom roles, permission inheritance and propagation rules, global permissions, solution user certificates, service account patterns, and practical least-privilege designs for production environments.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ---

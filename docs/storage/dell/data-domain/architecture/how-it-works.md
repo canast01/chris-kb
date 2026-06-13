@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, Data Path, Components, HA Options and 2 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## Overview

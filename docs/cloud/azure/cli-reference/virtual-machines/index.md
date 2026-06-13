@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure CLI commands for VM management — create, resize, deallocate, managed disks, extensions, and snapshot operations.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

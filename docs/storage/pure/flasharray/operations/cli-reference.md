@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering Admin Accounts, Alerts & Audit, Array & System Management, Configuration & Directory Services, CSV Exports and 5 more sections.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 ```text
 ┌─────────────────────────────────── Pure FlashArray — CLI Reference ───────────────────────────────────┐

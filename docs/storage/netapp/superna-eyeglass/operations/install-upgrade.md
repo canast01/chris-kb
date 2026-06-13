@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Version Compatibility Matrix, EOL Tracking, License Management.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ## Before you begin

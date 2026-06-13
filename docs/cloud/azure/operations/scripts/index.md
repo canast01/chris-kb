@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Azure](../../index.md) reference.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────── Cloud Azure Operations — Scripts and Automation ───────────────────────────┐

@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common virtualization troubleshooting workflows.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌───────────────────── Virtualization Operations Troubleshooting — Troubleshooting ─────────────────────┐

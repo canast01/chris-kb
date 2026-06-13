@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure cloud platform architecture — management hierarchy, hub-and-spoke networking, compute options, HA patterns, and identity with Entra ID.
+
+*Applies to: Azure*
 </div>
 
 ![Azure Platform Architecture](../../../assets/azure-architecture-overview.svg)

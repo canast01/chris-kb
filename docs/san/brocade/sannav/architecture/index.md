@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Brocade SANnav is a SAN management platform in two variants: Management Portal (per-fabric operations) and Global View (multi-portal aggregation). Deployed as Linux virtual appliances; communicates with switches via HTTPS and SNMP v3.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ![SANnav Architecture](../../../../assets/sannav-architecture-overview.svg)

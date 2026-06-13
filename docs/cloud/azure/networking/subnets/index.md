@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Subnets segment a Virtual Network address space into smaller ranges.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐

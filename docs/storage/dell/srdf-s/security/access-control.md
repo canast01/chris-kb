@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Preventing Accidental Failover, Audit Logging.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

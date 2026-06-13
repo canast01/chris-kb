@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Architecture, Component Roles, AIOps Capabilities, Telemetry Sources, Data Flow.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

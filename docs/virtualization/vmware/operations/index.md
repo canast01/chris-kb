@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Operational procedures, health checks, troubleshooting guides, and runbooks for the virtualization platform.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

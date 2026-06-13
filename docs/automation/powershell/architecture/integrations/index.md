@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering PowerCLI VM Management Flow, Windows.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ## PowerCLI VM Management Flow

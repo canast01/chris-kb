@@ -11,6 +11,8 @@ patch cycle, manual configuration change, or hardware replacement. This scenario
 how to identify which settings have drifted, determine whether the drift is intentional
 or accidental, and remediate by applying the host profile — or by updating the profile
 to capture the intended new state.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

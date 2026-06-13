@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell VPLEX — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+
+*Applies to: VPLEX*
 </div>
 
 ```text

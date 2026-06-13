@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Cisco DCNM day-to-day operations — fabric management, template deployment, image management, and health monitoring.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Storage Encryption reference covering Overview, Storage Encryption Key Model, Encryption Key Options, Checking Encryption Status, Enabling Customer-Managed Keys (CMK) and 3 more sections.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────── Cloud Azure Storage — Encryption ───────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Monitor & Alerts reference.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

@@ -12,6 +12,8 @@ A VM or workload loses network connectivity on an NSX-T overlay network. This sc
 scoping method to determine whether the problem is a single VM (DFW rule), a segment (overlay binding),
 inter-segment routing (T1 gateway), or north-south external traffic (T0/edge BGP), then provides the
 exact commands and UI paths to isolate and resolve each layer.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

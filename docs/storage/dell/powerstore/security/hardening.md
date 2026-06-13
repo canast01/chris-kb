@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Overview, Management Plane Hardening, Host Connectivity Hardening, SupportAssist Hardening, Audit Logging and 2 more sections.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌──────────────────────────────── Dell PowerStore — Security Hardening ─────────────────────────────────┐

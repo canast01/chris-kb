@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FlashArray operational procedures — host and volume provisioning, snapshot and replication management, pod and ActiveCluster operations, capacity monitoring, performance analysis, and change readiness.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

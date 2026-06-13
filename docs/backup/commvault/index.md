@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Commvault enterprise backup and recovery — CommServe command and control, MediaAgent data movement with deduplication, and multi-site storage library management.
+
+*Applies to: Commvault 11.x*
 </div>
 
 ```text

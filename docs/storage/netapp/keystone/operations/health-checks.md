@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Keystone Operations](index.md) reference.
+
+*Applies to: Keystone STaaS*
 </div>
 ```text
 ┌─────────────────────────────────── NetApp Keystone — Health Checks ───────────────────────────────────┐

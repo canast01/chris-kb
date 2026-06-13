@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Running, scheduling, and maintaining Python automation scripts — virtual environments, dependency management, and job monitoring.
+
+*Applies to: Python 3.x*
 </div>
 
 ```text

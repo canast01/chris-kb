@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌───────────────────────────────── NetApp ONTAP — Install and Upgrade ──────────────────────────────────┐

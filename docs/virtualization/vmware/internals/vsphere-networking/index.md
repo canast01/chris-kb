@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Comprehensive reference for vSphere networking. Covers the architecture differences between Standard Switches and Distributed Switches, VMkernel adapter types and purposes, networking policies, Network I/O Control (NIOC), VLAN configuration including Private VLANs, multiple TCP/IP stacks, and topology best practices for production environments.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integration with other platforms and external systems.
+
+*Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
 
 ## Active Directory Authentication Flow

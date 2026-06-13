@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Organisational standards for OU structure, naming conventions, group policy design, and privileged access. Consistent standards reduce delegation complexity, enable scoped GPO application, and simplify access reviews.
+
+*Applies to: Active Directory (Windows Server 2019 / 2022)*
 </div>
 ```text
 ┌─────────────── Security Active Directory Architecture — Architecture Design Standards ────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Replication Types, Components, Connectivity, Key Commands and 2 more sections.
+
+*Applies to: SnapMirror*
 </div>
 ```text
 ┌────────────────────────────────── NetApp SnapMirror — How It Works ───────────────────────────────────┐

@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common Issues reference covering Quick Reference, Incident Triage.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerScale — Common Issues ───────────────────────────────────┐

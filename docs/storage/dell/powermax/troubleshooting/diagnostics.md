@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Commands, Log Locations, Performance Analysis, Before Calling Support.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌───────────────────────────────────── Dell PowerMax — Diagnostics ─────────────────────────────────────┐

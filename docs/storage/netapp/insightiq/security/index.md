@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 InsightIQ Security reference covering Authentication, OneFS Service Account Security, Database Backup Encryption, Audit Logging, Security Hardening Checklist.
+
+*Applies to: InsightIQ*
 </div>
 
 ## Before you begin

@@ -59,6 +59,8 @@ search:
 
 <div class="kb-summary">
 Step-by-step guide to setting up Dell APEX AIOps, connecting storage arrays, enabling AI-driven recommendations, and configuring dashboards and capacity alerts.
+
+*Applies to: Dell AIOps*
 </div>
 
 ## Prerequisites

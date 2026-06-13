@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Version and Release Matrix, Upgrade and Update Paths, EOL and Renewal Tracking, Replacement and Decommission Planning.
+
+*Applies to: PowerPath*
 </div>
 ```text
 ┌──────────────────────────────── Dell PowerPath — Install and Upgrade ─────────────────────────────────┐

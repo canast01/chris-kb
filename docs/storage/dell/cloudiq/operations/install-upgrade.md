@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Platform Updates, API Token Management, Secure Connect Gateway Compatibility, Supported Systems, Renewal and Subscription.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

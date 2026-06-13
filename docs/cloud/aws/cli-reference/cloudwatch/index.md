@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 AWS CloudWatch CLI reference — metrics queries, alarm management, log group operations, and Insights queries.
+
+*Applies to: AWS*
 </div>
 
 ```text

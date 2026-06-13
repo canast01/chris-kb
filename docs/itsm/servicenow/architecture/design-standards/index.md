@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 This page documents operational standards enforced within the ServiceNow platform, including incident priority, change risk scoring, CMDB naming conventions, SLA targets, and change governance procedures.
+
+*Applies to: ServiceNow*
 </div>
 
 ---

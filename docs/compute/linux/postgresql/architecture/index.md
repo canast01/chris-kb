@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Architecture overview, design standards, and integrations.
+
+*Applies to: PostgreSQL 15.x / 16.x*
 </div>
 
 ![PostgreSQL Architecture Overview](../../../../assets/postgresql-architecture-overview.svg)

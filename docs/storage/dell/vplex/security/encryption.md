@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VPLEX itself is a virtualisation and federation layer and does not natively encrypt data in transit between hosts and the directors (Fibre Channel does not provide encryption at the SAN layer). Encryption at rest is delegated to the back-end arrays.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌─────────────────────────────────────── Dell VPLEX — Encryption ───────────────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check Commands, Change Readiness, Incident Triage, Post-Change Validation.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

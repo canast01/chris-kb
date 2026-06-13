@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup & Restore reference covering Protection Group Snapshot Configuration, Restore Procedures, Backup Validation, Snapshot Capacity Management, Backup Integration with Veeam.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

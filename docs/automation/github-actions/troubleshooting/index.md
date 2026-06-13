@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Debugging workflow failures, runner connectivity, permission errors, caching issues, and common GitHub Actions pipeline problems.
+
+*Applies to: GitHub Actions*
 </div>
 
 ```text

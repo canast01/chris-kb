@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Commands, Performance Diagnostics, Log Locations, Before Calling Support.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup and restore in ONTAP is built around native snapshot technology. Snapshots are the on-array recovery primitive; SnapMirror and SnapVault extend recovery to remote systems and long-term retention; application-aware tools (SnapCenter, Veeam) add consistency coordination.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌────────────────────────────────── NetApp ONTAP — Backup and Restore ──────────────────────────────────┐

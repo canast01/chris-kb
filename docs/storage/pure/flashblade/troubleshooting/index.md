@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 FlashBlade — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌────────────────────────────────── Pure FlashBlade — Troubleshooting ──────────────────────────────────┐

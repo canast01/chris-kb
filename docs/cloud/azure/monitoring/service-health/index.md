@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Service Health provides personalised alerts and guidance for Azure service issues, planned maintenance, and health advisories that affect the services and regions you use. It combines three views: Service Issues, Planned Maintenance, and Health Advisories.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Monitoring ────────────────────────────────────────┐

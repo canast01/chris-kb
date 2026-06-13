@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Initial Setup, Software Upgrade, Appliance Lifecycle.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌──────────────────────────────── Dell PowerStore — Install and Upgrade ────────────────────────────────┐

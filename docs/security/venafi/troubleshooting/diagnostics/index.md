@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Use this page for practical Venafi troubleshooting notes, checks, commands, change notes, and field references.
+
+*Applies to: Venafi TLS Protect*
 </div>
 ```text
 ┌──────────────────────────── Security Venafi Troubleshooting — Diagnostics ────────────────────────────┐

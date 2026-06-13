@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 AWS CLI commands for IAM — users, groups, roles, policies, STS assume-role, access key rotation, and permission boundaries.
+
+*Applies to: AWS*
 </div>
 
 ```text

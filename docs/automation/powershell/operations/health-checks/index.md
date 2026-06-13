@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Module Health, Scheduled Tasks, Remoting Connectivity.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ## Before you begin

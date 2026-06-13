@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Storage Lifecycle Management reference covering Overview, Lifecycle Policy Evaluation, Policy Structure, Tier Transitions, Filter Sets and 3 more sections.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────────────────── Cloud Azure Storage ─────────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 An AWS Virtual Private Cloud (VPC) is your own isolated private network inside AWS. You control the IP ranges, subnets, routing, and security. Everything you run in AWS lives inside a VPC.
+
+*Applies to: AWS*
 </div>
 
 ## VPC Anatomy

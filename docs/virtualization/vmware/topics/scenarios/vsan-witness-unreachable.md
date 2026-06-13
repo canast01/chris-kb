@@ -13,6 +13,8 @@ loses connectivity, the cluster degrades silently — VMs continue running as lo
 healthy, but the cluster cannot tolerate a simultaneous data-node failure. This scenario covers detecting
 witness loss, restoring connectivity or the witness host, and applying a temporary workaround to prevent
 unnecessary data rebuilds while the witness is being restored.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

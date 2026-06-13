@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 PowerShell automation knowledge base covering execution engine internals, pipeline model, WinRM and SSH remoting, module development, runspace pools, and scripting patterns for Windows and cross-platform infrastructure automation.
+
+*Applies to: PowerShell 7.x*
 </div>
 
 ```text

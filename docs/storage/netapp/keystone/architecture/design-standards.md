@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Service Level Selection, Naming Conventions, Capacity Management.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ```text

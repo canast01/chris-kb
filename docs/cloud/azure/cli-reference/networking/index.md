@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure CLI commands for networking — VNet, subnets, NSGs, route tables, VNet peering, Private Endpoints, and DNS zones.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

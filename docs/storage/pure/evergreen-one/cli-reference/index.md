@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Evergreen//One](../index.md) reference.
+
+*Applies to: Evergreen//One*
 </div>
 
 ---

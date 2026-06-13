@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing PowerMax SRDF failures, provisioning errors, host connectivity issues, and performance degradation.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 SANnav day-to-day operations — dashboard monitoring, fabric discovery, alert management, firmware upgrades, and reporting.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

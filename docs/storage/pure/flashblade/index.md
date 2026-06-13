@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Unified fast file and object storage running Purity//FB — NFS, SMB, S3, and HDFS from a single scale-out platform. Architecture, operations, security, and troubleshooting for AI/ML, analytics, backup, and unstructured data workloads.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 ```text

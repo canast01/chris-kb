@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Component Topology, Connectivity, Key CLI Commands, Sizing and 1 more sections.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ## Overview

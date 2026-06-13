@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry reference covering Interpreting Health Score Changes, Endpoint Reachability, Flow Telemetry, Using Flow Data for Troubleshooting, Common Fabric Health Issues.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

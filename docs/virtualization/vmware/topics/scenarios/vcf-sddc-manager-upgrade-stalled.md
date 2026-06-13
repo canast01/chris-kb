@@ -11,6 +11,8 @@ reporting errors partway through a bundle apply operation. This scenario covers 
 diagnose a stalled upgrade — checking precondition failures, SDDC Manager logs, LCM task
 state, and the component health checks that block progress — and how to safely retry or
 recover the workflow.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

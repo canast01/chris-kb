@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Dell Flex on Demand](index.md) reference.
+
+*Applies to: Dell FOD*
 </div>
 ```text
 ┌────────────────────────────────── Dell FoD — Scripts and Automation ──────────────────────────────────┐

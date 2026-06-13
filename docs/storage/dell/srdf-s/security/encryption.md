@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering FCIP Encryption.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

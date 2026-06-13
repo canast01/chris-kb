@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vSphere HA uses slot-based or percentage-based admission control to guarantee capacity for VM restarts after host failure. Restart priority, network isolation response, and APD/PDL handling are configurable per cluster.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

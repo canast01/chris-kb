@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Approach, System-Level Diagnostics, Storage Processor Diagnostics, Alert and Event Diagnostics, Storage Pool and Disk Diagnostics and 7 more sections.
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌───────────────────────────────────── Dell Unity XT — Diagnostics ─────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Scale-out software-defined object storage on commodity x86 nodes. Exposes S3, Swift, Atmos, and CAS APIs; protects data within a site using erasure coding; replicates geo-distributed across Virtual Data Centers linked in replication groups.
+
+*Applies to: ECS 3.x*
 </div>
 
 ![Dell ECS Architecture](../../../../assets/ecs-architecture-overview.svg)

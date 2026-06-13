@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Python is the dominant language for infrastructure automation, data pipelines, and API integration in modern enterprise environments. This page covers architecture patterns, runtime models, and execution strategies for production Python automation.
+
+*Applies to: Python 3.x*
 </div>
 
 ---

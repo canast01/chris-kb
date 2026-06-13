@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Committed Reserve Sizing, Network Requirements, Protocol Selection, SLA Compliance Requirements, Naming Standards and 1 more sections.
+
+*Applies to: Evergreen//One*
 </div>
 
 ```text

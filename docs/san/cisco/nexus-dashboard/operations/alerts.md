@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies reference covering Acknowledging Alerts, Notification Policies, Alert Suppression During Maintenance, Common Alert Issues.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

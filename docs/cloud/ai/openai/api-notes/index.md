@@ -3,6 +3,8 @@
 
 <div class="kb-summary">
 Practical notes on authenticating to the OpenAI API, working with rate limits, counting tokens, handling errors, and choosing the right API endpoint.
+
+*Applies to: OpenAI API*
 </div>
 ```text
 ┌───────────────────────────────────────── Ai Openai Api Notes ─────────────────────────────────────────┐

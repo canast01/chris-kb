@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL design standards — HA patterns (streaming + Patroni), connection pooling, sizing guidelines, schema conventions, and backup requirements.
+
+*Applies to: PostgreSQL 15.x / 16.x*
 </div>
 
 ```text

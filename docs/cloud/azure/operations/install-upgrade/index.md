@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VM image management, patching via Azure Update Manager, and service upgrades.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────── Cloud Azure Operations — Install and Upgrade ─────────────────────────────┐

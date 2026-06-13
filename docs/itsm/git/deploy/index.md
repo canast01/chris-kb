@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Step-by-step guide to installing Git, configuring global settings, setting up SSH key authentication, and establishing a working local development environment.
+
+*Applies to: Git 2.x*
 </div>
 
 ## Before you begin

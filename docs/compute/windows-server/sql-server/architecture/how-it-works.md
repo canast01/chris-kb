@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server architecture — database engine, buffer pool, transaction log, WAL-based crash recovery, Always On AG replication, and query processing pipeline.
+
+*Applies to: SQL Server 2019 / 2022*
 </div>
 
 ## Database Engine Components

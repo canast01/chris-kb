@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 AKS CLI reference — az aks commands for cluster list and show, credential retrieval, node pool management, node count scaling, Kubernetes version upgrades, and cluster diagnostics.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Keystone STaaS architecture reference — delivery model, service tiers, components, capacity model, and consumption reporting.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ![Keystone Architecture](../../../../assets/netapp-keystone-architecture-overview.svg)

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Hardening, Host Connectivity Hardening, SupportAssist and Remote Access Hardening and 3 more sections.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌───────────────────────────────── Dell PowerMax — Security Hardening ──────────────────────────────────┐

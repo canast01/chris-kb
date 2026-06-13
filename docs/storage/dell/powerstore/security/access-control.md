@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Role-Based Access Control, User Account Management, Host Access Control, NFS Export Access Control, SMB Share Access Control and 1 more sections.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌────────────────────────────────── Dell PowerStore — Access Control ───────────────────────────────────┐

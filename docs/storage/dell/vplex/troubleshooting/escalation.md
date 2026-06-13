@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Vendor escalation procedures, support contacts, and information requirements for Dell VPLEX support cases.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌─────────────────────────────────────── Dell VPLEX — Escalation ───────────────────────────────────────┐

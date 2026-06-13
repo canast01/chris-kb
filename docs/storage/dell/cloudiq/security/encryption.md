@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CloudIQ data encryption settings, key management integration, and encryption compliance reporting.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

@@ -12,6 +12,8 @@ A PSOD is ESXi's kernel panic — the host halts immediately and displays a purp
 All VMs on the host are terminated instantly. This scenario covers confirming HA restart status, capturing
 the PSOD screen for diagnosis, correlating hardware events from iDRAC/iLO, retrieving post-reboot logs,
 and identifying driver/firmware mismatch as the most common production cause.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

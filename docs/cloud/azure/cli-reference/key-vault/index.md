@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Key Vault CLI reference — manage vaults, secrets, keys, and certificates via az keyvault commands.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌────────────────────────────────────── Cloud Azure Cli Reference ──────────────────────────────────────┐

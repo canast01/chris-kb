@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Connectivity and Integration Points, Secure Connect Gateway, Email Notifications, Webhook Notifications, REST API Integration and 1 more sections.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

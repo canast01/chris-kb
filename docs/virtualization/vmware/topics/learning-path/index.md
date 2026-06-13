@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for VMware. Start here to build a complete mental model — from the management plane down to hypervisor, storage, networking, and operations tooling.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

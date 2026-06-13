@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup configuration, restore procedures, and validation for Dell VPLEX.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌─────────────────────────────────── Dell VPLEX — Backup and Restore ───────────────────────────────────┐

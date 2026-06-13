@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Editions and Installation Types, Role Topology.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## Overview

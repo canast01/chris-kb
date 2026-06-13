@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Common Issues reference covering Common Issues Reference, Incident Triage Sequence, Known Behaviours (Not Bugs).
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌──────────────────────────────────── Dell Unity XT — Common Issues ────────────────────────────────────┐

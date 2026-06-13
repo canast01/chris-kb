@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Solutions Enabler RBAC, Preventing Accidental Resync.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

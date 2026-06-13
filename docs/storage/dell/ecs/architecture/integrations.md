@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering S3 Client Integration, Veeam Object Repository, Commvault Integration, NetBackup Integration, HDFS Integration and 4 more sections.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌─────────────────────────────────────── Dell ECS — Integrations ───────────────────────────────────────┐

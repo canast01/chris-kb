@@ -3,6 +3,8 @@
 
 <div class="kb-summary">
 Ollama's model library includes a wide range of open models. Models are identified by `name:tag` where the tag specifies size and quantisation. Custom models are defined via Modelfiles.
+
+*Applies to: Ollama*
 </div>
 ```text
 ┌────────────────────────────────────── Ai Local Ai Ollama Models ──────────────────────────────────────┐

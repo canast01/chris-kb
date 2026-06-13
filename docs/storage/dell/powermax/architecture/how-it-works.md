@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Internal architecture and data-path reference: Director architecture, Global Cache, SRDF replication, storage resource management, host connectivity, and Unisphere management.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 
 ## Architecture Overview

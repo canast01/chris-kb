@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Site Recovery (ASR) orchestrates replication, failover, and failback for Azure VMs and on-premises workloads. It enables business continuity with RPO targets as low as 30 seconds for Azure-to-Azure replication.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────────────────── Cloud Azure Backup Dr ────────────────────────────────────────┐

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps Integration reference covering Overview, CloudIQ / SCG (Inbound Telemetry), Email and Webhook Notifications, SIEM Integration, Integration Summary and 1 more sections.
+
+*Applies to: Dell AIOps*
 </div>
 
 ## Overview

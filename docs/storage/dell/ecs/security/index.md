@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell ECS — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: ECS 3.x*
 </div>
 
 ```text

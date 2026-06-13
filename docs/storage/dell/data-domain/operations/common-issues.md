@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Common Issues (Operations) reference covering Overview, Incident Triage — First Response, Issue: Replication Context in Error State, Issue: Replication Lag Growing, Issue: DDBoost Client Authentication Failure and 7 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## Before you begin

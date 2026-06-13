@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 NetBackup Standards reference covering Naming Conventions, Retention Schedule, Backup Policy to Job Flow, Encryption Standard, Test Restore Standard.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

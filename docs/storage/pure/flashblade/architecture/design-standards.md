@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Naming Conventions, Sizing Guidelines, Build Baseline, Configuration Checklist.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 FlashBlade Design Checklist

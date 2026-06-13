@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CloudIQ: Capacity Forecasting and Pool Utilisation reference covering Capacity Forecasting, Pool and Volume Utilisation, Threshold Alerts for Capacity, Common Capacity Issues.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

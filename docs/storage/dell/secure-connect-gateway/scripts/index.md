@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Dell Secure Connect Gateway](../index.md) reference.
+
+*Applies to: Secure Connect Gateway*
 </div>
 ```text
 ┌────────────────────────────────── Dell SCG — Scripts and Automation ──────────────────────────────────┐

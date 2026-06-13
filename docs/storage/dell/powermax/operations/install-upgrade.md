@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌───────────────────────────────── Dell PowerMax — Install and Upgrade ─────────────────────────────────┐

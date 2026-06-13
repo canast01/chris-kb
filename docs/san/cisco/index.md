@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Cisco SAN knowledge base covering MDS switches, DCNM, and Nexus Dashboard. Includes fabric architecture, zoning, CLI references, health checks, and troubleshooting guides for Cisco Fibre Channel environments.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

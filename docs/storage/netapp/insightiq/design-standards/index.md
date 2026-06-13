@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 InsightIQ Standards reference covering Appliance Sizing Standards, Data Retention Policy, Cluster Connection Standards, Alert Thresholds, Dashboard Standards and 3 more sections.
+
+*Applies to: InsightIQ*
 </div>
 
 ```text

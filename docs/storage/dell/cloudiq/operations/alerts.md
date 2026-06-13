@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CloudIQ: Alert Types, Severity, and Notification Configuration reference covering Notification Configuration, Dismissing and Acknowledging Alerts, Common Alert Issues.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

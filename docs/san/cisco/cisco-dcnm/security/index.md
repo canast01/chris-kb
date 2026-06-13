@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 DCNM hardening — AAA configuration, RBAC, TLS enforcement, and management interface access controls.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Failover, Failback, Day-to-Day Operations.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ## Before you begin

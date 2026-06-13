@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 NetApp Keystone offers tiered service levels based on performance characteristics. Each service level is defined by IOPS and latency targets per TB.
+
+*Applies to: Keystone STaaS*
 </div>
 ```text
 ┌─────────────────────────────────────────── NetApp Keystone ───────────────────────────────────────────┐

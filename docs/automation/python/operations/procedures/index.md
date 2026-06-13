@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Python Logging Pipeline, Reports.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

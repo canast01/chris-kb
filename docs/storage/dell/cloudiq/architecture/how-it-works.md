@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Data Pipeline Topology, How It Works, Supported Platforms, Key Capabilities.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

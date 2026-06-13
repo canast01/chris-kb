@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Related Reference.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

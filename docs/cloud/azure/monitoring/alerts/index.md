@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Monitor Alerts proactively notify you when conditions in your monitored resources are met. Alert rules evaluate signals — metrics, log queries, or activity log events — and fire when thresholds are crossed. Action groups define who gets notified and how.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Monitoring ────────────────────────────────────────┐

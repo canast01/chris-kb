@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference covering Alert Correlation, Predicted Failure Alerts, Acknowledging and Dismissing AI Alerts, Common AI Alert Issues.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Triage Flow, Diagnostic Commands, Log Locations, Capacity Diagnostics, Capacity Management Actions and 1 more sections.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerScale — Diagnostics ────────────────────────────────────┐

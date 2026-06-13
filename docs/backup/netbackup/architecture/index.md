@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Veritas NetBackup three-tier architecture — Primary Server catalog and scheduling, Media Servers for data movement, and Clients with backup agents.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ![NetBackup Architecture](../../../assets/netbackup-architecture-overview.svg)

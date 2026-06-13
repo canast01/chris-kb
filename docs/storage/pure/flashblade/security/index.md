@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 FlashBlade — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 FlashBlade Security Layers

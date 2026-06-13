@@ -11,6 +11,8 @@ product-to-product API calls fail, and browsers show trust warnings. Rotation mu
 right order because each Aria product and ESXi host trusts the vCenter VMCA as its root authority.
 Replace the root before the leaf certs, or all products immediately distrust the new root and break
 again. This scenario covers identification, rotation order, and validation across all affected products.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

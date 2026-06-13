@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 CloudIQ — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

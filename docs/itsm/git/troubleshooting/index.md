@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing merge conflicts, broken remote connections, rebase failures, and common Git workflow errors.
+
+*Applies to: Git 2.x*
 </div>
 
 ```text

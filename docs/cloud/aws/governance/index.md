@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 AWS governance is structured around AWS Organizations with SCPs enforcing preventive guardrails at the OU level and AWS Config handling detective compliance. Coverage includes account structure, Service Control Policies, tagging standards, and compliance review.
+
+*Applies to: AWS*
 </div>
 
 ```text

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 AWS compute spans EC2 virtual machines, Auto Scaling groups, Lambda serverless functions, and ECS/EKS containers. Fleet management runs through Systems Manager — no bastion hosts required. AMI standardisation and Patch Manager enforce OS hygiene across the fleet.
+
+*Applies to: AWS*
 </div>
 
 ```text

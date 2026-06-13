@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering First-Response Sequence, Alert Triage, Controller Diagnostics, Drive Diagnostics, Path Failover Decision Tree and 7 more sections.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

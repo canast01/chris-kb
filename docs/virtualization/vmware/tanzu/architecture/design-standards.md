@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Supervisor Cluster Sizing, TKG Workload Cluster Sizing, Namespace Design, Network CIDR Planning, Storage Policy Mapping and 4 more sections.
+
+*Applies to: Tanzu 2.x*
 </div>
 ```text
 ┌───────────────────── Virtualization Vmware Tanzu — Architecture Design Standards ─────────────────────┐

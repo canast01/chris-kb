@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Safely removes a server, VM, or cloud instance from production — preventing orphaned monitoring alerts, failed backup jobs, billing waste, and security exposure from unmanaged systems.
+
+*Applies to: ServiceNow*
 </div>
 
 ## Decommission Workflow

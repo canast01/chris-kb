@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Write Commit Model, RTT Requirements, Recovery Time Standards.
+
+*Applies to: SRDF/S*
 </div>
 
 ## Overview

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vSphere resource management controls how CPU and memory are allocated to VMs competing for physical capacity. This page covers the full scheduling model: shares, reservations, limits, resource pools, NUMA topology, memory reclamation techniques (ballooning, swapping, compression, TPS), and the operational patterns that prevent noisy-neighbor and capacity cliff problems in production clusters.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ---

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Secrets and Encryption Architecture, Encrypting Local Files with cryptography, Encryption Reference.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

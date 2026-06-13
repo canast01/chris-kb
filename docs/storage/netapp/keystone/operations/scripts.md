@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Script Reference reference covering Subscription Utilization Report, ONTAP Volume Usage Snapshot, Keystone Collector Health Monitor.
+
+*Applies to: Keystone STaaS*
 </div>
 ```text
 ┌────────────────────────────── NetApp Keystone — Scripts and Automation ───────────────────────────────┐

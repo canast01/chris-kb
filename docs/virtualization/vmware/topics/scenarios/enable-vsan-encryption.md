@@ -13,6 +13,8 @@ object on every disk is re-encrypted end-to-end. On a large cluster this takes h
 must not be interrupted. The key provider must be configured and backed up before starting — losing
 the key means losing access to all encrypted data. Plan for a dedicated maintenance window and
 ensure the cluster has at least 30% free space before enabling.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 A host fails or loses connectivity and VMs become inaccessible. This scenario covers how to determine
 whether vSphere HA has already restarted the VMs, distinguish network partition from hardware failure,
 assess vSAN component health during the outage, and confirm the cluster is re-armed before the next failure.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

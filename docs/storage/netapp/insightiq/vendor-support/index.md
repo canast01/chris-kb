@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 InsightIQ Vendor Support reference.
+
+*Applies to: InsightIQ*
 </div>
 
 ```text

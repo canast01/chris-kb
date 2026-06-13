@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 InsightIQ Lifecycle reference covering Compatibility Validation, Pre-Upgrade Checklist, Backup, Cluster Registration, Cluster Removal and 1 more sections.
+
+*Applies to: InsightIQ*
 </div>
 
 ## Compatibility Validation

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for NetApp Keystone. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ```text

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Jira knowledge base covering Data Center cluster architecture, issue management, workflow configuration, security, and troubleshooting.
+
+*Applies to: Jira Cloud / Data Center*
 </div>
 
 ```text

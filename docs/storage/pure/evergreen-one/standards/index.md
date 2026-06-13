@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure Storage Evergreen//One Standards reference covering Naming Conventions, Build Baseline, Service Agreement Checklist.
+
+*Applies to: Evergreen//One*
 </div>
 
 ```text

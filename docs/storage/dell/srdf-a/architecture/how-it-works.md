@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Delta Set Mechanics, Lag Reference, Connectivity.
+
+*Applies to: SRDF/A*
 </div>
 
 ## Overview

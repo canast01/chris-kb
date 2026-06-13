@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering GeoSynchrony Version Matrix, Upgrade Paths, Hardware Lifecycle, EOL Tracking.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌────────────────────────────────── Dell VPLEX — Install and Upgrade ───────────────────────────────────┐

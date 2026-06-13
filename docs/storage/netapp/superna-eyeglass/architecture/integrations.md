@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering NetApp PowerScale (SyncIQ), Syslog / SIEM, Email Notifications.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ## NetApp PowerScale (SyncIQ)

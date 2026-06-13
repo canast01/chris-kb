@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VMware Certificate Authority (VMCA) issues all vCenter machine SSL and solution user certificates. STS signing certificates are separate and have their own renewal path. Expired STS certificates cause total SSO authentication failure — the most critical certificate incident in a vSphere environment.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

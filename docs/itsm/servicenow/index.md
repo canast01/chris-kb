@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 ServiceNow knowledge base covering multi-instance SaaS architecture, ITSM/CMDB processes, MID Server integration, security, and troubleshooting.
+
+*Applies to: ServiceNow*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 SRDF/S day-to-day operations — synchronous link monitoring, R1/R2 device management, and failover/failback procedures.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

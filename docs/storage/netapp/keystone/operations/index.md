@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 NetApp Keystone — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ```text

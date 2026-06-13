@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [SRDF/A](../index.md) reference.
+
+*Applies to: SRDF/A*
 </div>
 
 ---

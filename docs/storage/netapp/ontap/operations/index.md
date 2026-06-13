@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 ONTAP — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌────────────────────────────────────── NetApp ONTAP — Operations ──────────────────────────────────────┐

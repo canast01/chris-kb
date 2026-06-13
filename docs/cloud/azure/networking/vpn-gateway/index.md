@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-premises networks over IPsec/IKE tunnels.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐

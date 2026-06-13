@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Venafi day-to-day operations — certificate discovery, policy enforcement, issuance workflows, and renewal automation.
+
+*Applies to: Venafi TLS Protect*
 </div>
 ```text
 ┌─────────────────────────────── Security Venafi Operations — Operations ───────────────────────────────┐

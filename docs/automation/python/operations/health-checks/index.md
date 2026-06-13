@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Environment Health, Package Management, Scheduled Scripts.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

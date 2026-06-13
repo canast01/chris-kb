@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure Storage Controller Upgrades reference covering How Controller Upgrades Work, Customer Pre-Upgrade Responsibilities, During the Upgrade, Verifying Paths During/After Upgrade, Post-Upgrade Verification and 1 more sections.
+
+*Applies to: Evergreen*
 </div>
 
 ```text

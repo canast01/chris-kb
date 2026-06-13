@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, ports, firmware, CLI references, health checks, scripts, and troubleshooting guides for Fibre Channel SAN environments.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

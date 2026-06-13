@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup & Restore reference covering Overview, Data Durability Model, Configuration Backup, Restoring Object Data, Veeam Backup Integration and 1 more sections.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌──────────────────────────────────── Dell ECS — Backup and Restore ────────────────────────────────────┐

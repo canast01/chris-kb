@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Standards, inventory, upgrade readiness checklists, and quick reference material for the virtualization platform.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

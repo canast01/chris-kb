@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 AWS Cost Explorer reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes.
+
+*Applies to: AWS*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Managed Disks reference covering Overview, Managed Disk Architecture, Disk Types, Creating and Attaching Disks, Resizing Disks and 3 more sections.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────────────────── Cloud Azure Storage ─────────────────────────────────────────┐

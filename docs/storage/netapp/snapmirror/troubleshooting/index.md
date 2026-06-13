@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 NetApp SnapMirror — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: SnapMirror*
 </div>
 ```text
 ┌───────────────────────────────── NetApp SnapMirror — Troubleshooting ─────────────────────────────────┐

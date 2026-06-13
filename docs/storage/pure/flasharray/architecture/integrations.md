@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

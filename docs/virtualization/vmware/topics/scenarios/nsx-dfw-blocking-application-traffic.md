@@ -12,6 +12,8 @@ An application suddenly cannot reach its database or a dependent service after a
 rule change or a new workload is deployed. This scenario covers how to determine whether
 DFW is causing the block, identify the specific rule responsible, and resolve it without
 opening broad exceptions — using Traceflow, hit count analysis, and packet capture.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

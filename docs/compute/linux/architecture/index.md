@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Linux server infrastructure running RHEL and Ubuntu — systemd service management, LVM2 storage with dm-multipath, LACP bonded networking, SELinux/AppArmor security enforcement, and Ansible-driven automation.
+
+*Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
 
 ![Linux Architecture](../../../assets/linux-architecture-overview.svg)

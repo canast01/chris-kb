@@ -11,6 +11,8 @@ when snapshot delta files exist on disk but are no longer tracked in the VM's sn
 by failed snapshot deletions, backup agent errors, or abrupt ESXi host shutdowns. This scenario covers
 identifying affected VMs, safely consolidating without data loss, resolving locked-file failures, and
 preventing snapshot sprawl through SPBM policy and backup integration.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Storage Private Endpoints reference covering Overview, Creating a Private Endpoint for Storage, DNS Configuration, Verifying Connectivity, Network Isolation Configuration and 1 more sections.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────────────────── Cloud Azure Storage ─────────────────────────────────────────┐

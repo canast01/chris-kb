@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

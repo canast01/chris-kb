@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Deployment Topology, Supported Hardware, Network Requirements, VM Sizing and 2 more sections.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

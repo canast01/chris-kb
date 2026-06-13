@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering vSphere with Tanzu Architecture, TKG Standalone — Workload Cluster Lifecycle, Networking Models, Harbor Registry Integration, TAP Supply Chain Concept and 1 more sections.
+
+*Applies to: Tanzu 2.x*
 </div>
 ```text
 ┌───────────────────────────── Virtualization Vmware Tanzu — How It Works ──────────────────────────────┐

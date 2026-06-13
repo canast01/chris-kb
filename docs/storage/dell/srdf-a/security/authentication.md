@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Credential Rotation, Service Account Policy.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

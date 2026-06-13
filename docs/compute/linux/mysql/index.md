@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 MySQL and MariaDB relational database for Linux — InnoDB, replication, backup, HA.
+
+*Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
 
 ```text

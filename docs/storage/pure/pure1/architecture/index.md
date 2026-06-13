@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure1 is a SaaS monitoring and analytics platform. FlashArray and FlashBlade systems connect directly to Pure1 via outbound HTTPS — no on-premises collector required. Pure1 Meta provides AI-driven capacity forecasting and anomaly detection.
+
+*Applies to: Pure1*
 </div>
 
 ![Pure1 Architecture](../../../../assets/pure1-architecture-overview.svg)

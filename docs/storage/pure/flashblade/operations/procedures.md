@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Snapshots.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 
 ```text

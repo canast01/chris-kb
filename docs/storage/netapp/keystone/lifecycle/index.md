@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 NetApp Keystone Lifecycle reference covering Subscription Terms and Renewal, True-Up Process, Hardware Refresh, Collector Lifecycle, Subscription Exit and Migration.
+
+*Applies to: Keystone STaaS*
 </div>
 
 ## Subscription Terms and Renewal

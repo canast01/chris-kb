@@ -14,6 +14,7 @@ tags:
 | Estimated time | 1–3 hours for full VMCA-signed rotation; 2–4 hours for custom CA |
 | Impact | All vSphere agents and vCenter services restart; 5–10 minute service interruption per node |
 
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

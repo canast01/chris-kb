@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Reusable health checks for virtualization operations.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

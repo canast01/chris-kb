@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Secure Python scripting — credential handling, dependency scanning, virtual environment isolation, and secrets management.
+
+*Applies to: Python 3.x*
 </div>
 
 ```text

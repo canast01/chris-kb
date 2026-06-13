@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Dell ECS operational procedures — namespace and bucket provisioning, IAM user and policy management, S3 access configuration, replication, retention policy, change readiness, and incident triage.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌────────────────────────────────── Dell ECS — Operational Procedures ──────────────────────────────────┐

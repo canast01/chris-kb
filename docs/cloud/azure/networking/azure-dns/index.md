@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Azure DNS hosts DNS zones and provides name resolution using the Azure infrastructure. It supports both public DNS zones (internet-facing) and private DNS zones (resolution within VNets). Azure DNS offers high availability with a 100% SLA for authoritative name resolution.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐

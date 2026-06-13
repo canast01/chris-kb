@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Deep-dive reference articles on specific VMware behaviors, edge cases, and troubleshooting scenarios — plus a structured learning path, cross-product scenarios, and 25 reactive and planned workflows.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

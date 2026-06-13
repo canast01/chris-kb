@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering RBAC, Namespace Isolation, Compliance, Access Review Procedure.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌────────────────────────────────────── Dell ECS — Access Control ──────────────────────────────────────┐

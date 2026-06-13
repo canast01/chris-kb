@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell VPLEX is a storage federation and virtualisation platform that decouples physical storage from the host view, presenting virtual volumes regardless of which back-end array holds the data. VPLEX Metro provides zero-RPO active-active stretched storage across two sites with a ≤5ms RTT ICL.
+
+*Applies to: VPLEX*
 </div>
 
 ![VPLEX Architecture](../../../../assets/vplex-architecture-overview.svg)

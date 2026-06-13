@@ -11,6 +11,8 @@ tags:
 An ESXi host shows "Disconnected" or "Not Responding" in vCenter. This scenario walks through confirming
 whether VMs are still running, testing management network reachability, restarting vpxa and hostd agents,
 diagnosing NTP and DNS as silent causes, and identifying the impact on NSX transport nodes.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

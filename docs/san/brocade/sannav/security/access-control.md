@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Overview, Built-In Roles, Resource Group Scoping, Service Accounts, Least Privilege Guidance and 2 more sections.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

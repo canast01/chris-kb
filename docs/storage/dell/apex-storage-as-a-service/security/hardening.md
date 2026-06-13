@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Requirements Summary.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

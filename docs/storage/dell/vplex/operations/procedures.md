@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Consistency Groups, Metro Operations.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌───────────────────────────────── Dell VPLEX — Operational Procedures ─────────────────────────────────┐

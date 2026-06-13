@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Enterprise certificate lifecycle management — TPP enforces policy, integrates with ADCS and commercial CAs, automates renewal via CA connectors, and provides visibility across all managed certificates; SQL Server-backed HA pair behind a load balancer.
+
+*Applies to: Venafi TLS Protect*
 </div>
 
 ![Venafi Architecture](../../../assets/venafi-architecture-overview.svg)

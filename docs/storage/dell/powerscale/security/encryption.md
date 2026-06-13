@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 TLS certificate management and data encryption for Dell PowerScale.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerScale — Encryption ─────────────────────────────────────┐

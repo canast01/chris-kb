@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Brocade FabricOS day-to-day operations — zoning, port management, fabric health monitoring, and switch administration.
+
+*Applies to: Brocade FOS 9.x*
 </div>
 
 ```text

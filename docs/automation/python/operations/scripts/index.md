@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Scripts reference covering Purpose, Windows Python Environment Setup Flow.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Operations for Networks (formerly vRealize Network Insight) provides network visibility, flow analysis, and micro-segmentation planning across NSX-T, physical switches, and cloud environments.
+
+*Applies to: Aria Operations for Networks 6.x*
 </div>
 
 ![Aria Operations for Networks Platform Architecture](../../../../assets/aria-operations-for-networks-architecture-overview.svg)

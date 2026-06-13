@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check, Cluster Status, Director Health, Pre-Change Checklist and 1 more sections.
+
+*Applies to: VPLEX*
 </div>
 ```text
 ┌───────────────────────────────────── Dell VPLEX — Health Checks ──────────────────────────────────────┐

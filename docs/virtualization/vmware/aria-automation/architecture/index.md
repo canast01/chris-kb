@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Kubernetes-based microservices platform for infrastructure self-service automation. Cloud templates (YAML IaC) define resources declaratively; Aria Automation resolves placement and orchestrates provisioning across vSphere, NSX, and public cloud.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ![Aria Automation Architecture](../../../../assets/aria-automation-architecture-overview.svg)

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [RecoverPoint](../index.md) > [Operations](index.md) reference.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ---

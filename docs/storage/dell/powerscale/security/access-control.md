@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Roles, permissions, and least privilege access for Dell PowerScale.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌────────────────────────────────── Dell PowerScale — Access Control ───────────────────────────────────┐

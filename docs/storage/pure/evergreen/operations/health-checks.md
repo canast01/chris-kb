@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Quick Health Check (5 minutes), Full Health Check (20 minutes), Health Check Checklist Template, Evergreen Subscription Checks, Common Issues During Health Checks.
+
+*Applies to: Evergreen*
 </div>
 ```text
 ┌─────────────────────────────── Storage Pure Evergreen — Health Checks ────────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Hardening Verification.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌──────────────────────────────── Pure FlashBlade — Security Hardening ─────────────────────────────────┐

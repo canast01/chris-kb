@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, Certificate Management, Encryption Hardening and 4 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## Before you begin

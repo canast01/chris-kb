@@ -12,6 +12,8 @@ NSX edge nodes carry all north-south traffic in and out of the datacenter. When 
 or its BGP session to the upstream router drops, every VM using that T0 gateway loses external
 connectivity. This scenario covers identifying the failure layer — NSX edge, TEP tunnels, or
 the physical network — and restoring connectivity with minimal downtime.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

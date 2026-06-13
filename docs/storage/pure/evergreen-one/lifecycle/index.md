@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure Storage Evergreen//One Lifecycle reference covering Overview, Service Agreement Lifecycle, Monthly Capacity True-Up, Hardware and Software Upgrade Lifecycle, Service Level Commitments and 1 more sections.
+
+*Applies to: Evergreen//One*
 </div>
 
 ```text

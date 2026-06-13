@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 APEX Storage as a Service — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

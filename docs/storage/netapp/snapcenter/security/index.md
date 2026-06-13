@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 NetApp SnapCenter — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: SnapCenter 5.x*
 </div>
 ```text
 ┌──────────────────────────────────── NetApp SnapCenter — Security ─────────────────────────────────────┐

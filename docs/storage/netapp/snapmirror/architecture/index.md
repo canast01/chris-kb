@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SnapMirror architecture reference — replication types (Async, Sync, SMBC, XDP), components, connectivity requirements, and DR failover procedures.
+
+*Applies to: SnapMirror*
 </div>
 
 ![SnapMirror Architecture](../../../../assets/snapmirror-architecture-overview.svg)

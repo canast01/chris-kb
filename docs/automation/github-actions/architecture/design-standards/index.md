@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [GitHub Actions Architecture](../index.md) reference.
+
+*Applies to: GitHub Actions*
 </div>
 
 ## Workflow File Structure

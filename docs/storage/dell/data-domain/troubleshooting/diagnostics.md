@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Overview, Filesystem Diagnostics, Replication Diagnostics, DD Boost Diagnostics, Disk and Hardware Diagnostics and 5 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## Before you begin

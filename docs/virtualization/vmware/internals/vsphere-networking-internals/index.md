@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vSphere Distributed Switch separates control plane (vCenter) from data plane (ESXi kernel module). Port group types, NIOC traffic pools, teaming policies, and VMkernel adapter configuration determine performance, redundancy, and isolation for all cluster traffic.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

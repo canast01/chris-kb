@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 CMDB Data Quality and Management reference covering Overview, Core Data Quality Dimensions, CI Relationships, Import Sources and Integration, ServiceNow Integration Notes and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌─────────────────────────────── Project Management Asset Inventory Cmdb ───────────────────────────────┐

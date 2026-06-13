@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (Purity), Drive Replacement, Controller Refresh (Evergreen//Forever), Lifecycle Timeline and 1 more sections.
+
+*Applies to: Evergreen*
 </div>
 
 ```text

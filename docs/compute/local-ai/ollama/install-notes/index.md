@@ -3,6 +3,8 @@
 
 <div class="kb-summary">
 Ollama supports Linux, macOS, and Windows. On Linux, the recommended setup is the official install script or a manually configured systemd service. Docker is also well-supported.
+
+*Applies to: Ollama*
 </div>
 ```text
 ┌────────────────────────────────── Ai Local Ai Ollama Install Notes ───────────────────────────────────┐

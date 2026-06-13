@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CyberArk follows a structured upgrade sequence to preserve Vault integrity: the Digital Vault is upgraded first, followed by CPM, then PSM, then PVWA; upgrading out of order is unsupported and may result in component incompatibility.
+
+*Applies to: CyberArk PAM*
 </div>
 ```text
 ┌───────────────────────── Security Cyberark Operations — Install and Upgrade ──────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in Flight Encryption — SRDF Encryption, Management Traffic — TLS Encryption, Encryption Key Rotation and 2 more sections.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌───────────────────────────────────── Dell PowerMax — Encryption ──────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Quick checks to confirm a vSphere cluster is healthy before and after changes.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐

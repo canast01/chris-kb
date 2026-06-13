@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Internal architecture and data-path reference: HA pair design, WAFL filesystem, Aggregate-SVM-Volume hierarchy, data protocols, SnapMirror, MetroCluster, ONTAP Mediator, and SnapCenter integration.
+
+*Applies to: ONTAP 9.x*
 </div>
 
 ## Architecture Overview

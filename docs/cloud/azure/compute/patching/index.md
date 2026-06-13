@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Update Manager (the successor to Azure Automation Update Management) provides centralised OS patch management for Azure VMs, Arc-connected servers, and on-premises machines. This page covers assessments, maintenance windows, and compliance reporting.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌───────────────────────────────────────── Cloud Azure Compute ─────────────────────────────────────────┐

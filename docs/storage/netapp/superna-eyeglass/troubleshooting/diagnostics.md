@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Commands.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ## Before you begin

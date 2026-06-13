@@ -13,6 +13,8 @@ triggering a Skyline Health alarm and blocking snapshot creation for all VMs on 
 affected datastore. This scenario covers how to confirm the alarm, identify the largest
 capacity consumers, and recover headroom through snapshot cleanup, storage vMotion, or
 capacity additions.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

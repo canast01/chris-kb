@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 SRDF/A escalation procedures — case creation and Dell EMC support triage for async replication failures.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

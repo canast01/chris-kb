@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boost), CommVault (SISL + DD Boost), Avamar (RAIN Dedup with DD), NFS — Generic Backup Targets and 5 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ## DD Boost Backup Flow

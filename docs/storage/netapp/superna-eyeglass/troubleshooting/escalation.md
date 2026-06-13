@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Opening a Support Request, Required Information for SR, Severity Levels, License Issues, Escalation Path.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

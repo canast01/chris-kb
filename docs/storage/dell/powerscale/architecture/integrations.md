@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory / LDAP, REST API.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerScale — Integrations ────────────────────────────────────┐

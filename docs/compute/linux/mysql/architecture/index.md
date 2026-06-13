@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Architecture overview, design standards, and integrations.
+
+*Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
 
 ![MySQL Architecture Overview](../../../../assets/mysql-architecture-overview.svg)

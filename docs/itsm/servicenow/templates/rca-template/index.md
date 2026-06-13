@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Root Cause Analysis Template reference covering Overview, Incident Summary, Timeline, Root Cause, Corrective Actions and 1 more sections.
+
+*Applies to: ServiceNow*
 </div>
 ```text
 ┌─────────────────────────────────── Project Management Rca Template ───────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerScale hardening — SmartLock compliance mode, NFS export access control, SMB share permissions, and audit logging.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 
 ```text

@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering Python Diagnostics Workflow, Structured Logging, Import and Module Diagnostics, Runtime Inspection, Diagnostics Reference.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

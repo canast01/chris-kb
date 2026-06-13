@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Daily and pre/post-change health checks for Dell Unity storage systems.
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌──────────────────────────────────── Dell Unity XT — Health Checks ────────────────────────────────────┐

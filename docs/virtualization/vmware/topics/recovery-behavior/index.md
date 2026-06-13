@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Understanding what normal recovery looks like prevents unnecessary intervention during incidents.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐

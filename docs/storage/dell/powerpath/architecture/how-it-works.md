@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Host-Side MPIO Stack, Path States, Load-Balancing Policies, Failover and Recovery and 2 more sections.
+
+*Applies to: PowerPath*
 </div>
 ```text
 ┌──────────────────────────────────── Dell PowerPath — How It Works ────────────────────────────────────┐

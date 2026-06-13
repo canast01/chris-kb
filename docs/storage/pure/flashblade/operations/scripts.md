@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Scripts reference covering Array Health Check (Python), Filesystem Capacity Report (Bash), ActiveDR Replication Monitor (Python), Daily Check Script (Bash via SSH), S3 Bucket Audit (Python) and 1 more sections.
+
+*Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ```text
 ┌────────────────────────────── Pure FlashBlade — Scripts and Automation ───────────────────────────────┐

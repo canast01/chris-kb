@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Mid-range unified storage — block (FC/iSCSI), file (NFS/SMB), and VMware integration with dual storage processor active-active architecture, FAST Cache, inline data reduction, and native replication.
+
+*Applies to: Unity XT*
 </div>
 
 ```text

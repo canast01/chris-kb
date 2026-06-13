@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 CyberArk Privileged Access Manager knowledge base covering Digital Vault architecture, CPM rotation, PSM session proxying, PVWA administration, DR activation, and PAM hardening for enterprise privileged access environments.
+
+*Applies to: CyberArk PAM*
 </div>
 ```text
 ┌────────────────────────────────────────── Security Cyberark ──────────────────────────────────────────┐

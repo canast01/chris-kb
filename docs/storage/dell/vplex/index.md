@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Storage federation and virtualization platform — active-active LUN access (VPLEX Local), synchronous metro mirroring (VPLEX Metro), and data mobility across heterogeneous arrays without host disruption.
+
+*Applies to: VPLEX*
 </div>
 
 ```text

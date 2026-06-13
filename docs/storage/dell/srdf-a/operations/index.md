@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 SRDF/A day-to-day operations — cycle monitoring, delta set management, STAR mode, and async replication health checks.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

@@ -11,6 +11,8 @@ VxRail LCM upgrades are an all-or-nothing validated bundle: ESXi, vSAN, vCenter,
 must all upgrade together. A failure at any phase can leave nodes partially upgraded or the cluster in
 a mixed-version state. This scenario covers identifying the failure stage, resolving the most common
 pre-check failures, handling mid-upgrade node failures, and safely retrying after root cause is fixed.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

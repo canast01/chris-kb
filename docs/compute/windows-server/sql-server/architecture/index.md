@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Architecture overview, design standards, and integrations.
+
+*Applies to: SQL Server 2019 / 2022*
 </div>
 
 ![SQL Server Architecture Overview](../../../../assets/sql-server-architecture-overview.svg)

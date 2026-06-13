@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Diagnostics reference covering On-Call Triage — SRDF/A Lag Alert, Diagnostic Command Reference.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

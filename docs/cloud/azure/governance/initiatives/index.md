@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 An initiative (formerly called a policy set definition) groups multiple related policy definitions into a single assignable unit. This simplifies governance by allowing you to assign and track a set of related controls as one entity.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Governance ────────────────────────────────────────┐

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 AWS Restore Testing reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+
+*Applies to: AWS*
 </div>
 
 ```text

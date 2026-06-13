@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 InsightIQ is an on-premises virtual appliance that collects performance telemetry from PowerScale clusters via the OneFS REST API and stores it in a local PostgreSQL database for historical trend analysis and reporting.
+
+*Applies to: InsightIQ*
 </div>
 
 ![InsightIQ Architecture](../../../../assets/insightiq-architecture-overview.svg)

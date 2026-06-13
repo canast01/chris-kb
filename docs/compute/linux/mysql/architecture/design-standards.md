@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL design standards — HA topology choices, replication sizing, InnoDB tuning baselines, naming conventions, and backup strategy requirements.
+
+*Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
 
 ```text

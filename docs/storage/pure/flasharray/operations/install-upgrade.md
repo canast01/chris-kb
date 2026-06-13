@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

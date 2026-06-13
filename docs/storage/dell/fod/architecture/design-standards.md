@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Upgrade Notes, Design Standards.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

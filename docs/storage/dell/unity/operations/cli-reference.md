@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity is a dual-controller mid-range array supporting both block (SAN) and file (NAS) workloads.
+
+*Applies to: Unity XT*
 </div>
 ```text
 ┌──────────────────────────────────── Dell Unity XT — CLI Reference ────────────────────────────────────┐

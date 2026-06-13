@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Authentication Architecture, Local Accounts, Active Directory (AD), LDAP (Non-AD), SAML SSO and 4 more sections.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 ```text
 ┌────────────────────────────────── Pure FlashArray — Authentication ───────────────────────────────────┐

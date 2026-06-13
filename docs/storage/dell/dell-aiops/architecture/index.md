@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps is a fully SaaS-delivered AI operations platform. Telemetry flows from arrays through the on-premises Secure Connect Gateway to Dell's cloud AI pipeline, which produces anomaly detection, root cause analysis, and prioritised recommendations.
+
+*Applies to: Dell AIOps*
 </div>
 
 ![Dell AIOps Architecture](../../../../assets/dell-aiops-architecture-overview.svg)

@@ -13,6 +13,8 @@ occurs when inter-site connectivity is lost and both sites believe they are the 
 cannot see the other. The witness appliance decides which site retains quorum. This scenario covers
 identifying the failure, understanding the quorum decision, and safely recovering after connectivity
 is restored.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

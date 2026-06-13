@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 NetBackup Integration reference covering Integration Architecture, SIEM Integration, CyberArk Integration, OpsCenter / IT Analytics.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ## Integration Architecture

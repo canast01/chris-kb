@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 NetApp SnapCenter — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: SnapCenter 5.x*
 </div>
 ```text
 ┌───────────────────────────────── NetApp SnapCenter — Troubleshooting ─────────────────────────────────┐

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Architecture Standards reference covering Project Naming Conventions, Workflow State Standards, Field Configuration Standards, Permission Scheme Standards, Notification Scheme Standards and 1 more sections.
+
+*Applies to: Jira Cloud / Data Center*
 </div>
 
 ## Project Naming Conventions

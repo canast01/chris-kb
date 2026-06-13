@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted hardened credential store that is the sole authoritative source for managed passwords and SSH keys.
+
+*Applies to: CyberArk PAM*
 </div>
 ```text
 ┌──────────────────────────── Security Cyberark Architecture — How It Works ────────────────────────────┐

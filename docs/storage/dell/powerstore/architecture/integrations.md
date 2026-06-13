@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data Domain / PowerProtect), CloudIQ, SupportAssist (ESRS), SNMP Monitoring and 4 more sections.
+
+*Applies to: PowerStore 3.x*
 </div>
 ```text
 ┌─────────────────────────────────── Dell PowerStore — Integrations ────────────────────────────────────┐

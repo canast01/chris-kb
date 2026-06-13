@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Veeam integration with VMware vSphere, Nutanix, Azure, object storage repositories, and monitoring platforms.
+
+*Applies to: Veeam Backup & Replication 12.x*
 </div>
 
 ```text

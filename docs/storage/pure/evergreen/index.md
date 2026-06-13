@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Pure Storage Evergreen hardware subscription model — non-disruptive controller refreshes, Purity upgrades, and Ever Modern lifecycle for FlashArray and FlashBlade. Covers architecture, operations, security, and troubleshooting.
+
+*Applies to: Evergreen*
 </div>
 
 ```text

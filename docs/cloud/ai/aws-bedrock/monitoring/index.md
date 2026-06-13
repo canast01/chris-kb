@@ -3,6 +3,8 @@
 
 <div class="kb-summary">
 AWS Bedrock emits CloudWatch metrics and optional invocation logs that cover latency, token usage, error rates, and throttling. Setting up monitoring early prevents blind spots in production.
+
+*Applies to: AWS Bedrock*
 </div>
 ```text
 ┌────────────────────────────────────── Ai Aws Bedrock Monitoring ──────────────────────────────────────┐

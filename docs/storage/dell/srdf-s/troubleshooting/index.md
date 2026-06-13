@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing SRDF/S link failures, synchronisation errors, SUSPENDED state recovery, and RDF group health issues.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Scripts reference covering Array Health Check (Python), ActiveCluster Pod Status Monitor (Python), Volume and Snapshot Report (Bash), Drive Failure Alert (Bash), Ansible FlashArray Health Playbook and 5 more sections.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 ```text
 ┌────────────────────────────── Pure FlashArray — Scripts and Automation ───────────────────────────────┐

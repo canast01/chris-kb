@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering Python Script Execution Pipeline, Package Management (pip), Common Infrastructure Packages, Environment Variables, Running Scripts and 3 more sections.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

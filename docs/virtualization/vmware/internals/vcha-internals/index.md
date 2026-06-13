@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vCenter High Availability (VCHA) deploys three vCenter instances — active, passive, and witness — with database replication over a private HA network. Failover is automatic (~4 min RTO) with split-brain prevention via the witness tie-breaker.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```mermaid

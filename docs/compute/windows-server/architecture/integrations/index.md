@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integration with other platforms and external systems.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## AD / DNS Dependency Diagram

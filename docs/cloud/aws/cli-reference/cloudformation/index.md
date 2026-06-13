@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 AWS CloudFormation CLI reference — stack lifecycle, change set preview, drift detection, and StackSet operations.
+
+*Applies to: AWS*
 </div>
 
 ```text

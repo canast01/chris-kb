@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoning, VSANs, ISLs, CLI references, health checks, scripts, and troubleshooting guides for Fibre Channel SAN environments.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

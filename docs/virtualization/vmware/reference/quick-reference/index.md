@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Fast operational tools for troubleshooting and validation.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐

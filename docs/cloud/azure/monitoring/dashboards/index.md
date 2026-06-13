@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Azure Dashboards provide a shared, customisable view of Azure resource telemetry. A minimal dashboard JSON skeleton:
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Monitoring ────────────────────────────────────────┐

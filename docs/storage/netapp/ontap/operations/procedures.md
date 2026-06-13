@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 ONTAP day-2 procedures — change readiness, rolling node upgrades, volume and LUN provisioning, SVM management, snapshot and SnapMirror operations, capacity management, and incident triage.
+
+*Applies to: ONTAP 9.x*
 </div>
 ```text
 ┌──────────────────────────────── NetApp ONTAP — Operational Procedures ────────────────────────────────┐

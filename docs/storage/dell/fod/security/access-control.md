@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering APEX Console RBAC Roles, API Service Account Configuration, SCG Access Controls, CloudIQ User Roles, General Controls.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

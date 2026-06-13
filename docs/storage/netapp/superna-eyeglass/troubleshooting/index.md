@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 Diagnosing Superna Eyeglass replication failures, configuration sync errors, DR orchestration issues, and Eyeglass connectivity.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

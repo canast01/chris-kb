@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Capacity on Demand integration with VMware, Unisphere, and storage management platforms.
+
+*Applies to: Cloud for Desktop (COD)*
 </div>
 
 ```text

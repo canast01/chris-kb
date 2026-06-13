@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Confluence hardening — access control, SSL termination, application links security, and user session management.
+
+*Applies to: Confluence Cloud / Data Center*
 </div>
 
 ```text

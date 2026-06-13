@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Pure Storage operations — Pure1 cloud portal management, hardware and capacity alerts, and support case workflows.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text

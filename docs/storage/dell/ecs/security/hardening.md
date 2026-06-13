@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Segmentation, Operating System Hardening (Node-Level), Object Lock (WORM) Hardening, Secrets Management Integration and 1 more sections.
+
+*Applies to: ECS 3.x*
 </div>
 ```text
 ┌──────────────────────────────────── Dell ECS — Security Hardening ────────────────────────────────────┐

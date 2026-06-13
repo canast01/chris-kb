@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering DDOS Version Matrix, Backup Software Compatibility, Hardware Model Lifecycle, Upgrade Procedure — Single Node (In-Service), Upgrade Procedure — HA Active-Standby Pair (Rolling) and 2 more sections.
+
+*Applies to: Data Domain DD OS 7.x*
 </div>
 
 ```text

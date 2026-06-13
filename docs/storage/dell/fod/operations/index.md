@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 FOD — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more.
+
+*Applies to: Dell FOD*
 </div>
 
 ```text

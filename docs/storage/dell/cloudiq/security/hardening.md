@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Audit Log, Security Baseline.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

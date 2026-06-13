@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, Before Calling Support, SLA Tiers and 1 more sections.
+
+*Applies to: FlashArray Purity 6.x*
 </div>
 ```text
 ┌──────────────────────────────────── Pure FlashArray — Escalation ─────────────────────────────────────┐

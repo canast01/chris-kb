@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Superna Eyeglass hardening — RBAC, TLS enforcement, audit logging, and management interface access controls.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

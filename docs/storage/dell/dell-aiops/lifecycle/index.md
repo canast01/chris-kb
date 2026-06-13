@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Dell AIOps Lifecycle reference covering Platform Update Model, Customer Lifecycle Responsibilities, Secure Connect Gateway (SCG) Lifecycle, Feature Enablement, API Lifecycle and 1 more sections.
+
+*Applies to: Dell AIOps*
 </div>
 
 ## Platform Update Model

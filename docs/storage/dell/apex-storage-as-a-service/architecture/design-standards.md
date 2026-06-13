@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Upgrade Notes, Design Standards.
+
+*Applies to: APEX Storage-as-a-Service*
 </div>
 
 ```text

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Azure Governance articles, operational checks, troubleshooting notes, and references.
+
+*Applies to: Azure*
 </div>
 
 ```text

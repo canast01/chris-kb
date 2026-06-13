@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Unity hardening — management access control, audit logging, replication channel security, and NAS share permissions.
+
+*Applies to: Unity XT*
 </div>
 
 ```text

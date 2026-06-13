@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Superna Eyeglass encryption — TLS configuration and data-in-transit security for Eyeglass management communications.
+
+*Applies to: Superna Eyeglass*
 </div>
 
 ```text

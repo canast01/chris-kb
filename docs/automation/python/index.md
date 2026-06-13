@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Python infrastructure automation knowledge base covering virtual environment management, dependency tooling, asyncio concurrency patterns, Docker containerisation, CLI script design, and integration with cloud and infrastructure APIs.
+
+*Applies to: Python 3.x*
 </div>
 
 ```text

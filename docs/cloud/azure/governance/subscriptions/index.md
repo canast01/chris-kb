@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 An Azure subscription is a logical unit of Azure services that links to an Azure account. Subscriptions are the primary billing and access control boundary. Understanding subscription types, limits, and management operations is essential for scalable Azure governance.
+
+*Applies to: Azure*
 </div>
 ```text
 ┌─────────────────────────────────────── Cloud Azure Governance ────────────────────────────────────────┐

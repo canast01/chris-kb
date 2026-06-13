@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL architecture — InnoDB storage engine, buffer pool, query execution pipeline, redo/undo logs, replication binlog, and connection threading model.
+
+*Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
 
 ## Storage Engine: InnoDB

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering API Authentication, Related Reference.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

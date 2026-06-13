@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 SRDF/S security controls — link encryption options, Unisphere access management, and audit logging for synchronous replication.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

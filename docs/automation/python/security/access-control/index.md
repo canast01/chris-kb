@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Least Privilege Access Model, AWS IAM Least Privilege, Access Policies Reference.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

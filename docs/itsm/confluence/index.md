@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Confluence knowledge base covering Data Center cluster architecture, space and page management, authentication, and troubleshooting.
+
+*Applies to: Confluence Cloud / Data Center*
 </div>
 
 ```text

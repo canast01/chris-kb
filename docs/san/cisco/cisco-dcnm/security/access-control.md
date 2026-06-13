@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Overview, Built-In Roles, Fabric-Level Scoping, LDAP Group to Role Mapping, Service Account Configuration and 2 more sections.
+
+*Applies to: Cisco MDS · Nexus*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Pure1 Integration, True Forward Capacity Upgrades, VMware Integration, Backup Integration, REST API.
+
+*Applies to: Evergreen*
 </div>
 ```text
 ┌──────────────────────────────── Storage Pure Evergreen — Integrations ────────────────────────────────┐

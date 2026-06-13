@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Required Information for Support Request, Support Tiers, When to Escalate.
+
+*Applies to: SRDF/S*
 </div>
 
 ```text

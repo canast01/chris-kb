@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Performance reference covering Performance via Pure1 API, Latency Investigation, Performance Benchmarking (fio), Common Performance Issues.
+
+*Applies to: Pure1*
 </div>
 
 ```text

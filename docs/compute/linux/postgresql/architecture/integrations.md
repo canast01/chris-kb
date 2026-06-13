@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL integration points — application connectors (JDBC, psycopg2, asyncpg), PgBouncer, monitoring exporters, logical replication targets, and backup tools.
+
+*Applies to: PostgreSQL 15.x / 16.x*
 </div>
 
 ```text

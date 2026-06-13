@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Deployment Models, Cluster Topology, Cloud Account Types, Appliance Sizing and 2 more sections.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ## Overview

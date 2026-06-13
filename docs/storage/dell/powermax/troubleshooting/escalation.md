@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
+
+*Applies to: PowerMax 2500 / 8500*
 </div>
 ```text
 ┌───────────────────────────────────── Dell PowerMax — Escalation ──────────────────────────────────────┐

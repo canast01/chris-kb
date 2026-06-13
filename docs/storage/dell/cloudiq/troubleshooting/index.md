@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 CloudIQ — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: CloudIQ*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Key Vault keys are cryptographic keys used for encryption, signing, and wrapping operations. Unlike secrets, keys are never exported as plaintext — all cryptographic operations happen within Key Vault (or the HSM).
+
+*Applies to: Azure*
 </div>
 ```text
 ┌──────────────────────────────────────── Cloud Azure Security ─────────────────────────────────────────┐

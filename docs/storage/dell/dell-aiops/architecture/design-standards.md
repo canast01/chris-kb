@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SCG prerequisites, configuration baselines, alert acknowledgement workflow, and operational standards for Dell AIOps.
+
+*Applies to: Dell AIOps*
 </div>
 
 ```text

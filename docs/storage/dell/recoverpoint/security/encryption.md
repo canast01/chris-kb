@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Journal Encryption, Network Segmentation, Certificate Management.
+
+*Applies to: RecoverPoint 5.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Identity Center SSO, and Transit Gateway hub-and-spoke networking. All production workloads run in dedicated member accounts; no workloads in the management account.
+
+*Applies to: AWS*
 </div>
 
 ![AWS Platform Architecture](../../../assets/aws-architecture-overview.svg)

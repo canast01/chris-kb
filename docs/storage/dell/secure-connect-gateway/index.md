@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Dell Secure Connect Gateway navigation for Operations, CLI Reference, Scripts.
+
+*Applies to: Secure Connect Gateway*
 </div>
 
 ```text

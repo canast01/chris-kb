@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Encryption In-Flight, Notes.
+
+*Applies to: SRDF/A*
 </div>
 
 ```text

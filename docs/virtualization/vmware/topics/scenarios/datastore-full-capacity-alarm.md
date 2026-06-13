@@ -11,6 +11,8 @@ datastore becoming completely full. On vSAN, the write-stop threshold is 80% cap
 Snapshots are the most common cause of sudden unexpected capacity consumption. This scenario covers
 finding what is consuming space, recovering quickly, and setting up proactive capacity monitoring
 to prevent recurrence.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

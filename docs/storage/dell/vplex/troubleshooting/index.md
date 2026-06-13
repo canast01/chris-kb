@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Dell VPLEX — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: VPLEX*
 </div>
 
 ```text

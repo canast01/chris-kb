@@ -10,6 +10,8 @@ search:
 
 <div class="kb-summary">
 AWS support case creation, severity level selection, TAM escalation path, and required diagnostics before opening a case.
+
+*Applies to: AWS*
 </div>
 
 ```text

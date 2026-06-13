@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Secure Script Development Checklist Flow, Dependency Management, File and Permission Security, Hardening Checklist.
+
+*Applies to: Python 3.x*
 </div>
 
 ## Before you begin

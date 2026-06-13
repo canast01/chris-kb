@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup configuration, restore procedures, and validation for Dell PowerScale.
+
+*Applies to: PowerScale (Isilon) 9.x*
 </div>
 ```text
 ┌──────────────────────────────── Dell PowerScale — Backup and Restore ─────────────────────────────────┐
