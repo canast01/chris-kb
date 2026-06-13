@@ -2854,25 +2854,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#aws-platform-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS Platform Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -3028,61 +3009,7 @@
 Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Identity Center SSO, and Transit Gateway hub-and-spoke networking. All production workloads run in dedicated member accounts; no workloads in the management account.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── AWS Platform Architecture ──────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      AWS Platform Architecture — Multi-Account Organisation with Hub-and-Spoke Networking     │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │     Management Account: AWS Organizations root · SCPs · IAM Identity Center SSO · billing     │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │    Networking: Transit Gateway hub connects spoke VPCs across accounts and on-premises via    │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │  Workload accounts: dedicated member accounts per environment (dev/staging/prod) or per team  │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │ Guardrails: SCPs (preventive) + AWS Config (detective) + Security Hub (aggregated compliance) │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Management account controls governance · networking hub connects spokes                            │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         How It Works        │  │         Integrations        │  │       Design Standards      │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │  Organizations: root + OUs  │  │    On-prem: DirectConnect   │  │ Account structure: OU layout│   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │   IAM Identity Center: SSO  │  │  IdP: Azure AD / Okta SAML  │  │   Tagging: env+owner+team   │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │  Transit Gateway: hub-spoke │  │ Monitoring: CloudWatch/SIEM │  │  Naming: account + resource │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │  SCPs: OU-level guardrails  │  │   Security: GuardDuty+Hub   │  │ Security baselines: CIS AWS │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │  Config: resource inventory │  │  Billing: CUR + Cost Expl.  │  │  No workloads in mgmt acct  │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    Architecture defines OU layout and networking · Integrations connect IdP and on-prem               │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │  Account Layer   │    Networking    │      Identity     │    Guardrails    │  Observability   │   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │   Mgmt account   │ Transit Gateway  │  IAM Identity Ctr │   SCPs on OUs    │  CloudTrail org  │   │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │  Audit account   │ VPC per account  │     SSO groups    │    AWS Config    │ CloudWatch logs  │   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │ Log archive acct │  DirectConnect   │  Permission sets  │   Security Hub   │  Cost Explorer   │   │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   │Workload accounts │  VPC Endpoints   │    MFA enforced   │  GuardDuty org   │  Budgets+alerts  │   │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  AWS Regions · Availability Zones · Data Centres · Global backbone · DirectConnect physical ports     │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Organizations = AWS service for multi-account management; root contains management account and OUs   │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  OU            = Organisational Unit; logical grouping of accounts; SCPs applied at OU level          │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  SCP           = Service Control Policy; preventive guardrail; restricts what actions accounts can    │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  IAM Identity Center= AWS SSO service; assigns permission sets to users/groups in member accounts     │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│  Transit Gateway= Regional hub router; connects VPCs across accounts and to on-premises via DX/VPN    │
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│  DirectConnect = Dedicated private network connection from on-premises to AWS; bypasses internet      │
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│  AWS Config    = Tracks resource configuration history; evaluates rules; records compliance state     │
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│  Security Hub  = Aggregates findings from GuardDuty, Inspector, Config; scores security posture       │
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│  GuardDuty     = Threat detection service; analyses CloudTrail, VPC Flow Logs, DNS logs for threats   │
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│  CUR           = Cost and Usage Report; detailed billing data for chargeback and FinOps analysis      │
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│  Permission set= IAM Identity Center policy assigned to a user/group for a specific member account    │
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  Management account= Root of the AWS Organization; no workloads; used for billing and org-level policy│
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
+<p><img alt="AWS Platform Architecture" src="../../../assets/aws-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="how-it-works/">
@@ -3101,9 +3028,6 @@ Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Iden
 </a>
 
 </div>
-
-<h2 id="aws-platform-architecture">AWS Platform Architecture<a class="headerlink" href="#aws-platform-architecture" title="Permanent link">&para;</a></h2>
-<p><img alt="AWS Platform Architecture" src="../../../assets/aws-architecture-overview.svg" /></p>
 
 
 
