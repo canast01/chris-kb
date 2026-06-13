@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 18 checks.
+KB site audit — 21 checks.
 
 Usage:
     python3 scripts/site_audit.py          # run all checks, print summary
@@ -334,6 +334,61 @@ for path in all_md():
             and '## Requirements' not in content
             and len(content.splitlines()) > 20):  # skip genuine stubs
         warn(issues, f'{rel}: procedure page missing "Before you begin"')
+
+
+# ── Check 20: Multi-H1 pages ─────────────────────────────────────────────────
+# Uses line-by-line fence tracking — avoids false positives from bash # comments
+# inside code blocks. Only flags genuine duplicate H1 headings in prose.
+issues = check(20, 'Multi-H1 pages')
+for path in all_md():
+    raw = open(path).read()
+    # Strip front matter
+    body = re.sub(r'^---\n.*?\n---\n', '', raw, count=1, flags=re.DOTALL)
+    lines = body.splitlines()
+    in_fence = False
+    h1s = []
+    for line in lines:
+        s = line.strip()
+        if not in_fence:
+            if s.startswith('```') or s.startswith('~~~'):
+                in_fence = True
+            elif line.startswith('# '):
+                h1s.append(line.rstrip())
+        else:
+            if s == '```' or s == '~~~':
+                in_fence = False
+    if len(h1s) > 1:
+        rel = os.path.relpath(path, DOCS)
+        warn(issues, f'{rel}: {len(h1s)} H1 headings: {h1s[:3]}')
+
+
+# ── Check 21: Duplicate page titles ──────────────────────────────────────────
+issues = check(21, 'Duplicate page titles')
+_title_map = {}
+for path in all_md():
+    raw = open(path).read()
+    body = re.sub(r'^---\n.*?\n---\n', '', raw, count=1, flags=re.DOTALL)
+    lines = body.splitlines()
+    in_fence = False
+    title = None
+    for line in lines:
+        s = line.strip()
+        if not in_fence:
+            if s.startswith('```') or s.startswith('~~~'):
+                in_fence = True
+            elif line.startswith('# ') and title is None:
+                title = line[2:].strip()
+                break
+        else:
+            if s == '```' or s == '~~~':
+                in_fence = False
+    if title:
+        _title_map.setdefault(title, []).append(os.path.relpath(path, DOCS))
+
+for title, paths in sorted(_title_map.items()):
+    if len(paths) > 1:
+        warn(issues, f'"{title}" appears on {len(paths)} pages: {paths}')
+
 
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)

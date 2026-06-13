@@ -3,7 +3,7 @@ tags:
   - learning-path
   - vxrail
 ---
-# VxRail — Learning Path
+# VxRail — Learning Path (Standalone Section)
 
 <div class="kb-summary">
 Recommended reading order for VxRail. Follow these stages in order to build a complete mental model before working with it in production.
