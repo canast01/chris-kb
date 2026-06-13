@@ -2,6 +2,8 @@
 tags:
   - deployment
   - san
+search:
+  boost: 1.5
 ---
 # Cisco MDS — Initial Deployment
 

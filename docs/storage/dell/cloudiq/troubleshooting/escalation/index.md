@@ -2,6 +2,8 @@
 tags:
   - dell
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # CloudIQ — Escalation
 

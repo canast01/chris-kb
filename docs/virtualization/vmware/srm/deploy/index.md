@@ -3,6 +3,8 @@ tags:
   - deployment
   - srm
   - vmware
+search:
+  boost: 1.5
 ---
 # SRM — Deploy
 

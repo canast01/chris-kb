@@ -2,6 +2,8 @@
 tags:
   - terraform
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Terraform — Diagnostics
 

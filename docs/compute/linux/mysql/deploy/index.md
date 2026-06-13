@@ -2,6 +2,8 @@
 tags:
   - deployment
   - linux
+search:
+  boost: 1.5
 ---
 # MySQL / MariaDB — Initial Deployment
 

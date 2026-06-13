@@ -2,6 +2,8 @@
 tags:
   - deployment
   - github-actions
+search:
+  boost: 1.5
 ---
 # GitHub Actions — Environment Setup
 

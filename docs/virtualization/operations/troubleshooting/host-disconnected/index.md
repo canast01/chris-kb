@@ -2,6 +2,8 @@
 tags:
   - operations
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Host Disconnected / Not Responding
 

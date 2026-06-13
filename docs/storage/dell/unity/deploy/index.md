@@ -2,6 +2,8 @@
 tags:
   - dell
   - deployment
+search:
+  boost: 1.5
 ---
 # Dell Unity XT — Initial Deployment
 

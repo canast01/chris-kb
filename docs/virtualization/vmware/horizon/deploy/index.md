@@ -3,6 +3,8 @@ tags:
   - deployment
   - horizon
   - vmware
+search:
+  boost: 1.5
 ---
 # Horizon — Deploy
 

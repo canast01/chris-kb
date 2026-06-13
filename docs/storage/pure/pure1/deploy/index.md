@@ -2,6 +2,8 @@
 tags:
   - deployment
   - pure
+search:
+  boost: 1.5
 ---
 # Pure1 — Initial Setup
 

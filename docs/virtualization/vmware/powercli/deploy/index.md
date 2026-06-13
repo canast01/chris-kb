@@ -3,6 +3,8 @@ tags:
   - deployment
   - powercli
   - vmware
+search:
+  boost: 1.5
 ---
 # PowerCLI — Deploy
 

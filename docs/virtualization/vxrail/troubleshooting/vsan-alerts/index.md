@@ -4,6 +4,8 @@ tags:
   - vsan
   - vsphere-8
   - vxrail
+search:
+  boost: 1.5
 ---
 # VxRail vSAN Alerts
 

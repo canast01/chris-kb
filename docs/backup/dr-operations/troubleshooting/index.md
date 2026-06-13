@@ -2,6 +2,8 @@
 tags:
   - dr
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # DR Troubleshooting
 

@@ -2,6 +2,8 @@
 tags:
   - san
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Cisco DCNM — Troubleshooting Escalation
 

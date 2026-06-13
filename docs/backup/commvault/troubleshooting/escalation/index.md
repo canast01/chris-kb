@@ -2,6 +2,8 @@
 tags:
   - commvault
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Commvault — Escalation
 

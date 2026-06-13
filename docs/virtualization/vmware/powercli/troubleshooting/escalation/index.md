@@ -3,6 +3,8 @@ tags:
   - powercli
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # PowerCLI — Escalation
 

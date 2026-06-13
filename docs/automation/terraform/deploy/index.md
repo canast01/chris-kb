@@ -2,6 +2,8 @@
 tags:
   - deployment
   - terraform
+search:
+  boost: 1.5
 ---
 # Terraform — Environment Setup
 

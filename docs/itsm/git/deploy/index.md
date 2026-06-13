@@ -2,6 +2,8 @@
 tags:
   - deployment
   - git
+search:
+  boost: 1.5
 ---
 # Git — Environment Setup
 

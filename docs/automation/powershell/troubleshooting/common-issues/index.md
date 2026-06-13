@@ -2,6 +2,8 @@
 tags:
   - powershell
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # PowerShell — Common Issues
 

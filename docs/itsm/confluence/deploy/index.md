@@ -2,6 +2,8 @@
 tags:
   - confluence
   - deployment
+search:
+  boost: 1.5
 ---
 # Confluence — Initial Deployment
 

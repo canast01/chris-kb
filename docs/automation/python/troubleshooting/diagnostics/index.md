@@ -2,6 +2,8 @@
 tags:
   - python
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Python Automation — Diagnostics
 

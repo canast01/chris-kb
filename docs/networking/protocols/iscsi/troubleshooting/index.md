@@ -2,6 +2,8 @@
 tags:
   - networking
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # iSCSI Troubleshooting
 

@@ -3,6 +3,8 @@ tags:
   - aria-lcm
   - deployment
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Suite Lifecycle — Deploy
 

@@ -2,6 +2,8 @@
 tags:
   - ceph
   - deployment
+search:
+  boost: 1.5
 ---
 # Ceph — Deploy
 

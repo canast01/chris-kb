@@ -2,6 +2,8 @@
 tags:
   - azure
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Azure — Troubleshooting
 

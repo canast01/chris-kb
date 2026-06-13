@@ -3,6 +3,8 @@ tags:
   - aria-operations
   - deployment
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Operations — Deploy
 

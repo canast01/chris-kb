@@ -2,6 +2,8 @@
 tags:
   - deployment
   - veeam
+search:
+  boost: 1.5
 ---
 # Veeam — Initial Deployment
 

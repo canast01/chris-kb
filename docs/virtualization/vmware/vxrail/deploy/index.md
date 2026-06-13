@@ -3,6 +3,8 @@ tags:
   - deployment
   - vmware
   - vxrail
+search:
+  boost: 1.5
 ---
 # VxRail — Deploy
 

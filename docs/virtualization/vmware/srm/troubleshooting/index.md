@@ -3,6 +3,8 @@ tags:
   - srm
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # Site Recovery Manager — Troubleshooting
 

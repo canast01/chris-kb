@@ -3,6 +3,8 @@ tags:
   - aria-automation
   - deployment
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Automation — Deploy
 

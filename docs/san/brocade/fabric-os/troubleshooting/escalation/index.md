@@ -2,6 +2,8 @@
 tags:
   - san
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Brocade Fabric OS — Troubleshooting Escalation
 

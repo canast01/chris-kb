@@ -3,6 +3,8 @@ tags:
   - troubleshooting
   - vmware
   - vxrail
+search:
+  boost: 1.5
 ---
 # VxRail — Troubleshooting
 

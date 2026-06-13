@@ -3,6 +3,8 @@ tags:
   - aria-logs
   - deployment
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Operations for Logs — Deploy
 

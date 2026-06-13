@@ -2,6 +2,8 @@
 tags:
   - deployment
   - servicenow
+search:
+  boost: 1.5
 ---
 # ServiceNow — Initial Instance Setup
 

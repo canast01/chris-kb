@@ -2,6 +2,8 @@
 tags:
   - troubleshooting
   - windows
+search:
+  boost: 1.5
 ---
 # Windows Server — Common Issues
 

@@ -3,6 +3,8 @@ tags:
   - deployment
   - vcf
   - vmware
+search:
+  boost: 1.5
 ---
 # VMware Cloud Foundation — Deploy
 

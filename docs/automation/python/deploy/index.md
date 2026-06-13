@@ -2,6 +2,8 @@
 tags:
   - deployment
   - python
+search:
+  boost: 1.5
 ---
 # Python Automation — Environment Setup
 

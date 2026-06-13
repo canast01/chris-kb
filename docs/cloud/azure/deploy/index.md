@@ -2,6 +2,8 @@
 tags:
   - azure
   - deployment
+search:
+  boost: 1.5
 ---
 # Azure — Subscription and Landing Zone Setup
 

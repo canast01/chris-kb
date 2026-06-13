@@ -2,6 +2,8 @@
 tags:
   - aws
   - deployment
+search:
+  boost: 1.5
 ---
 # AWS — Account and Landing Zone Setup
 

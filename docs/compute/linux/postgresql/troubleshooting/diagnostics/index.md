@@ -2,6 +2,8 @@
 tags:
   - linux
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # PostgreSQL — Diagnostics
 

@@ -3,6 +3,8 @@ tags:
   - tanzu
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # Tanzu — Escalation
 

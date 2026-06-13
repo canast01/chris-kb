@@ -2,6 +2,8 @@
 tags:
   - troubleshooting
   - vxrail
+search:
+  boost: 1.5
 ---
 # VxRail Support Bundle Failures
 

@@ -3,6 +3,8 @@ tags:
   - aria-lcm
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Suite Lifecycle — Diagnostics
 

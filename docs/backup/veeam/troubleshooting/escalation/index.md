@@ -2,6 +2,8 @@
 tags:
   - troubleshooting
   - veeam
+search:
+  boost: 1.5
 ---
 # Veeam — Escalation
 

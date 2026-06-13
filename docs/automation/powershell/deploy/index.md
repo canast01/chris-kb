@@ -2,6 +2,8 @@
 tags:
   - deployment
   - powershell
+search:
+  boost: 1.5
 ---
 # PowerShell — Environment Setup
 

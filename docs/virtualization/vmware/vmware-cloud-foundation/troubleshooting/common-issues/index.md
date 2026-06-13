@@ -3,6 +3,8 @@ tags:
   - troubleshooting
   - vcf
   - vmware
+search:
+  boost: 1.5
 ---
 # VCF Troubleshooting — Common Issues
 

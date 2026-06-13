@@ -2,6 +2,8 @@
 tags:
   - servicenow
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # ServiceNow Common Issues
 

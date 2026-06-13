@@ -3,6 +3,8 @@ tags:
   - aria-operations
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Operations Common Issues
 

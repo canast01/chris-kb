@@ -3,6 +3,8 @@ tags:
   - aria-logs
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Operations for Logs — Diagnostics
 

@@ -3,6 +3,8 @@ tags:
   - troubleshooting
   - vmware
   - vsphere-replication
+search:
+  boost: 1.5
 ---
 # vSphere Replication — Common Issues
 

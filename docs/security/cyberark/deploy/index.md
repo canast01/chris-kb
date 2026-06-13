@@ -2,6 +2,8 @@
 tags:
   - deployment
   - security
+search:
+  boost: 1.5
 ---
 # CyberArk PAM — Initial Deployment
 

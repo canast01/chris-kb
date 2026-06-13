@@ -2,6 +2,8 @@
 tags:
   - ceph
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Ceph — Troubleshooting
 

@@ -3,6 +3,8 @@ tags:
   - deployment
   - tanzu
   - vmware
+search:
+  boost: 1.5
 ---
 # Tanzu — Deploy
 

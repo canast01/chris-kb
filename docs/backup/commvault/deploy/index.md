@@ -2,6 +2,8 @@
 tags:
   - commvault
   - deployment
+search:
+  boost: 1.5
 ---
 # CommVault — Initial Deployment
 

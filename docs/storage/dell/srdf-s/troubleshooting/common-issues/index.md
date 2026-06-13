@@ -2,6 +2,8 @@
 tags:
   - dell
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # SRDF/S — Common Issues
 

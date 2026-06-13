@@ -2,6 +2,8 @@
 tags:
   - netapp
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # SnapCenter — Diagnostics
 

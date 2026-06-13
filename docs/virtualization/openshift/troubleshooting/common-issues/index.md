@@ -1,6 +1,8 @@
 ---
 tags:
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # OpenShift — Common Issues
 

@@ -2,6 +2,8 @@
 tags:
   - github-actions
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # GitHub Actions — Troubleshooting
 

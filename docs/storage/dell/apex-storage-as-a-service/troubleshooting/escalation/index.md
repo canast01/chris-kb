@@ -2,6 +2,8 @@
 tags:
   - dell
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # APEX Storage as a Service — Escalation
 

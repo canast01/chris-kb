@@ -4,6 +4,8 @@ tags:
   - nsx-4
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # NSX — Escalation
 

@@ -2,6 +2,8 @@
 tags:
   - deployment
   - windows
+search:
+  boost: 1.5
 ---
 # Windows Server — Initial Deployment
 

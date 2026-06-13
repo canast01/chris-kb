@@ -2,6 +2,8 @@
 tags:
   - security
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Certificates — Escalation
 

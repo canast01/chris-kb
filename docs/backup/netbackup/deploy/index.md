@@ -2,6 +2,8 @@
 tags:
   - deployment
   - netbackup
+search:
+  boost: 1.5
 ---
 # NetBackup — Initial Deployment
 

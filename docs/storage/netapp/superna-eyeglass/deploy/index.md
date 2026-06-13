@@ -2,6 +2,8 @@
 tags:
   - deployment
   - netapp
+search:
+  boost: 1.5
 ---
 # Superna Eyeglass — Initial Deployment
 

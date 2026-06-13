@@ -3,6 +3,8 @@ tags:
   - aria-networks
   - deployment
   - vmware
+search:
+  boost: 1.5
 ---
 # Aria Operations for Networks — Deploy
 

@@ -2,6 +2,8 @@
 tags:
   - deployment
   - jira
+search:
+  boost: 1.5
 ---
 # Jira — Initial Deployment
 

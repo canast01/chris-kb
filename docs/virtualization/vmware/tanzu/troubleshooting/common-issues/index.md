@@ -3,6 +3,8 @@ tags:
   - tanzu
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # Virtualization Vmware Tanzu — Common Issues
 

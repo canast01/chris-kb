@@ -2,6 +2,8 @@
 tags:
   - deployment
   - vxrail
+search:
+  boost: 1.5
 ---
 # VxRail — Initial Deployment
 

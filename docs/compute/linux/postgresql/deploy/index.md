@@ -2,6 +2,8 @@
 tags:
   - deployment
   - linux
+search:
+  boost: 1.5
 ---
 # PostgreSQL — Initial Deployment
 

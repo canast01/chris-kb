@@ -2,6 +2,8 @@
 tags:
   - ansible
   - deployment
+search:
+  boost: 1.5
 ---
 # Ansible — Environment Setup
 

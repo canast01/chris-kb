@@ -2,6 +2,8 @@
 tags:
   - aws
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # AWS — Troubleshooting
 

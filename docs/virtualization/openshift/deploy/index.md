@@ -1,6 +1,8 @@
 ---
 tags:
   - deployment
+search:
+  boost: 1.5
 ---
 # OpenShift — Deploy
 

@@ -2,6 +2,8 @@
 tags:
   - ansible
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Ansible — Escalation
 

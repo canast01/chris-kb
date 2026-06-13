@@ -3,6 +3,8 @@ tags:
   - horizon
   - troubleshooting
   - vmware
+search:
+  boost: 1.5
 ---
 # Horizon — Diagnostics
 

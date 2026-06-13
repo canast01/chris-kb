@@ -3,6 +3,8 @@ tags:
   - certifications
   - san
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # SAN Troubleshooting
 

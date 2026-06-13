@@ -2,6 +2,8 @@
 tags:
   - confluence
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Confluence — Troubleshooting
 

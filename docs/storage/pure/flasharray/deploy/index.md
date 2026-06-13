@@ -2,6 +2,8 @@
 tags:
   - deployment
   - pure
+search:
+  boost: 1.5
 ---
 # FlashArray — Initial Deployment
 

@@ -2,6 +2,8 @@
 tags:
   - pure
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # FlashArray — Diagnostics
 

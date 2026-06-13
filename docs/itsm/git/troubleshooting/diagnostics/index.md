@@ -2,6 +2,8 @@
 tags:
   - git
   - troubleshooting
+search:
+  boost: 1.5
 ---
 # Git — Diagnostics
 
