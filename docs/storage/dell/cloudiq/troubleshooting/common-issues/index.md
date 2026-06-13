@@ -140,6 +140,47 @@ curl -s -X PATCH "${BASE}/alerts/${ALERT_ID}" \
   }' | python3 -m json.tool
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{System not reporting\nto CloudIQ?}
+    S --> B2{Metric gap in\ntimeline?}
+    S --> B3{Anomaly alert\nincorrect?}
+    S --> B4{Capacity forecast\nwrong?}
+    S --> B5{Connectivity issue\nproxy or firewall?}
+
+    B1 -->|Check SCG service| D1{dsagw service\nrunning?}
+    D1 -->|No| R1[See SCG Issues —\nRestart dsagw and watch journal logs]
+    D1 -->|Device not registered| R2[See SCG Issues —\nSystem missing: add device in SCG]
+
+    B2 -->|Check SCG uptime during gap| D2{SCG offline\nduring gap period?}
+    D2 -->|Yes| R3[See SCG Issues —\nSCG VM powered off: restart and verify]
+    D2 -->|Credential expired| R4[See Telemetry Issues —\nDevice poll fail: fix credentials]
+
+    B3 -->|Check anomaly in CloudIQ UI| D3{Alert matches\nknown workload?}
+    D3 -->|Yes - planned event| R5[See CloudIQ API —\nAcknowledge alert with change reference]
+    D3 -->|Threshold wrong| R6[See Telemetry Issues —\nWrong health score: review alert policy]
+
+    B4 -->|Query capacity API and compare| D4{Forecast confidence\nLOW?}
+    D4 -->|Yes| R7[See CloudIQ API —\nInsufficient data: wait for more history]
+    D4 -->|Data mismatch| R8[See CloudIQ API —\nQuery capacity endpoint to validate]
+
+    B5 -->|Run SCG connectivity diagnostic| D5{cloudiq.dell.com\nreachable from SCG?}
+    D5 -->|No| R9[See SCG Issues —\nFirewall blocked: allow port 443 to Dell]
+    D5 -->|Proxy auth| R10[See SCG Issues —\nProxy auth fail: configure proxy creds in SCG]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

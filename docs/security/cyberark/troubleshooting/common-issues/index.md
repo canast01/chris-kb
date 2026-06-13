@@ -63,6 +63,40 @@ Known issues and resolution steps for frequent CyberArk problems, covering the V
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A{PSM session\nwon't connect?}
+    S --> B{Password change\nfailed - CPM error?}
+    S --> C{PVWA safe\naccess error?}
+    S --> D{Vault unreachable\nor DR failover?}
+    S --> E{Audit log\ngap detected?}
+    A -->|Yes| A1{RDP reaches\nPSM host?}
+    A1 -->|No| A2[Verify firewall TCP 3389\nCheck PSM service status\nVerify concurrent session limit]
+    A1 -->|Yes| A3[Check PSM recordings Safe perms\nVerify RDS CAL activated\nReview PSM.ini RecordingsPath]
+    A3 --> A4[PSM Issues]
+    B -->|Yes| B1[Check APPAP007E in vault.log\nVerify CPM network to target\nConfirm AD Reset Password right]
+    B1 --> B2[CPM Issues]
+    C -->|Yes| C1{Vault TCP 1858\nreachable from PVWA?}
+    C1 -->|No| C2[Fix firewall\nCheck Vault service]
+    C2 --> C3[Vault Issues]
+    C1 -->|Yes| C4[Restart CyberArk IIS app pool\nCheck WebApplication.log]
+    C4 --> C5[PVWA Issues]
+    D -->|Yes| D1[Check PADR.log on DR host\nVerify DR replication service\nConfirm DR user password matches]
+    D1 --> D2[Vault Issues]
+    E -->|Yes| E1[Check vault.ini SYSLOG section\nVerify SIEM IP and port\nRestart Vault to apply syslog config]
+    E1 --> E2[General and Cross-Component Issues]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A4,B2,C3,C5,D2,E2 section
+    class A,A1,B,C,C1,D,E decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

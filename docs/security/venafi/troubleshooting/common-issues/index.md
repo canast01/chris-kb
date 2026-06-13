@@ -71,6 +71,37 @@ Known issues and resolution steps for frequent Venafi problems.
 | LDAP/AD auth failing in Venafi | Test LDAP bind from TPP server; verify service account password not expired |
 | Syslog events not appearing in SIEM | Check Log Server service; verify syslog target IP/port; check firewall |
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A{Certificate discovery\nnot finding endpoints?}
+    S --> B{Policy violation\nblocking issuance?}
+    S --> C{CA connection\nerror?}
+    S --> D{Workflow approval\nstuck?}
+    S --> E{TPP service\ncrash?}
+    A -->|Yes| A1[Check Edge Proxy registration\nVerify scan range and port list\nCheck firewall from Edge to targets]
+    A1 --> A2[Known Issues]
+    B -->|Yes| B1[Review policy folder in TPP\nIdentify violated rule: CN · SAN · key size\nAdjust CSR or update policy]
+    B1 --> B2[Known Issues]
+    C -->|Yes| C1{CA type: ADCS\nor external?}
+    C1 -->|ADCS| C2[Verify DCOM/RPC to CA\nCheck CA template permissions\nReview VdcLogFile for error]
+    C1 -->|External| C3[Check CA API endpoint reachable\nVerify credential / API key\nCheck TPP CA connector config]
+    C3 --> C4[Known Issues]
+    D -->|Yes| D1[Check workflow approver mailbox\nVerify workflow policy config\nManually advance or escalate]
+    D1 --> D2[Known Issues]
+    E -->|Yes| E1[Verify IIS app pool running\nCheck SQL connectivity\nReview VdcLogFile for exception]
+    E1 --> E2[Known Issues]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A2,B2,C4,D2,E2 section
+    class A,B,C,C1,D,E decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -80,6 +80,42 @@ Common COD issues — capacity activation failures, allocation errors, and licen
 | CloudIQ shows COD headroom as 0 but license portal shows available | CloudIQ telemetry not reflecting latest license activation | Allow 30–60 minutes for CloudIQ to refresh; confirm SCG is forwarding telemetry |
 | COD activation audit trail missing | Activation performed without a change ticket or outside SYMCLI | Review SYMCLI audit log; correlate with Unisphere session logs; update CMDB retroactively |
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{Capacity-on-demand\nrequest stuck?}
+    S --> B2{License not\nactivating?}
+    S --> B3{Storage pool expansion\nblocked?}
+    S --> B4{Portal API\nerror?}
+
+    B1 -->|Check APEX Console SR| D1{SR raised\nand SLA elapsed?}
+    D1 -->|No SR| R1[See Issue Reference —\nCapacity request delayed: raise SR in console]
+    D1 -->|SLA not elapsed| R2[See Issue Reference —\nReview contracted SLA response time]
+
+    B2 -->|Verify array SID in license file| D2{SID in key\nmatches array?}
+    D2 -->|No - SN mismatch| R3[See Issue Reference —\nLicense key rejected: contact Dell for re-issue]
+    D2 -->|Permission error| R4[See Issue Reference —\nsymlicense install: run as StorageAdmin]
+
+    B3 -->|Check firmware compatibility| D3{Array firmware\nmeets minimum?}
+    D3 -->|No| R5[See Issue Reference —\nCOD drives not visible: upgrade firmware first]
+    D3 -->|Devices not bound| R6[See Issue Reference —\nCapacity available in SYMCLI: bind to thin pool]
+
+    B4 -->|Check CloudIQ telemetry lag| D4{CloudIQ showing\nstale COD data?}
+    D4 -->|Yes| R7[See Issue Reference —\nCloudIQ shows 0 headroom: allow 60 min refresh]
+    D4 -->|Duplicate key| R8[See Issue Reference —\nKey duplicate: do not apply again; contact Dell]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class B1,B2,B3,B4,D1,D2,D3,D4 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -63,6 +63,47 @@ Common Issues reference covering Incident Triage, Common Symptoms and Resolution
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{Node\nunavailable?}
+    S --> B2{Object GET or PUT\nfailing - S3 error?}
+    S --> B3{Bucket policy\nconflict?}
+    S --> B4{Replication\ngeo lag?}
+    S --> B5{Certificate expired\non ECS endpoint?}
+
+    B1 -->|Check ECS Portal hardware view| D1{Node in\nDEGRADED state?}
+    D1 -->|Yes| R1[See Incident Triage —\nCheck portal for FAILED or SUSPECT disks]
+    D1 -->|Service down| R2[See Symptoms and Resolutions —\nSSH to node: check storageos service]
+
+    B2 -->|Test S3 endpoint with HeadBucket| D2{S3 API\nreturning 403?}
+    D2 -->|AccessDenied| R3[See Incident Triage —\nCheck IAM user namespace and bucket policy]
+    D2 -->|503 Unavailable| R4[See Symptoms and Resolutions —\n503: data service process down on nodes]
+
+    B3 -->|Check bucket policy with ecscli| D3{Policy blocks\ncorrect principal?}
+    D3 -->|Yes - misconfigured| R5[See Symptoms and Resolutions —\nS3 AccessDenied: fix IAM or bucket policy]
+    D3 -->|WORM retention| R6[See Symptoms and Resolutions —\nWORM object deletion blocked by retention]
+
+    B4 -->|Check Geo Monitoring in portal| D4{WAN link\nsaturated?}
+    D4 -->|Yes| R7[See Incident Triage —\nCheck WAN port 9100 and replication throttle]
+    D4 -->|Read-after-write| R8[See Symptoms and Resolutions —\nObject 404: wait for geo-replication]
+
+    B5 -->|Check ECS Portal certificates| D5{Certificate\npast expiry?}
+    D5 -->|Yes| R9[See Symptoms and Resolutions —\nECS Portal login fails: renew certificate]
+    D5 -->|Quota| R10[See Symptoms and Resolutions —\nBucket quota exceeded: increase or expire objects]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)
