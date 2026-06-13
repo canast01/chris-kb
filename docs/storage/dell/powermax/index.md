@@ -1,6 +1,8 @@
 ---
 tags:
   - dell
+search:
+  boost: 2
 ---
 # Dell PowerMax
 

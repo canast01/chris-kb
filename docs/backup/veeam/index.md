@@ -1,6 +1,8 @@
 ---
 tags:
   - veeam
+search:
+  boost: 2
 ---
 # Veeam
 

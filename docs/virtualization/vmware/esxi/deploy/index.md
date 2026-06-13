@@ -4,6 +4,8 @@ tags:
   - esxi
   - vmware
   - vsphere-8
+search:
+  boost: 2
 ---
 # ESXi Host Deployment
 

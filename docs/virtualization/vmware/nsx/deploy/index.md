@@ -4,6 +4,8 @@ tags:
   - nsx
   - nsx-4
   - vmware
+search:
+  boost: 2
 ---
 # NSX — Deploy
 

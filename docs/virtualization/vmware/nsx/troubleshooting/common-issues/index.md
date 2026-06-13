@@ -4,6 +4,8 @@ tags:
   - nsx-4
   - troubleshooting
   - vmware
+search:
+  boost: 2
 ---
 # NSX — Common Issues
 

@@ -2,6 +2,8 @@
 tags:
   - dell
   - troubleshooting
+search:
+  boost: 2
 ---
 # PowerMax — Common Issues
 

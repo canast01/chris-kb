@@ -7,6 +7,8 @@ tags:
   - nsx
   - operations
   - vsphere-8
+search:
+  boost: 2
 ---
 # VMware — Morning Health Check
 

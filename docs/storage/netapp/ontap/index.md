@@ -1,6 +1,8 @@
 ---
 tags:
   - netapp
+search:
+  boost: 2
 ---
 # NetApp ONTAP
 

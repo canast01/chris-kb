@@ -1,6 +1,8 @@
 ---
 tags:
   - vmware
+search:
+  boost: 2
 ---
 # VMware Platform
 

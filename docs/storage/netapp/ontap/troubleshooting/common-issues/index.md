@@ -2,6 +2,8 @@
 tags:
   - netapp
   - troubleshooting
+search:
+  boost: 2
 ---
 # ONTAP — Common Issues
 

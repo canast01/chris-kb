@@ -4,6 +4,8 @@ tags:
   - vmware
   - vsan
   - vsphere-8
+search:
+  boost: 2
 ---
 # vSAN — Operations
 

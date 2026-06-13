@@ -2,6 +2,8 @@
 tags:
   - linux
   - troubleshooting
+search:
+  boost: 2
 ---
 # Linux — Common Issues
 

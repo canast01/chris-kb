@@ -2,6 +2,8 @@
 tags:
   - troubleshooting
   - windows
+search:
+  boost: 2
 ---
 # Active Directory — Common Issues
 

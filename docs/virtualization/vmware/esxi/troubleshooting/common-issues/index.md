@@ -4,6 +4,8 @@ tags:
   - troubleshooting
   - vmware
   - vsphere-8
+search:
+  boost: 2
 ---
 # ESXi — Common Issues
 

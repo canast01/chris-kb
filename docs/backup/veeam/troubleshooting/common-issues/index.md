@@ -2,6 +2,8 @@
 tags:
   - troubleshooting
   - veeam
+search:
+  boost: 2
 ---
 # Veeam — Common Issues
 
