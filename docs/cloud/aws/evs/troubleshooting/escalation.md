@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 AWS support escalation for EVS: severity levels, required data for support cases, joint VMware/AWS ticket coordination, and TAM escalation for production-critical issues.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -261,6 +263,11 @@ This is required for our internal post-incident review process."
 For recurring issues (same root cause appearing more than once), escalate to your AWS TAM and request a Well-Architected Review for your EVS environment. AWS offers a focused EVS review that covers resiliency, networking, and operations best practices.
 
 ---
+
+## See also
+
+- [Amazon EVS — Diagnostics](diagnostics/)
+- [Amazon EVS — Common Issues](common-issues/)
 
 ## Verify resolution
 

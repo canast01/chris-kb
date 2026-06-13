@@ -444,6 +444,12 @@ curl -sk -o /dev/null -w "%{http_code}" https://depot.vmware.com
 
 ---
 
+## See also
+
+- [VMware Cloud Foundation — How It Works](../architecture/how-it-works/)
+- [VCF — Health Checks](../operations/health-checks/)
+- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

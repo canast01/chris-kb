@@ -143,3 +143,8 @@ Key events to alert on:
 - Recovery initiated (especially outside of planned maintenance windows)
 - Replication removed from a protected VM
 - Site pairing configuration changed
+
+## See also
+
+- [vSphere Replication — Authentication](authentication/)
+- [vSphere Replication — Hardening](hardening/)

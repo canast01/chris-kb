@@ -265,3 +265,8 @@ ceph auth get-or-create client.cinder \
   mon 'profile rbd' \
   osd 'profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images'
 ```
+
+## See also
+
+- [Ceph — Authentication](../authentication/)
+- [Ceph — Hardening](../hardening/)

@@ -164,6 +164,12 @@ curl -k -X POST "https://<srm_fqdn>/api/plans/<plan_id>/actions/test"   -H "Auth
 
 ---
 
+## See also
+
+- [SRM — Procedures](procedures/)
+- [SRM — Scripts](scripts/)
+- [SRM — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

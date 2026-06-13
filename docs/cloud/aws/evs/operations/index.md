@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 EVS day-2 operations: cluster health, host management, vSAN capacity, lifecycle upgrades, backup procedures, and runbook scripts for routine administration.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VxRail architecture overview — node hardware, HCI cluster topology, vSAN disk groups, and management stack integration.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 ![VxRail Architecture](../../../../assets/vxrail-architecture-overview.svg)

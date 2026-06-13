@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration with Physical Network, Active Directory / LDAP Integration and 2 more sections.
+
+*Applies to: NSX-T 3.x · NSX 4.x*
 </div>
 
 ```text
@@ -235,3 +237,8 @@ Key log sources to forward:
 | Edge Node | Same CLI command on each Edge | BGP events, NAT, LB pool changes |
 | ESXi DFW | ESXi host syslog with DFW tag | Firewall rule hits, drops |
 | NSX Manager audit | `/var/log/vmware/nsx-manager/audit.log` | Admin actions, role changes |
+
+## See also
+
+- [NSX — How It Works](how-it-works/)
+- [NSX — Deploy](../deploy/)

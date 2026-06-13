@@ -259,6 +259,12 @@ tail -f /var/log/vmware/vmdird/vmdird-syslog.log
 
 ---
 
+## See also
+
+- [vCenter — Procedures](procedures/)
+- [vCenter — Scripts](scripts/)
+- [vCenter — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

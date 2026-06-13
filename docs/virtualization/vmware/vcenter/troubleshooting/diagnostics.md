@@ -363,6 +363,11 @@ Timestamp all evidence with the collection time. Upload support bundles directly
 
 ---
 
+## See also
+
+- [vCenter Troubleshooting — Common Issues](common-issues/)
+- [vCenter — Escalation](escalation/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

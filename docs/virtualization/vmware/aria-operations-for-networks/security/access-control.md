@@ -167,3 +167,8 @@ Forward to SIEM via syslog (Settings → Notifications → Syslog). Alert on:
 - Role mapping changes
 - Data source deletion
 - API token creation / revocation
+
+## See also
+
+- [Aria Operations for Networks — Authentication](authentication/)
+- [vRNI Security Hardening](hardening/)

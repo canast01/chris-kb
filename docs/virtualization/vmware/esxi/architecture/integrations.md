@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Network Integration, Backup Integration, Monitoring Integration.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ```text
@@ -134,3 +136,8 @@ esxcli system snmp get
 ```
 
 **Aria Operations (vROps):** The ESXi adapter connects through vCenter. Add vCenter as an account in Aria Operations and the ESXi adapter automatically discovers all managed hosts. Metrics include CPU ready, memory balloon, storage latency, and network utilisation per host.
+
+## See also
+
+- [ESXi — How It Works](how-it-works/)
+- [ESXi Host Deployment](../deploy/)

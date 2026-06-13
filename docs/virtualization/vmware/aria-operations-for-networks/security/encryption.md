@@ -137,3 +137,8 @@ Update stored credentials when source system passwords change:
 ```text
 Settings → Data Sources → [source] → Edit → update password → Save
 ```
+
+## See also
+
+- [vRNI Security Hardening](hardening/)
+- [vRNI Health Checks](../operations/health-checks/)

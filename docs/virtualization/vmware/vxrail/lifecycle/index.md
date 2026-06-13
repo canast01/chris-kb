@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VxRail lifecycle notes for upgrade planning, pre-checks, bundles, firmware, rollback planning, and validation.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 ```text

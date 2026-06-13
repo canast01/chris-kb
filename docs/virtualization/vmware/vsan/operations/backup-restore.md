@@ -272,6 +272,12 @@ vSAN stretched cluster does not improve RPO for logical failures — it only pro
 
 ---
 
+## See also
+
+- [vSAN — Procedures](procedures/)
+- [vSAN — Common Issues](../troubleshooting/common-issues/)
+- [vSAN — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

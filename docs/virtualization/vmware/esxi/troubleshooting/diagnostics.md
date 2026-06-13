@@ -190,6 +190,11 @@ Use before placing a host into maintenance mode and before returning it to servi
 
 ---
 
+## See also
+
+- [ESXi — Common Issues](common-issues/)
+- [ESXi — Escalation](escalation/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

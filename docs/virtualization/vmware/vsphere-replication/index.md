@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vSphere Replication knowledge base — deploy, architecture, operations, CLI references, security, and troubleshooting for VM-level asynchronous replication between vCenter sites.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
 ```text

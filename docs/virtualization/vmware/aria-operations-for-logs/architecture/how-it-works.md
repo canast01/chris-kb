@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Log Pipeline Architecture, ESXi Syslog Configuration.
+
+*Applies to: Aria Operations for Logs 8.x*
 </div>
 
 ## Overview
@@ -119,3 +121,9 @@ graph TB
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## See also
+
+- [Aria Ops for Logs — Standards](design-standards/)
+- [Aria Operations for Logs — Deploy](../deploy/)
+- [Aria Ops for Logs — Integrations](integrations/)

@@ -284,6 +284,12 @@ ceph pg dump pools   # check per-pool distribution
 
 ---
 
+## See also
+
+- [Ceph — How It Works](../architecture/how-it-works/)
+- [Ceph — Health Checks](../operations/health-checks/)
+- [Ceph — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **Cluster health:** all nodes show online in the management UI

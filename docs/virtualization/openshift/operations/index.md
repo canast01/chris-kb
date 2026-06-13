@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Day-2 operations: oc CLI, health checks, node management, upgrade procedures, etcd backup, and runnable health-check routines.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text

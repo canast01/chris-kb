@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Test Network Design, IP Customization Strategy, Recovery Plan Structure Best Practices, RPO Targets and SRA Capability, Test Frequency Recommendations and 1 more sections.
+
+*Applies to: SRM 8.x*
 </div>
 
   Replication Topology + Recovery Plan Structure
@@ -174,3 +176,8 @@ Install SRA on both SRM servers (protected and recovery site). Re-scan array man
 - Every source datastore must have a recovery-site counterpart documented in the SRM datastore mapping
 - Datastore mappings must be validated as part of quarterly test (verify VMs register on correct datastores post-test)
 - Placeholder VMs: SRM creates placeholder VMs on recovery-site datastores; ensure recovery datastores have adequate free space for placeholders plus recovered VMs
+
+## See also
+
+- [SRM — How It Works (VMware Platform)](how-it-works/)
+- [SRM — Deploy](../deploy/)

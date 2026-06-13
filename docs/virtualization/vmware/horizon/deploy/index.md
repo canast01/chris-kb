@@ -419,6 +419,12 @@ Invoke-RestMethod -Uri "https://<uag-mgmt-ip>:9443/rest/v1/monitor/service/horiz
 
 ---
 
+## See also
+
+- [Horizon — How It Works](../architecture/how-it-works/)
+- [VMware Horizon — Health Checks](../operations/health-checks/)
+- [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

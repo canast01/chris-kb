@@ -263,3 +263,8 @@ New-VIPermission `
     -Role "ReadOnly" `
     -Propagate $false
 ```
+
+## See also
+
+- [vSAN — Authentication](authentication/)
+- [vSAN — Hardening](hardening/)

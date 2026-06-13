@@ -179,6 +179,12 @@ For vSAN clusters: if ESXi 8.x is rolled back, vSAN on-disk format may need down
 
 ---
 
+## See also
+
+- [ESXi — Health Checks](health-checks/)
+- [ESXi — Common Issues](../troubleshooting/common-issues/)
+- [ESXi — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

@@ -259,3 +259,8 @@ Get-PowerCLIConfiguration | Select-Object Scope, InvalidCertificateAction,
 
 Disconnect-VIServer -Server * -Confirm:$false
 ```
+
+## See also
+
+- [PowerCLI — Hardening](hardening/)
+- [PowerCLI — Health Checks](../operations/health-checks/)

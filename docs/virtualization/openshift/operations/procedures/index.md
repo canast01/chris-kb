@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Common operational procedures: node drain and maintenance mode, scaling MachineSets, adding node roles, rotating certificates, etcd member recovery, kubeadmin rotation, and deployment rollout management.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -351,6 +353,12 @@ oc get nodes -w
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Health Checks](../health-checks/)
+- [OpenShift — Common Issues](../../troubleshooting/common-issues/)
+- [OpenShift — CLI Reference](../cli-reference/)
 
 ## Verify
 

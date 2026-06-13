@@ -296,3 +296,9 @@ tanzu cluster kubeconfig get my-cluster --admin
 # For OIDC users — tokens expire automatically; re-login to refresh:
 kubectl vsphere login --server https://supervisor.example.local --username user@corp.local
 ```
+
+## See also
+
+- [Tanzu — Access Control](access-control/)
+- [Tanzu — Authentication](authentication/)
+- [Tanzu — Health Checks](../operations/health-checks/)

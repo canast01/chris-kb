@@ -442,6 +442,12 @@ vSphere Client → [vCenter] → Configure → Advanced Settings
 
 ---
 
+## See also
+
+- [vCenter — How It Works](../architecture/how-it-works/)
+- [vCenter — Health Checks](../operations/health-checks/)
+- [vCenter Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** log in at `https://<vcenter-fqdn>/ui` — inventory loads and all hosts show Connected

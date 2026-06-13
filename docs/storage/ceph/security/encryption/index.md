@@ -126,6 +126,11 @@ cryptsetup status /dev/mapper/ceph-<uuid>
 
 > **Critical**: if all MONs are lost, encrypted OSD data is unrecoverable. Always maintain MON quorum and back up MON keyrings separately from the cluster.
 
+## See also
+
+- [Ceph — Hardening](../hardening/)
+- [Ceph — Health Checks](../../operations/health-checks/)
+
 ## Verify OSD Encryption Status
 
 ```bash

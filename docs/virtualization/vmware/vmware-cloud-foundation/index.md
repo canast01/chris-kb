@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware Cloud Foundation (VCF). Covers SDDC Manager, workload domains, lifecycle management, vSphere, vSAN, and NSX integration across the full-stack private cloud platform.
+
+*Applies to: VCF 4.x · 5.x*
 </div>
 
 ```text

@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layout, NTP Configuration, VIB Acceptance Levels, Storage Path Configuration and 3 more sections.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ESXi Host Design Checklist — Standard Layout
@@ -163,3 +165,8 @@ esxcli system settings advanced set -o /UserVars/ESXiShellInteractiveTimeOut -i 
 **CPU overcommit guidance:** 4:1 vCPU:pCPU ratio for general workloads; 2:1 for latency-sensitive (databases, real-time). Monitor CPU Ready — sustained > 5% indicates overcommitment.
 
 **Memory overcommit guidance:** Size physical RAM to cover peak active memory across all VMs. Balloon and swap are performance impacts, not design targets. Include 10–15% overhead for VMkernel and VM metadata.
+
+## See also
+
+- [ESXi — How It Works](how-it-works/)
+- [ESXi Host Deployment](../deploy/)

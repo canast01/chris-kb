@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation, RPO Selection, Target Datastore Sizing and 3 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
   Sizing and Bandwidth Design
@@ -139,3 +141,8 @@ vSphere Replication is tested and supported with up to 100ms RTT between sites. 
 | VRA appliance | `vra-<site>` | `vra-london`, `vra-amsterdam` |
 | VRS appliance | `vrs-<site>-<number>` | `vrs-london-01` |
 | Replication groups (in SRM) | `<workload>-vr-pg` | `sql-vr-pg`, `webapp-vr-pg` |
+
+## See also
+
+- [vSphere Replication — How It Works](how-it-works/)
+- [vSphere Replication — Deploy](../deploy/)

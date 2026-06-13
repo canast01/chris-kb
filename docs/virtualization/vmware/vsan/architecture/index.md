@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 vSAN pools local NVMe and SSD disks across ESXi hosts into a shared distributed datastore. Storage policies (RAID-1/5/6, FTT) define per-VM resilience. vSAN ESA eliminates the separate cache tier on supported hardware.
+
+*Applies to: vSAN 7.x · 8.x*
 </div>
 
 ![vSAN Architecture Models](../../../../assets/vsan-architecture-overview.svg)

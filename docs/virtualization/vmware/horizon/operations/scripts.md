@@ -221,6 +221,11 @@ Get-HVPool | ForEach-Object {
 
 ---
 
+## See also
+
+- [Horizon — CLI Reference](cli-reference/)
+- [Horizon — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

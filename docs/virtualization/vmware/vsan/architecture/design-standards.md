@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Cluster Configuration, Stretched Cluster Architecture, Storage Policy Baseline, Naming Conventions, Capacity Management.
+
+*Applies to: vSAN 7.x · 8.x*
 </div>
 
 ```text
@@ -299,3 +301,8 @@ For most all-flash vSAN deployments, IOPS is not the bottleneck — latency and 
 | Clusters per vCenter | 128 |
 
 Do not size clusters close to these maximums — leave at least 20% headroom for growth and operational overhead.
+
+## See also
+
+- [vSAN — How It Works](how-it-works/)
+- [vSAN — Deploy](../deploy/)

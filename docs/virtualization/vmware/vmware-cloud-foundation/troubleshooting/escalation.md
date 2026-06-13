@@ -96,6 +96,11 @@ VCF support is managed through the [Broadcom Support Portal](https://support.bro
 
 ---
 
+## See also
+
+- [VCF Troubleshooting — Diagnostics](diagnostics/)
+- [VCF Troubleshooting — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

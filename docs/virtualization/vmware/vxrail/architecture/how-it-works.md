@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Dell VxRail is a hyper-converged infrastructure (HCI) appliance that combines compute, storage, and networking in a pre-integrated, factory-configured unit. VxRail is built on VMware vSphere and vSAN, and is exclusively managed through the VxRail Manager plugin within vCenter.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 ```text
 ┌─────────────────────── VxRail Appliance — Manager and Lifecycle Control Plane ────────────────────────┐
@@ -220,3 +222,9 @@ Always validate the Dell VxRail Software Compatibility Matrix before upgrades.
 | VxRail 7.0.4xx | ESXi 7.0 U3 | vCenter 7.0 U3 | vSAN 7.0 U3 |
 
 VxRail upgrades always move the entire stack (ESXi + vCenter + vSAN + firmware) to a tested bundle version. Partial upgrades are not supported.
+
+## See also
+
+- [VxRail — Design Standards](design-standards/)
+- [VxRail — Deploy](../deploy/)
+- [VxRail — Integrations](integrations/)

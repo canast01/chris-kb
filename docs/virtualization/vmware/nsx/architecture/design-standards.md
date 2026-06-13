@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Segments (Logical Switches), Design Rules, Configuration Baselines, Version Compatibility Matrix, Change Control Standards.
+
+*Applies to: NSX-T 3.x · NSX 4.x*
 </div>
 
 ```text
@@ -262,3 +264,8 @@ curl -sk -u 'admin:password' \
   -d '{}' \
   "https://<nsx-manager>/api/v1/node/backups/create"
 ```
+
+## See also
+
+- [NSX — How It Works](how-it-works/)
+- [NSX — Deploy](../deploy/)

@@ -453,3 +453,8 @@ spec:
 
 ## Component Relationship Diagram
 
+## See also
+
+- [Tanzu — Design Standards](design-standards/)
+- [Tanzu — Deploy](../deploy/)
+- [Tanzu — Integrations](integrations/)

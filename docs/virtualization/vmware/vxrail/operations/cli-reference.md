@@ -419,6 +419,12 @@ Get-VMHostFirmware -VMHost "vxrail-node-01.example.local" \
 
 ---
 
+## See also
+
+- [VxRail — Procedures](procedures/)
+- [VxRail Appliance — Scripts](scripts/)
+- [VxRail — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

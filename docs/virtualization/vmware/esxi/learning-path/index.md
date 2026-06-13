@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for ESXi. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ```text

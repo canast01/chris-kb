@@ -273,3 +273,8 @@ Set `required` only for VMs that handle sensitive data. `opportunistic` is the s
 - [ ] ESXi host certificates valid (>60 days remaining)
 - [ ] Encrypted vMotion set to `opportunistic` or `required` for sensitive VMs
 - [ ] NKP health checked: `vCenter → Configure → Key Providers` — shows green
+
+## See also
+
+- [ESXi — Hardening](hardening/)
+- [ESXi — Health Checks](../operations/health-checks/)

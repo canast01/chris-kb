@@ -379,6 +379,12 @@ esxcli network firewall refresh
 
 ---
 
+## See also
+
+- [ESXi — How It Works](../architecture/how-it-works/)
+- [ESXi — Health Checks](../operations/health-checks/)
+- [ESXi — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **Host connected:** vSphere Client → host status shows Connected (green)

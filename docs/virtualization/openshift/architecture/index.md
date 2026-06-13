@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 OpenShift control plane, node types, networking model, and storage integration. Covers how etcd, API server, scheduler, and operators interact to manage cluster state.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ![OpenShift Architecture Overview](../../../assets/openshift-architecture-overview.svg)

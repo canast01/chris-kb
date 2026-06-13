@@ -131,3 +131,8 @@ If FIPS is required:
 - Deploy a new cluster with FIPS mode selected in the OVA deployment wizard
 - All management pack integrations must also support FIPS — verify compatibility before enabling
 - Note: FIPS mode disables some cipher suites and hash algorithms — test all adapter connections after deployment
+
+## See also
+
+- [Aria Operations Security Hardening](hardening/)
+- [Aria Operations Health Checks](../operations/health-checks/)

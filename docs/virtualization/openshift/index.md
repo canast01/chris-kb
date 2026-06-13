@@ -2,6 +2,8 @@
 
 <div class="kb-summary">
 Red Hat OpenShift Container Platform — Kubernetes-based container orchestration with enterprise security, multi-tenancy, and integrated CI/CD. Runs on vSphere (IPI/UPI), bare metal, AWS, and Azure.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text

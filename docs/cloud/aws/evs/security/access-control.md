@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 AWS IAM permissions for EVS cluster management, vSphere RBAC roles for VMs and infrastructure, SDDC Manager roles, and least-privilege design principles.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -309,3 +311,8 @@ Apply SCPs in AWS Organizations to enforce the separation at the account boundar
 ```
 
 This SCP blocks all EVS deletion except from a designated `evs-break-glass` role that requires MFA to assume and is audited through CloudTrail.
+
+## See also
+
+- [Amazon EVS — Authentication](authentication/)
+- [Amazon EVS — Hardening](hardening/)

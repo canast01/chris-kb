@@ -289,3 +289,8 @@ Dedicated service accounts must be used for VxRail component automation. Do not 
 - Service account passwords must be rotated annually at minimum, or immediately after any staff departure
 - Accounts must have no interactive logon rights — configured via Group Policy (`Deny log on locally`, `Deny log on through Remote Desktop`)
 - Review service account permissions after each VxRail LCM upgrade — Dell may adjust required permissions between releases
+
+## See also
+
+- [VxRail — Access Control](access-control/)
+- [VxRail — Hardening](hardening/)

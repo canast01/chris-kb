@@ -192,3 +192,8 @@ kubectl get secrets -n prelude
 ```
 
 The embedded Kubernetes cluster on Aria Automation appliances does not expose etcd encryption configuration to administrators. Protect the appliance disk using storage-layer encryption as the primary control.
+
+## See also
+
+- [Aria Automation — Hardening](hardening/)
+- [Aria Automation — Health Checks](../operations/health-checks/)

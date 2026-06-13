@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI wraps the vSphere Web Services API (SOAP/REST) in PowerShell cmdlets. Each Connect-VIServer call creates a persistent session object; all subsequent cmdlets in the session operate against that server's API without re-authenticating.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 <!-- diagram:powercli-architecture -->
@@ -120,3 +122,8 @@ $cred = New-Object System.Management.Automation.PSCredential(
     (ConvertTo-SecureString $env:VCENTER_PASS -AsPlainText -Force)
 )
 ```
+
+## See also
+
+- [PowerCLI — Deploy](../deploy/)
+- [PowerCLI — Integrations](integrations/)

@@ -228,6 +228,12 @@ Set-Annotation -Entity $vm -CustomAttribute $attr -Value "john.doe@example.com"
 
 ---
 
+## See also
+
+- [PowerCLI — Procedures](procedures/)
+- [PowerCLI — Scripts](scripts/)
+- [PowerCLI — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

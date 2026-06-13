@@ -479,3 +479,8 @@ proxy:
 ```
 
 Key metrics collected: K8s node CPU/mem/disk, pod resource usage, JVM metrics (via Prometheus annotations), custom app metrics via Prometheus scraping through Wavefront proxy.
+
+## See also
+
+- [Tanzu — How It Works](how-it-works/)
+- [Tanzu — Deploy](../deploy/)

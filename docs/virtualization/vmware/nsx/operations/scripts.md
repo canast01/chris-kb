@@ -706,6 +706,11 @@ nsxt_plink_check.bat
 
 ---
 
+## See also
+
+- [NSX — CLI Reference](cli-reference/)
+- [NSX — Standard Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

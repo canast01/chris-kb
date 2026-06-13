@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Node Replacement Checklist reference covering Confirm the Issue, Capture Current Node Details, Validate Cluster Health Before Replacement, Maintenance Mode, Dell Replacement Workflow and 2 more sections.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 Rollback Decision Tree

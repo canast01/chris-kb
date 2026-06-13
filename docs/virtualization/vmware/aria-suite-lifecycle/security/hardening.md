@@ -125,3 +125,9 @@ Run this checklist after initial deployment and after each major upgrade:
 - [ ] Syslog forwarding to Aria Ops for Logs or SIEM configured and verified
 - [ ] Firewall rules reviewed — only required ports open
 - [ ] LCM software at current patch level (check: **LCM → Settings → System Details**)
+
+## See also
+
+- [Aria Suite Lifecycle — Access Control](access-control/)
+- [Aria Suite Lifecycle — Authentication](authentication/)
+- [Aria Suite Lifecycle — Health Checks](../operations/health-checks/)

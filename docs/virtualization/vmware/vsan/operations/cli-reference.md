@@ -473,6 +473,12 @@ Get-VM -Location $cluster | ForEach-Object {
 
 ---
 
+## See also
+
+- [vSAN — Procedures](procedures/)
+- [vSAN — Scripts](scripts/)
+- [vSAN — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

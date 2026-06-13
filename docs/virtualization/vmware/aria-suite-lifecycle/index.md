@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware Aria Suite Lifecycle Manager. Covers deployment, patching, certificate management, upgrade orchestration, and environment health for all Aria Suite products.
+
+*Applies to: Aria Suite Lifecycle 8.x*
 </div>
 
 ```text

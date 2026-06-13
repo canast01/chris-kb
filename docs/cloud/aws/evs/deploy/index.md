@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 EVS cluster deployment: prerequisites, VPC setup, cluster creation via AWS console or CLI, initial VCF configuration, HCX deployment, network extension, and post-deploy validation checklist.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -482,6 +484,12 @@ curl -k -o /dev/null -w "%{http_code}" https://vcenter.vcf.internal/ui/
 Expected: `200` for the curl check. DNS failures in either direction indicate a DHCP options or forwarder misconfiguration that must be resolved before running any migrations.
 
 ---
+
+## See also
+
+- [Amazon EVS — How It Works](../architecture/how-it-works/)
+- [Amazon EVS — Health Checks](../operations/health-checks/)
+- [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
 
 ## Verify
 

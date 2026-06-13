@@ -161,3 +161,8 @@ Disconnect-VIServer -Server * -Confirm:$false
 | Rotate credentials on schedule | Update Export-Clixml file after rotation |
 | Log all connections | Source IP, timestamp, account in vCenter audit log |
 | Avoid storing passwords in script files | Use environment variables or secret stores |
+
+## See also
+
+- [PowerCLI — Access Control](access-control/)
+- [PowerCLI — Hardening](hardening/)

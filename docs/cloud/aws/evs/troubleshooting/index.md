@@ -11,6 +11,8 @@ search:
 
 <div class="kb-summary">
 EVS troubleshooting: host failures, vSAN degraded health, HCX connectivity issues, NSX-T networking failures, and AWS support escalation process.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text

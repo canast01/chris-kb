@@ -145,3 +145,8 @@ sudo vim /opt/vmware/etc/nginx/nginx.conf
 # Set: ssl_protocols TLSv1.2 TLSv1.3;
 sudo systemctl reload nginx
 ```
+
+## See also
+
+- [vSphere Replication — Hardening](hardening/)
+- [vSphere Replication — Health Checks](../operations/health-checks/)

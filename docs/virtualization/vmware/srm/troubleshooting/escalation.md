@@ -149,6 +149,11 @@ If the failure involves the Storage Replication Adapter or array-side replicatio
 
 ---
 
+## See also
+
+- [SRM — Diagnostics](diagnostics/)
+- [VMware SRM — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

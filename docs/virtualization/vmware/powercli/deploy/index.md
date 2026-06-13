@@ -180,6 +180,12 @@ Write-Host "PowerCLI deployment validated." -ForegroundColor Green
 
 ---
 
+## See also
+
+- [PowerCLI — How It Works](../architecture/how-it-works/)
+- [PowerCLI — Health Checks](../operations/health-checks/)
+- [PowerCLI — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

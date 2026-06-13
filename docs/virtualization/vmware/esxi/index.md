@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware ESXi. Covers host architecture, networking, storage paths, patching, security hardening, and troubleshooting for ESXi hosts managed by vCenter.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ```text

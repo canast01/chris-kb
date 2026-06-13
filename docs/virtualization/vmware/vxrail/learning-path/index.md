@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for VxRail. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 ```text

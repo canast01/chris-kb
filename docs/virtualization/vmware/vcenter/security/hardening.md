@@ -314,3 +314,9 @@ Patch response SLAs (align with your security policy):
 - **Critical (CVSS 9.0+)**: Apply within 72 hours; emergency patching
 - **High (CVSS 7.0–8.9)**: Apply within 30 days
 - **Medium and below**: Include in next quarterly patching cycle
+
+## See also
+
+- [vCenter Security — Access Control](access-control/)
+- [vCenter Security — Authentication](authentication/)
+- [vCenter — Health Checks](../operations/health-checks/)

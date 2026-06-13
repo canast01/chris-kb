@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Ceph is an open-source distributed storage system providing block (RBD), file (CephFS), and object (RGW/S3) storage from a single cluster. Deployed on commodity hardware with no single point of failure.
+
+*Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
 ```text

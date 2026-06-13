@@ -257,6 +257,12 @@ flowchart TD
 
 ---
 
+## See also
+
+- [SRM — Health Checks](health-checks/)
+- [VMware SRM — Common Issues](../troubleshooting/common-issues/)
+- [SRM — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

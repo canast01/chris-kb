@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Pre-Change Health Validation reference covering VxRail Manager, vCenter Health, vSAN Health, Hardware Health, Infrastructure and 1 more sections.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 Pre-Upgrade Checklist Flow

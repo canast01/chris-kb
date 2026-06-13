@@ -383,3 +383,9 @@ Invoke-VMHostProfile -VMHost $host -Profile $profile -Confirm:$false
 ```
 
 Host profiles are the recommended mechanism for maintaining configuration consistency on vSAN clusters. Any manual change to a host will show as non-compliant in the next profile check.
+
+## See also
+
+- [vSAN — Access Control](access-control/)
+- [vSAN — Authentication](authentication/)
+- [vSAN — Health Checks](../operations/health-checks/)

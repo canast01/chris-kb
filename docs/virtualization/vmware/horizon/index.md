@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Horizon knowledge base — architecture, operations, deploy, CLI references, security, and troubleshooting.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

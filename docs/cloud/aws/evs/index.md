@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Amazon Elastic VMware Service (EVS): VMware Cloud Foundation on AWS bare-metal — vSphere, vSAN, NSX-T, and HCX running natively on dedicated EC2 bare-metal instances in your VPC.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text

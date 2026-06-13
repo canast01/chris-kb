@@ -237,6 +237,12 @@ Submit a smoke-test deployment from Service Broker and confirm it reaches `DEPLO
 
 ---
 
+## See also
+
+- [Aria Automation — How It Works](../architecture/how-it-works/)
+- [Aria Automation — Health Checks](../operations/health-checks/)
+- [Aria Automation — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

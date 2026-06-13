@@ -148,3 +148,8 @@ Forward these logs to a SIEM or dedicated audit log store by configuring the app
 echo '*.* @@siem.example.local:514' > /etc/rsyslog.d/vrli-audit.conf
 systemctl restart rsyslog
 ```
+
+## See also
+
+- [Aria Ops for Logs — Authentication](authentication/)
+- [Aria Ops for Logs — Hardening](hardening/)

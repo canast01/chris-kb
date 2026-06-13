@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS VPC flow logs, disabling unnecessary services on ESXi, and CIS hardening controls for VCF.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -343,3 +345,9 @@ aws cloudwatch put-metric-alarm \
 | DCUI.Access = root only | Restrict DCUI to root; remove any extra accounts |
 | Ship all audit logs to SIEM | vCenter, NSX-T, SDDC Manager, ESXi auth.log |
 | CloudWatch alarm on EVS deletions | Alert on any evs:Delete* CloudTrail event |
+
+## See also
+
+- [Amazon EVS — Access Control](access-control/)
+- [Amazon EVS — Authentication](authentication/)
+- [Amazon EVS — Health Checks](../operations/health-checks/)

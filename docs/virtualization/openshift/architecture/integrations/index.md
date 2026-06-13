@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay image registry, Advanced Cluster Management (ACM), and ODF storage integration.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -354,3 +356,8 @@ oc get cephcluster -n openshift-storage
 oc rsh -n openshift-storage $(oc get pod -n openshift-storage -l app=rook-ceph-tools -o name) \
   ceph status
 ```
+
+## See also
+
+- [OpenShift — How It Works](../how-it-works/)
+- [OpenShift — Deploy](../../deploy/)

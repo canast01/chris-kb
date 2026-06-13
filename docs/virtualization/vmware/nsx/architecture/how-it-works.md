@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulation, Transport Zones, Gateway Architecture — T0 and T1 and 7 more sections.
+
+*Applies to: NSX-T 3.x · NSX 4.x*
 </div>
 
 ```text
@@ -392,3 +394,9 @@ NSX-V migrations are critical — NSX-V receives no patches.
 get log-file syslog follow   # live tail
 get log-file auth.log        # authentication events
 ```
+
+## See also
+
+- [NSX — Design Standards](design-standards/)
+- [NSX — Deploy](../deploy/)
+- [NSX — Integrations](integrations/)

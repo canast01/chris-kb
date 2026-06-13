@@ -306,3 +306,8 @@ If `administrator@vsphere.local` is locked out:
 If the root password is unknown, use the VCSA VM console (via ESXi DCUI) to boot into single-user mode and reset it — documented in VMware KB 2069041.
 
 Store the break-glass password for `administrator@vsphere.local` in an offline vault (e.g., printed and sealed, or HSM-backed secrets manager) separate from the primary password manager. The break-glass procedure must be documented and tested annually.
+
+## See also
+
+- [vCenter Security — Authentication](authentication/)
+- [vCenter Security — Hardening](hardening/)

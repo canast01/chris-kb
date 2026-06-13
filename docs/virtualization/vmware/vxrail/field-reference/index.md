@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Field Reference reference covering Overview, Daily Checks, Dependencies, Common Issues, Troubleshooting Workflow and 1 more sections.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 ```text
 ┌──────────────────────────────── Virtualization Vxrail Field Reference ────────────────────────────────┐

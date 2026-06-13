@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Node count requirements, cluster naming, vSAN policy standards, network design rules, and configuration baselines for VxRail HCI deployments.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 ```text
 ┌──────────────────── Virtualization Vmware Vxrail — Architecture Design Standards ─────────────────────┐
@@ -127,3 +129,8 @@ VxRail requires four VMkernel networks per node, separated by VLAN:
 - [ ] VxRail Manager admin credentials stored in CyberArk
 - [ ] Proactive HA / vSAN health checks green in vCenter
 - [ ] SupportAssist registered for warranty and firmware update eligibility
+
+## See also
+
+- [VxRail — How It Works (VMware Platform)](how-it-works/)
+- [VxRail — Deploy](../deploy/)

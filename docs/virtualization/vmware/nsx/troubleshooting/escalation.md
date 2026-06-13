@@ -108,6 +108,11 @@ curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/alarms?status=OPEN&se
 
 ---
 
+## See also
+
+- [NSX — Diagnostics](diagnostics/)
+- [NSX — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

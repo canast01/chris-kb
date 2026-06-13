@@ -299,3 +299,8 @@ esxcli system syslog config get | grep loghost
 ```
 
 Configure via Host Profile to enforce consistently across all cluster hosts.
+
+## See also
+
+- [ESXi — Authentication](authentication/)
+- [ESXi — Hardening](hardening/)

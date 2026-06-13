@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Site Recovery Manager knowledge base — architecture, operations, deploy, CLI references, security, and troubleshooting.
+
+*Applies to: SRM 8.x*
 </div>
 
 ```text

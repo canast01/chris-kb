@@ -137,3 +137,8 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 - [Architecture](index.md) — cluster topology
 - [Security](../security/index.md) — RBAC and project-based access
 - [Operations](../operations/index.md) — health checks
+
+## See also
+
+- [Aria Automation — How It Works](how-it-works/)
+- [Aria Automation — Deploy](../deploy/)

@@ -209,6 +209,12 @@ Write-Host "All VMs cloned and started"
 
 ---
 
+## See also
+
+- [PowerCLI — Health Checks](health-checks/)
+- [PowerCLI — Common Issues](../troubleshooting/common-issues/)
+- [PowerCLI — CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

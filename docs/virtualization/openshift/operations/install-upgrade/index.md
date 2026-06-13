@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upgrade prerequisites, pause-worker pattern, multi-hop upgrades, and rollback considerations.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -272,6 +274,12 @@ oc get pdb -A
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Health Checks](../health-checks/)
+- [OpenShift — Common Issues](../../troubleshooting/common-issues/)
+- [OpenShift — Procedures](../procedures/)
 
 ## Verify
 

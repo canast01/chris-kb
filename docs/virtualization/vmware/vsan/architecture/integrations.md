@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, Aria Operations.
+
+*Applies to: vSAN 7.x · 8.x*
 </div>
 
 ```text
@@ -155,3 +157,8 @@ The vSAN management pack in Aria Operations (vROps) provides detailed visibility
 - Capacity utilisation above 70%.
 
 The vSAN management pack connects through the vCenter adapter; no separate vSAN credentials are required.
+
+## See also
+
+- [vSAN — How It Works](how-it-works/)
+- [vSAN — Deploy](../deploy/)

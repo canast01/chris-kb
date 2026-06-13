@@ -418,6 +418,12 @@ kubectl run nettest --image=alpine --restart=Never --rm -it -- \
 
 ---
 
+## See also
+
+- [Tanzu — How It Works](../architecture/how-it-works/)
+- [Tanzu — Health Checks](../operations/health-checks/)
+- [Virtualization Vmware Tanzu — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

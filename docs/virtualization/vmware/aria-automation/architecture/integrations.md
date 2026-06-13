@@ -140,3 +140,8 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 Infrastructure > Connections > Cloud Accounts  — check green status for all vCenter and NSX accounts
 Infrastructure > Connections > Integrations    — check all integration endpoints are reachable
 ```
+
+## See also
+
+- [Aria Automation — How It Works](how-it-works/)
+- [Aria Automation — Deploy](../deploy/)

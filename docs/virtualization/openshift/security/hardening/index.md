@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission, RHCOS node hardening, Compliance Operator, audit logging, network policies, image security, and CIS benchmark controls.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -360,3 +362,9 @@ journalctl -u kube-apiserver | grep audit
 | Images | Require signed images | Deploy `ClusterImagePolicy` with cosign public key |
 | Nodes | SELinux enforcing | Enforced by default on RHCOS; verify with `sestatus` via node debug |
 | Nodes | No SSH access | Default RHCOS; enable only via MachineConfig for break-glass |
+
+## See also
+
+- [OpenShift — Access Control](../access-control/)
+- [OpenShift — Authentication](../authentication/)
+- [OpenShift — Health Checks](../../operations/health-checks/)

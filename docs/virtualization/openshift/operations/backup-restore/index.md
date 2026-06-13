@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for application workloads, PV snapshot backup, and recovery from common failure scenarios.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -336,6 +338,12 @@ EOF
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Procedures](../procedures/)
+- [OpenShift — Common Issues](../../troubleshooting/common-issues/)
+- [OpenShift — Health Checks](../health-checks/)
 
 ## Verify
 

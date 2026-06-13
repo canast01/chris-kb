@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Integration with Aria Operations (vROps), NSX-T Syslog Integration, Linux Log Forwarding Agent, Windows Log Forwarding Agent, SNMP Trap Receiver and 2 more sections.
+
+*Applies to: Aria Operations for Logs 8.x*
 </div>
 
 ## Integration with Aria Operations (vROps)
@@ -199,3 +201,8 @@ curl -sk -u 'admin:<password>' \
   "https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&limit=20" | \
   jq '.alerts[] | {name: .name, status: .status, timestamp: .timestamp}'
 ```
+
+## See also
+
+- [Aria Operations for Logs — How It Works](how-it-works/)
+- [Aria Operations for Logs — Deploy](../deploy/)

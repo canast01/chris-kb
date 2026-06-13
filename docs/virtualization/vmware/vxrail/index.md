@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Operational reference for Dell VxRail HCI. Covers architecture, lifecycle management, operations, CLI reference, troubleshooting, integration, and vendor support for VxRail clusters running vSphere and vSAN.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 ```text

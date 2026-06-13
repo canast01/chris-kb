@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VxRail integrates natively with vCenter, NSX-T, Aria Operations, and Dell SupportAssist. External CMDB and monitoring integrations consume the VxRail Manager REST API.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 ```text
 ┌───────────────────────────── Virtualization Vmware Vxrail — Integrations ─────────────────────────────┐
@@ -131,3 +133,8 @@ VxRail nodes and the vSAN datastore should be registered in the CMDB:
 | VxRail node | VxRail Manager API `/hosts` | Script or ServiceNow Discovery via MID Server |
 | vSAN datastore | vCenter API | ServiceNow Discovery or Aria Automation CMDB sync |
 | VxRail Manager VM | vCenter | Auto-discovered by ServiceNow Discovery |
+
+## See also
+
+- [VxRail — How It Works (VMware Platform)](how-it-works/)
+- [VxRail — Deploy](../deploy/)

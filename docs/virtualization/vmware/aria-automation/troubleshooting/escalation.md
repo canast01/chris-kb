@@ -79,6 +79,11 @@ scp root@vra-prod-01.example.local:/tmp/vracli-support-bundle*.tar.gz /tmp/
 
 ---
 
+## See also
+
+- [Aria Automation — Diagnostics](diagnostics/)
+- [Aria Automation — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

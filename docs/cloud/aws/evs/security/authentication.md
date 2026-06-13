@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, MFA for AWS console access, SSH key rotation for EVS bare-metal hosts, and service account management.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -266,3 +268,8 @@ done
 # 4. Delete old key pair after verification
 aws ec2 delete-key-pair --key-name evs-cluster-key
 ```
+
+## See also
+
+- [Amazon EVS — Access Control](access-control/)
+- [Amazon EVS — Hardening](hardening/)

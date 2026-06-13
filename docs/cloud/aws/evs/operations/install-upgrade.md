@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade sequence, pre-upgrade checklist, rollback considerations, and EVS host AMI updates managed through AWS.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -281,6 +283,12 @@ Get-VM | Get-Snapshot | Where-Object { $_.Name -like "pre-upgrade-*" } | Remove-
 Always verify the VMware Product Interoperability Matrix before upgrading EVS components.
 
 ---
+
+## See also
+
+- [Amazon EVS — Health Checks](health-checks/)
+- [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
+- [Amazon EVS — Procedures](procedures/)
 
 ## Verify
 

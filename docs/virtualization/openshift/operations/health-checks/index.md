@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Daily cluster health routine: cluster operators, node status, etcd health, monitoring stack, networking, storage, certificate expiry, and resource pressure. Run before and after every change.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -368,6 +370,12 @@ oc debug node/<node-name> -- chroot /host crictl images | sort -k4 -h | tail -20
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Common Issues](../../troubleshooting/common-issues/)
+- [OpenShift — Procedures](../procedures/)
+- [OpenShift — CLI Reference](../cli-reference/)
 
 ## Verify
 

@@ -208,3 +208,8 @@ Admin > Global Settings > Log Integration
 All adapter credentials should use dedicated service accounts with read-only permissions. Store credentials in the team secrets manager, not in the Aria Operations credential store alone. Rotate adapter service account passwords on the standard 12-month schedule and update credentials under:
 
 Admin > Credentials > [Select Credential] > Edit
+
+## See also
+
+- [Aria Operations — How It Works](how-it-works/)
+- [Aria Operations — Deploy](../deploy/)

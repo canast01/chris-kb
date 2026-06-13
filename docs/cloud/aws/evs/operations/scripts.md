@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Operational scripts for EVS: daily health check, host add/remove workflow, vSAN capacity report, HCX migration status tracker, safe host removal, VCF password rotation, and capacity reporting.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -476,6 +478,11 @@ echo "  Generated: $(date)"
 ```
 
 ---
+
+## See also
+
+- [Amazon EVS — CLI Reference](cli-reference/)
+- [Amazon EVS — Procedures](procedures/)
 
 ## Verify
 

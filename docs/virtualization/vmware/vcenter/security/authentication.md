@@ -239,3 +239,8 @@ AD account lockouts caused by vCenter (e.g. cached wrong password in identity so
 
 - [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
 - [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements
+
+## See also
+
+- [vCenter Security — Access Control](access-control/)
+- [vCenter Security — Hardening](hardening/)

@@ -438,6 +438,11 @@ crontab -e
 
 ---
 
+## See also
+
+- [VxRail — CLI Reference](cli-reference/)
+- [VxRail — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

@@ -243,6 +243,12 @@ kubectl get pods -n velero
 
 ---
 
+## See also
+
+- [Tanzu — Procedures](procedures/)
+- [Tanzu — Scripts](scripts/)
+- [Tanzu — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

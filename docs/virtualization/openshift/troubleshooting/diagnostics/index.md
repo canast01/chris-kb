@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 Diagnostic tools and techniques: must-gather collection, oc adm inspect, Prometheus-based diagnostics, OVN network tracing, log aggregation, and etcd health assessment.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -289,6 +291,11 @@ systemctl --failed                 # any failed systemd units
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Common Issues](../common-issues/)
+- [OpenShift — Escalation](../escalation/)
 
 ## Verify resolution
 

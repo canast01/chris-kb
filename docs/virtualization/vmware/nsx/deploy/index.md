@@ -502,6 +502,12 @@ get bgp neighbor summary
 
 ---
 
+## See also
+
+- [NSX — How It Works](../architecture/how-it-works/)
+- [NSX — Health Checks](../operations/health-checks/)
+- [NSX — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **Manager cluster:** NSX UI → System → Overview — all nodes Active, cluster Stable

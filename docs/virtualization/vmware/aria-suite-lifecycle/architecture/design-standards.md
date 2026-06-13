@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Pre-Deployment Checklist, Deployment Size Reference, Certificate Standards, Upgrade Sequence Rules, Version Matrix Compliance.
+
+*Applies to: Aria Suite Lifecycle 8.x*
 </div>
 
   LCM Design Standards at a Glance
@@ -122,3 +124,8 @@ Maintain a version compliance table in CMDB:
 | Aria Operations | 8.x.y | <check Broadcom> | Current / Update Needed |
 
 Review and update this table after every upgrade cycle and monthly for new releases.
+
+## See also
+
+- [Aria Suite Lifecycle — How It Works](how-it-works/)
+- [Aria Suite Lifecycle — Deploy](../deploy/)

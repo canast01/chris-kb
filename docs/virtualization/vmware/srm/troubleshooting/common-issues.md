@@ -322,6 +322,12 @@ Cause: Certificate mismatch, vCenter connectivity, or credential expiry
 
 ---
 
+## See also
+
+- [SRM — Diagnostics](diagnostics/)
+- [SRM — Escalation](escalation/)
+- [SRM — Health Checks](../operations/health-checks/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

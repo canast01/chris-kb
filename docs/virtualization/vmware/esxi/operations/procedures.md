@@ -720,6 +720,12 @@ esxcli system coredump network get
 
 ---
 
+## See also
+
+- [ESXi — Health Checks](health-checks/)
+- [ESXi — Common Issues](../troubleshooting/common-issues/)
+- [ESXi CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

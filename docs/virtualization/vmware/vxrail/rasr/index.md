@@ -8,6 +8,8 @@ tags:
 RASR is the Dell VxRail node rebuild utility. It boots from a USB drive or ISO, wipes the local disks,
 re-images ESXi and VxRail Manager, and returns the node to a factory-clean state — used when a node is
 unrecoverable by normal means and must be rebuilt from scratch before rejoining the cluster.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 ```text
@@ -84,6 +86,9 @@ Do **not** use RASR as a first response to a degraded node. Try these in order f
 4. Escalate to Dell GSS — they confirm RASR is appropriate before you proceed.
 
 ---
+
+!!! danger "All local data on this node is permanently destroyed"
+    RASR wipes all local disks and re-images from scratch. Any data not protected by vSAN replication or an external backup is unrecoverable. Confirm vSAN FTT compliance, evacuate all VMs, and open a Dell GSS support case **before** starting. There is no undo.
 
 ## Prerequisites
 

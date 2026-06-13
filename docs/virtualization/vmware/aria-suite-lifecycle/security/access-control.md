@@ -113,3 +113,8 @@ For formal audit trails, forward the LCM syslog to Aria Operations for Logs or a
 echo '*.* @@vrli-prod-01.example.local:514' > /etc/rsyslog.d/lcm-remote.conf
 systemctl restart rsyslog
 ```
+
+## See also
+
+- [Aria Suite Lifecycle — Authentication](authentication/)
+- [Aria Suite Lifecycle — Hardening](hardening/)

@@ -285,3 +285,9 @@ cat /var/run/tpm/tpminfo.json 2>/dev/null
 View in vCenter: **Host → Configure → System → TPM**
 
 If TPM attestation fails, investigate recent firmware or BIOS changes. A failed attestation indicates the host's boot chain has changed — investigate before trusting the host.
+
+## See also
+
+- [ESXi Access Control](access-control/)
+- [ESXi — Authentication](authentication/)
+- [ESXi — Health Checks](../operations/health-checks/)

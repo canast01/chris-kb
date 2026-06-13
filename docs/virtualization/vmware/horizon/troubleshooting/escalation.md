@@ -109,6 +109,11 @@ Escalation reference covering Engage VMware Support, Escalation Within VMware, U
 
 ---
 
+## See also
+
+- [Horizon — Diagnostics](diagnostics/)
+- [VMware Horizon — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

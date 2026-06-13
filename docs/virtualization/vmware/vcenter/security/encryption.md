@@ -243,3 +243,8 @@ Get-VM | ForEach-Object {
 ```
 
 vSAN encryption is preferred over per-VM encryption in all-vSAN environments — it is more performant and simpler to manage at scale.
+
+## See also
+
+- [vCenter Security — Hardening](hardening/)
+- [vCenter — Health Checks](../operations/health-checks/)

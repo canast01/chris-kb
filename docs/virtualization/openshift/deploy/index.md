@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 IPI vs UPI vs agent-based installation methods, install-config.yaml structure for vSphere IPI, RHCOS bootstrap sequence, air-gap mirror setup with oc-mirror, DNS requirements, and post-install validation checklist.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -372,6 +374,12 @@ oc delete secret kubeadmin -n kube-system
 ```
 
 ---
+
+## See also
+
+- [OpenShift — How It Works](../architecture/how-it-works/)
+- [OpenShift — Health Checks](../operations/health-checks/)
+- [OpenShift — Common Issues](../troubleshooting/common-issues/)
 
 ## Verify
 

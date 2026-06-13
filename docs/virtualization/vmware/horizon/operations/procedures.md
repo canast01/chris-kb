@@ -585,6 +585,12 @@ Set the minimum machine count to cover expected peak concurrency plus the spare 
 
 ---
 
+## See also
+
+- [VMware Horizon — Health Checks](health-checks/)
+- [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
+- [Horizon — CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

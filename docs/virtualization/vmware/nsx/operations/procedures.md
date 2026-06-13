@@ -107,6 +107,12 @@ curl -sk -u 'admin:password' \
 
 ---
 
+## See also
+
+- [NSX — Health Checks](health-checks/)
+- [NSX — Common Issues](../troubleshooting/common-issues/)
+- [NSX — CLI Reference](cli-reference/)
+
 ## Verify Segment Health
 
 Confirms a segment is operationally UP and that VMs have connected logical ports. Run after creating a segment or when VMs report no network connectivity.

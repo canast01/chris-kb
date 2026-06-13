@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Storage Replication Adapter (SRA) Integration, vSphere Replication Integration, NSX-T Integration for Network Mapping, Active Directory / Identity Integration, Identity Federation with vIDM / Workspace ONE Access and 1 more sections.
+
+*Applies to: SRM 8.x*
 </div>
 
 ```text
@@ -427,3 +429,8 @@ Example use cases:
 - Pre-failover: disable monitoring alerts to suppress DR failover noise
 - Post-failover: update DNS records pointing services to the recovery site
 - Post-failover: notify stakeholders via webhook
+
+## See also
+
+- [SRM — How It Works (VMware Platform)](how-it-works/)
+- [SRM — Deploy](../deploy/)

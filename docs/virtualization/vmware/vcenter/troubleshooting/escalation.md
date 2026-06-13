@@ -144,6 +144,11 @@ Upload logs directly to the case via the Broadcom portal file upload — do not 
 
 ---
 
+## See also
+
+- [vCenter — Diagnostics](diagnostics/)
+- [vCenter Troubleshooting — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

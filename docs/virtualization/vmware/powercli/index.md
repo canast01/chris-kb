@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI is VMware's official PowerShell module suite for automating and managing vSphere, NSX, vSAN, vCD, and other VMware products. It provides 900+ cmdlets covering the full vSphere API, enabling scripted VM operations, host configuration, storage management, and reporting at scale.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

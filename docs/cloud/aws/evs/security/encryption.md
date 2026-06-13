@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, TLS for all VCF management APIs, AWS KMS integration, and in-transit encryption for vMotion and vSAN traffic.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -256,3 +258,8 @@ Set-VsanClusterConfiguration -VsanClusterConfiguration $vsanConfig \
 # Verify TLS version on vCenter
 openssl s_client -connect $VCENTER:443 </dev/null 2>/dev/null | grep -E "Protocol|Cipher"
 ```
+
+## See also
+
+- [Amazon EVS — Hardening](hardening/)
+- [Amazon EVS — Health Checks](../operations/health-checks/)

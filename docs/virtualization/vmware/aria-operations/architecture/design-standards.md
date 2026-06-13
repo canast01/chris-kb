@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Alert Policy Standards, Related Sections.
+
+*Applies to: Aria Operations 8.x*
 </div>
 
 ```text
@@ -207,3 +209,8 @@ Reports are distributed via email and archived in the shared drive capacity fold
 | Host Memory Balloon | 1% | 5% |
 | Datastore Capacity Used | 75% | 85% |
 | Datastore Latency (ms) | 10 | 20 |
+
+## See also
+
+- [Aria Operations — How It Works](how-it-works/)
+- [Aria Operations — Deploy](../deploy/)

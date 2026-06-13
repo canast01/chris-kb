@@ -328,3 +328,8 @@ Get-VsanClusterConfiguration -Cluster "VxRail-Cluster" |
 | Test recovery | Verify NKP backup is readable annually using a test vCenter instance |
 
 Store the NKP backup password and `.p12` file in separate vault entries. An attacker who obtains both can decrypt vSAN data if they also gain access to the encrypted disks.
+
+## See also
+
+- [VxRail — Hardening](hardening/)
+- [VxRail — Health Checks](../operations/health-checks/)

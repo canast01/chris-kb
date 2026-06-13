@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How vSAN classifies each object component's health — from the initial ABSENT state through DEGRADED and STALE to REBUILDING — and what each state means operationally for data protection and admin action.
+
+*Applies to: vSAN 7.x · 8.x*
 </div>
 
 ```text

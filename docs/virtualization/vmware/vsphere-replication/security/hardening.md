@@ -179,3 +179,9 @@ Configure alerting for RPO violations — do not rely solely on manual dashboard
 # Or use vRealize Operations: create alert rule for metric "vsphere.replication.rpm_status"
 # Alert when value != 0 (0=OK, 1=Warning, 2=Error)
 ```
+
+## See also
+
+- [vSphere Replication — Access Control](access-control/)
+- [vSphere Replication — Authentication](authentication/)
+- [vSphere Replication — Health Checks](../operations/health-checks/)

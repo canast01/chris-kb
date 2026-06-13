@@ -264,3 +264,8 @@ spec:
     - apiGroups: [""]
       kinds: ["Pod"]
 ```
+
+## See also
+
+- [Tanzu — Authentication](authentication/)
+- [Tanzu — Hardening](hardening/)

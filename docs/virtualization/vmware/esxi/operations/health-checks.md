@@ -273,6 +273,12 @@ esxcli software vib list | grep -v "VMware\|Broadcom\|Dell\|HPE\|Cisco"
 
 ---
 
+## See also
+
+- [ESXi — Common Issues](../troubleshooting/common-issues/)
+- [ESXi — Procedures](procedures/)
+- [ESXi CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

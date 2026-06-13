@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Component Overview, Connection Flow, Blast Extreme vs PCoIP, Session Broker Role, Security Server Deprecation and 1 more sections.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ## Component Overview
@@ -218,3 +220,9 @@ Desktop:  <naming-pattern>-{n}   (e.g., WIN10-{n} → WIN10-001, WIN10-002)
 ```
 
 The replica and parent VMs consume resources on the ESXi host and datastore — size golden image appropriately and plan for replica storage overhead (one replica per datastore per pool).
+
+## See also
+
+- [Horizon — Design Standards](design-standards/)
+- [Horizon — Deploy](../deploy/)
+- [VMware Horizon — Integrations](integrations/)

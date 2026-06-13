@@ -73,6 +73,11 @@ SRM operational scripts — PowerCLI and REST API automation for replication lag
 
 ---
 
+## See also
+
+- [SRM — CLI Reference](cli-reference/)
+- [SRM — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

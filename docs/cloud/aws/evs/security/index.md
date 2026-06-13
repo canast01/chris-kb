@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 EVS security controls: AWS IAM for cluster management, vSphere RBAC, NSX-T micro-segmentation, encryption at rest and in transit, and CIS hardening for VCF components.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text

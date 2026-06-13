@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Post-Upgrade Validation reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 Post-Upgrade Validation Sequence

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Replication Engine — ESXi Kernel Module, Data Flow, RPO Mechanics, VRA Role — vSphere Replication Appliance, VRS — vSphere Replication Server (Scale-Out) and 2 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 ```text
 ┌────────────────────── Virtualization Vmware Vsphere Replication — How It Works ───────────────────────┐
@@ -368,3 +370,9 @@ SRM requires:
 - VRA at both sites reachable and paired
 - VR extension registered in both source and target vCenter
 - All VMs in an SRM protection group must be actively replicating via VR (green status) before a recovery plan can execute
+
+## See also
+
+- [vSphere Replication — Design Standards](design-standards/)
+- [vSphere Replication — Deploy](../deploy/)
+- [vSphere Replication — Integrations](integrations/)

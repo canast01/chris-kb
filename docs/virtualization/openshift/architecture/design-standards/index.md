@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Node sizing guidelines, MachineSet design, storage class standards, network CIDR planning, and infrastructure node placement for production OpenShift clusters.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -319,3 +321,8 @@ oc get machine -n openshift-machine-api
 oc apply -f clusterautoscaler.yaml        # Global autoscaler config
 oc apply -f machineautoscaler.yaml        # References MachineSet + min/max replicas
 ```
+
+## See also
+
+- [OpenShift — How It Works](../how-it-works/)
+- [OpenShift — Deploy](../../deploy/)

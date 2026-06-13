@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EVS backup strategy: SDDC Manager configuration backup, vCenter VAMI backup, NSX-T config backup, VM workload backup options (Veeam, VADP, cloud-native), and restoration procedures. AWS manages host hardware; you manage the VMware data layer.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -335,6 +337,12 @@ Veeam → Home → Restore → VMware VMs → Restore from backup
 ```
 
 ---
+
+## See also
+
+- [Amazon EVS — Procedures](procedures/)
+- [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
+- [Amazon EVS — Health Checks](health-checks/)
 
 ## Verify
 

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VMware Cloud Foundation (VCF) is a full-stack SDDC platform. SDDC Manager orchestrates vSphere, vSAN, and NSX as a validated, lifecycle-managed unit across a Management Domain and one or more Workload Domains.
+
+*Applies to: VCF 4.x · 5.x*
 </div>
 
 ![VCF Domain Architecture](../../../../assets/vcf-architecture-overview.svg)

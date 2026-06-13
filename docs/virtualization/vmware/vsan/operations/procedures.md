@@ -135,6 +135,9 @@ esxcli vsan debug object list | grep -v healthy
 
 **Step 2 — Remove the failed disk group**
 
+!!! warning "All components on this disk group become absent immediately"
+    Removing a disk group takes all capacity disk components offline at once. If FTT=1 and another host already has a degraded object, removal will move objects into an **absent** state with no redundancy. Verify `Active resyncing components = 0` on all other hosts before proceeding, and ensure cluster FTT compliance allows the loss.
+
 Removing the cache SSD removes the entire group. vSAN will start rebuilding all affected components on other hosts once the group is removed.
 
 **From vCenter UI:**
@@ -1612,6 +1615,12 @@ watch -n 60 "esxcli vsan debug resync summary get"
 ```
 
 ---
+
+## See also
+
+- [vSAN — Health Checks](health-checks/)
+- [vSAN — Common Issues](../troubleshooting/common-issues/)
+- [vSAN Operations — CLI Reference](cli-reference/)
 
 ## Verify
 

@@ -163,3 +163,8 @@ C:\Windows\Temp\vmware-viewcomposer-ga-new-*
 ```text
 \\?\Volume{*}\   (all volumes — or specifically App Volumes mount GUIDs)
 ```
+
+## See also
+
+- [Horizon — How It Works](how-it-works/)
+- [Horizon — Deploy](../deploy/)

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, Core Internal Services and 3 more sections.
+
+*Applies to: Aria Operations 8.x*
 </div>
 
 ```text
@@ -226,3 +228,9 @@ Remote Collector: 2 vCPUs, 4 GB RAM per site.
 | 443 | TCP | Outbound | vCenter, NSX, cloud adapters |
 | 9543 | TCP | Cluster-internal | Inter-node data replication |
 | 10010 | TCP | Cluster-internal | GemFire distributed data grid |
+
+## See also
+
+- [Aria Operations — Standards](design-standards/)
+- [Aria Operations — Deploy](../deploy/)
+- [Aria Operations Integrations](integrations/)

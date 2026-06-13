@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering vCenter Integration, SRM Integration, Network Requirements, Cross-vCenter Replication, Multi-Target Replication (Fan-Out) and 1 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 ```text
 ┌────────────────────── Virtualization Vmware Vsphere Replication — Integrations ───────────────────────┐
@@ -270,3 +272,8 @@ Target datastore must be accessible (mounted) on at least one ESXi host in the t
 When replicating to vSAN at the target site, storage policies are NOT transferred with the replication. The replica VM at the target site uses the default vSAN storage policy (or the policy assigned at replication configuration time). After failover, review and apply the appropriate vSAN policy to the recovered VM.
 
 When replicating FROM vSAN (source), replication works normally — the hbr module tracks writes at the virtual disk level, independent of the vSAN distributed storage layer.
+
+## See also
+
+- [vSphere Replication — How It Works](how-it-works/)
+- [vSphere Replication — Deploy](../deploy/)

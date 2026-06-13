@@ -161,3 +161,9 @@ if (-not $global:DefaultVIServer.IsConnected) {
 | Disconnect after each session | `Disconnect-VIServer` in trap block |
 | Dedicated service accounts per role | vCenter RBAC — see access-control/ |
 | Audit log review scheduled | Monthly `Get-VIEvent` review |
+
+## See also
+
+- [PowerCLI — Access Control](access-control/)
+- [PowerCLI — Authentication](authentication/)
+- [PowerCLI — Health Checks](../operations/health-checks/)

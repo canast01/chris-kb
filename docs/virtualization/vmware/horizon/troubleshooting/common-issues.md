@@ -219,6 +219,12 @@ graph TD
 
 ---
 
+## See also
+
+- [Horizon — Diagnostics](diagnostics/)
+- [Horizon — Escalation](escalation/)
+- [VMware Horizon — Health Checks](../operations/health-checks/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

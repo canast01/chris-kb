@@ -108,3 +108,8 @@ Restart-Service "VMware Horizon View Connection Server"
 Group Policy → Computer Configuration → VMware Horizon Agent
   Drive Redirection: Disabled
 ```
+
+## See also
+
+- [Horizon — Hardening](hardening/)
+- [VMware Horizon — Health Checks](../operations/health-checks/)

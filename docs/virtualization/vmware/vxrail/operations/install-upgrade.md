@@ -276,6 +276,12 @@ Post-upgrade checklist:
 
 ---
 
+## See also
+
+- [VxRail — Health Checks](health-checks/)
+- [VxRail — Common Issues](../troubleshooting/common-issues/)
+- [VxRail — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

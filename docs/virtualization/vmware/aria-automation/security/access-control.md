@@ -156,3 +156,8 @@ Service accounts used in event broker subscriptions and ABX actions should have 
 | `svc-vra-api` | Member (specific project) | Automation scripts that query deployments |
 | `svc-vra-pipeline` | Owner (specific project) | CI/CD pipeline deployments |
 | `svc-vra-monitor` | Viewer (all projects) | Monitoring and audit reporting |
+
+## See also
+
+- [Aria Automation — Authentication](authentication/)
+- [Aria Automation — Hardening](hardening/)

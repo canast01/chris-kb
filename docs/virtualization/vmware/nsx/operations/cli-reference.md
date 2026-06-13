@@ -561,6 +561,12 @@ get backup history
 
 ---
 
+## See also
+
+- [NSX — Standard Procedures](procedures/)
+- [NSX — Scripts](scripts/)
+- [NSX — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

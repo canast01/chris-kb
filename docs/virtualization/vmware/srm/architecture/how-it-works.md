@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 How It Works (VMware Platform) reference covering Site Topology, Test Failover Workflow, Planned Migration, Disaster Recovery Failover, Failback Process and 2 more sections.
+
+*Applies to: SRM 8.x*
 </div>
 
 ## Site Topology
@@ -362,3 +364,9 @@ SRAs must be installed on both sites and must match the same major version.
 - Consistency: crash-consistent by default; application-consistent with quiescing enabled
 - Bandwidth: compressed and deduplicated; can be throttled per-VM
 - No SRA required — replication engine is embedded in the vSphere Replication appliance (one per site)
+
+## See also
+
+- [SRM — Design Standards](design-standards/)
+- [SRM — Deploy](../deploy/)
+- [SRM — Integrations](integrations/)

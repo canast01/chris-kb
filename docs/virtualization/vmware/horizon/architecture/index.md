@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VMware Horizon delivers virtual desktops and published applications through Connection Servers, Unified Access Gateways, and desktop pools backed by vSphere.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ![Horizon Architecture](../../../../assets/horizon-architecture-overview.svg)

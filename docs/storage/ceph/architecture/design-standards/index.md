@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network separation (public vs cluster), CRUSH hierarchy for fault domains, and capacity planning rules.
+
+*Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
 ```text
@@ -295,3 +297,8 @@ ceph orch osd rm osd.12 --replace
 ceph orch status
 ceph orch ls
 ```
+
+## See also
+
+- [Ceph — How It Works](../how-it-works/)
+- [Ceph — Deploy](../../deploy/)

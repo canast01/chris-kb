@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 OpenShift troubleshooting: pod failures, node issues, cluster operator problems, must-gather collection, and Red Hat support escalation.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text

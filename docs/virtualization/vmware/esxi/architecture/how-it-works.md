@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Networking Architecture, VMkernel Adapters (vmk), Storage Architecture, CPU and Memory Scheduling, HA and DRS and 3 more sections.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 VMkernel Internals — Resource Stack
@@ -537,3 +539,9 @@ Get-VMHost | ForEach-Object {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## See also
+
+- [ESXi — Design Standards](design-standards/)
+- [ESXi Host Deployment](../deploy/)
+- [ESXi — Integrations](integrations/)

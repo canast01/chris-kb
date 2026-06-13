@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances inside your VPC. The cluster nodes are physical hosts you don't share with other tenants; VMware components run natively, not in VMs.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -188,3 +190,9 @@ You manage:
 - VM workloads
 - NSX-T policies
 - vSAN storage policies
+
+## See also
+
+- [Amazon EVS — Design Standards](design-standards/)
+- [Amazon EVS — Deploy](../deploy/)
+- [Amazon EVS — Integrations](integrations/)

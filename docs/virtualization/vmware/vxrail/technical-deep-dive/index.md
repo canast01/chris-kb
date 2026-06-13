@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Technical Deep Dive reference covering Overview, Platform Role, Core Components, Main Dependencies, Ports and Protocols and 7 more sections.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 ```text
 ┌────────────────────────────── Virtualization Vxrail Technical Deep Dive ──────────────────────────────┐

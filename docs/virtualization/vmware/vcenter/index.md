@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware vCenter Server (VCSA). Covers architecture, cluster management, lifecycle, security, and troubleshooting for the vSphere management plane.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ```text

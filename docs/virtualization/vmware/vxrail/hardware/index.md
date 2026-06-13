@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VxRail hardware notes for nodes, disks, NICs, power, cooling, iDRAC, and firmware inventory.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 ```text

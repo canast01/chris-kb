@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for OpenShift Container Platform. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text

@@ -385,3 +385,9 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 | Host profiles | After any change | Versioned | SDDC Manager |
 
 > **Test restores:** Run a full restore simulation quarterly in an isolated environment. An untested backup is not a backup.
+
+## See also
+
+- [VCF — Procedures](procedures/)
+- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+- [VCF — Health Checks](health-checks/)

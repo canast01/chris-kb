@@ -110,6 +110,9 @@ A single KMS server is a critical single point of failure. Always configure:
 
 ---
 
+!!! danger "Enabling encryption re-encrypts all existing data"
+    Once enabled, vSAN re-encrypts every object on the datastore. This is a long-running background operation (hours to days on large clusters) with significant I/O overhead. It **cannot be cancelled** once started. Ensure vSAN capacity is below 70%, KMS is redundant, and a maintenance window is scheduled before proceeding.
+
 ## Enabling Data-at-Rest Encryption
 
 **Prerequisites:**
@@ -271,3 +274,8 @@ nc -zv kms.example.com 5696
 # Check encryption-related errors in VMkernel log
 grep -i "encrypt\|kmip\|kms" /var/log/vmkernel.log | tail -50
 ```
+
+## See also
+
+- [vSAN — Hardening](hardening/)
+- [vSAN — Health Checks](../operations/health-checks/)

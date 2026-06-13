@@ -85,3 +85,8 @@ Get-Cluster "ClusterName" | Get-VMHost | ForEach-Object {
   Restart-VMHostService -VMHost $_ -Key "syslog" -Confirm:$false
 }
 ```
+
+## See also
+
+- [VMware Cloud Foundation — How It Works](how-it-works/)
+- [VMware Cloud Foundation — Deploy](../deploy/)

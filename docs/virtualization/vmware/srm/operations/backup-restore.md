@@ -281,6 +281,12 @@ foreach ($vm in $vms) {
 
 ---
 
+## See also
+
+- [SRM — Procedures](procedures/)
+- [VMware SRM — Common Issues](../troubleshooting/common-issues/)
+- [SRM — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

@@ -341,3 +341,8 @@ oc patch secret kube-apiserver-to-kubelet-signer \
 # This triggers the cert operator to issue new certs; monitor with:
 oc get co kube-apiserver -w
 ```
+
+## See also
+
+- [OpenShift — Hardening](../hardening/)
+- [OpenShift — Health Checks](../../operations/health-checks/)

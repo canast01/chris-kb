@@ -76,6 +76,11 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
 
 ---
 
+## See also
+
+- [VMware SRM — Common Issues](common-issues/)
+- [SRM — Escalation](escalation/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

@@ -295,3 +295,8 @@ ceph auth get-key client.myapp
 # Use in environment variable for containerised workloads
 export CEPH_KEY=$(ceph auth get-key client.myapp)
 ```
+
+## See also
+
+- [Ceph — Access Control](../access-control/)
+- [Ceph — Hardening](../hardening/)

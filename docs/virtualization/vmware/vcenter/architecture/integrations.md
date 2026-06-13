@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering Veeam Backup & Replication, Identity and Authentication Integration, Monitoring Integration, NSX Integration.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ```text
@@ -119,3 +121,8 @@ NSX registers vCenter as a **Compute Manager**. This enables:
 Register from NSX Manager: **System → Fabric → Compute Managers → Add vCenter**
 
 Permissions required: vCenter account with `Host → Configuration` and `Network` privileges.
+
+## See also
+
+- [vCenter — How It Works](how-it-works/)
+- [vCenter — Deploy](../deploy/)

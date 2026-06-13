@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 ESXi is VMware's Type-1 hypervisor. It is deployed in standalone, standard cluster, vSAN cluster, or stretched cluster configurations depending on resilience, storage, and scale requirements.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ![ESXi Cluster Deployment Models](../../../../assets/esxi-architecture-overview.svg)

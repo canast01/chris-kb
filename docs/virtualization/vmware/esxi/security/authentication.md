@@ -276,3 +276,8 @@ logger -t esxi-auth-test "Test auth log entry $(date)"
 
 - [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
 - [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements
+
+## See also
+
+- [ESXi Access Control](access-control/)
+- [ESXi — Hardening](hardening/)

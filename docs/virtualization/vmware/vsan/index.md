@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware vSAN. Covers storage policies, disk groups, capacity management, resync operations, health monitoring, and troubleshooting for software-defined storage in vSphere clusters.
+
+*Applies to: vSAN 7.x · 8.x*
 </div>
 
 ```text

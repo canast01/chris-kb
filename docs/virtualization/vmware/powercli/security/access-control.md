@@ -145,3 +145,8 @@ $vm = Get-VM -Name "prod-web01"
 $perms = Get-VIPermission | Where-Object { $_.Entity.Id -eq $vm.Id -or $_.Propagate }
 $perms | Select-Object Principal, Role, Entity, Propagate | Format-Table -AutoSize
 ```
+
+## See also
+
+- [PowerCLI — Authentication](authentication/)
+- [PowerCLI — Hardening](hardening/)

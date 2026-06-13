@@ -450,6 +450,12 @@ curl -sk https://vra-siteB.example.local/api/rest/vr/health
 
 ---
 
+## See also
+
+- [vSphere Replication — How It Works](../architecture/how-it-works/)
+- [vSphere Replication — Health Checks](../operations/health-checks/)
+- [vSphere Replication — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

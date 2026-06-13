@@ -260,6 +260,12 @@ systemctl stop ceph-mon@<id>
 
 Snapshots are cheap (copy-on-write) and do not require cluster downtime. Full image exports consume storage equal to the image size; use `export-diff` for incremental backups after the first full export.
 
+## See also
+
+- [Ceph — Procedures](../procedures/)
+- [Ceph — Common Issues](../../troubleshooting/common-issues/)
+- [Ceph — Health Checks](../health-checks/)
+
 ## Verify Backup Integrity
 
 ```bash

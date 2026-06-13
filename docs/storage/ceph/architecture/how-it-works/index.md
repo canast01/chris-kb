@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Ceph's RADOS layer stores all data as objects. Clients calculate data placement directly via CRUSH without a central metadata server — enabling linear scale with no bottlenecks.
+
+*Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
 ```text
@@ -285,3 +287,9 @@ ceph quorum_status --format json-pretty
 # Live I/O stats
 ceph -w                      # watch real-time cluster events
 ```
+
+## See also
+
+- [Ceph — Design Standards](../design-standards/)
+- [Ceph — Deploy](../../deploy/)
+- [Ceph — Integrations](../integrations/)

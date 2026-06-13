@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePullBackOff, node NotReady, Pending pods, OOMKilled, etcd high latency, DNS failures, and degraded cluster operators.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -334,6 +336,12 @@ oc rollout restart deployment/<operator-pod> -n openshift-<operator-ns>
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Diagnostics](../diagnostics/)
+- [OpenShift — Escalation](../escalation/)
+- [OpenShift — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

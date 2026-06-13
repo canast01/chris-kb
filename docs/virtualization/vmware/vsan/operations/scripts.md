@@ -1404,6 +1404,11 @@ Resync complete.
 
 ---
 
+## See also
+
+- [vSAN Operations — CLI Reference](cli-reference/)
+- [vSAN — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

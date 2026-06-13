@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS native services (S3, Route 53, IAM), and cross-account VPC connectivity via Transit Gateway.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -322,3 +324,8 @@ aws cloudwatch get-metric-statistics \
   --start-time $(date -u -v-1H +%Y-%m-%dT%H:%M:%SZ) \
   --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ)
 ```
+
+## See also
+
+- [Amazon EVS — How It Works](how-it-works/)
+- [Amazon EVS — Deploy](../deploy/)

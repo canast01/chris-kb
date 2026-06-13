@@ -231,6 +231,12 @@ Get-HVLocalSession  # should return sessions from all CS nodes
 
 ---
 
+## See also
+
+- [VMware Horizon — Health Checks](health-checks/)
+- [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
+- [Horizon — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

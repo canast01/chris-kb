@@ -351,6 +351,12 @@ Document test results and any issues found. Track trend of test durations — in
 
 ---
 
+## See also
+
+- [VMware SRM — Common Issues](../troubleshooting/common-issues/)
+- [SRM — Procedures](procedures/)
+- [SRM — CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

@@ -92,3 +92,9 @@ Hardening reference covering Hardening Checklist, Network Access Controls.
 | SDDC Manager | NSX Manager IPs | TCP 443 | NSX API |
 | SDDC Manager | ESXi management IPs | TCP 443, 902 | Host management |
 | SDDC Manager | SIEM IP | UDP/TCP 514 or TLS 6514 | Syslog |
+
+## See also
+
+- [VMware Cloud Foundation — Access Control](access-control/)
+- [VMware Cloud Foundation — Authentication](authentication/)
+- [VCF — Health Checks](../operations/health-checks/)

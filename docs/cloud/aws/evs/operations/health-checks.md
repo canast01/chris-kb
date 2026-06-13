@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EVS health check routine: cluster and host status via AWS CLI, vSAN and vCenter via PowerCLI, NSX-T component health, HCX service mesh status, and capacity review.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -120,6 +122,12 @@ curl -sk -u "admin:$NSX_PASSWORD" \
 ```
 
 ---
+
+## See also
+
+- [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
+- [Amazon EVS — Procedures](procedures/)
+- [Amazon EVS — CLI Reference](cli-reference/)
 
 ## Verify
 

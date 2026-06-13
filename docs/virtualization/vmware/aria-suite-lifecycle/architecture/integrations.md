@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Integrations reference covering vCenter Server, NSX-T Integration (Optional), SMTP Configuration, NFS Binary Repository, Proxy / Offline Depot and 2 more sections.
+
+*Applies to: Aria Suite Lifecycle 8.x*
 </div>
 
   LCM Integration Map
@@ -114,3 +116,8 @@ AD integration is handled through Workspace ONE Access, not LCM directly:
 After LCM deploys Aria Automation:
 1. LCM → My Services → Aria Automation → Connect to vCenter
 2. Configure cloud accounts in Aria Automation for each vCenter under management
+
+## See also
+
+- [Aria Suite Lifecycle — How It Works](how-it-works/)
+- [Aria Suite Lifecycle — Deploy](../deploy/)

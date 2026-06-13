@@ -173,6 +173,12 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 
 ---
 
+## See also
+
+- [vSphere Replication — Procedures](procedures/)
+- [vSphere Replication — Scripts](scripts/)
+- [vSphere Replication — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EVS operational procedures: adding and removing hosts, host replacement, vSAN rebalance, NSX-T segment and edge cluster management, VCF password rotation, vSAN storage policy updates, and HCX migration workflows.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -362,6 +364,12 @@ Get-VsanResyncDashboard -Cluster $cluster | Select BytesToSync, ActiveTasks, Rec
 ```
 
 ---
+
+## See also
+
+- [Amazon EVS — Health Checks](health-checks/)
+- [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
+- [Amazon EVS — CLI Reference](cli-reference/)
 
 ## Verify
 

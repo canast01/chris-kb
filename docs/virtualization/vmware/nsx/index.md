@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware NSX. Covers segments, gateways, distributed firewall, routing, edge nodes, and overlay networking for software-defined network and security across vSphere environments.
+
+*Applies to: NSX-T 3.x · NSX 4.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Technical and operational reference for VMware Aria Operations for Logs. Covers log ingestion, querying, alerting, dashboards, and integration for VMware infrastructure log management and analysis.
+
+*Applies to: Aria Operations for Logs 8.x*
 </div>
 
 ```text

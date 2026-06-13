@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Kubernetes RBAC in OpenShift: roles, cluster roles, role bindings, service accounts, SCCs, namespace isolation, project request templates, and API audit logging.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -355,3 +357,8 @@ oc get clusterrolebindings -o json | \
 oc get rolebindings -A -o json | \
   jq '.items[] | select(.subjects[]?.name=="alice") | {ns: .metadata.namespace, role: .roleRef.name}'
 ```
+
+## See also
+
+- [OpenShift — Authentication](../authentication/)
+- [OpenShift — Hardening](../hardening/)

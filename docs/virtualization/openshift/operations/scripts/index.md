@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Operational scripts: daily health snapshot, CSR auto-approval, node drain wrapper, etcd backup automation, pod restart loop detection, and namespace resource summary.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -290,6 +292,11 @@ exit $FAIL
 ```
 
 ---
+
+## See also
+
+- [OpenShift — CLI Reference](../cli-reference/)
+- [OpenShift — Procedures](../procedures/)
 
 ## Verify
 

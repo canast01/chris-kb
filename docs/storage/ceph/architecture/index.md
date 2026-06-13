@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Ceph architecture: RADOS object store, daemon roles (OSD/MON/MGR/MDS), CRUSH map for data placement, replication vs erasure coding pools, and client access protocols.
+
+*Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
 ![Ceph Architecture Overview](../../../assets/ceph-architecture-overview.svg)

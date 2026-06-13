@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI integrates with the full VMware product stack. Each product family has its own module. Most require a separate Connect- call in addition to Connect-VIServer.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text
@@ -152,3 +154,8 @@ jobs:
           if ($hosts) { throw "Disconnected hosts: $($hosts.Name -join ', ')" }
           Disconnect-VIServer -Confirm:$false
 ```
+
+## See also
+
+- [PowerCLI — How It Works](how-it-works/)
+- [PowerCLI — Deploy](../deploy/)

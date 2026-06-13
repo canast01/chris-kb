@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Design Standards reference covering Naming Conventions, Cluster Configuration Baseline, vSAN Cluster Baseline (where applicable), vCenter Configuration Checklist, VM Template Standards and 6 more sections.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ## Naming Conventions
@@ -167,3 +169,8 @@ vCPU and memory allocations must be sized to the approved tier:
 | Custom | Requires platform team sign-off | — |
 
 CPU and memory hot-add must be enabled on all VMs to allow online scaling without a maintenance window. Confirm in VM settings: `Edit Settings > VM Options > Memory/CPU Hot Plug`.
+
+## See also
+
+- [vCenter — How It Works](how-it-works/)
+- [vCenter — Deploy](../deploy/)

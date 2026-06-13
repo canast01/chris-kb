@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Recommended reading order for VMware PowerCLI. Follow these stages in order to build a complete mental model before working with it in production.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

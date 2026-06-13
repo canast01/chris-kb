@@ -153,6 +153,12 @@ Measure-Command { Import-Module VMware.PowerCLI } | Select-Object TotalSeconds
 
 ---
 
+## See also
+
+- [PowerCLI — Health Checks](health-checks/)
+- [PowerCLI — Common Issues](../troubleshooting/common-issues/)
+- [PowerCLI — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

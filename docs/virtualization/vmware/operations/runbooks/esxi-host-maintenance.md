@@ -53,6 +53,9 @@ tags:
 
 ---
 
+!!! warning "Host enters maintenance mode — VMs evacuate and the host reboots"
+    Placing a host in maintenance mode triggers DRS to vMotion all VMs to other cluster members. Verify the cluster has sufficient CPU and memory headroom to absorb the workload before proceeding. If HA admission control is tight, maintenance mode will be blocked until you increase headroom or temporarily adjust the HA policy.
+
 ## Run This Routine
 
 1. **Check cluster capacity** — confirm the remaining hosts can absorb the host's workload:

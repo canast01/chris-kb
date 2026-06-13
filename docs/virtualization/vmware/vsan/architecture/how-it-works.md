@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Storage Architecture Modes, Objects and Components, Write Path, Read Path, Core Components and 1 more sections.
+
+*Applies to: vSAN 7.x · 8.x*
 </div>
 
 ## Storage Architecture Modes
@@ -240,3 +242,9 @@ esxcli vsan debug object list | grep -E "Object|IOPS"
 **When to set limits:** Noisy-neighbour workloads (backups, bulk transfers) degrading production VMs. Set a low IOPS limit on backup VMs; leave production VMs unlimited or set a floor via shares.
 
 ---
+
+## See also
+
+- [vSAN — Design Standards](design-standards/)
+- [vSAN — Deploy](../deploy/)
+- [vSAN — Integrations](integrations/)

@@ -333,6 +333,12 @@ foreach ($perm in $permData) {
 
 ---
 
+## See also
+
+- [PowerCLI — Procedures](procedures/)
+- [PowerCLI — Common Issues](../troubleshooting/common-issues/)
+- [PowerCLI — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

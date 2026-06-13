@@ -188,6 +188,12 @@ nc -vz uag.public.corp.com 443
 
 ---
 
+## See also
+
+- [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
+- [Horizon — Procedures](procedures/)
+- [Horizon — CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

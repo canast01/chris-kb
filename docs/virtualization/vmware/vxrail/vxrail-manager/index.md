@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Manager notes for service health, lifecycle jobs, support bundles, connectivity, certificates, and logs.
+
+*Applies to: VxRail 7.x · 8.x*
 </div>
 
 ```text

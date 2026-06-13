@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Control plane components, etcd quorum, API server request flow, scheduler decisions, and how the operator pattern manages cluster resources.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -285,3 +287,9 @@ oc describe node <node-name> | grep -A10 Conditions
 oc label node <infra-node> node-role.kubernetes.io/infra=""
 oc adm taint node <infra-node> node-role.kubernetes.io/infra=reserved:NoSchedule
 ```
+
+## See also
+
+- [OpenShift — Design Standards](../design-standards/)
+- [OpenShift — Deploy](../../deploy/)
+- [OpenShift — Integrations](../integrations/)

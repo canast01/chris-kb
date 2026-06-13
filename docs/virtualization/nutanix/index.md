@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 Nutanix HCI platform — AOS, AHV, Prism Central, Files, Objects, Flow, and Calm. Covers cluster architecture, deployment, day-2 operations, security hardening, and troubleshooting.
+
+*Applies to: AOS 6.x · AHV*
 </div>
 
 <div class="kb-grid kb-grid-3">

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Ceph integrations: Kubernetes CSI (Rook-Ceph), OpenShift ODF, OpenStack Cinder/Glance/Swift, Prometheus MGR module, and NFS/Ganesha CephFS export.
+
+*Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
 
 ```text
@@ -340,3 +342,8 @@ ceph orch ps | grep nfs
 | Export path | `/export/<name>` | Maps to CephFS path; sub-path exports supported |
 | Auth | `sys` (default) or Kerberos | Kerberos requires `sec=krb5` mount option |
 | HA | RAFT quorum (built-in) | Ganesha grace period handles failover transparently |
+
+## See also
+
+- [Ceph — How It Works](../how-it-works/)
+- [Ceph — Deploy](../../deploy/)

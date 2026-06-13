@@ -462,6 +462,11 @@ echo === Diagnostic check complete ===
 
 ---
 
+## See also
+
+- [ESXi CLI Reference](cli-reference/)
+- [ESXi — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

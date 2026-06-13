@@ -147,6 +147,11 @@ echo "Export complete: $EXPORT_DIR"
 
 ---
 
+## See also
+
+- [Tanzu — CLI Reference](cli-reference/)
+- [Tanzu — Procedures](procedures/)
+
 ## Verify Harbor Vulnerability Scanning
 
 ```python

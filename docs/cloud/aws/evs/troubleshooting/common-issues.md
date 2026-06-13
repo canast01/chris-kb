@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 Troubleshooting guide for EVS failures: host stuck in non-CREATED state, vSAN degraded health, HCX service mesh down, NSX-T routing failures, and API errors.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -342,6 +344,12 @@ aws service-quotas request-service-quota-increase \
 ```
 
 ---
+
+## See also
+
+- [Amazon EVS — Diagnostics](diagnostics/)
+- [Amazon EVS — Escalation](escalation/)
+- [Amazon EVS — Health Checks](../operations/health-checks/)
 
 ## Verify resolution
 

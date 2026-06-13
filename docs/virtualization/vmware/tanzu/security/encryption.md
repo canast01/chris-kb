@@ -250,3 +250,8 @@ kubectl create clusterrole dev-no-secrets \
   --resource=deployments,services,configmaps,pods \
   --dry-run=client -o yaml
 ```
+
+## See also
+
+- [Tanzu — Hardening](hardening/)
+- [Tanzu — Health Checks](../operations/health-checks/)

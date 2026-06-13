@@ -316,3 +316,8 @@ The vSAN VMkernel network must not be reachable from VM subnets. vSAN traffic ca
 | Management VMkernel | Restricted to admin subnets for SSH and hostd access |
 
 Verify the vSAN VLAN is not present as a trunked VLAN on any VM-facing port group on the vDS or standard switches.
+
+## See also
+
+- [VxRail — Authentication](authentication/)
+- [VxRail — Hardening](hardening/)

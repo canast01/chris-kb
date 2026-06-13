@@ -261,6 +261,11 @@ When filing any Ceph support case, always include the following regardless of se
 
 ---
 
+## See also
+
+- [Ceph — Diagnostics](../diagnostics/)
+- [Ceph — Common Issues](../common-issues/)
+
 ## Verify resolution
 
 - Confirm the original symptom no longer occurs

@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token management, certificate auth, session revocation, and disabling the default kubeadmin account after production setup.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -318,3 +320,8 @@ oc get identity
 # List OCP user objects (auto-created on first login)
 oc get users
 ```
+
+## See also
+
+- [OpenShift — Access Control](../access-control/)
+- [OpenShift — Hardening](../hardening/)

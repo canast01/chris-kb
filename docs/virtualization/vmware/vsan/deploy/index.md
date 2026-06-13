@@ -548,6 +548,12 @@ Store the baseline numbers in a runbook. They become the reference for future tr
 
 ---
 
+## See also
+
+- [vSAN — How It Works](../architecture/how-it-works/)
+- [vSAN — Health Checks](../operations/health-checks/)
+- [vSAN — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **Skyline Health:** Cluster → Monitor → vSAN → Skyline Health — all checks green

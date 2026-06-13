@@ -602,6 +602,12 @@ Regular testing cadence recommendation: full test every 90 days, partial validat
 
 ---
 
+## See also
+
+- [SRM — How It Works (VMware Platform)](../architecture/how-it-works/)
+- [SRM — Health Checks](../operations/health-checks/)
+- [VMware SRM — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

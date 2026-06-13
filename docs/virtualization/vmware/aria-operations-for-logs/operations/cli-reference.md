@@ -134,6 +134,12 @@ curl -k -X GET https://<li-fqdn>/api/v1/agents \
 
 ---
 
+## See also
+
+- [Aria Ops for Logs — Procedures](procedures/)
+- [Aria Operations for Logs — Scripts Reference](scripts/)
+- [Aria Operations for Logs — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

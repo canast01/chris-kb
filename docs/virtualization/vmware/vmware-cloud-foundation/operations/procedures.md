@@ -578,6 +578,12 @@ sudo /opt/vmware/sddc-support/sos --health-check --domain-name sfo-m01
 
 ---
 
+## See also
+
+- [VCF — Health Checks](health-checks/)
+- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+- [VCF Operations — CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

@@ -484,6 +484,12 @@ esxcli network firewall ruleset set --enabled true --ruleset-id sshServer
 
 ---
 
+## See also
+
+- [ESXi — Procedures](procedures/)
+- [ESXi — Scripts](scripts/)
+- [ESXi — Health Checks](health-checks/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

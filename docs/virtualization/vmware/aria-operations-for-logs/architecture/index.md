@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Log analytics platform collecting syslog and LI Agent data from VMware infrastructure. Indexes and correlates logs in a Cassandra-backed hot tier with optional NFS archiving; provides real-time search, alerting, and bidirectional launch-in-context with Aria Operations.
+
+*Applies to: Aria Operations for Logs 8.x*
 </div>
 
 ![Aria Operations for Logs Cluster Architecture](../../../../assets/aria-operations-for-logs-architecture-overview.svg)

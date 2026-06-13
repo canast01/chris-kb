@@ -200,6 +200,11 @@ if ($alerts.Count -gt 0) {
 
 ---
 
+## See also
+
+- [vSphere Replication — CLI Reference](cli-reference/)
+- [vSphere Replication — Procedures](procedures/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

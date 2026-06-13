@@ -147,3 +147,8 @@ The ESXi replication service (hbrsvc) authenticates to the target VRA to establi
 ## Related Reference
 
 - [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements
+
+## See also
+
+- [vSphere Replication — Access Control](access-control/)
+- [vSphere Replication — Hardening](hardening/)

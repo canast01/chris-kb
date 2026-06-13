@@ -193,6 +193,11 @@ Low frame rate → check vGPU allocation, ESXi CPU contention, or display protoc
 
 ---
 
+## See also
+
+- [VMware Horizon — Common Issues](common-issues/)
+- [Horizon — Escalation](escalation/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

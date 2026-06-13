@@ -6,6 +6,8 @@ tags:
 
 <div class="kb-summary">
 oc command reference: resource management, log collection, exec, adm commands, debugging, and context management. oc extends kubectl with OpenShift-specific resources and shortcuts.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -314,6 +316,12 @@ alias oc-csr='oc get csr | grep Pending'
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Procedures](../procedures/)
+- [OpenShift — Scripts](../scripts/)
+- [OpenShift — Health Checks](../health-checks/)
 
 ## Verify
 

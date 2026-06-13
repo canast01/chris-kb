@@ -164,3 +164,9 @@ For automated monitoring, configure Events Database (SQL Server) and query it wi
 | Drive mapping disabled | GPO audit |
 | CS admin UI restricted to mgmt VLAN | Test: access `https://horizon-cs01` from desktop VLAN |
 | Events DB configured | Monitor → Events: confirm long history available |
+
+## See also
+
+- [Horizon — Access Control](access-control/)
+- [Horizon — Authentication](authentication/)
+- [VMware Horizon — Health Checks](../operations/health-checks/)

@@ -469,3 +469,8 @@ VSPHERE_CONTROL_PLANE_ENDPOINT: 10.10.10.30  # static VIP (via NSX LB or keepali
 # CAPI KubeadmControlPlane sets MaxSurge=1, MaxUnavailable=0 for prod plan
 # CAPV places VMs in a vSphere VM/Host Group per cluster for anti-affinity
 ```
+
+## See also
+
+- [Tanzu — How It Works](how-it-works/)
+- [Tanzu — Deploy](../deploy/)

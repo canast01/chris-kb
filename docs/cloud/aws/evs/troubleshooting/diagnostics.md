@@ -9,6 +9,8 @@ search:
 
 <div class="kb-summary">
 EVS diagnostic data collection: AWS CloudTrail, VPC Flow Logs, NSX-T support bundle, vSAN HCL check, HCX log bundle, and per-component log locations.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -311,6 +313,11 @@ After confirming layers 1-3 are healthy, investigate application-layer connectiv
 | AWS EVS | CloudTrail + CloudWatch | AWS console or CLI |
 
 ---
+
+## See also
+
+- [Amazon EVS — Common Issues](common-issues/)
+- [Amazon EVS — Escalation](escalation/)
 
 ## Verify resolution
 

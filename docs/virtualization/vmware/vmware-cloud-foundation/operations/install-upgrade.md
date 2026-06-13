@@ -116,6 +116,12 @@ curl -sk -u admin:<password> \
   https://localhost/v1/system/inventory/components \
   | python3 -m json.tool
 
+## See also
+
+- [VCF — Health Checks](health-checks/)
+- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+- [VCF — Procedures](procedures/)
+
 ## Verify NSX version compatibility
 curl -sk -u admin:<password> \
   https://localhost/v1/nsxt-clusters \

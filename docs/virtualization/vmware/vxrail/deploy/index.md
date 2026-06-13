@@ -437,6 +437,12 @@ foreach ($h in Get-VMHost -Location (Get-Cluster "VxRail-Cluster")) {
 
 ---
 
+## See also
+
+- [VxRail — How It Works (VMware Platform)](../architecture/how-it-works/)
+- [VxRail — Health Checks](../operations/health-checks/)
+- [VxRail — Common Issues](../troubleshooting/common-issues/)
+
 ## Verify
 
 - **vSphere Client:** confirm the component is visible and shows a healthy status

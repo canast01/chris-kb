@@ -145,3 +145,8 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 - Restrict local admin use — prefer AD group-based RBAC for day-to-day access
 - Store the admin credential in a secrets vault (CyberArk, HashiCorp Vault)
 - Review local accounts monthly: **Administration → Access Control → User Accounts** — remove any accounts that are no longer needed
+
+## See also
+
+- [Aria Operations — Authentication](authentication/)
+- [Aria Operations Security Hardening](hardening/)

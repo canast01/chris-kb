@@ -114,6 +114,11 @@ Before opening an SR, search the Broadcom knowledge base for known issues:
 
 ---
 
+## See also
+
+- [Aria Suite Lifecycle — Diagnostics](diagnostics/)
+- [Aria Suite Lifecycle — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

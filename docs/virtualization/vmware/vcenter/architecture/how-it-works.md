@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 How It Works reference covering Deployment Model, Core Services, Main Dependencies, vCenter HA (VCHA), Service Startup Order and 7 more sections.
+
+*Applies to: vSphere 7.x · 8.x*
 </div>
 
 ## Deployment Model
@@ -459,3 +461,9 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## See also
+
+- [vCenter — Design Standards](design-standards/)
+- [vCenter — Deploy](../deploy/)
+- [vCenter — Integrations](integrations/)

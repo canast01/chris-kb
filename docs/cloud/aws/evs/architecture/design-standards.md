@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requirements, and VPC design rules for production EVS deployments.
+
+*Applies to: Amazon EVS*
 </div>
 
 ```text
@@ -192,3 +194,8 @@ Use Direct Connect dedicated connection (1 Gbps or 10 Gbps) for production. VPN 
 - **vSAN slack**: keep ≥ 30% free capacity to allow host replacement without policy downgrade
 - **NSX Edge sizing**: for high-throughput workloads use dedicated Edge cluster (separate hosts); don't co-locate Edge VMs on compute hosts
 - **DNS**: create Route 53 private hosted zone or use on-premises DNS reachable via Direct Connect for VCF component names
+
+## See also
+
+- [Amazon EVS — How It Works](how-it-works/)
+- [Amazon EVS — Deploy](../deploy/)

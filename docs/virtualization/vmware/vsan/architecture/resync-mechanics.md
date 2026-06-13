@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives resync throughput and duration, and the capacity headroom requirement that makes rebuilds possible.
+
+*Applies to: vSAN 7.x · 8.x*
 </div>
 
 ```text

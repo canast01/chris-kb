@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Analytics cluster for vSphere performance, capacity, and compliance monitoring. Adapters collect metrics from vCenter, NSX, and storage; remote collectors extend reach into remote sites and DMZs without direct cluster connectivity.
+
+*Applies to: Aria Operations 8.x*
 </div>
 
 ![Aria Operations Cluster Architecture](../../../../assets/aria-operations-architecture-overview.svg)

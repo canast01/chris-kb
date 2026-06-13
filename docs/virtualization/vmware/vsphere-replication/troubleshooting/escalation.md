@@ -126,6 +126,11 @@ If using SRM to manage VR-based protection groups:
 
 ---
 
+## See also
+
+- [vSphere Replication — Diagnostics](diagnostics/)
+- [vSphere Replication — Common Issues](common-issues/)
+
 ## Verify resolution
 
 - **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active

@@ -146,3 +146,8 @@ Horizon Console → Monitor → Events
 ```
 
 For long-term audit storage, configure an Events database (SQL Server) during Connection Server setup. The embedded H2 database retains only limited history.
+
+## See also
+
+- [Horizon — Authentication](authentication/)
+- [Horizon — Hardening](hardening/)

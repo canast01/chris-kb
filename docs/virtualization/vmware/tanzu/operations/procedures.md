@@ -486,6 +486,12 @@ kubectl get pvc app-data -n app-namespace
 
 ---
 
+## See also
+
+- [Tanzu — Health Checks](health-checks/)
+- [Virtualization Vmware Tanzu — Common Issues](../troubleshooting/common-issues/)
+- [Tanzu — CLI Reference](cli-reference/)
+
 ## Verify
 
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation

@@ -8,6 +8,8 @@ search:
 
 <div class="kb-summary">
 Red Hat support escalation process: severity levels, required data for support cases, SOS report generation, KCS knowledge base, escalation path, and what not to include in support bundles.
+
+*Applies to: OpenShift 4.x*
 </div>
 
 ```text
@@ -262,6 +264,11 @@ oc get machineconfig --sort-by=.metadata.creationTimestamp | tail -10
 ```
 
 ---
+
+## See also
+
+- [OpenShift — Diagnostics](../diagnostics/)
+- [OpenShift — Common Issues](../common-issues/)
 
 ## Verify resolution
 
