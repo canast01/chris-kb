@@ -195,3 +195,11 @@ sequenceDiagram
 └── gitlab-rails/
     └── uploads/
 ```
+
+---
+
+## See also
+
+- [Git — Design Standards](../design-standards/)
+- [Git — Integrations](../integrations/)
+- [Git — Deploy](../../deploy/)

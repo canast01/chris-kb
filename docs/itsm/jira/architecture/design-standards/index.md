@@ -299,3 +299,9 @@ Examples:
 | Public dashboards | All logged-in users (read) |
 
 Never share dashboards publicly (unauthenticated) unless the Jira instance is intentionally public-facing.
+
+---
+
+## See also
+
+- [Jira — Deploy](../../deploy/)

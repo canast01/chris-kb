@@ -206,3 +206,10 @@ curl -k -u admin:password -X POST \
 - API version is included in the URL path (e.g., `91` for v9.1). Increment for newer Unisphere releases.
 - Use the interactive API documentation at `https://<unisphere-host>:8443/univmax/restapi/docs`.
 - For programmatic automation, use the `PyU4V` Python library (open source, maintained by Dell): `pip install PyU4V`.
+
+---
+
+## See also
+
+- [Powermax — How It Works](how-it-works/)
+- [Powermax — Design Standards](design-standards/)

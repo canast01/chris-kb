@@ -84,3 +84,11 @@ graph TD
 | `Export-Clixml` | DPAPI (user-bound) | Same user/machine | Scheduled tasks |
 | SecretManagement | Vault-dependent | Configurable | Production scripts |
 | Azure Key Vault | AES-256 | Cross-machine | Enterprise / cloud |
+
+---
+
+## See also
+
+- [PowerShell — Access Control](../access-control/)
+- [PowerShell — Hardening](../hardening/)
+- [PowerShell — Encryption](../encryption/)

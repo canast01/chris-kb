@@ -108,3 +108,11 @@ terraform {
 | `.gitignore` | Exclude `*.tfvars`, `*.tfstate`, `*.tfstate.backup`, `.terraform/` |
 | Code review | All Terraform PRs reviewed before apply; plan output included |
 | Audit logs | Enable CloudTrail / Azure Monitor for all provider API calls |
+
+---
+
+## See also
+
+- [Terraform — Authentication](../authentication/)
+- [Terraform — Access Control](../access-control/)
+- [Terraform — Encryption](../encryption/)

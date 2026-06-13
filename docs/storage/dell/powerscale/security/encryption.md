@@ -385,3 +385,11 @@ done
 | GDPR Article 32 | Appropriate technical measures (encryption) | At-rest SED; in-transit SMB3 encryption and SyncIQ TLS |
 | ISO 27001 A.10.1 | Cryptographic controls | SED + key management policy; TLS for all management and replication channels |
 | NIST SP 800-53 SC-28 | Protection of information at rest | SED drives with AES-256; KMIP for key management |
+
+---
+
+## See also
+
+- [Powerscale — Hardening](hardening/)
+- [Powerscale — Authentication](authentication/)
+- [Powerscale — Access Control](access-control/)

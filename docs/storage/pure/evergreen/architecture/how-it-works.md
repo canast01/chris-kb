@@ -142,3 +142,10 @@ purehw list                            # full hardware inventory and health
 purehw list | grep -v "Healthy\|Name\|---"   # non-healthy components only
 purealert list --flagged               # open hardware alerts
 ```
+
+---
+
+## See also
+
+- [Evergreen — Design Standards](design-standards/)
+- [Evergreen — Integrations](integrations/)

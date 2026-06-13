@@ -104,3 +104,11 @@ def safe_read(path: str) -> str:
 | File permissions | Restrict sensitive files to `600`; scripts to `700` |
 | Logging | Never log secrets, tokens, or passwords |
 | Error messages | Do not expose internal paths or stack traces to external callers |
+
+---
+
+## See also
+
+- [Python — Authentication](../authentication/)
+- [Python — Access Control](../access-control/)
+- [Python — Encryption](../encryption/)

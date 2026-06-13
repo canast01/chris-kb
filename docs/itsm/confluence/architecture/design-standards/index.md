@@ -80,3 +80,9 @@ curl -u user:token \
   }]
 }
 ```
+
+---
+
+## See also
+
+- [Confluence — Deploy](../../deploy/)

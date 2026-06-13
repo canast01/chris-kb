@@ -279,3 +279,11 @@ Get-SmHost | Select-Object HostName, PlugInStatus, OverallStatus
 | Encryption of stored credentials | Windows DPAPI on SnapCenter Server | Repository backup validates decryptability |
 | Certificate management | CA-signed cert on IIS | Certificate expiry check weekly |
 | TLS version enforcement | SCHANNEL registry (Windows) + IIS | Registry check; `netsh` SSL cert binding |
+
+---
+
+## See also
+
+- [Snapcenter — Hardening](hardening/)
+- [Snapcenter — Authentication](authentication/)
+- [Snapcenter — Access Control](access-control/)

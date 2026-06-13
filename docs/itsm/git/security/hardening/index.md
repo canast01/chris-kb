@@ -295,3 +295,10 @@ git add .gitignore && git commit -m "Prevent re-commit of secret file"
 
 ---
 
+---
+
+## See also
+
+- [Git — Authentication](../authentication/)
+- [Git — Access Control](../access-control/)
+- [Git — Encryption](../encryption/)

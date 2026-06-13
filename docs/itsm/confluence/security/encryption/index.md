@@ -214,3 +214,11 @@ mount | grep "/secure\|/encrypted"
 ## Check backup files are encrypted (should not be plain zip)
 file /backups/confluence-backup-*.zip* | grep -v "Zip archive"
 ```
+
+---
+
+## See also
+
+- [Confluence — Hardening](../hardening/)
+- [Confluence — Authentication](../authentication/)
+- [Confluence — Access Control](../access-control/)

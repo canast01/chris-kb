@@ -129,3 +129,11 @@ pt-kill --busy-time 300 --kill            # kill queries running > 5 min
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Mysql — Procedures](procedures/)
+- [Mysql — Scripts](scripts/)
+- [Mysql — Health Checks](health-checks/)

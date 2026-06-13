@@ -121,3 +121,11 @@ Every new PowerMax deployment should meet the following baseline before handover
 | Thin provisioning | Allow 2:1 to 3:1 oversubscription for general-purpose workloads; monitor subscribed vs. consumed capacity weekly |
 | SnapVX impact | Each snapshot session consumes metadata capacity; plan for <128 snapshots per device to maintain headroom |
 | Data reduction | Expected effective capacity ratio: 4:1 to 5:1 for mixed workloads with compression and deduplication enabled |
+
+---
+
+## See also
+
+- [Powermax — How It Works](how-it-works/)
+- [Powermax — Integrations](integrations/)
+- [Powermax — Deploy](../deploy/)

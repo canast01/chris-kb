@@ -277,3 +277,11 @@ DAYS_LEFT=$(( (EXPIRY_EPOCH - NOW_EPOCH) / 86400 ))
 echo "Certificate expires in $DAYS_LEFT days"
 [[ $DAYS_LEFT -lt 30 ]] && echo "WARNING: Certificate renewal required"
 ```
+
+---
+
+## See also
+
+- [Ecs — Hardening](hardening/)
+- [Ecs — Authentication](authentication/)
+- [Ecs — Access Control](access-control/)

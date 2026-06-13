@@ -86,3 +86,11 @@ Always test restores quarterly. Store backups off the DB host.
 - Avoid `TEXT`/`BLOB` in frequently joined tables; store in separate table or object storage
 - Use `DATETIME` not `TIMESTAMP` for dates beyond 2038
 - Enable `innodb_strict_mode` to catch row size violations at DDL time
+
+---
+
+## See also
+
+- [Mysql — How It Works](how-it-works/)
+- [Mysql — Integrations](integrations/)
+- [Mysql — Deploy](../deploy/)

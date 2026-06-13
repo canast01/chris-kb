@@ -83,3 +83,11 @@ Hardening reference covering Network Security, Security Hardening Checklist.
 - [ ] CyberArk integration active for infrastructure credentials
 - [ ] Audit log forwarded to SIEM; alerts configured
 - [ ] Veeam ONE alert for any backup job failing > 2 consecutive times
+
+---
+
+## See also
+
+- [Veeam — Authentication](../authentication/)
+- [Veeam — Access Control](../access-control/)
+- [Veeam — Encryption](../encryption/)

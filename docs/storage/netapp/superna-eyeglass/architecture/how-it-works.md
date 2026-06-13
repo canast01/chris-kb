@@ -106,3 +106,11 @@ graph LR
 | Tier 1 (critical file services) | Continuous | < 15 minutes | > 10 minutes lag |
 | Tier 2 (departmental shares) | Every 4 hours | < 4 hours | > 3.5 hours lag |
 | Tier 3 (archival) | Daily | < 24 hours | > 20 hours lag |
+
+---
+
+## See also
+
+- [Superna Eyeglass — Design Standards](design-standards/)
+- [Superna Eyeglass — Integrations](integrations/)
+- [Superna Eyeglass — Deploy](../deploy/)

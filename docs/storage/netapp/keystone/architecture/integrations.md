@@ -82,3 +82,10 @@ Use the Keystone REST API to pull monthly consumption reports and push them to S
 ## CloudOps Integration
 
 For hybrid cloud strategies, Keystone Flex extends the subscription model to Cloud Volumes ONTAP (CVO) instances in AWS, Azure, or GCP. A unified Keystone subscription can cover both on-premises Keystone STaaS and cloud CVO capacity under the same committed/burst billing model, with a single BlueXP dashboard view of total consumption across on-premises and cloud.
+
+---
+
+## See also
+
+- [Keystone — How It Works](how-it-works/)
+- [Keystone — Design Standards](design-standards/)

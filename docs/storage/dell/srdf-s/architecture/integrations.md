@@ -102,3 +102,10 @@ symsnap -sid <target_SID> -sg <sg_name> link -name BACKUP_$(date +%Y%m%d) -lnsg 
 ```
 
 Note: always snapshot the R2 while it is in `Synchronized` state to ensure consistency.
+
+---
+
+## See also
+
+- [Srdf S — How It Works](how-it-works/)
+- [Srdf S — Design Standards](design-standards/)

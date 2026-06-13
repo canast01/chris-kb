@@ -220,3 +220,10 @@ graph TB
 | Replication group modification | Pre-change health check; impact assessed; approval from storage lead | Normal change |
 | Disk replacement | ECS Portal guided procedure; change record | Emergency change (if unplanned) |
 | VDC decommission | Full data migration verified; all replication groups updated; application teams confirmed | Major change |
+
+---
+
+## See also
+
+- [Ecs — How It Works](how-it-works/)
+- [Ecs — Integrations](integrations/)

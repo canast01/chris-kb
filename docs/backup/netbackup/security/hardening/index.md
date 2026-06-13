@@ -77,3 +77,11 @@ Forward to SIEM: configure `nblog` syslog output or use a log shipper agent poin
 | Clients | Master | 1556 | vnetd |
 | OpsCenter | Master | 1556 | Reporting |
 | Admin workstation | Admin Console | 1556 | Management |
+
+---
+
+## See also
+
+- [Netbackup — Authentication](../authentication/)
+- [Netbackup — Access Control](../access-control/)
+- [Netbackup — Encryption](../encryption/)

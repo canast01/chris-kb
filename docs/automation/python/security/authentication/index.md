@@ -123,3 +123,11 @@ headers = {"Authorization": f"Bearer {token}"}
 | AWS Secrets Manager | AWS-hosted scripts | IAM role, not hardcoded |
 | HashiCorp Vault | Multi-cloud / on-prem | Vault token via env var |
 | Python keyring | Interactive desktop tools | OS keychain |
+
+---
+
+## See also
+
+- [Python — Access Control](../access-control/)
+- [Python — Hardening](../hardening/)
+- [Python — Encryption](../encryption/)

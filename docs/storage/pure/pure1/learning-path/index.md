@@ -106,3 +106,9 @@ graph LR
 - [Escalation](../troubleshooting/escalation/) — Pure Support case creation for Pure1 portal issues, telemetry gap investigation, and escalation path for Workload Planner recommendation disputes
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state — expected telemetry refresh frequency, normal anomaly alert rates for your workload types, and what capacity forecast accuracy to expect from Pure1's AI model.
+
+---
+
+## See also
+
+- [Pure1 — Deploy](../../deploy/)

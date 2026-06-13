@@ -174,3 +174,11 @@ snapmirror update -destination-path svm_dst:
 snapmirror break -destination-path svm_dst:
 vserver start -vserver svm_dst
 ```
+
+---
+
+## See also
+
+- [Snapmirror — Design Standards](design-standards/)
+- [Snapmirror — Integrations](integrations/)
+- [Snapmirror — Deploy](../deploy/)

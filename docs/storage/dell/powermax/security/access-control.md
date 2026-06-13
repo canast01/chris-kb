@@ -469,3 +469,11 @@ symaccess list -sid <SID> view | grep -iE "old|decom|unused|retired"
 - Rotate all service account passwords on a 6-month schedule minimum.
 - Use Ansible Vault, HashiCorp Vault, or CyberArk to store service account credentials — never in plain text in scripts or config files.
 - Audit service account last-login dates quarterly; disable accounts not used in 90 days.
+
+---
+
+## See also
+
+- [Powermax — Authentication](authentication/)
+- [Powermax — Hardening](hardening/)
+- [Powermax — Encryption](encryption/)

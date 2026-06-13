@@ -286,3 +286,11 @@ sudo -u postgres psql -d jira -c "SELECT count(*) FROM app_user;"
 - Confirm the service or component is running and reachable
 - Check management UI for any errors or warnings
 - Run a basic functional test (login, read, write) to confirm end-to-end operation
+
+---
+
+## See also
+
+- [Jira — Procedures](../operations/procedures/)
+- [Jira — Common Issues](../troubleshooting/common-issues/)
+- [Jira — How It Works](../architecture/how-it-works/)

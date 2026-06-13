@@ -89,3 +89,11 @@ terraform {
 | IAM role | Dedicated per-environment role with least privilege |
 | CI/CD | Credentials injected via secrets; not stored in code |
 | Human access | Use read-only credentials for review; write credentials for planned applies only |
+
+---
+
+## See also
+
+- [Terraform — Authentication](../authentication/)
+- [Terraform — Hardening](../hardening/)
+- [Terraform — Encryption](../encryption/)

@@ -78,3 +78,10 @@ Capacity on Demand integration with VMware, Unisphere, and storage management pl
 | Dell License Management Portal | Source of COD license key files; SID-tied entitlements managed here |
 | CloudIQ | Provides capacity forecasting; shows active vs. total installed capacity and COD headroom |
 | CMDB / change management | COD activations must be recorded as changes; CMDB updated after each activation |
+
+---
+
+## See also
+
+- [Cod — How It Works](how-it-works/)
+- [Cod — Design Standards](design-standards/)

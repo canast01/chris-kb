@@ -94,3 +94,11 @@ Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' |
 | Script block logging | Enable event ID 4104 logging |
 | Module allow-listing | Use WDAC to allow only approved modules |
 | JEA | Constrain remote session cmdlets to the minimum required |
+
+---
+
+## See also
+
+- [PowerShell — Authentication](../authentication/)
+- [PowerShell — Access Control](../access-control/)
+- [PowerShell — Encryption](../encryption/)

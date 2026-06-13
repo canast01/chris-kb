@@ -168,3 +168,9 @@ Get-WmiObject -Namespace "root\WMI" -Class "MSFC_FCAdapterHBAAttributes" |
 # Verify zoning is in place before enabling FC storage access
 # (confirm with storage team that initiator WWPNs are zoned to required target ports)
 ```
+
+---
+
+## See also
+
+- [Windows Server — Design Standards](../design-standards/)

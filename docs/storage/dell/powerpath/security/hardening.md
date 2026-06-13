@@ -95,3 +95,11 @@ PowerPath itself is not a compliance boundary, but as a host-side component it i
 | CIS Benchmarks (OS level) | Ensure PowerPath kernel module and config files have correct permissions per OS hardening guide |
 | PCI DSS | PowerPath hosts in the CDE must have access controls, patching (version currency), and audit logging per PCI requirements |
 | Change management | Any `powermt set policy` or `powermt config` operation should be performed within an approved change window and documented |
+
+---
+
+## See also
+
+- [Powerpath — Authentication](authentication/)
+- [Powerpath — Access Control](access-control/)
+- [Powerpath — Encryption](encryption/)

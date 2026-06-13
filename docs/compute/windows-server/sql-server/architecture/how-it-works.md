@@ -57,3 +57,11 @@ T-SQL Query → Parse → Bind (object resolution) → Optimize (execution plan)
 ```
 
 `sys.dm_exec_cached_plans` — view cached plans; `DBCC FREEPROCCACHE` — clear plan cache.
+
+---
+
+## See also
+
+- [Sql Server — Design Standards](design-standards/)
+- [Sql Server — Integrations](integrations/)
+- [Sql Server — Deploy](../deploy/)

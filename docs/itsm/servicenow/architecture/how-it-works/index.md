@@ -101,3 +101,11 @@ flowchart LR
 | Production upgrade scheduling | ServiceNow + customer | 1 week |
 | Production upgrade window | ServiceNow (automated) | 2–4 hours |
 | Post-upgrade validation | Platform team | 1 day |
+
+---
+
+## See also
+
+- [Servicenow — Design Standards](../design-standards/)
+- [Servicenow — Integrations](../integrations/)
+- [Servicenow — Deploy](../../deploy/)

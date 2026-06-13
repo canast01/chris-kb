@@ -194,3 +194,11 @@ powermt display dev=all
 ```
 
 Run `powermt config` after new LUNs have been zoned and masked to the host at the array. New devices will appear in `powermt display dev=all` output with the configured load-balancing policy applied automatically. Run `powermt save` after discovery to persist the updated configuration.
+
+---
+
+## See also
+
+- [Powerpath — Health Checks](health-checks/)
+- [Powerpath — CLI Reference](cli-reference/)
+- [Powerpath — Common Issues](../troubleshooting/common-issues/)

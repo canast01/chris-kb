@@ -214,3 +214,10 @@ Pure manages all hardware changes. The customer manages all host-side and config
 | Protocol changes (e.g., add NVMe/FC) | Customer + Pure | Requires Pure involvement for FlashArray-side port configuration |
 
 All Pure-initiated changes arrive with prior notification. Customer should not accept unscheduled on-site visits or remote sessions without validation through the Pure support portal.
+
+---
+
+## See also
+
+- [Evergreen//One — How It Works](how-it-works/)
+- [Evergreen//One — Integrations](integrations/)

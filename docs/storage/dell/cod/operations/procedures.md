@@ -174,3 +174,11 @@ Procedures reference covering COD Activation Procedure, Incident Triage.
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Cod — Health Checks](health-checks/)
+- [Cod — CLI Reference](cli-reference/)
+- [Cod — Common Issues](../troubleshooting/common-issues/)

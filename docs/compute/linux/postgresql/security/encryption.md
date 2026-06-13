@@ -77,3 +77,11 @@ PostgreSQL does not have native WAL encryption. Options:
 Native TDE is available in PostgreSQL 17+ and commercial forks (Percona, EnterpriseDB). For PostgreSQL 16 and earlier:
 - Use OS-level disk encryption (LUKS/BitLocker)
 - Store data on encrypted cloud volumes (AWS EBS, Azure Managed Disk)
+
+---
+
+## See also
+
+- [Postgresql — Hardening](hardening/)
+- [Postgresql — Authentication](authentication/)
+- [Postgresql — Access Control](access-control/)

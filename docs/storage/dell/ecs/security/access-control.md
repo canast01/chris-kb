@@ -327,3 +327,11 @@ For each access review:
 3. Remove object users for decommissioned applications
 4. Rotate any access keys that have not been rotated within 12 months
 5. Verify no object user has wildcard `s3:*` permissions on production buckets
+
+---
+
+## See also
+
+- [Ecs — Authentication](authentication/)
+- [Ecs — Hardening](hardening/)
+- [Ecs — Encryption](encryption/)

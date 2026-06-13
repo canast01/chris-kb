@@ -69,3 +69,9 @@ Veeam integrates with virtualisation, storage, cloud, and monitoring platforms t
 | Active Directory | Windows auth for VBR console | AD groups mapped to Veeam roles |
 | Veeam ONE | VBR API | Monitoring, alerting, and reporting |
 | ServiceNow | Custom PowerShell integration | Incident creation on job failure |
+
+---
+
+## See also
+
+- [Veeam — Design Standards](../design-standards/)

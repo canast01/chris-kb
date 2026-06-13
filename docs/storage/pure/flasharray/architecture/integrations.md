@@ -151,3 +151,10 @@ GET /api/2.x/arrays?space=true
 ```
 
 Full API reference: [Pure Storage API documentation](https://support.purestorage.com/bundle/m_fa_rest_api)
+
+---
+
+## See also
+
+- [FlashArray — How It Works](how-it-works/)
+- [FlashArray — Design Standards](design-standards/)

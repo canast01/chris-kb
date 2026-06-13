@@ -166,3 +166,11 @@ egcli drpolicy delete --policy <policy_name> --confirm
 # After deletion: verify remaining SyncIQ policies on PowerScale are correct
 isi sync policies list
 ```
+
+---
+
+## See also
+
+- [Superna Eyeglass — How It Works](how-it-works/)
+- [Superna Eyeglass — Integrations](integrations/)
+- [Superna Eyeglass — Deploy](../deploy/)

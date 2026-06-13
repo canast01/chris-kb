@@ -155,3 +155,10 @@ powermt display dev=all | awk '/Pseudo name=/{dev=$3} /dead/{print "DEAD PATH on
 ```
 
 Integrate the path health check script from the scripts section into your monitoring platform (Nagios, Zabbix, Prometheus textfile collector) to alert on degraded path counts.
+
+---
+
+## See also
+
+- [Powerpath — How It Works](how-it-works/)
+- [Powerpath — Design Standards](design-standards/)

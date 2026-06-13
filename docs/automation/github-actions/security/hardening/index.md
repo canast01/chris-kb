@@ -110,3 +110,11 @@ flowchart LR
 
     prOpen --> actionlint --> statusChecks --> reviewApproval --> branchMerge --> release --> oidcPublish
 ```
+
+---
+
+## See also
+
+- [GitHub Actions — Authentication](../authentication/)
+- [GitHub Actions — Access Control](../access-control/)
+- [GitHub Actions — Encryption](../encryption/)

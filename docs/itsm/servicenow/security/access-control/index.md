@@ -185,3 +185,11 @@ while (adminGroup.next()) {
 }
 gs.info(JSON.stringify(report, null, 2));
 ```
+
+---
+
+## See also
+
+- [Servicenow — Authentication](../authentication/)
+- [Servicenow — Hardening](../hardening/)
+- [Servicenow — Encryption](../encryption/)

@@ -83,3 +83,9 @@ Commvault integrates with virtualisation, storage, cloud, and identity platforms
 | Azure Blob | Cloud library (MediaAgent) | Azure AD service principal auth |
 | LDAP / Active Directory | CommServe auth config | AD groups mapped to CommVault user groups |
 | SIEM (Splunk, etc.) | Audit log export / syslog | CommServe audit trail forwarded via syslog |
+
+---
+
+## See also
+
+- [Commvault — Design Standards](../design-standards/)

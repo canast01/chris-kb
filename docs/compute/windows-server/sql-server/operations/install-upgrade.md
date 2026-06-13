@@ -119,3 +119,11 @@ Keep databases on previous compatibility level immediately after upgrade. Test a
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Sql Server — Procedures](procedures/)
+- [Sql Server — Health Checks](health-checks/)
+- [Sql Server — Deploy](../deploy/)

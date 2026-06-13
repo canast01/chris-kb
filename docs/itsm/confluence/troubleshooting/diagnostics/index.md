@@ -369,3 +369,11 @@ echo "Support zip: ${SUPPORT_DIR}.zip"
 - Confirm the original symptom no longer occurs
 - Check logs for any residual errors related to the issue
 - Monitor for 10–15 minutes to confirm the fix is stable
+
+---
+
+## See also
+
+- [Confluence — Common Issues](../common-issues/)
+- [Confluence — Escalation](../escalation/)
+- [Confluence — Health Checks](../../operations/health-checks/)

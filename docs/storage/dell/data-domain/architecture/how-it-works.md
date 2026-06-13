@@ -120,3 +120,10 @@ alerts show current               # active hardware/software alerts
 system show                       # hardware health (fans, PSUs, disks)
 mtree list                        # all MTrees and their quota status
 ```
+
+---
+
+## See also
+
+- [Data Domain — Design Standards](design-standards/)
+- [Data Domain — Integrations](integrations/)

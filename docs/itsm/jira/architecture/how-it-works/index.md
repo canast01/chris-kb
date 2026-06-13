@@ -210,3 +210,11 @@ For Jira Cloud, Atlassian manages all infrastructure on AWS:
 - Data residency configurable for Enterprise plans (EU, US, AUS)
 - Atlassian Access required for SAML SSO and enforced MFA
 - Connect / Forge app framework replaces Server plugins
+
+---
+
+## See also
+
+- [Jira — Design Standards](../design-standards/)
+- [Jira — Integrations](../integrations/)
+- [Jira — Deploy](../../deploy/)

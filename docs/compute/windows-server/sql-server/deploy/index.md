@@ -123,3 +123,11 @@ SELECT name, value_in_use FROM sys.configurations WHERE name IN ('max server mem
 - `SELECT @@VERSION` returns the expected SQL Server version and edition
 - `SELECT name FROM sys.databases` lists the expected databases including system DBs
 - SQL Server Agent is running and no failed agent jobs in SSMS → SQL Server Agent → Jobs
+
+---
+
+## See also
+
+- [Sql Server — Procedures](../operations/procedures/)
+- [Sql Server — Common Issues](../troubleshooting/common-issues/)
+- [Sql Server — How It Works](../architecture/how-it-works/)

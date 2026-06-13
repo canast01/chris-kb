@@ -125,3 +125,11 @@ psql -U monitor -Atc "SELECT now(), count(*) FROM pg_stat_activity;" \
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Postgresql — Procedures](procedures/)
+- [Postgresql — CLI Reference](cli-reference/)
+- [Postgresql — Health Checks](health-checks/)

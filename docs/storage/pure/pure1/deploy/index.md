@@ -214,3 +214,9 @@ Run through the following checks to confirm the setup is complete and data is fl
 
 - Invite at least one non-admin user and confirm they can sign in and view the assigned arrays
 - If SSO is configured, confirm SSO login completes successfully for a test user account
+
+---
+
+## See also
+
+- [Pure1 — How It Works](../architecture/how-it-works/)

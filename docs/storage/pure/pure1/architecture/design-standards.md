@@ -93,3 +93,11 @@ Pure1 applies AI-driven thresholds by default. Override only when the default pr
 - [ ] Array tags applied: `site`, `tier`, `team`
 - [ ] Pure1 Support (remote support) enabled on all production arrays
 - [ ] Capacity forecast reviewed and any < 90-day projections actioned
+
+---
+
+## See also
+
+- [Pure1 — How It Works](how-it-works/)
+- [Pure1 — Integrations](integrations/)
+- [Pure1 — Deploy](../deploy/)

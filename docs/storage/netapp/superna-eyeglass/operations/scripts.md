@@ -70,3 +70,11 @@ Automation scripts for Superna Eyeglass — DR test operations, configuration re
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Superna Eyeglass — Procedures](procedures/)
+- [Superna Eyeglass — CLI Reference](cli-reference/)
+- [Superna Eyeglass — Health Checks](health-checks/)

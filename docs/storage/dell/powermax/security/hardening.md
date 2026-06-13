@@ -480,3 +480,11 @@ When a security advisory is published:
 3. Plan and schedule the patch/upgrade within the risk-appropriate timeframe (critical: within 30 days; high: within 60 days; medium: within 90 days).
 4. Test the patch in a non-production environment first if available.
 5. Document the patch application in the change management system.
+
+---
+
+## See also
+
+- [Powermax — Authentication](authentication/)
+- [Powermax — Access Control](access-control/)
+- [Powermax — Encryption](encryption/)

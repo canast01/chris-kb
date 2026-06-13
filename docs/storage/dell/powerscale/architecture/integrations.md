@@ -153,3 +153,10 @@ curl -k -u admin:password \
 
 Use the `isilon_sdk` Python package for scripted automation: `pip install isilon-sdk`.
 API documentation is available at `https://<cluster-node>:8080/platform/latest/`.
+
+---
+
+## See also
+
+- [Powerscale — How It Works](how-it-works/)
+- [Powerscale — Design Standards](design-standards/)

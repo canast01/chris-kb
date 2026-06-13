@@ -126,3 +126,11 @@ ALTER SERVER AUDIT DBA_Audit WITH (STATE = ON);
 | TDE on sensitive DBs | `SELECT encryption_state FROM sys.dm_database_encryption_keys` → 3 |
 | TLS forced | SQL Server Config Manager → Force Encryption = Yes |
 | Audit enabled | `SELECT audit_id FROM sys.server_audits WHERE is_state_enabled = 1` |
+
+---
+
+## See also
+
+- [Sql Server — Authentication](authentication/)
+- [Sql Server — Access Control](access-control/)
+- [Sql Server — Encryption](encryption/)

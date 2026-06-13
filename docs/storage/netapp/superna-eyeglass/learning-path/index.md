@@ -99,3 +99,9 @@ graph LR
 - [Escalation](../troubleshooting/escalation/) — Superna support case process, log bundle export from Eyeglass, ONTAP audit configuration review with NetApp
 
 **Why last**: Troubleshooting missed detections or false positives requires a clear mental model of the audit event pipeline and anomaly engine thresholds — established in the Architecture and Operations stages.
+
+---
+
+## See also
+
+- [Superna Eyeglass — Deploy](../../deploy/)

@@ -262,3 +262,9 @@ Get-EventLog -LogName Security | Select-Object -ExpandProperty MaximumKilobytes
 - [ ] Security event log size set to 1 GB minimum
 - [ ] WEF or SIEM agent deployed and events visible in SIEM
 - [ ] Server visible in monitoring platform within 15 minutes of build
+
+---
+
+## See also
+
+- [Windows Server — Deploy](../../deploy/)

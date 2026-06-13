@@ -155,3 +155,10 @@ The SnapCenter Plug-in for SQL Server uses VSS to quiesce SQL Server databases b
 - Supports SQL Server Availability Groups (AG) — SnapCenter discovers AG replicas and can back up from a preferred replica
 - For AG, register all SQL nodes in the resource and configure preferred backup replica in the resource settings
 - Post-backup log truncation controlled by policy setting (Full/Log backup chaining for point-in-time recovery)
+
+---
+
+## See also
+
+- [Snapcenter — How It Works](how-it-works/)
+- [Snapcenter — Design Standards](design-standards/)

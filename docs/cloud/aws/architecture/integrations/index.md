@@ -187,3 +187,9 @@ terraform {
 ```
 
 One state bucket per environment; versioning and MFA-delete enabled on state bucket.
+
+---
+
+## See also
+
+- [Aws — Design Standards](../design-standards/)

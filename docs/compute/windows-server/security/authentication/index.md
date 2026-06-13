@@ -239,3 +239,11 @@ Get-WinEvent -FilterHashtable @{
   StartTime=(Get-Date).AddHours(-24)
 } | Select-Object TimeCreated, Message
 ```
+
+---
+
+## See also
+
+- [Windows Server — Access Control](../access-control/)
+- [Windows Server — Hardening](../hardening/)
+- [Windows Server — Encryption](../encryption/)

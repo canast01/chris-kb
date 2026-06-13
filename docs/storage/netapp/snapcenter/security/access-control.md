@@ -129,3 +129,11 @@ security login create -username svc-snapcenter -application http -authmethod pas
 - Access audit log: Settings → Settings → Audit Logs in the GUI, or query via REST API
 - Export audit logs to a SIEM: configure syslog forwarding from the Windows Server (use Windows Event Forwarding or a Splunk/Elastic agent on the SnapCenter Server)
 - Audit log tampering protection: SnapCenter 6.1+ signs audit log entries with a hash chain for integrity verification
+
+---
+
+## See also
+
+- [Snapcenter — Authentication](authentication/)
+- [Snapcenter — Hardening](hardening/)
+- [Snapcenter — Encryption](encryption/)

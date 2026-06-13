@@ -86,3 +86,10 @@ Standards reference covering Upgrade Notes, Design Standards.
 - Automate monthly usage extraction via CloudIQ API and feed into a finance reporting system
 - Set the committed baseline conservatively at contract start; adjust upward at renewal
 - Review monthly metered usage report from CloudIQ or APEX Console and compare to contracted baseline
+
+---
+
+## See also
+
+- [Fod — How It Works](how-it-works/)
+- [Fod — Integrations](integrations/)

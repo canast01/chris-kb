@@ -229,3 +229,10 @@ renderXml = true
 # 4726 - User account deleted
 # 4728/4732/4756 - Member added to security group
 ```
+
+---
+
+## See also
+
+- [Active Directory — How It Works](how-it-works/)
+- [Active Directory — Design Standards](design-standards/)

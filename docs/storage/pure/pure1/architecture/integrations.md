@@ -40,3 +40,10 @@ Pure1 integrates natively with FlashArray and FlashBlade via Purity OS telemetry
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## See also
+
+- [Pure1 — How It Works](how-it-works/)
+- [Pure1 — Design Standards](design-standards/)

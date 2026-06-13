@@ -154,3 +154,10 @@ curl -s -H "Authorization: Bearer <token>" \
 ```
 
 The REST API supports all array operations available in the GUI and CLI. Use API version 2.x for new integrations — version 1.x is deprecated. Pure1 also provides a fleet-level REST API for subscription and capacity data.
+
+---
+
+## See also
+
+- [Evergreen — How It Works](how-it-works/)
+- [Evergreen — Design Standards](design-standards/)

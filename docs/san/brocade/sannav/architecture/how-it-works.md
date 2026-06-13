@@ -174,3 +174,11 @@ graph TB
 | ServiceNow / ticketing | Alert forwarding via email or webhook (HTTPS POST) |
 | SIEM | Syslog forwarding from SANnav; SNMP trap forwarding |
 | Active Directory / LDAP | User authentication and group-based role assignment |
+
+---
+
+## See also
+
+- [Sannav — Design Standards](design-standards/)
+- [Sannav — Integrations](integrations/)
+- [Sannav — Deploy](../deploy/)

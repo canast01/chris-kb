@@ -141,3 +141,11 @@ curl -u admin:password \
 grep -i "403\|permission denied\|access denied" \
   /var/atlassian/application-data/confluence/logs/atlassian-confluence.log | tail -20
 ```
+
+---
+
+## See also
+
+- [Confluence — Authentication](../authentication/)
+- [Confluence — Hardening](../hardening/)
+- [Confluence — Encryption](../encryption/)

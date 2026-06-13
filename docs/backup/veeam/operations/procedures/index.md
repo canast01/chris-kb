@@ -260,3 +260,11 @@ When an extent needs to be decommissioned:
 - **Job status:** confirm backup job completed with status Success (not Warning)
 - **Recovery test:** restore a single file or VM from the new backup to confirm restorability
 - **Retention:** verify old recovery points are expiring per the configured retention policy
+
+---
+
+## See also
+
+- [Veeam — Health Checks](../health-checks/)
+- [Veeam — CLI Reference](../cli-reference/)
+- [Veeam — Common Issues](../../troubleshooting/common-issues/)

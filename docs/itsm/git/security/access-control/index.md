@@ -313,3 +313,11 @@ echo "Audit written to repo_access_audit.csv"
 - [Git — Authentication](../authentication/index.md)
 - [Git — Encryption](../encryption/index.md)
 - [Git — Hardening](../hardening/index.md)
+
+---
+
+## See also
+
+- [Git — Authentication](../authentication/)
+- [Git — Hardening](../hardening/)
+- [Git — Encryption](../encryption/)

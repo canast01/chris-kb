@@ -104,3 +104,11 @@ graph LR
 | Planned failover (SRM automated) | < 15 minutes |
 | Unplanned failover (manual) | < 30 minutes |
 | Post-failover data validation | < 60 minutes |
+
+---
+
+## See also
+
+- [Srdf S — Design Standards](design-standards/)
+- [Srdf S — Integrations](integrations/)
+- [Srdf S — Deploy](../deploy/)

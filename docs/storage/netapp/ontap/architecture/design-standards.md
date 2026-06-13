@@ -121,3 +121,10 @@ Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelin
 - [ ] QoS adaptive policy groups created and assigned to production volumes
 - [ ] EMS email notifications configured for CRITICAL and ERROR severity events
 - [ ] SnapMirror relationships initialized for all protected volumes
+
+---
+
+## See also
+
+- [Ontap — How It Works](how-it-works/)
+- [Ontap — Integrations](integrations/)

@@ -110,3 +110,10 @@ After applying a COD license:
 - [ ] Update the COD inventory record with the new activation date and capacity
 - [ ] Update the CMDB asset record for the array
 - [ ] Close the change ticket with the post-change evidence attached
+
+---
+
+## See also
+
+- [Cod — How It Works](how-it-works/)
+- [Cod — Integrations](integrations/)

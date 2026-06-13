@@ -79,3 +79,10 @@ Features on Demand integration with PowerMax/Unity management platforms and stor
 | Unisphere REST API | Capacity queries (`/system_capacity`, `/srp`) for burst monitoring |
 | SYMCLI | Local capacity and license queries for PowerMax/VMAX arrays |
 | Finance / chargeback tools | Automated monthly usage export via CloudIQ API for internal reporting |
+
+---
+
+## See also
+
+- [Fod — How It Works](how-it-works/)
+- [Fod — Design Standards](design-standards/)

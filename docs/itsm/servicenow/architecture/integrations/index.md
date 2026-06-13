@@ -236,3 +236,9 @@ sequenceDiagram
 Configure via **PagerDuty** spoke in Flow Designer (ServiceNow Integration Hub) or manually via REST Messages. Required fields:
 - `routing_key` (PagerDuty Integration Key)
 - `dedup_key` (ServiceNow `sys_id` — prevents duplicate PD incidents)
+
+---
+
+## See also
+
+- [Servicenow — Design Standards](../design-standards/)

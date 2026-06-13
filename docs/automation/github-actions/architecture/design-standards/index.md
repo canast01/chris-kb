@@ -243,3 +243,9 @@ jobs:
 | Notifications on failure | Slack / email on `if: failure()` |
 | `workflow_dispatch` on all workflows | Manual trigger available |
 | Artifact retention set | `retention-days` specified |
+
+---
+
+## See also
+
+- [Github Actions — Deploy](../../deploy/)

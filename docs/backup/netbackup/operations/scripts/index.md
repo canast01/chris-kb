@@ -85,3 +85,11 @@ Automation scripts for NetBackup use the `admincmd` CLI tools and are typically 
 - **Job status:** confirm backup job completed with status Success (not Warning)
 - **Recovery test:** restore a single file or VM from the new backup to confirm restorability
 - **Retention:** verify old recovery points are expiring per the configured retention policy
+
+---
+
+## See also
+
+- [Netbackup — Procedures](../procedures/)
+- [Netbackup — CLI Reference](../cli-reference/)
+- [Netbackup — Health Checks](../health-checks/)

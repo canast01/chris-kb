@@ -290,3 +290,11 @@ Close-SmConnection
 | Plugin version alignment | `Get-SmHost` — confirm all plugin versions match the SnapCenter Server version |
 | Log partition usage | Check `C:\Program Files\NetApp\SnapCenter\` disk usage; archive or purge old logs |
 | Restore test | Execute a restore from backup on a non-production resource; confirm success |
+
+---
+
+## See also
+
+- [Snapcenter — Authentication](authentication/)
+- [Snapcenter — Access Control](access-control/)
+- [Snapcenter — Encryption](encryption/)

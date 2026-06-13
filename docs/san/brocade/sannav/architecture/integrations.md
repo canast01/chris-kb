@@ -71,3 +71,10 @@ logger -t sannav-test "Test syslog message from SANnav"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## See also
+
+- [Sannav — How It Works](how-it-works/)
+- [Sannav — Design Standards](design-standards/)

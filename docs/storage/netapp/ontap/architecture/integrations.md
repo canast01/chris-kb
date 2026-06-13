@@ -139,3 +139,10 @@ ONTAP on-premises clusters can peer with Cloud Volumes ONTAP (CVO) deployments i
 | SNMP monitoring (Nagios, Zabbix) | SNMPv3 only; MIB files available from NetApp support site |
 | NetApp Active IQ / BlueXP | AutoSupport-based; enabled by default; provides AI-driven health and capacity advisories |
 | PagerDuty / OpsGenie | EMS email notifications forwarded via relay or webhook integrations |
+
+---
+
+## See also
+
+- [Ontap — How It Works](how-it-works/)
+- [Ontap — Design Standards](design-standards/)

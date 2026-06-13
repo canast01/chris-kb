@@ -128,3 +128,9 @@ switch01 ansible_host=10.0.1.1 ansible_network_os=arista.eos.eos ansible_connect
     author: ansible
     comment: "Automated maintenance window"
 ```
+
+---
+
+## See also
+
+- [Ansible — Design Standards](../design-standards/)

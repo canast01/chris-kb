@@ -87,3 +87,11 @@ Data disk sizing: approximately 10 GB per monitored node per month of retention.
 - [ ] Retention policy configured per standards above
 - [ ] Email notification configured for capacity threshold alerts
 - [ ] Backup: VM snapshot or file-level backup of data disk, daily
+
+---
+
+## See also
+
+- [Insightiq — How It Works](how-it-works/)
+- [Insightiq — Integrations](integrations/)
+- [Insightiq — Deploy](../deploy/)

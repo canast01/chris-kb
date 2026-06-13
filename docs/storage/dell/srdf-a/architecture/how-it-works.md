@@ -114,3 +114,11 @@ flowchart TD
 | iSLR (IP Short Range) | Newer PowerMax connectivity via IP directors |
 
 **Bandwidth sizing:** Required bandwidth = peak_change_rate_MB_per_cycle / cycle_time_s × 1.20 (20% headroom).
+
+---
+
+## See also
+
+- [Srdf A — Design Standards](design-standards/)
+- [Srdf A — Integrations](integrations/)
+- [Srdf A — Deploy](../deploy/)

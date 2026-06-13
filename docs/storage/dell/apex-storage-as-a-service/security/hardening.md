@@ -108,3 +108,11 @@ Hardening reference covering Hardening Checklist, Network Requirements Summary.
 | SCG admin console | TCP 443 | Management hosts to SCG | SCG configuration and update management |
 
 All other inbound connections to the SCG should be denied by default. SCG appliances do not require inbound access from the internet.
+
+---
+
+## See also
+
+- [Apex Storage As A Service — Authentication](authentication/)
+- [Apex Storage As A Service — Access Control](access-control/)
+- [Apex Storage As A Service — Encryption](encryption/)

@@ -87,3 +87,11 @@ RECONFIGURE WITH OVERRIDE;
 - Databases: `AppName_Env` — `CRM_Prod`, `ERP_Dev`
 - Logins/users: `app_<name>_<rw|ro>`, `svc_<servicename>`
 - AG names: `AG_<DatabaseName>` — `AG_CRM`
+
+---
+
+## See also
+
+- [Sql Server — How It Works](how-it-works/)
+- [Sql Server — Integrations](integrations/)
+- [Sql Server — Deploy](../deploy/)

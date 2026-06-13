@@ -369,3 +369,10 @@ ECS Portal → Settings → SNMP
 ```
 
 **Key SNMP MIBs:** Download the ECS MIB file from ECS Portal → Settings → SNMP → Download MIB to import into your monitoring platform (Nagios, Zabbix, SolarWinds, etc.).
+
+---
+
+## See also
+
+- [Ecs — How It Works](how-it-works/)
+- [Ecs — Design Standards](design-standards/)

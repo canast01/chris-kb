@@ -166,3 +166,10 @@ syslogadmin --show
 snmpwalk -v3 -u <username> -l authPriv -a SHA -A <auth-pass> -x AES -X <priv-pass> \
   <switch-ip> sysDescr
 ```
+
+---
+
+## See also
+
+- [Fabric Os — How It Works](how-it-works/)
+- [Fabric Os — Design Standards](design-standards/)

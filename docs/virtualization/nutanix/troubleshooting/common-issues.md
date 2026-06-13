@@ -15,6 +15,37 @@ Troubleshooting guide for the most frequent Nutanix problems: CVM down or unreac
 *Applies to: AOS 6.x · AHV*
 </div>
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([Alert or symptom]) --> A[Run NCC: ncc --health_checks run_all]
+    A --> B{NCC result?}
+    B -->|FAIL - specific check| C[Identify failing check\nread check description]
+    B -->|PASS or inconclusive| D[Check service health\ngenesis status · nodetool status]
+
+    C --> C1{Check category}
+    C1 -->|CVM / service| E1[CVM Down: restart via virsh / genesis restart]
+    C1 -->|Storage| E2[Storage Degraded: check disk, RF, rebuild status]
+    C1 -->|Replication| E3[PD Replication: check remote site, ncli remote-site]
+    C1 -->|Network| E4[No network: OVS bridge check, AHV host ping]
+
+    D --> D2{Service down?}
+    D2 -->|Yes| F1[genesis restart on CVM · nodetool repair if Cassandra]
+    D2 -->|No| F2[Read relevant log\nstargate.ERROR · curator.INFO]
+
+    F2 --> G{Root cause found?}
+    G -->|Yes| H[Apply fix · verify with NCC]
+    G -->|No| I[Collect support bundle\nlogbay collect · open GSS case]
+
+    classDef action fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class E1,E2,E3,E4,F1,F2,H,I action
+    class B,C1,D2,G decision
+    class S start
+```
+
 ---
 
 ## Before you begin

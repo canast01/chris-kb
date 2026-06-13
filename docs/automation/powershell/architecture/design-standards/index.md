@@ -217,3 +217,9 @@ Invoke-Pester -Path ./Tests -CodeCoverage ./Public/*.ps1 -CodeCoverageOutputFile
 # CI — output NUnit XML for test reporting
 Invoke-Pester -Path ./Tests -OutputFormat NUnitXml -OutputFile test-results.xml
 ```
+
+---
+
+## See also
+
+- [Powershell — Deploy](../../deploy/)

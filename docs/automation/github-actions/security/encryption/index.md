@@ -78,3 +78,11 @@ flowchart LR
 # but the pattern is still bad practice:
 # run: echo ${{ secrets.MY_SECRET }}  # avoid this
 ```
+
+---
+
+## See also
+
+- [GitHub Actions — Hardening](../hardening/)
+- [GitHub Actions — Authentication](../authentication/)
+- [GitHub Actions — Access Control](../access-control/)

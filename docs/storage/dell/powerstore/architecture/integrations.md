@@ -349,3 +349,10 @@ resource "powerstore_volume" "db_lun" {
   volume_group_name = "oracle-vg"
 }
 ```
+
+---
+
+## See also
+
+- [Powerstore — How It Works](how-it-works/)
+- [Powerstore — Design Standards](design-standards/)

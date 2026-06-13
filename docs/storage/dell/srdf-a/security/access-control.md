@@ -70,3 +70,11 @@ For async operations, accidentally re-syncing from target to source (after a fai
 - Set SYMCLI session to confirm mode for destructive operations: `SYMCLI_CONFIRM=prompt`
 - Restrict `symrdf restore` and `symrdf establish -full` to a separate break-glass account
 - Implement a peer-review process for any SRDF failover in production
+
+---
+
+## See also
+
+- [Srdf A — Authentication](authentication/)
+- [Srdf A — Hardening](hardening/)
+- [Srdf A — Encryption](encryption/)

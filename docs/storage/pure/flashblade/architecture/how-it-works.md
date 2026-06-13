@@ -191,3 +191,11 @@ purefb snap list               # filesystem and object store snapshots
 purefb replication list        # ActiveDR links and lag
 purefb network interface list  # data and replication interface status
 ```
+
+---
+
+## See also
+
+- [FlashBlade — Design Standards](design-standards/)
+- [FlashBlade — Integrations](integrations/)
+- [FlashBlade — Deploy](../deploy/)

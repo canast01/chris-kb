@@ -100,3 +100,11 @@ output "db_connection_string" {
 | Secrets in config | Use Secrets Manager or SSM; never hardcode in `.tf` files |
 | Sensitive variables | Mark with `sensitive = true` to suppress log output |
 | `.tfvars` files | Do not commit files containing secrets; use CI/CD secret injection |
+
+---
+
+## See also
+
+- [Terraform — Hardening](../hardening/)
+- [Terraform — Authentication](../authentication/)
+- [Terraform — Access Control](../access-control/)

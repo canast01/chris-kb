@@ -191,3 +191,11 @@ Confluence plugins use the **Atlassian Plugin Framework (APF2)**. Plugin states 
 | `/admin/indexqueue.action` | Search index queue |
 | `/admin/scheduledjobs.action` | Scheduled task status |
 | `/admin/logging.action` | Log level control |
+
+---
+
+## See also
+
+- [Confluence — Design Standards](../design-standards/)
+- [Confluence — Integrations](../integrations/)
+- [Confluence — Deploy](../../deploy/)

@@ -115,3 +115,10 @@ A host with 2 dual-port HBAs connected to 2 storage ports per fabric typically h
 - [ ] `powermt display ports class=all` shows all HBA ports `alive`
 - [ ] Post-reboot validation: reboot the host and confirm path count and policy are intact
 - [ ] Monitoring configured: script or tool alerting on `dead` or `unlic` paths
+
+---
+
+## See also
+
+- [Powerpath — How It Works](how-it-works/)
+- [Powerpath — Integrations](integrations/)

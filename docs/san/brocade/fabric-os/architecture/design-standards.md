@@ -89,3 +89,11 @@ Part of the [Architecture](index.md) reference.
 - New FOS versions applied to Fabric B first, validated, then Fabric A
 - Minimum: stay within 1 major FOS version of Broadcom's current release
 - Check FOS EOL: [support.broadcom.com](https://support.broadcom.com) → Product Lifecycle
+
+---
+
+## See also
+
+- [Fabric Os — How It Works](how-it-works/)
+- [Fabric Os — Integrations](integrations/)
+- [Fabric Os — Deploy](../deploy/)

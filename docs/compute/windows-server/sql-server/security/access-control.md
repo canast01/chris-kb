@@ -122,3 +122,11 @@ FROM sys.database_permissions pe
 JOIN sys.database_principals pr ON pr.principal_id = pe.grantee_principal_id
 ORDER BY principal, permission_name;
 ```
+
+---
+
+## See also
+
+- [Sql Server — Authentication](authentication/)
+- [Sql Server — Hardening](hardening/)
+- [Sql Server — Encryption](encryption/)

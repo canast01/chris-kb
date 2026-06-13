@@ -149,3 +149,11 @@ curl -k -X GET https://<eyeglass_ip>/eca/api/v1/jobs/failover \
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Superna Eyeglass — Procedures](procedures/)
+- [Superna Eyeglass — Scripts](scripts/)
+- [Superna Eyeglass — Health Checks](health-checks/)

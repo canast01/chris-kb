@@ -391,3 +391,11 @@ git -C ~/git-test status
 - Confirm the service or component is running and reachable
 - Check management UI for any errors or warnings
 - Run a basic functional test (login, read, write) to confirm end-to-end operation
+
+---
+
+## See also
+
+- [Git — Procedures](../operations/procedures/)
+- [Git — Common Issues](../troubleshooting/common-issues/)
+- [Git — How It Works](../architecture/how-it-works/)

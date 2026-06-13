@@ -143,3 +143,11 @@ isi audit log view
 | HIPAA | §164.312 (access control) | Access zones, RBAC, and per-share ACLs |
 | GDPR | Article 32 (security of processing) | Encryption in transit (SMB3, SyncIQ TLS) and at rest (SED) |
 | ISO 27001 | A.9 (access control) | RBAC roles, AD/LDAP integration, root squash on NFS |
+
+---
+
+## See also
+
+- [Powerscale — Authentication](authentication/)
+- [Powerscale — Hardening](hardening/)
+- [Powerscale — Encryption](encryption/)

@@ -81,3 +81,11 @@ graph TB
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## See also
+
+- [Azure — Design Standards](../design-standards/)
+- [Azure — Integrations](../integrations/)
+- [Azure — Deploy](../../deploy/)

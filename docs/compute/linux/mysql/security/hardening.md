@@ -123,3 +123,11 @@ SET GLOBAL server_audit_file_path = '/var/log/mysql/audit.log';
 | `local_infile = OFF` | `SHOW VARIABLES LIKE 'local_infile'` → OFF |
 | `log_error` set | `SHOW VARIABLES LIKE 'log_error'` → path set |
 | SSL enabled | `SHOW VARIABLES LIKE 'have_ssl'` → YES |
+
+---
+
+## See also
+
+- [Mysql — Authentication](authentication/)
+- [Mysql — Access Control](access-control/)
+- [Mysql — Encryption](encryption/)

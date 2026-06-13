@@ -163,3 +163,10 @@ Complete this checklist when commissioning a new Data Domain or adding a new MTr
 - [ ] No active hardware alerts (`alerts show current`)
 - [ ] DD Boost user credentials rotated per password policy cycle
 - [ ] Retention lock periods reviewed against current compliance requirements annually
+
+---
+
+## See also
+
+- [Data Domain — How It Works](how-it-works/)
+- [Data Domain — Integrations](integrations/)

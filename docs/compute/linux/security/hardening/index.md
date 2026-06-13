@@ -461,3 +461,11 @@ systemctl is-active auditd firewalld
 sshd -T | grep -E "permitrootlogin|passwordauthentication|x11forwarding"
 stat /etc/shadow /etc/gshadow | grep "Access:"
 ```
+
+---
+
+## See also
+
+- [Linux — Authentication](../authentication/)
+- [Linux — Access Control](../access-control/)
+- [Linux — Encryption](../encryption/)

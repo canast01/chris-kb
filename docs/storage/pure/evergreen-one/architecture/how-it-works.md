@@ -124,3 +124,10 @@ Sizing for Evergreen//One is driven by:
 4. **Growth plan** — Pure and the customer agree on a capacity growth projection to ensure hardware can be provisioned ahead of demand; capacity increase requests require sufficient lead time (typically 30 days)
 
 Capacity consumed is measured in TiB of raw host-written data (before data reduction). Pure's data reduction guarantee may apply depending on the service agreement terms — confirm with the Pure account team at contract signing.
+
+---
+
+## See also
+
+- [Evergreen//One — Design Standards](design-standards/)
+- [Evergreen//One — Integrations](integrations/)

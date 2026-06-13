@@ -85,3 +85,11 @@ psql "host=db.example.com dbname=app_prod user=certuser \
 # pg_hba.conf
 host  all  all  10.0.1.0/24  ldap  ldapserver=ldap.example.com  ldapbasedn="dc=example,dc=com"  ldapsearchattribute=sAMAccountName
 ```
+
+---
+
+## See also
+
+- [Postgresql — Access Control](access-control/)
+- [Postgresql — Hardening](hardening/)
+- [Postgresql — Encryption](encryption/)

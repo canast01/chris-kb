@@ -124,3 +124,11 @@ Boot DR CommServe (if primary lost) → restore CommServe DB from backup → rec
 - **Job status:** confirm backup job completed with status Success (not Warning)
 - **Recovery test:** restore a single file or VM from the new backup to confirm restorability
 - **Retention:** verify old recovery points are expiring per the configured retention policy
+
+---
+
+## See also
+
+- [Commvault — Health Checks](../health-checks/)
+- [Commvault — CLI Reference](../cli-reference/)
+- [Commvault — Common Issues](../../troubleshooting/common-issues/)

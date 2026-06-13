@@ -101,3 +101,9 @@ graph LR
 - [Escalation](../troubleshooting/escalation/) — NetApp support case for InsightIQ bugs, log bundle collection procedure, ONTAP statistics API troubleshooting with NetApp
 
 **Why last**: Troubleshooting InsightIQ data gaps requires knowing the expected collection cadence and data model — context built in the Architecture and Operations stages.
+
+---
+
+## See also
+
+- [Insightiq — Deploy](../../deploy/)

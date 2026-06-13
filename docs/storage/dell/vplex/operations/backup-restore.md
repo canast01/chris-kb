@@ -165,3 +165,11 @@ After any recovery:
 - `ll /distributed-storage/distributed-devices/*/health-indications/` — all devices show `health-state: ok`
 - `ll /distributed-storage/consistency-groups/` — all CGs show `operational-status: ok`
 - Host multipath check (`multipath -ll` or `powermt display dev=all`) shows all expected paths active
+
+---
+
+## See also
+
+- [Vplex — Procedures](procedures/)
+- [Vplex — Health Checks](health-checks/)
+- [Vplex — Common Issues](../troubleshooting/common-issues/)

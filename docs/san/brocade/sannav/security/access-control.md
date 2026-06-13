@@ -198,3 +198,11 @@ Access audit log: **Administration > Audit Log**. Filter by event category **Aut
 3. Confirm deletion. Any scheduled reports owned by this user will need to be reassigned.
 
 For LDAP-authenticated users: removing the user from the AD group is sufficient to prevent access. SANnav does not cache group membership; the next login attempt will fail. No SANnav-side deletion is required unless the account was also created locally.
+
+---
+
+## See also
+
+- [Sannav — Authentication](authentication/)
+- [Sannav — Hardening](hardening/)
+- [Sannav — Encryption](encryption/)

@@ -178,3 +178,9 @@ az keyvault set-policy --name <kv-name> \
 # Test secret retrieval
 az keyvault secret show --vault-name <kv-name> --name <secret-name>
 ```
+
+---
+
+## See also
+
+- [Azure — Design Standards](../design-standards/)

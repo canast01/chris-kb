@@ -93,3 +93,11 @@ Eyeglass → DR Testing → Runbook → generate DR readiness report → verify 
 - **Cluster health:** all nodes show online in the management UI
 - **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
 - **Replication:** confirm replication partner shows last-sync within RPO window
+
+---
+
+## See also
+
+- [Superna Eyeglass — Procedures](../operations/procedures/)
+- [Superna Eyeglass — Common Issues](../troubleshooting/common-issues/)
+- [Superna Eyeglass — How It Works](../architecture/how-it-works/)

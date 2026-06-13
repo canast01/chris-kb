@@ -99,3 +99,11 @@ Encryption reference covering Encryption Controls, Key Points.
 - Data-at-rest encryption is a platform-level control on the underlying hardware (PowerStore, PowerScale, PowerFlex).
 - Telemetry transmitted via SCG contains capacity metrics only — no user data or file content leaves the array through this path.
 - TLS 1.0 and 1.1 are not accepted by Dell's cloud endpoints.
+
+---
+
+## See also
+
+- [Apex Storage As A Service — Hardening](hardening/)
+- [Apex Storage As A Service — Authentication](authentication/)
+- [Apex Storage As A Service — Access Control](access-control/)

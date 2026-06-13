@@ -168,3 +168,10 @@ curl -c cookie.txt -b cookie.txt -k \
 ```
 
 The API supports basic auth and session (cookie) auth. Use session auth for scripts that make multiple API calls to avoid authenticating on each request. The full API reference is available in Unisphere under **Help > REST API Reference**.
+
+---
+
+## See also
+
+- [Unity — How It Works](how-it-works/)
+- [Unity — Design Standards](design-standards/)

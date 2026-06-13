@@ -92,3 +92,11 @@ PowerPath operates at the block I/O layer and does not encrypt data in transit b
 | Data in transit (FC fabric) | FC frame encryption (Brocade/Cisco MDS) | Transparent — PowerPath operates above this layer |
 | Host-side data at rest | dm-crypt/LUKS (Linux), BitLocker (Windows) | Applied on top of PowerPath pseudo device |
 | Management plane | Host OS authentication (SSH, RDP) | Out of scope for PowerPath |
+
+---
+
+## See also
+
+- [Powerpath — Hardening](hardening/)
+- [Powerpath — Authentication](authentication/)
+- [Powerpath — Access Control](access-control/)

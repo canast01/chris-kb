@@ -163,3 +163,11 @@ isi quota list                # quota violations
 isi network pools list        # SmartConnect zone config
 isi job list                  # background jobs (Restripe, FlexProtect)
 ```
+
+---
+
+## See also
+
+- [Powerscale — Design Standards](design-standards/)
+- [Powerscale — Integrations](integrations/)
+- [Powerscale — Deploy](../deploy/)

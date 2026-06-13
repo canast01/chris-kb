@@ -334,3 +334,11 @@ PHS is the recommended mode for most organisations — it provides cloud-only au
 ## Related Reference
 
 - [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
+
+---
+
+## See also
+
+- [Azure — Access Control](../access-control/)
+- [Azure — Hardening](../hardening/)
+- [Azure — Encryption](../encryption/)

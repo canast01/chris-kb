@@ -77,3 +77,11 @@ graph TD
 | Use JEA for constrained remoting | Limit cmdlets available in remote sessions |
 | Audit with `Start-Transcript` | Log all script activity |
 | Check group membership in scripts | Enforce RBAC in code |
+
+---
+
+## See also
+
+- [PowerShell — Authentication](../authentication/)
+- [PowerShell — Hardening](../hardening/)
+- [PowerShell — Encryption](../encryption/)

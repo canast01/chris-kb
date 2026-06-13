@@ -62,3 +62,11 @@ ORDER BY n_dead_tup DESC LIMIT 10;
 | `maintenance_work_mem` | 64MB | For VACUUM, CREATE INDEX; set to 1–2 GB |
 | `max_connections` | 100 | Each connection ~5–10 MB RAM |
 | `wal_level` | replica | Must be `replica` for streaming replication |
+
+---
+
+## See also
+
+- [Postgresql — Design Standards](design-standards/)
+- [Postgresql — Integrations](integrations/)
+- [Postgresql — Deploy](../deploy/)

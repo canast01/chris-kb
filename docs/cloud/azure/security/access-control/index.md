@@ -328,3 +328,11 @@ Conduct quarterly access reviews:
 - Validate service principal secrets are rotated
 - Confirm no standing Owner assignments outside break-glass accounts
 - Validate PIM eligible assignments match current team membership
+
+---
+
+## See also
+
+- [Azure — Authentication](../authentication/)
+- [Azure — Hardening](../hardening/)
+- [Azure — Encryption](../encryption/)

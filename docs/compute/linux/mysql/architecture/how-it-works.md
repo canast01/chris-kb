@@ -61,3 +61,11 @@ Replica: relay log → SQL thread applies → committed to replica data files
 ## Transaction Isolation
 
 InnoDB defaults to `REPEATABLE READ`. MVCC provides non-blocking reads by keeping old row versions in the undo log. Long-running transactions hold undo log space — watch `innodb_history_list_length`.
+
+---
+
+## See also
+
+- [Mysql — Design Standards](design-standards/)
+- [Mysql — Integrations](integrations/)
+- [Mysql — Deploy](../deploy/)

@@ -222,3 +222,11 @@ Add known issues here as they come up.
 - Catalog backup completed within the last 24 hours
 - Media server disk pool utilisation is below 85%
 - Client connectivity test passes for all protected servers
+
+---
+
+## See also
+
+- [Netbackup — Procedures](../procedures/)
+- [Netbackup — CLI Reference](../cli-reference/)
+- [Netbackup — Common Issues](../../troubleshooting/common-issues/)

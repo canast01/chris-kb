@@ -402,3 +402,9 @@ terraform {
   }
 }
 ```
+
+---
+
+## See also
+
+- [Terraform — Design Standards](../design-standards/)

@@ -281,3 +281,9 @@ graph LR
     GIT -->|webhook| JIRA
     GIT -->|webhook| WH
 ```
+
+---
+
+## See also
+
+- [Git — Design Standards](../design-standards/)

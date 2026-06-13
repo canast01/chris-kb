@@ -84,3 +84,11 @@ Thresholds are configured in CloudIQ and feed into the AIOps anomaly engine:
 - [ ] Notification rules set (email + ServiceNow for Critical)
 - [ ] Weekly recommendation review scheduled as recurring calendar event
 - [ ] APEX Console bookmarked and access verified for on-call engineer
+
+---
+
+## See also
+
+- [Dell Aiops — How It Works](how-it-works/)
+- [Dell Aiops — Integrations](integrations/)
+- [Dell Aiops — Deploy](../deploy/)

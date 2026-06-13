@@ -125,3 +125,11 @@ APEX Console supports federated authentication via SAML 2.0. When SSO is configu
 - Enforce MFA for all human user accounts, either via SSO policy or the APEX Console's built-in MFA setting.
 - Do not use shared or team-named accounts for APEX Console access — all access should be attributable to a named individual.
 - Log and alert on Account Admin role assignment changes.
+
+---
+
+## See also
+
+- [Apex Storage As A Service — Authentication](authentication/)
+- [Apex Storage As A Service — Hardening](hardening/)
+- [Apex Storage As A Service — Encryption](encryption/)

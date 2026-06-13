@@ -101,3 +101,11 @@ Ordered steps for initial FlashBlade setup:
 15. **Configure snapshot schedules** — create per-filesystem snapshot policies with appropriate retention aligned with application RPO
 16. **Configure replication** — set up replica links to the remote FlashBlade for ActiveDR; verify lag is within RPO
 17. **Validate and document** — confirm all filesystems, exports, and buckets are accessible; run `purefb alert list` and `purefb blade list`; record build in CMDB
+
+---
+
+## See also
+
+- [FlashBlade — How It Works](how-it-works/)
+- [FlashBlade — Integrations](integrations/)
+- [FlashBlade — Deploy](../deploy/)

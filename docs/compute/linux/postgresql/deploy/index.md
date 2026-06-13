@@ -96,3 +96,11 @@ psql -U appuser -h 127.0.0.1 -d app_prod -c "SELECT 1 AS alive;"
 - `psql -U postgres -c "SELECT version();"` returns the expected PostgreSQL version
 - Application user can connect: `psql -U appuser -h 127.0.0.1 -d app_prod -c "SELECT 1 AS alive;"`
 - `pg_lsclusters` shows the cluster as `online`
+
+---
+
+## See also
+
+- [Postgresql — Procedures](../operations/procedures/)
+- [Postgresql — Common Issues](../troubleshooting/common-issues/)
+- [Postgresql — How It Works](../architecture/how-it-works/)

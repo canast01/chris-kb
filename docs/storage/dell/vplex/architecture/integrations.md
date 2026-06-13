@@ -317,3 +317,10 @@ Key log sources to forward:
 | vplexcli command history | `/var/log/VPlex/cli/vplexcli.log` | All CLI commands; critical for audit trail |
 | Management events | `/var/log/VPlex/vplexmanagement.log` | Configuration changes, director events |
 | Unisphere web UI | `/var/log/VPlex/` | Web authentication and API events |
+
+---
+
+## See also
+
+- [Vplex — How It Works](how-it-works/)
+- [Vplex — Design Standards](design-standards/)

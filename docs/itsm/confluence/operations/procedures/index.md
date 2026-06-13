@@ -356,3 +356,11 @@ Keep installed apps patched and remove unused add-ons to reduce attack surface a
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Confluence — Health Checks](../health-checks/)
+- [Confluence — CLI Reference](../cli-reference/)
+- [Confluence — Common Issues](../../troubleshooting/common-issues/)

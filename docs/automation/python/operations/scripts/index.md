@@ -77,3 +77,11 @@ The script steps through 5 numbered stages printed in yellow. If Python is missi
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Python — Procedures](../procedures/)
+- [Python — CLI Reference](../cli-reference/)
+- [Python — Health Checks](../health-checks/)

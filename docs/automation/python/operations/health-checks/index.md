@@ -253,3 +253,11 @@ tail -20 /var/log/automation/<script-name>.log
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Python — Procedures](../procedures/)
+- [Python — CLI Reference](../cli-reference/)
+- [Python — Common Issues](../../troubleshooting/common-issues/)

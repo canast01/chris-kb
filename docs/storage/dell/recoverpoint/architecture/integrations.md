@@ -140,3 +140,10 @@ GET /rest/consistency_groups
 PUT /rest/consistency_groups/{id}/clusters/{clusterId}/image_access/enable
 Body: {"scenario": "LOGGED_ACCESS", "consistency": "CRASH_CONSISTENT"}
 ```
+
+---
+
+## See also
+
+- [Recoverpoint — How It Works](how-it-works/)
+- [Recoverpoint — Design Standards](design-standards/)

@@ -347,3 +347,11 @@ When using an external KMIP server, key rotation is initiated from the KMIP serv
 | CA-signed certificate installed | `openssl s_client -connect host:8443 \| openssl x509 -noout -issuer` | Shows internal or public CA, not self-signed |
 | Management cipher strength | `nmap --script ssl-enum-ciphers -p 8443 host` | Only strong GCM ciphers listed |
 | SYMAPI daemon TLS enabled | `grep SECURE /var/symapi/config/netcnfg` | SECURE flag present |
+
+---
+
+## See also
+
+- [Powermax — Hardening](hardening/)
+- [Powermax — Authentication](authentication/)
+- [Powermax — Access Control](access-control/)

@@ -125,3 +125,11 @@ graph LR
 - [Escalation](../troubleshooting/escalation/) — GitHub/GitLab Support for hosting-side issues (repository corruption, access failures), `git gc --aggressive` and `git repack` for local repository performance, and data recovery specialists for catastrophic history loss on self-hosted servers
 
 **Why last**: Troubleshooting makes most sense once you can visualise the DAG and understand how reflog, stash, and the index interact with the working tree.
+
+---
+
+## See also
+
+- [Git — Deploy](../deploy/)
+- [Git — Procedures](../operations/procedures/)
+- [Git — Common Issues](../troubleshooting/common-issues/)

@@ -134,3 +134,11 @@ symdev show -sid <target_SID> <dev_id> | grep -E "Size|Emulation|Track"
 | Planned failover (SRM automated) | < 15 minutes | Per recovery plan |
 | Unplanned failover (manual) | < 30 minutes | DR runbook execution |
 | Post-failover data validation | < 60 minutes | Application-level check |
+
+---
+
+## See also
+
+- [Srdf S — How It Works](how-it-works/)
+- [Srdf S — Integrations](integrations/)
+- [Srdf S — Deploy](../deploy/)

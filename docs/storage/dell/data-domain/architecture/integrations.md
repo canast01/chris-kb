@@ -177,3 +177,10 @@ authentication ldap set base-dn "DC=corp,DC=example,DC=com"
 authentication ldap status
 authentication ldap test user <username>
 ```
+
+---
+
+## See also
+
+- [Data Domain — How It Works](how-it-works/)
+- [Data Domain — Design Standards](design-standards/)

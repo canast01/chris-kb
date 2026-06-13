@@ -163,3 +163,10 @@ Verify SNMP is reachable from the monitoring server:
 ```bash
 snmpwalk -v3 -u <username> -l authPriv -a SHA -A <auth-pass> -x AES -X <priv-pass> <switch-ip> sysDescr
 ```
+
+---
+
+## See also
+
+- [Mds — How It Works](how-it-works/)
+- [Mds — Design Standards](design-standards/)

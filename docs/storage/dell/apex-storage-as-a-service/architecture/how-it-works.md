@@ -135,3 +135,10 @@ graph TB
 | Use the APEX REST API to build automated capacity reports | Feed into internal capacity planning tools |
 | Review APEX Console alerts daily | Infrastructure issues are Dell's responsibility to remediate but you need to confirm SLA compliance |
 | Document subscription details in a runbook | Subscription ID, contract end date, committed tier, and burst thresholds for on-call staff |
+
+---
+
+## See also
+
+- [Apex Storage As A Service — Design Standards](design-standards/)
+- [Apex Storage As A Service — Integrations](integrations/)

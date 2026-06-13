@@ -77,3 +77,11 @@ graph TD
 | `Export-Clixml` | Current user + machine | Serialize full `PSCredential` objects |
 | WinRM over HTTPS (port 5986) | In-transit | Secure remote sessions |
 | Azure Key Vault + SecretManagement | Cross-machine | Enterprise secret storage |
+
+---
+
+## See also
+
+- [PowerShell — Hardening](../hardening/)
+- [PowerShell — Authentication](../authentication/)
+- [PowerShell — Access Control](../access-control/)

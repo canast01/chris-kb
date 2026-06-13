@@ -338,3 +338,11 @@ Key points illustrated:
 | Mediator | A third-party arbitration service (hosted in Pure1 or a third site) used by ActiveCluster to prevent split-brain on network partition |
 | Pure1 | Pure Storage's cloud analytics and management portal; provides fleet-wide visibility, AI-driven support, and capacity forecasting |
 | FlashArray | Pure Storage's block storage platform; available in FA//X (NVMe), FA//C (QLC), and FA//E (high-density) product lines |
+
+---
+
+## See also
+
+- [FlashArray — Design Standards](design-standards/)
+- [FlashArray — Integrations](integrations/)
+- [FlashArray — Deploy](../deploy/)

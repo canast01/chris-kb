@@ -102,3 +102,10 @@ GET /api/snapmirror/relationships/{uuid}/transfers
 ```
 
 Authenticate with HTTP Basic or cluster-scoped API tokens. Use the ONTAP REST API documentation at `https://<cluster-mgmt>/docs/api` for interactive exploration.
+
+---
+
+## See also
+
+- [Snapmirror — How It Works](how-it-works/)
+- [Snapmirror — Design Standards](design-standards/)

@@ -107,3 +107,11 @@ plaintext = fernet.decrypt(ciphertext)
 | File encryption | `cryptography` library with Fernet or AES-GCM |
 | TLS in transit | Always `verify=True`; use custom CA bundle for internal PKI |
 | SSH keys | Generate with `ssh-keygen -t ed25519`; restrict permissions with `chmod 600` |
+
+---
+
+## See also
+
+- [Python — Hardening](../hardening/)
+- [Python — Authentication](../authentication/)
+- [Python — Access Control](../access-control/)

@@ -132,3 +132,11 @@ graph LR
 | Tier 1 (critical DB, ERP) | < 15 minutes via Instant VM Recovery |
 | Tier 2 (business apps) | < 1 hour |
 | Tier 3 (dev/test) | < 4 hours |
+
+---
+
+## See also
+
+- [Veeam — Design Standards](../design-standards/)
+- [Veeam — Integrations](../integrations/)
+- [Veeam — Deploy](../../deploy/)

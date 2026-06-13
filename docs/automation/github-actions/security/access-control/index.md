@@ -164,3 +164,11 @@ gh api orgs/ORG/audit-log \
   env:
     SECRET: ${{ secrets.MY_SECRET }}   # referenced as $SECRET in script
 ```
+
+---
+
+## See also
+
+- [GitHub Actions — Authentication](../authentication/)
+- [GitHub Actions — Hardening](../hardening/)
+- [GitHub Actions — Encryption](../encryption/)

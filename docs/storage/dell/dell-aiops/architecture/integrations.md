@@ -47,3 +47,10 @@ Dell AIOps is embedded in CloudIQ — integrations are shared. Supported Dell ar
 - AIOps anomaly alerts can auto-create ServiceNow incidents linked to the affected CI
 - Requires SCG → CloudIQ → ServiceNow connector configured with the correct CMDB table mapping (`cmdb_ci_storage_server`)
 - Map CloudIQ array names to ServiceNow CI names to ensure correct CI assignment on incident creation
+
+---
+
+## See also
+
+- [Dell Aiops — How It Works](how-it-works/)
+- [Dell Aiops — Design Standards](design-standards/)

@@ -97,3 +97,11 @@ Credentials should be stored as CI/CD secrets and injected at runtime — never 
 | Azure | Managed Identity | Service principal via env vars |
 | GCP | Workload Identity | Service account via OIDC |
 | HashiCorp Vault | Vault agent | Vault token via CI secret |
+
+---
+
+## See also
+
+- [Terraform — Access Control](../access-control/)
+- [Terraform — Hardening](../hardening/)
+- [Terraform — Encryption](../encryption/)

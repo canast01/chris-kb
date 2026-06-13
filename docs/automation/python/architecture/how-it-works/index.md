@@ -125,3 +125,11 @@ widget-automation/
     ├── test_api.py
     └── test_config.py
 ```
+
+---
+
+## See also
+
+- [Python — Design Standards](../design-standards/)
+- [Python — Integrations](../integrations/)
+- [Python — Deploy](../../deploy/)

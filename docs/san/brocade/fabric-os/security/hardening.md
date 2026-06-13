@@ -256,3 +256,11 @@ Hardening is not a one-time task. Schedule these reviews:
 | Audit log review | Monthly | Review SIEM for unusual login patterns or config changes |
 | Firmware currency | Quarterly | Compare installed FOS version against Broadcom release notes |
 | CMDB accuracy | After any change | Update switch serial, firmware, port map in CMDB |
+
+---
+
+## See also
+
+- [Fabric Os — Authentication](authentication/)
+- [Fabric Os — Access Control](access-control/)
+- [Fabric Os — Encryption](encryption/)

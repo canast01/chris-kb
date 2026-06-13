@@ -81,3 +81,11 @@ aws iam simulate-principal-policy \
 | Token scoping | Scope API tokens to specific resources, not entire platforms |
 | Account isolation | Use a dedicated service account — never a personal account |
 | Regular review | Audit script credentials and permissions quarterly |
+
+---
+
+## See also
+
+- [Python — Authentication](../authentication/)
+- [Python — Hardening](../hardening/)
+- [Python — Encryption](../encryption/)

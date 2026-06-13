@@ -260,3 +260,9 @@ Before a Linux build is marked complete, confirm all items below:
 - [ ] No pending security patches (`yum/dnf/apt` security update count = 0)
 - [ ] Server visible in monitoring platform within 15 minutes of first boot
 - [ ] AIDE database initialised (`aide --init`)
+
+---
+
+## See also
+
+- [Linux — Deploy](../../deploy/)

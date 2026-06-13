@@ -135,3 +135,10 @@ Aria Operations > Admin > Solutions > Dell CloudIQ Management Pack
 | Splunk / Grafana | CloudIQ REST API poller | Fleet health and capacity dashboards |
 | Aria Operations | CloudIQ management pack | VMware + Dell storage correlation |
 | Email | CloudIQ notification rules | WARNING alert distribution to team |
+
+---
+
+## See also
+
+- [Cloudiq — How It Works](how-it-works/)
+- [Cloudiq — Design Standards](design-standards/)

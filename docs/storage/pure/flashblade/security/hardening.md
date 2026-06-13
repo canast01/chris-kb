@@ -502,3 +502,11 @@ purefb audit list | head -30
 ```
 
 Document the completion date, the engineer who performed the hardening, and the Purity//FB version at time of hardening in the array's CMDB record. Schedule a re-review at the next major Purity upgrade or 12 months, whichever comes first.
+
+---
+
+## See also
+
+- [FlashBlade — Authentication](authentication/)
+- [FlashBlade — Access Control](access-control/)
+- [FlashBlade — Encryption](encryption/)

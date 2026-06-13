@@ -106,3 +106,9 @@ graph LR
 - [Escalation](../troubleshooting/escalation/) — Pure Support case creation (via Pure1 or phone), diagnostic bundle upload, Evergreen SLA response time tiers, and on-site hardware replacement workflow
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state — healthy replication lag ranges, expected latency baselines, and what protection group states indicate active data protection.
+
+---
+
+## See also
+
+- [Flasharray — Deploy](../../deploy/)

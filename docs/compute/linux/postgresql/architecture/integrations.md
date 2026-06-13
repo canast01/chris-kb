@@ -103,3 +103,10 @@ CREATE SUBSCRIPTION my_sub
 | `pg_dump` / `pg_restore` | Logical | Portable; table/schema selective |
 | `pgBackRest` | Physical + WAL | Incremental; compression; S3 target; PITR |
 | `Barman` | Physical + WAL | Central backup server; retention policies |
+
+---
+
+## See also
+
+- [Postgresql — How It Works](how-it-works/)
+- [Postgresql — Design Standards](design-standards/)

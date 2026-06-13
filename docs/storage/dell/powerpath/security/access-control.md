@@ -102,3 +102,11 @@ PowerPath does not generate its own audit log, but path state changes are writte
 - **AIX**: Events logged to `/var/adm/ras/errlog`; use `errpt` to review
 
 Log `powermt check_registration` and `powermt save` operations as part of any change management process — these are the two highest-impact administrative actions.
+
+---
+
+## See also
+
+- [Powerpath — Authentication](authentication/)
+- [Powerpath — Hardening](hardening/)
+- [Powerpath — Encryption](encryption/)

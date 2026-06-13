@@ -85,3 +85,10 @@ SELECT * FROM [REMOTE_SERVER].[database].[schema].[table];
 | Redgate SQL Monitor | Instance/AG health; performance baselines |
 
 Key DMVs for monitoring: `sys.dm_os_wait_stats`, `sys.dm_exec_query_stats`, `sys.dm_os_performance_counters`
+
+---
+
+## See also
+
+- [Sql Server — How It Works](how-it-works/)
+- [Sql Server — Design Standards](design-standards/)

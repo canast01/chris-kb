@@ -117,3 +117,11 @@ xtrabackup --backup --encrypt=AES256 \
 -- Rotate the master key (re-encrypts all tablespace keys)
 ALTER INSTANCE ROTATE INNODB MASTER KEY;
 ```
+
+---
+
+## See also
+
+- [Mysql — Hardening](hardening/)
+- [Mysql — Authentication](authentication/)
+- [Mysql — Access Control](access-control/)

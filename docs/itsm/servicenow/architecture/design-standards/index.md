@@ -222,3 +222,9 @@ flowchart TD
 | Managed by | Recommended | LDAP / manual |
 
 CI completeness is measured by the **CMDB Health Dashboard**. Target: >90% completeness score for Tier 1 CIs.
+
+---
+
+## See also
+
+- [Servicenow — Deploy](../../deploy/)

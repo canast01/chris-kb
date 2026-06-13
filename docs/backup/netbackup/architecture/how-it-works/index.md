@@ -104,3 +104,11 @@ Store the DR file off-host (NAS/object storage) and the passphrase in a secure v
 | Large (>2000 clients) | 32 vCPU | 128 GB | 5–10 TB |
 
 Catalog disk should be on SSD/NVMe — IOPS under load are significantly higher than sequential throughput figures suggest.
+
+---
+
+## See also
+
+- [Netbackup — Design Standards](../design-standards/)
+- [Netbackup — Integrations](../integrations/)
+- [Netbackup — Deploy](../../deploy/)

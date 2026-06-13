@@ -119,3 +119,11 @@ EXEC sp_readerrorlog 0, 1, 'Login failed';
 
 -- C2 audit / SQL Server Audit for detailed authentication logging
 ```
+
+---
+
+## See also
+
+- [Sql Server — Access Control](access-control/)
+- [Sql Server — Hardening](hardening/)
+- [Sql Server — Encryption](encryption/)

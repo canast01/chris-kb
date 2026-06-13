@@ -97,3 +97,10 @@ Before every Ever Modern controller upgrade:
 5. Engage Pure Support to schedule and lead the non-disruptive controller upgrade (Pure performs the swap)
 6. Monitor host I/O during upgrade with `purearray monitor` to confirm no latency impact
 7. After upgrade, verify all hardware components are healthy, all host paths are restored, and replication pods have resumed
+
+---
+
+## See also
+
+- [Evergreen — How It Works](how-it-works/)
+- [Evergreen — Integrations](integrations/)

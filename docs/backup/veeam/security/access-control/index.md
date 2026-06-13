@@ -66,3 +66,10 @@ Forward to SIEM using a log forwarder (Filebeat, Splunk UF) on the VBR server. A
 
 ---
 
+---
+
+## See also
+
+- [Veeam — Authentication](../authentication/)
+- [Veeam — Hardening](../hardening/)
+- [Veeam — Encryption](../encryption/)

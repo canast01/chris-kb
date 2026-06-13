@@ -333,3 +333,11 @@ If the restored `powermt.custom` references devices or paths that no longer exis
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Powerpath — Procedures](procedures/)
+- [Powerpath — Health Checks](health-checks/)
+- [Powerpath — Common Issues](../troubleshooting/common-issues/)

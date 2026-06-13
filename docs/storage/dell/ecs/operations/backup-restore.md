@@ -358,3 +358,11 @@ After any restore or VDC failover, validate the following before declaring recov
 - S3 `HEAD Bucket` and `GET Object` operations succeed from the application side
 - Geo-replication lag between VDCs is 0 bytes after the restore completes
 - Capacity utilisation is within expected range — no unexpected spike from rebalancing
+
+---
+
+## See also
+
+- [Ecs — Procedures](procedures/)
+- [Ecs — Health Checks](health-checks/)
+- [Ecs — Common Issues](../troubleshooting/common-issues/)

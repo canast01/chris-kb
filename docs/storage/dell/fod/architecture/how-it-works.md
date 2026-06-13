@@ -141,3 +141,10 @@ Metering is based on the **maximum capacity used in any hour** during the billin
 | Monitor CloudIQ capacity trends weekly | Burst events are visible before the end-of-month bill |
 | Ensure Secure Connect Gateway redundancy | A single SCG failure causing telemetry gaps can complicate billing disputes |
 | Automate monthly usage extraction via CloudIQ API | Feed into finance reporting to eliminate manual reconciliation |
+
+---
+
+## See also
+
+- [Fod — Design Standards](design-standards/)
+- [Fod — Integrations](integrations/)

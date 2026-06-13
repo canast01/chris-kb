@@ -244,3 +244,9 @@ defaults {
 ```
 
 Consult the vendor's Linux Multipath Guide (Dell PowerMax, Pure Storage) for device-specific settings.
+
+---
+
+## See also
+
+- [Linux — Design Standards](../design-standards/)

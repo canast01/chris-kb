@@ -110,3 +110,11 @@ concurrency:
 | Artifact storage included | 500 MB | 2 GB | 50 GB |
 | Cache storage per repository | 10 GB | 10 GB | 10 GB |
 | Secrets per repository | 100 | 100 | 100 |
+
+---
+
+## See also
+
+- [Github Actions — Design Standards](../design-standards/)
+- [Github Actions — Integrations](../integrations/)
+- [Github Actions — Deploy](../../deploy/)

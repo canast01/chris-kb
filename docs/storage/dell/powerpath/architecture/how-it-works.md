@@ -129,3 +129,10 @@ powermt display dev=all      # verbose path detail per device
 powermt restore              # retest dead paths and restore alive
 powermt check_registration   # verify PowerPath license is registered
 ```
+
+---
+
+## See also
+
+- [Powerpath — Design Standards](design-standards/)
+- [Powerpath — Integrations](integrations/)

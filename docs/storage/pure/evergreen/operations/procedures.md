@@ -468,3 +468,10 @@ Confirm the upgrade readiness check passes without blockers before setting the m
 - After upgrade: `purearray get --version` returns the expected target version
 - Array health: `purehw list` and `puredrive list` show no failed components
 - Performance metrics are within baseline 30 minutes after the upgrade completes
+
+---
+
+## See also
+
+- [Evergreen — Health Checks](health-checks/)
+- [Evergreen — CLI Reference](cli-reference/)

@@ -107,3 +107,11 @@ All MDS switches should be managed through Cisco NDFC (Nexus Dashboard Fabric Co
 - Fabric discovery: NDFC discovers switches via SSH/SNMP
 - SAN fabric view: topology, VSAN health, ISL utilisation
 - Zone management: preferred over per-switch CLI for large fabrics
+
+---
+
+## See also
+
+- [Mds — How It Works](how-it-works/)
+- [Mds — Integrations](integrations/)
+- [Mds — Deploy](../deploy/)

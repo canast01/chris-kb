@@ -238,3 +238,11 @@ SureBackup boots each VM in the isolated lab and runs application-specific tests
 - **Job status:** confirm backup job completed with status Success (not Warning)
 - **Recovery test:** restore a single file or VM from the new backup to confirm restorability
 - **Retention:** verify old recovery points are expiring per the configured retention policy
+
+---
+
+## See also
+
+- [Veeam — Procedures](../procedures/)
+- [Veeam — Health Checks](../health-checks/)
+- [Veeam — Common Issues](../../troubleshooting/common-issues/)

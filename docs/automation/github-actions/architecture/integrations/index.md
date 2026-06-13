@@ -142,3 +142,9 @@ steps:
     JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
     JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 ```
+
+---
+
+## See also
+
+- [Github Actions — Design Standards](../design-standards/)

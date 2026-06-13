@@ -418,3 +418,9 @@ curl -u svc-jira:token -X POST \
     }
   }'
 ```
+
+---
+
+## See also
+
+- [Jira — Design Standards](../design-standards/)

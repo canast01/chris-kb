@@ -161,3 +161,10 @@ Aria Operations > Admin > Solutions > Cisco Network Insights MP
 | LDAP / AAA | Inbound | Centralised user authentication and RBAC |
 | SMTP | Outbound | Alert email notifications |
 | Aria Operations | Outbound | Correlated VMware + Cisco fabric visibility |
+
+---
+
+## See also
+
+- [Nexus Dashboard — How It Works](how-it-works/)
+- [Nexus Dashboard — Design Standards](design-standards/)

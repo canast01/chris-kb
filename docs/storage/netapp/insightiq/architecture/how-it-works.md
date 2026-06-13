@@ -146,3 +146,11 @@ InsightIQ does not have native HA. Protect the appliance with:
 ## Supported OneFS Versions
 
 InsightIQ version compatibility with OneFS must be validated using the NetApp Interoperability Matrix Tool (IMT) before any OneFS upgrade. For OneFS 9.5+, consider whether native OneFS performance views may supplement InsightIQ for simpler use cases.
+
+---
+
+## See also
+
+- [Insightiq — Design Standards](design-standards/)
+- [Insightiq — Integrations](integrations/)
+- [Insightiq — Deploy](../deploy/)

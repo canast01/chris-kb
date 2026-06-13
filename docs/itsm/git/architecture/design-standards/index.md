@@ -188,3 +188,9 @@ git describe --exact-match --tags HEAD 2>/dev/null || echo "not a tagged commit"
 # List tags sorted by semver
 git tag -l "v*" | sort -V
 ```
+
+---
+
+## See also
+
+- [Git — Deploy](../../deploy/)

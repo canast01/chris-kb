@@ -296,3 +296,11 @@ grep -i "out of memory" /opt/atlassian/confluence/logs/catalina.out
 - Confirm the service or component is running and reachable
 - Check management UI for any errors or warnings
 - Run a basic functional test (login, read, write) to confirm end-to-end operation
+
+---
+
+## See also
+
+- [Confluence — Procedures](../operations/procedures/)
+- [Confluence — Common Issues](../troubleshooting/common-issues/)
+- [Confluence — How It Works](../architecture/how-it-works/)

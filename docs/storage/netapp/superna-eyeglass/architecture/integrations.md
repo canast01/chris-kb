@@ -99,3 +99,10 @@ Eyeglass Admin UI: Configuration → Notifications → Email:
 - Configure SMTP relay
 - Add distribution lists for DR team and on-call
 - Enable notifications for: failover events, readiness changes, SyncIQ policy errors
+
+---
+
+## See also
+
+- [Superna Eyeglass — How It Works](how-it-works/)
+- [Superna Eyeglass — Design Standards](design-standards/)

@@ -76,3 +76,11 @@ graph LR
 ## High Availability
 
 Pure1 is managed entirely by Pure Storage as a SaaS platform. Availability SLA and disaster recovery are Pure Storage's responsibility. Customer action is not required for Pure1 infrastructure HA.
+
+---
+
+## See also
+
+- [Pure1 — Design Standards](design-standards/)
+- [Pure1 — Integrations](integrations/)
+- [Pure1 — Deploy](../deploy/)

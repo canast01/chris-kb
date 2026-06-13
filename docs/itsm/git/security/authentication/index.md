@@ -153,3 +153,10 @@ trufflehog git https://github.com/org/repo.git --only-verified
 
 ---
 
+---
+
+## See also
+
+- [Git — Access Control](../access-control/)
+- [Git — Hardening](../hardening/)
+- [Git — Encryption](../encryption/)

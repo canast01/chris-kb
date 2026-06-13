@@ -91,3 +91,10 @@ Integrations reference covering Notes on APEX Management Boundaries.
 | Performance metrics | APEX Block API or CloudIQ API |
 | Firmware upgrades | Dell-managed (SaaS — no customer action required) |
 | Hardware replacement | Dell field service — no customer CLI |
+
+---
+
+## See also
+
+- [Apex Storage As A Service — How It Works](how-it-works/)
+- [Apex Storage As A Service — Design Standards](design-standards/)

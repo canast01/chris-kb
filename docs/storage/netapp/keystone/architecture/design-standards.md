@@ -96,3 +96,10 @@ Standards reference covering Service Level Selection, Naming Conventions, Capaci
 - Set EMS capacity threshold alerts at 80% of committed tier within ONTAP; configure BlueXP notifications for Keystone capacity events
 - Request a committed capacity increase at least 60 days before anticipated growth to allow for NetApp procurement and order processing
 - Generate and archive monthly consumption reports from the BlueXP digital wallet for internal chargeback or showback to business units
+
+---
+
+## See also
+
+- [Keystone — How It Works](how-it-works/)
+- [Keystone — Integrations](integrations/)

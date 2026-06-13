@@ -239,3 +239,11 @@ event notification destination show
 | Review mediator VM OS patch level for SMBC deployments | Apply outstanding OS patches; confirm mediator compatibility with current ONTAP version |
 | Audit service account usage; rotate credentials | Review `security login show`; rotate passwords in the secrets vault |
 | Confirm EMS alerts are being received by the SIEM | Verify alert delivery; test with `event log show -message-name snapmirror.lag*` |
+
+---
+
+## See also
+
+- [Snapmirror — Authentication](authentication/)
+- [Snapmirror — Access Control](access-control/)
+- [Snapmirror — Encryption](encryption/)

@@ -54,3 +54,10 @@ Key metrics to export: `Threads_connected`, `Queries`, `Innodb_buffer_pool_read_
 | Percona XtraBackup | Physical hot backup | No table locks; incremental supported; faster restore |
 | MySQL Enterprise Backup | Physical | Oracle commercial; streaming to S3 supported |
 | `mysqlbinlog` | Binlog backup | Used for PITR; replicate binlogs to backup host continuously |
+
+---
+
+## See also
+
+- [Mysql — How It Works](how-it-works/)
+- [Mysql — Design Standards](design-standards/)

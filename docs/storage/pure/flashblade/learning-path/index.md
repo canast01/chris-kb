@@ -106,3 +106,9 @@ graph LR
 - [Escalation](../troubleshooting/escalation/) — Pure Support case creation, diagnostic bundle upload via Pure1, blade hardware replacement workflow, and Evergreen SLA response time tiers
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state — healthy replication lag ranges, expected NFS/S3 latency baselines, and normal blade utilisation patterns.
+
+---
+
+## See also
+
+- [Flashblade — Deploy](../../deploy/)

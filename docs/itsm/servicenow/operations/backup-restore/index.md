@@ -187,3 +187,11 @@ ServiceNow SLA for restore initiation: 4 hours (P1 priority).
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Servicenow — Procedures](../procedures/)
+- [Servicenow — Health Checks](../health-checks/)
+- [Servicenow — Common Issues](../../troubleshooting/common-issues/)

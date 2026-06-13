@@ -146,3 +146,10 @@ VDC
 3. Coordinator chunks the object, applies erasure coding, distributes fragments across data nodes
 4. Once local write completes, coordinator acknowledges write to client
 5. Geo-replication journal records the new object; replication service transmits to peer VDCs
+
+---
+
+## See also
+
+- [Ecs — Design Standards](design-standards/)
+- [Ecs — Integrations](integrations/)

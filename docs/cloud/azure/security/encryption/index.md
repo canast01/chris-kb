@@ -353,3 +353,11 @@ az monitor diagnostic-settings create \
 # Alert on Key Vault secret access by unexpected principals
 # Create a scheduled query rule in Azure Monitor targeting the above query
 ```
+
+---
+
+## See also
+
+- [Azure — Hardening](../hardening/)
+- [Azure — Authentication](../authentication/)
+- [Azure — Access Control](../access-control/)

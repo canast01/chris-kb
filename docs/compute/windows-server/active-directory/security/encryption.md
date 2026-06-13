@@ -117,3 +117,11 @@ Get-WinEvent -ComputerName dc1 -FilterHashtable @{
     LogName='Security'; Id=4769
 } -MaxEvents 500 | Where-Object { $_.Message -match "0x17" } | Select-Object -First 10 TimeCreated, Message
 ```
+
+---
+
+## See also
+
+- [Active Directory — Hardening](hardening/)
+- [Active Directory — Authentication](authentication/)
+- [Active Directory — Access Control](access-control/)

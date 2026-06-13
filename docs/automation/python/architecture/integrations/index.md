@@ -146,3 +146,9 @@ except requests.exceptions.Timeout:
 | Session object | Multiple requests to same host | `requests.Session()` |
 | Retry adapter | Resilience against transient failures | `HTTPAdapter(max_retries=Retry(...))` |
 | Timeout | Avoid hanging scripts | `timeout=(connect_timeout, read_timeout)` |
+
+---
+
+## See also
+
+- [Python — Design Standards](../design-standards/)

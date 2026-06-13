@@ -82,3 +82,11 @@ DROP EXTENSION IF EXISTS file_fdw;
 | `log_connections = on` | `SHOW log_connections` → on |
 | Strong auth method | All `host` lines in pg_hba.conf use `scram-sha-256` |
 | Data dir mode 700 | `stat /var/lib/pgsql/16/data` → permissions 700 |
+
+---
+
+## See also
+
+- [Postgresql — Authentication](authentication/)
+- [Postgresql — Access Control](access-control/)
+- [Postgresql — Encryption](encryption/)

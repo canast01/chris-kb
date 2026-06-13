@@ -340,3 +340,11 @@ nslookup <production-smartconnect-zone>
 - SyncIQ replication policies show `Running` and last-run within the expected window
 - SMB share failover test: shares accessible from DR site post-failover and post-failback
 - DNS failover verification: client resolution points to DR SVM IP during failover
+
+---
+
+## See also
+
+- [Superna Eyeglass — Procedures](procedures/)
+- [Superna Eyeglass — CLI Reference](cli-reference/)
+- [Superna Eyeglass — Common Issues](../troubleshooting/common-issues/)

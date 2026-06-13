@@ -119,3 +119,11 @@ BACKUP DATABASE app_prod
   WITH COMPRESSION,
        ENCRYPTION (ALGORITHM = AES_256, SERVER CERTIFICATE = TDE_Cert);
 ```
+
+---
+
+## See also
+
+- [Sql Server — Hardening](hardening/)
+- [Sql Server — Authentication](authentication/)
+- [Sql Server — Access Control](access-control/)

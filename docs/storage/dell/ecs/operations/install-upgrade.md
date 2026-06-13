@@ -295,3 +295,10 @@ Replacing a failed node requires draining it from the cluster before physical re
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+---
+
+## See also
+
+- [Ecs — Procedures](procedures/)
+- [Ecs — Health Checks](health-checks/)

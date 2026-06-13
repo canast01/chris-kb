@@ -371,3 +371,11 @@ Audit events to monitor in the SIEM:
 | ISO 27001 A.8.5 | Secure authentication | LDAP/AD; MFA via jump host; session timeout 15 minutes |
 | CIS Controls v8 CIS 4 | Secure Configuration | Hardening checklist above; periodic review |
 | CIS Controls v8 CIS 5 | Account Management | Named accounts; quarterly review; disable stale accounts |
+
+---
+
+## See also
+
+- [Powerstore — Authentication](authentication/)
+- [Powerstore — Access Control](access-control/)
+- [Powerstore — Encryption](encryption/)

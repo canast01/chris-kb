@@ -399,3 +399,11 @@ purefb filesystem list
 | All S3 access keys have a documented owner | Every key maps to an active service or person | Revoke unaccounted keys immediately |
 | No AD group mappings to accounts that no longer exist in AD | Groups are still valid in AD directory | Remove stale group mappings |
 | Audit logs are flowing to SIEM | SIEM shows recent FlashBlade audit events | Check syslog configuration and SIEM ingestion |
+
+---
+
+## See also
+
+- [FlashBlade — Authentication](authentication/)
+- [FlashBlade — Hardening](hardening/)
+- [FlashBlade — Encryption](encryption/)

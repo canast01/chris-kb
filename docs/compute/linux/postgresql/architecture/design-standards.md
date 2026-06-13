@@ -84,3 +84,11 @@ PgBouncer between app and PostgreSQL:
 | PITR capability | WAL + base backup together | Any point |
 
 Test restore to separate instance monthly. `pg_restore` time must be < RTO.
+
+---
+
+## See also
+
+- [Postgresql — How It Works](how-it-works/)
+- [Postgresql — Integrations](integrations/)
+- [Postgresql — Deploy](../deploy/)

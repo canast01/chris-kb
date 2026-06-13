@@ -235,3 +235,9 @@ Get-CimInstance -ClassName Win32_ComputerSystem |
 | Event Logs | `Get-WinEvent`, `Get-EventLog` (legacy) |
 | WMI/CIM | `Get-CimInstance`, `Invoke-CimMethod` |
 | Firewall | `Get-NetFirewallRule`, `New-NetFirewallRule`, `Set-NetFirewallRule` |
+
+---
+
+## See also
+
+- [Powershell — Design Standards](../design-standards/)

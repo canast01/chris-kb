@@ -120,3 +120,11 @@ SELECT * FROM information_schema.SCHEMA_PRIVILEGES WHERE GRANTEE LIKE '%appuser%
 | Database | One schema | `GRANT SELECT ON db.*` |
 | Table | One table | `GRANT SELECT ON db.table` |
 | Column | Specific columns | `GRANT SELECT (col1, col2) ON db.table` |
+
+---
+
+## See also
+
+- [Mysql — Authentication](authentication/)
+- [Mysql — Hardening](hardening/)
+- [Mysql — Encryption](encryption/)

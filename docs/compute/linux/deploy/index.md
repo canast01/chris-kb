@@ -335,3 +335,11 @@ systemctl status <service-name>   # Active: running
 journalctl -u <service-name> -n 20 --no-pager  # no ERROR lines
 ss -tlnp | grep <port>            # service listening on expected port
 ```
+
+---
+
+## See also
+
+- [Linux — Procedures](../operations/procedures/)
+- [Linux — Common Issues](../troubleshooting/common-issues/)
+- [Linux — How It Works](../architecture/how-it-works/)

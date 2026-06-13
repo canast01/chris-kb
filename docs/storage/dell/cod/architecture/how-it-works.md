@@ -169,3 +169,9 @@ graph LR
   class META,METAB purple
 ```
 
+---
+
+## See also
+
+- [Cod — Design Standards](design-standards/)
+- [Cod — Integrations](integrations/)

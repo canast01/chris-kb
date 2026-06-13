@@ -86,3 +86,10 @@ Standards reference covering Upgrade Notes, Design Standards.
 - Monitor APEX Console alerts daily — infrastructure issues are Dell's responsibility but customer must confirm SLA compliance
 - Request capacity tier increases at least 30 days before projected threshold breach
 - Document subscription ID, contract end date, committed tier, and burst thresholds in a runbook
+
+---
+
+## See also
+
+- [Apex Storage As A Service — How It Works](how-it-works/)
+- [Apex Storage As A Service — Integrations](integrations/)
