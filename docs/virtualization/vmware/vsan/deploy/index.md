@@ -76,6 +76,9 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 
 ---
 
+!!! warning "Disk claim is destructive"
+    Claiming disks for vSAN **erases all existing data** on those disks. Confirm disk selection before proceeding — this action cannot be undone.
+
 ## Phase 1 — Physical Layer
 
 **Exit criterion:** All hosts powered on, reachable via OOB management, cabling verified, and HCL compliance confirmed.

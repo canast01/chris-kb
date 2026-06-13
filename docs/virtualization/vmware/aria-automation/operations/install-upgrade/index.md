@@ -22,6 +22,9 @@ Install & Upgrade reference covering Version Matrix, Initial Deployment (New Env
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## Version Matrix
 
 | Product Name | Version | vSphere Compatibility | Notes |

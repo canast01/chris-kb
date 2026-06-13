@@ -48,6 +48,9 @@ tags:
 
 ---
 
+!!! warning "Service interruption"
+    Certificate rotation restarts vCenter SSO and platform services. All vSphere Client sessions will disconnect. Allow 15–30 minutes and schedule a maintenance window.
+
 ## Run This Routine
 
 ### Pre-rotation checks

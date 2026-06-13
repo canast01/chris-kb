@@ -68,6 +68,9 @@ Install and Upgrade reference covering Prerequisites for vSphere with Tanzu (Sup
 
 ---
 
+
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
 ## Prerequisites for vSphere with Tanzu (Supervisor)
 
 | Requirement | Detail |

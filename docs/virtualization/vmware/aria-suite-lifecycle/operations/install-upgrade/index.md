@@ -70,6 +70,9 @@ Store backup archives off the LCM appliance (NFS, S3, or external storage).
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## LCM Recovery
 
 If LCM appliance is lost:

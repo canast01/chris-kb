@@ -129,6 +129,9 @@ Shut down the VM and take a snapshot before creating a pool.
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## UAG Deployment
 
 UAG is deployed from OVA. Use PowerShell for repeatable deployment:

@@ -65,6 +65,9 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 
 ---
 
+!!! warning "DFW enforcement change"
+    Deploying or reconfiguring NSX affects distributed firewall policy across all hosts. Validate in monitor mode before enforcing. A misconfigured rule can block application traffic immediately.
+
 ## Phase 1 — Prerequisites
 
 **Exit criterion:** DNS, NTP, MTU, and vCenter connectivity confirmed on all hosts; IP allocation plan documented.

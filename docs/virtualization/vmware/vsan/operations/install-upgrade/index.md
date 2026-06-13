@@ -70,6 +70,9 @@ Install & Upgrade reference covering ESA Migration, Driver and Firmware.
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## Upgrade Procedure
 
 All health checks must pass before beginning an upgrade. Resolve any degraded objects or active resyncs before proceeding.

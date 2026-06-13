@@ -80,6 +80,9 @@ vCenter (Protected) → Site Recovery → New Site Pair
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## SRA Installation
 
 Storage Replication Adapters (SRAs) are provided by storage array vendors:

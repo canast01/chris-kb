@@ -88,6 +88,9 @@ tags:
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## Run pre-check for a workload domain upgrade
 curl -sk -X POST -u admin:<password> \
   https://localhost/v1/upgrades \

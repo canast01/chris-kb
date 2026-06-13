@@ -118,6 +118,9 @@ ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legac
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## Upgrade and Patching Readiness Checklist
 
 ### Current State

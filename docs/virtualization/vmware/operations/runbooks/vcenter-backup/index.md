@@ -53,6 +53,9 @@ tags:
 
 ---
 
+!!! warning "vCenter downtime"
+    Restoring vCenter from backup replaces the running instance. The environment will be unmanaged for the duration of the restore (typically 20–60 minutes).
+
 ## Run This Routine
 
 ### Ad-hoc backup via VAMI

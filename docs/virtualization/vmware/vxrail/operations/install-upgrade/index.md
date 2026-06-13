@@ -59,6 +59,9 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## LCM Pre-Upgrade Checklist
 
 Complete this checklist before initiating any VxRail LCM upgrade. LCM will run its own pre-check, but these manual verifications catch issues that may not surface in the automated check.

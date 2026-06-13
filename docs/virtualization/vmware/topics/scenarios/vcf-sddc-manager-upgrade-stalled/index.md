@@ -43,6 +43,9 @@ recover the workflow.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+!!! warning "Full SDDC management plane downtime"
+    SDDC Manager upgrade pauses all lifecycle management operations for the duration. No new workloads, patches, or expansions can be applied until the upgrade completes.
 ## Products Involved
 
 | Product | Role in This Scenario |

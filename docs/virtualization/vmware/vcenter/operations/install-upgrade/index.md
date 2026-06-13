@@ -70,6 +70,9 @@ Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere L
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## vCenter Upgrade Procedure (VCSA)
 
 1. Take a **file-based backup** of vCenter (VAMI → Backup)

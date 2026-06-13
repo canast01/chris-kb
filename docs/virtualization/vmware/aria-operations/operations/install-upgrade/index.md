@@ -72,6 +72,9 @@ tags:
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## Backup
 
 Aria Operations does not have a native backup tool. Use the following:

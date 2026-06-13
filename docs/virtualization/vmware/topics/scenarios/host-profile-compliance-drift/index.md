@@ -42,6 +42,9 @@ to capture the intended new state.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+!!! warning "Hosts reboot during remediation"
+    Applying a host profile that changes kernel parameters or drivers requires a host reboot. Ensure DRS can evacuate each host before remediation begins.
 ## Products Involved
 
 | Product | Role in This Scenario |

@@ -37,6 +37,9 @@ Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Regist
 
 ---
 
+
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
 ## Prerequisites
 
 | Requirement | Detail |

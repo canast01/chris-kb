@@ -44,6 +44,9 @@ ensure the cluster has at least 30% free space before enabling.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+!!! warning "Full data rebuild required"
+    Enabling or disabling vSAN encryption triggers a full data migration across all disk groups. This can take hours on large clusters. Do not proceed without confirming available capacity and a tested rollback snapshot of vCenter.
 ## Products Involved
 
 | Product | Role in This Scenario |

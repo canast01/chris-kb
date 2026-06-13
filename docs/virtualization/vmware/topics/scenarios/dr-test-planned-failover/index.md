@@ -41,6 +41,9 @@ them to fail.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+!!! warning "Production traffic cutover"
+    Executing a planned failover transfers production traffic to the recovery site. Confirm all replication groups are synchronised (RPO = 0) and stakeholders are notified before starting.
 ## Products Involved
 
 | Product | Role in This Scenario |

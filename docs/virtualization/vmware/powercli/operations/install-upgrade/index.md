@@ -56,6 +56,9 @@ PowerCLI module lifecycle: upgrading to new versions, managing individual sub-mo
 
 ---
 
+!!! warning "Host enters maintenance mode"
+    ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.
+
 ## Check Installed Version
 
 ```powershell

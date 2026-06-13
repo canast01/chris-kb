@@ -41,6 +41,9 @@ large VMDKs and always verify destination capacity and storage policy before sta
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+!!! warning "Increased I/O load"
+    Storage vMotion generates sustained read/write I/O on both source and destination datastores. Run during a low-traffic window and monitor vSAN resync latency throughout.
 ## Products Involved
 
 | Product | Role in This Scenario |
