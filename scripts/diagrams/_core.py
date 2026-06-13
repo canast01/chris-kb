@@ -13,8 +13,7 @@ DIAGRAMS = {}  # populated at import time by @kb_diagram decorators
 def kb_diagram(key, file, description):
     """Decorator that auto-registers a diagram function. Usage:
 
-        @kb_diagram('my-key', 'docs/path/index.md', 'Short description')
-        def my_diagram():
+                def my_diagram():
             ...
     """
     def _register(fn):

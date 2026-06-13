@@ -89,11 +89,6 @@ def dr_commvault():
     return lines
 
 
-@kb_diagram(
-    'dr-commvault-architecture',
-    'docs/backup/commvault/architecture/index.md',
-    'Commvault Architecture — Component topology and data flows',
-)
 def dr_commvault_architecture():
     """Commvault Architecture Overview — W=103."""
     W2 = 103
@@ -1593,11 +1588,6 @@ def _dr_netbackup_overview():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-netbackup-architecture',
-    'docs/backup/netbackup/architecture/index.md',
-    'NetBackup — architecture overview, components, data flow',
-)
 def _dr_netbackup_architecture():
     W2 = 103
     R, txt_row = make_helpers(W2)

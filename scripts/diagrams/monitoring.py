@@ -20,11 +20,6 @@ PD1, PD2, PD3, PD4 = 22, 41, 61, 80
 # MONITORING ROOT / SHARED PAGES
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@kb_diagram(
-    'monitoring-alert-management',
-    'docs/monitoring-standards/alert-management/index.md',
-    'Alert management — routing, suppression, escalation policies',
-)
 def monitoring_alert_management():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -103,11 +98,6 @@ def monitoring_alert_management():
     return lines
 
 
-@kb_diagram(
-    'monitoring-dashboard-standards',
-    'docs/monitoring-standards/dashboard-standards/index.md',
-    'Dashboard standards — naming, layout, and visualisation conventions',
-)
 def monitoring_dashboard_standards():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -186,11 +176,6 @@ def monitoring_dashboard_standards():
     return lines
 
 
-@kb_diagram(
-    'monitoring-event-correlation',
-    'docs/monitoring-standards/event-correlation/index.md',
-    'Event correlation — linking alerts to root causes across domains',
-)
 def monitoring_event_correlation():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -269,11 +254,6 @@ def monitoring_event_correlation():
     return lines
 
 
-@kb_diagram(
-    'monitoring-health-monitoring',
-    'docs/monitoring-standards/health-monitoring/index.md',
-    'Health monitoring — platform-wide health checks and scoring',
-)
 def monitoring_health_monitoring():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -352,11 +332,6 @@ def monitoring_health_monitoring():
     return lines
 
 
-@kb_diagram(
-    'monitoring-log-retention',
-    'docs/monitoring-standards/log-retention/index.md',
-    'Log retention — policies for on-prem and cloud log storage',
-)
 def monitoring_log_retention():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -435,11 +410,6 @@ def monitoring_log_retention():
     return lines
 
 
-@kb_diagram(
-    'monitoring-metrics-baseline',
-    'docs/monitoring-standards/metrics-baseline/index.md',
-    'Metrics baseline — defining normal operating ranges for threshold tuning',
-)
 def monitoring_metrics_baseline():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -518,11 +488,6 @@ def monitoring_metrics_baseline():
     return lines
 
 
-@kb_diagram(
-    'monitoring-syslog',
-    'docs/monitoring-standards/syslog/index.md',
-    'Syslog — centralised syslog collection and forwarding architecture',
-)
 def monitoring_syslog():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -665,7 +630,6 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-dell-aiops-arch', 'docs/storage/dell/dell-aiops/architecture/index.md', 'Dell AIOps architecture')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -1369,7 +1333,6 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-insightiq-arch', 'docs/storage/netapp/insightiq/architecture/index.md', 'InsightIQ architecture')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99
@@ -2071,7 +2034,6 @@ def _():
     return lines
 
 
-@kb_diagram('monitoring-pure1-arch', 'docs/storage/pure/pure1/architecture/index.md', 'Pure1 architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     L, RR = 3, 99

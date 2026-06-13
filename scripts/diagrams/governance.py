@@ -6,11 +6,6 @@ from ._core import kb_diagram, make_helpers, bTop, bMid, bBot, sections, arrow, 
 
 # ── Data Protection ───────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'dp-backup-validation',
-    'docs/backup/backup-validation/index.md',
-    'Backup validation — verify job completion, restore testing, retention compliance',
-)
 def dp_backup_validation():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -59,11 +54,6 @@ def dp_backup_validation():
     return lines
 
 
-@kb_diagram(
-    'dp-data-classification',
-    'docs/security/data-classification/index.md',
-    'Data classification — tiers, labelling requirements, handling rules per sensitivity level',
-)
 def dp_data_classification():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -114,11 +104,6 @@ def dp_data_classification():
     return lines
 
 
-@kb_diagram(
-    'dp-data-encryption',
-    'docs/security/data-encryption/index.md',
-    'Data encryption — at rest and in transit, standards, key management and compliance',
-)
 def dp_data_encryption():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -162,11 +147,6 @@ def dp_data_encryption():
     return lines
 
 
-@kb_diagram(
-    'dp-data-governance',
-    'docs/security/data-governance/index.md',
-    'Data governance — ownership, access controls, audit requirements, regulatory alignment',
-)
 def dp_data_governance():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -211,11 +191,6 @@ def dp_data_governance():
     return lines
 
 
-@kb_diagram(
-    'dp-retention-policy',
-    'docs/security/data-retention-policy/index.md',
-    'Data retention policy — schedules by data type, legal holds, deletion verification',
-)
 def dp_retention_policy():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -265,11 +240,6 @@ def dp_retention_policy():
     return lines
 
 
-@kb_diagram(
-    'dp-key-management',
-    'docs/security/key-management/index.md',
-    'Key management — KMS architecture, key rotation, HSM integration references',
-)
 def dp_key_management():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -313,11 +283,6 @@ def dp_key_management():
     return lines
 
 
-@kb_diagram(
-    'dp-recovery-testing',
-    'docs/backup/recovery-testing/index.md',
-    'Recovery testing — restore test procedures, DR test schedules, test result documentation',
-)
 def dp_recovery_testing():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -385,11 +350,6 @@ def dp_recovery_testing():
 
 # ── Integration ───────────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'int-api-connectivity',
-    'docs/protocols/api-connectivity/index.md',
-    'API connectivity — testing REST API endpoints, authentication, TLS certificate validation',
-)
 def int_api_connectivity():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -432,11 +392,6 @@ def int_api_connectivity():
     return lines
 
 
-@kb_diagram(
-    'int-cert-trust',
-    'docs/security/certificate-trust/index.md',
-    'Certificate trust — adding CA certificates to trust stores on Linux, Windows, appliances',
-)
 def int_cert_trust():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -531,11 +486,6 @@ def int_directory_integration():
     return lines
 
 
-@kb_diagram(
-    'int-email-relay',
-    'docs/protocols/email-relay/index.md',
-    'Email relay — SMTP relay config for infrastructure alerts, monitoring notifications, appliances',
-)
 def int_email_relay():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -622,11 +572,6 @@ def int_external_connectivity():
     return lines
 
 
-@kb_diagram(
-    'int-service-integrations',
-    'docs/protocols/service-integrations/index.md',
-    'Service integrations — ServiceNow, monitoring, backup, SIEM integration patterns',
-)
 def int_service_integrations():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1053,11 +998,6 @@ def inv_system_inventory():
 
 
 
-@kb_diagram(
-    'perf-capacity-forecasting',
-    'docs/monitoring-standards/capacity-forecasting/index.md',
-    'Capacity forecasting — projecting compute, storage, network from trend data',
-)
 def perf_capacity_forecasting():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1098,11 +1038,6 @@ def perf_capacity_forecasting():
     return lines
 
 
-@kb_diagram(
-    'perf-failure-testing',
-    'docs/monitoring-standards/failure-testing/index.md',
-    'Failure testing — chaos engineering and fault injection for validating HA and DR',
-)
 def perf_failure_testing():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1143,11 +1078,6 @@ def perf_failure_testing():
     return lines
 
 
-@kb_diagram(
-    'perf-baselining',
-    'docs/monitoring-standards/performance-baselining/index.md',
-    'Performance baselining — establishing compute, storage, network baselines before changes',
-)
 def perf_baselining():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1188,11 +1118,6 @@ def perf_baselining():
     return lines
 
 
-@kb_diagram(
-    'perf-reliability-engineering',
-    'docs/monitoring-standards/reliability-engineering/index.md',
-    'Reliability engineering — MTTR/MTBF tracking, failure mode analysis, reliability improvement',
-)
 def perf_reliability_engineering():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1234,11 +1159,6 @@ def perf_reliability_engineering():
     return lines
 
 
-@kb_diagram(
-    'perf-resource-optimization',
-    'docs/monitoring-standards/resource-optimization/index.md',
-    'Resource optimization — right-sizing VMs, reclaiming storage, reducing idle resource consumption',
-)
 def perf_resource_optimization():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1279,11 +1199,6 @@ def perf_resource_optimization():
     return lines
 
 
-@kb_diagram(
-    'perf-service-availability',
-    'docs/monitoring-standards/service-availability/index.md',
-    'Service availability — measurement, downtime tracking, reporting against SLA targets',
-)
 def perf_service_availability():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1331,11 +1246,6 @@ def perf_service_availability():
     return lines
 
 
-@kb_diagram(
-    'perf-slo',
-    'docs/monitoring-standards/service-level-objectives/index.md',
-    'Service level objectives — defining, measuring, reporting SLOs for infrastructure services',
-)
 def perf_slo():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1379,11 +1289,6 @@ def perf_slo():
 
 # ── Architecture ──────────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'arch-dr-design',
-    'docs/backup/dr-design/index.md',
-    'DR design — RPO/RTO targets, site topology, failover patterns, DR architecture decisions',
-)
 def arch_dr_design():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1432,11 +1337,6 @@ def arch_dr_design():
     return lines
 
 
-@kb_diagram(
-    'arch-ha',
-    'docs/virtualization/high-availability/index.md',
-    'High availability design — HA patterns, redundancy, automatic failover, cluster design',
-)
 def arch_ha():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1823,11 +1723,6 @@ def net_troubleshooting():
 
 
 
-@kb_diagram(
-    'start-here',
-    'docs/start-here/index.md',
-    'Start Here — how to navigate and use the KB effectively',
-)
 def kb_start_here():
     W2 = 103
     R, txt_row = make_helpers(W2)

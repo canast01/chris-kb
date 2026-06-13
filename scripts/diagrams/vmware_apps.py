@@ -443,11 +443,6 @@ def vsphere_replication_stack():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'horizon-architecture',
-    'docs/virtualization/vmware/horizon/architecture/index.md',
-    'Horizon Architecture — Connection Server, UAG, Blast/PCoIP, App Volumes, DEM, pools',
-)
 def horizon_architecture():
     """Horizon Architecture sub-section — W=103."""
     W2 = 103
@@ -899,11 +894,6 @@ def horizon_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'srm-architecture',
-    'docs/virtualization/vmware/srm/architecture/index.md',
-    'SRM Architecture — site pair, SRA, protection groups, recovery plans, IP customisation',
-)
 def srm_architecture():
     """SRM Architecture sub-section — W=103."""
     W2 = 103
@@ -1355,11 +1345,6 @@ def srm_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'tanzu-architecture',
-    'docs/virtualization/vmware/tanzu/architecture/index.md',
-    'Tanzu Architecture — Supervisor Cluster, TKGs/TKGm, Cluster API, NSX-T, Harbor, TMC',
-)
 def tanzu_architecture():
     """Tanzu Architecture sub-section — W=103."""
     W2 = 103
@@ -1811,11 +1796,6 @@ def tanzu_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'vsphere-replication-architecture',
-    'docs/virtualization/vmware/vsphere-replication/architecture/index.md',
-    'vSphere Replication Architecture — VRMS/VRS per site, per-VMDK RPO, SRM integration',
-)
 def vsphere_replication_architecture():
     """vSphere Replication Architecture sub-section — W=103."""
     W2 = 103

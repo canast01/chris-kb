@@ -71,11 +71,6 @@ def dr_recoverpoint():
     return lines
 
 
-@kb_diagram(
-    'dr-recoverpoint-architecture',
-    'docs/storage/dell/recoverpoint/architecture/index.md',
-    'RecoverPoint Architecture — RPA cluster, splitter, journals, replication topology',
-)
 def dr_recoverpoint_architecture():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1233,11 +1228,6 @@ def _dr_srdf_a_overview():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-srdf-a-architecture',
-    'docs/storage/dell/srdf-a/architecture/index.md',
-    'SRDF/A — architecture overview, components, data flow',
-)
 def _dr_srdf_a_architecture():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -2347,11 +2337,6 @@ def _dr_srdf_s_overview():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-srdf-s-architecture',
-    'docs/storage/dell/srdf-s/architecture/index.md',
-    'SRDF/S — architecture overview, components, data flow',
-)
 def _dr_srdf_s_architecture():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3461,11 +3446,6 @@ def _dr_superna_overview():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-superna-architecture',
-    'docs/storage/netapp/superna-eyeglass/architecture/index.md',
-    'Superna Eyeglass — architecture overview, components, data flow',
-)
 def _dr_superna_architecture():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4575,11 +4555,6 @@ def _dr_veeam_overview():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-veeam-architecture',
-    'docs/backup/veeam/architecture/index.md',
-    'Veeam — architecture overview, components, data flow',
-)
 def _dr_veeam_architecture():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5634,11 +5609,6 @@ def _dr_veeam_ts_escalation():
     return lines
 
 
-@kb_diagram(
-    'dr-failover',
-    'docs/backup/runbooks/failover/index.md',
-    'DR Failover Procedure — declare disaster, activate DR site, redirect hosts, validate',
-)
 def _dr_failover():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5674,11 +5644,6 @@ def _dr_failover():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-failback',
-    'docs/backup/runbooks/failback/index.md',
-    'DR Failback Procedure — reverse replicate, re-sync, validate, cut back to production',
-)
 def _dr_failback():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5714,11 +5679,6 @@ def _dr_failback():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-runbook',
-    'docs/backup/runbooks/dr-runbook/index.md',
-    'DR Runbook — pre-defined response steps for declared disaster across all DR tools',
-)
 def _dr_runbook():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5754,11 +5714,6 @@ def _dr_runbook():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-ire',
-    'docs/backup/ire/index.md',
-    'Isolated Recovery Environment — air-gapped clean-room for ransomware recovery',
-)
 def _dr_ire():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5794,11 +5749,6 @@ def _dr_ire():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-ire-cleanroom',
-    'docs/backup/ire/clean-room/index.md',
-    'IRE Clean Room — isolated ESXi + vCenter + workstations for validated recovery',
-)
 def _dr_ire_cleanroom():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5834,11 +5784,6 @@ def _dr_ire_cleanroom():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-ire-isolation',
-    'docs/backup/ire/isolation/index.md',
-    'IRE Network Isolation — air-gap switch config, VLAN separation, no production routes',
-)
 def _dr_ire_isolation():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5874,11 +5819,6 @@ def _dr_ire_isolation():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-ire-restore',
-    'docs/backup/ire/restore/index.md',
-    'IRE Restore — step-by-step clean restore from vault to clean-room environment',
-)
 def _dr_ire_restore():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5914,11 +5854,6 @@ def _dr_ire_restore():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-ire-security',
-    'docs/backup/ire/security/index.md',
-    'IRE Security — access control, two-person integrity, audit logging in the vault',
-)
 def _dr_ire_security():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5954,11 +5889,6 @@ def _dr_ire_security():
     lines.append('\u2514' + '\u2500' * W2 + '\u2518')
     return lines
 
-@kb_diagram(
-    'dr-ire-validation',
-    'docs/backup/ire/validation/index.md',
-    'IRE Validation — application testing, data integrity checks, sign-off before cutback',
-)
 def _dr_ire_validation():
     W2 = 103
     R, txt_row = make_helpers(W2)

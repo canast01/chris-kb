@@ -279,11 +279,6 @@ def rb_service_restart():
     return lines
 
 
-@kb_diagram(
-    'rb-vol-expand',
-    'docs/storage/operations/runbooks/storage-volume-expansion/index.md',
-    'Storage volume expansion runbook — LUN expand, filesystem grow, no downtime',
-)
 def rb_vol_expand():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1288,11 +1283,6 @@ def ts_auth_failures():
     return lines
 
 
-@kb_diagram(
-    'ts-backup-failures',
-    'docs/backup/troubleshooting/backup-failures/index.md',
-    'Backup failures — Veeam/NBU/Commvault job errors, proxy, repo, snapshot issues',
-)
 def ts_backup_failures():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1342,11 +1332,6 @@ def ts_backup_failures():
     return lines
 
 
-@kb_diagram(
-    'ts-dns',
-    'docs/protocols/troubleshooting/dns-resolution/index.md',
-    'DNS resolution — forward/reverse failure, forwarder issues, cache flush, split-brain',
-)
 def ts_dns():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1395,11 +1380,6 @@ def ts_dns():
     return lines
 
 
-@kb_diagram(
-    'ts-high-cpu',
-    'docs/compute/troubleshooting/high-cpu/index.md',
-    'High CPU — identify top processes on Linux, Windows, ESXi; vCPU contention',
-)
 def ts_high_cpu():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1612,11 +1592,6 @@ def ts_storage_latency():
     return lines
 
 
-@kb_diagram(
-    'ts-vm-perf',
-    'docs/virtualization/troubleshooting/vm-performance/index.md',
-    'VM performance — CPU ready, memory balloon, disk latency, network drops',
-)
 def ts_vm_perf():
     W2 = 103
     R, txt_row = make_helpers(W2)

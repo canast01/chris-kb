@@ -4,6 +4,29 @@
 OpenShift troubleshooting: pod failures, node issues, cluster operator problems, must-gather collection, and Red Hat support escalation.
 </div>
 
+```text
+┌────────────────────────────────────── OpenShift Troubleshooting ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               OpenShift Troubleshooting Overview                              │   │
+│   │       Three sub-sections: Common Issues, Diagnostics (must-gather), Escalation (Red Hat)      │   │
+│   │       First step: oc get events -A and oc logs <pod> --previous; resolves 90% of issues       │   │
+│   │         Escalation: always attach must-gather; Sev 1 = call Red Hat after opening case        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                 ▼                               ▼                                 ▼                   │
+│                                                                                                       │
+│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
+│   │       Common Issues        │  │        Diagnostics         │  │           Escalation          │   │
+│   │       CrashLoopBackOff     │  │      must-gather bundle    │  │       Sev 1–4 definitions     │   │
+│   │       ImagePullBackOff     │  │        oc adm inspect      │  │       SOS report per node     │   │
+│   │        Node NotReady       │  │       etcd diagnostics     │  │       Case data checklist     │   │
+│   │          OOMKilled         │  │        Network debug       │  │       TAM escalation path     │   │
+│   │      Operator Degraded     │  │     Node crictl/kubelet    │  │        access.redhat.com      │   │
+│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
+│                                                                                                       │
+```
+
 ```mermaid
 graph TD
     A([Start: Issue Reported]) --> B{Check CVO\noc get clusterversion}
@@ -30,7 +53,6 @@ graph TD
     class C,E,G,I,K,L action
     class M escalate
 ```
-
 ## Sub-Page Index
 
 | Symptom | Go To |

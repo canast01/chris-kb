@@ -160,11 +160,6 @@ def vxrail_platform_stack():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'vmware-vxrail-architecture',
-    'docs/virtualization/vmware/vxrail/architecture/index.md',
-    'VMware VxRail Architecture — node families, vSAN HCI stack, LCM, VCF integration',
-)
 def vmware_vxrail_architecture():
     """VxRail Architecture sub-section — W=103."""
     W2 = 103

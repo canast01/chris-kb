@@ -1909,11 +1909,6 @@ def brocade_fabric_os():
     return lines
 
 
-@kb_diagram(
-    'brocade-fabric-os-arch',
-    'docs/san/brocade/fabric-os/architecture/index.md',
-    'Brocade FOS Architecture — OS layers, fabric services, hardware abstraction, data plane',
-)
 def brocade_fabric_os_arch():
     """Brocade FOS Architecture — W=103."""
     W2 = 103
@@ -3052,7 +3047,6 @@ def _brocade_fabric_os_trouble_esc():
     return lines
 
 
-@kb_diagram('brocade-sannav-arch', 'docs/san/brocade/sannav/architecture/index.md', 'Brocade SANnav Architecture')
 def _brocade_sannav_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3916,7 +3910,6 @@ def _brocade_sannav_trouble_esc():
     return lines
 
 
-@kb_diagram('cisco-dcnm-arch', 'docs/san/cisco/cisco-dcnm/architecture/index.md', 'Cisco DCNM Architecture')
 def _cisco_dcnm_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4942,7 +4935,6 @@ def _cisco_mds_index():
     return lines
 
 
-@kb_diagram('cisco-mds-arch', 'docs/san/cisco/mds/architecture/index.md', 'Cisco MDS Architecture')
 def _cisco_mds_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -5914,7 +5906,6 @@ def _cisco_mds_trouble_esc():
     return lines
 
 
-@kb_diagram('cisco-nd-arch', 'docs/san/cisco/nexus-dashboard/architecture/index.md', 'Cisco Nexus Dashboard — Architecture Overview')
 def _cisco_nd_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)

@@ -111,11 +111,6 @@ def openshift_root():
 
 # ── OpenShift Architecture ─────────────────────────────────────────────────────
 
-@kb_diagram(
-    'openshift-architecture',
-    'docs/virtualization/openshift/architecture/index.md',
-    'OpenShift architecture landing — control plane, design, integrations',
-)
 def openshift_architecture():
     """OpenShift Architecture landing — W=103."""
     W2 = 103

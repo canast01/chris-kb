@@ -224,11 +224,6 @@ def tools_confluence():
     return lines
 
 
-@kb_diagram(
-    'tools-confluence-architecture',
-    'docs/itsm/confluence/architecture/index.md',
-    'Confluence Architecture Overview — tiers, clustering, data flow',
-)
 def tools_confluence_architecture():
     """Confluence Architecture Overview — W=103."""
     W2 = 103
@@ -1471,7 +1466,6 @@ def tools_jira():
     return lines
 
 
-@kb_diagram('tools-jira-arch', 'docs/itsm/jira/architecture/index.md', 'Jira architecture overview')
 def tools_jira_arch():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -2558,7 +2552,6 @@ def tools_snow():
     return lines
 
 
-@kb_diagram('tools-snow-arch', 'docs/itsm/servicenow/architecture/index.md', 'ServiceNow architecture overview')
 def tools_snow_arch():
     R, txt_row = make_helpers(W2)
     B1_L, B1_R = 3, 50
@@ -3647,7 +3640,6 @@ def _snow_ops_cli():
     return lines
 
 
-@kb_diagram('tools-git', 'docs/automation/git/index.md', 'Git Overview')
 def _git_index():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3687,7 +3679,6 @@ def _git_index():
     return lines
 
 
-@kb_diagram('tools-git-arch', 'docs/automation/git/architecture/index.md', 'Git Architecture Overview')
 def _git_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3739,7 +3730,6 @@ def _git_arch():
     return lines
 
 
-@kb_diagram('tools-git-arch-how', 'docs/automation/git/architecture/how-it-works/index.md', 'Git How It Works')
 def _git_arch_how():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3791,7 +3781,6 @@ def _git_arch_how():
     return lines
 
 
-@kb_diagram('tools-git-arch-int', 'docs/automation/git/architecture/integrations/index.md', 'Git Integrations')
 def _git_arch_int():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3843,7 +3832,6 @@ def _git_arch_int():
     return lines
 
 
-@kb_diagram('tools-git-arch-design', 'docs/automation/git/architecture/design-standards/index.md', 'Git Design Standards')
 def _git_arch_design():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3895,7 +3883,6 @@ def _git_arch_design():
     return lines
 
 
-@kb_diagram('tools-git-ops', 'docs/automation/git/operations/index.md', 'Git Operations Overview')
 def _git_ops():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3935,7 +3922,6 @@ def _git_ops():
     return lines
 
 
-@kb_diagram('tools-git-ops-procedures', 'docs/automation/git/operations/procedures/index.md', 'Git Ops Procedures')
 def _git_ops_procedures():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -3987,7 +3973,6 @@ def _git_ops_procedures():
     return lines
 
 
-@kb_diagram('tools-git-ops-backup', 'docs/automation/git/operations/backup-restore/index.md', 'Git Backup and Restore')
 def _git_ops_backup():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4039,7 +4024,6 @@ def _git_ops_backup():
     return lines
 
 
-@kb_diagram('tools-git-ops-health', 'docs/automation/git/operations/health-checks/index.md', 'Git Health Checks')
 def _git_ops_health():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4091,7 +4075,6 @@ def _git_ops_health():
     return lines
 
 
-@kb_diagram('tools-git-ops-install', 'docs/automation/git/operations/install-upgrade/index.md', 'Git Install and Upgrade')
 def _git_ops_install():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4143,7 +4126,6 @@ def _git_ops_install():
     return lines
 
 
-@kb_diagram('tools-git-ops-scripts', 'docs/automation/git/operations/scripts/index.md', 'Git Operations Scripts')
 def _git_ops_scripts():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4195,7 +4177,6 @@ def _git_ops_scripts():
     return lines
 
 
-@kb_diagram('tools-git-ops-cli', 'docs/automation/git/operations/cli-reference/index.md', 'Git CLI Reference')
 def _git_ops_cli():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4247,7 +4228,6 @@ def _git_ops_cli():
     return lines
 
 
-@kb_diagram('tools-git-sec', 'docs/automation/git/security/index.md', 'Git Security Overview')
 def _git_sec():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4287,7 +4267,6 @@ def _git_sec():
     return lines
 
 
-@kb_diagram('tools-git-sec-access', 'docs/automation/git/security/access-control/index.md', 'Git Access Control')
 def _git_sec_access():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4339,7 +4318,6 @@ def _git_sec_access():
     return lines
 
 
-@kb_diagram('tools-git-sec-auth', 'docs/automation/git/security/authentication/index.md', 'Git Authentication')
 def _git_sec_auth():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4391,7 +4369,6 @@ def _git_sec_auth():
     return lines
 
 
-@kb_diagram('tools-git-sec-enc', 'docs/automation/git/security/encryption/index.md', 'Git Encryption')
 def _git_sec_enc():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4443,7 +4420,6 @@ def _git_sec_enc():
     return lines
 
 
-@kb_diagram('tools-git-sec-hard', 'docs/automation/git/security/hardening/index.md', 'Git Hardening')
 def _git_sec_hard():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4495,7 +4471,6 @@ def _git_sec_hard():
     return lines
 
 
-@kb_diagram('tools-git-trouble', 'docs/automation/git/troubleshooting/index.md', 'Git Troubleshooting Overview')
 def _git_trouble():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4535,7 +4510,6 @@ def _git_trouble():
     return lines
 
 
-@kb_diagram('tools-git-trouble-common', 'docs/automation/git/troubleshooting/common-issues/index.md', 'Git Common Issues')
 def _git_trouble_common():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4587,7 +4561,6 @@ def _git_trouble_common():
     return lines
 
 
-@kb_diagram('tools-git-trouble-diag', 'docs/automation/git/troubleshooting/diagnostics/index.md', 'Git Diagnostics')
 def _git_trouble_diag():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -4639,7 +4612,6 @@ def _git_trouble_diag():
     return lines
 
 
-@kb_diagram('tools-git-trouble-esc', 'docs/automation/git/troubleshooting/escalation/index.md', 'Git Escalation')
 def _git_trouble_esc():
     W2 = 103
     R, txt_row = make_helpers(W2)

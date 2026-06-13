@@ -142,9 +142,11 @@ def _write(name):
             new_content = _BLOCK_RE.sub('', content, count=1)
             n = 0
     if n == 0:
-        # Mermaid fallback: strip it, then re-insert at the correct position.
-        stripped, n = _MERMAID_RE.subn('', content, count=1)
-        base = stripped if n else content
+        # No existing text block — insert at correct position.
+        # If a Mermaid block is present, strip it and re-insert it AFTER the new text block.
+        mermaid_m = _MERMAID_RE.search(content)
+        mermaid_block = mermaid_m.group(0) if mermaid_m else ''
+        base = _MERMAID_RE.sub('', content, count=1) if mermaid_block else content
         # Find insertion point: after kb-summary </div>, else before kb-grid, else after title
         summary_end = re.search(r'</div>\n', base)
         grid_start = re.search(r'^<div class="kb-grid', base, re.MULTILINE)
@@ -157,7 +159,10 @@ def _write(name):
             pos = title_end.end()
         else:
             pos = 0
-        new_content = base[:pos] + '\n' + replacement + '\n' + base[pos:].lstrip('\n')
+        insert = '\n' + replacement + '\n'
+        if mermaid_block:
+            insert += '\n' + mermaid_block + '\n'
+        new_content = base[:pos] + insert + base[pos:].lstrip('\n')
         n = 1  # mark as handled
     if new_content == content:
         print(f'  OK (unchanged)  {entry["file"]}')

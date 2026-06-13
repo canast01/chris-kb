@@ -555,11 +555,6 @@ def aria_lcm_stack():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'aria-automation-architecture',
-    'docs/virtualization/vmware/aria-automation/architecture/index.md',
-    'Aria Automation Architecture — Prelude cluster, CAS, ABX, service broker, extensibility',
-)
 def aria_automation_architecture():
     """Aria Automation Architecture sub-section — W=103."""
     W2 = 103
@@ -1011,11 +1006,6 @@ def aria_automation_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'aria-operations-architecture',
-    'docs/virtualization/vmware/aria-operations/architecture/index.md',
-    'Aria Operations Architecture — analytics cluster, remote collectors, adapters, capacity',
-)
 def aria_operations_architecture():
     """Aria Operations Architecture sub-section — W=103."""
     W2 = 103
@@ -1467,11 +1457,6 @@ def aria_operations_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'aria-logs-architecture',
-    'docs/virtualization/vmware/aria-operations-for-logs/architecture/index.md',
-    'Aria Logs Architecture — master/worker HA cluster, vRLI agents, VLQL, content packs',
-)
 def aria_logs_architecture():
     """Aria Logs Architecture sub-section — W=103."""
     W2 = 103
@@ -1923,11 +1908,6 @@ def aria_logs_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'aria-networks-architecture',
-    'docs/virtualization/vmware/aria-operations-for-networks/architecture/index.md',
-    'Aria Networks Architecture — platform/collector VMs, IPFIX flows, path analysis, NSX',
-)
 def aria_networks_architecture():
     """Aria Networks Architecture sub-section — W=103."""
     W2 = 103
@@ -2379,11 +2359,6 @@ def aria_networks_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'aria-lcm-architecture',
-    'docs/virtualization/vmware/aria-suite-lifecycle/architecture/index.md',
-    'Aria LCM Architecture — LCM appliance, Locker, cert manager, product registry',
-)
 def aria_lcm_architecture():
     """Aria LCM Architecture sub-section — W=103."""
     W2 = 103

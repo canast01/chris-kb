@@ -1257,11 +1257,6 @@ def pure_operations_hub():
     return lines
 
 
-@kb_diagram(
-    'pure-flasharray-arch',
-    'docs/storage/pure/flasharray/architecture/index.md',
-    'Pure FlashArray Architecture — dual-controller HA, NVMe flash, Purity//FA, data services',
-)
 def pure_flasharray_arch():
     """Pure FlashArray Architecture overview — W=103."""
     W2 = 103

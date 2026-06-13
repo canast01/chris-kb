@@ -88,11 +88,6 @@ def netapp_keystone():
     return lines
 
 
-@kb_diagram(
-    'netapp-keystone-arch',
-    'docs/storage/netapp/keystone/architecture/index.md',
-    'NetApp Keystone Architecture — ONTAP clusters, Keystone Collector, management plane',
-)
 def netapp_keystone_arch():
     """NetApp Keystone Architecture — W=103."""
     W2 = 103

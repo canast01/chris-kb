@@ -89,7 +89,6 @@ def _():
     return lines
 
 
-@kb_diagram('automation/ansible/architecture/index', 'docs/automation/ansible/architecture/index.md', 'Ansible architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -736,7 +735,6 @@ def _():
     return lines
 
 
-@kb_diagram('automation/github-actions/architecture/index', 'docs/automation/github-actions/architecture/index.md', 'GitHub Actions architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -1354,7 +1352,6 @@ def _():
     return lines
 
 
-@kb_diagram('automation/powershell/architecture/index', 'docs/automation/powershell/architecture/index.md', 'PowerShell architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -1670,7 +1667,6 @@ def _():
     return lines
 
 
-@kb_diagram('automation/powershell/scripts', 'docs/automation/powershell/scripts/index.md', 'PowerShell scripts library')
 def _():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -1994,7 +1990,6 @@ def _():
     return lines
 
 
-@kb_diagram('automation/python/architecture/index', 'docs/automation/python/architecture/index.md', 'Python architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     lines = []
@@ -2609,7 +2604,6 @@ def _():
     return lines
 
 
-@kb_diagram('automation/terraform/architecture/index', 'docs/automation/terraform/architecture/index.md', 'Terraform architecture overview')
 def _():
     R, txt_row = make_helpers(W2)
     lines = []

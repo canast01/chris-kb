@@ -6926,11 +6926,6 @@ def dell_vplex_troubleshooting():
 
 # ── Dell CloudIQ sub-pages ────────────────────────────────────────────────────
 
-@kb_diagram(
-    'dell-cloudiq-arch',
-    'docs/storage/dell/cloudiq/architecture/index.md',
-    'Dell CloudIQ architecture overview — cloud-based AIOps platform for Dell storage',
-)
 def dell_cloudiq_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -7499,11 +7494,6 @@ def dell_cloudiq_ts_esc():
 
 # ── Dell COD sub-pages ────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'dell-cod-arch',
-    'docs/storage/dell/cod/architecture/index.md',
-    'Dell COD architecture overview — Capacity On Demand licensing model',
-)
 def dell_cod_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -7926,11 +7916,6 @@ def dell_cod_ts_diag():
 
 # ── Dell Data Domain sub-pages ────────────────────────────────────────────────
 
-@kb_diagram(
-    'dell-dd-arch',
-    'docs/storage/dell/data-domain/architecture/index.md',
-    'Dell Data Domain architecture overview — deduplication backup appliance',
-)
 def dell_dd_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)

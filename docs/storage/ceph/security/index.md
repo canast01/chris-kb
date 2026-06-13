@@ -26,21 +26,6 @@ Ceph security: CephX authentication for all daemon and client communication, RBA
 │   │             Key rotation (manual)            │  │               msgr2 secure mode             │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CephX         = Ceph's shared-secret authentication protocol; all daemons and clients use it         │
-│  capability    = CephX permission string: allow r/rw/* per service (mon, osd, mds) and pool           │
-│  client.admin  = CephX superuser key; full cluster access; protect and rotate regularly               │
-│  dmcrypt       = Linux kernel block device encryption used for OSD at-rest encryption                 │
-│  msgr2 secure  = Ceph messenger v2 encryption mode; encrypts OSD-to-OSD and client traffic            │
-│  RBD encrypt   = Per-image client-side encryption; LUKS key managed in client keyring                 │
-│  SSE-KMS       = RGW server-side encryption with external KMS (Vault); per-object or per-bucket       │
-│  profile rbd   = Pre-defined CephX capability preset granting pool-level RBD access                   │
-│  keyring       = File holding CephX shared secret: /etc/ceph/ceph.client.<name>.keyring               │
-│  MON keyring   = Master authentication database on MON nodes; only cephadm should write this          │
-│  pg_autoscaler = MGR module; disable in production to prevent unplanned PG count changes              │
-│  firewalld     = Linux firewall; restrict cluster-network ports to Ceph nodes only                    │
-│                                                                                                       │
 ```
 <div class="kb-grid">
   <a class="kb-card" href="access-control/">

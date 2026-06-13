@@ -1214,11 +1214,6 @@ def vcf_stack():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'esxi-architecture',
-    'docs/virtualization/vmware/esxi/architecture/index.md',
-    'ESXi Architecture — VMkernel, vmknic, storage stack, HA/DRS integration',
-)
 def esxi_architecture():
     """ESXi Architecture sub-section — W=103."""
     W2 = 103
@@ -1650,11 +1645,6 @@ def esxi_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'nsx-architecture',
-    'docs/virtualization/vmware/nsx/architecture/index.md',
-    'NSX Architecture — manager cluster, control plane, transport nodes, DFW',
-)
 def nsx_architecture():
     """NSX Architecture sub-section — W=103."""
     W2 = 103
@@ -2086,11 +2076,6 @@ def nsx_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'vsan-architecture',
-    'docs/virtualization/vmware/vsan/architecture/index.md',
-    'vSAN Architecture — disk groups, SPBM, FTT, ESA, stretched cluster',
-)
 def vsan_architecture():
     """vSAN Architecture sub-section — W=103."""
     W2 = 103
@@ -2542,11 +2527,6 @@ def vsan_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'vcenter-architecture',
-    'docs/virtualization/vmware/vcenter/architecture/index.md',
-    'vCenter Architecture — VCSA, PSC, SSO, ELM topology, HA, LCM',
-)
 def vcenter_architecture():
     """vCenter Architecture sub-section — W=103."""
     W2 = 103
@@ -2998,11 +2978,6 @@ def vcenter_troubleshooting():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'vcf-architecture',
-    'docs/virtualization/vmware/vmware-cloud-foundation/architecture/index.md',
-    'VCF Architecture — SDDC Manager, management/workload domains, CloudBuilder',
-)
 def vcf_architecture():
     """VCF Architecture sub-section — W=103."""
     W2 = 103

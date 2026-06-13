@@ -111,11 +111,6 @@ def evs_root():
 
 # ── EVS Architecture ──────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'evs-architecture',
-    'docs/cloud/aws/evs/architecture/index.md',
-    'EVS architecture landing — bare-metal model, VPC integration, NSX-T, HCX',
-)
 def evs_architecture():
     """EVS Architecture landing — W=103."""
     W2 = 103

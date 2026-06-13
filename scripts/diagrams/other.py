@@ -727,8 +727,6 @@ def brocade_san_stack():
     return lines
 
 
-@kb_diagram('linux-arch', 'docs/compute/linux/architecture/index.md',
-            'Linux Architecture — kernel, init, VFS, namespaces, cgroups, memory')
 def linux_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)
@@ -1871,7 +1869,6 @@ def linux_trouble_esc():
     return lines
 
 
-@kb_diagram('windows-arch', 'docs/compute/windows-server/architecture/index.md', 'Windows Server Architecture')
 def _windows_arch():
     W2 = 103
     R, txt_row = make_helpers(W2)

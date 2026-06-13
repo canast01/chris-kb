@@ -22,5 +22,6 @@ from . import openshift
 from . import evs
 from . import ceph
 from . import powercli
+from . import learning_paths
 
 from ._core import DIAGRAMS

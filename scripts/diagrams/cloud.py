@@ -492,11 +492,6 @@ def azure_platform_stack():
     lines.append('└' + '─' * W2 + '┘')
     return lines
 
-@kb_diagram(
-    'aws-architecture',
-    'docs/cloud/aws/architecture/index.md',
-    'AWS Architecture Overview — multi-account, Organizations, SCPs, TGW, IAM Identity Center',
-)
 def aws_architecture_overview():
     """AWS Architecture Overview — W=103."""
     W2 = 103
@@ -1912,11 +1907,6 @@ def aws_troubleshooting_overview():
 
 # ── Azure sub-section diagrams ─────────────────────────────────────────────────
 
-@kb_diagram(
-    'azure-architecture',
-    'docs/cloud/azure/architecture/index.md',
-    'Azure Architecture Overview — tenant hierarchy, hub-spoke VNet, Entra ID, Availability Zones',
-)
 def azure_architecture_overview():
     """Azure Architecture Overview — W=103."""
     W2 = 103

@@ -107,11 +107,6 @@ def ceph_root():
 
 # ── Ceph Architecture ─────────────────────────────────────────────────────────
 
-@kb_diagram(
-    'ceph-architecture',
-    'docs/storage/ceph/architecture/index.md',
-    'Ceph architecture landing — RADOS, daemon roles, CRUSH, pool types',
-)
 def ceph_architecture():
     """Ceph Architecture landing — W=103."""
     W2 = 103

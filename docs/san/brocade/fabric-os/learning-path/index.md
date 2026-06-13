@@ -4,13 +4,32 @@
 Recommended reading order for Brocade Fabric OS (FOS). Follow these stages in order to build a complete mental model before working with it in production.
 </div>
 
+```text
+┌────────────────────────────────────── Fabric OS — Learning Path ──────────────────────────────────────┐
+│                                                                                                       │
+│    5 stages in order: Architecture → Deploy → Operations → Security → Troubleshoot                    │
+│                                                                                                       │
+│   ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐  ┌────────────────┐  ┌────────────────┐ │
+│   │  Architecture  │  │     Deploy     │  │    Operations   │  │    Security    │  │  Troubleshoot  │ │
+│   │                │  │                │  │                 │  │                │  │                │ │
+│   │  How It Works  │  │ Initial Setup  │  │  Health Checks  │  │ Access Control │  │ Common Issues  │ │
+│   │Design Standards│  │Install/Upgrade │  │  CLI Reference  │  │ Authentication │  │  Diagnostics   │ │
+│   │  Integrations  │  │                │  │    Procedures   │  │   Encryption   │  │   Escalation   │ │
+│   │                │  │                │  │ Backup & Restore│  │   Hardening    │  │                │ │
+│   │                │  │                │  │     Scripts     │  │                │  │                │ │
+│   └────────────────┘  └────────────────┘  └─────────────────┘  └────────────────┘  └────────────────┘ │
+│                                                                                                       │
+│    Stage 1 (Architecture) builds understanding. Stage 3 (Operations) is daily work. Troubleshoot last.│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ```mermaid
 graph LR
   S1[Architecture] --> S2[Deploy] --> S3[Operations] --> S4[Security] --> S5[Troubleshoot]
   classDef stage fill:#1e3a5f,stroke:#2563eb,color:#fff
   class S1,S2,S3,S4,S5 stage
 ```
-
 ## Stage 1 — Architecture
 
 **Goal**: Understand the FC fabric model, the login sequence (FLOGI/PLOGI/PRLI), zoning types, and how ISLs and trunking connect switches in a fabric.
