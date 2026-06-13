@@ -145,3 +145,11 @@ EVC (Enhanced vMotion Compatibility) masks CPU features to the lowest common den
 
 **vMotion cost:**
 DRS assigns a cost to each migration (CPU and network load of vMotion). The benefit of balancing must exceed this cost; DRS will not propose a migration that produces marginal balance improvement at high vMotion cost (e.g., moving a very large memory VM).
+
+---
+
+## See also
+
+- [HA Deep Dive — Internals](../ha-deep-dive/)
+- [Cluster Services — Internals](../cluster-services/)
+- [Resource Management — Internals](../vsphere-resource-management/)

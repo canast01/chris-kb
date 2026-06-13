@@ -163,3 +163,11 @@ esxcli system certificate list  # run on each host
 | ESXi hosts show "Disconnected" after VMCA root rotation | Hosts have stale VMCA trust | Wait 15 min for auto-reconciliation; if persistent: reconnect host from vCenter → right-click → Reconnect |
 | SSO login fails after STS cert rotation | Browser cached SSO token is invalid | Clear browser cookies and session; re-login |
 | `certificate-manager` prompts for SSO admin password repeatedly | Wrong password format | Use full UPN: `administrator@vsphere.local` |
+
+---
+
+## See also
+
+- [Certificate Chain — Internals](../../../internals/certificate-chain/)
+- [Scenarios — Certificate Expiry and Rotation](../../../topics/scenarios/certificate-expiry-rotation/)
+- [vCenter — Security](../../../vcenter/security/)

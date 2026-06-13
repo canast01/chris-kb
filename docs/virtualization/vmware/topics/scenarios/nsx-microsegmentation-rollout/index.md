@@ -256,3 +256,11 @@ Expected: no application-breaking DROP entries. Have an application owner verify
 - NSX Connectivity Broken
 - Add ESXi Host to Cluster
 - VM Performance Degraded
+
+---
+
+## See also
+
+- [NSX Data Plane — Internals](../../../internals/nsx-data-plane/)
+- [Scenarios — NSX DFW Blocking](../nsx-dfw-blocking-application-traffic/)
+- [NSX — Deploy](../../../nsx/deploy/)

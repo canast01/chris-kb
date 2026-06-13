@@ -177,3 +177,11 @@ NSX-T introduces N-VDS (NSX Virtual Distributed Switch), which replaces standard
 
 **VDS as N-VDS (NSX 3.2+):**
 From NSX 3.2, VDS version 7.0 can serve as the N-VDS — no separate N-VDS required. vmnics stay on VDS; NSX adds overlay datapath on top. This simplifies migration and preserves existing VDS port group configs for non-NSX VMs.
+
+---
+
+## See also
+
+- [NSX Data Plane — Internals](../nsx-data-plane/)
+- [vSphere Networking — Internals](../vsphere-networking/)
+- [NSX — Architecture](../../nsx/architecture/)

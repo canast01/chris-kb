@@ -149,3 +149,11 @@ The `vcha.failover` operation is idempotent if passive is already active; return
 2. Check **Administration → vCenter HA** — original active should show as new passive.
 3. Confirm DB replication status returns to "In Sync" (within 5–10 min after original active recovers).
 4. Run `vCenter Server → Monitor → Tasks` to confirm no stuck tasks from the failover window.
+
+---
+
+## See also
+
+- [Scenarios — vCenter HA Failover](../../topics/scenarios/vcenter-ha-failover/)
+- [vCenter — Operations](../../vcenter/operations/)
+- [HA Deep Dive — Internals](../ha-deep-dive/)

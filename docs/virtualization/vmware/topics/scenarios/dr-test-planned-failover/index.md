@@ -209,3 +209,11 @@ failback. A failback to a site still under maintenance causes an immediate secon
 | NSX stretched network | An NSX-T configuration where the same logical segment (same IP subnet) spans both primary and DR sites, allowing VMs to retain their IP addresses after failover without DNS changes |
 | recovery plan | An SRM object that defines which VMs are protected, their startup order and priority groups, network mappings, and any pre/post-power-on scripts — the unit of execution for both DR tests and failovers |
 | HA admission control | vCenter HA mechanism that reserves cluster capacity for VM restarts after a host failure; the DR site cluster's effective capacity after HA reservation must be checked before failover to confirm it can host all failed-over VMs |
+
+---
+
+## See also
+
+- [SRM — Operations](../../../srm/operations/)
+- [vSphere Replication — Operations](../../../vsphere-replication/operations/)
+- [Scenarios — SRM RPO Violation](../srm-replication-lag-rpo-violation/)

@@ -174,3 +174,11 @@ Storage path loss has two distinct states with different HA behaviors:
 | APD timeout | Storage APD exceeds configured timeout | Restart VMs per APD protection policy |
 | PDL detected | Storage returns PDL SCSI sense code | Restart VMs immediately per PDL policy |
 | Admission control violation | Insufficient capacity to restart all VMs | HA logs warning; restarts highest-priority VMs first |
+
+---
+
+## See also
+
+- [DRS Mechanics — Internals](../drs-mechanics/)
+- [Cluster Services — Internals](../cluster-services/)
+- [Scenarios — VM Inaccessible / HA Failover](../../topics/scenarios/vm-inaccessible-ha-failover/)

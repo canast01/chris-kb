@@ -157,3 +157,11 @@ Full restore requires a complete re-deploy — do not attempt during normal oper
 | Backup fails with "Insufficient disk space" | Target directory full | Clean up old backup directories; ensure 20+ GB free on SFTP target |
 | Backup job shows "Running" but no progress | VCSA services under load | Check VAMI → Monitor → CPU/memory; wait 15 min before cancelling |
 | Cannot find backup encryption password | Password not recorded at setup | Without the password the backup cannot be restored; re-establish a fresh scheduled backup with a recorded password |
+
+---
+
+## See also
+
+- [vCenter — Operations](../../../vcenter/operations/)
+- [Scenarios — vCenter Down](../../../topics/scenarios/vcenter-down/)
+- [VMware Morning Health Check](../../morning-health-check/)

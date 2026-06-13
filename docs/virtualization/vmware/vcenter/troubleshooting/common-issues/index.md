@@ -381,3 +381,11 @@ Get-VIEvent -MaxSamples 500 |
 | SSH enabled on host | Break-glass or maintenance | Add suppression or use alarm action to auto-disable SSH after X hours |
 
 Alarm definitions are managed at **vCenter → Configure → Alarm Definitions**. Each alarm has configurable thresholds, trigger conditions, and actions (send email, run script, send SNMP trap).
+
+---
+
+## See also
+
+- [vCenter HA — Internals](../../../internals/vcha-internals/)
+- [Certificate Chain — Internals](../../../internals/certificate-chain/)
+- [Scenarios — vCenter Down](../../../topics/scenarios/vcenter-down/)
