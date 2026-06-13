@@ -4,50 +4,6 @@
 Linux server infrastructure running RHEL and Ubuntu — systemd service management, LVM2 storage with dm-multipath, LACP bonded networking, SELinux/AppArmor security enforcement, and Ansible-driven automation.
 </div>
 
-```text
-┌───────────────────────────────────────── Linux Architecture ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Linux Kernel (monolithic + loadable modules)                         │   │
-│   │     Process scheduler: CFS — Completely Fair Scheduler; time-slices CPU per cgroup weight     │   │
-│   │        Memory manager: virtual address spaces, page tables, TLB, OOM killer, hugepages        │   │
-│   │       VFS: Virtual File System layer — unified API over ext4, XFS, Btrfs, tmpfs, procfs       │   │
-│   │      Syscall interface: glibc wraps int 0x80 / SYSCALL into POSIX functions for userspace     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Kernel subsystems provide isolation, scheduling, and I/O to all userspace processes                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Namespaces & cgroups             │  │                systemd & init               │   │
-│   │         pid: process tree isolation          │  │            PID 1: systemd is init           │   │
-│   │         net: network stack isolation         │  │          Units: service/timer/mount         │   │
-│   │          mnt: mount point isolation          │  │        Targets: multi-user/graphical        │   │
-│   │         cgroup v2: CPU/mem/IO limits         │  │         journald: structured logging        │   │
-│   │         user: UID mapping isolation          │  │         socket activation: on-demand        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 CPUs · RAM DIMMs · NVMe/SAS disks · NIC · iDRAC/iLO BMC · Power & Cooling                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CFS         = Completely Fair Scheduler; distributes CPU time using a red-black tree                 │
-│  VFS         = Virtual File System; kernel abstraction layer over concrete filesystems                │
-│  cgroups     = Control Groups; enforce per-process CPU, memory, and I/O resource limits               │
-│  namespace   = Kernel isolation primitive; wraps PIDs, network, mounts, UIDs independently            │
-│  systemd     = PID 1 init; manages units (services, timers, mounts) and the boot sequence             │
-│  journald    = systemd journal daemon; stores structured binary logs with metadata fields             │
-│  OOM killer  = Out-of-Memory killer; terminates processes when the kernel exhausts RAM                │
-│  hugepages   = 2 MB / 1 GB pages; reduce TLB misses for memory-intensive workloads                    │
-│  tmpfs       = RAM-backed filesystem; used for /tmp, /dev/shm, and systemd runtime dirs               │
-│  procfs      = /proc virtual filesystem; exposes kernel and process state as readable files           │
-│  syscall     = Kernel entry point; userspace requests OS services via a defined ABI                   │
-│  loadable module= .ko kernel object loaded/unloaded at runtime via modprobe/rmmod                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ![Linux Architecture](../../../assets/linux-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -80,5 +36,4 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
 | Backup proxy | RHEL 9 | 8 | 16 GB | Veeam proxy or NetBackup media server |
 
 ## Topology
-
 

@@ -6,28 +6,6 @@ OpenShift control plane, node types, networking model, and storage integration. 
 
 ![OpenShift Architecture Overview](../../../assets/openshift-architecture-overview.svg)
 
-```text
-┌─────────────────────────────────────── OpenShift Architecture ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                OpenShift Architecture Overview                                │   │
-│   │   Three sub-sections: How It Works (internals), Design Standards (sizing/CIDR), Integrations  │   │
-│   │       Control plane: etcd quorum + API server + controller-manager + scheduler on RHCOS       │   │
-│   │  Operator pattern: platform components self-manage via Cluster Operators (CO reconciliation)  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                 ▼                               ▼                                 ▼                   │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
-│   │        How It Works        │  │      Design Standards      │  │          Integrations         │   │
-│   │        etcd I/O path       │  │      Node sizing rules     │  │           vSphere IPI         │   │
-│   │       OVN-K data path      │  │        CIDR planning       │  │          LDAP identity        │   │
-│   │       Operator pattern     │  │         StorageClass       │  │          Quay registry        │   │
-│   │      MachineSet scaling    │  │      MachineSet config     │  │            ACM / ODF          │   │
-│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
-│                                                                                                       │
-```
-
 ```mermaid
 graph LR
     A[OpenShift Architecture] --> B[How It Works]
