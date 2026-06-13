@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Data at Rest, Data in Transit, Certificate Management, TLS Cipher Hardening, Credential Storage.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ---

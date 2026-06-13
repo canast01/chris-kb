@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL / MariaDB procedures reference.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Database — Maintenance Procedures

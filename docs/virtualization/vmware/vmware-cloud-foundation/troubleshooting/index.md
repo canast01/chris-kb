@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Troubleshooting reference for VMware Cloud Foundation. Covers common SDDC Manager and LCM failure patterns, workload domain issues, diagnostic commands, log collection, and escalation procedures.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 ```text

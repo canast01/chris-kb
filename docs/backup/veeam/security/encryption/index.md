@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Backup Encryption.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

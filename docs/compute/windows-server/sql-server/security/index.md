@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Access control, authentication, encryption, and hardening.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

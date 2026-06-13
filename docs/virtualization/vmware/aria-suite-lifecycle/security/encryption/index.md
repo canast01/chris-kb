@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Importing a Signed Certificate into Locker, Verifying a Certificate Before Import, Applying a Certificate to a Product, Password Encryption in Locker, TLS Standards and 1 more sections.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Encryption Coverage

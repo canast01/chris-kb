@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurID), SAML Authentication (Workspace ONE / vIDM), Smart Card / Certificate Authentication, True SSO, Unauthenticated Access (Kiosk Mode) and 3 more sections.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

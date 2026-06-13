@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing NetBackup job failures, status codes, media server errors, client connectivity, and catalog issues.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

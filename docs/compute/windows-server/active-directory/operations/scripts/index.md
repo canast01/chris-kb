@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the `ActiveDirectory` PowerShell module installed.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌──────────────────── Security Active Directory Operations — Scripts and Automation ────────────────────┐

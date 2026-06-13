@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering NetBackup Access Control (NBAC).
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

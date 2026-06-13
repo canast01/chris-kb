@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Access Controls.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server initial deployment — installation checklist, post-install configuration (max memory, tempdb, SQL Agent), firewall, and validation queries.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

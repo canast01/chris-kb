@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Solutions for the most frequent PowerCLI problems: certificate errors, connection failures, module conflicts, API incompatibility, session expiry, and cmdlet parameter mismatches.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

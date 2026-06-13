@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering Information to Collect Before Opening an SR, Support Tiers.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Linux — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

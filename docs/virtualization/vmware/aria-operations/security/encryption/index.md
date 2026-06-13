@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering TLS Certificate Replacement, Cluster-Internal TLS, Data at Rest Encryption, Credential Encryption in Adapters, Certificate Expiry Monitoring and 1 more sections.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ## TLS Certificate Replacement

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Kubernetes Secrets Encryption at Rest, TLS for All Kubernetes API Communication, vSAN Encryption for Persistent Volumes, Image Content Trust (Cosign), External Secrets (Vault Integration) and 1 more sections.
+
+*Applies to: Tanzu 3.x*
 </div>
 ```text
 ┌────────────────────────────── Virtualization Vmware Tanzu — Encryption ───────────────────────────────┐

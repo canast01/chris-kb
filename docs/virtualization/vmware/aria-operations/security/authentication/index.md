@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Authentication Sources, Configuring Active Directory / LDAP, LDAP Group Import and Role Assignment, Workspace ONE Access (VIDM) / SAML Integration, API Authentication and 3 more sections.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ## Authentication Sources

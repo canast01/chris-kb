@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing vSphere Replication RPO violations, VR server connectivity, delta disk errors, and replication task failures.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
 ```text

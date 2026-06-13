@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Backup Policies.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware Tanzu Kubernetes Grid on vSphere. Covers Workload Management enablement, Supervisor cluster initialisation, vSphere namespace configuration, TKG workload cluster provisioning, Harbor registry setup, and developer onboarding validation.
+
+*Applies to: Tanzu 3.x*
 </div>
 
 ```text

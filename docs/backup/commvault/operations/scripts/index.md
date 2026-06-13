@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerShell and qscript automation for Commvault job management, SLA reporting, client health checks, and storage utilisation.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text

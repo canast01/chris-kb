@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Create a Break-Glass Local Account, Password Policy, Active Directory Integration, Authentication Hardening, Login Banner and 2 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ESXi Authentication Paths

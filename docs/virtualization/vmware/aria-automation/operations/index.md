@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Automation day-to-day operations — blueprint publishing, request management, approval workflows, and catalog maintenance.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Credentials, Test Recovery Plans Regularly, Restrict Who Can Execute Recovery, Secure Recovery Site Network Design and 3 more sections.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
   SRM Hardening Controls

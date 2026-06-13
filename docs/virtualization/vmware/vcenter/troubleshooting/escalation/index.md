@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering Severity Levels, SLA Tiers, Escalation Path, Useful Broadcom Resources, Information Broadcom Will Ask For.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

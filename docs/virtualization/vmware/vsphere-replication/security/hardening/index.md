@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Restrict VRA Management Access, Least-Privilege VR Service Account, Enable Encryption for WAN Replications and 3 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
   VR Hardening Controls

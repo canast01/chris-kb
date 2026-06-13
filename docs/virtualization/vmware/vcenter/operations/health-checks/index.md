@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Disk Partition Usage, SSO and Lookup Service Health, DNS and NTP Validation, PowerCLI Health Checks, Daily Checks and 2 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

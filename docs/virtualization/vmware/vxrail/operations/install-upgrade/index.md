@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VxRail LCM upgrade workflow from bundle download through post-upgrade validation. Covers obtaining and uploading the bundle, running pre-upgrade checks, the node-by-node upgrade sequence, monitoring progress, and a common LCM failure reference table.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Harbor project configuration, Helm deployments, Ingress setup, node scaling, cluster upgrade, Velero backup/restore, and persistent storage via vSAN CNS.
+
+*Applies to: Tanzu 3.x*
 </div>
 ```text
 ┌──────────────────────── Virtualization Vmware Tanzu — Operational Procedures ─────────────────────────┐

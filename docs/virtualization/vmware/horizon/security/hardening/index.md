@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Windows Hardening of Connection Server, UAG Hardening, USB Redirection Policy, Clipboard Direction Restriction, Drive Mapping Restriction and 3 more sections.
+
+*Applies to: Horizon 8.x*
 </div>
 
   Hardening Checklist Coverage

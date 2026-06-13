@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Performance Metrics Baseline reference covering Documenting the Baseline, Setting Thresholds from Baseline, Baseline Review Cadence.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Security reference for VMware ESXi. Covers vCenter SSO authentication, lockdown mode, role-based access control, VM and vSAN encryption, and host hardening aligned to VMware security guidance and DISA STIGs.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

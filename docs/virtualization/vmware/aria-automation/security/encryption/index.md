@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Secrets and Encrypted Properties, TLS Certificate Management, Data at Rest Encryption, Kubernetes Secret Management.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ## Secrets and Encrypted Properties

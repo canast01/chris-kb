@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Jira day-to-day operations — project administration, workflow configuration, board management, and user provisioning.
+
+*Applies to: Jira 9.x / Cloud*
 </div>
 
 ```text

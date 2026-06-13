@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Common issues, diagnostics, and escalation.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Check Flow, Daily Checklist, Job Monitoring, Validation.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

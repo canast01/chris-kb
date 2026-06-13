@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for SRM, Get Protected VM List, Get Recovery Plan History, Disconnect SRM Session.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
   SRM CLI / API Access

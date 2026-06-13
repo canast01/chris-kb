@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Day-2 procedures for VMware Aria Operations for Networks — data source management, application discovery, micro-segmentation planning, flow investigation, alerts, and reporting.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ```text

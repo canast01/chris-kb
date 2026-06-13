@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 NetBackup CLI Reference reference covering Master → Media → Client Topology, Restore Operations, Catalog & Media, Client & Policy Management, Error & Log Analysis.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ## Master → Media → Client Topology

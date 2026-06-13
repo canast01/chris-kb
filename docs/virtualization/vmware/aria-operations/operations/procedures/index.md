@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Day-2 operational procedures for Aria Operations — adding adapters, configuring alert policies, managing custom groups, remote collectors, dashboards, workload optimisation, and API data export.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

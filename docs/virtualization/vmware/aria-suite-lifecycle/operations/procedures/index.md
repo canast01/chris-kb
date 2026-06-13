@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Rotate a Password in Locker, Add a vCenter Server to LCM, Content Migration Between Environments, Register VIDM (Workspace ONE Access), Decommission a Product from LCM.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Common Procedures

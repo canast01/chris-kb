@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Tanzu hardening — RBAC, network policies, pod security admission, OPA Gatekeeper, and container image scanning.
+
+*Applies to: Tanzu 3.x*
 </div>
 
 ```text

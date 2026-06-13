@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Aria Operations adapter failures, data collection gaps, alert storms, and performance degradation.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

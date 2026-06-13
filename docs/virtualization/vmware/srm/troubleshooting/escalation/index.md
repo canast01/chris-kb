@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering Before Opening a Support Case, Severity Definitions, If SRA Vendor is Involved, Support Portal, Escalation Path and 1 more sections.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VxRail troubleshooting notes for lifecycle failures, manager issues, host alerts, vSAN alerts, bundles, and network alerts.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server common issues reference.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## Database — Performance Troubleshooting

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Windows Event Log Pipeline, Key Security Event IDs, Searching by Event ID, Exporting Logs, Event Log Forwarding (WEF) and 3 more sections.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 Diagnostic procedures and log analysis.

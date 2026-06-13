@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Tiered Administration Model, Core Security Controls, AdminSDHolder Monitoring.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌───────────────────────── Security Active Directory Security — Access Control ─────────────────────────┐

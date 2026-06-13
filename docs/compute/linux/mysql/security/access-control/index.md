@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL access control — user creation, GRANT/REVOKE, privilege hierarchy, role-based access, and auditing who has access to what.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

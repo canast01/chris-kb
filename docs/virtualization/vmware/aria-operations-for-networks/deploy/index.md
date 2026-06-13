@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for Aria Operations for Networks (AON). Covers pre-flight checks, platform node OVA deployment, proxy/collector node registration, data source configuration (vCenter, NSX, physical switches), IPFIX flow collection setup, and post-deployment validation.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ```text

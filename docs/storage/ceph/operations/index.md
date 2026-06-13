@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Ceph day-2 operations: cluster health monitoring, OSD management, pool tuning, CRUSH map updates, RBD/CephFS/RGW administration, and routine maintenance procedures.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

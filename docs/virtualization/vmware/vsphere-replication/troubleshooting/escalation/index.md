@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering Before Opening a Support Case, Severity Definitions, If SRM is Also Involved, VMware Support Portal, Escalation Path and 1 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
   VR Escalation Path

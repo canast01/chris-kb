@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Aria Suite Lifecycle upgrade failures, certificate errors, and product deployment issues.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
 ```text

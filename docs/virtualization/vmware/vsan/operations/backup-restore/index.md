@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Backup & Restore reference covering Supported Backup Methods, vSAN Configuration Backup, Restore Procedures, Backup Validation and Testing, Recovery Point and Recovery Time Objectives.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

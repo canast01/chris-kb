@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Commvault job failures, media agent connectivity, subclient errors, schedule issues, and restore failures.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text

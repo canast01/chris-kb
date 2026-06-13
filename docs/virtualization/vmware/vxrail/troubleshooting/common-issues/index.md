@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Concrete troubleshooting steps for the most frequent VxRail operational problems: plugin unavailability, LCM upgrade failures, vSAN health degradation, node offline conditions, and hardware alarms.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

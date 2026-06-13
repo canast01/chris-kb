@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering ESA Migration, Driver and Firmware.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

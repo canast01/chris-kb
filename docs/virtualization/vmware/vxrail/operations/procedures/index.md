@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Operational procedures for VxRail cluster administration. Covers node maintenance mode (with vSAN evacuation), node expansion, disk replacement, and the change readiness and post-change validation checklists required before any VxRail maintenance operation.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

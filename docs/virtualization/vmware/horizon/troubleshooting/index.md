@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Horizon troubleshooting — Connection Server failures, desktop provisioning errors and stuck instant clones, Blast and PCoIP session disconnects and latency, vGPU driver problems, UAG certificate errors, and App Volumes mount failures. Diagnostic paths: Horizon events database, /opt/vmware/hzn logs, UAG admin UI, and the Desktop Connectivity Tool.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

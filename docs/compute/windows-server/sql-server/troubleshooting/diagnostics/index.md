@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server diagnostics — error log, Activity Monitor equivalent via DMVs, blocking chain analysis, AG health, tempdb contention, and Query Store.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

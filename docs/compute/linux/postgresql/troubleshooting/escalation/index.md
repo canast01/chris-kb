@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL escalation criteria — P1/P2 indicators, evidence bundle to collect before engaging DBA support, and crash recovery guidance.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

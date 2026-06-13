@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Ops for Networks hardening — collector security, RBAC configuration, and certificate management.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ```text

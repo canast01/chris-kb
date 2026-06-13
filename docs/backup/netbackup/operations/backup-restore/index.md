@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup & Restore reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands and 2 more sections.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

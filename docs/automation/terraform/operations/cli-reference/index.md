@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired infrastructure in `.tf` files, and Terraform figures out what to create, change, or delete to reach that state.
+
+*Applies to: Terraform 1.x*
 </div>
 
  State is stored in a `.tfstate` file — it's Terraform's record of what it has actually deployed.

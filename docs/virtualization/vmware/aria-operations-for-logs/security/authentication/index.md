@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Authentication Methods, Active Directory / LDAP Configuration, Workspace ONE Access (VIDM) Integration, Verify LDAP Authentication from CLI, Session Policies and 2 more sections.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ## Authentication Methods

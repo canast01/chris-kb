@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Dell support escalation procedures for VxRail incidents: severity classification, required information checklist, case creation steps, SupportAssist automatic case handling, and TAM escalation path for critical issues.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

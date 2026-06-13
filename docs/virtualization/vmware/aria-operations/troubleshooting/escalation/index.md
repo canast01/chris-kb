@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering Support Portal, Support Bundle Collection, Information to Collect Before Opening a Case, SLA Tiers, Escalation Path and 2 more sections.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ## Support Portal

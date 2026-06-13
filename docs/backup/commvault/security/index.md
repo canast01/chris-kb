@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Commvault hardening — RBAC, encryption keys, audit logging, CommServe access control, and network security configuration.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text

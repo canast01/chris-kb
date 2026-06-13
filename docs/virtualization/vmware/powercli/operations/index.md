@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI operational reference: cmdlet library, automation scripts, health check routines, operational procedures, and lifecycle management.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

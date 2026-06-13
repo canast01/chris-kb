@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Security reference for VMware vCenter Server. Covers SSO authentication, identity sources, role-based access control, certificate management, and hardening aligned to VMware security guidance and DISA STIGs.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

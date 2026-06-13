@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Release Cadence, Decommission Procedure.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ## Release Cadence

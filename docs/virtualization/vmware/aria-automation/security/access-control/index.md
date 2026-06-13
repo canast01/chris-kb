@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering RBAC Model, Configuring AD Group Role Assignments, Content Sharing (Service Broker), Approval Policies, Reviewing Role Assignments via API and 1 more sections.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ## RBAC Model

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Terraform operational procedures — standard apply workflow, plan and apply strategies, change readiness, workspace management, state operations, incident triage, and provider credential rotation.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ## Standard Apply Workflow

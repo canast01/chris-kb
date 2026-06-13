@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Windows Server failures — services, event logs, WMI errors, performance degradation, and common boot issues.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

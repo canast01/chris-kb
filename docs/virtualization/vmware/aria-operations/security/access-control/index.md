@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering RBAC Roles, Object-Level Access Permissions, Creating a Service Account for API Access, Reviewing Current Role Assignments, Local Admin Account Hardening.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ## RBAC Roles

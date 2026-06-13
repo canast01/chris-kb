@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers hardware validation, Cloud Builder OVA deployment, bringup JSON spec preparation, management domain deployment, SDDC Manager commissioning, and first workload domain creation.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Veeam day-to-day operations — backup job management, restore procedures, scale-out repository, and immutability settings.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Data Sources, dmesg — Kernel Ring Buffer, Audit Log (auditd), Authentication Events, Log Rotation and 3 more sections.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 Diagnostic procedures and log analysis.

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Installation, upgrade, patching, and decommission.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## Patch Deployment Ring Flow

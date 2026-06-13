@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware Aria Automation (on-premises). Covers prerequisites, LCM-based deployment, cloud account configuration, project and blueprint setup, and end-to-end validation.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ```text

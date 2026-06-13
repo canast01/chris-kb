@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Scripts reference covering Pre-Upgrade Disk Check, Environment Health Summary, Bulk Locker Password Export (Alias List), NTP Validation Across All Product Nodes, Trigger Upgrade via API (Non-Interactive).
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Automation Scripts

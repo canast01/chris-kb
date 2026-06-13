@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering Support Bundles, SDDC Manager REST API, Password Management, Service Status & Logs.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 VCF CLI Tool Map — Where to Run What

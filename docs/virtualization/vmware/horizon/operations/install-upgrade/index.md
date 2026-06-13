@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Install and Upgrade reference covering Horizon Agent Installation in Golden Image, UAG Deployment, App Volumes Manager Installation, Upgrade Order, Upgrade a Connection Server (Rolling) and 2 more sections.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

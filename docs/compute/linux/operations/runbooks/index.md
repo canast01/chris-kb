@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Linux operational runbooks — routine maintenance, service recovery, backup validation, and performance checks.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

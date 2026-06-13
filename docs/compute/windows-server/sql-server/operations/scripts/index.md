@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server automation scripts — PowerShell backup rotation, index maintenance, AG health check, blocking chain alert, and database size report.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

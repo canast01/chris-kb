@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin node status, vSAN object health and resync, iDRAC hardware alarms, capacity thresholds, and LCM bundle availability — with a single runnable sequence and alert threshold table.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

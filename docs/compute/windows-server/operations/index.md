@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Windows Server — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

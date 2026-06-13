@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 SRM health checks — site pair connectivity verification, VM replication status and RPO compliance, recovery plan test compliance (90-day rule), RTO validation, placeholder VM presence at recovery site, and protection group coverage audit across all protected workloads.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server upgrade procedures — in-place upgrade, side-by-side upgrade, compatibility level, upgrade advisor, and post-upgrade validation.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

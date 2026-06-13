@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration, content library, certificate replacement, file-based backup, roles/permissions, SSO identity sources, alarms, cluster config, and VCSA upgrade.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

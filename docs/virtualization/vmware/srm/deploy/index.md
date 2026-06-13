@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. Phases 1–2 establish prerequisites and deploy SRM at both the protected and recovery sites; Phases 3–4 cover site pairing, inventory mappings, and replication (vSphere Replication or SRA); Phases 5–6 build protection groups, recovery plans, and validate with a test failover.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
 ```text

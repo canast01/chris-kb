@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL encryption — SSL/TLS for connections, pgcrypto for column-level encryption, transparent data encryption options, and WAL/backup encryption.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## SSL/TLS for Connections

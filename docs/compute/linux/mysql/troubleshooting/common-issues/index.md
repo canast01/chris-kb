@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL / MariaDB common issues reference.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Database — Performance Troubleshooting

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Jira operational procedures — story and epic creation, sprint management, backlog grooming, workflow configuration, user and permission management, board setup, and reporting.
+
+*Applies to: Jira 9.x / Cloud*
 </div>
 
 ## Stories

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Aria Automation deployment failures, vRO workflow errors, integration issues, and catalog problems.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ```text

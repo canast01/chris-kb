@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Common Issues reference covering Issue Summary, vCenter Services Not Starting, Certificate Errors, ESXi Host Disconnected or Not Responding, SSO / Authentication Failures and 5 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

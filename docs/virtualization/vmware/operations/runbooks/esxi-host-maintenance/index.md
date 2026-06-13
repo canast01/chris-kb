@@ -16,6 +16,7 @@ tags:
 | Estimated time | 15–60 minutes (DRS drain depends on VM count) |
 | Impact | Host-local VMs migrate; no service interruption when DRS is enabled |
 
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

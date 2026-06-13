@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Aria Ops for Networks collector failures, flow data gaps, and path analysis errors.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ```text

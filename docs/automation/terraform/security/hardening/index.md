@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Security Scanning Pipeline, Dependency and Provider Security, Hardening Checklist.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ## Security Scanning Pipeline

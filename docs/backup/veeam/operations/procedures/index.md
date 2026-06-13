@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Operational procedures covering backup job creation, copy job setup, SOBR management, and restore testing.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ## Instant VM Recovery Flow

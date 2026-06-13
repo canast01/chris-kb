@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers prerequisites, master node OVA deployment, worker cluster setup, syslog and CFAPI agent configuration, content pack installation, and end-to-end validation.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configuration, Firewall Rules for LCM, Hardening Checklist.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Hardening Controls

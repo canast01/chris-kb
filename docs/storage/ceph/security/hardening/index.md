@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Ceph security hardening: network isolation, msgr2 encryption, cephx least-privilege, OSD encryption, RGW HTTPS, dashboard TLS, audit logging, and CIS-aligned controls.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

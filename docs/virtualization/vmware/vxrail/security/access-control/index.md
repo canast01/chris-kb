@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 RBAC and access scoping for VxRail in the VMware product context. Covers VxRail Manager roles, vSphere RBAC, lockdown mode, exception users, OMIVV permissions, and network access restrictions.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

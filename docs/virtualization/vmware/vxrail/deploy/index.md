@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for a new VxRail cluster. Covers pre-deployment readiness, the First Run Wizard, vCenter integration, vSAN validation, OMIVV plugin setup, and Day 1 post-deployment hardening.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

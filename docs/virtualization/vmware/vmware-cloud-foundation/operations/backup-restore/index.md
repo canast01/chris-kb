@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 VMware Cloud Foundation backup protects the management plane components: SDDC Manager, NSX Manager, and vCenter Server. Each component has its own backup mechanism and must be restored in the correct sequence.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
  This page covers configuration, scheduling, restore procedures, and validation.

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Register VRA with vCenter, Deploy VRS (Scale-Out Server), Pair Sites and 3 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
   VR Deployment and Upgrade Workflow

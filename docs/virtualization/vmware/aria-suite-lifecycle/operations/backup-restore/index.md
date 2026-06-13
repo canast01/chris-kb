@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferred for Production), Backing Up the NFS Binary Repository, Exporting LCM Environment Configuration via API, Restore Procedure, Backup Verification Checklist.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Backup Strategy

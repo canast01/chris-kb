@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [VxRail](../index.md) reference.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 ```text
 ┌────────────────────────────── Virtualization Vxrail Security — Security ──────────────────────────────┐

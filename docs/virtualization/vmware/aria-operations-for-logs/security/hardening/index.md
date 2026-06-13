@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Default Account Hardening, LDAPS-Only Authentication, SSH Hardening, Firewall Rules, Syslog Output for Audit and 1 more sections.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ## Default Account Hardening

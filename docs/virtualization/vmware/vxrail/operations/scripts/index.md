@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI and bash scripts for VxRail automation. Includes vSAN health summary, cluster capacity report, pre-upgrade validation, node firmware version report, and a configurable vSAN capacity alert script.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

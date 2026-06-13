@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Site Recovery Manager procedures — planned migration, emergency failover, reprotect, failback, quarterly DR drills, protection groups, recovery plans, network/resource mapping updates, SRM upgrade, and VM lifecycle management.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
   Test Failover vs Actual Failover

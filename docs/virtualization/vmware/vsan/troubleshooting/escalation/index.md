@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Guidance on when to escalate vSAN incidents to VMware (Broadcom) support, what to collect before opening a case, and how to manage escalation effectively.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

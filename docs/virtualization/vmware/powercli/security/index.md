@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI security: RBAC and role management, credential and certificate handling, service account hardening, and audit logging for vSphere automation.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

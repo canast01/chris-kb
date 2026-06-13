@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering When to Escalate, Opening a Broadcom Support Request, Data to Collect Before Opening an SR, SR Handoff Checklist, VMware Knowledge Base.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Data in Transit, Replication Data Encryption (Per-VM), Encryption at Rest on Target Datastore, KMS Consideration for Encrypted VMs, Certificate Management for VRA and 1 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
   VR Encryption Coverage

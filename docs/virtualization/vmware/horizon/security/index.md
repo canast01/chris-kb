@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Horizon security controls — AD authentication, RSA SecurID and SAML MFA, Connection Server and UAG certificate management, RBAC entitlements, Blast Extreme and PCoIP TLS encryption, smart card authentication, App Volumes and DEM file encryption, and USB device restriction policies.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

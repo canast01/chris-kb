@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference for VxRail in the VMware product context. Covers vSAN data-at-rest and in-transit encryption, iDRAC HTTPS enforcement, Secure Boot on ESXi nodes, VxRail Manager TLS, and Native Key Provider backup.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

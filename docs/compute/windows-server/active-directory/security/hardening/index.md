@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering AD Hardening Controls Flow, DCSync Attack Detection, Defender for Identity Deployment, Hardening Checklist.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌─────────────────────── Security Active Directory Security — Security Hardening ───────────────────────┐

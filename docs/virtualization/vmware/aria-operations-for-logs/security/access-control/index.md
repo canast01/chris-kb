@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering RBAC Roles, Configuring Active Directory Integration, AD Group-Based Role Assignment, Local User Accounts, API Authentication for Automation and 1 more sections.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ## RBAC Roles

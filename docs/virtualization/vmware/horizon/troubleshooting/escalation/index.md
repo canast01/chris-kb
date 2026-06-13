@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering Engage VMware Support, Escalation Within VMware, Useful Resources.
+
+*Applies to: Horizon 8.x*
 </div>
 
   Escalation Path

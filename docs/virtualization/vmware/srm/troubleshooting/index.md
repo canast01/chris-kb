@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing SRM replication failures, protection group errors, inventory mapping issues, and failover/failback problems.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
 ```text

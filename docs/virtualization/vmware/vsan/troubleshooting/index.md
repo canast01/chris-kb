@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Troubleshooting reference for VMware vSAN. Covers common failure patterns, diagnostic commands, log collection, and escalation procedures for engaging VMware support.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

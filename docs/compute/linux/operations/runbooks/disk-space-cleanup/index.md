@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 | Field | Value | |---|---| | Risk | Low–Medium | | Approval | Standard change; confirm with app owner before deleting unfamiliar files | | Estimated time | 20–45 minutes | | Impact | No downtime expected; log deletion may affect audit trails |
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 | Field | Value |

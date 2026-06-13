@@ -167,7 +167,7 @@ for path in all_md():
         warn(issues, f'{rel}: ASCII diagram fence after kb-grid')
 
 # ── Check 10: Missing kb-summary ─────────────────────────────────────────────
-KNOWN_NO_SUMMARY = {'docs/index.md'}
+KNOWN_NO_SUMMARY = {'docs/index.md', 'docs/tags.md'}
 issues = check(10, 'Missing kb-summary')
 for path in all_md():
     if os.path.relpath(path, REPO) in KNOWN_NO_SUMMARY:
@@ -199,8 +199,11 @@ for path in all_md():
         warn(issues, f'{rel}: no H1 heading')
 
 # ── Check 13: Stub/empty pages ────────────────────────────────────────────────
+KNOWN_STUB_OK = {'docs/tags.md'}
 issues = check(13, 'Stub/empty pages')
 for path in all_md():
+    if os.path.relpath(path, REPO) in KNOWN_STUB_OK:
+        continue
     lines = open(path).readlines()
     if len(lines) < 15:
         content = ''.join(lines)

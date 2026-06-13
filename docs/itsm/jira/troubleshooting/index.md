@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Jira performance issues, workflow errors, index corruption, mail handler failures, and integration problems.
+
+*Applies to: Jira 9.x / Cloud*
 </div>
 
 ```text

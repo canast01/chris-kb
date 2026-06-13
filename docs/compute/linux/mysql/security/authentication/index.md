@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL authentication — auth plugins (caching_sha2, mysql_native_password, auth_socket), SSL/TLS client certs, and password policy configuration.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

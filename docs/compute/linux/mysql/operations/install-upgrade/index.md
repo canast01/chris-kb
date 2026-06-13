@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL install and upgrade procedures — major version upgrade path, in-place upgrade steps, upgrade checker tool, and post-upgrade validation.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

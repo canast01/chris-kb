@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 establish prerequisites and the NSX Manager cluster; Phases 3–4 prepare transport zones, TEP profiles, and ESXi host transport nodes; Phases 5–6 deploy Edge nodes, configure T0/T1 gateways and overlay segments, then validate the full data path.
+
+*Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
 ```text

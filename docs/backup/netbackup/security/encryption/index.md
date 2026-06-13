@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Backup Data Encryption.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

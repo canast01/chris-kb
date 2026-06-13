@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering DC Diagnostic Tool Map, Dcdiag Tests, Replication Diagnostics, Event Log Diagnostics, LDAP Diagnostics and 1 more sections.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌─────────────────────── Security Active Directory Troubleshooting — Diagnostics ───────────────────────┐

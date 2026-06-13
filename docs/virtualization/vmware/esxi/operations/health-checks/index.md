@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Daily and weekly health runbook for ESXi hosts: hardware sensors, service status, storage paths, network uplinks, NTP sync, VIB compliance, and capacity thresholds — with a runnable command sequence and per-area deep-dive checks.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

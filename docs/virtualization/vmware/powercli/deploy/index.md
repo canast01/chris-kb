@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Installing PowerCLI, first connection to vCenter, service account setup, certificate configuration, and proxy settings for environments without direct internet access.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

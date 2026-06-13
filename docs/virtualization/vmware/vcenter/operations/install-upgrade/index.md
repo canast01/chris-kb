@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere Lifecycle Manager (vLCM), Interoperability Matrix, Patch Cadence, EOL Planning and 2 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

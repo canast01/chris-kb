@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL hardening — disabling superuser remote login, SSL enforcement, restricting pg_hba.conf, file permissions, and CIS benchmark key controls.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Restrict Superuser Access

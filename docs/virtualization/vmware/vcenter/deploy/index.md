@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers pre-deployment DNS/NTP checks, Stage 1 OVA deployment, Stage 2 SSO and network configuration, Active Directory integration, host inventory build, and post-deployment hardening.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

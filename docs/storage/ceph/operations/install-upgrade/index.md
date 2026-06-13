@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON → MGR → OSD → MDS → RGW), monitoring upgrade progress, and rollback considerations.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```mermaid

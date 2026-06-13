@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server CLI reference — sqlcmd, PowerShell SqlServer module, BCP, SQLCMD scripting, and key DMV queries for operations.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

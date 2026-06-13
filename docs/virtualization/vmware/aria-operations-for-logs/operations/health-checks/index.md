@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health checks for Aria Operations for Logs — cluster node status, disk and ingestion rate, alert configuration, archive jobs, syslog source connectivity, and integration health.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 1–3 cover the physical and hypervisor foundation; Phases 4–7 cover vSAN-specific enablement, policy configuration, and end-to-end validation.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

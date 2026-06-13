@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service Enable/Disable), Useful Paths, REST API Quick Reference, Related Sections.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 Aria Operations — CLI Command Reference Map

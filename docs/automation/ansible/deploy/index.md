@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Step-by-step guide to installing Ansible, configuring inventory and SSH authentication, testing connectivity, and running your first playbook.
+
+*Applies to: Ansible 2.14+*
 </div>
 
 ```text

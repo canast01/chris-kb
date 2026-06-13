@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Scripts reference covering Purpose, Multi-Workspace Deploy Pipeline, Windows: Terraform Plan and Apply (CMD Batch), Windows: Terraform State Audit (PowerShell).
+
+*Applies to: Terraform 1.x*
 </div>
 
 ## Purpose

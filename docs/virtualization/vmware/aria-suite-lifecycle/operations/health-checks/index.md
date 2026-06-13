@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Cluster Node Health via API, Locker Health Checks, Pre-Upgrade Health Gate, Checking Product Health via LCM API, Log File Locations.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Health Check Chain

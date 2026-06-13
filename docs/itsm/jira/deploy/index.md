@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Step-by-step guide to installing Jira Data Center, configuring the database connection, setting up user authentication, and validating the deployment.
+
+*Applies to: Jira 9.x / Cloud*
 </div>
 
 ```text

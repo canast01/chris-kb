@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 NetBackup hardening — access control, certificate management, encryption at rest and in transit, and audit logging.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

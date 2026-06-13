@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation Communication Template, Post-Incident Review (PIR) Checklist.
+
+*Applies to: Jira 9.x / Cloud*
 </div>
 
 ## Escalation Matrix

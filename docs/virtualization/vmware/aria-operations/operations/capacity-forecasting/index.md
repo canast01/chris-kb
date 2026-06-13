@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ## Forecasting Model

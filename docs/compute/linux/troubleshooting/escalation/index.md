@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Vendor escalation procedures and support contacts.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Escalation Decision Flow

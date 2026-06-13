@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 SRM operational scripts — PowerCLI and REST API automation for replication lag reporting, RPO compliance checking, recovery plan test scheduling, 90-day compliance alerting, placeholder VM verification, and plan history export to CSV for DR governance reporting.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
   SRM Automation via PowerCLI + REST API

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Access control, authentication, encryption, and hardening.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

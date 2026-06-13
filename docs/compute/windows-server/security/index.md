@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Windows Server hardening — security baselines, local admin controls, Windows Firewall, audit policy, and BitLocker configuration.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

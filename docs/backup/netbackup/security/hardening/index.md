@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering NetBackup Security Architecture, Firewall Ports.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

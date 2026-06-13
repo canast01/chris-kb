@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Common Issues reference covering Resolution Steps, All Paths Down (APD) — Storage, High CPU Ready Time, High Memory Ballooning or Swapping, PSOD (Purple Screen of Death) and 3 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ESXi Common Issue Resolution Paths

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL automation scripts — base backup, WAL archiving, replication lag monitor, bloat report, long-running transaction alert, and connection trend logging.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Health checks, procedures, CLI, backup/restore, upgrades, and scripts.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

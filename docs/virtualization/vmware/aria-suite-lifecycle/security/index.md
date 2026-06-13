@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Suite Lifecycle hardening — certificate management, RBAC, locker credential security, and audit logging.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
 ```text

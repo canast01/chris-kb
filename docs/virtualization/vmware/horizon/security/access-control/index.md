@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Entitlements, App Volumes Permission Model, UAG Access Control, Service Account for vCenter and 1 more sections.
+
+*Applies to: Horizon 8.x*
 </div>
 
   RBAC: AD Groups → Entitlements → Pools

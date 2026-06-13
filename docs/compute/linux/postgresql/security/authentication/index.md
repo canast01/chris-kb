@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, ldap, cert), password management, and SSL client certificate auth.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Authentication Methods

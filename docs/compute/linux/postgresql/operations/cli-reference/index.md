@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL CLI reference — psql meta-commands, pg_dump/pg_restore, pg_basebackup, pg_upgrade, vacuumdb, and reindexdb quick reference.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

@@ -46,6 +46,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostic tools for Ceph: health code reference, OSD log analysis, crash dump review, network and latency diagnostics, PG deep dives, and gathering data for support cases.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```mermaid

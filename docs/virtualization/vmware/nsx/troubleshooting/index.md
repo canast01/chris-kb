@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Troubleshooting reference for VMware NSX. Covers common overlay, gateway, and DFW failure patterns, diagnostic commands, log collection, and escalation procedures.
+
+*Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering VRA Log Locations, Collect VRA Support Bundle, Check VRA Service Status, Test Connectivity from Source ESXi to Target VRA, Check ESXi hbrsvc (Replication Source Service) and 4 more sections.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
   VR Diagnostic Data Sources

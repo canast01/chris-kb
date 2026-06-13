@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health checks for Aria Operations for Networks (vRNI) — collector connectivity, data source status, flow freshness, platform disk and resource health, and certificate expiry.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL initial deployment — installation on RHEL/Ubuntu, post-install hardening, root password setup, firewall rules, and first-connection validation.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering SSO Security, TLS Configuration, Certificates to Track, Certificate Replacement Process, Validation After Replacement and 5 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

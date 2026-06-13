@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL access control — roles, GRANT/REVOKE, row-level security, schema permissions, pg_hba.conf host rules, and auditing current privileges.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Role Management

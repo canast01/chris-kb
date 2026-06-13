@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Day-to-day operational tasks and how-to guides.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## Key Infrastructure Service Dependencies

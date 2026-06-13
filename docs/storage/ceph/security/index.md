@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Ceph security: CephX authentication for all daemon and client communication, RBAC capabilities per user, encryption at rest with dmcrypt, and TLS for RGW S3 endpoints.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

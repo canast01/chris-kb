@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 NetBackup case creation, nbsu log collection, and Veritas support escalation procedures for unresolved backup failures.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

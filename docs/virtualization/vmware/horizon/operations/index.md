@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Horizon day-2 operations — Connection Server health monitoring, active session management, desktop pool recompose and instant clone image push, App Volumes and DEM assignment, event database review, lifecycle upgrade sequencing (Connection Server first, then UAG, then agent via recompose), and PowerCLI Horizon module and REST API automation.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

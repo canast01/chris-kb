@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Health checks for NSX — Manager cluster status, transport node health, Edge BGP sessions, DFW policy state, certificate expiry, alarm review, backup age, and post-change verification.
+
+*Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
 ```text

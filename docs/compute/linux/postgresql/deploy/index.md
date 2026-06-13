@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf baseline tuning, pg_hba.conf access control, firewall, and first-connection validation.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Install on RHEL / Rocky

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Routine checks, service validation, and status verification.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Run This Routine

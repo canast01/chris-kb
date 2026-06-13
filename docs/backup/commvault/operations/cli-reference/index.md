@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restore Operations, Clients & Policies, CommServe Maintenance and 1 more sections.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ## Backup Job Lifecycle

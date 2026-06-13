@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE) and data-in-transit encryption. Both are optional and independently configurable. This page covers architecture, KMS integration, enabling procedures, and operational considerations.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ---

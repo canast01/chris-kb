@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and stuck, slow requests, nearfull/full cluster, clock skew, MON quorum loss, and recovery that won't complete.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

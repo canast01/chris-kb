@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Privileged Access and Kerberos Security Flow, Privileged Access Workstations (PAWs), Protected Users Group, Kerberos Encryption Policy, Related Reference.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌───────────────────────── Security Active Directory Security — Authentication ─────────────────────────┐

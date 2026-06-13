@@ -46,6 +46,8 @@ tags:
 
 <div class="kb-summary">
 Ceph operational procedures: add/replace/decommission OSDs, reweight for capacity balance, scrub management, PG repair, and controlled cluster maintenance with noout/norebalance flags.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```mermaid

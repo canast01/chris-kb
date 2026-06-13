@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering TLS Configuration, SSO Password and Lockout Policy, ESXi Host Lockdown Mode, Firewall Hardening, Audit Logging Configuration and 3 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

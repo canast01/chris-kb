@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Part of the [Ansible Operations](../index.md) reference.
+
+*Applies to: Ansible 2.14+*
 </div>
 
 ---

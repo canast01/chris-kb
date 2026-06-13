@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering RBAC Roles, Audit Trail.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text

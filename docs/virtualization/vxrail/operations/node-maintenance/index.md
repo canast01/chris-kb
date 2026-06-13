@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Node Maintenance Procedure reference covering Before Starting, Evacuation Mode Selection, Entering Maintenance Mode, Performing the Work, Exiting Maintenance Mode and 1 more sections.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 Node Maintenance Mode Lifecycle

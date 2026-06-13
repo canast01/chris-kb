@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL diagnostics — reading the error log, SHOW PROCESSLIST, slow query log analysis, InnoDB status, and performance_schema queries for locking and I/O bottlenecks.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

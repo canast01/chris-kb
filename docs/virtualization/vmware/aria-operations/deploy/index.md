@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequisites, master node OVA deployment, cluster expansion, vCenter adapter configuration, management pack installation, and end-to-end validation.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code, Validation Checklist, Dashboard Review Cadence.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

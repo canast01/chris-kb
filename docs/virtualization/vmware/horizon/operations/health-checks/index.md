@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health checks for Horizon — Connection Server status, desktop pool availability, UAG gateway health, session counts vs licensed capacity, certificate expiry, and App Volumes / DEM component health.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signing.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## BitLocker — Drive Encryption

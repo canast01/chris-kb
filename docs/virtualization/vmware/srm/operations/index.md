@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Site Recovery Manager daily operations — protection group management, replication monitoring, test failover, and DR plan maintenance.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Step-by-step guide to requesting a ServiceNow developer instance, configuring admin settings, connecting LDAP, importing users, configuring email and MID Server, and validating the instance.
+
+*Applies to: ServiceNow (Washington / Xanadu)*
 </div>
 
 ```text

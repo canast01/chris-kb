@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Ceph support escalation: Red Hat Ceph Storage support case process, community resources, severity levels, required diagnostic data, must-gather for ODF/OpenShift, and sanitisation before sharing logs.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

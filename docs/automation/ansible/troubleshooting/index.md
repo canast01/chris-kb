@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Ansible — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+
+*Applies to: Ansible 2.14+*
 </div>
 
 ```text

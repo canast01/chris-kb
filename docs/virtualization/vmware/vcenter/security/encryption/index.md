@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryption Key Flow, vSphere Trust Authority (vTA), Certificate Management and 3 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

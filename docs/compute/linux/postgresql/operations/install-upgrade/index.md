@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL upgrade procedures — minor version (in-place), major version (pg_upgrade), upgrade path, pre-upgrade checks, and post-upgrade validation.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

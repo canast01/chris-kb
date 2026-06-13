@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 NetBackup automation scripts — job summary reporting, failed job alerts, STU capacity monitoring, and catalog validation.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

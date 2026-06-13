@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Incident Triage, Networking, Storage, Security and Hardening, and Lifecycle and Patching.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server encryption — Transparent Data Encryption (TDE), Always Encrypted, column-level encryption, TLS for connections, and backup encryption.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

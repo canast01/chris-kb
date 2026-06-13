@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Troubleshooting reference for VMware ESXi. Covers common host failure patterns, diagnostic commands, log collection, and escalation procedures for engaging VMware support.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

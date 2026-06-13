@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies, NAT, load balancers, IPsec VPN, certificate rotation, backup/restore, and upgrade validation. Includes API commands.
+
+*Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
 ```text

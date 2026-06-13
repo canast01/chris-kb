@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Role-Based Access Control, Audit Log.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

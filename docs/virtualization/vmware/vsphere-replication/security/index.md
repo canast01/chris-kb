@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 vSphere Replication hardening — certificate management, RBAC, and secure communication between VR appliances.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
 ```text

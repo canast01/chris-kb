@@ -16,6 +16,7 @@ tags:
 | Estimated time | 30–60 minutes for a full capacity review and forecast |
 | Impact | None — review is non-disruptive |
 
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

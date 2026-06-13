@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerShell scripts for Veeam job management, capacity reporting, SLA health checks, and backup copy automation.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering TLS Certificate Replacement, Verifying Certificate Validity, Log Ingestion Transport Encryption, Data at Rest Encryption, TLS Configuration Hardening.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ## TLS Certificate Replacement

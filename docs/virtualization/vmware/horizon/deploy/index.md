@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for VMware Horizon VDI and published applications. Phases 1–2 establish the prerequisites and Connection Server pod; Phases 3–4 cover external access via UAG and desktop pool configuration; Phases 5–6 add application layering (App Volumes), user environment management (DEM), and final validation.
+
+*Applies to: Horizon 8.x*
 </div>
 
 ```text

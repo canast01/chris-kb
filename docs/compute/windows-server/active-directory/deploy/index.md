@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, NTP, replica DCs, OU structure, and security baseline GPO.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

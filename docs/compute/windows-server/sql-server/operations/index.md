@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Health checks, procedures, CLI, backup/restore, upgrades, and scripts.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

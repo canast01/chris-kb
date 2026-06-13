@@ -14,6 +14,20 @@ import glob, sys
 OUTER_WIDTH = 105   # │ + 103 content chars + │
 
 
+def _adjust_border(stripped: str, open_ch: str, close_ch: str, dash: str) -> str:
+    """Resize a top or bottom border line to OUTER_WIDTH by trimming/extending trailing dashes."""
+    if len(stripped) == OUTER_WIDTH:
+        return stripped
+    # Remove closing char, adjust trailing dash run, re-add closing char
+    body = stripped[:-1]           # drop close_ch
+    # Find last run of dashes
+    rstripped = body.rstrip(dash)
+    needed = OUTER_WIDTH - 1 - len(rstripped)
+    if needed < 1:
+        needed = 1
+    return rstripped + (dash * needed) + close_ch
+
+
 def fix_file(path, dry_run=False):
     with open(path) as f:
         lines = f.readlines()
@@ -22,11 +36,24 @@ def fix_file(path, dry_run=False):
     changed = False
     for line in lines:
         stripped = line.rstrip('\n')
+
         if stripped.startswith('│') and stripped.endswith('│') and len(stripped) != OUTER_WIDTH:
+            # Content line: pad/trim inner content
             without_close = stripped[:-1].rstrip()
             padded = without_close.ljust(OUTER_WIDTH - 1) + '│'
             fixed.append(padded + '\n')
             changed = True
+
+        elif stripped.startswith('┌') and stripped.endswith('┐') and len(stripped) != OUTER_WIDTH:
+            # Top border: adjust trailing dashes
+            fixed.append(_adjust_border(stripped, '┌', '┐', '─') + '\n')
+            changed = True
+
+        elif stripped.startswith('└') and stripped.endswith('┘') and len(stripped) != OUTER_WIDTH:
+            # Bottom border: adjust trailing dashes
+            fixed.append(_adjust_border(stripped, '└', '┘', '─') + '\n')
+            changed = True
+
         else:
             fixed.append(line)
 

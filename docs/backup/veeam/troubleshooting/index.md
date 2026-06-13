@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Veeam job failures, transport mode errors, repository issues, restore failures, and agent connectivity problems.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

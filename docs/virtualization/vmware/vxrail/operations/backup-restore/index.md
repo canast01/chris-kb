@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Backup and restore coverage for VxRail clusters. Covers VxRail Manager VM backup, pre-LCM snapshots, ESXi host configuration export, vCenter VAMI file-based backup, and restore considerations for each component if lost.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

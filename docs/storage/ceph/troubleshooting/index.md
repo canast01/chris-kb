@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Ceph troubleshooting: OSD down/out recovery, PG degraded and stuck states, slow requests, nearfull cluster, and escalation to Red Hat/Ceph community support.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VxRail Pre-Upgrade Checks reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 ```text
 ┌────────────────────────────────── Virtualization Vxrail Operations ───────────────────────────────────┐

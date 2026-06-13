@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Day-to-day operational reference for VxRail in the VMware product context. Covers plugin health, LCM upgrade sequencing, cluster expansion, and SupportAssist automation.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

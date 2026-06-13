@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL backup restore reference.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Database — Backup Validation

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference for VxRail components. Covers VxRail Manager local and LDAP accounts, iDRAC centralised authentication, vCenter SSO configuration, ESXi host accounts, and service account policy.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server access control — logins vs users, server/database roles, GRANT/DENY/REVOKE, schema ownership, and auditing current permissions.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

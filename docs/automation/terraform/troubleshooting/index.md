@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing state drift, provider errors, plan failures, lock conflicts, and common Terraform workflow issues.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ```text

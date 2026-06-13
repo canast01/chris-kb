@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Quick reference for common problems and resolutions. Structured approach to diagnosing common Windows Server issues.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 Quick reference for common problems and resolutions.

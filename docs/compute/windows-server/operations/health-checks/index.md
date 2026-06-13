@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Routine checks, service validation, and status verification.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## Run This Routine

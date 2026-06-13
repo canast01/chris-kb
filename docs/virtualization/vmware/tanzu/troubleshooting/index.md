@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Tanzu cluster failures, pod scheduling issues, ingress errors, and control plane health problems.
+
+*Applies to: Tanzu 3.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Support Bundle, Collector VM Log Locations, Test Data Source Connectivity, Verify NetFlow Receipt, Check Data Source Last-Sync via API and 3 more sections.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ---

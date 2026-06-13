@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Exporting vSphere configurations using PowerCLI — VM inventory exports, storage policy snapshots, permissions and role exports, tag taxonomy backups, and module inventory for reproducible automation environments.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 VxRail LCM Failure Triage reference covering Symptoms, Likely Causes, Commands, Troubleshooting Workflow, Resolution and 1 more sections.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 ```text
 ┌────────────────────────────────── Virtualization Vxrail Operations ───────────────────────────────────┐

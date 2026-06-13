@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Day-to-day operational reference for VMware ESXi. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and automation scripts.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

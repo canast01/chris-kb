@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 vSAN access control is implemented through vCenter's Role-Based Access Control (RBAC) system. There is no separate vSAN permission model — all vSAN management actions require vCenter permissions on the cluster or datacenter objects.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

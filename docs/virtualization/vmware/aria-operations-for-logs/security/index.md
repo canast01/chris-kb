@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Ops for Logs hardening — RBAC, TLS configuration, syslog source authentication, and audit logging.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ```text

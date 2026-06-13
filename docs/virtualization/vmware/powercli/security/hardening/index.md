@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening PowerCLI deployments: enforcing certificate validation, script execution policies, session timeout controls, audit log review, and secure pipeline configuration.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

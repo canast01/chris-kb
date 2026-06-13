@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Troubleshooting guide for VxRail in the VMware product context. Covers VxRail plugin unavailability, LCM pre-check failures, vSAN degraded states, and node rejoin procedures.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

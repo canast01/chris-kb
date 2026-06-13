@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Firewall Hardening, Advanced Security Settings, Secure Boot, Audit Logging, Host Profile Enforcement and 2 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ESXi Host Hardening Layers

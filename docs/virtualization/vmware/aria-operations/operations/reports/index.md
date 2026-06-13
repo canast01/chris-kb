@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Aria Operations: Scheduled Reports and PDF Export reference covering Scheduling Reports, Downloading Generated Reports, Report Output Formats, Common Report Issues.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

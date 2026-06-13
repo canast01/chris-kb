@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Managing vSphere RBAC via PowerCLI: auditing existing permissions, creating automation service roles with least-privilege, assigning roles to objects, and detecting permission sprawl.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

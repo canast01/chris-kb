@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Signing and Channel Binding, Kerberos Encryption Policy.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌─────────────────────────── Security Active Directory Security — Encryption ───────────────────────────┐

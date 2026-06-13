@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 The primary review surface is the **Home** view in the VBR console, which shows job counts grouped by status (Running, Success, Warning, Failed). Work through this list top-to-bottom every morning.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ## SureBackup Verification Sequence

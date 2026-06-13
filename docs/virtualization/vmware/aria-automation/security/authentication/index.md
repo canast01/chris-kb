@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Authentication Architecture, Active Directory Integration via VIDM, API Authentication, API Service Account, Session and Token Policies and 2 more sections.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ## Authentication Architecture

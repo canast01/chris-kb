@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Secrets and Encryption Architecture, Secrets Management with Terraform, Sensitive Variable Handling, Encryption Reference.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ## Secrets and Encryption Architecture

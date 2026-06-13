@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge Base.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Escalation Path

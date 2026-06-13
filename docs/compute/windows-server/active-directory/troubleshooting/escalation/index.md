@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Active Directory support is provided through the Microsoft Support portal at support.microsoft.com, with Service Requests (SRs) raised under the Windows Server or Microsoft 365/Entra product family.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌─────────────────────── Security Active Directory Troubleshooting — Escalation ────────────────────────┐

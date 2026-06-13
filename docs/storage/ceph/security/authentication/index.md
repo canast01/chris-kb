@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 CephX shared-secret authentication protocol, how clients authenticate to MONs and OSDs, key distribution, session tickets, key rotation procedures, bootstrap key handling, and msgr2 in-transit encryption.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ## CephX Protocol Overview

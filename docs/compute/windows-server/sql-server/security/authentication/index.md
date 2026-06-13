@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server authentication — Windows vs Mixed Mode, service account configuration, AD group logins, Managed Service Accounts, and password policy enforcement.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

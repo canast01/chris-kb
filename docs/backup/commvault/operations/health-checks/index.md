@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Checklist, Weekly Checks.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text

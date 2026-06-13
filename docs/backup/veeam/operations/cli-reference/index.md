@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering Backup Infrastructure Topology, Sessions & History, Restore Points, VM Restore, Infrastructure and 1 more sections.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ## Backup Infrastructure Topology

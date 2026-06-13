@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Ansible — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+
+*Applies to: Ansible 2.14+*
 </div>
 
 ```text

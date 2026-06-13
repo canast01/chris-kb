@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Veeam case creation, log export, and Veeam support escalation procedures for unresolved backup and restore failures.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

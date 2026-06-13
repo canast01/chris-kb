@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostic data collection for VxRail clusters: VxRail Manager log paths, ESXi host log grep patterns, iDRAC hardware diagnostics, and Dell support bundle generation. Includes a decision tree for selecting the right log source for each symptom type.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & Time, Logs.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM CLI Coverage (SSH to LCM as root)

@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters, Virtual Machines, Snapshots, Datastores and 3 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

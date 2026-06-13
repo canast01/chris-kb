@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Veeam hardening — RBAC, immutable repositories, backup encryption, Linux hardened repository, and access controls.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

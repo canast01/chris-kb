@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 vSphere Replication daily operations — RPO monitoring, replication group management, and test recovery procedures.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
 ```text

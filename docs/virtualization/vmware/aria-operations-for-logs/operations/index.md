@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Ops for Logs daily operations — agent management, log forwarder configuration, content pack updates, and alert tuning.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ```text

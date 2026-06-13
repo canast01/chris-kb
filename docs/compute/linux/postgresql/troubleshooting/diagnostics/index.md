@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 PostgreSQL diagnostics — reading pg_stat_activity, lock contention queries, autovacuum analysis, WAL lag, slow query identification, and log analysis.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

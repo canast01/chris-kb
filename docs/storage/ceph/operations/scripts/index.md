@@ -52,6 +52,8 @@ tags:
 
 <div class="kb-summary">
 Operational scripts for Ceph: daily health check, OSD replacement workflow, capacity report, cluster health snapshot, OSD utilization report, and RBD snapshot rotation.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```mermaid

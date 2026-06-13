@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server hardening — surface area reduction, disabling xp_cmdshell, SQL Browser, CLR, linked server restrictions, auditing, and CIS benchmark key controls.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

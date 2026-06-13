@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Ansible — Security reference: Authentication, Access Control, Encryption, Hardening.
+
+*Applies to: Ansible 2.14+*
 </div>
 
 ```text

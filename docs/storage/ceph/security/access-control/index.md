@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 CephX user accounts, capability syntax for granular permissions, per-pool access control, admin key management, and least-privilege design for application service accounts.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI escalation — collecting diagnostic information, engaging VMware support for PowerCLI and vSphere API issues, module version compatibility matrix, and community resources for advanced troubleshooting.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

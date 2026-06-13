@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Active Directory day-to-day operations — user and group management, GPO administration, replication health, and OU structure.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌────────────────────────── Security Active Directory Operations — Operations ──────────────────────────┐

@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Troubleshooting, Host Disconnect Troubleshooting, Maintenance Mode Validation.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ESXi Diagnostic Data Sources

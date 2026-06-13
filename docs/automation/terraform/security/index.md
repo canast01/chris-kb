@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Terraform security — state file encryption, secrets handling, provider authentication, and Terraform Cloud access controls.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ```text

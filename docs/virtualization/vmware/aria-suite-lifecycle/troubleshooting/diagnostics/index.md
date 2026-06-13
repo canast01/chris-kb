@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Service Status Verification, Certificate Expiry Checks, Disk Space Verification, NTP and Time Sync, Pre-Operation Health Summary.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Diagnostic Data Sources

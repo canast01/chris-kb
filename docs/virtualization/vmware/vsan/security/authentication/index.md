@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 vSAN does not have its own authentication system. All access to vSAN management functions is authenticated through vCenter Server, which in turn delegates identity verification to the vSphere SSO domain and configured identity sources.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ---

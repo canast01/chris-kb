@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Common issues, diagnostics, and escalation.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

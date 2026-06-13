@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Quick reference for common problems and resolutions. Structured approach to diagnosing common Linux server issues.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 Quick reference for common problems and resolutions.

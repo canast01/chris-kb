@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Common Operational Issues.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 VCF Daily Health Check — Coverage Map

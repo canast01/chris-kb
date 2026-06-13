@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Controllers.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌──────────────────── Security Active Directory Operations — Operational Procedures ────────────────────┐

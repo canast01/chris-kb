@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Ceph health check routine: cluster status, OSD up/in counts, PG state verification, MON quorum, capacity thresholds, and recovery progress monitoring.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```mermaid

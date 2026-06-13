@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Protecting Active Directory requires regular System State backups of every Domain Controller, a tested restore procedure, and familiarity with AD-specific recovery modes.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌────────────────────── Security Active Directory Operations — Backup and Restore ──────────────────────┐

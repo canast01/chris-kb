@@ -16,6 +16,7 @@ tags:
 | Estimated time | 15–45 minutes depending on VCSA size |
 | Impact | No service interruption; vCenter remains fully operational during backup |
 
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

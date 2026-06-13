@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Security reference for VMware NSX. Covers NSX Manager authentication, role-based access control, data-in-transit encryption, certificate management, and DFW hardening baselines.
+
+*Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
 ```text

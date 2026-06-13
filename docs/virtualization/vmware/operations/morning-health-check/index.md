@@ -15,7 +15,7 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 </div>
 
 ```text
-┌────────────────────────────────── VMware Morning Health Check ─────────────────────────────────────────┐
+┌────────────────────────────────── VMware Morning Health Check ────────────────────────────────────────┐
 │                                                                                                       │
 │  Run order (each check feeds the next):                                                               │
 │                                                                                                       │

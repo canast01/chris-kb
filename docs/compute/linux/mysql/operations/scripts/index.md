@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL automation scripts — nightly backup, slow query report, replication lag alert, connection count monitoring, and table size report.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

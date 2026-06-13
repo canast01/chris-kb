@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 ServiceNow day-to-day operations — incident routing, CMDB hygiene, report scheduling, upgrade health checks, and platform monitoring.
+
+*Applies to: ServiceNow (Washington / Xanadu)*
 </div>
 
 ```text

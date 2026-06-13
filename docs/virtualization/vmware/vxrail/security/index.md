@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and access control.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

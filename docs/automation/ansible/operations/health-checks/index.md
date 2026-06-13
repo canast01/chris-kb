@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Inventory Health, Connectivity, Vault and Secrets, AWX / Automation Platform.
+
+*Applies to: Ansible 2.14+*
 </div>
 
 ## Run This Routine

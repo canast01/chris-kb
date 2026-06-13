@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Flow.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ## Diagnostic Flow

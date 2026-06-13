@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Drift Detection Flow, Daily Checks.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ## Run This Routine

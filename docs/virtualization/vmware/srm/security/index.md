@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 SRM hardening — RBAC configuration, certificate management, vSphere Replication security, and audit logging.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Health checks for Aria Operations — cluster node status, adapter collection health, disk usage, service states, NTP sync, alert pipeline validation, and capacity API queries.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

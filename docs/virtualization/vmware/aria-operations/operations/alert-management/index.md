@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Alert Management reference covering Common Alert Sources, Alert Noise Reduction Checklist, Escalation Matrix (template).
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

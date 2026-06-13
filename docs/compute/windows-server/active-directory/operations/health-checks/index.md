@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Daily operations centre on replication health and authentication event monitoring across all Domain Controllers.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌──────────────────────── Security Active Directory Operations — Health Checks ─────────────────────────┐

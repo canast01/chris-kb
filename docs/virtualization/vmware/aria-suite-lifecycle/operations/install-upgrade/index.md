@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM, Full Suite Upgrade Procedure.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Upgrade Sequence (strict order)

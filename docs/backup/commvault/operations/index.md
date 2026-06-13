@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Commvault day-to-day operations — job management, subclient configuration, data aging policies, SLA monitoring, and library health.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Operations hardening — SSO configuration, RBAC, adapter credential management, and audit logging.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

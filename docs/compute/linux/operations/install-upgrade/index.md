@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Installation, upgrade, patching, and decommission.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Linux Boot Sequence

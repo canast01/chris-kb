@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Automation hardening — RBAC configuration, endpoint credentials, certificate management, and audit logging.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ```text

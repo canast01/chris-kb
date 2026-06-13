@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, Diagnostic Flowchart, Windows CPU Diagnosis, VMware ESXi: esxtop CPU Analysis and 4 more sections.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Overview

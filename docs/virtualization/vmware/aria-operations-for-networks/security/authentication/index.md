@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Authentication Methods, Local Authentication, SAML / VMware Identity Manager, API Token Authentication, Session Management and 3 more sections.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ---

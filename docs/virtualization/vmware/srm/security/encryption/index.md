@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Encryption reference covering Encryption at Recovery Site, Certificate Management for SRM Server, SRA Credential Storage Encryption, FIPS Mode.
+
+*Applies to: SRM 8.x / 9.x*
 </div>
 
   TLS Encryption Coverage

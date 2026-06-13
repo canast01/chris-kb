@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI diagnostic techniques: verbose/debug output, API call tracing via ExtensionData, performance profiling for large inventories, and log collection for VMware support escalations.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

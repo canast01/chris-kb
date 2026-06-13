@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 What to collect before opening a support case and how to engage vendor support.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ## Escalation Flow

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Provider Credential Flow — CI/CD, CI/CD Credential Injection, Credential Management Reference.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ## Provider Credential Flow — CI/CD

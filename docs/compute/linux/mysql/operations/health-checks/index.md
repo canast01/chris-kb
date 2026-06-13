@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL / MariaDB health checks reference.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Database — Daily Health Check

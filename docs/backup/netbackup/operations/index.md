@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 NetBackup day-to-day operations — policy management, job monitoring, tape/disk pool administration, and catalog maintenance.
+
+*Applies to: NetBackup 10.x*
 </div>
 
 ```text

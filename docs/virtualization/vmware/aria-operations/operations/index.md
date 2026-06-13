@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Operations daily operations — policy management, alert tuning, dashboard maintenance, and capacity reporting.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

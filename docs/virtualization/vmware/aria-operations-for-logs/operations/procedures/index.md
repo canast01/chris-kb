@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Step-by-step procedures for Aria Operations for Logs — adding log sources, installing content packs, managing disk and retention, configuring alerts and notifications, certificate rotation, and cluster scaling.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ```text

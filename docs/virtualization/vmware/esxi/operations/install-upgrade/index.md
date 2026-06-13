@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legacy, Host Upgrade Procedure, ESXi Patch Application (Manual / Standalone), Upgrade and Patching Readiness Checklist, Driver and Firmware Lifecycle and 1 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

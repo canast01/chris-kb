@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Flow, JVM Heap Analysis, Thread Dump Capture and Analysis, Database Slow Query Analysis, Support ZIP Collection and 1 more sections.
+
+*Applies to: Jira 9.x / Cloud*
 </div>
 
 ## Diagnostic Flow

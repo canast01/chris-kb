@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Production-ready PowerCLI scripts for vSphere operations: VM inventory reports, snapshot audit, host capacity report, vSAN status, bulk tag assignment, and VM health reports. All scripts follow the standard header and error-handling pattern.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

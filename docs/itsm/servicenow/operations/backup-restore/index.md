@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 ServiceNow cloud instances do not expose direct database backup access. The primary mechanisms for instance protection and data recovery are **Instance Cloning** (for sub-production refresh and disaster recovery testing) and **Export Sets** (for selective data export).
+
+*Applies to: ServiceNow (Washington / Xanadu)*
 </div>
 
  This page covers both in detail.

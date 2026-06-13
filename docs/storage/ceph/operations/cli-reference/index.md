@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 Essential Ceph CLI commands: ceph status and health, OSD management, pool operations, PG management, RADOS object-level ops, RBD image management, radosgw-admin for S3, and cephadm orchestration.
+
+*Applies to: Ceph Reef / Squid*
 </div>
 
 ```text

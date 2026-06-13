@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Managing vSphere encryption via PowerCLI — vSAN encryption enablement and key rotation, VM encryption (vSphere VMcrypt) configuration, KMS cluster management, encrypted credential file handling, and TLS connection security settings.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

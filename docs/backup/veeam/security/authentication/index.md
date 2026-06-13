@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Authentication reference covering Multi-Factor Authentication, CyberArk Integration, VBR Windows Authentication Modes, Service Account Requirements, REST API Authentication and 3 more sections.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

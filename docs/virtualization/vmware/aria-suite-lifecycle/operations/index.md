@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Suite Lifecycle daily operations — product upgrades, patch management, locker management, and environment health checks.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening reference covering Network Security, Security Hardening Checklist.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

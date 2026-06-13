@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Terraform Diagnostics Workflow, Plan Inspection, State Inspection, Diagnostics Reference.
+
+*Applies to: Terraform 1.x*
 </div>
 
 ## Terraform Diagnostics Workflow

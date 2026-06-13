@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Service Health, Log Locations, DNS and NTP Validation, Certificate Checks, SSO and Identity Source Diagnostics and 4 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

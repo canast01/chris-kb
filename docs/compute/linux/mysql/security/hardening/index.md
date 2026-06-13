@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL hardening — removing defaults, binding to specific interfaces, disabling LOAD DATA LOCAL, audit plugin, and CIS benchmark key controls.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

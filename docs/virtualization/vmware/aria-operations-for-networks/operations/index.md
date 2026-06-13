@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Aria Ops for Networks daily operations — data source management, flow analysis, path visibility, and alert configuration.
+
+*Applies to: Aria Networks 6.x*
 </div>
 
 ```text

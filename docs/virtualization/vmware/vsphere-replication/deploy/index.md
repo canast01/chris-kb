@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment at source and target sites, vCenter registration, site pairing, per-VM replication configuration with RPO and MPIT settings, and RPO compliance validation.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
 ```text

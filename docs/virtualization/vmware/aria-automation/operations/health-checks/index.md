@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Checks, Platform Service Health Commands.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ## Daily Checks

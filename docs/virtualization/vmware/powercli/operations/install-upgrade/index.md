@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI module lifecycle: upgrading to new versions, managing individual sub-modules, handling multi-vCenter version compatibility, and offline bundle management.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

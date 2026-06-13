@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Effective VCF troubleshooting requires knowing where logs live, how to collect diagnostic bundles, and which API health checks to run first.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
  This page covers log locations, bundle collection procedures, per-component diagnostic commands, a structured decision flowchart, and a reference table of common error codes.

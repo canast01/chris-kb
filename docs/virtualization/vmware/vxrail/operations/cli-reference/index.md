@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Complete command reference for VxRail operations: VxRail Manager REST API, esxcli vSAN and network commands, iDRAC RACADM, and PowerCLI vSAN cmdlets. Use this page as the go-to lookup for day-to-day VxRail CLI and API work.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

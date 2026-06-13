@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA deployment, VAMI first-boot configuration, Locker setup, depot synchronisation, vCenter infrastructure account registration, and first product environment creation. LCM must be deployed and validated before any Aria product can be deployed or managed.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
 ```text

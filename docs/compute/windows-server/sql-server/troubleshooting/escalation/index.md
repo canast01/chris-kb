@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 SQL Server escalation criteria — P1/P2 indicators, evidence bundle before engaging Microsoft CSS or DBA team, and AG failover decision criteria.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 ```text

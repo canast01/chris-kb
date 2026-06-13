@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Common Commvault issues — backup job failures, media agent errors, deduplication problems, and client connectivity failures.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text

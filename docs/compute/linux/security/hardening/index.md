@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login.defs, and PAM password policy.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ## Linux Hardening Layers

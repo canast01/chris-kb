@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Day-2 operational procedures for Aria Automation — managing cloud accounts, projects, catalog items, extensibility actions, and deployment lifecycle. Covers UI workflows and YAML blueprint management.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ```text

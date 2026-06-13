@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and Identity Sources, Audit Logging — Access Events, PowerCLI — Permission Management and 3 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

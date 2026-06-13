@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL encryption — InnoDB tablespace encryption (TDE), SSL/TLS for connections, encrypted backups, and keyring plugin configuration.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

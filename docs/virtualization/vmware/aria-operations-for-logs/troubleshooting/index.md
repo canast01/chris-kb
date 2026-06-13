@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing Aria Ops for Logs ingestion failures, agent connectivity issues, and high-cardinality alert storms.
+
+*Applies to: Aria Logs 8.x*
 </div>
 
 ```text

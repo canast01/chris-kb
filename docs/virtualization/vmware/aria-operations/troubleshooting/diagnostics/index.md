@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Alert Tuning, Capacity Planning, Dashboards, Reports, Related Sections.
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

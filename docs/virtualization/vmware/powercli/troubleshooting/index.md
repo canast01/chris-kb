@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing and resolving PowerCLI issues: connection failures, module conflicts, API errors, certificate problems, and performance issues with large inventories.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

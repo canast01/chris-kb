@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Day-to-day operational reference for VMware NSX. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and automation scripts.
+
+*Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
 ```text

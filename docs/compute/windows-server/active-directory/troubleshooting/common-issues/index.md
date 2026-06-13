@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 AD failures typically trace back to replication, DNS, time sync, or Kerberos. This page covers the most common failure categories with diagnostic commands.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌────────────────────── Security Active Directory Troubleshooting — Common Issues ──────────────────────┐

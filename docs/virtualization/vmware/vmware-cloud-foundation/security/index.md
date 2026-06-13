@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Security reference for VMware Cloud Foundation. Covers SDDC Manager authentication, role-based access control, certificate and key management, and hardening baselines across the full VCF stack.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 ```text

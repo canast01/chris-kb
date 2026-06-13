@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, ESXi Host Encryption — Secure Boot and TPM, ESXi SSL/TLS Certificate Management, Encrypted vMotion and 1 more sections.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ESXi Encryption Stack

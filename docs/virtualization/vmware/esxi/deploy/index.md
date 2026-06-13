@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Step-by-step guide to deploying a new ESXi host: hardware readiness, installation, network and storage configuration, vCenter join, and baseline hardening.
+
+*Applies to: vSphere 7.x / 8.x*
 </div>
 
 ```text

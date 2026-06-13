@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Most Veeam job failures fall into a small set of categories: VMware snapshot issues, repository space problems, proxy connectivity timeouts, and Veeam service instability.
+
+*Applies to: Veeam 12.x*
 </div>
 
  The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.

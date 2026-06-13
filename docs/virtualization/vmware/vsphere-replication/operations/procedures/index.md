@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Operational procedures for vSphere Replication — configuring VM replication, managing RPO, handling stuck replications, non-disruptive test recovery, failback, and integration with SRM protection groups.
+
+*Applies to: vSphere Replication 8.x*
 </div>
 
 ```text

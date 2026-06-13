@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL escalation criteria — P1/P2 indicators, what to collect before engaging DBA or vendor support, and support bundle checklist.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

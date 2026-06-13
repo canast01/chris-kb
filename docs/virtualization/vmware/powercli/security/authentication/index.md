@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI authentication methods: credential objects, encrypted credential files, certificate-based auth, SSO token reuse, and multi-session management for automation pipelines.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Day-2 Horizon procedures — managing desktop and RDS pools, user entitlements, session operations, instant clone recompose, certificate renewal, UAG configuration, True SSO, App Volumes, DEM, and pool decommission.
+
+*Applies to: Horizon 8.x*
 </div>
 
   Common Operational Procedures

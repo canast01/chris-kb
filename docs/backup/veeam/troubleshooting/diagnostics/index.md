@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnostics reference covering Log Locations, Diagnostic Commands, Support Bundle Collection.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ```text

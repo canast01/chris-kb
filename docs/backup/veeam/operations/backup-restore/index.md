@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Veeam Backup & Replication provides comprehensive recovery options ranging from full VM restore to granular application-item recovery. Choosing the right restore type minimises RTO and avoids unnecessary data movement.
+
+*Applies to: Veeam 12.x*
 </div>
 
 ---

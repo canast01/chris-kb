@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Common Issues reference covering Common Issues, Technical Deep Dive.
+
+*Applies to: VCF 4.x / 5.x*
 </div>
 
 VCF Common Failure Points — Quick Reference

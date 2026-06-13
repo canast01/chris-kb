@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Hardening checklist and procedures for VxRail in the VMware product context. Covers VxRail Manager, iDRAC per-node, vSphere/ESXi, network hardening, and SupportAssist security considerations.
+
+*Applies to: VxRail 7.x / 8.x*
 </div>
 
 ```text

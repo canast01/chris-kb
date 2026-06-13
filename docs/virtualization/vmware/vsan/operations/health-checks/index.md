@@ -10,6 +10,8 @@ tags:
 
 <div class="kb-summary">
 Health Checks reference covering Weekly Checks, Performance Baseline, Network Health, Stretched Cluster Checks, Change Readiness.
+
+*Applies to: vSAN 7.x / 8.x*
 </div>
 
 ```text

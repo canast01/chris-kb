@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 PowerCLI health check routines for vSphere platform health: host connection states, VM power states, snapshot inventory, datastore capacity, cluster HA status, and vSAN health — all runnable as a single daily check script.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

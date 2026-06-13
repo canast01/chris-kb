@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Diagnosing AD replication failures, Kerberos errors, trust issues, SYSVOL sync problems, and LDAP query failures.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 ```text
 ┌───────────────────── Security Active Directory Troubleshooting — Troubleshooting ─────────────────────┐

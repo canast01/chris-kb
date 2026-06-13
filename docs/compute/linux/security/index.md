@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Linux hardening — PAM configuration, sudoers, SSH controls, SELinux/AppArmor, auditd logging, and CIS benchmark compliance.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Tanzu day-to-day operations — cluster lifecycle management, namespace administration, workload deployment, and health monitoring.
+
+*Applies to: Tanzu 3.x*
 </div>
 
 ```text

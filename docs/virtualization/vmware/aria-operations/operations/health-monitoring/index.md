@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Infrastructure Health Monitoring reference covering Server Health (Windows), Storage Array Health, Network Health, Monitoring Agent Validation, Escalation Thresholds (reference).
+
+*Applies to: Aria Ops 8.x*
 </div>
 
 ```text

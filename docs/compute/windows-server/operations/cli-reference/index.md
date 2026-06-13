@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Commands, syntax, and quick reference. All commands are PowerShell unless noted as `cmd`.
+
+*Applies to: Windows Server 2019 / 2022*
 </div>
 
 Commands, syntax, and quick reference.

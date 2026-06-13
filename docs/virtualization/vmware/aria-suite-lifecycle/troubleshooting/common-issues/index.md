@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost During Operation, Locker Certificate Import Fails, VIDM Authentication Failure After Password Change, Product Shows Red Health in LCM Dashboard and 1 more sections.
+
+*Applies to: Aria LCM 8.x*
 </div>
 
   LCM Triage Decision Tree

@@ -7,6 +7,8 @@ tags:
 
 <div class="kb-summary">
 MySQL CLI reference — mysql client, mysqladmin, mysqldump, mysqlcheck, mysqlbinlog, and Percona pt-* tool quick reference.
+
+*Applies to: RHEL / Ubuntu LTS*
 </div>
 
 ```text

@@ -9,6 +9,8 @@ tags:
 
 <div class="kb-summary">
 Install & Upgrade reference covering Version Matrix, Initial Deployment (New Environment), Pre-Upgrade Checklist, Post-Upgrade Validation, EOL Tracking and 2 more sections.
+
+*Applies to: Aria Automation 8.x*
 </div>
 
 ## Version Matrix

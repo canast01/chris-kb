@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Common operational procedures using PowerCLI: bulk VM operations, host maintenance workflow, snapshot consolidation, datastore migration, and tag management at scale.
+
+*Applies to: PowerCLI 13.x*
 </div>
 
 ```text

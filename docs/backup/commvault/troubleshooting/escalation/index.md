@@ -8,6 +8,8 @@ tags:
 
 <div class="kb-summary">
 Commvault case creation, log collection via cvpkgadd, and Commvault support escalation procedures for unresolved issues.
+
+*Applies to: Commvault 2024.x*
 </div>
 
 ```text
