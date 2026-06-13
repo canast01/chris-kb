@@ -2507,7 +2507,27 @@
 Ceph troubleshooting: OSD down/out recovery, PG degraded and stuck states, slow requests, nearfull cluster, and escalation to Red Hat/Ceph community support.
 </div>
 
-<pre class="mermaid"><code>graph TD
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Ceph Troubleshooting ─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                 Ceph Troubleshooting Overview                                 │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │         Three sub-sections: Common Issues, Diagnostics (logs/health codes), Escalation        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Start: ceph health detail — every warning has a health code with context           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │        Sev 1: any HEALTH_ERR with inactive PGs or cluster full → open case immediately        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                 ▼                               ▼                                 ▼                   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌───────────────────────────────┐   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │       Common Issues        │  │        Diagnostics         │  │           Escalation          │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           OSD down         │  │      Health code guide     │  │        Red Hat RHCS cases     │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │      PG degraded/stuck     │  │       OSD log analysis     │  │       Required data bundle    │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        Slow requests       │  │      Crash dump review     │  │       Community resources     │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │    Nearfull/Full cluster   │  │     Network diagnostics    │  │        Emergency commands     │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └────────────────────────────┘  └────────────────────────────┘  └───────────────────────────────┘   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+</code></pre></div>
+<p><pre class="mermaid"><code>graph TD
     classDef check fill:#2563eb,color:#fff
     classDef warn fill:#b45309,color:#fff
     classDef err fill:#991b1b,color:#fff
@@ -2522,48 +2542,16 @@ Ceph troubleshooting: OSD down/out recovery, PG degraded and stuck states, slow 
     F -- PG inactive --&gt; H([PG diagnostics\ndiagnostics/]):::err
     F -- MON quorum lost --&gt; I([MON recovery\ncommon-issues/]):::err
     F -- Need support --&gt; J([Escalation\nescalation/]):::err</code></pre>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Start here</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OSD_DOWN, OSDs not starting</td>
-<td><a href="common-issues/">Common Issues</a></td>
-</tr>
-<tr>
-<td>PG degraded, undersized, inactive</td>
-<td><a href="common-issues/">Common Issues</a></td>
-</tr>
-<tr>
-<td>HEALTH_ERR OSD_FULL, writes blocked</td>
-<td><a href="common-issues/">Common Issues</a></td>
-</tr>
-<tr>
-<td>Slow ops, client latency &gt; 100 ms</td>
-<td><a href="common-issues/">Common Issues</a></td>
-</tr>
-<tr>
-<td>Clock skew HEALTH_WARN</td>
-<td><a href="common-issues/">Common Issues</a></td>
-</tr>
-<tr>
-<td>MON quorum lost</td>
-<td><a href="common-issues/">Common Issues</a></td>
-</tr>
-<tr>
-<td>Need crash info, log collection, PG deep dive</td>
-<td><a href="diagnostics/">Diagnostics</a></td>
-</tr>
-<tr>
-<td>Opening Red Hat support case</td>
-<td><a href="escalation/">Escalation</a></td>
-</tr>
-</tbody>
-</table>
+| Symptom | Start here |
+|---|---|
+| OSD_DOWN, OSDs not starting | <a href="common-issues/">Common Issues</a> |
+| PG degraded, undersized, inactive | <a href="common-issues/">Common Issues</a> |
+| HEALTH_ERR OSD_FULL, writes blocked | <a href="common-issues/">Common Issues</a> |
+| Slow ops, client latency &gt; 100 ms | <a href="common-issues/">Common Issues</a> |
+| Clock skew HEALTH_WARN | <a href="common-issues/">Common Issues</a> |
+| MON quorum lost | <a href="common-issues/">Common Issues</a> |
+| Need crash info, log collection, PG deep dive | <a href="diagnostics/">Diagnostics</a> |
+| Opening Red Hat support case | <a href="escalation/">Escalation</a> |</p>
 <div class="kb-grid">
   <a class="kb-card" href="common-issues/">
     <span class="kb-card-title">Common Issues</span>
