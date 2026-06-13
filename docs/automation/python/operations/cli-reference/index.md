@@ -10,6 +10,14 @@ tags:
 CLI Reference reference covering Python Script Execution Pipeline, Package Management (pip), Common Infrastructure Packages, Environment Variables, Running Scripts and 3 more sections.
 </div>
 
+## Before you begin
+
+- **Access:** Python 3.10+ installed on the control host; `pip` or `pipx` available
+- **Timing:** safe to run at any time — all commands below are read-only unless noted
+- **Dependencies:** virtual environment activated (`source venv/bin/activate`) before running scripts
+
+---
+
 ## Python Script Execution Pipeline
 
 ```mermaid

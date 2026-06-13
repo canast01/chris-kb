@@ -311,6 +311,30 @@ for hx, paths in light_fills.items():
     if len(paths) > 2:
         warn(issues, f'  ... and {len(paths)-2} more')
 
+# ── Check 19: Prerequisites on procedure pages ────────────────────────────────
+# 19a: no kb-grid landing page should have "## Before you begin"
+# 19b: leaf procedure pages (no kb-grid, under proc dirs) should have one
+PROC_DIRS_AUDIT = {'/deploy/', '/operations/', '/troubleshooting/', '/security/'}
+issues = check(19, 'Prerequisites placement')
+for path in all_md():
+    content = open(path).read()
+    rel  = os.path.relpath(path, DOCS)
+    rpath = '/' + rel.replace(os.sep, '/')
+    is_proc_dir = any(d in rpath for d in PROC_DIRS_AUDIT)
+
+    # 19a: landing pages must NOT have "Before you begin"
+    if '<div class="kb-grid' in content and '## Before you begin' in content:
+        warn(issues, f'{rel}: landing page (kb-grid) has "Before you begin" — remove it')
+
+    # 19b: leaf procedure pages SHOULD have "Before you begin"
+    if (is_proc_dir
+            and '<div class="kb-grid' not in content
+            and '## Before you begin' not in content
+            and '## Prerequisites' not in content
+            and '## Requirements' not in content
+            and len(content.splitlines()) > 20):  # skip genuine stubs
+        warn(issues, f'{rel}: procedure page missing "Before you begin"')
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')
