@@ -438,3 +438,11 @@ Compliance checks validate that all nodes are running the expected firmware and 
    - **Configuration drift** — host profile or VxRail configuration differs from the cluster template; investigate and re-apply profile via vCenter **Host Profiles**
 4. After remediation, re-run the compliance check to confirm all nodes return to Compliant status
 5. Schedule periodic compliance checks (monthly recommended) as part of ongoing operational governance
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -291,3 +291,11 @@ Gather the following before opening a case to reduce time to resolution:
 9. **Pure1 health score screenshot** — captures the fleet view context at time of incident
 
 For controller upgrade or subscription issues, also have the Pure1 subscription dashboard available and the CSM contact details ready.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

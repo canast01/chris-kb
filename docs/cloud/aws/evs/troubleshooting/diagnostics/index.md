@@ -307,3 +307,11 @@ After confirming layers 1-3 are healthy, investigate application-layer connectiv
 | SDDC Manager | `/var/log/vmware/sddc-manager/` | SDDC Manager SSH |
 | HCX Manager | HCX UI → Support → Download Logs | HCX Manager UI |
 | AWS EVS | CloudTrail + CloudWatch | AWS console or CLI |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

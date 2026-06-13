@@ -228,3 +228,11 @@ If the consumption report shows unexpected usage:
 4. Describe the issue clearly — include subscription ID, affected service level, and any relevant timestamps or error messages
 5. Submit the case — the NetApp Keystone team will respond according to the contracted SLA for the reported severity level
 6. Monitor case progress in the portal and provide additional information if requested by the support team
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

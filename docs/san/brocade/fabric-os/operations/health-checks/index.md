@@ -97,3 +97,11 @@ Health Checks reference covering Daily Checks, Health Check Checklist, Post-Chan
 - [ ] Host multipath paths are active and balanced (check host-side multipath tool)
 - [ ] Management platform (SANnav) shows no new alarms for affected fabric
 - [ ] Close change ticket with validation evidence attached
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

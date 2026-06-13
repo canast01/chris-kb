@@ -129,3 +129,11 @@ Run these checks each morning to confirm CyberArk Vault, CPM, and PSM are operat
 - Review new safe creation requests against naming standards
 - Confirm CPM platform configurations are up to date
 - Audit users with "Vault Admin" role for any additions
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

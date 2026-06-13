@@ -187,3 +187,11 @@ Get-VBRVirtualLab | Select Name, Platform, Description
 2. Check **test credentials** — SureBackup uses guest credentials to run verification scripts; confirm they are correct and the account is not locked.
 3. For application-aware tests (SQL, Exchange), confirm the VM's application services started within the timeout window (default 2 minutes; increase if needed for slow VMs).
 4. Check the SureBackup session log for the specific task that failed — it lists which VM and which test step failed.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

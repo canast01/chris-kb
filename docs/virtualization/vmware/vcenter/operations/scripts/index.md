@@ -382,3 +382,11 @@ Log "Triage data saved to: $OUT"
 Disconnect-VIServer -Confirm:$false
 Write-Host "Triage data saved to: $OUT" -ForegroundColor Cyan
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

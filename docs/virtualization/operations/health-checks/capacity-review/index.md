@@ -98,3 +98,11 @@ Check primary and SOBR capacity tier fill levels — alert operators when perfor
 - CommVault: Command Center → Storage → Disk Libraries
 - Veeam: VBR console → Backup Infrastructure → Repositories
 - NetBackup: OpsCenter → Reports → Storage Unit Utilization
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

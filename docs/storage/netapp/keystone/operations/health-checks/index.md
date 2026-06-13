@@ -243,3 +243,11 @@ volume show -fields vserver,volume,qos-policy-group -state online | grep " - "
 | Volumes with no QoS policy | 0 | Any online Keystone volume without a policy |
 | Burst status | 0% on all tiers | Any tier > 90% consumed |
 | ONTAP cluster reachable from Collector | HTTP 200/401 | HTTP 000 (connection failure) or HTTP 500 |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

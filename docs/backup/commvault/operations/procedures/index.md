@@ -116,3 +116,11 @@ CommCell Console → Reports → Backup Job Summary → filter by last 24h → i
 ## Recover the CommServe Database
 
 Boot DR CommServe (if primary lost) → restore CommServe DB from backup → reconnect MediaAgents → verify client connections restored.
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

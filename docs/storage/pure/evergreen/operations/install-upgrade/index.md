@@ -156,3 +156,11 @@ purecli alert list     # No post-upgrade alerts
 - Purity software is supported for all active subscriptions
 - Pure Storage commits to NVM and drive compatibility across generations
 - Customer-owned (Evergreen//Forever) arrays receive software support for the platform lifetime
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

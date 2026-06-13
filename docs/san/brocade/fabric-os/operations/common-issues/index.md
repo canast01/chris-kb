@@ -152,3 +152,11 @@ Known Issues reference covering Incident Triage, Port Issues, Zoning Issues, Swi
 | Device not visible | Wrong FID context | `setContext <fid>` then `switchshow` |
 | Port in wrong FID | `lscfg --show` | Reassign port to correct FID |
 | VF not enabled | License | Verify VF license with `licenseShow` |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

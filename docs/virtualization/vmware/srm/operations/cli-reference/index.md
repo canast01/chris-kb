@@ -161,3 +161,11 @@ curl -k -X GET https://<srm_fqdn>/api/plans   -H "Authorization: <token>"
 ## Trigger test failover
 curl -k -X POST "https://<srm_fqdn>/api/plans/<plan_id>/actions/test"   -H "Authorization: <token>"
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

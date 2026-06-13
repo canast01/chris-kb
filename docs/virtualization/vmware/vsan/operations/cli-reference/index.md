@@ -470,3 +470,11 @@ Get-VM -Location $cluster | ForEach-Object {
 | Read latency (ESA) | < 0.5 ms | > 2 ms sustained | > 5 ms |
 | Write latency (ESA) | < 1 ms | > 5 ms sustained | > 10 ms |
 | Congestion | 0 | Any non-zero | Sustained > 0 |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

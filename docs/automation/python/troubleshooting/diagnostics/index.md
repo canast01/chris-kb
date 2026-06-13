@@ -116,3 +116,11 @@ python3 -X dev script.py
 | verbose imports | `python3 -v script.py` | Trace every import |
 | dev mode | `python3 -X dev script.py` | Extra warnings and fault handler |
 | pip show | `pip show <package>` | Confirm installed version and location |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

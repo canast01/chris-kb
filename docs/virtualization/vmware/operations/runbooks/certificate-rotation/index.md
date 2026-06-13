@@ -171,3 +171,11 @@ esxcli system certificate list  # run on each host
 - [Certificate Chain — Internals](../../../internals/certificate-chain/)
 - [Scenarios — Certificate Expiry and Rotation](../../../topics/scenarios/certificate-expiry-rotation/)
 - [vCenter — Security](../../../vcenter/security/)
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

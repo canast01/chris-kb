@@ -108,3 +108,11 @@ FlashBlade Common Issues reference covering NFS/SMB mount problems, S3 403 error
 | Blade in `rebalancing` state after blade add | Normal state during data rebalancing after a new blade is added | This is expected behaviour — monitor progress with `purefb blade list`; do not interrupt the rebalancing process; alert if rebalancing is stuck for more than 24 hours |
 | High NFS latency during AI/ML training | Clients not using pNFS parallel access; single VIP bottleneck | Enable pNFS (NFSv4.1 pNFS) on the filesystem and verify client NFS mounts use `nfsvers=4.1` and `proto=tcp`; pNFS allows clients to access multiple blades in parallel |
 | Snapshot schedule not creating snapshots | Snapshot policy not associated with the filesystem, or policy is paused | Run `purefb policy list` to verify the snapshot policy; check `purefb snap list` to confirm recent snapshots exist; re-associate the policy with the filesystem if needed |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

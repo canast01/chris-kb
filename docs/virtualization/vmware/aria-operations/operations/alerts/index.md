@@ -94,3 +94,11 @@ Notification rules filter by: object type, alert criticality, alert definition n
 | Notification not delivered | Outbound plugin misconfigured | Test plugin under Outbound Settings |
 | Smart alert thresholds unpredictable | Insufficient data history | Allow 30+ days for baseline learning period |
 | Adapter alerts missing | Adapter not collecting | Check adapter instance status under Administration |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

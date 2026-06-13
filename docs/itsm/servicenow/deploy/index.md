@@ -294,3 +294,11 @@ Run through the following checks before handing the instance to users.
 **Plugins:**
 
 - Navigate to **System Applications → Applications** — all activated plugins show **Active**, none show **Error**
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

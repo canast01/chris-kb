@@ -200,3 +200,11 @@ Confirm that AD group memberships are accurately reflected in application role a
 4. Remove `testuser01` from the AD group and re-test to confirm access is revoked after the next sync.
 5. Review the application's LDAP sync log for any errors or warnings: in vCenter check `/var/log/vmware/sso/ldap-cache.log`.
 6. Document the validated sync interval and group mapping in the integration runbook.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

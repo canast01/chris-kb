@@ -371,3 +371,11 @@ vplexcli -q -e "ll /distributed-storage/consistency-groups/<cg_name>/"
 | RecoverPoint vplexcli commands hang | RP–VPLEX communication timeout | Interrupt the command; check RecoverPoint appliance health |
 | Volume not visible to host after zoning | Initiator WWN not registered in storage view | Register the WWN and add to the storage view; rescan host |
 | High write latency on Metro volumes | ICL latency approaching or exceeding 5ms | Measure ICL RTT; investigate network path; check ICL utilisation |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

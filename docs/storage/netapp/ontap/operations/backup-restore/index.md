@@ -435,3 +435,11 @@ volume clone delete -vserver <svm> -flexclone <vol>-restore-test
 | SVM DR failover | Minutes to hours (lag-dependent) | 30–60 minutes | Full SVM including protocol config |
 | SnapVault restore | Hours (last backup transfer) | Hours (transfer time from vault) | Full volume or selected files |
 | SnapCenter application restore | Hours (last job run) | Minutes to hours | Application-consistent; granular |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

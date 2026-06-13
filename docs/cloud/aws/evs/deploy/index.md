@@ -478,3 +478,11 @@ curl -k -o /dev/null -w "%{http_code}" https://vcenter.vcf.internal/ui/
 ```
 
 Expected: `200` for the curl check. DNS failures in either direction indicate a DHCP options or forwarder misconfiguration that must be resolved before running any migrations.
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

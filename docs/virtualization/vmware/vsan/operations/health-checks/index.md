@@ -279,3 +279,11 @@ Run before any host maintenance, upgrade, or cluster configuration change.
 - [ ] No hosts currently in maintenance mode
 - [ ] Full data migration selected when putting host into maintenance
 - [ ] Change window approved; storage admin and compute team notified
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

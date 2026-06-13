@@ -90,3 +90,11 @@ Include in the ticket or message:
 - **Reproduction:** Exact steps to reproduce (or confirm it cannot be reproduced)
 - **What was tried:** List of diagnostic steps already taken
 - **Recent changes:** Any deployments, token rotations, or config changes in the last 48 hours
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

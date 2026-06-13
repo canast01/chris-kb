@@ -181,3 +181,11 @@ The output includes feature name, licence state (Active / Inactive / Expired), a
 5. For over-licensed features: plan deactivation or reallocation
 6. For unused entitlements: confirm whether the feature was never applied or was deactivated; update the inventory accordingly
 7. Document audit findings and remediation actions; repeat quarterly
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -163,3 +163,11 @@ Dell is responsible for APEX infrastructure maintenance. Customer responsibiliti
 5. After migration completes, validate: mount points accessible, data integrity confirmed, performance metrics within expected range
 6. Perform application-level validation with the application owners, then confirm cutover is complete
 7. Decommission the old service after a post-migration soak period (typically 5–10 business days)
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

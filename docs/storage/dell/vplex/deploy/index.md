@@ -230,3 +230,11 @@ dd if=/dev/zero of=/dev/mapper/<vplex_mpath_dev> bs=1M count=2048 oflag=direct
 ```
 
 4. Verify the VPLEX Management Console shows no active alerts under **Health Monitor > System Alerts**.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

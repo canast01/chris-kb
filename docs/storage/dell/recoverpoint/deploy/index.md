@@ -412,3 +412,11 @@ Record the following for the operations runbook:
 - License file location and licensed volume count
 - Admin account and password vault reference
 - Escalation contact for RecoverPoint support (Dell EMC ESRS or SE contact)
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

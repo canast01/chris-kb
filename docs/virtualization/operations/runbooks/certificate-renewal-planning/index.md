@@ -61,3 +61,11 @@ Only restart services after confirming the new certificate is applied.
 
 - Update the certificate inventory with the new expiration date
 - Set a review reminder 60 days before the new expiration
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

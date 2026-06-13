@@ -582,3 +582,11 @@ Get-HVMachine -PoolName "pool-ic-win11-v2" | Group-Object State | Select-Object 
 ```
 
 Set the minimum machine count to cover expected peak concurrency plus the spare headroom count. Provisioning 50 instant clones typically completes within 10-15 minutes on a well-resourced vSAN cluster.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -146,3 +146,10 @@ test -f /backups/awx/awx-backup-$(date -d yesterday +%F).json && echo "PASS: AWX
 
 ---
 
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

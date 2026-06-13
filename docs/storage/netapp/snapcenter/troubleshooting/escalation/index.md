@@ -122,3 +122,11 @@ For P1 SnapCenter cases, call the NetApp support line after opening the web case
 3. **Development escalation**: For confirmed bugs, the TSE opens a bug report (BUG ID) and escalates to SnapCenter engineering; you receive a tracking ID
 4. **Duty Manager escalation**: If response SLA is breached or the issue is unresolved after reasonable time, request escalation to the Support Duty Manager — state your case number and SLA breach
 5. **Account team**: Engage your NetApp Account Manager for persistent P1 issues or SLA disputes
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

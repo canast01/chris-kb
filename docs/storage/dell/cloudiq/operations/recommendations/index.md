@@ -60,3 +60,11 @@ CloudIQ: Proactive Recommendations and Implementation Tracking reference coverin
 | Recommendation keeps reappearing | Not fully implemented | Verify change was applied on system side |
 | Incorrect impact estimate | Edge case in analytics model | Dismiss with note, open feedback via support portal |
 | Firmware recommendation not applying | System in production, change window needed | Schedule and mark as in-progress with comment |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

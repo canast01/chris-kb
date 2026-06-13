@@ -134,3 +134,11 @@ SAN Troubleshooting reference covering Diagnostic Scenario Reference, FLOGI Fail
 - [ ] Know Cisco MDS CLI commands: show flogi database, show zone active, show fcns database
 - [ ] Explain the impact of a Domain ID conflict on fabric behavior
 - [ ] Describe how to identify and resolve a slow drain device causing I/O latency
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

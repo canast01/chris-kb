@@ -112,3 +112,12 @@ Common KB categories for Aria Ops for Logs:
 - Ingestion stopped: search `Log Insight ingestion stopped disk full`
 - Cassandra errors: search `Log Insight Cassandra compaction`
 - Certificate errors: search `Log Insight SSL certificate replace`
+
+---
+
+## Verify resolution
+
+- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
+- **Event log:** confirm no new related error events in the last 5 minutes
+- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
+- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur

@@ -429,3 +429,11 @@ echo "Password is: $(terraform output -raw db_password)"
 | Store secrets in Vault/SSM | Do not rely on Terraform state as a secrets store |
 | Encrypt remote backend | State contains sensitive output values in plain text |
 | Never `echo` sensitive outputs | Avoids leaking values into CI logs or shell history |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

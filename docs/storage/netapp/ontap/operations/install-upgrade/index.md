@@ -125,3 +125,11 @@ ONTAP follows a major.minor.patch versioning model. Upgrade rules:
 | SnapMirror destination ONTAP < source | Upgrade destination first before upgrading source |
 
 Refresh projects should be tracked in a capacity and lifecycle register updated quarterly. Use the Active IQ / BlueXP risk advisor to surface hardware and firmware advisories that can trigger unplanned refresh requirements.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

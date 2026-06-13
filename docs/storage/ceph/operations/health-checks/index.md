@@ -281,3 +281,11 @@ ceph osd deep-scrub osd.5   # trigger deep scrub (checksums)
 ceph -s | grep -E "degraded|recovering|backfilling"
 ceph pg dump_stuck degraded   # show degraded PG details
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

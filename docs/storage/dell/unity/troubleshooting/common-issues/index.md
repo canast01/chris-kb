@@ -217,3 +217,11 @@ Fill in this form before opening a Dell support case or escalating internally. I
 | Pool subscription > 100% (thin provisioning) | Expected behaviour for thin-provisioned pools — subscription > physical capacity is allowed; monitor actual consumption, not subscribed size |
 | Write performance drops briefly after pool expansion | Expected — Unity rebalances data and FAST Cache after a disk group addition; temporary performance impact |
 | Alert generated when a disk in a disk group is replaced | Expected — Unity logs a disk replacement event and tracks rebuild progress; this is informational |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

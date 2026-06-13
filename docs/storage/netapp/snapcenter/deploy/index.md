@@ -215,3 +215,11 @@ snapshot show -vserver svm_sql01 -volume vol_sql01_data
    - Use **Alternate location** (restore to a different database name) for a non-destructive validation test.
 4. Confirm the restored database is accessible in SQL Server Management Studio.
 5. Verify no errors appear in SnapCenter under **Monitor > Alerts**.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

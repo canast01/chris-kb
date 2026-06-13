@@ -114,3 +114,11 @@ Administration > Reports > Scheduled Reports
 - Validate InsightIQ database backup is completing (check cron logs or backup target)
 - Review InsightIQ appliance OS patches and schedule maintenance window if needed
 - Review user accounts and remove stale accounts (Administration > Users)
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

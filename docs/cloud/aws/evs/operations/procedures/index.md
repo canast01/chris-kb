@@ -360,3 +360,11 @@ Get-VsanResyncDashboard -Cluster $cluster | Select BytesToSync, ActiveTasks, Rec
 # 2. Check vSAN policy applied to migrated VM
 # 3. Remove NE for migrated networks once all VMs are moved
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

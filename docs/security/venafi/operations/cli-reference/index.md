@@ -176,3 +176,11 @@ openssl verify -CAfile chain.pem cert.pem
 # Test TLS with the certificate
 openssl s_client -connect <host>:443 -servername <host>
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -88,3 +88,11 @@ Open a Dell support case at [https://www.dell.com/support](https://www.dell.com/
 1. For billing discrepancies or metering disputes, contact your **Dell account team** first — these are often resolved without a formal support case
 2. For technical issues (SCG connectivity, capacity not reflecting correctly), open a standard support case
 3. For contract baseline adjustments, submit a request through the **APEX Console → Subscription → Modify** or via your account team
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

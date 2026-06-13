@@ -130,3 +130,11 @@ curl -s -k \
 - [ ] Monthly consumption report updated to reflect any intentional capacity changes
 - [ ] Dell account team notified if sustained capacity increase is expected to exceed the contracted base
 - [ ] Capacity planning records updated with new baseline figures
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

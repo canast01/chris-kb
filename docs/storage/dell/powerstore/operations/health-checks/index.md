@@ -253,3 +253,11 @@ When a CRITICAL alert fires on PowerStore:
 | `Metro Volume link down` | Metro Volume network connectivity lost or mediator unreachable | Check inter-site network; check mediator VM status; prepare for manual promotion if link is persistently down |
 | `Certificate expired` | Management certificate past expiry date | Renew and import the certificate; see [Security / Authentication](../../security/authentication/index.md) |
 | `SupportAssist connectivity lost` | Outbound HTTPS to Dell SRS blocked | Check proxy/firewall for `esrs3.emc.com:443`; confirm SupportAssist configuration |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

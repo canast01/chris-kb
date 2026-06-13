@@ -218,3 +218,11 @@ kubectl get nodes  # all nodes on new version
 Check VMware Tanzu Kubernetes releases compatibility before upgrade:
 - https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/
 - Key compat: TKG version ↔ vSphere version ↔ Harbor version ↔ Kubernetes version
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

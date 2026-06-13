@@ -346,3 +346,11 @@ aws securityhub get-findings \
 ```
 
 Address all `CRITICAL` findings before workloads are deployed into the accounts.
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

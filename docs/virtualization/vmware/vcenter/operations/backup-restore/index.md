@@ -207,3 +207,11 @@ For compliance or audit:
 - Store all evidence in your ITSM or change management system
 
 Recovery test cadence: test restore to a non-production environment at minimum annually, ideally every 6 months. Document time taken and any issues encountered.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

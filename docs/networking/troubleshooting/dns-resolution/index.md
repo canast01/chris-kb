@@ -312,3 +312,11 @@ Escalate to DNS / AD team or network team when:
 - DNS resolution fails only for specific VLANs (ACL or scoped response misconfiguration)
 - Wildcard records or unexpected record changes discovered (security incident)
 - PTR record inconsistencies affect more than 20 hosts (systematic reverse zone issue)
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

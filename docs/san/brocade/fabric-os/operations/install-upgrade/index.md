@@ -160,3 +160,11 @@ haFailover      # Force CP failover
 - New FOS versions applied to Fabric B first, validated, then Fabric A
 - Minimum: stay within 1 major FOS version of Broadcom's current release
 - Check FOS EOL: [support.broadcom.com](https://support.broadcom.com) → Product Lifecycle
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -154,3 +154,11 @@ When escalating, always reference:
 - System serial number(s)
 - Business impact (applications affected, data at risk, revenue impact)
 - Timeline of events and actions already taken
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

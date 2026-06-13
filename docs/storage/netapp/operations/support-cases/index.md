@@ -136,3 +136,11 @@ If a case is not progressing:
 All open and closed cases are visible at **mysupport.netapp.com → Cases**.
 
 AutoSupport also generates case numbers automatically when critical EMS events are triggered — check **My AutoSupport → Cases** for system-initiated cases.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

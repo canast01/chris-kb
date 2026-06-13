@@ -346,3 +346,11 @@ Feed findings from each incident back into runbooks and contact lists so the nex
 8. Record the runbook update in the incident ticket as a closed action item.
 
 9. Schedule a tabletop exercise within 90 days if the incident revealed a significant gap that requires team practice.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

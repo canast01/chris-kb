@@ -105,3 +105,11 @@ grep "AuthenticationException\|failed.*login\|InvalidCredentials" /var/log/vmwar
 ```
 
 Alert on > 5 failed logins for any account in a 15-minute window.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

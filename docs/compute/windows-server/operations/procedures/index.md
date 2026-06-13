@@ -659,3 +659,11 @@ Get-NetTCPConnection -LocalPort 3389 | Select-Object LocalAddress, LocalPort, St
 ```
 
 Restrict RDP access to specific IP ranges using a firewall rule `-RemoteAddress` parameter. Disable RDP on servers that do not require it. Consider using Windows Admin Center or SSH as alternatives for server management.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

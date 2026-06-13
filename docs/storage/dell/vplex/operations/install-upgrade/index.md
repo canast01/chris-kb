@@ -144,3 +144,11 @@ For hardware EOL, replacement options are:
 - Review the Dell Support Product EOL page quarterly.
 - Maintain a lifecycle register for each VPLEX cluster recording: GeoSynchrony version, director hardware model, ProSupport contract expiry, and planned upgrade/refresh date.
 - Coordinate VPLEX lifecycle events with backend array and host OS refresh cycles to avoid compatibility gaps.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -102,3 +102,11 @@ systemctl status dell-cloudiq-agent 2>/dev/null || \
 | SCG telemetry logs | `/var/log/dsagw/` on the SCG host |
 | Unisphere audit log | Unisphere GUI → Settings → Audit Log |
 | APEX Console audit | APEX Console → Administration → Audit |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -312,3 +312,11 @@ Escalate to application team, platform team, or vendor when:
 - CPU throttling via cgroup/resource pool is masking an unresolved application fault
 - Security scan or crypto mining suspected (unexpected processes, outbound connections)
 - Host hardware fault suspected: check `esxcli hardware cpu list` and IPMI/iLO SEL logs
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

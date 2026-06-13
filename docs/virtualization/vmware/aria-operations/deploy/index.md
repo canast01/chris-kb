@@ -251,3 +251,11 @@ Administration → Backup and Restore → Backup Now
 | Cassandra running | `service vmware-vcops-cassandra status` | Active (running) |
 | CaSA backup completed | Administration → Backup | Last backup fresh |
 | Capacity forecasts available | Environment → Capacity | Forecasts shown (after 24h) |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

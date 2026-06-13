@@ -150,3 +150,11 @@ $spec.Enabled = $true
 | Dedup/compression ratio < 1.1× | Workload not compressible (databases, encrypted disks) | This is expected for some workloads; do not rely on efficiency for capacity planning |
 | Capacity drops sharply after snapshot deletion | Snapshots were large | Normal; delta disks are freed on deletion; verify with `esxcli storage vmfs extent list` |
 | New disks not claimed after adding to host | Disks not visible to vSAN | Check disk health in BIOS; verify disk is not in a foreign state: `esxcli vsan storage list` |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

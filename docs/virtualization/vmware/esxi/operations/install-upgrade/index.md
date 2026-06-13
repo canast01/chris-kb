@@ -176,3 +176,11 @@ ESXi does not support in-place downgrade. Options if a patch causes issues:
 3. **vLCM**: Remove the new component/VIB from the cluster image and remediate — reverts the specific change
 
 For vSAN clusters: if ESXi 8.x is rolled back, vSAN on-disk format may need downgrade — contact VMware Support before attempting.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

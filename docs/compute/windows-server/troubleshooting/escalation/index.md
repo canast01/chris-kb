@@ -100,3 +100,11 @@ flowchart TD
 | Slow logon | DCDiag, `gpresult /h` | Check DC connectivity and GPO application time |
 | Windows Update failure | `%SystemRoot%\Logs\CBS\CBS.log` | Look for "FAIL" entries |
 | DNS resolution | `Resolve-DnsName`, `nslookup` | Check DNS suffix search order |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

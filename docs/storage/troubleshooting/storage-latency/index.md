@@ -290,3 +290,11 @@ Escalate to storage team or vendor TAC when:
 - Storage array reporting hardware fault in Unisphere or SYMCLI health check
 - Queue full conditions occurring repeatedly (storage fabric or array tuning required)
 - Latency cannot be correlated to a specific cause after 30 minutes of investigation
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

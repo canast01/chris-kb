@@ -348,3 +348,11 @@ FastCopy is not a substitute for replication — it creates a local copy on the 
 | 7 | Confirm all restored files/VMs are accessible at the destination | |
 | 8 | Restart cleaning if it was stopped (`filesys clean start`) | |
 | 9 | Document restore completion time and throughput for future SLA planning | |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -69,3 +69,11 @@ Diagnostics reference covering Log Locations, Diagnostic Commands, Support Bundl
 1. In the VBR console: Main Menu > Help > Support Information
 2. Click "Export Logs" — select the job or time range relevant to the issue
 3. The wizard packages logs from the Backup Server and relevant proxies into a single ZIP archive
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

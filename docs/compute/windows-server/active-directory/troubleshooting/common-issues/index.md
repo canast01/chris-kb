@@ -198,3 +198,11 @@ Get-WinEvent -LogName Security |
     Where-Object {$_.Id -in @(4768,4769,4771)} |
     Select-Object -First 20 TimeCreated, Id, Message
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

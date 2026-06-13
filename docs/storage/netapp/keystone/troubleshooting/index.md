@@ -124,3 +124,11 @@ Gather the following before opening a Keystone support case:
 - Collector VM status output (`systemctl status keystone-collector`)
 - Consumption report for the affected period (download from BlueXP digital wallet)
 - Clear description of the symptom and its business impact
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -90,3 +90,11 @@ Aria Operations does not have a native backup tool. Use the following:
 - Broadcom Product Lifecycle Matrix: [support.broadcom.com/group/ecx/productlifecycle](https://support.broadcom.com/group/ecx/productlifecycle)
 - Aria Suite Lifecycle Manager — check installed product versions against the matrix quarterly
 - Aim to be no more than one major version behind the current release
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

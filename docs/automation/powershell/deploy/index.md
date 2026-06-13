@@ -240,3 +240,11 @@ Write-Output "PowerShell environment is ready."
 | `Get-Module -ListAvailable` | Az, VMware.PowerCLI present |
 | `Test-WSMan` | Returns WinRM version without error |
 | `Get-ExecutionPolicy -Scope CurrentUser` | `RemoteSigned` |
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

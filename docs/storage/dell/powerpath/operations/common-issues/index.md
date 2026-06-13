@@ -412,3 +412,11 @@ powermt version
 | PowerPath service not starting | Module not loaded; kernel update | `modprobe emcp`; rebuild DKMS module |
 | Configuration not persisted after reboot | `powermt save` not run | Run `powermt save` after every change |
 | All paths dead to a device | Array-side masking change; fabric failure | Verify LUN masking at array; check fabric |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

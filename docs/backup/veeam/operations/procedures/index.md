@@ -252,3 +252,11 @@ When an extent needs to be decommissioned:
 1. Right-click the extent and select **Set to Seal** — Veeam will evacuate data to other extents during the next job run.
 2. Monitor evacuation progress in **Backup Infrastructure** until the extent shows 0 restore points.
 3. Remove the extent only after it is fully evacuated.
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

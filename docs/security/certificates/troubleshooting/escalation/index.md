@@ -245,3 +245,11 @@ netsh http show sslcert | Select-String -Pattern "Thumbprint|IP:port"
 ```
 
 Target resolution time: expired internal certificate — 2 hours. Expired external/public certificate — 1 hour (P1 incident).
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

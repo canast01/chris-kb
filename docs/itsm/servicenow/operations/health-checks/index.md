@@ -262,3 +262,11 @@ Actions:
 - Triggered manual LDAP import at 08:15 — resolved
 - Opened INC0042187 for LDAP import job failure root cause
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

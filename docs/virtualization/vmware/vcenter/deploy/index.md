@@ -437,3 +437,12 @@ vSphere Client → [vCenter] → Configure → Advanced Settings
 | Alarms | Host disconnect, datastore full, cert expiry alarms active |
 | Syslog | vCenter events forwarding to syslog server |
 | SSH | SSH disabled on VCSA after setup complete |
+
+---
+
+## Verify
+
+- **vSphere Client:** log in at `https://<vcenter-fqdn>/ui` — inventory loads and all hosts show Connected
+- **Alarms:** Home → Alarms — no critical alarms present after deployment
+- **Services:** `service-control --status --all` — all services show RUNNING
+- **Backup:** VAMI → Backup — schedule active, first backup completes successfully

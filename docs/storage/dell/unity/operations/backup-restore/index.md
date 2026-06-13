@@ -443,3 +443,11 @@ uemcli -d <ip> -u admin /prot/snap show -detail | grep -E "Name|Size" | sort -k3
 | < 5% | Unity may invalidate snapshots and replication sessions to protect primary I/O — data loss risk |
 
 Set capacity alerts in Unisphere at 70% and 80% consumed to get early warning before snapshot auto-deletion begins.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

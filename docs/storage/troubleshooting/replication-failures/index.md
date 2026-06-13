@@ -306,3 +306,11 @@ Escalate immediately to DR coordinator / management when:
 - Both primary site and DR replication paths are simultaneously degraded (dual failure)
 - Disaster scenario confirmed at primary site — initiate DR runbook immediately
 - Any situation where last known good replication point is older than the RPO objective
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

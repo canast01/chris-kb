@@ -139,3 +139,11 @@ curl -k -X GET https://<eyeglass_ip>/eca/api/v1/jobs/sync \
 curl -k -X GET https://<eyeglass_ip>/eca/api/v1/jobs/failover \
   -H "Authorization: Bearer <token>"
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

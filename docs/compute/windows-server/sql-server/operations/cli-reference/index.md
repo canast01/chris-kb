@@ -133,3 +133,11 @@ FROM msdb.dbo.sysjobhistory h
 JOIN msdb.dbo.sysjobs j ON j.job_id = h.job_id
 ORDER BY h.run_date DESC, h.run_time DESC;
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

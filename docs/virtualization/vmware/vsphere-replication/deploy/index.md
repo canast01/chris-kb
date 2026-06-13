@@ -445,3 +445,11 @@ curl -sk https://vra-siteB.example.local/api/rest/vr/health
 | Alerts | Email notifications configured for RPO violations |
 | Target datastore | Adequate free space; < 70% used |
 | Recovery test | Planned migration test completed on test VM |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

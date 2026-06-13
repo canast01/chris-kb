@@ -153,3 +153,11 @@ Add tested commands here.
 ### Known issues
 
 Add known issues here as they come up.
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

@@ -413,3 +413,11 @@ bottleneckmon --enable
 ```
 
 When a port shows persistent zero BB credits, the connected device is not returning credits fast enough. The connected device is the slow drain device. Identify it, disable the port temporarily, and work with the host or storage team to resolve the queue depth or driver issue.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

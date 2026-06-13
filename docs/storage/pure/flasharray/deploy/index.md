@@ -266,3 +266,11 @@ dd if=/dev/mapper/<pure_mpath_dev> of=/dev/null bs=1M count=2048 iflag=direct
 4. Check no errors in `/var/log/messages` or the multipath log.
 5. Verify the protection group snapshot schedule is running: navigate to **Storage > Snapshots** and confirm hourly snapshots are being created.
 6. In Pure1, confirm the array shows as **Connected** and no critical alerts are active.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

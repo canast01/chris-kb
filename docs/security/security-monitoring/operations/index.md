@@ -210,3 +210,11 @@ Extract SIEM alert data for inclusion in the monthly security operations report.
    - Top 5 triggered rules by volume
 4. Produce a trend comparison against the previous month to show whether alert volume and true positive rates are improving.
 5. Insert the metrics and charts into the monthly Security Operations report template and distribute to the Security Manager and CISO.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

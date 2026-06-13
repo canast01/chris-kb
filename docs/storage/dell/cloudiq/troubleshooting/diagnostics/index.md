@@ -81,3 +81,11 @@ Collect the following before opening a Dell support case for a CloudIQ issue:
 - **SCG connectivity test output**: output of `curl -k https://esrs3.emc.com` and `systemctl status dsagw`
 - **dsagw logs**: relevant lines from `/var/log/dsagw/` around the time the issue started
 - **Browser console errors**: for dashboard UI issues, export the browser console log with timestamps
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

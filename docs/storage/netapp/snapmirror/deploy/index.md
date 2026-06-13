@@ -321,3 +321,11 @@ Confirm the relationship is back to `Snapmirrored` and lag time is under the RPO
 ```bash
 snapmirror show -destination-path svm_dr:vol_nfs_dr01
 ```
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

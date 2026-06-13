@@ -148,3 +148,11 @@ Get-WinEvent -LogName "Directory Service" -MaxEvents 50 |
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics" `
                  -Name "16 LDAP Interface Events" -Value 1
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

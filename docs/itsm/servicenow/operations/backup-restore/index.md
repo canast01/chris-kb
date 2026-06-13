@@ -179,3 +179,11 @@ This is a last-resort option for catastrophic data loss. Raise a P1 case on the 
 - Business justification
 
 ServiceNow SLA for restore initiation: 4 hours (P1 priority).
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

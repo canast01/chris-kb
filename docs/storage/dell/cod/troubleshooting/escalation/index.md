@@ -98,3 +98,11 @@ Before opening a case:
 1. Open a standard support case via Dell support portal
 2. If the activation is time-critical (emergency capacity event), request **Priority 1** escalation and contact your Dell account team directly to expedite
 3. For license file re-issuance issues (wrong SID), the Dell License Management team handles this separately from standard support — your account team can connect you directly
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

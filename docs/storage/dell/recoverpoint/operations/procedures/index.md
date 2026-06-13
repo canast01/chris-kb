@@ -413,3 +413,11 @@ Modify the synchronisation interval for a Consistency Group to adjust the RPO ta
 3. Modify the synchronisation interval — lower values reduce RPO but increase journal write rate and bandwidth consumption
 4. Click **Apply** to save the new policy
 5. Monitor the CG cycle time after the change to confirm the new interval is being achieved — check **group status** to verify the actual RPO matches the new target
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

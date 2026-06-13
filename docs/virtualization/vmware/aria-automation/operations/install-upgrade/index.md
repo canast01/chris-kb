@@ -224,3 +224,11 @@ If LCM rollback is not available:
 4. Wait 5 minutes for services to start
 5. Verify services: `vracli status` and `kubectl get pods --all-namespaces`
 6. Open a Broadcom SR if the rollback succeeds but the root cause of the upgrade failure needs investigation before retrying
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

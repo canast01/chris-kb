@@ -117,3 +117,11 @@ grep "sending data" /var/log/zabbix/zabbix_agent2.log | tail -5
 | Disk usage | >75% | >90% |
 | Storage latency (avg) | >5ms | >20ms |
 | Backup failure | 1 job | 2+ consecutive |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

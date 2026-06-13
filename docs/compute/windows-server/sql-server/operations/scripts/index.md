@@ -138,3 +138,11 @@ SELECT DB_NAME(database_id) AS db_name,
 FROM sys.master_files
 ORDER BY database_id, type;
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -199,3 +199,11 @@ All directors should be `operational-status: ok` and `health-state: ok`.
 | Virtual volumes | `ll .../virtual-volumes/` | operational-status: ok |
 | WAN COM | `ll .../connectivity/` | operational-status: ok |
 | Alerts | `ll /alerts/` | No critical alerts |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

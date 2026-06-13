@@ -324,3 +324,11 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 **What you should see**
 
 A table of all resources in state (address, type, provider), a count grouped by resource type, and a tainted resources section. A `.txt` report is saved to your Desktop.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

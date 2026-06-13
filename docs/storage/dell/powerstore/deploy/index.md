@@ -250,3 +250,11 @@ dd if=/dev/zero of=/dev/mapper/<mpath_dev> bs=1M count=512 oflag=direct
 
 4. Check PowerStore Manager **Monitoring > Performance** — latency should be sub-millisecond for NVMe-based appliances at low queue depth.
 5. Confirm no active alerts under **Monitoring > Alerts**.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

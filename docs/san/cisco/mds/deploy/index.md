@@ -296,3 +296,11 @@ Save configuration:
 ```bash
 copy running-config startup-config
 ```
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

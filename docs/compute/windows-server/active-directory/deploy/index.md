@@ -274,3 +274,11 @@ netdom query fsmo
 ```
 
 All five FSMO roles (Schema Master, Domain Naming Master, PDC Emulator, RID Master, Infrastructure Master) should be assigned.
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

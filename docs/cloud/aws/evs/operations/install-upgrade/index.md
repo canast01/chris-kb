@@ -279,3 +279,11 @@ Get-VM | Get-Snapshot | Where-Object { $_.Name -like "pre-upgrade-*" } | Remove-
 | VCF 4.5 | ESXi 7.0 U3 | NSX 3.2 | vCenter 7.0 U3 |
 
 Always verify the VMware Product Interoperability Matrix before upgrading EVS components.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

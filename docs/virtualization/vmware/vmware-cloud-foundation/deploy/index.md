@@ -439,3 +439,11 @@ curl -sk -o /dev/null -w "%{http_code}" https://depot.vmware.com
 | NSX TEP | Geneve tunnel health all green in NSX UI |
 | LCM depot | SDDC Manager can reach depot.vmware.com |
 | Syslog | SDDC Manager and components forwarding to syslog |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

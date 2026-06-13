@@ -202,3 +202,11 @@ vxlogview -i 51216 -d 24:00:00
 # Tail legacy job logs
 tail -f /usr/openv/netbackup/logs/bprd/log.<today>
 ```
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

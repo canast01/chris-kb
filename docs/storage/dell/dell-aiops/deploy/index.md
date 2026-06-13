@@ -204,3 +204,11 @@ Run through the following before declaring setup complete.
 **Access validation:**
 
 - Log in with a non-admin account and confirm the user sees only the arrays and dashboards they have been granted access to
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

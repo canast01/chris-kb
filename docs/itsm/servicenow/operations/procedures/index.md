@@ -431,3 +431,11 @@ Export list view data for reporting, auditing, or offline analysis.
 3. Right-click any column header and select **Export**, or use the list **Actions** menu and choose **Export**.
 4. Choose the format: **Excel** (`.xlsx`) or **CSV** — CSV is preferred for large datasets or scripted processing.
 5. Download the file from the browser.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

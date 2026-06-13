@@ -185,3 +185,11 @@ nc -vz uag.public.corp.com 4172
 ## HTTPS Tunnel — TCP 443 to UAG
 nc -vz uag.public.corp.com 443
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

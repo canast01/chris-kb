@@ -474,3 +474,11 @@ aws s3api get-object-lock-configuration \
 | `NoSuchBucket` | Bucket does not exist or wrong namespace | Check bucket name and namespace assignment |
 | `403 Forbidden` | Bucket policy denies access | Review bucket policy: `aws s3api get-bucket-policy ...` |
 | `QuotaExceeded` | Bucket or namespace quota reached | Increase quota in ECS Portal or expire old objects |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

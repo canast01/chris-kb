@@ -348,3 +348,11 @@ Document test results and any issues found. Track trend of test durations — in
 - Execute test failover on at least one non-critical recovery plan.
 - Document results and resolve any script or network mapping failures.
 - Confirm SRA version compatibility with current array firmware.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

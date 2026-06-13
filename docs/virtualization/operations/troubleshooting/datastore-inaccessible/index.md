@@ -220,3 +220,11 @@ esxcli vsan debug resync list
 | Degraded | A component is missing — fault tolerance is used up | Restore the failed host/disk before another failure occurs |
 | Absent | Component on a temporarily disconnected host | Resync starts automatically after the host reconnects |
 | Inaccessible | Quorum lost — cannot read the object | Restore majority of cluster hosts; contact VMware GSS if unrecoverable |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

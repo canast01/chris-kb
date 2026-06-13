@@ -300,3 +300,11 @@ vsipioctl getrules -f <affected-filter> >> /tmp/dvfilter.txt
 
 ---
 
+---
+
+## Verify resolution
+
+- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
+- **Event log:** confirm no new related error events in the last 5 minutes
+- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
+- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur

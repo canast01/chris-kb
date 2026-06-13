@@ -229,3 +229,11 @@ This page is a quick-reference for operational issues encountered during day-to-
    - Confirm the subject CN matches the hostname in the URL
    - Confirm the issuer is a CA trusted by browsers (corporate CA must be in the browser trust store)
 3. If the certificate is expired: renew it using the same procedure as initial installation.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

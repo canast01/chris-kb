@@ -251,3 +251,11 @@ ceph orch apply mon --placement="host1,host2,host3-new"
 # 5. Check MON log for split-brain or election issues
 journalctl -u ceph-mon@<id> -n 200 | grep -E "election|quorum|paxos"
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -212,3 +212,11 @@ Policies define how SnapCenter performs backups — schedule, retention, SnapMir
 6. Review the restore scope (full database, tablespace, or file-level) and confirm settings
 7. Click **Restore** and monitor the job in **Monitor → Jobs**
 8. Once the job completes, verify the database is online and confirm data integrity with the application team
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

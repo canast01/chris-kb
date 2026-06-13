@@ -354,3 +354,11 @@ Results confirm Azure Activity logs are flowing.
 az account management-group show --name root-mg --expand --recurse
 az policy assignment list --scope "/providers/Microsoft.Management/managementGroups/root-mg"
 ```
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

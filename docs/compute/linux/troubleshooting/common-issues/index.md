@@ -266,3 +266,11 @@ strace -p <PID> -s 200 -f 2>&1 | head -100
 # Check for time skew (NTP offset > 1s = problematic)
 chronyc tracking | grep "System time"
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

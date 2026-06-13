@@ -299,3 +299,11 @@ flowchart TD
 | SRDF synchronized | `symrdf query -rdfg all` | All = Synchronized |
 | No failed devices | `symdev list -failed` | 0 failed |
 | Cache WP < 31% | `symstat list -type cache` | WP% < 31% |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

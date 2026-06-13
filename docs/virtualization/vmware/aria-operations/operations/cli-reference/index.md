@@ -187,3 +187,11 @@ curl -sk -H "Authorization: vRealizeOpsToken <token>" \
 - [Operations](../index.md) — operational runbooks
 - [Scripts](../scripts/index.md) — automation using the API
 - [Troubleshooting](../../troubleshooting/index.md) — diagnostic commands
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -143,3 +143,11 @@ Confirm last successful delivery is recent (within 24 hours for daily AutoSuppor
 | LIFs | `network interface show -status-oper down` | No output |
 | EMS | `event log show -severity critical` | No output |
 | SnapMirror | `snapmirror show -health false` | No output |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

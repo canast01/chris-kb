@@ -109,3 +109,11 @@ ALTER AVAILABILITY GROUP [AG_Name] FORCE_FAILOVER_ALLOW_DATA_LOSS;
 - Windows System/Application event logs around the time of incident
 - AG topology diagram and database list
 - Recent changes (patches, schema changes, load spikes)
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -459,3 +459,11 @@ echo === Diagnostic check complete ===
 ```
 
 **Before first use:** Accept the SSH fingerprint once by running `plink.exe -ssh root@<esxi-ip>` and typing `y`.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

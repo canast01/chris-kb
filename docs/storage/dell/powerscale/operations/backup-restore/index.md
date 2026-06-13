@@ -436,3 +436,11 @@ ls /ifs/replicated/project1/
 | SyncIQ failback to primary | Variable (depends on data changed during DR period) | Run return policy sync; validate completion; redirect clients |
 | NDMP full restore | Hours to days | Depends on backup size and network/tape throughput |
 | Veeam NAS full share restore | Hours | Depends on share size and network throughput |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

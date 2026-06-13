@@ -71,3 +71,11 @@ Aria Operations: Scheduled Reports and PDF Export reference covering Scheduling 
 | PDF layout broken | Too many columns in table view | Reduce columns or switch to landscape |
 | Scheduled report never runs | Schedule timezone mismatch | Confirm server timezone in Administration |
 | Report generation fails | Large dataset timeout | Reduce scope, use group-level filtering |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

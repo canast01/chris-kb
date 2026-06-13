@@ -281,3 +281,11 @@ Review the Venafi support lifecycle page quarterly:
 `https://support.venafi.com/hc/en-us/articles/360024784232`
 
 Plan upgrades at least 6 months before the current version reaches End of Standard Support. Versions on Extended Support receive security fixes only.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

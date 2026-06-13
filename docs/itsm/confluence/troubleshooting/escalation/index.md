@@ -195,3 +195,11 @@ After every SEV1 or SEV2 incident, complete a post-incident review within 5 busi
 | Increase NFS timeout in fstab | Platform | 2026-05-12 |
 | Schedule quarterly restore test | Platform | 2026-06-01 |
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

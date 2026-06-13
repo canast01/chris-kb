@@ -100,3 +100,11 @@ terraform output -json
 | State list | `terraform state list` | Confirm resources tracked in state |
 | State show | `terraform state show <resource>` | Inspect a specific resource's attributes |
 | Plan JSON | `terraform show -json tfplan` | Parse plan output in scripts |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

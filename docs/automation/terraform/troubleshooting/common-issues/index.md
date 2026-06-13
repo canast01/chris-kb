@@ -101,3 +101,11 @@ resource "aws_instance" "web" {
 | `Error: Reference to undeclared resource` | Typo in resource address | Check spelling; run `terraform state list` |
 | `Error: cycle` | Circular dependency between resources | Use `depends_on` carefully; restructure dependencies |
 | `Error: expected ... to be a string, got ...` | Variable type mismatch | Check `type` constraints in variable declarations |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

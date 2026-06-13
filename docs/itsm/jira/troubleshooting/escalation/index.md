@@ -129,3 +129,11 @@ Complete within 5 business days for all P1 and P2 incidents.
 - [ ] SLA breach assessed — did response and resolution meet targets?
 - [ ] PIR document published to Confluence incident space
 - [ ] PIR shared with stakeholders
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -118,3 +118,13 @@ CREATE USER 'appuser'@'10.0.1.%' IDENTIFIED BY '<strong-password>';
 GRANT SELECT, INSERT, UPDATE, DELETE ON app_prod.* TO 'appuser'@'10.0.1.%';
 FLUSH PRIVILEGES;
 ```
+
+---
+
+## Verify
+
+```bash
+systemctl status <service-name>   # Active: running
+journalctl -u <service-name> -n 20 --no-pager  # no ERROR lines
+ss -tlnp | grep <port>            # service listening on expected port
+```

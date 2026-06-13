@@ -277,3 +277,11 @@ When a CPM password rotation fails (e.g., the target system rejected the new pas
 7. Document the failure reason and resolution in the change ticket.
 
 If reconcile also fails, check network connectivity between the CPM server and the target, firewall rules, and whether the reconcile account has the required permissions on the target system.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

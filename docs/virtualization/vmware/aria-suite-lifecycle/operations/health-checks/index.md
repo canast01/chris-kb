@@ -315,3 +315,11 @@ curl -sk https://<vidm-fqdn>/SAAS/API/1.0/REST/system/health | jq .
 
 **Depot connectivity (online depot):**
 Navigate to **LCM → Settings → My VMware / Broadcom Support Portal** — verify the depot status shows as Connected. If offline: check proxy settings under **Settings → Proxy** and verify outbound HTTPS to `depot.vmware.com` is permitted by the firewall.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

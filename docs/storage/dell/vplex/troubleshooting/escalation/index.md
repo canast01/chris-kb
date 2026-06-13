@@ -216,3 +216,11 @@ For director hardware replacement (physical dispatch):
 3. Dell Support will confirm the part number and dispatch a field service engineer (FSE) or ship the part depending on your support contract (on-site vs. parts-only).
 4. Do not remove or reseat the faulted director until Dell Support confirms the correct procedure — incorrect handling may impact the surviving director's cache state.
 5. Record the replacement part serial numbers and update the hardware inventory in the CMDB after the repair.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

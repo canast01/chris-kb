@@ -337,3 +337,11 @@ LCM does not include built-in clustering. HA is achieved using vSphere HA for au
    5. Verify LCM UI is accessible at the FQDN
    6. Run environment health checks to confirm all managed products reconnect
 6. Test failover in a maintenance window every 6 months; resync the standby clone from a fresh snapshot of the active LCM after each test
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

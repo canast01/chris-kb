@@ -336,3 +336,11 @@ Control programmatic access to repositories via tokens and deploy keys.
 1. **Settings > Repository > Deploy Keys > Add Deploy Key** → paste the public key from the CI service.
 2. Enable **Write access** only if the CI pipeline needs to push (e.g., auto-tagging).
 3. Rotate tokens and keys on a schedule or immediately on suspected compromise.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

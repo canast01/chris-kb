@@ -237,3 +237,11 @@ Overall status : ☐ All clear  ☐ Monitoring  ☐ Incident open (ticket: _____
 - [NSX Data Plane Internals](../../internals/nsx-data-plane/) — TEP, BFD, DFW fast path
 - [Runbooks](../runbooks/) — step-by-step procedures for specific operational tasks
 - [Scenarios — Issues](../../topics/scenarios/) — cross-product troubleshooting playbooks
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

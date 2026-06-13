@@ -216,3 +216,11 @@ curl -sk \
 | VxRail Manager VM | vSphere snapshot (pre-LCM only) | Before each LCM | Delete within 24h | vSAN (temporary) |
 | ESXi node config | `Get-VMHostFirmware` | Before each LCM | Keep last 2 per node | Off-cluster SFTP/NAS |
 | vCenter Server | VAMI file-based backup | Daily | 14 copies | External SFTP target |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

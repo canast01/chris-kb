@@ -208,3 +208,11 @@ pstcli -d <ip> -u admin "show /hardware"
 pstcli -d <ip> -u admin "show /drive"
 pstcli -d <ip> -u admin "show /replication_session"
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -257,3 +257,11 @@ This is required for our internal post-incident review process."
 ```
 
 For recurring issues (same root cause appearing more than once), escalate to your AWS TAM and request a Well-Architected Review for your EVS environment. AWS offers a focused EVS review that covers resiliency, networking, and operations best practices.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

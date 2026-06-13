@@ -327,3 +327,11 @@ symrdf establish -sid <sid> -rdfg <group>
 ```
 
 Monitor the establish operation until the new pairs reach **Consistent** state alongside the existing group members.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

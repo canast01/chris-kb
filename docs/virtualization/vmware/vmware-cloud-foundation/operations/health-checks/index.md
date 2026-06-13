@@ -300,3 +300,11 @@ Upgrade bundles must be downloaded to SDDC Manager before an upgrade can be sche
    ```
 3. **Manual depot sync**: SDDC Manager → Lifecycle Management → Bundle Management → **Sync Now** — forces re-check of available bundles from the VMware depot
 4. **Offline depot**: for air-gapped environments, upload bundles manually via SDDC Manager → Lifecycle Management → **Offline Bundle Upload**; verify the bundle checksum matches the manifest
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

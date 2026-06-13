@@ -254,3 +254,11 @@ multipath -ll
 
 1. Navigate to **Performance > Storage Pools** and verify I/O latency is normal (sub-1ms for SSD pools under light load).
 2. Confirm no alerts are active in **System > Alerts**.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

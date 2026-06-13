@@ -167,3 +167,11 @@ Revert an application from SAML SSO to local authentication as part of decommiss
 5. Unassign users and groups from the IdP application to prevent orphaned assignments.
 6. Notify affected users of the authentication method change and provide new login instructions.
 7. Update the SSO application register and remove the entry from the SAML configuration documentation.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

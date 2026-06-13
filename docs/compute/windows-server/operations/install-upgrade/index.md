@@ -200,3 +200,11 @@ Get-WinEvent -FilterHashtable @{
 | Production non-critical | Monthly (Patch Tuesday + 7 days) | Saturday 02:00–06:00 |
 | Production critical | Monthly + emergency for CVE ≥ 9.0 | Agreed maintenance window |
 | Domain Controllers | Monthly — stagger DCs | Off-hours; verify replication after each |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

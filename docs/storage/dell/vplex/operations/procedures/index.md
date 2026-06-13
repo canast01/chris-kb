@@ -392,3 +392,11 @@ VPlexcli:/> ll /distributed-storage/distributed-devices/*/health-indications/
 ```
 
 After the test, confirm all distributed devices return to `in-sync` status and that the Witness connection is healthy on both clusters before closing the change record.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

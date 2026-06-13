@@ -190,3 +190,11 @@ journalctl --since "2026-05-01 14:25:00" --until "2026-05-01 14:35:00" \
 # Search for a specific string across all units
 journalctl --since "today" | grep -i "connection refused\|timeout\|SIGKILL"
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

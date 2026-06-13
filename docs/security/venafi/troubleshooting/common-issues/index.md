@@ -84,3 +84,11 @@ Known issues and resolution steps for frequent Venafi problems.
 ## Known Issues
 
 Add known issues here as they come up.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

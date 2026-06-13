@@ -123,3 +123,11 @@ When clients report NFS/SMB errors, SyncIQ failures, or a node is unreachable, w
 | Which SyncIQ policies are failing and what is the error? | |
 | Are any quota directories at or above hard threshold? | |
 | Is a Restripe job running and what is its progress? | |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

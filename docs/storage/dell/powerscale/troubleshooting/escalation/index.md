@@ -151,3 +151,11 @@ If a P1 case is not progressing within the response SLA or a critical outage req
 2. Contact your **Dell account team Technical Account Manager (TAM)** — TAMs have direct lines into the engineering team for critical production issues.
 3. For prolonged or complex outages, request engagement with **Dell Global Priority Services (GPS)** — GPS provides on-site or remote senior engineering support beyond standard TAM involvement.
 4. Reference the case number, cluster serial, and business impact statement (number of users/petabytes affected) in all escalation communications.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

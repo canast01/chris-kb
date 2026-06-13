@@ -497,3 +497,12 @@ get bgp neighbor summary
 | Overlay segment | VM ping to T1 gateway IP | Reachable |
 | DFW rule push | `summarize-dvfilter` (ESXi host) | vmware-sfw filter on all vNICs |
 | NSX backup | System → Backup & Restore | Last backup: successful |
+
+---
+
+## Verify
+
+- **Manager cluster:** NSX UI → System → Overview — all nodes Active, cluster Stable
+- **Transport nodes:** Fabric → Nodes → Host Transport Nodes — all nodes Configured/Success
+- **Edge cluster:** Fabric → Nodes → Edge Transport Nodes — all edges Up
+- **Connectivity test:** NSX UI → Tools → Traceflow — send a packet between two VMs on different segments

@@ -270,3 +270,11 @@ esxcli software vib list | grep -v "VMware\|Broadcom\|Dell\|HPE\|Cisco"
 - [ ] All datastores > 20% free space
 - [ ] No unexpected maintenance mode hosts
 - [ ] VIB compliance matches vLCM baseline (no patch drift)
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

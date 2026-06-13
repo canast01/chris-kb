@@ -116,3 +116,11 @@ Document what changed, what fixed it, and how health was validated.
 - Add missing checks.
 - Update the runbook.
 - Capture known issue notes.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

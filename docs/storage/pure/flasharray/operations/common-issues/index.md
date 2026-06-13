@@ -108,3 +108,11 @@ purevol setattr <volume_name> --iops-limit 0
 | < 500 µs read/write | Normal | None |
 | 500 µs – 1 ms | Elevated | Investigate |
 | > 1 ms | Abnormal | Check queue depth, host connectivity, array load |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

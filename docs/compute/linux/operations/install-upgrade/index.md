@@ -281,3 +281,11 @@ find /etc -newer /tmp/pre-patch-packages.txt -type f 2>/dev/null | head -20
 | Production — non-critical | Monthly (change-controlled) | Weekend 02:00–06:00 |
 | Production — critical | Quarterly OR emergency (CVE ≥ 9.0) | Agreed maintenance window |
 | Emergency (CVSS ≥ 9.0) | Within 72 hours | Emergency change process |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

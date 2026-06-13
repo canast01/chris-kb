@@ -508,3 +508,11 @@ Pure1 provides historical analytics and AI-driven anomaly detection that complem
 | Support cases | Support > Cases | Track open cases and add attachments |
 
 Pure1's AI-driven recommendations (Pure1 Meta) surface workload anomalies and right-sizing recommendations that may not be visible in real-time CLI output. Review these weekly during normal operations and immediately during a performance incident.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

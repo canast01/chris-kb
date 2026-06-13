@@ -121,3 +121,11 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 
 echo "Alerts saved to /tmp/aria-ops-alerts-$(date +%Y%m%d).json"
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

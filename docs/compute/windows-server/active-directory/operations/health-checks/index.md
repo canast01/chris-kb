@@ -145,3 +145,11 @@ Run these commands each morning to verify Active Directory health before issues 
 - `repadmin /showrepl` — full replication partner detail
 - Review FSMO role holders with `netdom query fsmo`
 - Confirm DC OS patch levels are current
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

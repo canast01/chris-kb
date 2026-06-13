@@ -119,3 +119,11 @@ FlashArray hardware refreshes are managed through the Evergreen subscription mod
 | FA-300 / FA-400 hardware | End of Life | Hardware refresh required — contact Pure account team |
 
 Maintain a quarterly review of Pure's published compatibility matrix and EOL announcements. Subscribe to Pure Support notifications for your array's Purity version to receive advance EOS warnings.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

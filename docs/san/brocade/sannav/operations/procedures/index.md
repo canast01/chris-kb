@@ -186,3 +186,11 @@ Upgrade SANnav during a scheduled maintenance window — fabric management is un
 5. Apply the upgrade — SANnav services will restart automatically.
 6. Verify all SANnav services have resumed: check **Administration > System Status**.
 7. Confirm all fabrics have reconnected and topology data is current in **SAN > Fabrics**.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

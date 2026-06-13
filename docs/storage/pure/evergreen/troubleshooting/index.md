@@ -108,3 +108,11 @@ Gather the following before opening a case to reduce time to resolution:
 6. **Symptom timeline** — when did the issue start, what changed around that time, what has already been attempted
 
 Having this information ready before calling significantly reduces time to first meaningful action from the support engineer.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

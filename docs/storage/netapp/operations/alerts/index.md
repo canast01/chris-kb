@@ -141,3 +141,11 @@ system health alert delete -node <node> -alert-id <id>
 | Disk failed | Hardware failure | Replace disk, verify RAID rebuild |
 | HA interconnect down | Cable/port failure | Investigate HA link |
 | AutoSupport failure | Proxy or network | Verify outbound connectivity |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -285,3 +285,11 @@ Replacing a failed node requires draining it from the cluster before physical re
 7. Securely erase all disks if required by data classification policy (use Dell secure erase tools)
 
 **Do not shut down nodes while still in an active replication group — this will cause data access failures on the surviving VDC.**
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

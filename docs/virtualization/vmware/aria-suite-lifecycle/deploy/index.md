@@ -379,3 +379,11 @@ openssl s_client -connect lcm.example.local:443 2>/dev/null \
 | All products show Healthy in env | LCM Health Check: all green |
 | NTP synchronised | `chronyc tracking` offset < 1 s on LCM VM |
 | DNS resolves all product FQDNs | Forward + reverse for each product IP |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

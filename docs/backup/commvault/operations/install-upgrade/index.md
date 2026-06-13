@@ -103,3 +103,11 @@ For cloud migration of on-premises CommVault to Metallic (SaaS):
 | Windows Server OS (CommServe host) | Align CommServe OS lifecycle with CommVault support matrix |
 | SQL Server (CommServe DB) | Track SQL Server EOL; upgrade requires CommVault testing |
 | Hyperscale X firmware | Annual review against CommVault recommended firmware versions |
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

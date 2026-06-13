@@ -615,3 +615,11 @@ Traffic type options:
 | `ALL` | Accepted and rejected traffic |
 | `ACCEPT` | Only traffic allowed by security group and NACL rules |
 | `REJECT` | Only traffic denied by security group or NACL rules |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

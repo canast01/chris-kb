@@ -142,3 +142,11 @@ get_audit_log -last 500
 ssh admin@<dr-rpa-cluster-ip> "system status"
 ssh admin@<dr-rpa-cluster-ip> "groups status"
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

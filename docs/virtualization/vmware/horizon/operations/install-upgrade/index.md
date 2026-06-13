@@ -228,3 +228,11 @@ Get-HVLocalSession  # should return sessions from all CS nodes
 
 # Test desktop provisioning — create a test pool, provision 1 desktop, confirm it connects
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

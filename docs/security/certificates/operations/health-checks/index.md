@@ -213,3 +213,11 @@ EPOCH=$(date -d "$EXPIRY" +%s)
 echo "ssl_cert_expiry_seconds{host=\"example.com\"} $EPOCH" \
     > /var/lib/node_exporter/textfile_collector/ssl.prom
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

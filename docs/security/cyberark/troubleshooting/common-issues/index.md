@@ -120,3 +120,11 @@ Known issues and resolution steps for frequent CyberArk problems, covering the V
 | CyberArk components not visible in syslog / SIEM | Syslog forwarding not configured in Vault | Configure `SYSLOG` section in `vault.ini` with the SIEM IP and port; restart the Vault service |
 | Accounts duplicated after HR feed | CyberArk Privileged Access Manager provisioning rules matching too broadly | Narrow the Provisioner search filter in the directory mapping; enable duplicate detection in the provisioning workflow |
 | License capacity warning | Too many active Vault users or too many managed accounts | Run the license report from PrivateArk Client; deactivate stale users; archive unmanaged accounts |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

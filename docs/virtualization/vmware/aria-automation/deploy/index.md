@@ -232,3 +232,11 @@ Submit a smoke-test deployment from Service Broker and confirm it reaches `DEPLO
 | Lease policy | Deployment details | Expiry date set |
 | ABX subscriptions | Extensibility → Subscriptions | Status: Enabled |
 | Backup configured | VAMI → Lifecycle → Backup | Schedule set |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

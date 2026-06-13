@@ -456,3 +456,11 @@ The support bundle is saved to `/ddr/var/support/` on the DD. For large arrays, 
 | Authentication failure | `log view audit`, `ddboost user list`, `auth show` |
 | Network connectivity | `net show all`, `net show stats`, `net ping <target>`, `net traceroute <target>` |
 | CloudIQ / AutoSupport offline | `autosupport status`, `autosupport test`, `net ping <scg-ip>` |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

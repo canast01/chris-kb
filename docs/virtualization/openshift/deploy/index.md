@@ -368,3 +368,11 @@ oc get pods -A | grep -vE "Running|Completed|Succeeded" | grep -v "^NAMESPACE"
 # Rotate kubeadmin after configuring identity provider
 oc delete secret kubeadmin -n kube-system
 ```
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

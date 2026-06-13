@@ -419,3 +419,11 @@ Gather all of the following before opening a Dell Support case:
 - [ ] Description of any recent changes (upgrades, array changes, zoning, host additions)
 - [ ] Host-side path output: `powermt display dev=all` or `multipath -ll` from affected hosts
 - [ ] VMS management log excerpt covering the incident timeframe
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

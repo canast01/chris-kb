@@ -378,3 +378,11 @@ curl -s -X GET "${CIQ_BASE}/systems/${APEX_CIQ_ID}/capacity/forecast?days=90" \
 | Performance metrics | APEX Block API or CloudIQ API |
 | Firmware upgrades | Dell-managed (SaaS — no customer action required) |
 | Hardware replacement | Dell field service — no customer CLI |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

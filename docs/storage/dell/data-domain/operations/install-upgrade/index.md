@@ -156,3 +156,11 @@ Track DDOS EOL dates in the team's capacity/lifecycle spreadsheet. Dell publishe
   - [ ] SCG registration removed from old DD
   - [ ] Array powered down and deregistered from Dell Support portal
   - [ ] Physical decommission or return to Dell (if leased)
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

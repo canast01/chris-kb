@@ -291,3 +291,11 @@ Complete all items before any planned maintenance. Do not proceed if any item is
 | Cassandra health | All nodes `UN` | Check Cassandra logs on affected node; high heap usage requires tuning or node restart |
 | ZooKeeper quorum | Leader/follower reachable | Check ZK logs; quorum loss requires immediate Dell support engagement |
 | NTP offset | < 100ms | Fix NTP configuration immediately; ECS geo-replication consistency depends on clock sync |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -111,4 +111,10 @@ Do not open a general support SR for licensing — use the licensing portal dire
 3. For critical issues, call Superna's emergency support line (listed on the support portal)
 4. For account-level escalation: contact Superna account manager
 
+---
 
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

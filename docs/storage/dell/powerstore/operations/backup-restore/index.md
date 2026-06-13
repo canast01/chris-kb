@@ -320,3 +320,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_volume_mapping" \
 | Site failure (async replication) | Replication failover; bring up at DR | 1–4 hours | Last RPO cycle (e.g., 1 hour) |
 | Site failure (Metro Volume) | Automatic promotion via mediator | < 5 minutes | 0 (synchronous) |
 | Full array loss | Restore from Veeam / PPDM backup to new array | 4–24 hours | Last backup |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

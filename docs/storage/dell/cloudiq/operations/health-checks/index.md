@@ -117,3 +117,11 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 | Component status stale | Delayed telemetry | Last contact > 1 hour indicates connectivity issue |
 | Drive predictive failure alert | Vendor analysis from telemetry | Open support case — proactive replacement |
 | Replication link health degraded | WAN latency or packet loss | Check network path between replication endpoints |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

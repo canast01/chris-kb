@@ -356,3 +356,11 @@ Apply a throttle during business hours to protect production I/O from replicatio
    filesys show space
    ```
 6. Update the CMDB with the new raw and usable capacity figures and close the change record
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

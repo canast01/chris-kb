@@ -273,3 +273,11 @@ Post-upgrade checklist:
 | Upgrade fails: vCenter update fails | vCenter unreachable or disk full during update | Check vCenter VAMI; ensure vCenter has sufficient disk space |
 | Post-upgrade: version mismatch on one node | Node was offline during upgrade | Re-run LCM upgrade — it will apply to the skipped node only |
 | Post-upgrade: vSAN health warning persists | Rebuild in progress or clock skew | Wait for rebuild; check NTP on all nodes if warning is clock-related |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

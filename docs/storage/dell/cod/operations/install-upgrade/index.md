@@ -90,3 +90,11 @@ Understanding when COD makes more sense than buying standard licensed capacity u
 | DR site headroom for failover | COD — DR capacity rarely needed at full scale, but must be available instantly |
 | Cloud migration (temporary scale-up) | COD — activate for the migration period; headroom not needed after migration completes |
 | Service provider burst capacity | COD — provision tenant capacity rapidly without procurement delays |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

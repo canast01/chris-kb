@@ -625,3 +625,11 @@ check "Storage group listing OK" "$SYMCLI_PATH/symsg" list -sid "$SID"
 echo ""; [[ $FAIL -gt 0 ]] && echo "POST-CHECK FAILED: $FAIL issue(s) — investigate before closing change." && exit 2
 echo "POST-CHECK PASSED — change completed successfully."
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

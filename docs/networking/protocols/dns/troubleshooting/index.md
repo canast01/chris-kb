@@ -140,3 +140,11 @@ $zone = "corp.local"
 - If `dcdiag /test:dns` reports "Missing glue record", the NS record for a delegated child zone has no corresponding A record in the parent. Add the glue A record in the parent zone.
 - DNS resolution works for some clients but not others on the same subnet: check client DNS server settings — some machines may point to a server that has a stale conditional forwarder.
 - After a DC promotion, DNS replication may lag by up to 15 minutes. Use `repadmin /syncall` to force convergence before testing.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

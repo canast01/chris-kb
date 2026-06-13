@@ -184,3 +184,11 @@ Manage access review findings that are not remediated within the agreed SLA.
 3. If the account poses an active risk (e.g., a leaver still with Domain Admin access), disable the account immediately and notify HR: `Disable-ADAccount -Identity <SamAccountName>`.
 4. Raise a risk acceptance ticket in the GRC platform if business justification prevents immediate remediation; require CISO or VP sign-off.
 5. Track each escalation to closure and include it in the quarterly security risk report.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -333,3 +333,11 @@ Veeam → Home → Restore → VMware VMs → Restore from backup
   → Instant VM Recovery: mount and power on from backup without full restore
   → Disk-level restore: attach individual VMDK to running VM
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

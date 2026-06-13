@@ -112,3 +112,11 @@ curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token \
 curl -H "Authorization: Bearer <token>" \
     https://api.pure1.purestorage.com/api/1.latest/arrays
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

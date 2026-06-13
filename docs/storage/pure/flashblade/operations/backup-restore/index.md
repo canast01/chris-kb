@@ -360,3 +360,11 @@ Conduct full restore testing — including application startup from restored dat
 | Snapshot restoration overwrote live data unintentionally | `purefb filesystem restore` was run against the wrong filesystem | Restore requires the administrator to explicitly name the target filesystem — verify the name before executing; use clone to a new filesystem for non-destructive recovery |
 | Object restore bucket contains stale or partial data | Bucket snapshot was taken mid-write during an active application operation | Object snapshots are crash-consistent; coordinate with the application team to quiesce writes before taking a snapshot for backup purposes if consistency is required |
 | SafeMode blocks snapshot deletion during testing | SafeMode is enabled and the retention window has not expired | Expected behaviour — SafeMode-protected snapshots cannot be deleted until retention expires; contact Pure Support for assistance if an emergency deletion is required |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

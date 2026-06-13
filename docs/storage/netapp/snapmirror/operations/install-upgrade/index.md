@@ -109,3 +109,11 @@ ONTAP Mediator provides the out-of-band witness for SMBC automatic failover deci
 - Review retention policies annually; prune excess retained copies using `snapshot delete` on the destination volume when snapshots exceed the documented retention window
 - Set destination volume autogrow thresholds and alerts to detect capacity creep before it causes transfer failures
 - When retiring a SnapVault relationship, decide whether to retain existing destination snapshots for compliance before deleting the relationship
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

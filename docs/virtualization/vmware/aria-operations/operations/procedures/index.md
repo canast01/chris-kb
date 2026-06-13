@@ -448,3 +448,11 @@ When an adapter shows "Not Collecting" in the Solutions page:
    - `Connection refused` / `timeout` → verify network path from collector to target; check firewall rules
    - `Certificate validation failed` → add target cert to Aria Ops trust store or disable SSL verification for internal hosts
 5. After fixing root cause, re-run UI restart and confirm green status within one collection cycle
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

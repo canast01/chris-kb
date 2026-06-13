@@ -106,3 +106,11 @@ Include in the ticket or message:
 | State file corrupt | Restore from backend version history; never edit state manually |
 | Resource in wrong state | `terraform state rm` then `terraform import` |
 | Provider version regression | Restore previous `.terraform.lock.hcl`; run `terraform init` |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

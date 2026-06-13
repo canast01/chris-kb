@@ -137,3 +137,11 @@ purevol list --space           # per-volume space usage
 - [ ] Pure1 phone-home is active for all arrays — telemetry is flowing to Pure Support
 - [ ] Confirm with application teams that I/O is serving normally and latency is within expected thresholds
 - [ ] If a capacity change was made: verify consumed TB in Pure1 reflects the new provisioning accurately and burst is not inadvertently triggered
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

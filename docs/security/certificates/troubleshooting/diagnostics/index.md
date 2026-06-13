@@ -220,3 +220,11 @@ openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt internal-server.crt
 - Root CA not in client trust store: distribute root via GPO or system package
 - AIA URL unreachable from DMZ clients: publish AIA on an internet-accessible URL
 - Expired intermediate: renew and replace on all servers issuing from that CA
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

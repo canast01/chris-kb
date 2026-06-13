@@ -132,3 +132,11 @@ Monitor progress: Cluster → Monitor → Tasks.
 | vSAN health goes degraded | Object rebuilding paused during maintenance | Use vSAN "No data migration" mode only for very brief hardware tasks with no risk; ensure full evacuation for longer work |
 | HA admission control prevents maintenance | Cluster would violate HA policy | Temporarily adjust admission control policy (record original values) or migrate some VMs to another cluster |
 | PowerCLI Set-VMHost hangs | DRS not completing evacuation | Verify no VM is stuck in vMotion; check DRS history for migration failures |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -299,3 +299,11 @@ When opening the case:
 - **Software version**: from software_installed API
 - **Problem description**: describe the symptom, when it started, and the impact on hosts and workloads
 - **Attach**: the support package and the system state JSON dump collected above
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

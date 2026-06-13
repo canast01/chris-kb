@@ -127,3 +127,11 @@ Recommended upgrade sequence:
 Node hardware EOL is announced 12–18 months in advance via Dell EOL notification. Nodes can be decommissioned from a live cluster non-disruptively using `isi devices node smartfail`.
 
 Check current status: https://www.dell.com/support/home/en-us/product-support/product/isilon-onefs/drivers
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

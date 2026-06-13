@@ -169,3 +169,11 @@ foreach ($vm in $vms) {
 ```
 
 For clustered deployments, back up all 3 nodes together — inconsistent snapshots across nodes can cause database split-brain on restore.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

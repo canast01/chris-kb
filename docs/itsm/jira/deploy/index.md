@@ -276,3 +276,11 @@ sudo -u postgres psql -d jira -c "SELECT count(*) FROM app_user;"
 **Plugins:**
 
 - Navigate to **Administration → Manage apps → Manage apps** — all installed apps show **Enabled**, no **Error** status
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

@@ -187,3 +187,11 @@ Restore from backup if:
 - STS certificate cannot be repaired
 - Services fail to start after all troubleshooting steps
 - The appliance is unrecoverable after a hardware or VM failure
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -274,3 +274,11 @@ ceph orch daemon logs osd.5 > /tmp/osd5.log
 # Compress all for upload
 tar czf ceph-support-$(date +%F).tar.gz /tmp/ceph-*.txt /tmp/osd*.log /tmp/mon-*.log
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

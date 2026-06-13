@@ -187,3 +187,11 @@ Get-Service TermService | Select-Object Status, StartType
 Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4625 } -MaxEvents 20 |
     Select-Object TimeCreated, Message | Format-List
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

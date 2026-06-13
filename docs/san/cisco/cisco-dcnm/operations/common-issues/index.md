@@ -203,3 +203,11 @@ switch# show tech-support > bootflash:tech-support-$(date +%Y%m%d).txt
 | VPC down | Physical peer-link | `show vpc` + `show vpc peer-keepalive` |
 | VXLAN not forming | BGP EVPN / MTU | `show nve peers` + `show bgp l2vpn evpn summary` |
 | License warning | Expired SmartNet | UI: Administration → Licensing |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

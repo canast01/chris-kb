@@ -285,3 +285,11 @@ du -sh /var/log/pods/*             # pod logs on disk
 rpm-ostree status                  # RHCOS OS version + pending changes
 systemctl --failed                 # any failed systemd units
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

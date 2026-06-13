@@ -293,3 +293,11 @@ PowerStore drives are hot-swappable. When a drive failure alert fires:
 5. Monitor reconstruction progress in PowerStore Manager → Hardware → Drives (state will show `reconstructing` then return to `healthy`)
 
 Reconstruction time: approximately 1 hour per TB under moderate workload. During reconstruction, the pool remains operational but with reduced fault tolerance.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

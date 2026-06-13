@@ -128,3 +128,11 @@ Get-SmBackup -ResourceName <resource_name> | Select BackupName, BackupTime, Stat
 # Check all policies
 Get-SmPolicy | Select PolicyName, PluginType, BackupType
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

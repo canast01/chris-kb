@@ -139,3 +139,11 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 | Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
 | Keep support bundle notes with the case. | Keep support bundle notes with the case. |
 | Record post-change validation. | Record post-change validation. |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

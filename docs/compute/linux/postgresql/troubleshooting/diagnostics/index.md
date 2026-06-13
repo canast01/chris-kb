@@ -120,3 +120,11 @@ SELECT query, calls, total_exec_time/1000 AS total_sec,
 FROM pg_stat_statements
 ORDER BY total_exec_time DESC LIMIT 10;
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

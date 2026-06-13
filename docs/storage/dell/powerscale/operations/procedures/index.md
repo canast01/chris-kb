@@ -347,3 +347,11 @@ isi snapshot snapshots modify <snap_id> --set-expiration never   # Protect befor
 isi snapshot snapshots revert <snap_id>
 # WARNING: revert is destructive — all data written after the snapshot is lost
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

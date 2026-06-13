@@ -271,3 +271,11 @@ python3 -c "import requests, boto3, paramiko; print('All imports OK')"
 deactivate
 rm -rf venv-test
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

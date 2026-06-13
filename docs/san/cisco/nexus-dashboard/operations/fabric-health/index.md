@@ -89,3 +89,11 @@ curl -sk -X POST \
 | Flow telemetry missing | Telemetry not configured on switches | Enable NetFlow/ERSPAN on fabric switches |
 | Health score not updating | NDI service connectivity issue | Check NDI cluster status in Nexus Dashboard services page |
 | Endpoint shown in wrong EPG | VM migrated but policy not followed | Check VMM integration policy and port-group mapping |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

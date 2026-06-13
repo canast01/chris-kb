@@ -88,3 +88,11 @@ For each open critical alert, confirm:
 - Owner assigned
 - Next action documented
 - Escalation path clear if not resolved within SLA
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -139,3 +139,12 @@ Verify your support tier in the Broadcom portal under **My Entitlements**.
 - **Recent changes** (patches, firmware, network changes, vCenter upgrades)
 
 Upload logs directly to the case via the Broadcom portal file upload — do not send via email due to size limits.
+
+---
+
+## Verify resolution
+
+- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
+- **Event log:** confirm no new related error events in the last 5 minutes
+- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
+- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur

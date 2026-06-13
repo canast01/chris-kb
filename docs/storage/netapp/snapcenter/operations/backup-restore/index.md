@@ -137,3 +137,11 @@ Restore to a different host or path:
 | Log replay fails | Logs missing | Restore from an earlier consistent point |
 | Plugin error during restore | Plugin stopped | Restart plugin on target host |
 | Alternate restore fails | Credentials | Verify SnapCenter credentials for destination |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

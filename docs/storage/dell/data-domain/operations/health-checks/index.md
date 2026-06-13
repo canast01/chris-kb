@@ -188,3 +188,11 @@ raid show all | grep -v "normal\|OK"
 | Replication lag | < 4 hours | `replication show stats` |
 | Capacity used | < 80% | `filesys show space` |
 | Last cleaning | < 7 days | `filesys clean status` |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

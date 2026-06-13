@@ -89,3 +89,11 @@ Open a support case via the APEX Console (APEX Console → Support → New Case)
 2. Contact your **Dell account team** to escalate if the issue is not resolved within the contracted response time
 3. For billing or contractual disputes, engage your Dell account team directly — these are typically not resolved through standard support cases
 4. Check [https://www.dell.com/support/incidents-outages](https://www.dell.com/support/incidents-outages) for any announced APEX service incidents before escalating
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

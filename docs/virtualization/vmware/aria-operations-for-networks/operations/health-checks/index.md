@@ -245,3 +245,11 @@ ps aux | grep -E 'java|cassandra|kafka|nginx|postgres|elastic'
 # Java heap for platform service (if OutOfMemory suspected)
 sudo jmap -heap $(pgrep -f vrni-platform) 2>/dev/null | grep -E 'Heap|used|capacity'
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

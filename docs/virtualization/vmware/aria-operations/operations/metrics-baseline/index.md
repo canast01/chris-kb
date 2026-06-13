@@ -111,3 +111,11 @@ Avoid static thresholds that ignore daily/weekly patterns — use dynamic baseli
 | Quarterly | Review and update baselines for all production systems |
 | After major change (hardware refresh, app version) | Re-capture within 2 weeks |
 | After sustained alert activity | Investigate: real anomaly or stale baseline |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

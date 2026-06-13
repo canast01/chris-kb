@@ -483,3 +483,11 @@ kubectl get pvc app-data -n app-namespace
 # 5. Check volume in vSAN (vCenter UI)
 # vSAN → Container Volumes → confirm CNS volume listed with correct size and policy
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

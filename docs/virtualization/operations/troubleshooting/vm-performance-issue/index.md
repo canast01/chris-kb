@@ -243,3 +243,11 @@ Get-VM | Select Name, @{N="ToolsStatus";E={$_.ExtensionData.Guest.ToolsStatus}},
 Update VMware Tools:
 - **Windows:** Right-click VM in vCenter → Guest OS → Install/Upgrade VMware Tools → follow the wizard
 - **Linux:** `vmware-toolsd --version` then update via package manager (open-vm-tools) or VMware installer
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

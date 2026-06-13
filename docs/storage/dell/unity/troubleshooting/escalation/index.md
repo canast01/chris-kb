@@ -140,3 +140,11 @@ If a P1 case is not progressing within the response SLA or the fault is causing 
 2. Contact your **Dell account team Technical Account Manager (TAM)** — TAMs have direct escalation paths into the Unity engineering and field services teams.
 3. For multi-hour production outages with no resolution in sight, request engagement with **Dell Global Priority Services (GPS)** via your account team. GPS provides senior engineering support beyond standard case handling.
 4. When escalating, always state: case number, SP serial numbers, current fault status, duration of impact, number of hosts/applications affected, and what has already been tried.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

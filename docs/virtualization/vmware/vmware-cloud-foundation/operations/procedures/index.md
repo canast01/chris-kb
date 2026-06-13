@@ -575,3 +575,11 @@ ssh vcf@sddc-manager.example.local
 sudo /opt/vmware/sddc-support/sos --health-check --domain-name sfo-m01
 # Output saved to /var/log/vmware/vcf/sddc-support/sos-<timestamp>/
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

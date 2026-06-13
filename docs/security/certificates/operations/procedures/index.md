@@ -484,3 +484,11 @@ certutil -view -restrict "Disposition=20" -out "RequestID,CommonName,NotBefore,N
 | Certificate expiring in 7 days | Emergency renewal; notify service owners |
 | CA certificate expiring in 6 months | Plan CA renewal (impacts all issued certs) |
 | Key compromise suspected | Revoke immediately; issue replacement |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

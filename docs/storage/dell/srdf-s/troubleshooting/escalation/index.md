@@ -97,3 +97,11 @@ Dell SRDF/S support cases are opened at support.dell.com under the relevant Powe
 - R2 data consistency in question after unplanned failover
 - SRDF group port offline with no clear physical cause
 - Resync repeatedly failing or stalling beyond expected window
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

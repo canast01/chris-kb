@@ -127,3 +127,11 @@ porterrshow
 | Linux HBA (QLogic) | `/var/log/messages` — `qla2xxx` |
 | Linux HBA (Emulex) | `/var/log/messages` — `lpfc` |
 | ESXi | `esxcli storage core path list` / `vmkwarning.log` |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

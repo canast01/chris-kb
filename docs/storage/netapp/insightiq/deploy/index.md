@@ -243,3 +243,11 @@ Run through the following checks after completing the deployment.
   ```bash
   sudo systemctl status insightiq
   ```
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

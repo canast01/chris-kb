@@ -205,3 +205,11 @@ Phone Home (Secure Remote Services / SRS) enables Dell to proactively monitor ha
 7. Log in to the Dell support portal (`https://www.dell.com/support`) → **My Products** → confirm the VxRail cluster appears by service tag within 15–30 minutes.
 8. Raise a test service request from VxRail Manager → **Support → Create Service Request** → verify SR is created in the Dell support portal and Dell acknowledges receipt.
 9. Document the cluster service tags, VxRail Manager URL, vCenter FQDN, and support contract number in the runbook for this deployment.
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

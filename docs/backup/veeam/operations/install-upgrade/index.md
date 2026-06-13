@@ -113,3 +113,11 @@ When retiring a Veeam Backup Server:
 3. Un-register all proxies and repositories
 4. Deregister vCenter credentials
 5. Update CMDB to reflect decommission
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

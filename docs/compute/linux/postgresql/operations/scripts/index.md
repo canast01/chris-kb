@@ -117,3 +117,11 @@ ORDER BY schemaname, tablename;
 psql -U monitor -Atc "SELECT now(), count(*) FROM pg_stat_activity;" \
   >> /var/log/pg-connections.csv
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

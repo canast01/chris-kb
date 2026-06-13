@@ -222,3 +222,11 @@ curl -s https://status.openai.com/api/v2/status.json \
 | JSON output malformed | Model doesn't always produce valid JSON | Use `response_format={"type": "json_object"}` (gpt-4o+ only) |
 | High latency on first call | Cold start / connection setup | Reuse `openai.OpenAI()` client instance across calls |
 | `KeyError: 'content'` in code | Message content is `None` when content_filter fires | Always check `finish_reason` before accessing `.content` |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -266,3 +266,11 @@ isi job jobs list | grep -i "FlexProtect\|Repair"
 | SyncIQ policies healthy | `isi sync policies list` | All enabled, last job success |
 | No jobs in error | `isi job jobs list` | 0 errors |
 | No failed drives | `isi node drives list` | 0 failed/degraded |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

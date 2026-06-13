@@ -104,3 +104,12 @@ Escalation reference covering Engage VMware Support, Escalation Within VMware, U
 - VMware KB for Horizon: kb.vmware.com (search "VMware Horizon")
 - Horizon Community Forum: communities.vmware.com/community/vmtn/horizon
 - Horizon ADMX GPO templates: downloaded with Connection Server installer
+
+---
+
+## Verify resolution
+
+- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
+- **Event log:** confirm no new related error events in the last 5 minutes
+- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
+- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur

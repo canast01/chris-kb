@@ -374,3 +374,11 @@ nltest /dsgetdc:corp.example.com /force
 | DSRM password | Must be documented in CyberArk / password vault |
 | Recovery RPO target | ≤ 24 hours |
 | Recovery RTO target | ≤ 4 hours per DC |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

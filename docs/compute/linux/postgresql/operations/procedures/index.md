@@ -223,3 +223,11 @@ psql -c "SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE s
 # SQL Server
 SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_requests WHERE blocking_session_id != 0;
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

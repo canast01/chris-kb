@@ -109,3 +109,11 @@ Eyeglass licensing is per-cluster (primary and DR) and per-node count:
 3. Verify license file UUID matches the appliance UUID shown in the UI
 
 If appliance shows "Unlicensed" after an upgrade, re-import the license — appliance UUID may have changed if deployed from new OVA.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

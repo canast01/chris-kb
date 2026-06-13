@@ -485,3 +485,11 @@ uemcli /stor/config/pool show -detail -id <pool-id>
 ```
 
 Alternatively, add drives to the pool via Unisphere: navigate to **Storage → Pools → select pool → Add Drives** and select the drive count and type. Monitor pool rebuild progress in Unisphere until the pool returns to `Normal` health status. Confirm the new usable capacity is visible before closing the change.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

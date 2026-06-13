@@ -393,3 +393,11 @@ Next Ceremony Date:
 | CA private key | At key generation / change only | Forever | HSM or offline vault |
 | CA registry config | After any config change | 6 months | With DB backup |
 | PKCS#12 export (offline copy) | Quarterly ceremony | Forever | Fireproof, off-site |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

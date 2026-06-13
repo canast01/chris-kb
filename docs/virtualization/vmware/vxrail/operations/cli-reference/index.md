@@ -416,3 +416,11 @@ Get-VMHost | Select-Object Name,
 Get-VMHostFirmware -VMHost "vxrail-node-01.example.local" \
   -BackupConfiguration -DestinationPath C:\backups\vxrail\
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -135,3 +135,11 @@ flowchart TD
 | Are there active Unisphere alerts at the time of the incident? | |
 | What is the host multipath path count and state? | |
 | Are there director or port fault indicators in Unisphere? | |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

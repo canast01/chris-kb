@@ -231,3 +231,11 @@ Before upgrade:
 ### Documentation
 
 Update product versions, upgrade notes, pre/post-check results, issues found, integrations validated, rollback notes, and lessons learned.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

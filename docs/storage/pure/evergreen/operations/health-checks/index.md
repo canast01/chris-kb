@@ -301,3 +301,11 @@ purearray list --csv | grep phone_home
 | Capacity > 80% | Review and eradicate stale snapshots; plan Evergreen capacity expansion |
 | Replication lag > RPO | Investigate network bandwidth between sites; check source array load |
 | Host with 1 path | Investigate multipathing on the host; rescan HBA; check zoning |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

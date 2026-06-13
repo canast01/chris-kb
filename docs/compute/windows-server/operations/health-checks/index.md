@@ -680,3 +680,11 @@ What to look for:
 - Any pending reboot (`Test-Path` returns `True`) should be scheduled for the next maintenance window.
 - Available updates with `MsrcSeverity` of `Critical` should be prioritised and applied within the defined SLA.
 - Validate that the current build number matches the expected patched build from Microsoft's release notes.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

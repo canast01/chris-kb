@@ -118,3 +118,11 @@ mysql -u root -p -e "SHOW VARIABLES LIKE 'slow_query%';"
 2. Promote a replica to primary (failover)
 3. Upgrade former primary (now replica)
 4. Failover back if needed
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

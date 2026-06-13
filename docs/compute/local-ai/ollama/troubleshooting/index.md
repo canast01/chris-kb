@@ -207,3 +207,11 @@ firewall-cmd --add-port=11434/tcp --permanent && firewall-cmd --reload  # RHEL
 ss -tlnp | grep 11434
 # Should show 0.0.0.0:11434, not 127.0.0.1:11434
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

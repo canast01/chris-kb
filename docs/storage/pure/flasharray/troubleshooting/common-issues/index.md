@@ -548,3 +548,11 @@ purehost list --connection
 - The failed controller will attempt to reboot and rejoin automatically
 - `purearray list --controller` will show the recovering controller return to `ready` status within 5–15 minutes for a software-initiated restart
 - Hardware failures take longer and require Pure field service
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

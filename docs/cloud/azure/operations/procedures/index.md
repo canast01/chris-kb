@@ -796,3 +796,11 @@ Common built-in roles:
 | Reader | Read-only |
 | Virtual Machine Contributor | Create/manage VMs, not the VNet or Storage |
 | Storage Blob Data Contributor | Read/write blob data (not account management) |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

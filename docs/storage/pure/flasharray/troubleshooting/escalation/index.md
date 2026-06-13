@@ -207,3 +207,11 @@ If a case is not progressing at the expected pace:
 3. **Contact your Pure account team** — your Account Executive (AE) and Systems Engineer (SE) have escalation paths into the Pure Support management chain; use this channel for P1 situations where the standard process is not moving fast enough
 4. **Pure executive escalation** — for sustained high-severity incidents, your AE can engage the VP of Customer Support directly
 5. **Pure1 case tracking** — all cases are visible in Pure1 portal > Support > Cases; use this to track status and add attachments without calling
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -147,3 +147,11 @@ Response times are governed by your specific Dell support contract tier (Basic, 
 2. **Account Team**: Contact your Dell account manager or technical account manager (TAM) to escalate a Sev1/Sev2 case that is not progressing
 3. **Mission Critical escalation**: If you have a ProSupport Mission Critical contract, call the dedicated Mission Critical support line for immediate engineer engagement
 4. **Executive escalation**: If the account team is unresponsive, request escalation through your Dell sales representative to Dell EMC Services management
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

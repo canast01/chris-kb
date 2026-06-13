@@ -151,3 +151,11 @@ Monitor the percentage of users enrolled in MFA and identify accounts still lack
 5. Group gap accounts by department and send targeted communications to the department heads with a 30-day enrolment deadline.
 6. For accounts still not enrolled after the deadline, enforce MFA registration at next login via a Conditional Access policy set to `Block access` until MFA is registered.
 7. Present the adoption trend (month-over-month) to the Security steering committee at the monthly review.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

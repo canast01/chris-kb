@@ -374,3 +374,11 @@ Expected result: full hop-by-hop path including NSX DFW rule that allows or deni
 | Application discovery active | Plan & Assess → Applications shows candidates |
 | No errors in platform.log | `grep -i error /var/log/vrni-platform/platform.log` returns nothing critical |
 | NTP synchronised on all AON VMs | `chronyc tracking` shows < 1 s offset |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

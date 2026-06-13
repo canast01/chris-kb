@@ -74,3 +74,10 @@ find /data -type f -size +1G -mtime +90 -ls | sort -k7 -rn | head -20
 
 ---
 
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

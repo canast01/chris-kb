@@ -284,3 +284,11 @@ grep -i "out of memory" /opt/atlassian/confluence/logs/catalina.out
 
 - Navigate to **Administration → User management** and search for an AD user — the user must appear in the results
 - Confirm the user can log in and is assigned to the correct Confluence groups
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

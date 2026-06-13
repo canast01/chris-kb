@@ -212,3 +212,11 @@ terraform init -input=false
 terraform plan -input=false -out=tfplan
 terraform apply -input=false tfplan
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

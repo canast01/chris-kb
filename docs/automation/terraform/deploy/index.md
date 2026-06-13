@@ -399,3 +399,11 @@ Exit code meanings:
 - `2` — changes detected (drift)
 
 The workflow fails on exit code 2, triggering a GitHub Actions alert. Connect the workflow failure to your alerting channel (Slack, PagerDuty, email) via GitHub notifications or a webhook step.
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

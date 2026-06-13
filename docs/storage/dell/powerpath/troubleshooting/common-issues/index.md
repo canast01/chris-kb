@@ -433,3 +433,11 @@ systemctl disable --now multipathd
 | DM-Multipath conflict | `multipathd` claiming same devices | Blacklist Dell/EMC devices in `multipath.conf` |
 | PowerPath service not starting | Module not loaded; kernel update | `modprobe emcp`; rebuild DKMS module |
 | Configuration not persisting | `powermt save` not run | `powermt save` after every change |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

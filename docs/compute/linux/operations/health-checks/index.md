@@ -587,3 +587,11 @@ What to look for:
 - Unexpected users in `who` output or logins at unusual hours warrant investigation.
 - Any account with an empty password in `/etc/shadow` is a critical security misconfiguration.
 - Unexpected listening ports may indicate a backdoor or misconfigured service.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

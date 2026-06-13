@@ -99,3 +99,11 @@ Before closing the change:
   (Get-View ServiceInstance).Content.About.Version   # vCenter version
   ```
 - [ ] Change record updated with evidence screenshots or command output
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

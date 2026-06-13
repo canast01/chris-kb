@@ -277,3 +277,11 @@ Use Venafi's compliance reporting to identify certificates that violate organisa
 6. Click **Generate PDF** to export the full compliance report for audit evidence submission.
 
 Schedule automated compliance reports via **Reporting → Scheduled Reports** to receive a weekly or monthly email with the compliance summary for each policy folder.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

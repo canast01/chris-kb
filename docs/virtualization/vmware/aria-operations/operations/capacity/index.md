@@ -88,3 +88,11 @@ Navigation: **Reports > Report Templates > Capacity Report**
 | Rightsizing not appearing | Insufficient data history | Wait for 30-day baseline window |
 | Capacity analytics stale | Collection adapter failing | Check adapter status, restart if needed |
 | What-If results not saving | Session timeout | Re-authenticate and rerun analysis |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

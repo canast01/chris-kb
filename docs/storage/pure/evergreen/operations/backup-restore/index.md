@@ -158,3 +158,11 @@ Use Pure1 to review historical configuration changes before a restore decision.
 - [ ] Confirm protection group replication targets are intact post-upgrade
 - [ ] Verify host connectivity (iSCSI/FC) after hardware replacement
 - [ ] Re-register array in Pure1 if hardware serial number changed
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -432,3 +432,11 @@ foreach ($h in Get-VMHost -Location (Get-Cluster "VxRail-Cluster")) {
 | VxRail Manager VM backup | Snapshot or backup job | Post-deploy baseline exists |
 | DNS all records resolve | `nslookup <fqdn>` for each component | Forward + reverse match |
 | NTP synced on all nodes | `esxcli system ntp get` | NTP enabled, synced |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

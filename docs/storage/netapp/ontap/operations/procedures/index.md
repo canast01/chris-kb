@@ -476,3 +476,11 @@ iscsi create -vserver <svm_name>
 | CIFS share inaccessible | CIFS server joined to AD | Re-join AD if needed |
 | iSCSI sessions dropping | LIF and network status | Check LIF availability and switch ports |
 | FC initiator not logging in | Zoning and WWPN masking | Verify SAN zoning and LUN masking |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

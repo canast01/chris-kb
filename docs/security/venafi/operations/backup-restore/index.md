@@ -406,3 +406,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 | TPP config files | Weekly + on change | 90 days | PowerShell script |
 | Policy XML export | On every policy change | Versioned, 1 year | REST API script |
 | Adaptable App scripts | On change | Versioned, 1 year | Git repository |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

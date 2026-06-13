@@ -117,3 +117,11 @@ Pure Support is proactive for Evergreen subscribers:
 ## Case Tracking
 
 All open and closed cases are visible in **Pure1 → Support → Cases**.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

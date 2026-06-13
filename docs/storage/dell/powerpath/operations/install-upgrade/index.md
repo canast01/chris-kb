@@ -127,3 +127,11 @@ powermt display dev=all
 - When migrating a host from PowerPath to native DM-Multipath (Linux), the transition requires stopping I/O to all affected devices, removing PowerPath, configuring DM-Multipath, and validating device access — plan this as a maintenance window event
 - When decommissioning a host, remove LUN masking at the array before removing PowerPath to avoid orphaned device entries
 - When upgrading the underlying array (e.g., PowerMax to a new model), verify the new array model is in the PowerPath support matrix; some array firmware versions require a corresponding PowerPath update
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

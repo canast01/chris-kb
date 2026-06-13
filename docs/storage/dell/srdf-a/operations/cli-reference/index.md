@@ -195,3 +195,11 @@ curl -s $AUTH "$UNISPHERE/performance/RDFGroup/metrics" \
     \"metrics\": [\"MBSentPerSec\",\"MBReceivedPerSec\",\"AvgCycleTime\",\"CyclesPerSec\"]
   }" | python3 -m json.tool
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

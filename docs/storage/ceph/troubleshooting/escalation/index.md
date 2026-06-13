@@ -256,3 +256,11 @@ When filing any Ceph support case, always include the following regardless of se
 | sos reports | `sos report -e ceph -k ceph.all=true` from all MON hosts |
 | Crash dumps | `ceph crash ls && ceph crash info <id>` |
 | Affected daemon logs | `ceph orch daemon logs osd.<id>` |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

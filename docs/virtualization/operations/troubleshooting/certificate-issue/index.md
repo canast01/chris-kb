@@ -213,3 +213,11 @@ $certBytes = (Connect-VIServer -Server <vcenter-fqdn>).ExtensionData.Config.Cert
 $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new([byte[]]$certBytes)
 $cert | Select Subject, NotBefore, NotAfter
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

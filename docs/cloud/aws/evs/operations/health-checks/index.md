@@ -118,3 +118,11 @@ curl -sk -u "admin:$NSX_PASSWORD" \
   "https://$NSX_MANAGER_URL/api/v1/transport-nodes?node_types=EdgeNode" | \
   python3 -c "import sys,json; [print(f\"{n['display_name']}: {n.get('node_deployment_state',{}).get('state','unknown')}\") for n in json.load(sys.stdin)['results']]"
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

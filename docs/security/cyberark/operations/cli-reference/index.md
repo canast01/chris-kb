@@ -200,3 +200,11 @@ PACLI RETRIEVEFILE vault=<vault_name> user=admin safe=<safe_name> folder=Root fi
 # Logoff
 PACLI LOGOFF vault=<vault_name> user=admin
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

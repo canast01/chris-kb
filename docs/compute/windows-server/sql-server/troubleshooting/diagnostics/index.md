@@ -130,3 +130,11 @@ JOIN sys.query_store_plan p ON p.query_id = q.query_id
 JOIN sys.query_store_runtime_stats rs ON rs.plan_id = p.plan_id
 ORDER BY rs.avg_duration DESC;
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -273,3 +273,11 @@ ansible-playbook -i inventory/ site.yml -v
 ```
 
 Confirm the play recap shows `failed=0` and `unreachable=0` before considering the run successful.
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

@@ -186,3 +186,11 @@ Run monthly or after every restore test:
 - [ ] API export JSON files archived and stored off-appliance
 - [ ] Locker Master Password documented in offline vault (required for decryption after restore)
 - [ ] All Locker certificate private keys have source copies in secure offline storage (PEM files)
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

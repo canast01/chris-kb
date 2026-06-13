@@ -121,3 +121,11 @@ purefb replication list
 | FlashBlade //S original hardware | Check with Pure account team | Some early chassis generations have hardware EOL dates approaching — verify with Pure |
 
 Maintain a quarterly review cadence against Pure's published hardware and software EOL list. Subscribe to Pure Support notifications for your array's Purity//FB version.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -303,3 +303,11 @@ Set-ExecutionPolicy RemoteSigned -Scope LocalMachine
 | `NotSigned` | Script has no digital signature |
 | `HashMismatch` | File was modified after signing — do not run |
 | `UnknownError` | Certificate chain cannot be verified; check trust store |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

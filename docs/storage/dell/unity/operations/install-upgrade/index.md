@@ -129,3 +129,11 @@ Monitor the following sources for Unity EOL announcements:
 - ProSupport contract renewal: EOL hardware loses ProSupport coverage at the hardware EOL date even if a support contract is active.
 
 Maintain a lifecycle register that records each Unity system's hardware model, current OE version, ProSupport expiry date, and planned refresh date. Review and update the register quarterly.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -374,3 +374,12 @@ esxcli network firewall refresh
 | VMkernel pings | `vmkping -I vmk1 <gateway>` | 0% packet loss |
 | LCM compliant | vCenter → Lifecycle Manager | Compliant / no critical patches |
 | Host profile | vCenter → Host Profiles | Compliant |
+
+---
+
+## Verify
+
+- **Host connected:** vSphere Client → host status shows Connected (green)
+- **NTP sync:** `esxcli system time get` — time within 5 seconds of authoritative source
+- **Network:** `esxcli network ip interface list` — vmk0 (management) shows Up
+- **SSH disabled:** `esxcli system ssh get` — Policy: off (re-enable only when needed)

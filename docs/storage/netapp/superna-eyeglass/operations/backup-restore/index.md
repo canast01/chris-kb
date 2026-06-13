@@ -191,3 +191,11 @@ Test backup integrity quarterly:
 - [Superna Eyeglass — Architecture](../../architecture/how-it-works/index.md)
 - [Superna Eyeglass — Health Checks](../health-checks/index.md)
 - [PowerScale — Backup & Restore](../../../../storage/dell/powerscale/operations/backup-restore/index.md)
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

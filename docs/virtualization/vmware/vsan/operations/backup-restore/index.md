@@ -269,3 +269,11 @@ Document RPO and RTO per workload tier before deploying backup:
 | Dev/Test | < 24 hours | < 8 hours | Veeam daily backup or snapshot |
 
 vSAN stretched cluster does not improve RPO for logical failures — it only protects against site-level hardware failure. Backup remains required regardless of stretched cluster configuration.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

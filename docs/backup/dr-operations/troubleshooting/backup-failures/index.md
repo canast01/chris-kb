@@ -303,3 +303,11 @@ Escalate to backup vendor TAC or infrastructure team when:
 - Backup window is consistently exceeding the defined maintenance window
 - DR test restore fails — RPO/RTO commitments at risk
 - Ransomware suspected: check for mass deletion of restore points
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

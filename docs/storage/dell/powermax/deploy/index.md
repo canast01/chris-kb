@@ -301,3 +301,11 @@ dd if=/dev/mapper/<mpath_device> of=/dev/null bs=1M count=1024 iflag=direct
 ```
 
 6. Verify no I/O errors in `/var/log/messages` and no SCSI sense codes reported against the PowerMax in Unisphere alerts.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

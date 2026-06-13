@@ -414,3 +414,11 @@ Invoke-RestMethod -Uri "https://<uag-mgmt-ip>:9443/rest/v1/monitor/service/horiz
 | DEM policies | Test user login | Drive maps + printers applied |
 | Events DB | View Configuration → Event Config | Last event timestamp recent |
 | Certificates | Browser to CS VIP + UAG external | No certificate warnings |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

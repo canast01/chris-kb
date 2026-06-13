@@ -266,3 +266,11 @@ autosupport invoke -node * -type test
 ```
 
 Verify the test AutoSupport was received by NetApp Active IQ (check the Active IQ portal for the array).
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

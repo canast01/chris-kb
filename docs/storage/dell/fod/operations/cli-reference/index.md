@@ -333,3 +333,11 @@ OUT="/var/log/fod-reports/monthly_${MONTH}.csv"
 
 echo "Monthly FOD report written to ${OUT}"
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

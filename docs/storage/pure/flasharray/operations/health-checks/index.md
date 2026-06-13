@@ -236,3 +236,11 @@ Pure1 provides proactive health monitoring and AI-driven alerts:
 | Hardware | `purehw list` | All ok |
 | Alerts | `purealert list` | No critical |
 | Capacity | `purearray list --space` | < 80% used |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

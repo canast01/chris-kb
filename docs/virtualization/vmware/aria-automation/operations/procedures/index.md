@@ -474,3 +474,11 @@ The vRA administrator account password is managed through the VAMI (Virtual Appl
    - Log in to the vRA UI (`https://vra-prod-01.example.local`) as the admin user with the new password.
    - Confirm access to **Infrastructure**, **Design**, and **Extensibility** tabs.
 8. Update any automation scripts, monitoring integrations, or API callers that authenticate with this account.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -220,3 +220,11 @@ Use this checklist when a P1 incident is declared:
 - [ ] Change freeze enacted — no additional changes until the P1 is resolved
 - [ ] If hardware fault: confirm Dell has dispatched the replacement component (check case notes)
 - [ ] DR failover readiness assessed — if site is at risk, evaluate failing over to DR
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

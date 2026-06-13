@@ -323,3 +323,11 @@ If the restored `powermt.custom` references devices or paths that no longer exis
 - [ ] License registration key stored outside the host (support portal, password manager, or team runbook) — required to re-license a rebuilt host
 - [ ] Post-restore validation completed after every restore operation: policy, path count, dead paths, and license all checked
 - [ ] Baseline snapshots retained for at least 12 months and accessible to the storage team
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

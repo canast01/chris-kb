@@ -174,3 +174,11 @@ Get-VM | Where-Object { $_.PowerState -eq 'PoweredOn' } |
     Where-Object { $_.ExtensionData.Guest.ToolsStatus -ne 'toolsOk' } |
     Select-Object Name, @{N="ToolsStatus";E={$_.ExtensionData.Guest.ToolsStatus}}
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

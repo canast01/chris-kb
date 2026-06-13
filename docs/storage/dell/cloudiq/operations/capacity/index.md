@@ -72,3 +72,11 @@ Navigation: **CloudIQ > Settings > Notifications > Capacity Thresholds**
 | Days until full wildly inaccurate | Bulk migration skewing trend | Use 90-day view to smooth out spikes |
 | Used capacity not matching array UI | Data reduction ratio difference | CloudIQ shows logical used; check raw vs logical |
 | New pool not showing | System telemetry not yet pushed | Check SRS connectivity and wait 1 collection cycle |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

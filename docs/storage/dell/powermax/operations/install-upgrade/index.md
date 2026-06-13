@@ -151,3 +151,11 @@ Technology refresh timeline:
 | Solutions Enabler 9.1 | Q1 2024 | Q1 2026 |
 
 Check current EOL status at: https://www.dell.com/support/home/en-us/product-support/product/powermax2000/drivers
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

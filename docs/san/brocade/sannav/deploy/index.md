@@ -232,3 +232,11 @@ Navigate to **Analytics > Traffic > Heatmap**. This shows which switch-to-switch
 5. Confirm SANnav is receiving SNMP traps:
    - On a switch, generate a test trap: `snmpMibCapSet` → trigger a severity-1 event by briefly disabling and re-enabling a non-production port.
    - SANnav **Events** log should show the corresponding event within 30 seconds.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

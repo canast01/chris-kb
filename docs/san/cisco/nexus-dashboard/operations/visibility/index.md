@@ -61,3 +61,11 @@ Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference
 | Path trace shows "No path" | Policy contract missing | Check ACI contracts between source and destination EPGs |
 | Topology not loading | NDI not connected to APIC | Re-check fabric connection in NDI settings |
 | Latency values all zero | Latency telemetry requires specific hardware | Verify leaf hardware supports latency reporting |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

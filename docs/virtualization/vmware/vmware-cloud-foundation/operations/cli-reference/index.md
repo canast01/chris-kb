@@ -136,3 +136,11 @@ tail -f /var/log/vmware/vcf/sddc-manager/sddc-manager.log
 # View recent system events
 journalctl -u sddc-manager --since "2 hours ago"
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -399,3 +399,11 @@ $machines = Invoke-RestMethod -Uri "$csUrl/rest/inventory/v1/machines?desktop_po
 
 $machines | Group-Object -Property basic_state | Select-Object Name, Count | Format-Table
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

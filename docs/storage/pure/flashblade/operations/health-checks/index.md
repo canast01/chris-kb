@@ -221,3 +221,11 @@ Verify replica links show `lag-time` within expected RPO.
 | Alerts | `purefb alert list` | No critical |
 | Network | `purefb network-interface list` | All VIPs enabled |
 | Replication | `purefb fs-replica-link list` | Low lag |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

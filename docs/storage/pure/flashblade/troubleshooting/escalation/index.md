@@ -178,3 +178,11 @@ If a case is not progressing at the expected pace or the business impact increas
 4. **Executive escalation** — in cases of sustained outage or repeated resolution failures, request executive-level escalation through your TAM or account executive
 
 For P1 incidents involving data loss risk, request immediate engineering involvement alongside standard support engagement.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

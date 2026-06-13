@@ -181,3 +181,11 @@ curl -sk https://vra-london.example.local/api/rest/vr/health
 #   Verify initial sync starts (status: Syncing)
 #   Wait for initial sync to complete (status: OK)
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

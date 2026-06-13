@@ -147,3 +147,11 @@ If the VRA appliance VM is lost (host failure, accidental deletion):
 5. Replications resume from last successful sync point
 
 Replication data on the target datastore is preserved — only the appliance needs to be redeployed.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

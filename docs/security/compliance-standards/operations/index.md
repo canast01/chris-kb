@@ -170,3 +170,11 @@ Keep the organisation's control register current to ensure it accurately reflect
 4. Archive retired controls with a closure date and reason; do not delete them, as they may be referenced in historical audits.
 5. Publish the updated register to the internal compliance portal after each quarterly review.
 6. Present the register summary (total controls, compliant %, gap count) to the Security steering committee quarterly.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

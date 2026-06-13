@@ -351,3 +351,11 @@ Record the following for the operations runbook:
 - Backup job names and schedules
 - Proxy server hostnames and transport modes
 - Contact for backup alerts
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

@@ -103,3 +103,11 @@ Common backup errors:
 
 - Update the backup platform job notes with the root cause and fix
 - Update the incident ticket with findings and resolution
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

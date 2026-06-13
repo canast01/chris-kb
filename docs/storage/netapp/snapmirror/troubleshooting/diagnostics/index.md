@@ -109,3 +109,11 @@ snapmirror abort -destination-path svm_dst:vol_dst
 - **SnapMirror-specific EMS events** — `event log show -message-name snapmirror.*`
 - **Transfer history** — `snapmirror show-history -destination-path svm_dst:vol_dst`
 - **System Manager** — Protection > Relationships view shows a visual timeline of transfer health
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -164,3 +164,11 @@ Procedures reference covering COD Activation Procedure, Incident Triage.
 3. Review the breakdown by bucket, storage class (hot vs cold), and total namespace usage
 4. Click **Export CSV** to download the report for capacity planning, chargeback, or finance review
 5. Schedule recurring exports if the portal supports it, or automate via the COD S3 API to pull usage metrics on a schedule
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

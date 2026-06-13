@@ -85,3 +85,11 @@ Popular community packs:
 | Shared dashboard not visible | User lacks required role | Check user role permissions |
 | Import fails | Dashboard JSON version mismatch | Re-export from same Aria Ops version |
 | Widget interactions not working | Widgets not linked | Enable interactions in dashboard editor |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

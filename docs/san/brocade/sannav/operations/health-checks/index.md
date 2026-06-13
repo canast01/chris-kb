@@ -96,3 +96,11 @@ timedatectl status
 5. SANnav → Performance → port/ISL graphs — confirm data collection is active (non-flat graphs); missing data indicates collection failure
 6. `df -h /opt/brocade/sannav/data` on SANnav appliance — alert and investigate if filesystem usage exceeds **80%**
 7. SANnav → Administration → Certificates — review expiry dates; raise a ticket for any certificate expiring within 60 days
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

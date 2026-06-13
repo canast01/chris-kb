@@ -307,3 +307,11 @@ volume show -vserver <svm> -volume <vol> -fields state,junction-path
 snapmirror show -fields healthy,lag-time
 # All relationships should return to healthy: true with lag within RPO
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

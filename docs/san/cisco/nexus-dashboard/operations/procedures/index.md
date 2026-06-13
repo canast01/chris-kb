@@ -289,3 +289,11 @@ Nexus Dashboard allows custom dashboard layouts for frequently referenced metric
 4. Click **Save**.
 
 Custom dashboards are per-user; each engineer can maintain their own view. Shared dashboards can be created and assigned to user groups.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

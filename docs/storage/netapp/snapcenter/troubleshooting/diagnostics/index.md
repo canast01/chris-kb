@@ -126,3 +126,11 @@ Get-EventLog -LogName Application -Source "SnapCenter*" -Newest 50
 For a full support bundle (all logs + config):
 1. In SnapCenter GUI: Help → Support → Generate Support Bundle
 2. Alternatively, run PowerShell: `Get-SmSupportBundle -Path C:\temp\snapcenter-bundle`
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

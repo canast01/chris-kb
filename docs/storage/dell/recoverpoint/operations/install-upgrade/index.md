@@ -386,3 +386,11 @@ boxmgmt cg disable_image_access <CG-name>
 - Dell RecoverPoint compatibility matrix: [Dell Simple Support Matrix](https://elabnavigator.dell.com/eln/elnHomeSSM)
 - RP4VM installation and deployment guide: dell.com/support → RecoverPoint for Virtual Machines
 - SRA version compatibility (if SRM integration is in use): verify via VMware Compatibility Guide
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

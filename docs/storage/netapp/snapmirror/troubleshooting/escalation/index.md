@@ -135,3 +135,11 @@ SLA tiers apply under the NetApp SupportEdge Expert or Premier contract. Verify 
 - Engage the NetApp account team for executive escalation when standard P1 response is not meeting the situation
 - Request TAM (Technical Account Manager) engagement for SMBC implementations — SMBC is a complex feature where TAM guidance significantly reduces implementation risk
 - NetApp can provide remote hands access to both clusters with customer consent to perform live diagnostics during a P1 event
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

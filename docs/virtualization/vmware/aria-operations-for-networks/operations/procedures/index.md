@@ -605,3 +605,11 @@ Automates report delivery on a daily, weekly, or monthly cadence so stakeholders
 8. Click **Save Schedule**.
 
 The scheduled report appears in the **Scheduled Reports** list with next-run timestamp. Reports are also retained under **Reports → Report History** for 90 days.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

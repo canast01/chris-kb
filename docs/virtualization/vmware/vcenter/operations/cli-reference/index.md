@@ -256,3 +256,11 @@ tail -f /var/log/vmware/vmdird/vmdird-syslog.log
 /usr/lib/vmware-vmafd/bin/vecs-cli store list
 /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

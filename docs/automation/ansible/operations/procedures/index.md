@@ -586,3 +586,11 @@ api_key: "{{ vault_api_key }}"
   ansible.builtin.set_fact:
     required_packages: "{{ all_packages | select('match', '^python') | list }}"
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

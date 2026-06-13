@@ -417,3 +417,11 @@ REM From the PVWA server — test Vault connection
 | DR Vault replication | Continuous (every 60s) | 168 hours | DR site |
 | PVWA platform export | After any platform change | 6 months | Encrypted archive |
 | Vault metadata (REST) | Weekly | 90 days | Encrypted, off-site |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

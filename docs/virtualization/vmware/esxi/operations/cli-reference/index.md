@@ -481,3 +481,11 @@ vim-cmd hostsvc/disable_ssh
 # Enable SSH via esxcli firewall
 esxcli network firewall ruleset set --enabled true --ruleset-id sshServer
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

@@ -312,3 +312,11 @@ alias oc-events='oc get events --all-namespaces --sort-by=.lastTimestamp | tail 
 alias oc-notready='oc get nodes --no-headers | grep -v " Ready"'
 alias oc-csr='oc get csr | grep Pending'
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

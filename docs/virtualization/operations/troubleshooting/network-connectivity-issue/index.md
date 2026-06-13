@@ -214,3 +214,11 @@ Common causes:
 | Physical cable / transceiver | CRC errors on switch | Reseat or replace cable/SFP |
 | NIC teaming imbalance | One vmnic handling all traffic | Review load balancing policy (Route Based on IP hash requires LACP) |
 | Congestion on shared path | High latency and drops under load | Check QoS settings; consider storage traffic isolation to a separate vmnic |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

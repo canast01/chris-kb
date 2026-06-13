@@ -424,3 +424,11 @@ graph TD
 5. Verify the S3 request is using the correct addressing style (path-style vs virtual-hosted-style)
 6. Check that the bucket exists in the expected namespace: `ecscli bucket get --namespace <ns> --name <bucket>`
 7. Review ECS access logs for the bucket (if access logging is enabled) for the specific denial reason
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

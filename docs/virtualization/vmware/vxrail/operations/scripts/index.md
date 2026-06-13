@@ -435,3 +435,11 @@ crontab -e
 # Run capacity alert every 4 hours
 0 */4 * * * /usr/bin/pwsh /opt/scripts/vxrail/vsan-capacity-alert.ps1 >> /var/log/vxrail-capacity.log 2>&1
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

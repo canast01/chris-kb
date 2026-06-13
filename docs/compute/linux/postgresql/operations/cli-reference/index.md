@@ -116,3 +116,11 @@ pg_upgrade \
   --new-bindir /usr/pgsql-16/bin \
   --check   # dry-run; remove --check for actual upgrade
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

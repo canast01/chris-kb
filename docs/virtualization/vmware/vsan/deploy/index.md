@@ -543,3 +543,12 @@ Store the baseline numbers in a runbook. They become the reference for future tr
 - [ ] Capacity headroom > 30% confirmed
 - [ ] Monitoring alerts configured (if Aria Operations deployed)
 - [ ] Runbook updated with cluster-specific IPs, VLANs, and disk NAAs
+
+---
+
+## Verify
+
+- **Skyline Health:** Cluster → Monitor → vSAN → Skyline Health — all checks green
+- **Disk groups:** Cluster → Configure → vSAN → Disk Management — all disk groups Healthy
+- **Object compliance:** Cluster → Monitor → vSAN → Virtual Objects — all Compliant
+- **Performance service:** Cluster → Monitor → vSAN → Performance — graphs populating within 5 min

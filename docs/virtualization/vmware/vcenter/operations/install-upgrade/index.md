@@ -134,3 +134,11 @@ vCenter upgrade rollback is possible only via **file-based backup restore** — 
 ### vSphere Update Manager (VUM) — Legacy
 
 Baseline-based patching. Still available in vSphere 7 but deprecated in 8. Use for standalone hosts not in vLCM-managed clusters.
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

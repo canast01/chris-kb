@@ -366,3 +366,11 @@ oc debug node/<node-name> -- chroot /host journalctl -u kubelet --since "1 hour 
 oc debug node/<node-name> -- chroot /host crictl images | sort -k4 -h | tail -20
 # Remove unused images: crictl rmi --prune
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

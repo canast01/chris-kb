@@ -106,3 +106,11 @@ Track license types:
 - **APTARE/IT Analytics licenses**: annual subscription
 - **Capacity-based licensing**: TB under management; audit monthly
 - **Veritas support contract**: align renewal with SORT lifecycle dates
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

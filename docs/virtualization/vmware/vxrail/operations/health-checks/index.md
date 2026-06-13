@@ -330,3 +330,11 @@ echo ""
 echo "=== Hardware Sensors (Critical only) ==="
 esxcli hardware sensor list 2>&1 | grep -i "critical" || echo "No critical sensors"
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

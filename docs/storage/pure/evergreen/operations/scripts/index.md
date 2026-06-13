@@ -147,3 +147,11 @@ curl -s -k -H "x-auth-token: $TOKEN" \
     "https://$ARRAY_IP/api/2.16/protection-groups" | \
     jq -r '.items[] | "\(.name)\t replication_enabled=\(.replication_enabled // "N/A")"'
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

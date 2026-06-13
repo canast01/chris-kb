@@ -294,3 +294,11 @@ Get-DnsServerZoneAging -Name "corp.example.com"
 - Split-brain DNS: internal clients resolving to external IPs — ensure internal DNS is authoritative for the AD domain
 - Scavenging too aggressive: valid DC records deleted — review AgingEnabled and NoRefreshInterval settings
 - Wrong DNS server on DC NIC: DCs must point to AD-integrated DNS, not a public resolver
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

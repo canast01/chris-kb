@@ -305,3 +305,11 @@ oc get co | grep -v "True.*False.*False"
 # 5. Force operator to reconcile (redeploy its managed pods)
 oc rollout restart deployment/<operator-pod> -n openshift-<operator-ns>
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

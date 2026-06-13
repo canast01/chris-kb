@@ -420,3 +420,11 @@ curl -u user:token -G \
 | Burndown | Board → Reports → Burndown | Daily standup |
 | CFD | Board → Reports → Cumulative Flow | Weekly |
 | Created vs Resolved | Project → Reports → Created vs Resolved | Monthly |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

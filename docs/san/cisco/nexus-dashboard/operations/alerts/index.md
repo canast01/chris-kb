@@ -61,3 +61,11 @@ Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Poli
 | No alerts in UI | NDI service not receiving telemetry | Check switch telemetry config and NDI connectivity |
 | Email not delivered | SMTP relay not reachable from ND VM | Verify network path and SMTP server configuration |
 | Historical alerts missing | Alert retention policy set too low | Increase retention in Admin > System Settings |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

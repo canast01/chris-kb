@@ -154,3 +154,11 @@ Collect the following before opening a Pure support case:
 - [ ] NFS mount options from affected clients (output of `mount | grep nfs`)
 - [ ] Symptom description: what changed before the issue, when it started, and business impact
 - [ ] Diagnostic bundle: `purefb support diag` and attach to the case
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -123,3 +123,11 @@ Daily CommVault operations begin in the Job Controller (Command Center or Java G
 - Verify auxiliary copy jobs ran successfully for all secondary copy pools
 - Review SLA reports in Command Center — identify any clients below SLA threshold
 - Run DDB verification on any DDB that has not been verified in the last 7 days
+
+---
+
+## Verify
+
+- **Job status:** confirm backup job completed with status Success (not Warning)
+- **Recovery test:** restore a single file or VM from the new backup to confirm restorability
+- **Retention:** verify old recovery points are expiring per the configured retention policy

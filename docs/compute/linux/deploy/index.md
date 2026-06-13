@@ -323,3 +323,13 @@ sshd -T | grep -E 'permitrootlogin|passwordauthentication'
 ```
 
 Expected results: `systemctl --failed` returns empty, `sestatus` shows `SELinux status: enabled` and `Current mode: enforcing`, and SSH hardening settings match what was configured.
+
+---
+
+## Verify
+
+```bash
+systemctl status <service-name>   # Active: running
+journalctl -u <service-name> -n 20 --no-pager  # no ERROR lines
+ss -tlnp | grep <port>            # service listening on expected port
+```

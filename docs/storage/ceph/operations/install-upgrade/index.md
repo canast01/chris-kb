@@ -281,3 +281,11 @@ ceph orch daemon redeploy mgr.ceph-node1 --image quay.io/ceph/ceph:v18.2.2
 ```
 
 - Major version rollback (e.g., Reef → Quincy) is not supported and will corrupt OSD data if attempted after `ceph osd require-osd-release` has been updated.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

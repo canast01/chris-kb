@@ -234,3 +234,11 @@ The default self-signed certificate should be replaced for production use:
 1. Navigate to **Admin > Security > Certificates > Replace Certificate**.
 2. Upload a PEM-encoded certificate and private key signed by your internal CA.
 3. Apply and confirm that browsing to the cluster VIP no longer shows a certificate warning.
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

@@ -413,3 +413,11 @@ kubectl run nettest --image=alpine --restart=Never --rm -it -- \
 | Content library | TKR images available and up to date |
 | DNS | Supervisor VIP and control plane VM FQDNs resolve |
 | NTP | All ESXi hosts and vCenter drift < 1 second |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

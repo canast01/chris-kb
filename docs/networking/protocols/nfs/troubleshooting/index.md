@@ -152,3 +152,11 @@ umount -f /mnt/data
 | RHEL/Rocky server | `journalctl -u nfs-server` |
 | NetApp ONTAP | `event log show -messagename nfs*` |
 | Kernel messages | `dmesg | grep -i nfs` |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

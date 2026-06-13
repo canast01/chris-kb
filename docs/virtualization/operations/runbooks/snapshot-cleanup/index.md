@@ -72,3 +72,11 @@ Active resync is expected after a host returns from maintenance — wait for it 
 
 - Return to Virtual Objects view and confirm all objects are Healthy
 - Run Skyline Health and confirm no remaining failures
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

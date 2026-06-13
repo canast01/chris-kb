@@ -130,3 +130,11 @@ WHERE INDEX_NAME IS NOT NULL
   AND OBJECT_SCHEMA NOT IN ('mysql','sys')
 ORDER BY OBJECT_SCHEMA, OBJECT_NAME;
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

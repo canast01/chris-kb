@@ -370,3 +370,11 @@ Record the following for the operations runbook:
 - Client list with agent types and subclient content paths
 - Backup schedule summary
 - Alert recipients and SMTP server
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

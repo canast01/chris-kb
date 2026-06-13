@@ -107,3 +107,11 @@ show interface <int> counters errors
 | L1 | Infra on-call | 30 min no progress |
 | L2 | Platform / storage team | 1 hour on Critical |
 | L3 | Vendor TAC / architect | 2 hours on Critical |
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

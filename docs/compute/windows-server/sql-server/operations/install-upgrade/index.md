@@ -111,3 +111,11 @@ JOIN sys.availability_groups ag ON ar.group_id = ag.group_id;
 ## Compatibility Level Strategy
 
 Keep databases on previous compatibility level immediately after upgrade. Test application, then raise level. This allows rollback of query plan regression without downgrading SQL Server.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -427,3 +427,11 @@ Record the following for the operations runbook:
 - Client list with OS types
 - Catalog backup path and schedule
 - Web UI admin account and password vault location
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

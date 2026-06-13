@@ -124,3 +124,11 @@ SnapCenter supports in-place upgrades. Upgrade path:
 | Windows Server OS reaching EOL | Migrate SnapCenter Server to new Windows Server VM |
 | vSphere version upgrade | Verify SnapCenter Plug-in for VMware compatibility; upgrade OVA if needed |
 | Application plugin (Oracle/SQL) version change | Verify IMT for plugin-to-SnapCenter-Server compatibility |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

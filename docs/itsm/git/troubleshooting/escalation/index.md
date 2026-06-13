@@ -303,3 +303,11 @@ flowchart TD
     VALIDATE -->|Pass| POSTMORTEM([Write incident report\nSchedule postmortem])
     VALIDATE -->|Fail| ESCALATE([Escalate to L3 vendor support])
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

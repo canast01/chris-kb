@@ -241,3 +241,11 @@ Common first-run issues:
 | Secret not found | Secret name mismatch or wrong scope (repo vs environment) |
 | Runner offline | Runner service not started or network blocked |
 | Status check missing | Workflow never ran; push a commit to register the check name |
+
+---
+
+## Verify
+
+- Confirm the service or component is running and reachable
+- Check management UI for any errors or warnings
+- Run a basic functional test (login, read, write) to confirm end-to-end operation

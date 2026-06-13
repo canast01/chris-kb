@@ -597,3 +597,11 @@ Testing runs recovery in an isolated bubble network and is non-disruptive to pro
 7. Document the test result: date, plan name, steps executed, any failures and resolution, tester sign-off.
 
 Regular testing cadence recommendation: full test every 90 days, partial validation monthly.
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

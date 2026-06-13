@@ -89,3 +89,11 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 - [ ] No performance or availability impact to existing workloads (check I/O stats in Unisphere)
 - [ ] CloudIQ health score for the array is unchanged or improved
 - [ ] Change ticket updated and closed with post-activation capacity figures
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

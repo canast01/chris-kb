@@ -261,3 +261,11 @@ curl -sk -u 'admin:<password>' \
 | Alert test notification | Notifications → Test | Alert received at destination |
 | SIEM forwarding active | Forwarding → Destinations | Status: Active |
 | Retention policy set | Administration → Archiving | Days configured |
+
+---
+
+## Verify
+
+- **vSphere Client:** confirm the component is visible and shows a healthy status
+- **Alarms:** Home → Alarms — no new critical alarms after deployment
+- **Logs:** review vmware.log / recent events for any errors in the first 5 minutes

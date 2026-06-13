@@ -170,3 +170,11 @@ There is no CLI for immediate sync — use the vCenter UI or the VRA REST API:
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
   "https://vra-london.example.local/api/rest/vr/replications/$REPL_ID/sync"
 ```
+
+---
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
+- **Health check:** run the morning health-check sequence for the affected product tier

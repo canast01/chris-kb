@@ -359,3 +359,11 @@ jobs:
 | [ ] Review open pull requests that modify Terraform code for pending u |  |  |
 | [ ] Check for stale state lock files that may indicate a stuck or aban |  |  |
 | [ ] Confirm sensitive variable sources (Vault, SSM Parameter Store, en |  |  |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

@@ -228,3 +228,12 @@ Search the VMware Knowledge Base before and after incidents:
 [https://knowledge.broadcom.com](https://knowledge.broadcom.com)
 
 Search by: error message, health check name, symptom description. Many vSAN issues have published KB articles with specific resolution steps.
+
+---
+
+## Verify resolution
+
+- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
+- **Event log:** confirm no new related error events in the last 5 minutes
+- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
+- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur

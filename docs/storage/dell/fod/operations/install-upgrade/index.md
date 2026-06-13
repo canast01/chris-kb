@@ -99,3 +99,11 @@ symlmf -sid <sid> import -file /tmp/new_fod_license.dat
 # Verify the import updated the licensed capacity
 symcfg -sid <sid> list -license
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

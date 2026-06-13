@@ -266,3 +266,11 @@ aws ssm get-command-invocation \
   --query '[Status,StandardOutputContent]' \
   --output text
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

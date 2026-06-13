@@ -61,3 +61,11 @@ CloudIQ: Alert Types, Severity, and Notification Configuration reference coverin
 | Alerts not clearing after fix | System has not reported resolved state | Wait for next telemetry cycle (up to 30 min) |
 | Duplicate alerts for same event | Multiple notification rules overlapping | Review and deduplicate notification rules |
 | Historical alerts missing | Retention limit reached | CloudIQ retains 90 days of alert history by default |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

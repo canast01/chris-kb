@@ -336,3 +336,11 @@ TOKEN=$(curl -ks -X POST "https://<mgmt-ip>/api/rest/login_session" \
   -d '{"username":"admin","password":"<password>"}' \
   | jq -r '.token')
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

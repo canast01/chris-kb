@@ -247,3 +247,11 @@ Collect the following before opening a Dell Support case:
 8. Symptom description, time of first occurrence, and business impact
 
 Use Dell SupportAssist (if licensed) to automatically collect and upload diagnostic bundles: accessible from Unisphere → System → SupportAssist.
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

@@ -348,3 +348,11 @@ Keep installed apps patched and remove unused add-ons to reduce attack surface a
 4. **Disable** any apps that are unused or no longer required — disabling is safer than uninstalling as it preserves configuration.
 5. Check the **Atlassian Marketplace** for security advisories on any installed apps before applying updates.
 6. Test core page creation, macro rendering, and search after changes to confirm no regressions.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

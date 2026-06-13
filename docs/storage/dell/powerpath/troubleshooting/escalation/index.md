@@ -153,3 +153,11 @@ Response times are subject to your support contract tier (ProSupport, ProSupport
 2. **Technical Account Manager (TAM)**: Contact your TAM to drive priority Sev1/Sev2 cases
 3. **Mission Critical support line**: Available 24x7 for Mission Critical contract holders; bypasses standard queue
 4. **E-Lab Navigator**: For compatibility questions (OS upgrade, kernel update), the E-Lab Navigator is self-service and does not require a support case
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

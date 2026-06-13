@@ -130,3 +130,11 @@ Query slow?
   ├─ High I/O wait → buffer pool too small → increase shared_buffers / innodb_buffer_pool_size
   └─ CPU spiking → too many connections or parallel queries → check pool; tune work_mem
 ```
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

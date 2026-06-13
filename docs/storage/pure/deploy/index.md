@@ -207,3 +207,11 @@ purenetwork create vip --name datavip01 --address 192.168.20.100 --gateway 192.1
 ```
 
 For a complete FlashBlade deployment walkthrough see [FlashBlade — Initial Deployment](../flashblade/deploy/index.md).
+
+---
+
+## Verify
+
+- **Cluster health:** all nodes show online in the management UI
+- **Volume access:** mount a test LUN/NFS export from a host and confirm read/write
+- **Replication:** confirm replication partner shows last-sync within RPO window

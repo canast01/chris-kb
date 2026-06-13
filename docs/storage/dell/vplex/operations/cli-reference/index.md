@@ -404,3 +404,11 @@ vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/"
 # Check unclaimed storage volumes on a back-end array
 vplexcli -q -e "ls /storage-elements/storage-arrays/array-A/storage-volumes"
 ```
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

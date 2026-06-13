@@ -379,3 +379,12 @@ curl -sk -O \
 | iDRAC SEL | Hardware fault timeline | Any hardware alarm; planning disk/PSU/fan replacement |
 | vm-support bundle | Full ESXi snapshot for Dell support | Escalating ESXi-level issues; Dell requires this for P1 cases |
 | VxRail support bundle | Full cluster snapshot for Dell support | Escalating to Dell GSS; required for all support cases |
+
+---
+
+## Verify resolution
+
+- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
+- **Event log:** confirm no new related error events in the last 5 minutes
+- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
+- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur

@@ -203,3 +203,11 @@ Produce patch compliance evidence in the format required by auditors or regulato
 4. Produce an exceptions report listing all open exceptions with their risk owner sign-off.
 5. Hash all evidence files for integrity: `Get-FileHash C:\Audit\* | Export-Csv C:\Audit\manifest.csv`.
 6. Upload the evidence package to the GRC platform linked to the relevant patch management control record.
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

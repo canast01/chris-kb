@@ -572,3 +572,11 @@ api_key = os.environ.get('API_KEY')
 | `python-dotenv` + `.env` file | Local development without exporting to the shell |
 | CI/CD secrets | Set in the pipeline; accessed via `os.environ` at runtime |
 | Never hardcode secrets | Avoids credentials leaking in version control |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

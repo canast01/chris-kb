@@ -170,3 +170,11 @@ flowchart TD
 Always reference the case number in all communications. For P1 issues, also call the Dell ProSupport phone line directly in parallel with the web case to ensure immediate engagement.
 
 Dell ProSupport phone (US): 1-800-945-3355
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

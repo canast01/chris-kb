@@ -296,3 +296,11 @@ systemctl status multipathd
 | No dead paths | `grep dead` output | 0 dead paths |
 | Path count correct | Count `alive` per device | Matches design |
 | multipathd disabled | `systemctl status multipathd` | Inactive |
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

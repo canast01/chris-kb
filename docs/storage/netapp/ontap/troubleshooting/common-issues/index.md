@@ -542,3 +542,11 @@ If no spare disks are available, RAID reconstruction cannot proceed. Escalate im
 5. Record the hardware platform and serial numbers: `system node show -fields model,serial-number`
 6. Describe the timeline of the issue — when it started, what changed (upgrade, config change, load change)
 7. Have the NetApp support site login ready: [https://support.netapp.com](https://support.netapp.com)
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

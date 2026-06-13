@@ -430,3 +430,11 @@ Key MBeans to monitor:
 | `java.lang:type=Threading` | `ThreadCount` | Active threads |
 | `Catalina:type=ThreadPool` | `currentThreadsBusy` | HTTP threads in use |
 | `Catalina:type=ThreadPool` | `maxThreads` | Max HTTP threads |
+
+---
+
+## Verify resolution
+
+- Confirm the original symptom no longer occurs
+- Check logs for any residual errors related to the issue
+- Monitor for 10–15 minutes to confirm the fix is stable

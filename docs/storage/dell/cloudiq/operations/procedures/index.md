@@ -164,3 +164,11 @@ Procedures reference covering Maintenance Window.
 3. Click **Export** and select CSV format
 4. The downloaded file includes model, serial number, firmware version, site, and management IP for each managed system
 5. Use the CSV for asset audits, CMDB updates, or capacity planning reviews
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record

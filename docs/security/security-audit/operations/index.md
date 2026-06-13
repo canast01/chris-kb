@@ -206,3 +206,11 @@ Monitor the lifecycle of all open audit findings to ensure none exceed their agr
 3. Send weekly status reminders to owners of in-progress findings.
 4. Escalate overdue Critical/High findings to the CISO with a daily status update until closed.
 5. Present a closure rate trend to the Security steering committee monthly (target: 90% of Critical findings closed within SLA).
+
+---
+
+## Verify
+
+- Confirm the operation completed without errors in the log or management UI
+- Verify the expected state change is visible (service running, object created, config applied)
+- Document the outcome in the change record
