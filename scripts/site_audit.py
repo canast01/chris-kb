@@ -149,7 +149,9 @@ for path in all_md():
         if href.startswith('http') or href.startswith('mailto'):
             continue
         target = os.path.join(page_dir, href)
-        if not os.path.isdir(target):
+        # Accept both dir/index.md and flat dir.md (flattened tree)
+        flat_md = os.path.join(page_dir, href.rstrip('/') + '.md')
+        if not os.path.isdir(target) and not os.path.isfile(flat_md):
             rel = os.path.relpath(path, REPO)
             warn(issues, f'{rel}: dead href="{href}"')
 
@@ -200,9 +202,15 @@ for path in all_md():
 
 # ── Check 13: Stub/empty pages ────────────────────────────────────────────────
 KNOWN_STUB_OK = {'docs/tags.md'}
+# Directories whose pages are intentional stubs (new sections under construction)
+KNOWN_STUB_DIRS = {
+    'docs/virtualization/nutanix',
+}
 issues = check(13, 'Stub/empty pages')
 for path in all_md():
     if os.path.relpath(path, REPO) in KNOWN_STUB_OK:
+        continue
+    if any(os.path.relpath(path, REPO).startswith(d) for d in KNOWN_STUB_DIRS):
         continue
     lines = open(path).readlines()
     if len(lines) < 15:
