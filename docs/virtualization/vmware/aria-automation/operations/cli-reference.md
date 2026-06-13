@@ -2,23 +2,19 @@
 tags:
   - aria-automation
   - operations
+  - cli
+  - vracli
+  - kubectl
   - vmware
 ---
 # Aria Automation — CLI Reference
 
-```bash
-# List all pods in the prelude namespace
-kubectl get pods -n prelude
+<div class="kb-summary">
+Complete CLI reference for Aria Automation: vracli appliance management, kubectl microservice diagnostics, REST API authentication and resource operations, PowerVRA PowerShell module, Aria Orchestrator admin, and VAMI management.
 
-# Check pod logs
-kubectl logs <pod-name> -n prelude
+*Applies to: Aria Automation 8.x*
+</div>
 
-# Describe a pod (events, resource limits)
-kubectl describe pod <pod-name> -n prelude
-
-# List services
-kubectl get svc -n prelude
-```
 ```text
 ┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
@@ -44,69 +40,341 @@ kubectl get svc -n prelude
 │   │       vracli status --all (full check)       │  │        kubectl logs <pod> -n prelude        │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA Linux appliance VMs · internal Kubernetes (k3s/Rancher) · Postgres · vIDM VM                     │
-│                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  vracli            = Appliance CLI shipped with vRA; manages certs, vIDM config, proxy, NTP           │
-│  prelude namespace  = Kubernetes namespace where vRA microservices run inside the appliance           │
-│  kubectl           = Kubernetes CLI; used on vRA appliance to inspect pods and logs                   │
-│  REST API          = Primary programmatic interface; all UI actions use the same API underneath       │
-│  Bearer token      = JWT returned by /csp/gateway/am/api/login; passed as Authorization header        │
-│  Swagger UI        = /vco/api/docs (Orchestrator) and /automation-ui/api/docs (vRA) for REST docs     │
-│  vracli status     = Reports health of each microservice; green/red output per service                │
-│  systemctl         = Linux service manager; vra-cluster is main managed service                       │
-│  journalctl        = Linux log viewer; use -u vra-cluster for appliance startup logs                  │
-│  VAMI              = Web-based appliance management at :5480; configure network/NTP/proxy             │
-│  ABX CLI           = No dedicated CLI; ABX actions tested via vRA UI Run or REST trigger              │
-│  Orchestrator CLI  = vco-controlcenter at :8283 for Orchestrator admin and log download               │
+│  vracli = Appliance CLI; manages certs, vIDM, proxy, NTP · prelude = k8s namespace for vRA pods       │
+│  kubectl = k8s CLI on appliance · Bearer token = JWT from /csp/gateway/am/api/login                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```bash
-# List all deployments
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://<aria-auto>/deployment/api/deployments" | jq '.content[]|.name,.id,.status'
-
-# Get a specific deployment
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://<aria-auto>/deployment/api/deployments/<deployment-id>"
-
-# Delete a deployment
-curl -s -X DELETE -H "Authorization: Bearer $TOKEN" \
-  "https://<aria-auto>/deployment/api/deployments/<deployment-id>"
-```
-```bash
-# List all blueprints
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "https://<aria-auto>/blueprint/api/blueprints" | jq '.content[]|.name,.id'
-```
-```powershell
-# Connect to Aria Automation
-Connect-VRAServer -Server aria-auto.domain.com -Credential (Get-Credential)
-
-# List all deployments
-Get-VRADeployment
-
-# Get a specific deployment
-Get-VRADeployment -Name "my-deployment"
-
-# Create a new deployment from a catalog item
-New-VRADeployment -CatalogItemName "My Catalog Item" -DeploymentName "test-01" -ProjectName "My Project"
-
-# Remove a deployment
-Remove-VRADeployment -Id "<deployment-id>"
 ```
 
 ## Before you begin
 
-- **Access:** vCenter read-only minimum; Administrator role for remediation steps
-- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
-- **Dependencies:** no active upgrades or migrations on the same infrastructure
-- **Logging:** capture command output — paste into the change record on completion
+- **Access:** SSH to vRA appliance as `root`; REST API requires an Aria Automation admin account
+- **kubectl:** available on the vRA appliance at `/usr/local/bin/kubectl` — no separate install needed
+- **Token lifetime:** REST API bearer tokens expire after 8 hours; re-authenticate if commands return 401
 
 ---
+
+## vracli — Appliance Management
+
+`vracli` is installed on every Aria Automation appliance and manages appliance-level configuration.
+
+### Status and Health
+
+```bash
+# Full health check — shows green/red per service
+vracli status
+
+# Detailed per-service status
+vracli status --all
+
+# Check version of vRA and all components
+vracli version
+
+# Wait for all services to become healthy (useful after reboot)
+vracli status --wait
+```
+
+### Certificate Management
+
+```bash
+# Show current certificate info
+vracli certificate ingress --show
+
+# Generate a CSR for a custom certificate
+vracli certificate ingress --generate --cn "vra.corp.local" \
+  --org "Corp" --country "US"
+
+# Import a signed certificate (PEM format)
+vracli certificate ingress --import --certificate /tmp/vra.crt \
+  --private-key /tmp/vra.key \
+  --ca-cert /tmp/ca-chain.crt
+
+# Trust an external CA certificate (for external vIDM, LDAP with TLS)
+vracli certificate trust add /tmp/external-ca.crt
+vracli certificate trust list
+```
+
+### vIDM (Identity) Configuration
+
+```bash
+# Show current vIDM / identity source config
+vracli vidm
+
+# Configure external vIDM connection
+vracli vidm config --host vidm.corp.local \
+  --admin-user admin@vidm.local \
+  --admin-password <pass>
+
+# Re-sync vIDM groups
+vracli vidm refresh
+```
+
+### Proxy and Network
+
+```bash
+# Show current proxy configuration
+vracli proxy
+
+# Set HTTP proxy for outbound connections (cloud account sync, extension repo)
+vracli proxy set --http "http://proxy.corp.local:8080" \
+                 --https "http://proxy.corp.local:8080" \
+                 --no-proxy "localhost,127.0.0.1,.corp.local"
+
+# Remove proxy
+vracli proxy clear
+
+# Show NTP config
+vracli ntp
+
+# Set NTP servers
+vracli ntp set --servers "ntp1.corp.local,ntp2.corp.local"
+```
+
+### Cluster Management (3-Node HA)
+
+```bash
+# Show cluster node status
+vracli cluster status
+
+# Add a second/third node to form HA cluster
+vracli cluster join --master-node <master-ip> --join-token <token>
+
+# Get join token from master node
+vracli cluster token
+```
+
+---
+
+## kubectl — Kubernetes Diagnostics
+
+All vRA microservices run as pods in the `prelude` Kubernetes namespace inside the appliance.
+
+### Pod Status
+
+```bash
+# List all pods — healthy pods show Running/Completed, not CrashLoopBackOff/Error
+kubectl get pods -n prelude
+
+# Get detailed info on a failing pod (shows events and resource limits)
+kubectl describe pod <pod-name> -n prelude
+
+# Show pods with resource usage
+kubectl top pods -n prelude
+```
+
+### Logs
+
+```bash
+# Stream logs for a specific pod
+kubectl logs -f <pod-name> -n prelude
+
+# Logs for a specific container within a pod
+kubectl logs <pod-name> -c <container-name> -n prelude
+
+# Previous container logs (if pod restarted — shows why it crashed)
+kubectl logs --previous <pod-name> -n prelude
+
+# Common pods to check on failures:
+#   catalog-service      → catalog and request issues
+#   provisioning         → deployment provisioning failures
+#   event-broker         → subscription/notification issues
+#   blueprint-api        → template and blueprint issues
+#   abx-adapter          → ABX extensibility action issues
+```
+
+### Service and Config
+
+```bash
+# List all services
+kubectl get svc -n prelude
+
+# List config maps
+kubectl get configmap -n prelude
+
+# Get a specific config map
+kubectl get configmap <name> -n prelude -o yaml
+
+# Restart a pod (delete it — Kubernetes re-creates it automatically)
+kubectl delete pod <pod-name> -n prelude
+# ⚠ Only delete one pod at a time; do not delete multiple simultaneously
+```
+
+---
+
+## REST API — Authentication and Token
+
+All REST operations require a bearer token obtained from the identity service.
+
+```bash
+# Authenticate and get a token (store in TOKEN variable)
+TOKEN=$(curl -s -X POST \
+  "https://<aria-auto>/csp/gateway/am/api/login" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"<pass>","domain":"System Domain"}' \
+  | jq -r '.cspAuthToken')
+
+echo "Token: ${TOKEN:0:20}..."
+
+# Helper function — use in scripts
+get_token() {
+  curl -s -X POST \
+    "https://${VRA_HOST}/csp/gateway/am/api/login" \
+    -H "Content-Type: application/json" \
+    -d "{\"username\":\"${VRA_USER}\",\"password\":\"${VRA_PASS}\",\"domain\":\"System Domain\"}" \
+    | jq -r '.cspAuthToken'
+}
+```
+
+---
+
+## REST API — Deployments
+
+```bash
+VRA="https://<aria-auto>"
+
+# List all deployments
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/deployment/api/deployments?size=50" \
+  | jq '.content[] | {name, id, status, projectId}'
+
+# Get a specific deployment
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/deployment/api/deployments/<deployment-id>" | jq .
+
+# List resources in a deployment
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/deployment/api/deployments/<deployment-id>/resources" | jq '.content[].name'
+
+# Delete a deployment
+curl -s -X DELETE -H "Authorization: Bearer $TOKEN" \
+  "$VRA/deployment/api/deployments/<deployment-id>"
+```
+
+---
+
+## REST API — Blueprints and Catalog
+
+```bash
+# List all blueprints (cloud templates)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/blueprint/api/blueprints" \
+  | jq '.content[] | {name, id, status}'
+
+# Get blueprint YAML content
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/blueprint/api/blueprints/<blueprint-id>/content" | jq -r '.content'
+
+# List catalog items (self-service catalog)
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/catalog/api/items?size=50" \
+  | jq '.content[] | {name, id, type}'
+
+# Request a catalog item (create a deployment)
+curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  "$VRA/catalog/api/items/<item-id>/request" \
+  -d '{
+    "deploymentName": "my-deployment",
+    "projectId": "<project-id>",
+    "inputs": {}
+  }' | jq .
+```
+
+---
+
+## REST API — Projects and Cloud Accounts
+
+```bash
+# List projects
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/iaas/api/projects" \
+  | jq '.content[] | {name, id}'
+
+# List cloud accounts
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$VRA/iaas/api/cloud-accounts" \
+  | jq '.content[] | {name, cloudAccountType, id}'
+
+# Trigger data collection on a cloud account
+curl -s -X POST -H "Authorization: Bearer $TOKEN" \
+  "$VRA/iaas/api/cloud-accounts/<id>/schedule-data-collection"
+```
+
+---
+
+## PowerVRA — PowerShell Module
+
+```powershell
+# Install
+Install-Module -Name PowerVRA -Scope CurrentUser
+
+# Connect
+Connect-VRAServer -Server "aria-auto.corp.local" -Credential (Get-Credential)
+
+# List deployments
+Get-VRADeployment | Select-Object Name, Status, ProjectName | Format-Table
+
+# Get a specific deployment
+Get-VRADeployment -Name "my-deployment"
+
+# Request a catalog item
+New-VRADeployment -CatalogItemName "Ubuntu 22.04" `
+                  -DeploymentName "web-prod-01" `
+                  -ProjectName "Team-A"
+
+# Delete a deployment
+Remove-VRADeployment -Name "web-prod-01" -Confirm:$false
+
+# Disconnect
+Disconnect-VRAServer
+```
+
+---
+
+## Aria Orchestrator — Admin Commands
+
+Aria Orchestrator (vRO) is embedded in Aria Automation and accessible via its control center.
+
+```bash
+# vRO Control Center — browser URL
+# https://<aria-auto>/vco/app   (Orchestrator UI)
+# https://<aria-auto>:8283/vco-controlcenter  (Admin/logs)
+
+# Orchestrator API Swagger docs
+# https://<aria-auto>/vco/api/docs
+
+# Download vRO server log from Control Center:
+# vRO Control Center → Logs → Download Server Log
+
+# REST API — list workflows
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "https://<aria-auto>/vco/api/workflows?maxResult=20" \
+  | jq '.link[] | .attributes[] | select(.name=="name") | .value'
+
+# Run a workflow via REST
+curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  "https://<aria-auto>/vco/api/workflows/<workflow-id>/executions" \
+  -d '{"parameters": [{"name": "vmName", "type": "string", "value": {"string": {"value": "my-vm"}}}]}'
+```
+
+---
+
+## VAMI — Appliance Management Interface
+
+VAMI is the browser-based appliance management UI at `https://<aria-auto>:5480`.
+
+Key tasks available in VAMI:
+- **Network configuration** — IP, DNS, NTP (also doable via vracli)
+- **Time sync** — NTP status and synchronisation
+- **SSL certificate** — view and replace the VAMI/appliance certificate
+- **System** — reboot, shutdown, update vRA appliance patches
+- **Monitor** — CPU, memory, disk usage of the appliance VM
+
+```bash
+# VAMI is a web UI — access from browser:
+# https://<aria-auto>:5480
+# Credentials: root / <appliance-root-password>
+```
 
 ---
 
@@ -118,6 +386,6 @@ Remove-VRADeployment -Id "<deployment-id>"
 
 ## Verify
 
-- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
-- **Events:** monitor the vCenter Events view for the affected object for 5 minutes
-- **Health check:** run the morning health-check sequence for the affected product tier
+- **vracli status --all** returns green for all services
+- **kubectl get pods -n prelude** shows all pods in `Running` state
+- **API test:** `curl -s -H "Authorization: Bearer $TOKEN" "$VRA/iaas/api/zones" | jq '.totalElements'` returns a number

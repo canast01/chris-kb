@@ -6,96 +6,42 @@ tags:
 search:
   boost: 1.5
 ---
-# vRNI Common Issues
+# Aria Operations for Networks — Common Issues
 
-```bash
-# From Collector VM — test connectivity to Platform VM
-curl -sk https://<platform-vm-ip>/api/ni/auth/token
-nc -vz <platform-vm-ip> 443
+<div class="kb-summary">
+Troubleshooting guide for the most frequent Aria Operations for Networks problems: data source showing red, no flows in Flow Map, collector offline, LDAP login failure, path analysis gaps, and high disk usage.
 
-# Check Collector services
-ssh admin@<collector-vm-ip>
-sudo systemctl status hms
-sudo systemctl start hms   # restart if stopped
-
-# Check Collector disk usage (stops uploading when >85% full)
-df -h
-sudo journalctl --vacuum-size=1G   # free journal space
-```
-```text
-┌───────────────────────────────────────── vRNI Common Issues ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Common issues: data source red, no flows, LDAP login failure, and collector offline.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Data Source Red                │  │                No Flows in UI               │   │
-│   │            Check API reachability            │  │            Verify IPFIX target IP           │   │
-│   │         Validate credentials in vRNI         │  │            Check collector online           │   │
-│   │         Cert error: re-accept or fix         │  │           Check UDP 2055 firewall           │   │
-│   │           Service account locked?            │  │           proxy.log: flow receipt?          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Source and flow issues are most common; LDAP and collector are next in frequency.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              LDAP Login Failure              │  │              Collector Offline              │   │
-│   │           Test LDAP in Settings UI           │  │           Check collector VM power          │   │
-│   │         Validate bind DN + password          │  │          service collector restart          │   │
-│   │          Check LDAPS cert validity           │  │           Verify platform TCP 443           │   │
-│   │            Try LDAP browser tool             │  │         Re-register collector in UI         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform + collector VMs; AD/LDAP server; NSX-T and physical switches as sources                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Data Source Red     = vRNI cannot reach or authenticate to the configured source                     │
-│  No Flows            = Flow Map empty; IPFIX not reaching collector or platform                       │
-│  IPFIX Target        = Device setting pointing flow export to the collector IP                        │
-│  proxy.log           = Collector log; confirms flow packets received and forwarded                    │
-│  LDAP Bind Failure   = vRNI cannot authenticate to directory with stored credentials                  │
-│  Collector Offline   = Collector VM unreachable or service stopped; check VM health                   │
-│  Service Account Lock= AD account lockout caused by repeated vRNI auth attempts                       │
-│  Cert Error          = TLS cert mismatch; re-accept thumbprint or upload correct CA                   │
-│  Re-register         = Remove and re-add collector in vRNI UI to reset association                    │
-│  UDP 2055 Firewall   = NetFlow/IPFIX port; blocked firewall = no flows received                       │
-│  LDAP Browser        = Tool like ldp.exe to manually test LDAP bind and search                        │
-│  Test Connection     = vRNI built-in source test; confirms API reachability and auth                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+*Applies to: Aria Operations for Networks 6.x*
+</div>
 
 ## Diagnostic Flow
 
 ```mermaid
 graph TD
-    S([What is the symptom?]) --> B1[NSX data source collection failed]
-    S --> B2[Flow data missing in UI]
+    S([What is the symptom?]) --> B1[Data source red / collection failed]
+    S --> B2[No flows in Flow Map]
     S --> B3[Path analysis shows no path]
     S --> B4[Physical device not discovered]
-    S --> B5[Metric gap in timeline]
+    S --> B5[Collector offline in UI]
     S --> B6[LDAP login failure]
 
     B1 --> D1{API reachable\nand credentials valid?}
-    D1 -->|No| R1[Fix API Connectivity · Update Credentials · Re-accept Cert\n→ Data Source Red]
-    D1 -->|Yes| R2[Check Service Account Lock · Run Test Connection\n→ Data Source Red]
+    D1 -->|No| R1[Fix API Connectivity · Update Credentials · Re-accept Cert]
+    D1 -->|Yes| R2[Check Service Account Lock · Run Test Connection]
 
     B2 --> D2{IPFIX configured\non source?}
-    D2 -->|No| R3[Set IPFIX Target to Collector IP · Enable on vDS\n→ No Flows in UI]
-    D2 -->|Yes| R4[Check UDP 2055 Firewall · Review proxy.log\n→ No Flows in UI]
+    D2 -->|No| R3[Set IPFIX Target to Collector IP · Enable on vDS]
+    D2 -->|Yes| R4[Check UDP 2055 Firewall · Review proxy.log]
 
-    B3 --> R5[Verify All Source Devices Discovered · Check NSX Data Source\n→ No Flows in UI]
+    B3 --> R5[Verify All Source Devices Discovered · Check NSX Data Source]
 
-    B4 --> R6[Add Device via SNMP · Verify Credentials · Check Collector Reachability\n→ Data Source Red]
+    B4 --> R6[Add Device via SNMP · Verify Credentials · Check Collector Reachability]
 
-    B5 --> D3{Collector\nonline?}
-    D3 -->|No| R7[Restart Collector Service · Re-register in UI\n→ Collector Offline]
-    D3 -->|Yes| R8[Check Collector Disk Usage · Clear Journal Space\n→ Collector Offline]
+    B5 --> D3{Collector VM\npowered on?}
+    D3 -->|No| R7[Power on Collector VM]
+    D3 -->|Yes| R8[Restart ni-collector service · Re-register in UI]
 
-    B6 --> R9[Test LDAP Bind DN · Check LDAPS Cert · Use LDAP Browser Tool\n→ LDAP Login Failure]
+    B6 --> R9[Test LDAP Bind DN · Check LDAPS Cert · Use LDAP Browser Tool]
 
     classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
     classDef decision fill:#15803d,color:#fff,stroke:#15803d
@@ -109,25 +55,209 @@ graph TD
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** AON UI admin; SSH to platform VM (`ubuntu`) and collector VMs
+- **Baseline:** check collector health first — if the collector is offline, all other issues follow from it
+- **Log files:** `app.log` on platform VM; `proxy.log` on each collector VM
 
 ---
+
+## Data Source Red / Collection Failed
+
+**Symptoms:** Data source shows red status or "Collection Failed" in AON UI → Settings → Data Sources.
+
+```bash
+# From the collector VM — test API connectivity to the data source
+# vCenter:
+curl -sk https://vcenter.corp.local/rest/com/vmware/cis/session \
+  -X POST -u 'svc-aon:PASSWORD' -o /dev/null -w "HTTP %{http_code}\n"
+# Expected: HTTP 200
+
+# NSX-T:
+curl -sk https://nsxmgr.corp.local/api/v1/cluster \
+  -u 'svc-aon:PASSWORD' -o /dev/null -w "HTTP %{http_code}\n"
+# Expected: HTTP 200
+```
+
+**Common causes and fixes:**
+
+| Cause | Indicator | Fix |
+|---|---|---|
+| Wrong credentials | "Authentication failed" in data source details | Update credentials in Settings → Data Sources |
+| Service account locked | AD lockout event in DC event log | Unlock account; check for auth storm from AON |
+| TLS cert mismatch | "Certificate error" message | Re-accept thumbprint in data source settings, or upload correct CA to AON |
+| API endpoint unreachable | `curl` times out | Check firewall; verify AON collector can reach data source on TCP 443 |
+| Service account permissions | "Access denied" on specific API calls | Re-verify service account roles (vCenter read-only, NSX Auditor minimum) |
+
+**Re-test after fixing:**
+```bash
+# Use AON UI built-in test:
+# Settings → Data Sources → select source → Test Connection
+# Or trigger re-sync via REST:
+curl -sk -X POST "${AON_URL}/api/ni/datasources/${DS_ID}/sync" \
+  -H "Authorization: NetworkInsight ${AON_TOKEN}"
+```
+
+---
+
+## No Flows in Flow Map
+
+**Symptoms:** Flow Map is empty or shows only partial data; specific VMs show no flows.
+
+**Triage order:**
+1. Confirm collector is online (see Collector Offline below)
+2. Check IPFIX is configured to send to the collector IP
+
+```bash
+# On collector VM — verify UDP 2055 packets are arriving from switches/vDS
+sudo tcpdump -i eth0 -n udp port 2055 -c 50
+# If 0 packets: IPFIX is not reaching this collector
+
+# Check proxy.log for flow receipt
+sudo tail -100 /var/log/proxy.log | grep -E "received|forward|error"
+```
+
+**IPFIX not configured on vDS:**
+```text
+vSphere Client → Distributed Switch → Configure → NetFlow
+  Collector IP: <AON collector IP>
+  Collector Port: 2055
+  Active flow export timeout: 60s
+  Idle flow export timeout: 15s
+  Apply to all port groups
+```
+
+**Firewall blocking UDP 2055:**
+- Physical switches must send IPFIX to the collector IP on UDP 2055
+- Network firewall between switches and collector must allow UDP 2055 (not just TCP 443)
+
+---
+
+## Collector Offline in UI
+
+**Symptoms:** AON UI → Settings → Infrastructure and Support → Collectors shows collector as "Offline" or "Disconnected".
+
+```bash
+# SSH to the offline collector VM
+ssh ubuntu@aon-collector.corp.local
+
+# Check if collector service is running
+sudo systemctl status ni-collector
+
+# Restart collector service
+sudo systemctl restart ni-collector
+sudo systemctl status ni-collector   # verify running
+
+# Check collector can reach platform VM
+nc -zv aon-platform.corp.local 443
+# If unreachable: firewall or DNS issue — fix connectivity first
+
+# View collector logs for errors
+sudo journalctl -u ni-collector -n 100 --no-pager | grep -i "error\|fail\|warn"
+```
+
+**If service restart doesn't fix it — re-register in UI:**
+```text
+AON UI → Settings → Infrastructure and Support → Collectors
+  Select offline collector → Re-register
+  Copy the pairing key shown
+```
+
+```bash
+# On the collector VM, run the re-pairing script
+sudo /home/ubuntu/support/pairing.sh
+# Enter platform FQDN and paste the pairing key
+```
+
+**Collector disk full (stops forwarding flows at >85% disk usage):**
+```bash
+df -h /   # check root partition
+sudo journalctl --vacuum-size=1G   # free journal space
+```
+
+---
+
+## Path Analysis Showing No Path or Incomplete Path
+
+**Symptoms:** Path Analysis tool returns "No path found" or missing hops between two VMs.
+
+**Common causes:**
+- One or more network devices in the path are not discovered as data sources
+- NSX-T data source not added (missing logical overlay hops)
+- Physical switches not added via SNMP
+
+```bash
+# Check which data sources are configured
+curl -sk -H "Authorization: NetworkInsight ${AON_TOKEN}" \
+  "${AON_URL}/api/ni/datasources" \
+  | python3 -c "
+import sys, json
+for d in json.load(sys.stdin).get('results', []):
+    print(f\"{d.get('datasource_type','?'):<25} {d.get('nickname','?'):<30} {d.get('enabled','')}\")"
+```
+
+**Fix:** In AON UI → Settings → Data Sources → Add Source:
+- Ensure all NSX-T Managers are added
+- Add physical switch SNMP credentials for switches in the path
+- Add the underlay IP fabric (if spine/leaf architecture)
+
+---
+
+## LDAP / AD Login Failure
+
+**Symptoms:** Users cannot log in to AON UI with AD credentials; local `admin@local` works.
+
+```bash
+# Test LDAP bind from the platform VM
+ldapsearch -x -H ldap://dc.corp.local:389 \
+  -D "svc-aon@corp.local" -w "PASSWORD" \
+  -b "DC=corp,DC=local" "(sAMAccountName=testuser)" cn
+
+# For LDAPS (port 636):
+ldapsearch -x -H ldaps://dc.corp.local:636 \
+  -D "svc-aon@corp.local" -w "PASSWORD" \
+  -b "DC=corp,DC=local" "(sAMAccountName=testuser)" cn
+```
+
+**Common causes:**
+
+| Cause | Fix |
+|---|---|
+| Wrong bind DN format | Try `svc-aon@corp.local` (UPN) vs `CN=svc-aon,OU=Service,DC=corp,DC=local` (DN) |
+| LDAPS cert not trusted | Upload AD CA cert to AON: Settings → Authentication → Upload Certificate |
+| Service account locked | Unlock in AD; check for auth storms from AON retrying failed binds |
+| Wrong base DN | Verify `DC=corp,DC=local` matches your actual domain structure |
+
+**Re-test:**
+```text
+AON UI → Settings → Authentication → Test Connection
+  Enter a valid AD username and password to verify
+```
+
+---
+
+## High Disk Usage / Data Retention
+
+```bash
+# Check disk usage (alert at 80%, collection stops at ~90%)
+df -h /var/lib/cassandra    # flow data
+df -h /var/lib/elasticsearch   # search index
+df -h /var/log
+
+# Free journal space
+sudo journalctl --vacuum-size=1G
+sudo journalctl --vacuum-time=7d
+```
+
+**Adjust retention in UI:**
+```text
+AON UI → Settings → Infrastructure and Support → Platform Settings
+  Data Retention: reduce from default (6 months) to 30 days for lab; 90 days for production
+```
 
 ---
 
 ## See also
 
-- [Aria Operations for Networks — Diagnostics](diagnostics/)
-- [vRNI Escalation](escalation/)
-- [vRNI Health Checks](../operations/health-checks/)
-
-## Verify resolution
-
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- [AON Diagnostics](diagnostics/)
+- [AON Escalation](escalation/)
+- [AON Health Checks](../operations/health-checks/)
