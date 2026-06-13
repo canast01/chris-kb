@@ -178,6 +178,38 @@ for p in json.load(sys.stdin):
 "
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{Workflow transition\nblocked?}
+    S --> B2{Project permission\nmissing?}
+    S --> B3{JQL returns no\nresults unexpectedly?}
+    S --> B4{Attachment upload\nfails?}
+    S --> B5{Plugin incompatibility\nafter upgrade?}
+    B1 -->|Yes| D1{Validator or\ncondition blocking?}
+    D1 -->|Condition| R1[Workflow stuck\n— check conditions in Project Workflows]
+    D1 -->|Validator| R2[Workflow stuck\n— fix required fields or disable validator]
+    B2 -->|Yes| D2{User in correct\nproject role?}
+    D2 -->|No| R3[Project permission\n— add user to project role in settings]
+    D2 -->|Yes| R4[Project permission\n— check permission scheme for action]
+    B3 -->|Yes| D3{Index stale\nor corrupt?}
+    D3 -->|Yes| R5[Search stale\n— trigger full reindex from Admin Indexing]
+    D3 -->|No| R6[JQL query\n— verify JQL syntax and field names]
+    B4 -->|Yes| D4{NFS home\nmounted?}
+    D4 -->|No| R7[Attachments 404\n— remount NFS JIRA_HOME]
+    D4 -->|Yes| R8[Attachments 404\n— check attachment size limit in config]
+    B5 -->|Yes| R9[Plugin issues\n— disable suspect plugin via REST API]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

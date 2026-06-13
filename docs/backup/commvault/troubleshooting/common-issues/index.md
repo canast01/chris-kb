@@ -78,6 +78,38 @@ CommVault job failures are classified by error code and phase. The first diagnos
 | Auxiliary copy stuck | Source copy not pruned or tape library busy | Check tape drive availability; verify source data is not in use |
 | DDB corruption | Unexpected shutdown during write | Run `qoperation execscript -sn QS_DDBVerify`; escalate if phase 2 fails |
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Backup job stuck — offline client]
+    S --> B[Dedup DB corruption]
+    S --> C[Restore to different client failed]
+    S --> D[Media agent unreachable]
+    S --> E[Schedule not triggering]
+    A --> A1{Client reachable on 8400?}
+    A1 -->|No| A2[Check firewall and restart GxCVD on client — see Common Issues Reference]
+    A1 -->|Yes| A3[Check job phase log for hung pre/post script or VSS error]
+    B --> B1{DDB disk full?}
+    B1 -->|Yes| B2[Free DDB disk space and run DDB Verification job — see Common Issues Reference]
+    B1 -->|No| B3[Run qoperation execscript -sn QS_DDBVerify and escalate if phase 2 fails]
+    C --> C1{Cross-client restore permission granted?}
+    C1 -->|No| C2[Grant restore permission to target client in CommCell Console]
+    C1 -->|Yes| C3[Check destination client credentials and iDA compatibility]
+    D --> D1{GxCLMgrS service running?}
+    D1 -->|No| D2[Restart CommVault services on MediaAgent — see Common Issues Reference]
+    D1 -->|Yes| D3[Check network between CommServe and MediaAgent on port 8400]
+    E --> E1[Verify GxJobMgr service is running and schedule window is active — see Common Issues Reference]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
+    class A1,B1,C1,D1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

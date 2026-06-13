@@ -12,6 +12,36 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
 *Applies to: Terraform 1.x*
 </div>
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{Provider auth\nerror?}
+    S --> B2{State lock\nstuck?}
+    S --> B3{Resource already\nexists error?}
+    S --> B4{Plan or apply\ntimeout?}
+    S --> B5{Dependency\ncycle in graph?}
+    B1 -->|Yes| D1{Env vars\nset correctly?}
+    D1 -->|No| R1[Common Error Reference\n— set AWS_/ARM_ env vars]
+    D1 -->|Yes| R2[Terraform Troubleshooting Decision Flow\n— terraform init -upgrade]
+    B2 -->|Yes| D2{Stale lock\nor active run?}
+    D2 -->|Stale| R3[Common Error Reference\n— terraform force-unlock LOCK_ID]
+    D2 -->|Active| R4[Workspace Issues\n— wait for concurrent run to finish]
+    B3 -->|Yes| D3{Resource in\nanother state file?}
+    D3 -->|Yes| R5[Common Error Reference\n— terraform state rm then import]
+    D3 -->|No| R6[Terraform Troubleshooting Decision Flow\n— terraform import resource.type.name id]
+    B4 -->|Yes| R7[Workspace Issues\n— check provider timeout settings]
+    B5 -->|Yes| R8[Common Error Reference\n— terraform graph to visualise cycle]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class B1,B2,B3,B4,B5,D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Provider credentials configured (`terraform login` or env vars)

@@ -65,6 +65,40 @@ Detailed resolution procedures for the most frequently encountered FlashArray is
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Host volume not visible]
+    S --> B[Drive failure / RAID rebuilding]
+    S --> C[Replication session behind]
+    S --> D[Alert storm from phone-home]
+    S --> E[Purity upgrade failed or hung]
+    A --> A1{Volume connected to host?}
+    A1 -->|No| A2[Connect volume to host group — see Volume Not Visible on Host After Provisioning]
+    A1 -->|Yes| A3[Check initiator registration and rescan HBA on host]
+    B --> B1{Multiple drives failed?}
+    B1 -->|Yes| B2[P1 case immediately — do not pull drives — see Drive Failure and Rebuild]
+    B1 -->|No| B3[Single drive — open P2 case; monitor rebuild with puredrive list]
+    C --> C1{Replication link up?}
+    C1 -->|No| C2[Restore network path; pod resyncs automatically — see ActiveCluster Pod Out of Sync]
+    C1 -->|Yes| C3[Check mediator reachability and bandwidth saturation]
+    D --> D1{Critical alerts present?}
+    D1 -->|Yes| D2[Address hardware or capacity alerts — see Array Reporting High Latency]
+    D1 -->|No| D3[Check Pure1 cloud connectivity and phone-home proxy settings]
+    E --> E1{Upgrade pre-check failed?}
+    E1 -->|Yes| E2[Run purearray upgrade --check and resolve blockers — see Purity Upgrade Hangs or Fails]
+    E1 -->|No| E3[Contact Pure Support if no progress after 30 minutes]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
+    class A1,B1,C1,D1,E1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -11,6 +11,31 @@ PostgreSQL common issues reference.
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{Connection limit\nreached — FATAL?}
+    S --> D2{Replication slot\nnot advancing / WAL bloat?}
+    S --> D3{Autovacuum\nnot running?}
+    S --> D4{Lock contention /\nblocked queries?}
+    S --> D5{FATAL: database\ndoes not exist?}
+    D1 --> R1[Database — Performance Troubleshooting]
+    D2 --> R2[Database — Performance Troubleshooting]
+    D3 --> R3[Database — Performance Troubleshooting]
+    D4 --> R4[Database — Performance Troubleshooting]
+    D5 --> R5[Verify resolution]
+    R1 --> R6[Verify resolution]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

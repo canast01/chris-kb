@@ -84,6 +84,38 @@ FlashBlade Common Issues reference covering NFS/SMB mount problems, S3 403 error
                        regenerate access key
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Blade hardware fault]
+    S --> B[NFS or S3 bucket inaccessible]
+    S --> C[Replication policy error]
+    S --> D[Capacity alarm triggered]
+    S --> E[Performance degraded after blade failure]
+    A --> A1{Blade state?}
+    A1 -->|failed| A2[Open Pure Support case immediately — see Common Issues]
+    A1 -->|rebalancing| A3[Normal post-add state; monitor with purefb blade list]
+    B --> B1{NFS or S3?}
+    B1 -->|NFS| B2[Check VIP reachability and export policy — see Common Issues]
+    B1 -->|S3| B3[Regenerate access key with purefb objectstoreuser — see Common Issues]
+    C --> C1{Replication link up?}
+    C1 -->|No| C2[Restore network path between sites — see Common Issues]
+    C1 -->|Yes| C3[Check replication policy configuration and RPO lag]
+    D --> D1{Filesystem at provisioned limit?}
+    D1 -->|Yes| D2[Expand with purefb filesystem update --provisioned — see Common Issues]
+    D1 -->|No| D3[Review snapshot retention and backup tool write rate]
+    E --> E1[Confirm blade replacement underway; monitor rebalancing — see Common Issues]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
+    class A1,B1,C1,D1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

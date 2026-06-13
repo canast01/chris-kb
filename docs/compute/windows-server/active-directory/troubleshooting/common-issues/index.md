@@ -65,6 +65,31 @@ AD failures typically trace back to replication, DNS, time sync, or Kerberos. Th
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{DC replication\nfailing / USN rollback?}
+    S --> D2{User cannot\nlog in / Kerberos error?}
+    S --> D3{SYSVOL not\nsyncing?}
+    S --> D4{DNS resolution\nfailing?}
+    S --> D5{Domain join\nfailing?}
+    D1 --> R1[Replication Errors]
+    D2 --> R2[Kerberos Failures]
+    D3 --> R3[Time Sync Issues]
+    D4 --> R4[Dcdiag Tests]
+    D5 --> R5[Event Log References]
+    R1 --> R6[Common Replication Error Codes]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

@@ -63,6 +63,47 @@ Common Issues reference covering Quick Reference, Host Connectivity Issues, Repl
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{Node hardware\nfault?}
+    S --> B2{Volume\ninaccessible?}
+    S --> B3{Replication\nsession failed?}
+    S --> B4{NAS server\noffline?}
+    S --> B5{Storage pool\ncapacity alarm?}
+
+    B1 -->|Check appliance health| D1{Node in\nfault state?}
+    D1 -->|Yes| R1[See Quick Reference —\nAlert: drive fault / pool degraded]
+    D1 -->|No| R2[See Management Plane Issues —\nPowerStore Manager Inaccessible]
+
+    B2 -->|Check host object and zoning| D2{FC or\niSCSI?}
+    D2 -->|FC| R3[See Host Connectivity —\nFC Host Cannot See Volumes]
+    D2 -->|iSCSI| R4[See Host Connectivity —\niSCSI Host Cannot Connect]
+
+    B3 -->|Check replication session state| D3{Network or\ncredential error?}
+    D3 -->|Network| R5[See Replication Issues —\nReplication Session in Failed State]
+    D3 -->|Metro link| R6[See Replication Issues —\nMetro Volume Link Down]
+
+    B4 -->|Check NAS server node| D4{NAS server\nfailed over?}
+    D4 -->|Yes| R7[See Quick Reference —\nNAS server offline]
+    D4 -->|SMB auth| R8[See Host Connectivity —\nMultipath Not Working]
+
+    B5 -->|Check pool utilisation| D5{Pool above\n85% used?}
+    D5 -->|Yes| R9[See Capacity Issues —\nPool Approaching Full Capacity]
+    D5 -->|Snapshot full| R10[See Snapshot Failures —\nSnapshot schedule failures]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

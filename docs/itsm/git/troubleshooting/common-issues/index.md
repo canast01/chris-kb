@@ -336,6 +336,38 @@ git log HEAD..origin/main --oneline    # commits remote has, you don't
 git diff origin/main...HEAD            # diff of diverged changes
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{Push rejected\nnon-fast-forward?}
+    S --> B2{Merge\nconflict?}
+    S --> B3{Detached\nHEAD state?}
+    S --> B4{SSH authentication\nfailed?}
+    S --> B5{Submodule\nout of sync?}
+    B1 -->|Yes| D1{Shared or\nprotected branch?}
+    D1 -->|Shared| R1[Push rejected\n— git pull --rebase then push]
+    D1 -->|Personal| R2[Push rejected\n— git push --force-with-lease]
+    B2 -->|Yes| D2{Conflict in\nmany files?}
+    D2 -->|Yes| R3[Merge conflict\n— git mergetool for interactive resolution]
+    D2 -->|No| R4[Merge conflict\n— edit conflict markers then git add]
+    B3 -->|Yes| D3{New commits\nmade in detached state?}
+    D3 -->|Yes| R5[Detached HEAD\n— git switch -c new-branch to save work]
+    D3 -->|No| R6[Detached HEAD\n— git switch main to return to branch]
+    B4 -->|Yes| D4{SSH key\nloaded in agent?}
+    D4 -->|No| R7[SSH auth\n— ssh-add key then verify with ssh -T]
+    D4 -->|Yes| R8[SSH auth\n— check public key added to remote host]
+    B5 -->|Yes| R9[Submodule issues\n— git submodule update --init --recursive]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

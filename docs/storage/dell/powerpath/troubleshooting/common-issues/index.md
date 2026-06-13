@@ -63,6 +63,47 @@ Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths De
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{Path not\ndetected - emcpowern missing?}
+    S --> B2{Dead paths\non LUN?}
+    S --> B3{powermt check\nshows degraded?}
+    S --> B4{Multipath policy\nmismatch?}
+    S --> B5{Host reboot needed\nafter upgrade?}
+
+    B1 -->|Rescan SCSI bus| D1{Device visible\nafter rescan?}
+    D1 -->|No| R1[See Device Not Visible —\nVerify LUN masking and host group]
+    D1 -->|Still missing| R2[See PowerPath Not Starting —\nCheck kernel module and DKMS]
+
+    B2 -->|Run powermt restore| D2{Paths recovered\nafter restore?}
+    D2 -->|No| R3[See Dead Paths —\nCheck HBA port state and fabric switch]
+    D2 -->|All paths dead| R4[See All Paths Dead —\nVerify masking and issue LIP on HBA]
+
+    B3 -->|Check path count vs baseline| D3{Fewer paths\nthan expected?}
+    D3 -->|Yes| R5[See Incorrect Path Count —\nTrace missing path from HBA to array]
+    D3 -->|Flapping| R6[See Path Flapping —\nReplace marginal SFP or cable]
+
+    B4 -->|Check powermt display options| D4{Policy is\nRoundRobin or BasicFailover?}
+    D4 -->|Yes| R7[See Wrong Load Balance Policy —\nSet CLAROpt and powermt save]
+    D4 -->|DM-Multipath conflict| R8[See DM-Multipath Conflict —\nBlacklist Dell devices in multipath.conf]
+
+    B5 -->|Check PowerPath service| D5{powermt daemon\nconnectable?}
+    D5 -->|No| R9[See PowerPath Not Starting —\nmodprobe emcp and start service]
+    D5 -->|Config lost| R10[See Configuration Not Persisting —\nRun powermt save after every change]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -14,6 +14,36 @@ Part of the [Ansible Troubleshooting](../index.md) reference.
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{SSH connection\nrefused?}
+    S --> B2{Module or\ncollection not found?}
+    S --> B3{Privilege\nescalation failed?}
+    S --> B4{Variable\nundefined?}
+    S --> B5{Playbook not\nidempotent?}
+    B1 -->|Yes| D1{sshd running\non target?}
+    D1 -->|No| R1[SSH Connection Issues\n— start sshd / open port 22]
+    D1 -->|Yes| R2[Inventory and Vault Issues\n— check ansible_host / firewall]
+    B2 -->|Yes| D2{Collection in\nrequirements.yml?}
+    D2 -->|No| R3[Common Module Errors\n— ansible-galaxy collection install]
+    D2 -->|Yes| R4[Common Module Errors\n— rebuild EE image for AWX]
+    B3 -->|Yes| D3{NOPASSWD in\nsudoers?}
+    D3 -->|No| R5[SSH and Become Issues\n— add NOPASSWD or --ask-become-pass]
+    D3 -->|Yes| R6[Fact Gathering Issues\n— verify become_user]
+    B4 -->|Yes| R7[Common Module Errors\n— use -vvv and register debug]
+    B5 -->|Yes| R8[Common Module Errors\n— ansible-playbook --check --diff]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class B1,B2,B3,B4,B5,D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH key or service account with sudo on managed hosts; Ansible control node

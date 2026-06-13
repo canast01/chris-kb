@@ -11,6 +11,31 @@ SQL Server common issues reference.
 *Applies to: Windows Server 2019 / 2022*
 </div>
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{Connection timeout\nor login failed?}
+    S --> D2{AG replica not\nsynchronising?}
+    S --> D3{Blocking or\ndeadlock alert?}
+    S --> D4{tempdb full?}
+    S --> D5{Log file full\nor log shipping lag?}
+    D1 --> R1[Database — Performance Troubleshooting]
+    D2 --> R2[Database — Performance Troubleshooting]
+    D3 --> R3[Database — Performance Troubleshooting]
+    D4 --> R4[Database — Performance Troubleshooting]
+    D5 --> R5[Verify resolution]
+    R1 --> R6[Verify resolution]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

@@ -151,6 +151,45 @@ df -h /var/log/loginsight
 # Workers can be added without downtime: deploy OVA → setup wizard → Join Cluster
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[Agent not sending logs]
+    S --> B2[Ingestion rate dropped]
+    S --> B3[Syslog source not appearing]
+    S --> B4[Alert not firing]
+    S --> B5[Disk usage over 80 percent]
+    S --> B6[Worker node disconnected]
+
+    B1 --> D1{Agent service\nrunning?}
+    D1 -->|No| R1[Restart VMware Log Insight Agent Service\n→ Ingestion Issues]
+    D1 -->|Yes| R2[Check Agent Config · Firewall Port 514 or 9543\n→ Ingestion Issues]
+
+    B2 --> D2{Disk near\nfull?}
+    D2 -->|Yes| R3[Archive and Purge Old Data · Reduce Retention\n→ Disk Usage Over 80 Percent]
+    D2 -->|No| R4[Check Worker Node Load · Add Worker VM\n→ Ingestion Issues]
+
+    B3 --> R5[Check syslog.global.logHost on ESXi · Test logger Command\n→ Ingestion Issues]
+
+    B4 --> D3{Alert\nenabled?}
+    D3 -->|No| R6[Re-enable Alert · Test Notification Channel\n→ Alert and Cluster Issues]
+    D3 -->|Yes| R7[Check Webhook URL · SMTP Connectivity\n→ Alert and Cluster Issues]
+
+    B5 --> R8[Reduce Hot Retention · Archive to NFS · Add Worker Disk\n→ Disk Usage Over 80 Percent]
+
+    B6 --> R9[Check NTP Skew · Verify Port 16520 · Restart loginsight Service\n→ Alert and Cluster Issues]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

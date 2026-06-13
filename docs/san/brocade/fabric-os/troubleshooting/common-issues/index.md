@@ -12,6 +12,37 @@ Part of the [Troubleshooting](../index.md) reference.
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A{ISL down or\nfabric split?}
+    S --> B{Port in faulty\nor disabled state?}
+    S --> C{Host cannot\nsee LUNs?}
+    S --> D{MAPS alert\nfiring?}
+    S --> E{Slow drain /\nhigh latency?}
+    A -->|Yes| A1[Check fabricshow · islshow\nVerify domain ID conflict\nCheck SFP and cable]
+    A1 --> A2[Fabric Segmentation]
+    B -->|Yes| B1[porttest suspect port\nCheck sfpshow Rx/Tx power\nRe-seat SFP and cable]
+    B1 --> B2[Port Flapping / High Error Counts]
+    C -->|Yes| C1{WWPN in nsshow?}
+    C1 -->|No| C2[Check HBA login · portlogshow\nVerify cable and SFP]
+    C1 -->|Yes| C3[zoneshow · cfgshow\nVerify zone and alias WWPN]
+    C3 --> C4[Host Cannot See Storage]
+    D -->|Yes| D1[mapsdb --show\nIdentify rule: CRC · ITW · BB zero]
+    D1 --> D2[MAPS Alert Firing]
+    E -->|Yes| E1[bottleneckmon --show\nporterrshow disc_c3\nIdentify slow-drain port]
+    E1 --> E2[Slow Drain Device Detection]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A2,B2,C4,D2,E2 section
+    class A,B,C,C1,D,E decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

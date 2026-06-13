@@ -66,6 +66,45 @@ sudo journalctl --vacuum-size=1G   # free journal space
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[NSX data source collection failed]
+    S --> B2[Flow data missing in UI]
+    S --> B3[Path analysis shows no path]
+    S --> B4[Physical device not discovered]
+    S --> B5[Metric gap in timeline]
+    S --> B6[LDAP login failure]
+
+    B1 --> D1{API reachable\nand credentials valid?}
+    D1 -->|No| R1[Fix API Connectivity · Update Credentials · Re-accept Cert\n→ Data Source Red]
+    D1 -->|Yes| R2[Check Service Account Lock · Run Test Connection\n→ Data Source Red]
+
+    B2 --> D2{IPFIX configured\non source?}
+    D2 -->|No| R3[Set IPFIX Target to Collector IP · Enable on vDS\n→ No Flows in UI]
+    D2 -->|Yes| R4[Check UDP 2055 Firewall · Review proxy.log\n→ No Flows in UI]
+
+    B3 --> R5[Verify All Source Devices Discovered · Check NSX Data Source\n→ No Flows in UI]
+
+    B4 --> R6[Add Device via SNMP · Verify Credentials · Check Collector Reachability\n→ Data Source Red]
+
+    B5 --> D3{Collector\nonline?}
+    D3 -->|No| R7[Restart Collector Service · Re-register in UI\n→ Collector Offline]
+    D3 -->|Yes| R8[Check Collector Disk Usage · Clear Journal Space\n→ Collector Offline]
+
+    B6 --> R9[Test LDAP Bind DN · Check LDAPS Cert · Use LDAP Browser Tool\n→ LDAP Login Failure]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

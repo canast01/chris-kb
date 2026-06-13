@@ -188,6 +188,37 @@ checkpoint post-change
 show checkpoint summary
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A{Port channel\ndegraded?}
+    S --> B{VSAN mismatch\nor isolation?}
+    S --> C{BB credit\nstarvation errors?}
+    S --> D{Zone conflict\nor host blocked?}
+    S --> E{NP port not\nlogged in?}
+    A -->|Yes| A1[show port-channel summary\nVerify member port states\nCheck SFP and cable]
+    A1 --> A2[ISL / E_Port Issues]
+    B -->|Yes| B1[show vsan membership\nshow trunk\nAlign VSAN list on both ends]
+    B1 --> B2[ISL / E_Port Issues]
+    C -->|Yes| C1[show interface counters\nIdentify slow-drain device\nEnable slow-drain detection]
+    C1 --> C2[Performance Issues]
+    D -->|Yes| D1{Host pWWN in\nflogi database?}
+    D1 -->|No| D2[Check port VSAN · SFP · cable]
+    D1 -->|Yes| D3[show zone active\nVerify both WWPNs zoned\nCommit pending changes]
+    D3 --> D4[Zoning Issues]
+    E -->|Yes| E1[show interface fc\nCheck NPV/NPIV config\nVerify FLOGI on parent port]
+    E1 --> E2[Login Failures]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A2,B2,C2,D4,E2 section
+    class A,B,C,D,D1,E decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -63,6 +63,47 @@ Common Issues reference covering Common Issues, Incident Triage.
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{Host connectivity\nlost?}
+    S --> B2{SRDF link\ndegraded?}
+    S --> B3{TimeFinder clone\nsplit failed?}
+    S --> B4{Performance alert\nresponse time spike?}
+    S --> B5{Masking view\nmismatch?}
+
+    B1 -->|Check FA port state| D1{Director or\nport faulted?}
+    D1 -->|Yes| R1[See Common Issues —\nDirector port I/O errors]
+    D1 -->|No| R2[See Common Issues —\nHost cannot see LUN]
+
+    B2 -->|Check RDF group state| D2{Pair state\nSuspended / R1 Updated?}
+    D2 -->|Yes| R3[See Common Issues —\nSRDF pair in Suspended state]
+    D2 -->|Link down| R4[See Incident Triage —\nSRDF link check]
+
+    B3 -->|Check SnapVX session count| D3{Session count\nat 256 limit?}
+    D3 -->|Yes| R5[See Common Issues —\nSnapVX session count at 256]
+    D3 -->|No| R6[See Incident Triage —\nEscalate to Dell TAC]
+
+    B4 -->|Check FAST VP tier placement| D4{SLO violation\n>2ms latency?}
+    D4 -->|Yes| R7[See Common Issues —\nPerformance SLO violations]
+    D4 -->|Cache WP high| R8[See Incident Triage —\nPerformance path]
+
+    B5 -->|Verify initiator group| D5{WWN in\ninitiator group?}
+    D5 -->|No| R9[See Common Issues —\nHost cannot see LUN after MV creation]
+    D5 -->|Zone missing| R10[See Incident Triage —\nFabric zone check]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -61,6 +61,31 @@ graph TD
     class D,E,F issue
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{Pod stuck\nCrashLoopBackOff?}
+    S --> D2{Node\nNotReady?}
+    S --> D3{Image pull\nerror — registry auth?}
+    S --> D4{PVC stuck\nPending?}
+    S --> D5{Ingress / route\nreturning 503?}
+    D1 --> R1[CrashLoopBackOff]
+    D2 --> R2[Node NotReady]
+    D3 --> R3[ImagePullBackOff]
+    D4 --> R4[Pending Pods]
+    D5 --> R5[Cluster Operator Degraded]
+    R2 --> R6[etcd High Latency]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

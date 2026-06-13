@@ -330,6 +330,38 @@ curl -s -X DELETE -H "Authorization: Bearer $CF_TOKEN" \
 # Admin > General Configuration > Mail Servers > Send Test Email
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{Page not loading\nor macro error?}
+    S --> B2{Search not\nreturning page?}
+    S --> B3{Attachment\ntoo large?}
+    S --> B4{Space permissions\nblocking access?}
+    S --> B5{PDF export\nbroken?}
+    B1 -->|Yes| D1{Macro or\nplugin error?}
+    D1 -->|Plugin| R1[Plugin issues\n— disable suspect plugin via REST API]
+    D1 -->|Macro| R2[Plugin issues\n— check ac:name in page source]
+    B2 -->|Yes| D2{Index stale\nor corrupt?}
+    D2 -->|Yes| R3[Search missing pages\n— trigger full reindex from Admin Content Indexing]
+    D2 -->|No| R4[Search missing pages\n— check space permissions for search user]
+    B3 -->|Yes| D3{Limit set in\nConfluence config?}
+    D3 -->|Yes| R5[Attachment issues\n— increase limit in Admin Further Configuration]
+    D3 -->|No| R6[Attachment issues\n— fix nginx client_max_body_size setting]
+    B4 -->|Yes| D4{LDAP sync\nor SAML issue?}
+    D4 -->|LDAP| R7[Auth and LDAP\n— trigger manual LDAP sync in User Directories]
+    D4 -->|SAML| R8[Auth and LDAP\n— check IdP cert expiry in SAML config]
+    B5 -->|Yes| R9[Plugin issues\n— check PDF export plugin version compatibility]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

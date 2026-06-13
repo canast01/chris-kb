@@ -16,6 +16,31 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Windows Server issues.
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{Blue screen\nor BSOD?}
+    S --> D2{RDP not\nconnecting?}
+    S --> D3{Service fails\nto start?}
+    S --> D4{Critical Event ID\nin System log?}
+    S --> D5{Disk I/O high\nor storage fault?}
+    D1 --> R1[System Crash / Reboot Analysis]
+    D2 --> R2[RDP / Remote Access Issues]
+    D3 --> R3[Service Not Starting]
+    D4 --> R4[High Memory]
+    D5 --> R5[Disk Full or High Latency]
+    R2 --> R6[Network Connectivity Issues]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

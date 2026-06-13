@@ -67,6 +67,43 @@ tags:
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[Protection group shows error]
+    S --> B2[Recovery plan stuck Running]
+    S --> B3[Test failover VMs fail to power on]
+    S --> B4[Site pair shows Error]
+    S --> B5[Failback fails]
+    S --> B6[RPO breach or replication lag]
+
+    B1 --> D1{RPO lag\nor snapshot issue?}
+    D1 -->|RPO lag| R1[Check Bandwidth · ESXi CPU · Storage I/O\n→ Protection Group Shows Error]
+    D1 -->|Snapshot| R2[Re-discover Devices via Array Pairs\n→ Protection Group Shows Error]
+
+    B2 --> D2{Manual step\nor VM power-on?}
+    D2 -->|Manual step| R3[Approve or Skip Pending Step\n→ Recovery Plan Stuck in Running]
+    D2 -->|VM power-on| R4[Check Recovery Site Resources · Script Exit Code\n→ Recovery Plan Stuck in Running]
+
+    B3 --> R5[Check Network Mapping · Placeholder VM\n→ Test Failover: VMs Fail to Power On]
+
+    B4 --> R6[Renew Cert · Re-enter Credentials · Check Port 9086\n→ Site Pair Shows Error]
+
+    B5 --> R7[Run Reprotect · Verify Protected Site Operational\n→ Failback Fails]
+
+    B6 --> R8[Check WAN Bandwidth · vSR Appliance · Disk Space\n→ Protection Group Shows Error]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class D1,D2 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

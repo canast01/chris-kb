@@ -75,6 +75,45 @@ tags:
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[Supervisor cluster not ready]
+    S --> B2[TKG cluster create fails]
+    S --> B3[Pod stuck in Pending]
+    S --> B4[ImagePullBackOff error]
+    S --> B5[Service LoadBalancer pending]
+    S --> B6[Namespace provisioning stuck]
+
+    B1 --> D1{NSX or AVI\nVIP assigned?}
+    D1 -->|No| R1[Check LB VIP · Content Library Sync\n→ TKG Cluster Create Fails]
+    D1 -->|Yes| R2[Check Control Plane VM NTP · vCenter Creds\n→ TKG Cluster Create Fails]
+
+    B2 --> D2{Image pull\nor resource quota?}
+    D2 -->|Image pull| R3[Check Harbor Cert · Pull Secret Credentials\n→ ImagePullBackOff]
+    D2 -->|Resource quota| R4[Check Namespace CPU/Memory Limit\n→ TKG Cluster Create Fails]
+
+    B3 --> D3{Insufficient resources\nor PVC unbound?}
+    D3 -->|Resources| R5[Scale Nodes · kubectl top nodes\n→ Pod Stuck in Pending]
+    D3 -->|PVC| R6[Check CSI Driver Pods · Storage Provisioner\n→ Pod Stuck in Pending]
+
+    B4 --> R7[Trust Harbor CA · Refresh imagePullSecret\n→ ImagePullBackOff]
+
+    B5 --> R8[Check NSX-T IP Pool Capacity · AVI SE Group\n→ Service Type LoadBalancer Pending]
+
+    B6 --> R9[Check vCenter Creds · Namespace Resource Usage\n→ TKG Cluster Create Fails]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

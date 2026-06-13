@@ -63,6 +63,47 @@ Common Issues reference covering Quick Reference, Incident Triage.
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{Node down\nor degraded?}
+    S --> B2{SMB share\ninaccessible?}
+    S --> B3{NFS export\npermission denied?}
+    S --> B4{Quota\nalert?}
+    S --> B5{Replication\npolicy failed?}
+
+    B1 -->|Run isi status| D1{Node in\nSMARTFAIL state?}
+    D1 -->|Yes| R1[See Incident Triage —\nSMARTFAIL: do not remove manually]
+    D1 -->|No| R2[See Quick Reference —\nHigh per-node CPU or latency spike]
+
+    B2 -->|Check AD connectivity| D2{AD provider\njoined?}
+    D2 -->|No| R3[See Quick Reference —\nSMB access denied despite correct perms]
+    D2 -->|Time skew| R4[See Quick Reference —\nSMB access denied: time skew issue]
+
+    B3 -->|Check export access list| D3{Client IP in\nrwHosts or roHosts?}
+    D3 -->|No| R5[See Quick Reference —\nNFS stale file handle or permission denied]
+    D3 -->|Yes| R6[See Incident Triage —\nCheck isi auth and share ACL]
+
+    B4 -->|Check quota on directory| D4{Hard quota\nexceeded?}
+    D4 -->|Yes| R7[See Quick Reference —\nWrite failure on quota directory]
+    D4 -->|No| R8[See Quick Reference —\nCluster capacity unexpectedly full]
+
+    B5 -->|Check SyncIQ policy| D5{Network or\nsnapshot conflict?}
+    D5 -->|Network| R9[See Quick Reference —\nSyncIQ policy stuck in running or failed]
+    D5 -->|Target full| R10[See Incident Triage —\nCheck target cluster quota and capacity]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

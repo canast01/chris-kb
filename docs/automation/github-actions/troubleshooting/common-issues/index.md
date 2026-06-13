@@ -12,6 +12,38 @@ Part of the [GitHub Actions Troubleshooting](../index.md) reference.
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{Workflow not\ntriggering?}
+    S --> B2{Secret not\navailable in step?}
+    S --> B3{Artifact upload\nfailed?}
+    S --> B4{Runner offline\nor busy?}
+    S --> B5{Permission denied\non GITHUB_TOKEN?}
+    B1 -->|Yes| D1{on.branches filter\nmatches branch?}
+    D1 -->|No| R1[Common Failures\n— adjust on.branches or on.paths filter]
+    D1 -->|Yes| R2[Common Failures\n— merge workflow file to default branch]
+    B2 -->|Yes| D2{Secret defined at\ncorrect scope?}
+    D2 -->|No| R3[Common Failures\n— check repo vs env vs org secret scope]
+    D2 -->|Yes| R4[Common Failures\n— verify step can access secrets context]
+    B3 -->|Yes| D3{Working directory\ncorrect?}
+    D3 -->|No| R5[Common Failures\n— add working-directory: or cd in step]
+    D3 -->|Yes| R6[Common Failures\n— check artifact path glob matches files]
+    B4 -->|Yes| D4{Runner labels\nmatch runs-on?}
+    D4 -->|No| R7[Common Failures\n— fix runs-on label or register runner]
+    D4 -->|Yes| R8[Common Failures\n— restart runner service on host]
+    B5 -->|Yes| R9[Common Failures\n— add permissions: block with required scopes]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

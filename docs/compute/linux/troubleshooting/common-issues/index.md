@@ -16,6 +16,31 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Linux server issues.
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{SSH refused\nor login fails?}
+    S --> D2{Disk full /\nENOSPC error?}
+    S --> D3{Service will\nnot start?}
+    S --> D4{OOM killer\nkilled process?}
+    S --> D5{Network\nunreachable?}
+    D1 --> R1[SSH Access Denied]
+    D2 --> R2[Disk Full — Emergency]
+    D3 --> R3[Service Not Starting]
+    D4 --> R4[High Disk I/O or Latency]
+    D5 --> R5[Network Connectivity Issues]
+    R1 --> R6[System Crash / Reboot Analysis]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

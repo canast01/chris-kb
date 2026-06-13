@@ -63,6 +63,47 @@ Dell VPLEX common issues — path and virtual volume failures, backend LUN error
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{Director\nfault?}
+    S --> B2{Distributed volume\ninaccessible?}
+    S --> B3{Witness\nunreachable - Metro?}
+    S --> B4{Cache invalidation\nerror?}
+    S --> B5{Cluster communication\nlost?}
+
+    B1 -->|Check director hardware| D1{Director in\nmajor-failure state?}
+    D1 -->|Yes| R1[See Issue Reference —\nDirector shows major-failure]
+    D1 -->|Port fault| R2[See Issue Reference —\nHost Loses Access to All VPLEX Volumes]
+
+    B2 -->|Check distributed device| D2{Device out\nof sync?}
+    D2 -->|Yes| R3[See Issue Reference —\nDistributed Device Out-of-Sync]
+    D2 -->|Storage view| R4[See Issue Reference —\nSingle Host Loses Access to Volumes]
+
+    B3 -->|Check Witness VM and network| D3{ICL also\ndown?}
+    D3 -->|Yes| R5[See Issue Reference —\nI/O Suspended on Consistency Group]
+    D3 -->|Witness only| R6[See Issue Reference —\nWitness Not Reachable from One Cluster]
+
+    B4 -->|Run health-check full| D4{health-check\nreports warnings?}
+    D4 -->|Yes| R7[See Issue Reference —\nhealth-check reports warnings]
+    D4 -->|RP CLI hang| R8[See Issue Reference —\nRecoverPoint CLI Commands Hang]
+
+    B5 -->|Check ICL between clusters| D5{ICL link\ndown?}
+    D5 -->|Yes| R9[See Incident Triage —\nICL down: restore network]
+    D5 -->|No| R10[See Common Issues —\nHigh write latency on Metro volumes]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

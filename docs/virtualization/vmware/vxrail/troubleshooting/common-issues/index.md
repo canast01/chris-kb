@@ -46,6 +46,45 @@ Concrete troubleshooting steps for the most frequent VxRail operational problems
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[VxRail plugin unavailable in vCenter]
+    S --> B2[LCM pre-check failure]
+    S --> B3[LCM upgrade stuck or failed]
+    S --> B4[vSAN health check failure]
+    S --> B5[Node offline in VxRail plugin]
+    S --> B6[Hardware alarm on node]
+
+    B1 --> D1{Mystic service\nrunning?}
+    D1 -->|No| R1[Restart Mystic Service\n→ VxRail Plugin Unavailable in vCenter]
+    D1 -->|Yes| R2[Re-register Plugin via API\n→ VxRail Plugin Unavailable in vCenter]
+
+    B2 --> R3[Resolve Failing Check\n→ LCM Pre-Check Failures]
+
+    B3 --> D2{Resume\noption available?}
+    D2 -->|Yes| R4[Fix Root Cause · Resume LCM\n→ LCM Upgrade Stuck or Failed]
+    D2 -->|No| R5[Open Dell Support Case\n→ LCM Upgrade Stuck or Failed]
+
+    B4 --> R6[Match Health Check to Resolution Table\n→ vSAN Health Check Failures]
+
+    B5 --> D3{iDRAC\nreachable?}
+    D3 -->|No| R7[Check OOB Network · Power State\n→ Node Offline in VxRail Plugin]
+    D3 -->|Yes| R8[Check ESXi mgmt · VxRail API\n→ Node Offline in VxRail Plugin]
+
+    B6 --> R9[Read iDRAC SEL · Check vCenter HW View\n→ Node Hardware Alarm]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

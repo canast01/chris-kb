@@ -65,6 +65,38 @@ Part of the [SnapMirror Troubleshooting](../index.md) reference.
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Relationship in broken-off state]
+    S --> B[Lag time exceeding RPO]
+    S --> C[Transfer stuck in progress]
+    S --> D[Destination volume full]
+    S --> E[SnapMirror Sync out of sync]
+    A --> A1{Was a failover or DR test run?}
+    A1 -->|Yes| A2[Resync after confirming data direction — see Common Issues Reference]
+    A1 -->|No| A3[Check for manual quiesce and break commands in audit log]
+    B --> B1{Network or schedule issue?}
+    B1 -->|Network| B2[Check intercluster LIF and WAN bandwidth — see Common Issues Reference]
+    B1 -->|Schedule| B3[Increase transfer frequency or adjust throttle]
+    C --> C1{Source snapshot still present?}
+    C1 -->|No| C2[Abort and restart transfer — see Common Issues Reference]
+    C1 -->|Yes| C3[Check network interruption and resume transfer]
+    D --> D1{Retention policy correct?}
+    D1 -->|No| D2[Update SnapVault retention and delete excess snapshots]
+    D1 -->|Yes| D3[Expand destination volume size — see Common Issues Reference]
+    E --> E1[Check intercluster latency; relationship auto-resyncs on restore — see Common Issues Reference]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
+    class A1,B1,C1,D1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

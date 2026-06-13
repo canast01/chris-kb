@@ -10,6 +10,36 @@ tags:
 Common Issues reference covering Python Error Triage Flow, API and Network Timeouts, Common Errors Reference.
 </div>
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{ModuleNotFound\nError?}
+    S --> B2{SSL certificate\nverify failed?}
+    S --> B3{Connection\ntimeout?}
+    S --> B4{Permission\ndenied?}
+    S --> B5{JSON decode\nerror?}
+    B1 -->|Yes| D1{Correct venv\nactivated?}
+    D1 -->|No| R1[Python Error Triage Flow\n— source venv/bin/activate]
+    D1 -->|Yes| R2[Python Error Triage Flow\n— pip install package in active venv]
+    B2 -->|Yes| D2{Corporate\nproxy in use?}
+    D2 -->|Yes| R3[Common Errors Reference\n— set REQUESTS_CA_BUNDLE to corp CA]
+    D2 -->|No| R4[Common Errors Reference\n— pass verify= with cert bundle path]
+    B3 -->|Yes| D3{API reachable\nfrom host?}
+    D3 -->|No| R5[API and Network Timeouts\n— fix firewall or proxy settings]
+    D3 -->|Yes| R6[API and Network Timeouts\n— set timeout= in requests.get call]
+    B4 -->|Yes| R7[Common Errors Reference\n— chmod or chown output directory]
+    B5 -->|Yes| R8[Common Errors Reference\n— print resp.text before resp.json]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class B1,B2,B3,B4,B5,D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

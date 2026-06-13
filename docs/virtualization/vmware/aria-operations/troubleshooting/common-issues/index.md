@@ -133,6 +133,45 @@ nodetool compactionstats
 tail -200 /data/vcops/log/analytics.log | grep -i "slow\|timeout\|duration"
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[Adapter not collecting data]
+    S --> B2[Dashboard blank or no data]
+    S --> B3[Alert storm]
+    S --> B4[Capacity calculation wrong]
+    S --> B5[vSAN management pack missing metrics]
+    S --> B6[Node offline or cluster issue]
+
+    B1 --> D1{Credentials\nor connectivity?}
+    D1 -->|Credentials| R1[Re-test Adapter Connection · Unlock Service Account\n→ Adapter Disconnected]
+    D1 -->|Connectivity| R2[Verify Source Reachability · Check Collector Log\n→ Adapter Disconnected]
+
+    B2 --> D2{Adapter status\ngreen?}
+    D2 -->|No| R3[Resolve Adapter Issue First\n→ Adapter Disconnected]
+    D2 -->|Yes| R4[Check Widget Scope · Widen Time Range\n→ No Data in Dashboards]
+
+    B3 --> R5[Raise Alert Threshold · Add Wait Cycles · Suppress During Maintenance\n→ Alert Storm]
+
+    B4 --> R6[Force Capacity Recalculation via API\n→ Capacity Calculation Wrong]
+
+    B5 --> R7[Verify vSAN Management Pack Installed · Check Adapter Log\n→ vSAN Management Pack Missing Metrics]
+
+    B6 --> D3{Node VM\npowered on?}
+    D3 -->|No| R8[Power On Node · Check Inter-node Network\n→ Node Offline / Cluster Issue]
+    D3 -->|Yes| R9[Restart vmware-vcops Service · Check VAMI Cluster Status\n→ Node Offline / Cluster Issue]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9 section
+    class D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

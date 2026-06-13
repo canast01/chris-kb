@@ -60,6 +60,38 @@ Common Eyeglass issues include SyncIQ policies not being detected, low DR readin
 | RPO breach alerts | SyncIQ replication lag exceeding threshold | Check SyncIQ job status on source cluster (`isi sync jobs list`); check network bandwidth between sites |
 | Eyeglass appliance unreachable | VM or network issue | Verify VM is powered on in vCenter; check management network connectivity; check Eyeglass service status via console |
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Configuration replication lag]
+    S --> B[SVM DR failover test failed]
+    S --> C[Audit event not captured]
+    S --> D[Eyeglass appliance unreachable]
+    S --> E[License expiry warning]
+    A --> A1{API connectivity OK?}
+    A1 -->|No| A2[Re-register cluster credentials in Eyeglass — see Common Issues Reference]
+    A1 -->|Yes| A3[Check SyncIQ job status and network bandwidth between sites]
+    B --> B1{Pre-check passed?}
+    B1 -->|No| B2[Fix pre-check error; re-run DR runbook — see Common Issues Reference]
+    B1 -->|Yes| B3[Review Eyeglass task log and OneFS audit log for step-level error]
+    C --> C1{RAPA service running?}
+    C1 -->|No| C2[Restart RAPA service on Eyeglass appliance]
+    C1 -->|Yes| C3[Verify audit log connector configuration and OneFS audit settings]
+    D --> D1{VM powered on?}
+    D1 -->|No| D2[Power on Eyeglass VM in vCenter — see Common Issues Reference]
+    D1 -->|Yes| D3[Check management network and Eyeglass service status via console]
+    E --> E1[Log in to Superna portal and renew license; apply key in Eyeglass UI]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
+    class A1,B1,C1,D1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -69,6 +69,31 @@ See also: [Troubleshooting](../index.md) for full diagnostic procedures.
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{VM unreachable —\nNSG rule blocking?}
+    S --> D2{Storage account\naccess denied?}
+    S --> D3{AKS node\nNotReady?}
+    S --> D4{ExpressRoute\nBGP down?}
+    S --> D5{ARM deployment\nfailed — quota or policy?}
+    D1 --> R1[VM Connectivity Issues]
+    D2 --> R2[Azure Storage Access Denied]
+    D3 --> R3[AKS Pod Not Starting]
+    D4 --> R4[NSG Troubleshooting]
+    D5 --> R5[App Service 502/503]
+    R1 --> R6[Azure AD Authentication Errors]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -65,6 +65,31 @@ graph TD
     class L support
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{EVS cluster deployment\nfailed?}
+    S --> D2{ESXi host disconnected\nor FAILED state?}
+    S --> D3{vSAN health\nred / degraded?}
+    S --> D4{NSX Manager\nunreachable?}
+    S --> D5{VPC connectivity\nto on-prem broken?}
+    D1 --> R1[AWS EVS API Errors]
+    D2 --> R2[Host Stuck or FAILED State]
+    D3 --> R3[vSAN Degraded Health]
+    D4 --> R4[NSX-T Routing Failure]
+    D5 --> R5[HCX Service Mesh Down]
+    R2 --> R6[vSAN Degraded Health]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

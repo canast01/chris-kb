@@ -16,6 +16,47 @@ SRDF/S issues typically manifest as pair state transitions away from `Synchroniz
 
 Always collect `symrdf query -g <group> -v` and array event logs before engaging Dell support.
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{SRDF/S pair\nsuspended?}
+    S --> B2{Write I/O stall\non source?}
+    S --> B3{Link bandwidth\nsaturated?}
+    S --> B4{Failover test\nfailure?}
+    S --> B5{Pair in\nInvalid state?}
+
+    B1 -->|Check pair state| D1{State Write\nDisabled or Suspended?}
+    D1 -->|Suspended| R1[See Link-Down Recovery —\nCheck physical link then resume]
+    D1 -->|Partitioned| R2[See Link-Down Recovery —\nResume pair after link restored]
+
+    B2 -->|Check RTT to DR site| D2{RTT above\n5ms?}
+    D2 -->|Yes| R3[See Link-Down Recovery —\nEscalate to network team]
+    D2 -->|Write storm| R4[See Common Issues —\nPair in Consistent state: monitor]
+
+    B3 -->|Check FCIP or dark fibre| D3{Link physically\ndown?}
+    D3 -->|Yes| R5[See ISL / FCIP Link Failure —\nRestore link then resync pair]
+    D3 -->|Bandwidth full| R6[See Root Causes —\nFCIP MTU mismatch or GRE overhead]
+
+    B4 -->|Check pair state before test| D4{Pair in\nSplit state?}
+    D4 -->|Unexpected split| R7[See Pair in Split State —\nConfirm authoritative side]
+    D4 -->|Maintenance trigger| R8[See Unintended Failover —\nSuspend before maintenance]
+
+    B5 -->|Check event log for cause| D5{R1 or R2\nauthoritative?}
+    D5 -->|R1 authoritative| R9[See Invalid State —\nResync R1 to R2]
+    D5 -->|R2 authoritative| R10[See Invalid State —\nFailback from R2: engage Dell Support]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

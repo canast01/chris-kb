@@ -63,6 +63,39 @@ Common Issues reference covering Certificate Issue Triage Flow, Common checks, I
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A{Certificate expired\nor browser error?}
+    S --> B{Certificate not\ntrusted / chain error?}
+    S --> C{Auto-renewal\nfailed?}
+    S --> D{Wrong SAN or CN\non certificate?}
+    S --> E{Private key\nmismatch?}
+    A -->|Yes| A1{Expired internal\nor external?}
+    A1 -->|External| A2[P1 incident: 1-hour SLA\nEmergency renewal via CA]
+    A1 -->|Internal| A3[certutil -verify\nRenew via ADCS or ACME]
+    A3 --> A4[Expired Certificate Response]
+    B -->|Yes| B1[openssl s_client check chain\nAdd intermediate cert to TLS config\nDistribute root CA via GPO]
+    B1 --> B2[Certificate Issue Triage Flow]
+    C -->|Yes| C1{ACME or\nADCS renewal?}
+    C1 -->|ACME| C2[Check DNS/HTTP challenge\nVerify ACME client logs\nConfirm port 80/443 reachable]
+    C1 -->|ADCS| C3[certutil -pulse\nCheck CA service and CRL\nVerify template permissions]
+    C3 --> C4[Common ADCS Issues]
+    D -->|Yes| D1[openssl x509 -text -in cert.pem\nCompare SAN list to hostname\nRequest new cert with correct SANs]
+    D1 --> D2[Certificate Issue Triage Flow]
+    E -->|Yes| E1[openssl verify cert against key\nIf mismatch: re-issue cert\nor restore correct private key]
+    E1 --> E2[Expired Certificate Response]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A4,B2,C4,D2,E2 section
+    class A,A1,B,C,C1,D,E decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

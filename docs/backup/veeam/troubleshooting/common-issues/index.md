@@ -14,6 +14,38 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 
  The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Backup job failed — cannot connect to guest]
+    S --> B[Repository full]
+    S --> C[Restore fails — no valid restore point]
+    S --> D[Tape job error]
+    S --> E[Veeam B&R service crashed]
+    A --> A1{Proxy reachable?}
+    A1 -->|No| A2[Check proxy TCP 2500-3300 and VMware Tools — see Triage Decision Tree]
+    A1 -->|Yes| A3[Check VSS writer state and quiesce settings on guest]
+    B --> B1{SOBR offload configured?}
+    B1 -->|Yes| B2[Trigger capacity tier offload manually — see Repository Out of Space]
+    B1 -->|No| B3[Reduce retention or delete orphaned backup files]
+    C --> C1{Restore point visible in console?}
+    C1 -->|No| C2[Check retention policy and catalog — restore point may be expired]
+    C1 -->|Yes| C3[Check vPower NFS service and mount server access — see Instant VM Recovery]
+    D --> D1{Tape library online?}
+    D1 -->|No| D2[Check media manager and tape library connectivity]
+    D1 -->|Yes| D3[Check media expiry and tape slot inventory]
+    E --> E1[Restart VBR service and check Windows Event Log — see VBR Service Crash / Instability]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E1 section
+    class A1,B1,C1,D1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Backup admin role on backup server; target system credentials

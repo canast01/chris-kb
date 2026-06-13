@@ -63,6 +63,47 @@ Common Issues reference covering Common Issues Reference, Incident Triage Sequen
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?])
+    S --> B1{SP fault\nor offline?}
+    S --> B2{LUN\ninaccessible?}
+    S --> B3{Snapshot schedule\nfailed?}
+    S --> B4{NAS server\ndown?}
+    S --> B5{Pool space\nalarm?}
+
+    B1 -->|Check SP health| D1{Both SPs\nonline?}
+    D1 -->|One offline| R1[See Storage Processors —\nOne SP offline: open Dell case]
+    D1 -->|Both offline| R2[See Storage Processors —\nBoth SPs offline: P1 case]
+
+    B2 -->|Check LUN mapping| D2{LUN mapped\nto host?}
+    D2 -->|No| R3[See Block Storage —\nLUN not visible to FC host]
+    D2 -->|Protocol issue| R4[See Block Storage —\nLUN not visible to iSCSI host]
+
+    B3 -->|Check pool utilisation| D3{Pool above\n90% full?}
+    D3 -->|Yes| R5[See Pool and Capacity —\nPool capacity alert at 80%]
+    D3 -->|Protection policy| R6[See Replication —\nReplication session in Error state]
+
+    B4 -->|Check NAS server SP ownership| D4{NAS server\nfailed over?}
+    D4 -->|Yes| R7[See NAS / File Storage —\nNAS server not responding after SP failover]
+    D4 -->|AD issue| R8[See NAS / File Storage —\nSMB share inaccessible]
+
+    B5 -->|Check pool subscription| D5{Pool degraded\nor drive failed?}
+    D5 -->|Drive failed| R9[See Pool and Capacity —\nPool health Degraded]
+    D5 -->|Snapshot growth| R10[See Pool and Capacity —\nPool over-subscribed warning]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8,R9,R10 section
+    class B1,B2,B3,B4,B5,D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

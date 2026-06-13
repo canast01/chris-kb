@@ -46,6 +46,43 @@ Solutions for the most frequent PowerCLI problems: certificate errors, connectio
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[Connect-VIServer fails with SSL error]
+    S --> B2[Module not found]
+    S --> B3[Connection refused or timeout]
+    S --> B4[Session expired or invalid]
+    S --> B5[Cmdlet parameter not found]
+    S --> B6[Multiple module version conflict]
+
+    B1 --> D1{Lab or\nproduction?}
+    D1 -->|Lab| R1[Set InvalidCertificateAction Ignore\n→ Certificate Error on Connect]
+    D1 -->|Production| R2[Import vCenter CA to OS Trust Store\n→ Certificate Error on Connect]
+
+    B2 --> R3[Install-Module VMware.PowerCLI · Check PSModulePath\n→ Module Not Found]
+
+    B3 --> D2{Network\nreachable?}
+    D2 -->|No| R4[Test-NetConnection Port 443 · Check DNS\n→ Connection Refused / Timeout]
+    D2 -->|Yes| R5[Check Existing Sessions · Disconnect and Retry\n→ Connection Refused / Timeout]
+
+    B4 --> R6[Check IsConnected · Reconnect · Extend SSO Token Lifetime\n→ Session Expired / Invalid Session]
+
+    B5 --> R7[Check PowerCLI vs vCenter API Compatibility\n→ Cmdlet Parameter Not Found]
+
+    B6 --> R8[Uninstall Old Module Versions · Keep Latest Only\n→ Multiple Module Versions Conflict]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class D1,D2 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

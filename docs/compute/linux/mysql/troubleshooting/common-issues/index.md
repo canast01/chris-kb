@@ -11,6 +11,31 @@ MySQL / MariaDB common issues reference.
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> D1{Connection refused\nor max_connections hit?}
+    S --> D2{Replication broken\nor slave lag?}
+    S --> D3{Table locked /\nlong-running query?}
+    S --> D4{InnoDB crash\nor recovery loop?}
+    S --> D5{Disk full — writes\nstopping?}
+    D1 --> R1[Database — Performance Troubleshooting]
+    D2 --> R2[Database — Performance Troubleshooting]
+    D3 --> R3[Database — Performance Troubleshooting]
+    D4 --> R4[Database — Performance Troubleshooting]
+    D5 --> R5[Verify resolution]
+    R1 --> R6[Verify resolution]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6 section
+    class D1,D2,D3,D4,D5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

@@ -63,6 +63,40 @@ Common Issues reference covering Incident Triage Decision Tree, Quick Reference,
 ```
 
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Volume offline or write errors]
+    S --> B[NFS/CIFS share inaccessible]
+    S --> C[Aggregate capacity critical]
+    S --> D[SnapMirror lag / broken relationship]
+    S --> E[Node takeover not triggering]
+    A --> A1{Volume state online?}
+    A1 -->|No| A2[Bring online — see Volume Full / Write Errors]
+    A1 -->|Yes| A3[Check autogrow and snapshot reserve]
+    B --> B1{Which protocol?}
+    B1 -->|NFS| B2[Check LIF and export policy — see NFS Mount Hangs]
+    B1 -->|CIFS/SMB| B3[Check AD join and CIFS server — see SMB/CIFS Share Inaccessible]
+    C --> C1{Aggregate above 90%?}
+    C1 -->|Yes| C2[Move volumes or add disks — see Aggregate Capacity Critical]
+    C1 -->|No| C3[Check volume snapshot reserves]
+    D --> D1{Relationship healthy?}
+    D1 -->|No| D2[Resume or resync — see SnapMirror Lag / Unhealthy Relationship]
+    D1 -->|Yes| D3[Check throttle and intercluster LIF]
+    E --> E1{Failover enabled?}
+    E1 -->|No| E2[Re-enable failover — see Storage Failover Not Triggering]
+    E1 -->|Yes| E3[Check cluster interconnect and heartbeat]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A,B,C,D,E,A2,A3,B2,B3,C2,C3,D2,D3,E2,E3 section
+    class A1,B1,C1,D1,E1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

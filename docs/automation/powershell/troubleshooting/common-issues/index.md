@@ -12,6 +12,36 @@ Part of the [PowerShell Troubleshooting](../index.md) reference.
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1{Execution policy\nblocked?}
+    S --> B2{Module not\ninstalled or found?}
+    S --> B3{Credential prompt\nloop?}
+    S --> B4{PSRemoting\nconnection refused?}
+    S --> B5{RemoteSigned or\nRestricted policy error?}
+    B1 -->|Yes| D1{Scope of\npolicy block?}
+    D1 -->|CurrentUser| R1[Common Error Reference\n— Set-ExecutionPolicy RemoteSigned -Scope CurrentUser]
+    D1 -->|Machine| R2[Common Error Reference\n— Set-ExecutionPolicy -Scope Process for bypass]
+    B2 -->|Yes| D2{PSModulePath\ncorrect?}
+    D2 -->|No| R3[Common Error Reference\n— add module dir to PSModulePath]
+    D2 -->|Yes| R4[Common Error Reference\n— Install-Module -Force -AllowClobber]
+    B3 -->|Yes| D3{Saved credential\nstale?}
+    D3 -->|Yes| R5[Debugging Scripts\n— Get-Credential again or Import-Clixml]
+    D3 -->|No| R6[Debugging Scripts\n— inspect $Error[0] for root cause]
+    B4 -->|Yes| R7[Common Error Reference\n— Enable-PSRemoting -Force on target]
+    B5 -->|Yes| R8[Common Error Reference\n— Set-ExecutionPolicy RemoteSigned]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class B1,B2,B3,B4,B5,D1,D2,D3 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

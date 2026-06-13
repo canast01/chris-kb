@@ -66,6 +66,43 @@ If the upgrade is truly stuck (no log activity for 30+ minutes):
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> B1[Product upgrade failed mid-way]
+    S --> B2[Certificate sync error]
+    S --> B3[Environment health check red]
+    S --> B4[Locker credential or cert import fails]
+    S --> B5[NFS mount lost during operation]
+    S --> B6[vIDM authentication failure]
+
+    B1 --> D1{Log activity\nin last 30 min?}
+    D1 -->|No| R1[Open Broadcom SR with LCM Log Bundle\n→ Product Shows Red Health in LCM Dashboard]
+    D1 -->|Yes| R2[Review installer.log · Use Retry if Offered\n→ Product Shows Red Health in LCM Dashboard]
+
+    B2 --> D2{Cert SAN matches\nproduct FQDN?}
+    D2 -->|No| R3[Re-import Correct Cert · Run Replace Cert Action in LCM\n→ Locker Certificate Import Fails]
+    D2 -->|Yes| R4[Check Product Cert Trust Chain · Verify openssl verify\n→ Locker Certificate Import Fails]
+
+    B3 --> R5[Click Red Card · Check Service Status · Run Health Check\n→ Product Shows Red Health in LCM Dashboard]
+
+    B4 --> R6[Verify Key Matches Cert · Confirm No Passphrase on Key\n→ Locker Certificate Import Fails]
+
+    B5 --> R7[Remount NFS · Verify Write Access · Remap Binary Mapping\n→ NFS Mount Lost During Operation]
+
+    B6 --> R8[Re-register vIDM in LCM Settings · Update Credentials\n→ VIDM Authentication Failure After Password Change]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class R1,R2,R3,R4,R5,R6,R7,R8 section
+    class D1,D2 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

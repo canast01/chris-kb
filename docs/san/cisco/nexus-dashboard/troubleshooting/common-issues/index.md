@@ -132,6 +132,37 @@ acs system ntp show
 sudo chronyc makestep
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A{Service pod\nCrashLoopBackOff?}
+    S --> B{Site fabric\nnot connected?}
+    S --> C{App health\ndegraded?}
+    S --> D{Certificate expired\non ND node?}
+    S --> E{BGP session not\nshowing in ND?}
+    A -->|Yes| A1[kubectl describe pod\nacs logs for app\nCheck node resource limits]
+    A1 --> A2[Site and App Issues]
+    B -->|Yes| B1{acs health\nall nodes Ready?}
+    B1 -->|No| B2[Check node NIC · NTP drift\nInvestigate quorum loss]
+    B1 -->|Yes| B3[Verify site credentials\nRe-register site in ND]
+    B3 --> B4[Site and App Issues]
+    C -->|Yes| C1[acs apps status\nkubectl get pods all-namespaces\nFree disk if Elasticsearch full]
+    C1 --> C2[Cluster Problems]
+    D -->|Yes| D1[Renew ND TLS certificate\nVerify NTP synced\nacs system ntp show]
+    D1 --> D2[Cluster Problems]
+    E -->|Yes| E1[Confirm site fabric connected\nCheck ND app version compatibility\nRestart NDFC app: acs restart]
+    E1 --> E2[Site and App Issues]
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A2,B4,C2,D2,E2 section
+    class A,B,B1,C,D,E decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)
