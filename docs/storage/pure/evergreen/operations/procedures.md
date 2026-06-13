@@ -459,3 +459,12 @@ purearray upgrade --version <target>
 ```
 
 Confirm the upgrade readiness check passes without blockers before setting the maintenance window: `purearray upgrade --check`.
+
+---
+
+## Verify
+
+- `purearray upgrade --check` returns no blocking issues before running the upgrade
+- After upgrade: `purearray get --version` returns the expected target version
+- Array health: `purehw list` and `puredrive list` show no failed components
+- Performance metrics are within baseline 30 minutes after the upgrade completes

@@ -232,6 +232,20 @@ Key metrics to check during performance incidents:
 
 ---
 
+
+
+---
+
+## Verify
+
+- Root cause is identified and documented — log entry or NCC check maps to the symptom
+- Support bundle is collected and available for upload if escalation is needed
+- Log timestamps bracket the incident window; no unexplained errors remain
+- If a pattern is found (recurring Cassandra ring issue, repeated Stargate errors), open a proactive case
+
+
+---
+
 ## See also
 
 - [Nutanix — Common Issues](common-issues/)

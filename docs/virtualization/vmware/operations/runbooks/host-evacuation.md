@@ -101,3 +101,12 @@ ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, 
 - Confirm vSAN object health is green if vSAN is used
 - Confirm VMs are running on healthy hosts
 - Update the change or incident ticket with findings
+
+---
+
+## Verify
+
+- Target host shows 0 running VMs in vCenter inventory
+- All evacuated VMs are in Powered On state on remaining cluster hosts
+- vSAN health is green — no component degradation from the host removal
+- HA and DRS are enabled on the cluster

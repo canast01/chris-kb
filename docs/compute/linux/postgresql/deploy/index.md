@@ -87,3 +87,12 @@ GRANT ALL ON DATABASE app_prod TO appuser;
 psql -U postgres -c "SELECT version(); SHOW shared_buffers;"
 psql -U appuser -h 127.0.0.1 -d app_prod -c "SELECT 1 AS alive;"
 ```
+
+---
+
+## Verify
+
+- `systemctl status postgresql` shows `active (running)`
+- `psql -U postgres -c "SELECT version();"` returns the expected PostgreSQL version
+- Application user can connect: `psql -U appuser -h 127.0.0.1 -d app_prod -c "SELECT 1 AS alive;"`
+- `pg_lsclusters` shows the cluster as `online`

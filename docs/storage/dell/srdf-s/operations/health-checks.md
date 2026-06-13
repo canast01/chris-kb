@@ -301,3 +301,12 @@ symrdf -g 10 query -detail | grep OLPAIRS
 - **Device count mismatch between arrays**: If R1 and R2 show different device counts, the RDFG was likely modified on one array without the corresponding change on the other. Open a Dell support case immediately — do not attempt manual corrections.
 - **SRDF mode shows "Adaptive Copy" instead of "Synchronous"**: This indicates the array temporarily switched to adaptive copy mode due to link congestion. Review link utilization history and correct mode with `symrdf -g <rdfg> -type S set mode synchronous`.
 - **Post-DR-test validation shows Suspended pairs**: SRM test failover with array-based replication uses a test bubble snapshot, not a real failover. If pairs appear Suspended after cleanup, run `symrdf -g <rdfg> -type S resume -noprompt` and verify they return to Synchronized.
+
+---
+
+## Verify
+
+- `symrdf query` shows all devices in `Synchronized` state (not `Suspended` or `SyncInProg`)
+- `symstat -type rdf -i 5 -c 3` shows 0 KB invalid tracks under normal load
+- No RDFG-related critical alerts in Unisphere
+- Link utilisation is within expected baseline — no sustained spikes above 80%

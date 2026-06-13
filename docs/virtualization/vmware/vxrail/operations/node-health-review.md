@@ -113,3 +113,12 @@ Use this page to review host, hardware, vSAN, and cluster health by node.
 ## Notes
 
 Keep screenshots, task IDs, error messages, and timestamps with the change or incident record.
+
+---
+
+## Verify
+
+- VxRail Manager shows all nodes in `Healthy` state with no active alerts
+- Disk health in VxRail Manager → Hardware → Disks shows all drives `Online`
+- vSAN health check returns no errors for the reviewed node
+- iDRAC hardware summary shows no amber/red indicators on reviewed host

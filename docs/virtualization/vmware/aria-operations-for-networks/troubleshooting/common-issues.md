@@ -256,6 +256,20 @@ AON UI → Settings → Infrastructure and Support → Platform Settings
 
 ---
 
+
+
+---
+
+## Verify
+
+- Data source shows green status in Settings → Data Sources — no red indicators
+- Flow Map displays flows for at least the test VMs / workloads
+- Collector shows Online in Settings → Infrastructure and Support → Collectors
+- AD users can log in if LDAP was the issue; test with a known-good AD account
+
+
+---
+
 ## See also
 
 - [AON Diagnostics](diagnostics/)

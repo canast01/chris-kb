@@ -113,3 +113,13 @@ Use this page before VxRail lifecycle upgrades or firmware updates.
 ## Notes
 
 Keep screenshots, task IDs, error messages, and timestamps with the change or incident record.
+
+---
+
+## Verify
+
+- VxRail upgrade readiness check in VxRail Manager completes with no blocking issues
+- All hosts are `Connected` in vCenter with no pending tasks
+- vSAN health is green and all objects are fully rebuilt (0% resync)
+- Snapshot inventory is clear — no stale snapshots that could block upgrade
+- Change request is approved and maintenance window is confirmed

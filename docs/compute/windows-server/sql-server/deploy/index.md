@@ -114,3 +114,12 @@ SELECT @@VERSION;
 SELECT name, physical_name FROM sys.master_files ORDER BY database_id;
 SELECT name, value_in_use FROM sys.configurations WHERE name IN ('max server memory (MB)', 'max degree of parallelism');
 ```
+
+---
+
+## Verify
+
+- SQL Server service shows `Running` in Services console or `Get-Service MSSQLSERVER`
+- `SELECT @@VERSION` returns the expected SQL Server version and edition
+- `SELECT name FROM sys.databases` lists the expected databases including system DBs
+- SQL Server Agent is running and no failed agent jobs in SSMS → SQL Server Agent → Jobs

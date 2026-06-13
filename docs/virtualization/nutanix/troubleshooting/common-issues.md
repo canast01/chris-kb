@@ -235,6 +235,20 @@ genesis restart
 
 ---
 
+
+
+---
+
+## Verify
+
+- The original symptom is resolved — CVM is reachable, storage is healthy, VM has power
+- `ncc --health_checks run_all` returns no failures related to the resolved issue
+- Prism alert for the issue is cleared or acknowledged
+- If a permanent fix was applied (config change, re-registration), record it in the change ticket
+
+
+---
+
 ## See also
 
 - [Nutanix — Diagnostics](diagnostics/)

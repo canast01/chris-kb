@@ -91,3 +91,12 @@ Use this after network changes, VLAN changes, host work, NSX changes, or VM conn
 ## Notes
 
 Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+
+---
+
+## Verify
+
+- All vSS/vDS port groups show expected uplink connectivity in vCenter
+- VMkernel adapters (management, vMotion, vSAN) ping their gateway successfully
+- VM network traffic is flowing — no packet loss from a test VM
+- vSAN storage traffic is healthy — no resync objects related to network issues

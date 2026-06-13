@@ -89,3 +89,12 @@ Use this before vendor escalation, RCA work, or major incident review.
 ## Notes
 
 Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+
+---
+
+## Verify
+
+- Log bundle is collected and stored in the designated evidence folder with the incident number
+- Screenshots include timestamps and are named with the incident ID
+- vCenter log bundle export completed without errors
+- All evidence referenced in the incident ticket is accessible to the team

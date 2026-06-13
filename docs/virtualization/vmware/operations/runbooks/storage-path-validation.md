@@ -90,3 +90,12 @@ Use this after SAN changes, storage maintenance, host work, or datastore alerts.
 ## Notes
 
 Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+
+---
+
+## Verify
+
+- All ESXi hosts show 4+ active paths per LUN (`esxcli storage nmp path list`)
+- No APD (All Paths Down) or PDL (Permanent Device Loss) conditions in vCenter events
+- Datastore is accessible and VMs are reading/writing without latency spikes
+- Multipathing policy matches the storage vendor's recommendation (RR for most arrays)

@@ -809,3 +809,12 @@ gh run list --workflow=scheduled-report.yml --limit 10
 | `0 9 1 * *` | First of every month at 09:00 UTC |
 
 Note: GitHub Actions schedules run in UTC. Scheduled workflows may be delayed by up to 15 minutes under high load.
+
+---
+
+## Verify
+
+- Workflow run appears in Actions tab with green checkmark (not red X)
+- Workflow logs show all steps completed without errors
+- Scheduled workflows trigger at the expected time (allow up to 15 min delay under load)
+- Secrets referenced in the workflow are resolved — no `Context access might be invalid` warnings

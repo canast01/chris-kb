@@ -331,3 +331,12 @@ nslookup <production-smartconnect-zone>
 | Failback completed | | | |
 | SyncIQ replicating (prod → DR) | | | |
 | Client access restored to production | | | |
+
+---
+
+## Verify
+
+- Eyeglass UI dashboard shows all services green and no outstanding alarms
+- SyncIQ replication policies show `Running` and last-run within the expected window
+- SMB share failover test: shares accessible from DR site post-failover and post-failback
+- DNS failover verification: client resolution points to DR SVM IP during failover

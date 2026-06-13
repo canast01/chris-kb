@@ -158,6 +158,20 @@ After issue resolution:
 
 ---
 
+
+
+---
+
+## Verify
+
+- Nutanix support case is open with a case number recorded in the incident ticket
+- Support bundle has been uploaded to the case or a Pulse remote session is active
+- Severity is set correctly and SLA timer is running
+- NCC run 24 hours post-resolution returns clean to confirm no recurrence
+
+
+---
+
 ## See also
 
 - [Nutanix — Diagnostics](diagnostics/)

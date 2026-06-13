@@ -187,6 +187,20 @@ ncli disk list | grep -v NORMAL
 
 ---
 
+
+
+---
+
+## Verify
+
+- `ncc --health_checks run_all` returns `Nutanix Cluster Check completed with no failures`
+- Prism cluster health shows all components green (no CRITICAL or WARNING badges)
+- `ncli cluster get` shows `Cluster Status: STARTED` and all nodes as `UP`
+- Alert feed in Prism shows no unacknowledged critical alerts
+
+
+---
+
 ## See also
 
 - [Nutanix — Common Issues](../troubleshooting/common-issues/)

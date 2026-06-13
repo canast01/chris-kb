@@ -156,3 +156,12 @@ After any recovery:
 - [ ] `ll /distributed-storage/consistency-groups/` — all CGs `operational-status: ok`
 - [ ] Host path validation: `powermt display dev=all` or `multipath -ll` shows all expected paths active
 - [ ] Application owners confirm I/O has resumed normally
+
+---
+
+## Verify
+
+- `health-check --full` returns no errors across all VPLEX components
+- `ll /distributed-storage/distributed-devices/*/health-indications/` — all devices show `health-state: ok`
+- `ll /distributed-storage/consistency-groups/` — all CGs show `operational-status: ok`
+- Host multipath check (`multipath -ll` or `powermt display dev=all`) shows all expected paths active

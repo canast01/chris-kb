@@ -287,6 +287,20 @@ done
 
 ---
 
+
+
+---
+
+## Verify
+
+- Scripts execute without error and write output to the expected file or stdout
+- Daily health snapshot email arrives with attached JSON report
+- VM inventory CSV contains all expected VMs when opened in a spreadsheet tool
+- REST API Python script returns HTTP 200 and non-empty JSON payload
+
+
+---
+
 ## See also
 
 - [Nutanix — CLI Reference](cli-reference/)

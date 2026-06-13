@@ -349,3 +349,12 @@ After any restore or VDC failover, validate the following before declaring recov
 - [ ] Application teams confirm S3 workloads are running normally with no authentication or connectivity errors
 - [ ] No new `FAILED` or `DEGRADED` nodes in `GET /vdc/nodes`
 - [ ] Capacity utilisation is within expected range; no unexpected jump from rebalancing
+
+---
+
+## Verify
+
+- `GET /vdc/nodes` returns all nodes with no `FAILED` or `DEGRADED` status
+- S3 `HEAD Bucket` and `GET Object` operations succeed from the application side
+- Geo-replication lag between VDCs is 0 bytes after the restore completes
+- Capacity utilisation is within expected range — no unexpected spike from rebalancing

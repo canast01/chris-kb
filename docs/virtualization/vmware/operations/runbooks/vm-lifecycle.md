@@ -92,3 +92,12 @@ Use this for VM build, change, ownership, review, retirement, and cleanup.
 ## Notes
 
 Keep this page updated with local commands, screenshots, system names, and known environment quirks.
+
+---
+
+## Verify
+
+- New VM: powered on, OS boots, guest OS tools show running, IP is assigned
+- Decommissioned VM: removed from inventory and no orphaned VMDK files remain on datastores
+- Migrated VM: running on target host/datastore with no configuration changes
+- Template updated: version suffix updated, old template snapshot removed

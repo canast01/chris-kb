@@ -253,6 +253,20 @@ ncli ctr edit name=<container-name> advertised-capacity=<size-in-bytes>
 
 ---
 
+
+
+---
+
+## Verify
+
+- Maintenance mode: target CVM reports `genesis status` shows CVM `UP` again after exit
+- LCM upgrade: version shown in Prism matches intended target; NCC post-upgrade run is clean
+- Node expansion: new node appears in `ncli host ls` and shows `State: NORMAL`
+- Container expansion: new capacity reflected in `ncli storage-pool ls`
+
+
+---
+
 ## See also
 
 - [Nutanix — Health Checks](health-checks/)

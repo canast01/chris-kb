@@ -386,6 +386,20 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 > **Test restores:** Run a full restore simulation quarterly in an isolated environment. An untested backup is not a backup.
 
+
+
+---
+
+## Verify
+
+- SDDC Manager: Operations → Backups shows last backup timestamp within the backup window
+- SDDC Manager backup bundle is stored at the configured external location and is retrievable
+- After a restore test: SDDC Manager UI is accessible and inventory reflects the expected state
+- NSX and vCenter configurations match the backup point-in-time snapshot
+
+
+---
+
 ## See also
 
 - [VCF — Procedures](procedures/)

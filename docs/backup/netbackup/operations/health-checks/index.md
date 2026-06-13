@@ -213,3 +213,12 @@ Add tested commands here.
 ### Known issues
 
 Add known issues here as they come up.
+
+---
+
+## Verify
+
+- No jobs in `Failed` or `Incomplete` state in Activity Monitor
+- Catalog backup completed within the last 24 hours
+- Media server disk pool utilisation is below 85%
+- Client connectivity test passes for all protected servers

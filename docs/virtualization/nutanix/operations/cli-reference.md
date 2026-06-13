@@ -324,6 +324,20 @@ zeus_config_printer | head -50
 
 ---
 
+
+
+---
+
+## Verify
+
+- `ncli cluster info` returns cluster status `STARTED` with no degraded components
+- `acli vm.list` lists VMs without error — AHV API is responding
+- `ncc --health_checks run_all` completes with no failures on a healthy cluster
+- `genesis status` on any CVM shows all services as `UP`
+
+
+---
+
 ## See also
 
 - [Nutanix — Procedures](procedures/)

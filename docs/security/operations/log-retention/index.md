@@ -114,3 +114,12 @@ aws s3 ls s3://<bucket>/logs/$(hostname)/
 - [ ] Disk space on log server/index <80% used
 - [ ] Security logs accessible for at least 365 days
 - [ ] Retention policy document reviewed and approved within last 12 months
+
+---
+
+## Verify
+
+- SIEM retention policy is set to the required minimum (e.g., 365 days for security logs)
+- Archive job last-run timestamp is within the scheduled window
+- Log server/index disk utilisation is below 80%
+- A spot test — querying logs from 12 months ago — returns results, confirming retention is active
