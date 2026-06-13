@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 21 checks.
+KB site audit — 22 checks.
 
 Usage:
     python3 scripts/site_audit.py          # run all checks, print summary
@@ -334,6 +334,33 @@ for path in all_md():
             and '## Requirements' not in content
             and len(content.splitlines()) > 20):  # skip genuine stubs
         warn(issues, f'{rel}: procedure page missing "Before you begin"')
+
+
+# ── Check 22: Misplaced product sections ─────────────────────────────────────
+# Detects product directories that exist both as a standalone section AND under
+# their parent vendor directory — e.g. docs/virtualization/vxrail/ alongside
+# docs/virtualization/vmware/vxrail/.  Both appear in auto-nav, creating
+# duplicate entries and confusing users.
+issues = check(22, 'Misplaced product sections (duplicate under vendor)')
+_VENDOR_ROOTS = {
+    os.path.join(DOCS, 'virtualization', 'vmware'): os.path.join(DOCS, 'virtualization'),
+}
+for vendor_dir, parent_dir in _VENDOR_ROOTS.items():
+    if not os.path.isdir(vendor_dir):
+        continue
+    # Products that live correctly under the vendor dir
+    vendor_products = {d for d in os.listdir(vendor_dir)
+                       if os.path.isdir(os.path.join(vendor_dir, d))}
+    # Siblings of the vendor dir (e.g. docs/virtualization/<name>/)
+    siblings = {d for d in os.listdir(parent_dir)
+                if os.path.isdir(os.path.join(parent_dir, d)) and d != 'vmware'}
+    for name in sorted(vendor_products & siblings):
+        vendor_path = os.path.relpath(os.path.join(vendor_dir, name), DOCS)
+        sibling_path = os.path.relpath(os.path.join(parent_dir, name), DOCS)
+        page_count = sum(1 for _, _, fs in os.walk(os.path.join(parent_dir, name))
+                         for f in fs if f == 'index.md')
+        warn(issues, (f'{sibling_path}/ duplicates {vendor_path}/ '
+                      f'({page_count} orphaned pages — merge into vendor section)'))
 
 
 # ── Check 20: Multi-H1 pages ─────────────────────────────────────────────────
