@@ -86,6 +86,43 @@ services.sh restart
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Host shows PSOD]
+    S --> B[Host disconnected in vCenter]
+    S --> C[VM slow / high latency]
+    S --> D[Storage inaccessible / APD]
+    S --> E[Auth / certificate failure]
+
+    A --> A1[Collect vmkernel.log + crash dump\nfrom DCUI or iDRAC]
+    A1 --> A2{Kernel module in\nstack trace?}
+    A2 -->|Yes — driver/plugin| A3[Update driver or firmware\n→ PSOD section]
+    A2 -->|No| A4[Escalate to VMware GSS\nwith vm-support bundle]
+
+    B --> B1{vpxa agent\nrunning on host?}
+    B1 -->|No| B2[Restart management agents\n→ Host Disconnected section]
+    B1 -->|Yes| B3[Check network / DNS / NTP\n→ Host Disconnected section]
+
+    C --> C1{esxtop — which\nresource is hot?}
+    C1 -->|CPU Ready > 10%| C2[→ High CPU Ready section]
+    C1 -->|Memory balloon/swap| C3[→ Memory Ballooning section]
+    C1 -->|Storage latency > 20ms| C4[→ VMFS Inaccessible section]
+
+    D --> D1[→ All Paths Down section]
+    E --> E1[→ Certificate Thumbprint section]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A3,A4,B2,B3,C2,C3,C4,D1,E1 section
+    class A2,B1,C1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

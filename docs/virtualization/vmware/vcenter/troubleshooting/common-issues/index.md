@@ -82,6 +82,40 @@ service-control --start --all
 
 ---
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[Can't log in / UI unreachable]
+    S --> B[ESXi host disconnected]
+    S --> C[Certificate or SSO error]
+    S --> D[Service crashed / alarm]
+    S --> E[Upgrade failed]
+
+    A --> A1{vSphere Client\nloads at all?}
+    A1 -->|No — blank/timeout| A2{VCSA VM powered on?}
+    A2 -->|No| A3[Power on VCSA — check host it runs on]
+    A2 -->|Yes| A4[→ Services Not Starting section]
+    A1 -->|Yes — login page| A5{Error message?}
+    A5 -->|Certificate / SEC_E| A6[→ Certificate Errors section]
+    A5 -->|SSO / locked out| A7[→ SSO / Auth Failures section]
+    A5 -->|VAMI 5480 unreachable| A8[→ VAMI Inaccessible section]
+
+    B --> B1[→ ESXi Host Disconnected section]
+    C --> A6
+    D --> D1[→ Alarms and Events section]
+    E --> E1[→ vCenter Upgrade Failures section]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A6,A7,A8,A4,A3,B1,D1,E1 section
+    class A1,A2,A5 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

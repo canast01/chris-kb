@@ -272,6 +272,42 @@ Get-SpbmEntityConfiguration | Where-Object { $_.ComplianceStatus -ne "compliant"
     Select Entity, StoragePolicy, ComplianceStatus
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What triggered the alert?]) --> A[Object DEGRADED\nor ABSENT]
+    S --> B[Capacity alarm\n≥ 70 / 80%]
+    S --> C[Skyline Health\ncheck failing]
+    S --> D[Resync stuck\nor very slow]
+    S --> E[VM storage\npolicy non-compliant]
+
+    A --> A1{Is a host\ndown or isolated?}
+    A1 -->|Yes| A2[Restore host first\n— wait for rebuild\n→ Object Health section]
+    A1 -->|No| A3{Disk failure\nin disk group?}
+    A3 -->|Yes| A4[Replace disk\n→ Disk Group Failure section]
+    A3 -->|No| A5[Check network\npartition / witness]
+
+    B --> B1{Which threshold?}
+    B1 -->|70–79%| B2[Clean snapshots\ncheck dedup savings\n→ Capacity section]
+    B1 -->|≥ 80%| B3[Escalate immediately\nStorage vMotion or\nadd capacity]
+
+    C --> C1[Identify specific\nfailing check\n→ Health Checks section]
+    D --> D1[Check resync throttle\nand available bandwidth\n→ Resync section]
+    E --> E1[Run policy compliance\ncheck + remediate\n→ Policy Compliance section]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    classDef urgent fill:#b91c1c,color:#fff,stroke:#b91c1c
+    class A2,A4,A5,B2,C1,D1,E1 section
+    class A1,A3,B1 decision
+    class S start
+    class B3 urgent
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access

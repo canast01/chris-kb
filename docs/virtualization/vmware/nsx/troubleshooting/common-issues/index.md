@@ -152,6 +152,42 @@ get load-balancer virtual-servers
 get nat translations | wc -l
 ```
 
+## Diagnostic Flow
+
+```mermaid
+graph TD
+    S([What is the symptom?]) --> A[VM cannot reach\nanother VM]
+    S --> B[North-south broken\n/ BGP down]
+    S --> C[Transport node\nconfig failed]
+    S --> D[NSX Manager\nunreachable]
+
+    A --> A1[Run Traceflow in NSX UI\nbetween source and dest]
+    A1 --> A2{Where does\nit drop?}
+    A2 -->|DFW on source| A3[→ DFW Rules section\ncheck applied policy]
+    A2 -->|Segment / logical| A4[→ Segment Config section\ncheck port binding]
+    A2 -->|T1 / T0 router| A5[→ Routing section\ncheck route tables]
+
+    B --> B1{Edge node\nstatus?}
+    B1 -->|Edge down| B2[→ Edge Failure section\ncheck HA and BFD]
+    B1 -->|Edge up| B3{BGP peer\nstate?}
+    B3 -->|Idle / Active| B4[→ BGP section\ncheck AS, timers, upstream]
+    B3 -->|Established| B5[Check T0 static routes\nand route redistribution]
+
+    C --> C1[→ Transport Node section\ncheck VIBs and TEP IP]
+    D --> D1{Cluster\nstatus?}
+    D1 -->|Degraded| D2[→ Manager Cluster section]
+    D1 -->|Stable| D3[Check API gateway\nand LB VIP]
+
+    classDef section fill:#1e3a5f,color:#fff,stroke:#1e3a5f
+    classDef decision fill:#15803d,color:#fff,stroke:#15803d
+    classDef start fill:#7c3aed,color:#fff,stroke:#7c3aed
+    class A3,A4,A5,B2,B4,B5,C1,D2,D3 section
+    class A2,B1,B3,D1 decision
+    class S start
+```
+
+---
+
 ## Before you begin
 
 - **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
