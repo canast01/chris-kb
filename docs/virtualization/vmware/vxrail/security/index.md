@@ -1,96 +1,213 @@
 ---
 tags:
   - security
-  - vmware
   - vxrail
 ---
-# VxRail — Security
+# VxRail Security
+
 
 <div class="kb-summary">
-Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and access control.
+Part of the [VxRail](../index.md) reference.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-
 ```text
-┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
+┌────────────────────────────── Virtualization Vxrail Security — Security ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         iDRAC LDAP/AD authentication with OOB-only VLAN access for hardware management        │   │
-│   │      ESXi lockdown mode (normal) with host profiles enforcement across all cluster nodes      │   │
-│   │     vCenter SSO for all management plane access; VxRail Manager TLS certificates enforced     │   │
-│   │      vSAN data-at-rest encryption with KMIP-compatible KMS integration for key management     │   │
-│   │      Secure Boot on all nodes; STIG alignment via host profiles; syslog forwarded to SIEM     │   │
+│   │        Vxrail security: access control, authentication, encryption, and hardening guide       │   │
+│   │          Principle of least privilege applied to all admin roles and service accounts         │   │
+│   │          Encryption at rest and in transit enforced; key rotation on defined schedule         │   │
+│   │            Annual security review and audit; logs forwarded to SIEM for correlation           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Authentication gates hardware access · access control limits management scope                      │
+│    Define roles → enforce MFA → enable encryption → harden → audit                                    │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
-│   │        iDRAC LDAP/AD        │  │       RBAC via vCenter      │  │      vSAN data-at-rest      │   │
-│   │      ESXi lockdown mode     │  │       iDRAC user roles      │  │       iDRAC HTTPS only      │   │
-│   │         vCenter SSO         │  │       VxRail Mgr roles      │  │       Secure Boot ESXi      │   │
-│   │       VxRail Mgr local      │  │         LCM op roles        │  │        VxRail Mgr TLS       │   │
-│   │          iDRAC 2FA          │  │       Least privilege       │  │        iDRAC SSL cert       │   │
-│   │       Svc acct policy       │  │         Audit events        │  │          Syslog TLS         │   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │             Core            │  │       Primary service       │  │        Main function        │   │
+│   │          Management         │  │        Control plane        │  │         Admin access        │   │
+│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
+│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
+│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Auth controls who accesses hardware · RBAC scopes management                                       │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│                          ▼                                                 ▼                          │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
-│   │    iDRAC LDAP    │   vCenter RBAC   │    vSAN encrypt   │   Secure Boot    │  vCenter events  │   │
-│   │  ESXi lockdown   │   iDRAC roles    │    iDRAC HTTPS    │   SSH disabled   │   iDRAC audit    │   │
-│   │   vCenter SSO    │   VxRail roles   │     VxRail TLS    │  Host profiles   │  Syslog to SIEM  │   │
-│   │    iDRAC 2FA     │ Least privilege  │   Cert rotation   │    STIG align    │  LCM log audit   │   │
+│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
+│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
+│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
+│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
+│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · TPM 2.0 · NVMe/SSD/HDD · iDRAC OOB network · CA infrastructure              │
+│    Physical: Virtualization Vxrail Security infrastructure · management network · monitoring          │
 │                                                                                                       │
-│  Key terms:                                                                                           │
+│    Key terms:                                                                                         │
 │                                                                                                       │
-│  iDRAC             = Integrated Dell Remote Access Controller; LDAP/AD auth; OOB-only VLAN access     │
-│  Lockdown mode     = ESXi host setting preventing direct SSH/DCUI; all management via vCenter only    │
-│  vSAN encryption   = Data-at-rest encryption on vSAN datastore; keys managed by external KMIP KMS     │
-│  KMS/KMIP          = Key Management Server / protocol; external key store for vSAN and VM encryption  │
-│  Secure Boot       = UEFI feature verifying ESXi VIB signatures on all VxRail nodes at boot time      │
-│  Host Profile      = vCenter config template enforcing lockdown, NTP, syslog, and security settings   │
-│  VxRail Manager TLS = TLS certificate on VxRail Manager VM; used for API and plugin communications    │
-│  STIG alignment    = Defense Information Systems Agency hardening guide applied via host profiles     │
-│  OOB VLAN          = Out-of-band management VLAN restricted to iDRAC access only; no VM traffic       │
-│  LDAP/AD integration = iDRAC and vCenter authenticate against Active Directory for role mapping       │
-│  RBAC              = Role-Based Access Control; vCenter roles applied to VxRail management operations │
-│  2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk              │
+│    Vxrail             = Virtualization Vxrail Security platform overview and core concepts            │
+│    Management         = management console and command-line interface for administration              │
+│    Monitoring         = health and performance monitoring dashboards and alerting                     │
+│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
+│    Security           = access control, authentication, and encryption configuration                  │
+│    Backup             = backup and recovery procedures and schedule configuration                     │
+│    Upgrade            = software version upgrades and firmware patching procedures                    │
+│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
+│    Escalation         = vendor support escalation path and severity triage process                    │
+│    Documentation      = vendor knowledge base and official product documentation                      │
+│    Change management  = change ticket requirements for production modifications                       │
+│    Audit log          = admin action logging for compliance and security review                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-<div class="kb-grid">
 
-<div class="kb-card">
-<h3><a href="authentication/">Authentication</a></h3>
-<p>iDRAC LDAP/AD, VxRail Manager accounts, vCenter SSO, and service account policy.</p>
-</div>
+---
+## Before you begin
 
-<div class="kb-card">
-<h3><a href="access-control/">Access Control</a></h3>
-<p>RBAC roles, lockdown mode, exception users, and network access scoping.</p>
-</div>
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
 
-<div class="kb-card">
-<h3><a href="encryption/">Encryption</a></h3>
-<p>vSAN at-rest and in-transit encryption, iDRAC HTTPS, Secure Boot, and TLS.</p>
-</div>
+---
 
-<div class="kb-card">
-<h3><a href="hardening/">Hardening</a></h3>
-<p>Full hardening checklist for VxRail Manager, iDRAC, vSphere, and network.</p>
-</div>
+## Hardening Checklist
 
-</div>
+- [ ] All iDRAC default credentials changed; iDRAC access restricted to management VLAN
+- [ ] iDRAC audit logging enabled on all nodes
+- [ ] Secure Boot enabled on all nodes (where supported by node generation)
+- [ ] ESXi lockdown mode enabled (Normal minimum; Strict for high-security environments)
+- [ ] ESXi root password changed from default; stored in vault; local access via break-glass only
+- [ ] vSAN data-at-rest encryption enabled for clusters handling sensitive data
+- [ ] VxRail Manager and ESXi certificates replaced with CA-signed certs via VxRail Manager workflow
+- [ ] vCenter RBAC scoped — VxRail operator role mapped to an AD group; no shared admin credentials
+- [ ] SNMP community strings managed via vault; v3 preferred over v2c
+- [ ] Syslog forwarding from ESXi hosts to SIEM configured
 
+---
+
+## iDRAC Hardening
+
+Each VxRail node has a dedicated iDRAC management interface. Harden at deployment:
+
+```bash
+# From iDRAC RACADM CLI — set a strong password for the root account
+racadm set iDRAC.Users.2.Password <new-password>
+
+# Disable unused interfaces (serial, local RACADM if not required)
+racadm set iDRAC.LocalSecurity.LocalConfig 0
+
+# Enable iDRAC audit logging
+racadm set iDRAC.AuditLog.Enable 1
+
+# Restrict iDRAC to management network subnet (IP filter)
+racadm set iDRAC.IPBlocking.BlockEnable 1
+racadm set iDRAC.IPBlocking.RangeAddr <mgmt-subnet>
+racadm set iDRAC.IPBlocking.RangeMask <subnet-mask>
+```
+
+---
+
+## ESXi Lockdown Mode
+
+Lockdown mode forces all ESXi management through vCenter, preventing direct host access.
+
+| Mode | Effect |
+|---|---|
+| Normal lockdown | Direct API and SSH access disabled; DCUI still accessible |
+| Strict lockdown | DCUI also disabled; only vCenter can manage the host |
+
+**Enable via PowerCLI:**
+
+```powershell
+# Enable Normal lockdown on all hosts in a cluster
+Get-Cluster "VxRailCluster" | Get-VMHost | ForEach-Object {
+  ($_ | Get-View).EnterLockdownMode()
+}
+
+# Check lockdown state
+Get-VMHost | Select Name, @{N="Lockdown";E={$_.ExtensionData.Config.LockdownMode}}
+```
+
+**Exception list** (accounts that can access even in lockdown mode):
+
+```powershell
+# View exception users
+Get-VMHost "vxr-host" | Get-View | Select -ExpandProperty Config | Select -ExpandProperty LockdownExceptionUsers
+```
+
+---
+
+## vSAN Encryption
+
+For workload domains with sensitive data requirements:
+
+1. Deploy and configure a KMS (Key Management Server) — the KMS must be HA-redundant.
+2. In vCenter → Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Enable.
+3. Accept the warning about re-formatting disk groups (initial enablement triggers a rolling disk group reformat — plan for resync time).
+4. Configure key rotation schedule per policy.
+
+**Verify encryption is active:**
+
+```bash
+# From ESXi on a VxRail node
+esxcli vsan debug object list | grep -i "encrypt"
+
+# PowerCLI
+Get-Cluster | Get-View | Select -ExpandProperty ConfigurationEx | Select -ExpandProperty VsanConfigInfo
+```
+
+---
+
+## Certificate Management
+
+VxRail Manager orchestrates certificate replacement for both ESXi hosts and VxRail Manager itself.
+
+```text
+VxRail Manager UI → System → Certificates → Replace Certificate
+```
+
+**ESXi host certificate renewal:**
+
+- This is done via VxRail Manager, not directly through vCenter.
+- VxRail Manager will push the certificate to all nodes in the cluster.
+- Schedule during a low-risk window — the certificate replacement causes a brief disruption to the vCenter-host connection.
+
+**VxRail Manager certificate renewal:**
+
+1. Generate a CSR from VxRail Manager → System → Certificates → Generate CSR.
+2. Submit to internal CA and receive the signed cert.
+3. Import via VxRail Manager → System → Certificates → Upload Certificate.
+
+---
+
+## vCenter RBAC
+
+VxRail does not require vCenter Admin on the cluster for routine operations — scope access appropriately.
+
+| Role | Scope | Purpose |
+|---|---|---|
+| VxRail Administrator | VxRail cluster object | Full VxRail Manager and LCM operations |
+| vCenter Administrator | Management domain vCenter | Break-glass only |
+| Read-Only | VxRail cluster | Monitoring-only access |
+
+Map these roles to AD groups — avoid assigning roles to individual AD user accounts.
+
+---
+
+## Syslog Forwarding
+
+```powershell
+# Configure syslog forwarding on all VxRail ESXi hosts
+Get-Cluster "VxRailCluster" | Get-VMHost | ForEach-Object {
+  Set-VMHostSysLogServer -VMHost $_ -SysLogServer "udp://<siem-ip>:514"
+  Restart-VMHostService -VMHost $_ -Key "syslog" -Confirm:$false
+}
+
+# Verify syslog is configured
+Get-VMHost | Get-VMHostSysLogServer
+```

@@ -274,12 +274,12 @@ if os.path.isdir(ASSETS):
 issues = check(17, 'VMware section consolidation')
 vmware = os.path.join(DOCS, 'virtualization', 'vmware')
 if os.path.isdir(vmware):
-    # 17a: thin sub-sections
+    # 17a: thin sub-sections (count all .md files, including flat ones post-flatten)
     for d in sorted(os.listdir(vmware)):
         full = os.path.join(vmware, d)
         if not os.path.isdir(full):
             continue
-        count = sum(1 for _, _, files in os.walk(full) for f in files if f == 'index.md')
+        count = sum(1 for _, _, files in os.walk(full) for f in files if f.endswith('.md'))
         if count < 5:
             warn(issues, f'vmware/{d}/: only {count} pages — thin section')
     # 17b: knowledge section proliferation (>3 is actionable; 4 is borderline but acceptable)
@@ -287,12 +287,9 @@ if os.path.isdir(vmware):
     found = [d for d in knowledge_types if os.path.isdir(os.path.join(vmware, d))]
     if len(found) > 3:
         warn(issues, f'vmware/: {len(found)} knowledge sections coexist: {found} — consider consolidating')
-    # 17c: product pair duplication (srm vs vsphere-replication)
-    srm_files = set(f for _,_,files in os.walk(os.path.join(vmware,'srm')) for f in files if f.endswith('.md'))
-    vrep_files = set(f for _,_,files in os.walk(os.path.join(vmware,'vsphere-replication')) for f in files if f.endswith('.md'))
-    overlap = srm_files & vrep_files
-    if len(overlap) > 3:
-        warn(issues, f'srm/ and vsphere-replication/ share {len(overlap)} file names — check for content duplication')
+    # 17c: product pair duplication — disabled after tree-flattening
+    # All products now share the same template filenames (common-issues.md, health-checks.md, etc.)
+    # so filename-overlap is a universal false positive. Content-diff check to be added later.
 
 # ── Check 18: Mermaid node contrast ──────────────────────────────────────────
 issues = check(18, 'Mermaid node contrast (light mode)')

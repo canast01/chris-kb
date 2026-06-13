@@ -1,10 +1,9 @@
 ---
 tags:
   - learning-path
-  - vmware
   - vxrail
 ---
-# VxRail — Learning Path
+# VxRail — Learning Path (Standalone Section)
 
 <div class="kb-summary">
 Recommended reading order for VxRail. Follow these stages in order to build a complete mental model before working with it in production.
@@ -44,8 +43,8 @@ graph LR
 **Read in this order**:
 
 - [How It Works](../architecture/how-it-works/) — VxRail Manager VM role (embedded in the cluster), node anatomy (cache/capacity drive layout, NIC topology), cluster formation via the first-run wizard, and the relationship to vCenter and vSAN
-- [Design Standards](../architecture/design-standards/) — node model selection, network profile (dynamic vs static), vSAN disk group layout per node type, and stretched cluster witness appliance placement
-- [Integrations](../architecture/integrations/) — VxRail Manager integration with vCenter, iDRAC out-of-band management, OMIVV for OpenManage integration, and SDDC Manager when deployed as a VCF-managed system
+- [Design Standards](../design-standards/) — node model selection, network profile (dynamic vs static), vSAN disk group layout per node type, and stretched cluster witness appliance placement
+- [Integration](../integration/) — VxRail Manager integration with vCenter, iDRAC out-of-band management, OMIVV for OpenManage integration, and SDDC Manager when deployed as a VCF-managed system
 
 **Why first**: VxRail is opinionated — firmware, ESXi, vSAN, and VxRail Manager versions must match the validated bundle. Understanding why manual patching of any individual component is unsupported before touching any upgrade or configuration task prevents the cluster entering an unsupported state that voids Dell support.
 
@@ -58,7 +57,7 @@ graph LR
 **Read**:
 
 - [Deploy](../deploy/) — physical cabling validation, iDRAC network configuration, first-run wizard inputs (network profile, DNS, NTP, vCenter credentials), and initial vSAN policy assignment
-- [Install & Upgrade](../operations/install-upgrade/) — LCM bundle download via VxRail Manager, pre-upgrade health checks, upgrade sequence (VxRail Manager → vCenter → NSX → ESXi+firmware), and post-upgrade validation
+- [Upgrade Planning](../lifecycle/upgrade-planning/) — LCM bundle selection, pre-upgrade health check requirements, upgrade sequence (VxRail Manager → vCenter → NSX → ESXi+firmware), and scheduling the maintenance window
 
 **Why second**: The first-run wizard makes irreversible decisions about the cluster network profile, vCenter registration, and vSAN disk group layout. Running it without fully validated iDRAC access, DNS resolution, and NTP synchronisation results in a failed bring-up that requires factory reset of the nodes.
 
@@ -70,11 +69,12 @@ graph LR
 
 **Read in this order**:
 
-- [Health Checks](../operations/health-checks/) — start here every shift; run the routine covering VxRail Manager service health, iDRAC hardware alerts, vSAN component states, and LCM bundle currency
-- [CLI Reference](../operations/cli-reference/) — VxRail Manager API endpoints for cluster health, `vxrail-callhome` CLI, `esxcli` on VxRail nodes for storage path inspection, and iDRAC RACADM commands
-- [Procedures](../operations/procedures/) — node expansion workflow via VxRail Manager, disk replacement and rebuild monitoring, entering maintenance mode on a VxRail node, and VxRail Manager VM recovery
-- [Backup & Restore](../operations/backup-restore/) — VxRail Manager configuration backup, cluster state backup dependencies (vCenter file-based backup), and recovery sequence after total cluster failure
-- [Scripts](../operations/scripts/) — VxRail Manager API scripts for health polling, LCM bundle status monitoring, and iDRAC firmware inventory export
+- [Health Checks](../health-checks/) — start here every shift; run the routine covering VxRail Manager service health, iDRAC hardware alerts, vSAN component states, and LCM bundle currency
+- [Daily Checks](../operations/daily-checks/) — the daily operational checklist: node health review, active alarms, vSAN resync status, and LCM pending bundle notifications
+- [Node Maintenance](../operations/node-maintenance/) — entering and exiting maintenance mode on a VxRail node safely, including vSAN data migration pre-checks
+- [Cluster Expansion](../operations/cluster-expansion/) — node expansion workflow via VxRail Manager, cabling validation, iDRAC pre-configuration, and post-expansion vSAN rebalance monitoring
+- [LCM Failure Triage](../operations/lcm-failure-triage/) — identifying the failed stage, collecting logs, and recovering without full cluster remediation where possible
+- [CLI Reference](../cli-reference/) — VxRail Manager API endpoints for cluster health, RACADM commands for iDRAC, and `esxcli` on VxRail nodes for storage path inspection
 
 **Why third**: VxRail LCM bundles are the only supported upgrade path — no manual ESXi patch, driver update, or firmware flash outside of LCM. Understanding the LCM pre-check requirements and the upgrade sequence before any maintenance window prevents an upgrade failure that can leave nodes in an inconsistent state.
 
@@ -86,10 +86,9 @@ graph LR
 
 **Read**:
 
-- [Access Control](../security/access-control/) — VxRail Manager local accounts, vCenter integration permissions, iDRAC user management, and the Dell service account required for OMIVV
-- [Authentication](../security/authentication/) — VxRail Manager certificate replacement, iDRAC certificate management, and integrating iDRAC with AD for out-of-band access
-- [Encryption](../security/encryption/) — vSAN data-at-rest encryption on VxRail nodes (requires external KMS), iDRAC TLS enforcement, and encrypted vMotion between nodes
-- [Hardening](../security/hardening/) — iDRAC network isolation, disabling default credentials, VxRail Manager API access restriction, and audit log configuration for compliance reporting
+- [Security](../security/) — VxRail Manager local account management, iDRAC user hardening, credential rotation procedures, and audit log configuration for compliance reporting
+- [iDRAC](../hardware/idrac/) — iDRAC network isolation, certificate management, AD integration for out-of-band access, and TLS enforcement
+- [VxRail Manager Certificates](../vxrail-manager/certificates/) — VxRail Manager certificate replacement procedure and the impact on vCenter trust if not coordinated correctly
 
 **Why fourth**: VxRail hardening must account for the iDRAC and OMIVV service accounts that LCM uses during firmware upgrades. Rotating iDRAC credentials without updating VxRail Manager causes the next LCM operation to fail at the firmware stage.
 
@@ -101,8 +100,10 @@ graph LR
 
 **Read**:
 
-- [Common Issues](../troubleshooting/common-issues/) — LCM upgrade failure mid-node, VxRail Manager VM unresponsive, node disconnected from vCenter after hardware event, and iDRAC alert flooding after a drive failure
-- [Diagnostics](../troubleshooting/diagnostics/) — VxRail Manager log collection (`/var/log/mystic/`), LCM job history via API, iDRAC SEL log export, and `esxcli storage core path list` for drive path validation
-- [Escalation](../troubleshooting/escalation/) — Dell SupportAssist log bundle generation, required VxRail Manager API exports before opening a case, and when to engage Dell Hardware vs VMware GSS separately
+- [LCM Failures](../troubleshooting/lcm-failures/) — LCM upgrade failure identification by stage, log extraction, and recovery steps without a full cluster reset
+- [Manager Unavailable](../troubleshooting/manager-unavailable/) — VxRail Manager VM unresponsive scenarios, service recovery, and when a Manager restore from backup is required
+- [Host Alerts](../troubleshooting/host-alerts/) — iDRAC hardware alert triage, distinguishing transient from persistent hardware faults, and disk replacement initiation
+- [vSAN Alerts](../troubleshooting/vsan-alerts/) — vSAN component degradation on VxRail nodes, resync monitoring, and capacity alarm interpretation
+- [Support Case Prep](../operations/support-case-prep/) — Dell SupportAssist log bundle generation, required VxRail Manager API exports, and when to engage Dell Hardware vs VMware GSS separately
 
 **Why last**: Troubleshooting makes most sense once you know the normal operating state.

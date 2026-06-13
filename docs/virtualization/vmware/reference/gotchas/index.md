@@ -1,286 +1,291 @@
 ---
 tags:
   - reference
-  - vmware
 ---
-# VMware Gotchas
+# VMware Platform Gotchas
 
-<div class="kb-summary">
-Underdocumented behaviours, default limits, and common traps across the VMware platform. Each entry documents what happens, why it happens, and how to prevent or fix it. These are the issues that cause real incidents — things that work fine until they don't.
-</div>
-
-```text
-┌────────────────────────────────────── VMware — Gotchas ───────────────────────────────────────────────┐
-│                                                                                                       │
-│  OVERVIEW                                                                                             │
-│  Each gotcha: what happens · why · impact · how to avoid / fix                                        │
-│  Categories: HA/DRS · vSAN · NSX · Snapshots · Lifecycle · Limits · Certificates                      │
-│                                                                                                       │
-│  HA / DRS GOTCHAS                                                                                     │
-│  Slot-based AC over-reserves with large VMs · vCLS VMs cannot be deleted · FT incompatible with vSAN  │
-│                                                                                                       │
-│  vSAN / STORAGE GOTCHAS                                                                               │
-│  Resync blocks maintenance mode · 80% capacity hard stops writes · dedup ratio drops post-encryption  │
-│                                                                                                       │
-│  NSX / NETWORK GOTCHAS                                                                                │
-│  TEP MTU mismatch silent · DFW default deny not visible in UI by default · tag case-sensitive         │
-│                                                                                                       │
-│  LIFECYCLE GOTCHAS                                                                                    │
-│  vDS rollback 30-second window · upgrade order matters · certificate expiry cascades                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+Known pitfalls, unexpected behaviours, and non-obvious operational traps across the VMware platform. Each entry documents the symptom, root cause, and corrective or preventive action.
 
 ---
 
-## HA and DRS Gotchas
+## vSAN — clomRepairDelay Catches Admins Off Guard
 
-### vCLS VMs Appear in Cluster and Cannot Be Deleted
+**Symptom:** A host goes down during maintenance; no rebuild starts for 60 minutes. Alerts fire. Team panics.
 
-**What happens:** After enabling DRS or HA on a cluster, vSphere automatically deploys 1–3 small `vCLS` (vSphere Cluster Services) VMs in a special hidden datastore (`vsanDatastore` or a shared datastore). These VMs appear in inventory but cannot be deleted or moved through normal means. Attempts to power them off are automatically reverted within minutes.
+**Cause:** `clomRepairDelay` (default 60 min) is intentional — vSAN waits to see if the host returns before triggering a rebuild. It is not a bug; it prevents unnecessary I/O churn when a host bounces briefly.
 
-**Why:** vCLS VMs are the coordination agents for DRS placement decisions and HA operations in vSphere 7+. They replaced a monolithic vCenter component with distributed agents. vSphere monitors them and restores them if deleted.
+**Fix / Avoid:** For planned maintenance, put the host in Maintenance Mode (Full Data Migration or Ensure Accessibility) before powering off — this triggers an immediate, orderly resync. For an emergency outage where you need to force an early rebuild, reduce the delay temporarily:
 
-**Impact:** vCLS VMs consume CPU, RAM (~2 GB each), and datastore capacity. They will trigger backup job failures if a backup tool tries to protect them without the correct exclusion filter.
-
-**Fix:**
-```text
-To exclude vCLS VMs from backup jobs, filter by VM name pattern: vCLS-*
-To temporarily disable vCLS (for troubleshooting only), use:
-  Advanced cluster setting: config.vcls.clusters.<cluster-id>.enabled = false
-  (Re-enable immediately after troubleshooting — disabling vCLS degrades HA/DRS)
-```
-
----
-
-### HA Slot-Based Admission Control Over-Reserves With Mixed VM Sizes
-
-**What happens:** If a cluster uses Slot-Based admission control and contains even one VM with large CPU or memory reservations, the slot size is calculated from that VM. All other VMs are treated as if they were that large. HA blocks new VM power-ons even when there is plenty of capacity — because the calculated "available slots" is very low.
-
-**Example:** A cluster with 3 hosts × 512 GB RAM each (1.5 TB total). One VM has a 256 GB RAM reservation. Slot size = 256 GB. "Available slots" = 3 after reserving 1 host. A new 4 GB VM cannot power on because 4 slots × 256 GB = 1 TB of reserved RAM, which exceeds availability — even though the actual VM only needs 4 GB.
-
-**Fix:** Switch to Percentage-based admission control. Reserve the equivalent of one host's contribution (e.g., 25% for a 4-node cluster, 20% for a 5-node cluster).
-
----
-
-### DRS Does Not Balance vSAN Resync Traffic
-
-**What happens:** When vSAN is rebuilding absent components after a disk failure, the resync traffic runs across the vSAN VMkernel. DRS does not consider resync I/O when making vMotion decisions — it may move VMs *onto* the host with the most active resync, worsening storage contention.
-
-**Impact:** During a disk failure risk window (between disk failure and rebuild completion), DRS may inadvertently increase storage latency on the affected host by adding VM workloads to it.
-
-**Fix:** During active vSAN resyncs, temporarily set the affected host to "Partially Automated" DRS or add a DRS anti-affinity rule to keep latency-sensitive VMs away from it. Remove after resync completes.
-
----
-
-### Fault Tolerance (FT) Is Incompatible With vSAN and Most Advanced Features
-
-**What happens:** vSphere Fault Tolerance (continuous availability, RPO=0) has a long list of incompatible features: vSAN datastores, snapshots, linked clones, large pages, 3D graphics, NVMe controllers, and multi-vCPU VMs above 8 vCPU.
-
-**Why:** FT works by recording and replaying every CPU instruction between primary and secondary VM — any feature that introduces non-determinism breaks this model.
-
-**Impact:** Enabling FT on a VM stored on vSAN will fail with an error. Attempts to snapshot an FT-protected VM will fail. FT only works on VMFS or NFS datastores.
-
-**Fix:** Use HA with custom restart priority for critical VMs on vSAN instead of FT. For true zero-RPO protection, use vSAN stretched cluster with ActiveCluster (FlashArray) or synchronous SRM replication.
-
----
-
-## vSAN Gotchas
-
-### Placing a Host in Maintenance Mode During Active Resync Causes Data Loss Risk
-
-**What happens:** If you put a host into maintenance mode while vSAN is actively rebuilding components (resync in progress), you reduce the protection level further. For FTT=1 VMs that already have one absent component and one host in maintenance mode, some VMs may become non-compliant and lose their last surviving data copy.
-
-**Fix:** Always check resync status before putting any host into maintenance:
 ```bash
-esxcli vsan debug resync summary get
-# Only proceed if BytesToResync = 0
+esxcli vsan cluster set --clom-repair-delay-minutes 0
 ```
 
----
-
-### vSAN Stops Accepting Writes at 80% Capacity
-
-**What happens:** When vSAN physical capacity reaches 80%, the cluster enters a degraded write mode. Above 92%, vSAN may place the datastore in read-only mode, causing VM crashes.
-
-**Why:** vSAN requires capacity headroom for resync operations and for the write buffer. Without headroom, a disk failure would leave no space to rebuild absent components.
-
-**Impact:** VM freezes, application crashes, and data corruption if the threshold is hit without warning.
-
-**Fix:** Set a capacity alarm at 70% (not 80%). At 75%, begin capacity relief operations. Never rely on the default 75% alarm as an early warning — by the time the alarm fires, headroom is already limited.
+Reset to the original value (60) after the resync completes.
 
 ---
 
-### vSAN Dedup Savings Collapse When Workloads Are Encrypted
+## vSAN — ESA and OSA Are Mutually Exclusive per Disk Group
 
-**What happens:** vSAN dedup and compression is calculated before data is written. If VM-level encryption (vSphere VM Encryption) or application-level encryption is enabled, all data entering vSAN is already encrypted and random — dedup finds zero duplicate blocks and compression finds zero compressibility. The dedup ratio drops to 1:1.
+**Symptom:** Attempting to enable ESA on a cluster that has OSA disk groups fails with a cryptic error.
 
-**Impact:** If capacity was sized based on an expected dedup ratio (e.g., 3:1 for VDI workloads), enabling encryption halves or triples the effective storage consumption.
+**Cause:** ESA (Express Storage Architecture) and OSA (Original Storage Architecture) cannot coexist in the same cluster. Migrating requires evacuating all data, removing existing disk groups, and re-claiming disks under the new architecture.
 
-**Fix:** When sizing vSAN for encrypted workloads, do not count dedup/compression savings. Size on raw physical capacity only. Consider vSAN Data-at-Rest Encryption (array-level) instead of VM-level encryption — vSAN DAR encryption is applied after dedup/compression, preserving the savings ratio.
+**Fix / Avoid:** Plan ESA adoption from day 0. Migrating an existing OSA cluster to ESA is a destructive operation — all data must be migrated off the cluster first. There is no in-place upgrade path between architectures.
 
 ---
 
-## NSX Gotchas
+## vSAN — Stretched Cluster Witness Must Not Be Domain-Joined
 
-### TEP MTU Mismatch Causes Silent Packet Drops
+**Symptom:** Witness VM is joined to Active Directory; SSO replication fails or the witness loses connectivity intermittently.
 
-**What happens:** If any switch in the TEP (Tunnel Endpoint) path is configured with MTU 1500 instead of 9000, Geneve-encapsulated packets above ~1450 bytes are silently dropped or fragmented. VMs appear to have connectivity for small packets (ping works) but fail for large transfers (file copies, database queries, application timeouts).
+**Cause:** The witness VM should never be domain-joined. DNS round-robin or AD load balancing can interfere with the dedicated witness heartbeat network, causing the witness to be unreachable on the expected IP.
 
-**Why:** Geneve adds a 50-byte header overhead. A 1500-byte IP packet becomes a 1550-byte Geneve frame — exceeding 1500 MTU and causing fragmentation or drops.
+**Fix / Avoid:** Deploy the witness VM in workgroup mode. Use a dedicated management IP and a static DNS entry. Do not apply domain GPOs or domain-based NTP sources to the witness.
 
-**Fix:**
+---
+
+## NSX — DFW Policy Must Be Published to Take Effect
+
+**Symptom:** A new DFW rule is visible in the UI but traffic is not being blocked or allowed as expected.
+
+**Cause:** In Policy mode, rules are saved as drafts by default and require an explicit **Publish** action before they are pushed to the dataplane. A rule that is saved but not published has no enforcement effect.
+
+**Fix / Avoid:** Always click **Publish** after saving rule changes. Verify enforcement via Traceflow. Via API: send a `PATCH` to the policy endpoint to update the rule, then a `POST` to the `?action=publish` endpoint to push it to the dataplane.
+
+---
+
+## NSX — Transport Node Reboot Required After Host Profile Application
+
+**Symptom:** After applying an NSX host profile to ESXi hosts via vLCM, transport nodes show as "Out of Sync" until a maintenance window is completed.
+
+**Cause:** Some NSX kernel module parameters require a full host reboot to take effect. Applying the profile via vLCM updates the configuration on disk but does not automatically reboot the host.
+
+**Fix / Avoid:** Schedule a rolling reboot of ESXi hosts after host profile application. Include this reboot requirement explicitly in the change window plan so stakeholders are not surprised by the Out of Sync state.
+
+---
+
+## NSX — Edge VM CPU Must Be Pinned to a Dedicated NUMA Node for BFD
+
+**Symptom:** BFD sessions flap intermittently; BGP reconverges randomly with no clear network event.
+
+**Cause:** Edge VMs sharing NUMA nodes with high-CPU workload VMs can experience BFD timer inconsistency. The default 300 ms BFD hello interval is violated under CPU contention, causing the peer to declare the session down.
+
+**Fix / Avoid:** Pin Edge VMs to a dedicated NUMA node using CPU affinity, or run them on dedicated ESXi hosts. Reserve CPU resources for Edge VMs in vSphere to prevent scheduler starvation. Validate BFD timer stability after any workload density change on Edge hosts.
+
+---
+
+## vCenter — Expired Certificate Causes Cascade Failure
+
+**Symptom:** vCenter services fail to start; hosts disconnect; SSO authentication fails; the web UI shows a certificate error on login.
+
+**Cause:** VMCA issues machine certificates with a 2-year validity by default. When the machine SSL certificate expires, the `vpxd` daemon, lookup service, and SSO token service all fail simultaneously because they mutually authenticate using the same certificate chain.
+
+**Fix / Avoid:** Monitor VMCA certificate expiry proactively:
+
 ```bash
-# Test MTU from ESXi TEP VMkernel to another TEP
-vmkping -I vmk10 -d -s 8972 <remote-tep-ip>
-# -d = do not fragment; -s 8972 = 8972 bytes payload + 28 bytes IP/ICMP = 9000 bytes
-# Must succeed from every host to every other host in the transport zone
+/usr/lib/vmware-vmafd/bin/vecs-cli entry list --store MACHINE_SSL_CERT | grep -i valid
 ```
 
-Confirm MTU 9000 on: ESXi vDS portgroup (TEP portgroup), physical ToR switch ports, any intermediate switches in the path.
+Set a 60-day alert. Renew certificates proactively using `certificate-manager` before expiry. Do not wait for services to fail.
 
 ---
 
-### NSX DFW Default Deny Is Not Visible in the Main Rule Table
+## vCenter — vCLS Agent VMs Cannot Be Deleted from Inventory
 
-**What happens:** When a DFW section is configured with an "Allow Listed" security policy, there is an implicit default-deny rule at the bottom of that section. This rule is not visible in the normal DFW rule table — it only appears in the rule hit counts and Traceflow output.
+**Symptom:** An admin deletes or powers off vCLS agent VMs to reclaim resources; DRS immediately stops working for the affected cluster.
 
-**Impact:** A VM that is not included in any allow rule will have all traffic silently dropped without any visible blocking rule in the UI. Engineers assume there is no rule blocking traffic and overlook DFW entirely.
+**Cause:** vCLS (vSphere Cluster Services) agent VMs are automatically managed by vCenter and are required for DRS and HA to function. vCenter will attempt to recreate any deleted agent VMs, but DRS operates in a degraded state until they are healthy.
 
-**Fix:** Use Traceflow first for any unexplained connectivity failure. The Traceflow output reports the exact rule ID (including the implicit deny rule ID) that dropped the packet.
+**Fix / Avoid:** Never delete vCLS agent VMs. If troubleshooting requires temporarily disabling vCLS, use Retreat Mode by setting the following key in vCenter advanced settings:
 
----
-
-### NSX Tags Are Case-Sensitive
-
-**What happens:** NSX tag values are case-sensitive. A dynamic group with criterion `tag = "web-tier"` will not match a VM tagged with `Web-Tier` or `WEB-TIER`.
-
-**Impact:** DFW allow rules stop applying after a manual tag update that changes capitalisation. VM is dropped by the implicit deny rule.
-
-**Fix:** Establish a naming standard for NSX tags and enforce it. Common convention: all lowercase, hyphen-separated (e.g., `web-tier`, `db-tier`, `app-tier`). Add a compliance check to alert on tag values that do not match the standard pattern.
-
----
-
-## Snapshot Gotchas
-
-### Snapshot Delta Growth Is Unbounded and Accelerates Under Load
-
-**What happens:** A snapshot delta disk grows with every write to the base VMDK after the snapshot is taken. For write-heavy workloads (databases, log files), a snapshot taken on a Monday and forgotten can fill the datastore by Wednesday.
-
-**Key data point:** A 100 GB database server writing 2 GB/hour will consume 48 GB of snapshot delta space in 24 hours. After one week, the delta is larger than the original VMDK.
-
-**Impact:** Datastore capacity alarm → vSAN cluster near-full → snapshot consolidation required alarm → potential VM freeze during forced consolidation.
-
-**Fix:** Backup tools must have verified snapshot removal. Set a maximum snapshot age alarm (e.g., any snapshot older than 24 hours). Never take manual snapshots on database VMs without a removal plan.
-
----
-
-### Snapshot Consolidation Required Does Not Remove Snapshot Delta Automatically
-
-**What happens:** After a backup tool fails to cleanly remove a snapshot, vCenter detects residual delta files and raises the "Virtual Machine Disks Consolidation Needed" alarm. The alarm does NOT automatically consolidate — it only notifies. The delta continues to grow.
-
-**Fix:**
 ```text
-vCenter → right-click VM → Snapshots → Consolidate
+config.vcls.clusters.<cluster-id>.enabled = false
 ```
 
-Monitor consolidation progress in Recent Tasks — it can take hours for large deltas. The VM remains live during consolidation but I/O latency increases. Schedule consolidation during off-peak hours for production VMs.
+Re-enable after troubleshooting is complete. vCenter will automatically recreate healthy agent VMs when Retreat Mode is disabled.
 
 ---
 
-## Lifecycle and Certificate Gotchas
+## vLCM — Image and Baseline Management Are Mutually Exclusive
 
-### vCenter Upgrade Without Closing vDS Edit Session Leaves Network in Read-Only Mode
+**Symptom:** After migrating a cluster to image-based management, the Baselines tab disappears; team members attempt to apply a patch via baseline and cannot find the option.
 
-**What happens:** If a vDS port group or switch is being edited in another browser session when a vCenter upgrade begins, the vDS edit lock is not released cleanly. After the upgrade, the vDS is stuck in a "read-only" state and no port group changes can be made until the lock is manually cleared via the vSphere Managed Object Browser (MOB).
+**Cause:** vLCM image mode and baseline mode cannot coexist in the same cluster. Once a cluster is migrated to desired-state image management, all patching must go through image updates and the software depot. There is no way to revert to baseline mode without rebuilding the cluster.
 
-**Fix:** Before any vCenter upgrade, confirm no vDS edit sessions are open:
-```text
-vCenter → Networking → right-click vDS → Actions — check for any pending edits
-```
+**Fix / Avoid:** This is by design. Plan all patch application via image updates and the depot. Train all team members on the image workflow before migrating clusters — the Baselines tab will not return.
 
 ---
 
-### vDS Configuration Rollback Window Is 30 Seconds
+## vLCM — Quick Boot Requires UEFI and No PCI Passthrough
 
-**What happens:** When a host is migrated to a vDS, there is a 30-second rollback window during which vCenter tests connectivity. If vCenter cannot reach the host within 30 seconds of applying the new configuration, the change is rolled back automatically to the last working state.
+**Symptom:** The Quick Boot option is greyed out for a host, or a host configured for Quick Boot falls back to a full reboot during remediation.
 
-**Impact:** Network changes that break management connectivity are automatically reversed — but this also means a misconfigured network change will silently revert, and the engineer may not notice immediately.
+**Cause:** Quick Boot requires UEFI firmware, compatible hardware (listed on the VMware HCL), and no PCI passthrough devices attached to any VMs on the host. Any PCI passthrough assignment disables Quick Boot for the entire host.
 
-**Fix:** Confirm management VLAN connectivity before migrating vmk0 to vDS. Test from a host that will NOT be migrated first. Always have out-of-band (iDRAC/IPMI) access available during networking changes.
+**Fix / Avoid:** Check Quick Boot compatibility:
 
----
-
-### NTP Drift Breaks SSO, HA, vSAN, and Certificates Simultaneously
-
-**What happens:** If NTP is misconfigured and ESXi hosts drift > 5 minutes from vCenter time, SSO authentication tokens become invalid. Symptoms appear simultaneously: SSO login failures, vSAN components showing as absent, HA agent disconnections, and certificate errors — all caused by the same root cause.
-
-**Why:** Kerberos-based SSO tokens have a 5-minute clock skew tolerance. vSAN also uses Paxos consensus with timestamps. Certificate validity checking uses system time.
-
-**Fix:** Configure NTP on every component: ESXi hosts, vCenter VCSA, NSX Manager, and all infrastructure VMs. Use at least two NTP sources. Verify with:
 ```bash
-# On ESXi
-esxcli system time get
-ntpq -p
-
-# On VCSA
-/usr/lib/vmware-tools/sbin/ntpq -p
+vim-cmd hostsvc/quickboot/enabled
 ```
+
+Remove PCI passthrough device assignments from all VMs on the host before enabling Quick Boot. Verify against the HCL if the host is borderline-compatible.
 
 ---
 
-### Upgrade Order Matters — Out-of-Order Upgrades Break APIs
+## SRM — Placeholder VMs Must Be Refreshed After vCenter Upgrade
 
-**What happens:** VMware components have strict upgrade ordering. If NSX is upgraded before vCenter, or if vSAN is upgraded while ESXi is still at the previous major version, API compatibility breaks occur and SDDC Manager workflows fail.
+**Symptom:** After upgrading vCenter at the recovery site, some placeholder VMs show as orphaned or missing in SRM.
 
-**Required upgrade order for VCF/vSphere:**
+**Cause:** A vCenter upgrade can change VM MoRef IDs or datastore associations. Placeholder VM registration in SRM references these identifiers directly, and the stale references cause placeholder VMs to appear orphaned in inventory.
+
+**Fix / Avoid:** After any vCenter upgrade at the recovery site, run **Configure All** on each Protection Group to force SRM to recreate stale placeholder VMs. Include this step in the vCenter upgrade runbook for the recovery site.
+
+---
+
+## SRM — Test Cleanup Must Complete Before Running a Real Failover
+
+**Symptom:** Attempting to run a Recovery Plan while a test is in progress fails with "Plan is in test state".
+
+**Cause:** SRM holds the replicated datastore in snapshot mode during a test recovery. A real failover cannot proceed until the test snapshot is released and the datastore is returned to a consistent state.
+
+**Fix / Avoid:** Always initiate **Cleanup** after a test completes and allow it to finish fully before declaring the plan ready for production use. Never leave a Recovery Plan in a partial test state. Build Cleanup into the DR test runbook as a mandatory final step.
+
+---
+
+## Horizon — ClonePrep Domain Join Fails if Pre-Staged Account Limit Is Reached
+
+**Symptom:** Instant clone desktops fail to provision; the ClonePrep log shows "account creation failed" or an LDAP error during domain join.
+
+**Cause:** The domain-join account has exhausted the default AD limit of 10 computer accounts creatable by a non-admin user, or the target OU has an explicit quota set. ClonePrep cannot create new computer objects and the provisioning job fails silently at the AD step.
+
+**Fix / Avoid:** Use a dedicated service account with explicit delegation to create and manage computer accounts in the Horizon OU. Do not rely on default user permissions. Verify the account has no join limit and that the OU has no object quota before deploying a new pool.
+
+---
+
+## Horizon — Parent VM Must Stay Powered On for Instant Clone Pools
+
+**Symptom:** After powering off the parent VM for maintenance, new desktop provisioning stalls; existing desktops are unaffected.
+
+**Cause:** Instant clone uses `vmFork` against the live memory state of the parent VM. If the parent VM is powered off, the memory fork source does not exist and no new desktops can be created. The parent VM is not interchangeable with a template.
+
+**Fix / Avoid:** The parent VM must remain running at all times while the pool is active. Schedule parent VM maintenance only during off-peak windows with an agreed brief provisioning outage. Communicate the outage to the pool's users in advance.
+
+---
+
+## VCF — Precheck Failures Block All LCM Operations
+
+**Symptom:** An upgrade is queued in SDDC Manager; it is marked as blocked and no upgrade steps can proceed.
+
+**Cause:** VCF's Precheck validates DNS (forward and reverse), NTP sync, certificate expiry, password rotation status, and vSAN health before any LCM operation. Any single failure blocks the entire upgrade chain — there is no way to skip individual precheck items.
+
+**Fix / Avoid:** Run Precheck on demand regularly, not just before upgrades. Resolve DNS reverse-lookup failures, expired certificates, and credential rotation issues proactively. Treat Precheck failures as P2 incidents so they are addressed before an upgrade window arrives.
+
+---
+
+## VCF — NSX Manager Upgrade Must Follow SDDC Manager Upgrade
+
+**Symptom:** After upgrading SDDC Manager, NSX Manager shows as "Unsupported version" in the SDDC Manager UI.
+
+**Cause:** VCF enforces strict BOM (Bill of Materials) ordering. NSX must be upgraded after SDDC Manager and vCenter, never before. Upgrading NSX outside of SDDC Manager orchestration, or upgrading it first, breaks the BOM alignment and puts the environment into an unsupported state.
+
+**Fix / Avoid:** Always follow the VCF upgrade sequence:
+
 ```text
-1. SDDC Manager
-2. vCenter
-3. ESXi hosts (one cluster at a time)
-4. vSAN ESA upgrade (if applicable)
-5. NSX Manager
-6. NSX Transport Nodes (ESXi and Edge)
-7. Aria Suite (via LCM)
+SDDC Manager → vCenter → ESXi → NSX → vSAN on-disk format
 ```
 
-Never upgrade NSX before vCenter. Never upgrade ESXi past the vCenter build it is managed by. Check the VMware Interoperability Matrix before any upgrade.
+Never upgrade any component outside of SDDC Manager orchestration. If a component was upgraded out of order, open a VMware support case before proceeding — attempting to continue LCM operations in a mismatched BOM state can cause further failures.
 
 ---
 
-## Limits and Defaults Gotchas
+## Horizon — UAG Certificate Mismatch Breaks HTML Access and Client Connections Silently
 
-### vCenter Manages a Maximum of 2,000 Hosts and 35,000 VMs
+**What catches admins:** Users report that Horizon Client connects intermittently, or HTML Access shows a certificate warning that users click through, while the admin console shows all UAG services as healthy.
 
-**What happens:** vCenter Server has hard limits. Exceeding them causes performance degradation and eventually vCenter instability, not a clean failure.
+**Why it happens:** Unified Access Gateway (UAG) uses three independent certificate stores: the external-facing TLS certificate, the Horizon Connection Server pairing certificate, and the admin UI certificate. Replacing only the external TLS certificate (the most visible one) leaves the Connection Server pairing certificate unchanged. When that pairing certificate expires or mismatches the Connection Server's expected thumbprint, the back-end session tunnel to Connection Server breaks — but UAG continues to report itself as healthy because the health check probes the admin port, not the tunnel.
 
-| Resource | Limit per vCenter |
-|---|---|
-| ESXi hosts | 2,000 |
-| VMs | 35,000 |
-| Hosts per cluster | 96 |
-| VMs per cluster | 8,000 |
-| vDS port groups | 10,000 |
-| Concurrent vMotion | 8 per host (1 GbE), 16 per host (10 GbE) |
-
-**Fix:** For environments approaching these limits, use Enhanced Linked Mode to distribute inventory across multiple vCenter instances while maintaining a single management view.
+**How to avoid / fix:** When replacing any UAG certificate, audit all three certificate bindings in the UAG admin UI (HTTPS/TLS, Connection Server pairing, and admin UI) in the same change window. Set monitoring on all three certificate expiry dates independently. If tunnel failures are suspected, check the UAG gateway logs under `/opt/vmware/gateway/logs/` for `TUNNEL_DISCONNECT` events alongside the Connection Server event logs.
 
 ---
 
-### ESXi Host Has a Default 1,024 VM Limit
+## Horizon — App Volumes Agent Version Must Match the App Volumes Manager Version Exactly
 
-**What happens:** ESXi hosts have a per-host VM limit of 1,024 powered-on VMs. This limit is almost never hit in physical environments but is a real constraint in nested virtualisation (ESXi-on-ESXi) test labs.
+**What catches admins:** After upgrading App Volumes Manager, existing desktops function normally but new instant clone desktops fail to attach AppStacks or writable volumes. The App Volumes event log shows "Agent version mismatch" or attachments silently fail with no error surfaced to the end user.
+
+**Why it happens:** App Volumes enforces a strict version lock between the agent installed in the gold image (and thus in every instant clone derived from it) and the App Volumes Manager. When Manager is upgraded, desktops running the previous agent version are tolerated for existing sessions, but new desktops forked from an unupdated parent VM present the old agent version, which the upgraded Manager refuses to service.
+
+**How to avoid / fix:** Always update the gold image (parent VM) agent version in the same maintenance window as the App Volumes Manager upgrade. The update sequence is: upgrade Manager first, then update the agent in the parent VM, push the updated parent VM to all pools. Do not upgrade Manager and leave the gold image update for a later window — any new desktops provisioned in the gap will fail volume attachment silently.
 
 ---
 
-### vMotion Concurrent Migrations Are Limited by Network Speed
+## Tanzu — Supervisor Namespace IP Range Exhaustion Stalls All Workload Cluster Creation
 
-```text
-Per-host vMotion concurrency limits:
-  1 GbE:    2 concurrent vMotions
-  10 GbE:   4 concurrent vMotions
-  25 GbE:   8 concurrent vMotions
-  40 GbE+:  16 concurrent vMotions
+**What catches admins:** New TKC (Tanzu Kubernetes Cluster) creation requests hang at "Pending" indefinitely. Existing clusters are unaffected. The Supervisor control plane shows no error in the vCenter UI.
+
+**Why it happens:** The Supervisor Namespace IP range is configured during Workload Management enablement and is fixed at that point. Each Supervisor VM, each TKC control plane VM, and each TKC worker node consumes an IP from this range. In environments where the initial range was sized for a pilot and then expanded with additional TKCs, the range becomes exhausted. When all IPs are consumed, new cluster creation requests wait for an IP indefinitely with no explicit "out of IP addresses" error surfaced to the administrator.
+
+**How to avoid / fix:** Size the Supervisor Namespace IP range to at least 5x the anticipated peak number of TKC nodes, including control planes, at design time. To check current consumption:
+
+```bash
+kubectl get virtualmachinesetresourcepolicies -A
 ```
 
-DRS and maintenance mode operations respect these limits — a 96-host cluster entering maintenance mode on one host will queue vMotions rather than parallelise them all simultaneously.
+If the range is exhausted, the only remediation is to remove unused TKCs to free IPs, or to re-enable Workload Management with a larger range — which requires destroying all existing TKCs. Plan the range generously at initial deployment.
+
+---
+
+## Tanzu — TKC Upgrades Cannot Skip Minor Versions
+
+**What catches admins:** An administrator attempts to upgrade a TKC from Kubernetes 1.25 to 1.27 in a single operation to catch up after a period of deferred upgrades. The upgrade request is rejected or silently queued without explanation.
+
+**Why it happens:** Tanzu Kubernetes Grid enforces the same sequential minor-version upgrade constraint as upstream Kubernetes. A TKC on 1.25 must be upgraded to 1.26 before it can be upgraded to 1.27. Unlike vSphere component upgrades which can be batched, Kubernetes minor version skipping is not supported and will be blocked by the TKG service even if the target image is available in the content library.
+
+**How to avoid / fix:** Establish a Kubernetes version lifecycle policy that limits the acceptable age of a running TKC to no more than two minor versions behind the current supported release. Check TKC versions regularly:
+
+```bash
+kubectl get tkc -A
+```
+
+For clusters that have fallen behind, plan sequential upgrade windows rather than attempting a single jump. Each minor version upgrade should be validated (workloads running, kube-system pods healthy) before proceeding to the next step.
+
+---
+
+## VxRail — LCM Bundle Download Failures Leave the Cluster in a Partial Upgrade State
+
+**What catches admins:** A VxRail LCM upgrade is initiated through the VxRail Manager plugin in vCenter. The bundle download phase fails partway through (connectivity loss, timeout, or proxy authentication error). The administrator retries the upgrade — but VxRail LCM reports a conflict because a partial bundle exists, and subsequent attempts fail with a generic "bundle validation error."
+
+**Why it happens:** VxRail LCM stages bundle files to the VxRail Manager VM local filesystem during download. If the download is interrupted, partial files remain on disk. The LCM engine validates bundle checksums before proceeding and correctly rejects partial downloads — but the error message does not clearly identify the partial file as the cause or explain how to clean it up. Retrying the download via the UI attempts to write to the same path and fails the same validation.
+
+**How to avoid / fix:** Ensure stable internet connectivity or a local Dell update repository is configured before initiating any LCM bundle download. If a partial download occurs, SSH to the VxRail Manager VM, navigate to `/data/store/` (or the configured bundle staging path), and remove incomplete bundle files before retrying. Verify the proxy configuration and firewall egress rules permit access to `dl.dell.com` and `downloads.vmware.com` without authentication challenges. Use the Dell Update Repository (DUP) offline bundle method for environments with restricted egress.
+
+---
+
+## VxRail — Mixed Hardware Generations in a Single Cluster Are Not Supported After Initial Build
+
+**What catches admins:** An existing VxRail cluster is partially refreshed with newer-generation nodes (e.g., VxRail E Series Gen 2 added to an existing Gen 1 cluster) to expand capacity. The new nodes initially join and appear healthy. After the next LCM upgrade cycle, SDDC Manager or VxRail Manager flags the cluster as invalid or blocks the upgrade entirely.
+
+**Why it happens:** VxRail clusters are validated and certified as a homogeneous hardware unit. VxRail Manager's LCM pipeline selects a single firmware and driver bundle for the entire cluster based on the cluster's registered hardware profile. When mixed hardware generations are present, no single bundle satisfies all node models, and the LCM validation fails. While the hosts may function at the vSphere layer, VxRail's integrated lifecycle management cannot manage a heterogeneous cluster.
+
+**How to avoid / fix:** All nodes in a VxRail cluster must be from a compatible hardware profile within the same generation as defined in the VxRail compatibility matrix. To expand with newer hardware, create a new VxRail cluster (a new VCF Workload Domain or a standalone cluster) using the new-generation nodes exclusively. Workloads can then be migrated using vMotion from the old cluster to the new cluster. Never add nodes of a different model family to an existing VxRail cluster mid-lifecycle.
+
+---
+
+## Aria — LCM Certificate Rotation Breaks Product Registrations Silently
+
+**What catches admins:** After rotating certificates in Aria Suite Lifecycle Manager (LCM), Aria Operations, Aria Automation, or Aria Operations for Logs appears healthy in LCM but inter-product API calls begin failing. Workflows that depend on cross-product integration (e.g., Aria Automation calling Aria Operations for placement decisions) stop working without any alert in the product UIs.
+
+**Why it happens:** Aria LCM stores certificate thumbprints for all registered products in its internal trust store. When a product certificate is rotated, LCM updates that product's certificate but does not automatically propagate the new thumbprint to all other registered products that communicate with it. Products that cached the old thumbprint for mutual TLS validation continue to reject connections from the rotated product, causing silent integration failures at the API layer rather than at the product health check layer.
+
+**How to avoid / fix:** After any certificate rotation in Aria LCM, trigger a **Sync** operation on all other registered products to force LCM to refresh cross-product trust store entries. Verify inter-product connectivity from the LCM Inventory view. Include a post-rotation integration test (e.g., trigger a test Aria Automation cloud template deployment that exercises Aria Operations placement) in the certificate rotation runbook. Do not close the change window until all integration checks pass.
+
+---
+
+## Aria — Adapter Credential Drift Causes Silent Data Collection Gaps in Aria Operations
+
+**What catches admins:** Aria Operations dashboards show stale metrics for a subset of monitored objects — the objects are present in inventory, the adapter instance shows as "Collecting," but metric graphs flatline or show gaps. No alert is raised because the adapter reports a healthy collection state.
+
+**Why it happens:** Aria Operations adapter instances cache credentials locally when they are configured. If the target system's service account password is rotated (Active Directory password expiry, vCenter service account rotation, NSX Manager credential update) but the adapter instance in Aria Operations is not updated simultaneously, the adapter's authentication attempts begin failing. Many adapter types treat repeated authentication failures as transient network errors and continue reporting "Collecting" rather than transitioning to a "Credential Error" state, masking the data gap.
+
+**How to avoid / fix:** Maintain a registry of all Aria Operations adapter instances and their associated service accounts. Synchronise adapter credential updates with password rotation events — treat Aria Operations as a dependency that must be updated in the same change window as any monitored system's service account rotation. After a rotation, validate adapter collection health by confirming that the most recent metric timestamp for a representative monitored object is current:
+
+From Aria Operations UI: **Administration → Solutions → [Adapter Instance] → Test Connection**, then confirm the last collected timestamp in the monitored object's metric browser.

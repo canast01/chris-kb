@@ -1,13 +1,13 @@
 ---
 tags:
   - operations
-  - vmware
   - vxrail
 ---
-# VxRail — Operations
+# VxRail Operations
+
 
 <div class="kb-summary">
-Day-to-day operational reference for VxRail in the VMware product context. Covers plugin health, LCM upgrade sequencing, cluster expansion, and SupportAssist automation.
+VxRail operations notes for daily checks, maintenance windows, node work, expansion, support cases, and post-change validation.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
@@ -16,91 +16,104 @@ Day-to-day operational reference for VxRail in the VMware product context. Cover
 ┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         VxRail plugin daily health checks in vCenter; iDRAC hardware alarms monitoring        │   │
-│   │        LCM bundle download and pre-check before upgrade; node-by-node upgrade sequence        │   │
-│   │            FW + ESXi upgraded together per node in a single LCM operation per node            │   │
-│   │        SupportAssist for proactive case creation on hardware alerts from iDRAC or OMIVV       │   │
-│   │   Post-upgrade validation: vSAN health, ESXi version, iDRAC FW, and cluster stability checks  │   │
+│   │           Daily VxRail cluster operations: health checks via VxRail plugin and iDRAC          │   │
+│   │        Maintenance window procedures; node maintenance mode workflow and DRS evacuation       │   │
+│   │        Cluster expansion node addition; support case preparation with bundle generation       │   │
+│   │            Post-change validation; LCM failure triage; pre-upgrade readiness checks           │   │
+│   │       Change management log; alert review from OMIVV, SupportAssist, and vCenter alarms       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch drift early · lifecycle upgrades per node · automation scales VxRail management    │
+│    Daily ops catch cluster issues · maintenance keeps nodes updated · cluster mgmt handles expansion  │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Daily Ops          │  │          Lifecycle          │  │          Automation         │   │
-│   │       VxRail plugin UI      │  │        LCM bundle DL        │  │        VxRail Mgr API       │   │
-│   │         iDRAC alarms        │  │       Pre-check health      │  │         LCM REST API        │   │
-│   │        ESXi connected       │  │       Node-by-node upg      │  │        PowerCLI vSAN        │   │
-│   │       vSAN resync chk       │  │       FW+ESXi together      │  │       Dell automation       │   │
-│   │          LCM status         │  │      Rebalance post-add     │  │        Ansible VxRail       │   │
-│   │        SupportAssist        │  │          Post-check         │  │      SupportAssist API      │   │
+│   │          Daily Ops          │  │         Maintenance         │  │         Cluster Mgmt        │   │
+│   │         Daily checks        │  │         Maint window        │  │        Cluster expand       │   │
+│   │        VxRail plugin        │  │       Node maint mode       │  │        Node add guide       │   │
+│   │         iDRAC alarms        │  │        Pre-maint chk        │  │          Rebalance          │   │
+│   │         vSAN resync         │  │        Change window        │  │         Support case        │   │
+│   │         Node health         │  │       Post-change val       │  │       LCM fail triage       │   │
+│   │         Alert review        │  │          Change log         │  │        Pre-upg checks       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│    Daily ops catch issues early · lifecycle upgrades in sequence · automation handles at-scale changes│
+│    Daily ops surface issues early · maintenance follows change process                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     CLI Ref      │    Health Chk    │     Procedures    │    Install/Up    │   Backup/Rest    │   │
-│   │    VxRail API    │  Plugin: green   │    Daily checks   │  LCM bundle DL   │  Config export   │   │
-│   │   LCM REST API   │    iDRAC: ok     │    Maint window   │  Pre-check run   │  vSAN config bk  │   │
-│   │  PowerCLI vSAN   │  vSAN: resync=0  │     Node maint    │   Node-by-node   │   iDRAC config   │   │
-│   │  Ansible VxRail  │ ESXi: connected  │   Expand cluster  │   Post-upg val   │  Restore redep   │   │
+│   │    Daily Chks    │   Maint Window   │     Node Maint    │  Cluster Expnd   │   Support Case   │   │
+│   │  VxRail plugin   │  Pre-maint chk   │     Maint mode    │  Add node guide  │    Bundle gen    │   │
+│   │   iDRAC alarms   │  Change window   │    DRS evacuate   │    Rebalance     │   Log collect    │   │
+│   │  vSAN resync=0   │   Work perform   │    FW+ESXi upg    │   vSAN expand    │  SupportAssist   │   │
+│   │  ESXi connected  │  Post-chng val   │     Exit maint    │  Cluster health  │    GSS portal    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · NVMe/SSD/HDD · 25GbE NICs · iDRAC OOB · ToR switches                        │
+│  Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC OOB · 25GbE NICs · ToR switches                        │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  VxRail Manager API  = REST API on VxRail Manager VM; used for LCM jobs, health queries, and config   │
-│  LCM bundle          = Signed Dell upgrade package; FW + ESXi + vSAN versions tested and bundled      │
-│  Pre-check           = Health validation run before LCM upgrade; blocks if vSAN or network issues     │
-│  Node-by-node upgrade = LCM puts one node in maintenance, upgrades FW+ESXi, then moves to next node   │
-│  SupportAssist       = Dell proactive support; auto-opens cases on hardware alert from iDRAC or OMIVV │
-│  iDRAC               = Integrated Dell Remote Access Controller; hardware health, console, and OOB    │
-│  OMIVV               = OpenManage Integration for VMware vCenter; shows Dell hardware alarms in       │
-│  vSAN rebalance      = Redistributes vSAN objects evenly after a node is added to the cluster         │
-│  Maintenance mode    = ESXi state that evacuates VMs via DRS before hardware or upgrade operations    │
-│  FW update           = Firmware update applied to iDRAC, BIOS, NICs, and drives as part of LCM bundle │
-│  PowerCLI            = VMware PowerShell module; used for vSAN health checks and cluster automation   │
-│  Post-upgrade validation = Checks ESXi version, iDRAC FW, vSAN health, and cluster stability after LCM│
+│  VxRail plugin     = vCenter plugin aggregating cluster health from VxRail Manager into a single view │
+│  Maintenance mode  = ESXi state evacuating VMs via DRS before node-level maintenance or upgrade       │
+│  DRS evacuation    = DRS migrates all VMs off a host via vMotion before maintenance mode is entered   │
+│  Cluster expansion = Adding new VxRail nodes to an existing cluster via guided VxRail Manager workflow│
+│  Post-change val   = Checks vSAN health, ESXi connectivity, iDRAC status, and alarms after any change │
+│  Support bundle    = Log archive generated by VxRail Manager for Dell GSS case submission             │
+│  SupportAssist     = Dell proactive support service; opens cases automatically on hardware fault      │
+│  LCM failure triage = Investigating why an LCM upgrade stalled; review LCM logs and pre-check output  │
+│  Pre-upgrade check = Health and readiness validation run before initiating an LCM upgrade job         │
+│  Change management = Formal process for scheduling, approving, and documenting cluster changes        │
+│  iDRAC             = Integrated Dell Remote Access Controller; hardware health and OOB access         │
+│  Node-by-node      = LCM upgrade pattern: maintenance → upgrade → validate → next node in sequence    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+<div class="kb-grid kb-grid-5">
 
-<div class="kb-grid">
+<a class="kb-card" href="daily-checks/">
+  <strong>Daily Checks</strong>
+  <span>Daily VxRail cluster checks across VxRail Manager, vCenter, ESXi, vSAN, and hardware.</span>
+</a>
 
-<div class="kb-card">
-<h3><a href="cli-reference/">CLI Reference</a></h3>
-<p>VxRail Manager API, esxcli vSAN, iDRAC RACADM, and PowerCLI command reference.</p>
-</div>
+<a class="kb-card" href="maintenance-window/">
+  <strong>Maintenance Window</strong>
+  <span>Preparation, execution, validation, and communication during VxRail maintenance.</span>
+</a>
 
-<div class="kb-card">
-<h3><a href="health-checks/">Health Checks</a></h3>
-<p>Daily and weekly health check routine — VxRail plugin, vSAN, iDRAC, and capacity.</p>
-</div>
+<a class="kb-card" href="node-maintenance/">
+  <strong>Node Maintenance</strong>
+  <span>Node-level maintenance planning, evacuation, validation, and return to service.</span>
+</a>
 
-<div class="kb-card">
-<h3><a href="procedures/">Procedures</a></h3>
-<p>Node maintenance, expansion, disk replacement, and change readiness.</p>
-</div>
+<a class="kb-card" href="cluster-expansion/">
+  <strong>Cluster Expansion</strong>
+  <span>Node add planning, compatibility, network checks, and validation.</span>
+</a>
 
-<div class="kb-card">
-<h3><a href="install-upgrade/">Install &amp; Upgrade</a></h3>
-<p>VxRail LCM bundle upload, pre-check, node-by-node upgrade, and validation.</p>
-</div>
+<a class="kb-card" href="support-case-prep/">
+  <strong>Support Case Prep</strong>
+  <span>Evidence, timeline, logs, screenshots, and clear issue summary for Dell support.</span>
+</a>
 
-<div class="kb-card">
-<h3><a href="backup-restore/">Backup &amp; Restore</a></h3>
-<p>VxRail Manager backup, vCenter VAMI backup, ESXi config export, and restore.</p>
-</div>
+<a class="kb-card" href="post-change-validation/">
+  <strong>Post-Change Validation</strong>
+  <span>Validation after lifecycle, hardware, configuration, or support changes.</span>
+</a>
 
-<div class="kb-card">
-<h3><a href="scripts/">Scripts</a></h3>
-<p>PowerCLI and bash scripts for health checks, capacity, pre-upgrade validation.</p>
-</div>
+<a class="kb-card" href="lcm-failure-triage/">
+  <strong>LCM Failure Triage</strong>
+  <span>Diagnose stuck or failed VxRail LCM upgrades — bundle validation, component errors, and remediation steps.</span>
+</a>
 
+<a class="kb-card" href="node-health-review/">
+  <strong>Node Health Review</strong>
+  <span>Per-node health review covering hardware alerts, disk groups, network state, and iDRAC status.</span>
+</a>
+
+<a class="kb-card" href="pre-upgrade-checks/">
+  <strong>Pre-Upgrade Checks</strong>
+  <span>Pre-upgrade readiness checks for VxRail — compatibility, cluster health, free capacity, and snapshot state.</span>
+</a>
 </div>
 
