@@ -38,7 +38,12 @@ Operational runbooks and procedures for VMware platform management.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-<div class="kb-grid kb-grid-1">
+<div class="kb-grid kb-grid-2">
+
+<a class="kb-card" href="morning-health-check/">
+  <strong>Morning Health Check</strong>
+  <span>Start-of-shift check sequence: vCenter → ESXi → vSAN → NSX → Aria Ops. Under 20 minutes. Includes sign-off checklist.</span>
+</a>
 
 <a class="kb-card" href="runbooks/">
   <strong>Runbooks</strong>
