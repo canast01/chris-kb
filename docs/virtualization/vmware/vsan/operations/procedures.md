@@ -84,6 +84,9 @@ esxcli vsan storage list | grep -E "naa\.|Health|State"
 esxcli vsan debug object list | grep -v healthy
 ```
 
+!!! warning "Destructive — triggers vSAN data rebuild"
+    Removing a disk from a disk group triggers a full rebuild of all affected objects across the remaining nodes. Ensure `FTT` (Failures To Tolerate) policy allows the current loss before proceeding. If cluster resilience is already reduced, do not remove until the rebuild from the previous failure completes.
+
 **Step 2 — Remove the disk from its disk group**
 
 **From vCenter UI:**
@@ -946,6 +949,9 @@ Monitor evacuation — do not proceed until resync is at zero:
 ```bash
 watch -n 30 "esxcli vsan debug resync summary get"
 ```
+
+!!! danger "Data migration required before removing disk groups"
+    Removing disk groups evacuates all vSAN objects from the host to other nodes. If the cluster lacks sufficient free capacity to absorb the migrated data, the operation will fail mid-way and leave objects in a degraded state. Verify free capacity ≥ 25% and FTT compliance before proceeding.
 
 **Step 2 — Remove Disk Groups**
 

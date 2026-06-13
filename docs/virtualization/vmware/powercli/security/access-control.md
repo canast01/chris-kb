@@ -120,6 +120,9 @@ $perm = Get-VIPermission | Where-Object { $_.Principal -eq "DOMAIN\svc-automatio
 Set-VIPermission -Permission $perm -Role (Get-VIRole -Name "Automation-ReadOnly")
 
 # Remove a permission
+!!! warning "Removes permission immediately — verify principal and scope first"
+    This command removes permissions for the matched principal without confirmation. Double-check the filter (`Where-Object`) before running to avoid accidentally revoking access for the wrong group. Run with `-WhatIf` to preview if supported in your PowerCLI version.
+
 $perm | Remove-VIPermission -Confirm:$false
 ```
 

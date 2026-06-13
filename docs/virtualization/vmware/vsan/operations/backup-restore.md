@@ -224,6 +224,9 @@ esxcli vsan storage list | grep -E "naa\.|Is SSD|Disk Group UUID|Is Capacity Tie
 # 2. Check object health — expect degraded components
 esxcli vsan debug object list | grep -v healthy
 
+!!! warning "Run only after hardware is replaced and visible to ESXi"
+    Do not remove the failed disk group until the replacement hardware is physically installed and confirmed visible to the ESXi host. Removing before the new hardware is ready leaves the host with no disk group, which may trigger vSAN object degradation if FTT is already reduced.
+
 # 3. Remove the failed disk group (after hardware replacement)
 esxcli vsan storage remove -s <new_ssd_naa>
 

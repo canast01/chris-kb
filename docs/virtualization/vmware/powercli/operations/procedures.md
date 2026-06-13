@@ -345,6 +345,9 @@ $role   = Get-VIRole -Name "VirtualMachineAdmin"
 $entity = Get-Cluster -Name "Production"
 New-VIPermission -Entity $entity -Principal "CORP\vSphere-Admins" -Role $role -Propagate:$true -Confirm:$false
 
+!!! warning "Removing permissions is immediate and logged"
+    `Remove-VIPermission` takes effect immediately — the affected user or group loses access the moment the command runs. Verify the target principal and entity before running. Export current permissions first: `Get-VIPermission | Export-Csv permissions-backup.csv`.
+
 # Remove a permission
 Get-VIPermission -Entity $entity | Where-Object { $_.Principal -like "*old-group*" } |
     Remove-VIPermission -Confirm:$false
@@ -406,6 +409,9 @@ Get-VsanDiskGroup | ForEach-Object {
         Capacity  = ($_.ExtensionData.NonSsdDisks | ForEach-Object { $_.CanonicalName }) -join ", "
     }
 } | Format-Table -AutoSize
+
+!!! danger "Evacuates all vSAN data from disk group — ensure FTT compliance"
+    `Remove-VsanDiskGroup` with `-DataMigrationMode Full` migrates all vSAN objects from the disk group to other nodes before removal. If the cluster cannot absorb the data (insufficient free space or FTT already reduced), the operation fails mid-way and may leave objects degraded. Check cluster health and capacity before running.
 
 # Remove a disk group (for disk replacement)
 # ⚠ Ensure FTT compliance allows the loss before proceeding

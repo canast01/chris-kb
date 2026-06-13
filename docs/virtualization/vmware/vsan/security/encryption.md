@@ -244,6 +244,9 @@ If the KMS becomes unreachable:
 With vSAN D@RE enabled, removing a disk from the cluster does not require physical drive shredding. Destroying the DEK cryptographically erases all data on the disk — a process called crypto-erase.
 
 ```bash
+!!! danger "Cryptographically destroys all data on disk group — irreversible"
+    This command destroys the Data Encryption Key (DEK) and cryptographically erases all data on the disk group. The data **cannot be recovered** after the DEK is destroyed. Ensure all required snapshots, backups, or replicas exist before running. This satisfies NIST 800-88 crypto-erase.
+
 # Remove a disk group (DEK is destroyed, data is cryptographically erased)
 esxcli vsan storage remove -s <cache_ssd_naa>
 ```

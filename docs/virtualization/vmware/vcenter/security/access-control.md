@@ -216,6 +216,9 @@ New-VIPermission `
 # Remove a permission
 Get-VIPermission -Entity (Get-Datacenter "DC-LON") |
     Where-Object { $_.Principal -eq "CORP\jsmith" } |
+!!! warning "Removes permission immediately — verify scope before running"
+    This command takes effect immediately with no undo. Run `Get-VIPermission -Entity <entity>` first to confirm the exact permission being removed, and export permissions to CSV as a backup before making bulk changes.
+
     Remove-VIPermission -Confirm:$false
 
 # Create a custom role with specific privileges

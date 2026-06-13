@@ -411,6 +411,9 @@ New-VIPermission -Entity $folder -Principal $principal -Role "VM-Operator" -Prop
 # List permissions on an object
 Get-VIPermission -Entity (Get-Folder "Production-VMs")
 
+!!! warning "Permission removal is immediate — export before deleting"
+    This command removes the permission immediately. Verify the principal and scope before running. Export current permissions first so you can restore if needed: `Get-VIPermission -Entity <entity> | Export-Csv perms-backup.csv`.
+
 # Remove a permission
 Get-VIPermission -Entity (Get-Folder "Production-VMs") -Principal "DOMAIN\vm-operators" |
     Remove-VIPermission -Confirm:$false

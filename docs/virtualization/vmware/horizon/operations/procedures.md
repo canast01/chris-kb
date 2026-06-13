@@ -444,6 +444,9 @@ Get-HVMachine -MachineName "ic-win11-0055" | Remove-HVMachine -DeleteFromDisk $t
 #    Horizon Console → Catalog → Desktop Pools → [pool] → Machines
 #    Select stuck machine → More Commands → Delete → check "Delete from disk"
 
+!!! warning "Permanently deletes VM from disk — no recovery"
+    `Remove-VM -DeletePermanently` deletes the VM and all VMDKs from the datastore with no recycle bin. Only run this after confirming the Horizon delete failed and the VM is a known orphan. Verify the VM name matches the stuck machine before executing.
+
 # 5. Orphan cleanup in vCenter (if VM remains after Horizon delete)
 Get-VM "ic-win11-0055" | Remove-VM -DeletePermanently -Confirm:$false
 

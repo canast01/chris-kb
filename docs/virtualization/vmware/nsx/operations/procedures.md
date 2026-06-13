@@ -594,6 +594,9 @@ curl -sk -u 'admin:password' \
 
 ---
 
+!!! danger "Wipes current NSX configuration — use only after catastrophic failure"
+    NSX restore **overwrites the entire current NSX configuration** with the backup state. All changes made after the backup timestamp are permanently lost. This procedure is for disaster recovery only — not for config rollback. Coordinate with the network team before initiating. Ensure the backup timestamp is valid and all dependent services (VMs, NSX-T segments, DFW rules) are accounted for in the chosen backup.
+
 ## Restore NSX from Backup
 
 Restores NSX Manager configuration from a previously taken backup. Run only after a catastrophic NSX Manager failure where the cluster cannot be recovered in place. Restoration wipes the current NSX configuration and replaces it with the backup state.

@@ -193,6 +193,9 @@ esxcli vsan debug resync list
 esxcli vsan storage list | grep <device_naa>
 ```
 
+!!! danger "Removes entire disk group — triggers rebuild"
+    `esxcli vsan storage remove -s` removes the cache SSD and all associated capacity disks as a unit. All vSAN objects on that disk group are evacuated to other nodes before removal. Do not run if the cluster has degraded objects or insufficient free space (< 25%). Always verify with `esxcli vsan health cluster get` before proceeding.
+
 ### Remove a Disk Group
 
 ```bash

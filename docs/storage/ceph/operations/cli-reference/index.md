@@ -231,11 +231,16 @@ radosgw-admin key create --uid=<user> --key-type=s3   # generate S3 access/secre
 
 radosgw-admin bucket list --uid=<user>
 radosgw-admin bucket stats --bucket=<name>
-radosgw-admin bucket rm --bucket=<name> --purge-objects
-
 radosgw-admin quota set --uid=<user> --quota-type=user --max-size=50G
 radosgw-admin quota enable --uid=<user> --quota-type=user
 radosgw-admin usage show --uid=<user> --start-date=2026-01-01
+```
+
+!!! danger "bucket rm --purge-objects deletes all objects — irreversible"
+    `radosgw-admin bucket rm --purge-objects` permanently deletes every object in the bucket before removing it. There is no recycle bin or soft-delete. Confirm the bucket name and ensure no application is actively writing to it. Verify an offsite backup or snapshot exists before running.
+
+```bash
+radosgw-admin bucket rm --bucket=<name> --purge-objects
 ```
 
 ## cephadm Orchestration

@@ -132,6 +132,9 @@ nslookup <hostname>.example.com
 ### Virtual Machine
 
 ```powershell
+!!! danger "Permanently deletes VM and all disk files — no recovery"
+    `Remove-VM -DeletePermanently` deletes the VM configuration and all VMDKs from the datastore immediately. Ensure the decommission checklist is complete: data backed up, application decommissioned, CMDB updated, and approval obtained in ServiceNow before running.
+
 # VMware — power off and delete
 Stop-VM -VM "<hostname>" -Confirm:$false
 Remove-VM -VM "<hostname>" -DeletePermanently -Confirm:$false
