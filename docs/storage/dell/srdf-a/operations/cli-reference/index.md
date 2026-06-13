@@ -12,6 +12,15 @@ Part of the [SRDF/A](../../index.md) reference.
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Overview
 
 SRDF/A (Asynchronous) is managed via SYMCLI on a Solutions Enabler (SE) host that has access to the PowerMax/VMAX gatekeeper devices. All commands require `-sid <SymmID>` and typically `-rdfg <rdfg_number>`.

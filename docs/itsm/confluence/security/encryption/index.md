@@ -87,6 +87,15 @@ server {
 ```
 ```text
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Database Encryption
 
 Confluence stores all content (pages, comments, attachments metadata) in its database. Protect the database connection and data at rest.

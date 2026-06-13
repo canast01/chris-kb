@@ -55,6 +55,15 @@ Event Correlation reference covering Correlation Workflow, Building a Correlatio
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Dependency Map (template)
 
 Document for each critical service:

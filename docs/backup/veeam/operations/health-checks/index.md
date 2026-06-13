@@ -12,6 +12,15 @@ The primary review surface is the **Home** view in the VBR console, which shows 
 *Applies to: Veeam 12.x*
 </div>
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## SureBackup Verification Sequence
 
 SureBackup starts VMs in an isolated virtual lab and runs application-level tests — it is the only way to confirm a backup is truly restorable.

@@ -548,3 +548,13 @@ foreach ($p in $ports | Sort-Object { [int]$_.Port }) {
     Write-Host ("{0,-6} {1,-8} {2,-12} {3,-10} {4,-8} {5,-8} {6}" -f $p.Port,$p.Speed,$p.State,$p.Mode,$enc,$lossSync,$linkFail) -ForegroundColor $color
 }
 ```
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

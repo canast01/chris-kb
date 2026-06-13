@@ -62,6 +62,15 @@ Azure OpenAI security covers authentication methods, role-based access control (
 ```
 
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## RBAC Roles
 
 Azure RBAC roles control who can manage the resource and who can call the API. API keys are an alternative but managed identity is preferred in production.

@@ -235,3 +235,13 @@ aws iam attach-user-policy \
 # CloudTrail alert: break-glass login triggers SNS → PagerDuty
 # Create CloudWatch alarm on metric filter for user: "break-glass-admin"
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

@@ -64,6 +64,15 @@ Part of the [Azure](../../index.md) reference.
 
 
 ---
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Script Categories
 
 ```mermaid

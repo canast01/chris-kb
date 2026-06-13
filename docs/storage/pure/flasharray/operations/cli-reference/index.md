@@ -84,6 +84,15 @@ Commonly used Purity CLI commands for managing Pure FlashArray all-flash storage
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Admin Accounts
 
 Admin accounts control who can log in and what they can do. Pure supports role-based access and API tokens for automation.

@@ -10,6 +10,15 @@ tags:
 Azure daily health checks — runnable CLI routine covering service health incidents, VM power states and provisioning failures, load balancer backend pool health, storage capacity, NSG flow log validation, and Monitor alert review.
 </div>
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 Run these eight commands at the start of every operational shift to verify Azure environment health.

@@ -10,6 +10,15 @@ tags:
 Access Control reference covering Least Privilege Access Model, AWS IAM Least Privilege, Access Policies Reference.
 </div>
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Least Privilege Access Model
 
 ```mermaid

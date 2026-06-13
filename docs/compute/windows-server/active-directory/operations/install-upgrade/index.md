@@ -67,6 +67,15 @@ Active Directory domain and forest functional levels determine which features ar
 
  SYSVOL replication must be migrated from FRS to DFSR before the domain functional level can be raised to Windows Server 2008 R2 or higher.
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Domain Functional Level Upgrade Flow
 
 ```mermaid

@@ -65,6 +65,15 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 
  Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Encryption Layer Architecture
 
 ```mermaid

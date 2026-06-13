@@ -56,3 +56,13 @@ PowerShell scripts for Veeam job management, capacity reporting, SLA health chec
 
 - Store VBR credentials using Windows Credential Manager or retrieve from CyberArk at runtime.
 - Use `Try/Catch/Finally` blocks to ensure `Disconnect-VBRServer` is called even on error.
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

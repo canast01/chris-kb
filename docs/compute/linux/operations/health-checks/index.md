@@ -12,6 +12,15 @@ Routine checks, service validation, and status verification.
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 Run these commands in sequence at the start of any health check or before making changes to a Linux server.

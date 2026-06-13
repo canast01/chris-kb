@@ -11,6 +11,15 @@ PostgreSQL hardening — disabling superuser remote login, SSL enforcement, rest
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Restrict Superuser Access
 
 ```sql

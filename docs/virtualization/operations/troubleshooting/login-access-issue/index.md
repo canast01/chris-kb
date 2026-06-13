@@ -64,6 +64,15 @@ Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD 
 
 
 ---
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Cannot Log Into vCenter
 
 **Step 1 — Try the local SSO admin account** (`administrator@vsphere.local` or `administrator@<sso-domain>`). If this works but AD accounts cannot log in, the issue is with the identity source.

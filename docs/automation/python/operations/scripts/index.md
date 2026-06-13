@@ -10,6 +10,15 @@ tags:
 Scripts reference covering Purpose, Windows Python Environment Setup Flow.
 </div>
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Purpose
 
 Use this page for practical Python scripts, field-tested commands, known issues, and operational notes.

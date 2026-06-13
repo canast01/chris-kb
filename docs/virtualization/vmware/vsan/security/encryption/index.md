@@ -16,6 +16,15 @@ vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE)
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Encryption Architecture
 
 ### Data-at-Rest Encryption (D@RE)

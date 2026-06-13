@@ -71,6 +71,15 @@ Authentication reference for VxRail components. Covers VxRail Manager local and 
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## VxRail Manager Local Account (mystic)
 
 VxRail Manager ships with a local admin account named `mystic`. This account is used during initial setup and is the default credential for the VxRail Manager API and UI.

@@ -80,3 +80,13 @@ systemctl restart rsyslog
 # View authentication and admin action logs on the appliance
 tail -f /data/vcops/log/casa.log | grep -i "login\|logout\|admin\|role"
 ```
+
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

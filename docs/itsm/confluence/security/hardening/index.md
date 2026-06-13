@@ -181,3 +181,13 @@ chown confluence:root /var/atlassian/application-data/confluence/logs
 iptables -A INPUT -p tcp --dport 8090 -s 127.0.0.1 -j ACCEPT
 iptables -A INPUT -p tcp --dport 8090 -j DROP
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

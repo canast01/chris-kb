@@ -96,3 +96,13 @@ aws ce get-reservation-utilization --time-period Start=2026-01-01,End=2026-01-31
 aws ec2 describe-reserved-instances --filters "Name=state,Values=active" \
     --query "ReservedInstances[?End<='$(date -d '+90 days' +%Y-%m-%d)T23:59:59'].[ReservedInstancesId,InstanceType,End]"
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

@@ -61,6 +61,15 @@ Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere L
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## vCenter Upgrade Procedure (VCSA)
 
 1. Take a **file-based backup** of vCenter (VAMI → Backup)

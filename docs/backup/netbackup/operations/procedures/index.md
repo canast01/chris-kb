@@ -53,6 +53,15 @@ Procedures reference covering Backup Policies.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Backup Policies
 
 Use this section for practical NetBackup Policies notes, checks, troubleshooting, commands, change notes, and field references.

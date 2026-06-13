@@ -38,6 +38,15 @@ VM Lifecycle Runbook reference covering Overview, Pre-Checks, Steps, Validation,
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Overview
 
 Use this for VM build, change, ownership, review, retirement, and cleanup.

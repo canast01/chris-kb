@@ -12,6 +12,15 @@ CLI Reference reference covering Backup Infrastructure Topology, Sessions & Hist
 *Applies to: Veeam 12.x*
 </div>
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Backup Infrastructure Topology
 
 The Veeam component hierarchy governs how jobs are routed, where data lands, and which components need to be healthy for a job to succeed.

@@ -16,6 +16,15 @@ Automation scripts and reusable code.
 
 Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to `/var/log/ops/` and forwarded to the central logging platform.
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Script Deployment Flow
 
 ```mermaid

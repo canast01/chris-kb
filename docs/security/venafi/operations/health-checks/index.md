@@ -62,6 +62,15 @@ Daily operations centre on the Venafi Policy Server dashboard: review certificat
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 1. **Venafi Trust Protection Platform service** — On the Venafi server run `Get-Service VenafiTrustProtectionPlatform | Select-Object Name, Status`; the service must show `Running`; if stopped, check the Windows Event Log under Application for startup errors before attempting a restart.

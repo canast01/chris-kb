@@ -151,3 +151,13 @@ ansible all -i inventory/ -m ansible.posix.authorized_key \
   -a "user=ansible key={{ lookup('file', '/home/ansible/.ssh/ansible_ed25519.pub') }}" \
   --become --user root
 ```
+
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

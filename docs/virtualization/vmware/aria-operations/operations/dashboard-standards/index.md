@@ -58,6 +58,15 @@ Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code,
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Validation Checklist
 
 - [ ] All required dashboards loading in monitoring tool

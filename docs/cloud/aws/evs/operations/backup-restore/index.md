@@ -39,6 +39,15 @@ EVS backup strategy: SDDC Manager configuration backup, vCenter VAMI backup, NSX
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Backup Architecture
 
 EVS is a shared-responsibility model for backup. AWS and VMware each own different layers.

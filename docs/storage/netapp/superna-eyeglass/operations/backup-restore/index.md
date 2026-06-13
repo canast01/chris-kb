@@ -12,6 +12,15 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## What Eyeglass Backs Up
 
 | Category | Backed Up | Notes |

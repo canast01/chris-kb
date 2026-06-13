@@ -10,6 +10,15 @@ tags:
 Install & Upgrade reference covering Version Compatibility Matrix, EOL Tracking, License Management.
 </div>
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Version Compatibility Matrix
 
 Eyeglass version must be compatible with the deployed PowerScale OneFS version. Always verify before upgrading either system.

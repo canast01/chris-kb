@@ -69,6 +69,15 @@ sequenceDiagram
 ```
 ```text
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Kerberos
 
 Kerberos is the default domain authentication protocol (port 88 TCP/UDP). The Key Distribution Center (KDC) runs on each domain controller.

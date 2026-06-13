@@ -63,6 +63,15 @@ Key Vault keys are cryptographic keys used for encryption, signing, and wrapping
 ```
 
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Key Types
 
 | Type | Algorithm family | Key sizes | Supports HSM backing |

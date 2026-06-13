@@ -63,6 +63,16 @@ Diagnostics reference covering Diagnostic Data Collection, Component-Level Diagn
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Diagnostic Data Collection
 
 Before contacting Dell Support or performing deep troubleshooting, collect the standard diagnostic dataset. This avoids repeated back-and-forth with support and establishes a timestamped baseline.

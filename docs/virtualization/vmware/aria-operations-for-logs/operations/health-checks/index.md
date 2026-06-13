@@ -58,6 +58,15 @@ Health checks for Aria Operations for Logs — cluster node status, disk and ing
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 Run these 8 checks in order at the start of each shift or after any infrastructure change.

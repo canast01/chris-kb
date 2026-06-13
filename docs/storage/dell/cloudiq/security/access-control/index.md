@@ -78,3 +78,13 @@ CloudIQ provides role-based access control to limit what each user can view and 
 | Viewer | Read-only access to dashboards, health scores, capacity, and alerts; cannot modify settings or acknowledge alerts |
 
 Assign roles under **Settings > Users**. Apply the principle of least privilege — most operational users should be Viewer or System Admin; CloudIQ Admin should be restricted to a small number of named individuals.
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

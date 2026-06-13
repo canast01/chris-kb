@@ -112,3 +112,13 @@ git clone git@github.com:ORG/.github.git /backups/github/org-github-repo
 # Export runner groups
 gh api orgs/ORG/actions/runner-groups | jq '.runner_groups[]' > runner-groups.json
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

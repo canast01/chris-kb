@@ -9,6 +9,15 @@ Cisco DCNM (Data Center Network Manager) is the management and automation platfo
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Discover a Fabric in DCNM
 
 Fabric discovery imports an existing MDS FC or VXLAN fabric into DCNM management without disrupting traffic.

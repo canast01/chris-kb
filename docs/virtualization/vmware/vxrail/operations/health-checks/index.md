@@ -55,6 +55,15 @@ Daily and weekly health check routine for VxRail clusters. Covers VxRail Plugin 
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Alert Threshold Table
 
 | Metric | Warning | Critical | Action |

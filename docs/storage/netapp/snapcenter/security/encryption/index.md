@@ -65,6 +65,15 @@ Part of the [SnapCenter Security](../index.md) reference.
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## TLS and Certificate Management
 
 SnapCenter exposes its web GUI and REST API on port 8146 over HTTPS. The underlying web server is IIS (Internet Information Services) on Windows Server. By default, SnapCenter installs with a self-signed certificate — this must be replaced with a CA-signed certificate before production use.

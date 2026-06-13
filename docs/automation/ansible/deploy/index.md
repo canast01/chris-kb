@@ -51,6 +51,16 @@ Step-by-step guide to installing Ansible, configuring inventory and SSH authenti
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Install Ansible
 
 Install Ansible using the package manager appropriate for your control node OS, or via Python pip for a version-flexible install.

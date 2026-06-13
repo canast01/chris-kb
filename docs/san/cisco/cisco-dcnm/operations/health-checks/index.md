@@ -74,6 +74,15 @@ timedatectl status
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 1. **DCNM service status** — SSH to the DCNM server and run `/usr/local/cisco/dcm/dcnm/sbin/dcnm-server status`; all listed services must show `running`; alternatively confirm the DCNM web UI loads successfully and you can log in.

@@ -77,3 +77,4 @@ graph TD
     <span class="kb-card-desc">Red Hat Ceph support cases, community resources, required diagnostic data</span>
   </a>
 </div>
+

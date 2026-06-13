@@ -33,6 +33,15 @@ Script Reference reference covering Subscription Capacity Report, Alert Configur
   Replication:  curl ──► /api/2.x/protection-groups
 ```
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Subscription Capacity Report
 
 Queries Pure1 API to report consumed vs committed TiB across all arrays in the Evergreen subscription.

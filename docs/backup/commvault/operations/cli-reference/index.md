@@ -12,6 +12,15 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
 *Applies to: Commvault 2024.x*
 </div>
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Backup Job Lifecycle
 
 From schedule trigger to media write, every CommVault backup job moves through a defined sequence of states.

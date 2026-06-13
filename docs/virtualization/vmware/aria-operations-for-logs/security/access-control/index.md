@@ -13,6 +13,15 @@ Access Control reference covering RBAC Roles, Configuring Active Directory Integ
 *Applies to: Aria Logs 8.x*
 </div>
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## RBAC Roles
 
 Aria Operations for Logs uses a simple two-tier RBAC model: users are either administrators or users. More granular access control is applied through Active Directory group assignment and, in Advanced/Enterprise editions, through **user roles** with object-level scoping.

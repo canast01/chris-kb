@@ -142,4 +142,3 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 
 </div>
 
-

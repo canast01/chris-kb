@@ -69,6 +69,15 @@ Procedures reference covering COD Activation Procedure, Incident Triage.
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## COD Activation Procedure
 
 1. Confirm the COD activation is required and the change ticket is approved

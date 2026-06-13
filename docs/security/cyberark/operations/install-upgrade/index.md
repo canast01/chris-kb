@@ -79,3 +79,13 @@ CyberArk follows a structured upgrade sequence to preserve Vault integrity: the 
 - Snapshot all Windows VMs hosting PAM components
 - Review CyberArk release notes for breaking changes
 - Verify licence count covers current account inventory
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

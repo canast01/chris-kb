@@ -45,6 +45,15 @@ Step-by-step procedures for configuring SAML SSO with Azure Entra ID and Okta, m
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Configure SAML SSO with Azure Entra ID
 
 Register an application in Azure Entra ID and configure it as a SAML identity provider.

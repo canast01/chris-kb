@@ -79,6 +79,15 @@ tags:
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```bash
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run pre-check for a workload domain upgrade
 curl -sk -X POST -u admin:<password> \
   https://localhost/v1/upgrades \

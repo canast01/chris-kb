@@ -68,6 +68,15 @@ Access Control reference covering Overview, Built-In Roles, Resource Group Scopi
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Overview
 
 SANnav RBAC is built around roles, resource groups, and optional scope restrictions. A user's effective access is the intersection of their role (what operations they can perform) and their resource group assignment (which fabrics and switches they can see).

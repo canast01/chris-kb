@@ -76,6 +76,15 @@ After registration, the LCM login page shows a "Log In with Workspace ONE" butto
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Active Directory Group Sync via VIDM
 
 LCM does not connect to AD directly. AD group membership is resolved through VIDM.

@@ -61,6 +61,15 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
 ```
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## TLS Configuration
 
 Ensure LCM does not expose weak TLS versions or cipher suites:

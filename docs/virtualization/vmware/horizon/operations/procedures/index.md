@@ -71,6 +71,15 @@ Get-HVPool -PoolName "pool-ic-win11" | Select-Object -ExpandProperty AutomatedDe
 Get-HVMachine -PoolName "pool-ic-win11" | Group-Object State | Select-Object Name, Count
 ```
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Create an RDS Farm and Application Pool
 
 RDS farms deliver published desktops and RemoteApp applications from Windows Server RDSH hosts.

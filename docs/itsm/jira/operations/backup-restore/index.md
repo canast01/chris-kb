@@ -209,3 +209,13 @@ curl -s https://jira.example.com/status | python3 -m json.tool
 # Start additional nodes after primary is healthy
 systemctl start jira   # on jira-app-02, jira-app-03
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

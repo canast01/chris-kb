@@ -72,6 +72,15 @@ passwd ndadmin
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## 7. Backup Encryption
 
 Enable backup encryption to protect backup archives at rest on the remote backup server:

@@ -75,3 +75,14 @@ Common FOD activation errors, feature entitlement failures, and troubleshooting 
 | CloudIQ reports no telemetry for a FOD-enrolled system | Secure Connect Gateway offline or CloudIQ agent not running | Check SCG appliance health; verify outbound HTTPS connectivity to Dell CloudIQ endpoints |
 | FOD capacity ceiling reached (no more burst available) | All pre-installed burst capacity is consumed | Contact Dell account team to install additional physical capacity under the FOD agreement |
 | Committed baseline appears incorrect in APEX Console | Baseline was set at contract time and workload changed | Submit a baseline adjustment request through APEX Console or Dell account team |
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

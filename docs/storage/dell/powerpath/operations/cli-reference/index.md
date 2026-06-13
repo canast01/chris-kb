@@ -65,6 +65,15 @@ Commonly used `powermt` commands for managing Dell PowerPath multipathing on Lin
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Status & Devices
 
 ```mermaid

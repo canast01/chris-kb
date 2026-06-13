@@ -38,6 +38,15 @@ This page covers FlashBlade snapshot-based data protection, integration with ent
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Snapshot-Based Backup Overview
 
 FlashBlade uses space-efficient, redirect-on-write snapshots as the foundation for all data protection. Snapshots are instantaneous regardless of filesystem size and consume space only for changed blocks. A snapshot of a 100 TiB filesystem completes in milliseconds and immediately exposes the full point-in-time namespace through the `.snapshot` directory inside the NFS export.

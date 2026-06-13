@@ -57,3 +57,13 @@ PowerShell and qscript automation for Commvault job management, SLA reporting, c
 │  allCopies      = Flag in auxcopy command to replicate all storage policy copies                      │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

@@ -13,6 +13,15 @@ Encryption reference covering TLS Certificate Replacement, Verifying Certificate
 *Applies to: Aria Logs 8.x*
 </div>
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## TLS Certificate Replacement
 
 Aria Operations for Logs ships with a self-signed certificate. Replace it with a CA-signed certificate for production before connecting any syslog sources or users.

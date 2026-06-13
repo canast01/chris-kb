@@ -36,6 +36,15 @@ EVS encryption: vSAN encryption at rest, VM encryption via vSphere Encryption, T
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Encryption Layers
 
 EVS encryption operates across multiple layers. Understanding which layer covers what helps when designing a compliance posture or troubleshooting an encryption-related issue.

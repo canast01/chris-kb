@@ -63,6 +63,15 @@ Scripts reference covering Authentication Helper, Daily Health Check Script, Vol
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Authentication Helper
 
 All scripts in this section use the REST API token-based authentication. Source this helper before running any other script.

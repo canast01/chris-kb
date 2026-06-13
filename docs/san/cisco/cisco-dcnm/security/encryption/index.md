@@ -122,3 +122,13 @@ exp = datetime.strptime(d, '%b %d %H:%M:%S %Y %Z')
 print(f'Expires in {(exp-datetime.utcnow()).days} days: {exp.date()}')
 "
 ```
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

@@ -13,6 +13,15 @@ Data governance is the framework of policies, roles, processes, and controls tha
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Data Ownership Model
 
 Every dataset must have an assigned owner, steward, and custodian. These are not interchangeable — each carries distinct accountability.

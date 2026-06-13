@@ -39,6 +39,15 @@ Alert thresholds:
 - > 75% used: review and plan expansion
 - > 85% used: immediate action — thin provisioned disks may fail to inflate
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## vSAN Capacity
 
 ```bash

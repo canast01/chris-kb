@@ -12,6 +12,15 @@ Access Control reference covering Terraform RBAC and Backend Access Model, Least
 *Applies to: Terraform 1.x*
 </div>
 
+## Before you begin
+
+- **Access:** Provider credentials configured (`terraform login` or env vars)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Terraform RBAC and Backend Access Model
 
 ```mermaid

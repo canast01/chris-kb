@@ -44,6 +44,15 @@ Managing vSphere encryption via PowerCLI — vSAN encryption enablement and key 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## vSAN Encryption via PowerCLI
 
 Enable and manage vSAN data-at-rest encryption. Requires a configured KMS cluster in vCenter.

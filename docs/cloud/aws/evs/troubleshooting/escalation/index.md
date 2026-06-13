@@ -36,6 +36,16 @@ AWS support escalation for EVS: severity levels, required data for support cases
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Case Routing Matrix
 
 Use this matrix to determine who to contact first and when to open joint cases.

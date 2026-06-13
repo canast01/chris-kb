@@ -49,6 +49,15 @@ Step-by-step procedures for connecting, configuring, and troubleshooting LDAP id
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Test LDAP Connectivity
 
 Verify network and TLS connectivity to the LDAP directory before configuring any application integration.

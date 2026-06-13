@@ -34,6 +34,15 @@ Access Control reference covering vSphere Replication Uses vCenter RBAC, VR-Spec
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## vSphere Replication Uses vCenter RBAC
 
 vSphere Replication has no separate user store. All access control is managed through vCenter permissions using VR-specific privileges.

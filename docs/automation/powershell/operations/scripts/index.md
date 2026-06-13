@@ -37,6 +37,15 @@ See also:
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Daily Check Script
 
 Check that scheduled PowerShell tasks ran, review log files for errors, test connectivity to key infrastructure endpoints, and verify required modules are loaded and up to date. Environment variables: `SCRIPT_DIR` (default `C:\Scripts`), `LOG_DIR` (default `C:\Logs`).

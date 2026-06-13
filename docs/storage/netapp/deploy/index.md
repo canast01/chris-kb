@@ -9,6 +9,16 @@ This guide covers the initial setup of a NetApp ONTAP cluster from first boot th
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Cluster Initial Setup
 
 ONTAP cluster setup is performed through the System Manager wizard (browser-based) or the ONTAP CLI setup script (`cluster setup`).

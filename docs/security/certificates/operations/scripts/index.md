@@ -89,3 +89,13 @@ def check_cert_expiry(hostname, port=443, warn_days=30):
         print(f"WARNING: {hostname} expires in {days_left} days ({expiry})")
     return days_left
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

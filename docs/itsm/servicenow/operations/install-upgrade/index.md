@@ -14,6 +14,15 @@ ServiceNow cloud instances are upgraded by ServiceNow as part of the managed ser
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Release Cadence
 
 ServiceNow releases two major platform versions per year, each named after a city in alphabetical order:

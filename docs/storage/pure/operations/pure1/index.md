@@ -34,6 +34,15 @@ Pure1 Cloud Management reference covering Accessing Pure1, Key Navigation Areas,
 ```
 
 Pure1 is Pure Storage's cloud-based management and monitoring platform. It provides a unified view of all FlashArray and FlashBlade systems.
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Accessing Pure1
 
 Log in at **pure1.purestorage.com** with your Pure Storage account credentials.

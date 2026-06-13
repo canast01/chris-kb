@@ -76,3 +76,14 @@ Common APEX Storage as a Service issues — provisioning failures, connectivity 
 | APEX Console shows infrastructure as offline | Secure Connect Gateway appliance down or network path to Dell blocked | Check SCG appliance health and outbound HTTPS connectivity on port 443 to Dell APEX endpoints |
 | Capacity request delayed | Service request not raised in APEX Console, or SLA window not yet elapsed | Raise a capacity increase request via APEX Console; review the contracted SLA response time |
 | Billing discrepancy | Consumed capacity reported differently between on-premises platform and APEX Console | Allow 24 hours for telemetry sync; open a support case via APEX Console if discrepancy persists |
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

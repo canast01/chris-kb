@@ -44,6 +44,15 @@ Step-by-step procedures for assessing controls against CIS, ISO 27001, NIST, and
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run CIS Benchmark Assessment
 
 Evaluate infrastructure against the CIS Benchmark for the relevant OS or platform to produce a scored compliance baseline.

@@ -12,6 +12,15 @@ Part of the [SRDF/A](../../index.md) reference.
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Change Readiness
 
 - [ ] All SRDF/A pairs are in Consistent state before beginning any storage changes on R1 or R2 devices

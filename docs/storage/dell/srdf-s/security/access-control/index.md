@@ -55,3 +55,13 @@ Configure Unisphere → Notifications → Syslog to forward SRDF events to SIEM.
 - `SRDF Failover` (any occurrence)
 - `SRDF Suspend` without corresponding maintenance ticket
 - `SRDF Invalid` (indicates device state inconsistency)
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

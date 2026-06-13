@@ -26,6 +26,15 @@ Evergreen Security Controls
 │  └── Controller refresh: drives sanitised before return                                               │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Hardening Checklist
 
 - Enforce TLS 1.2 or higher for all management access (GUI, REST API); confirm HTTP redirect is disabled

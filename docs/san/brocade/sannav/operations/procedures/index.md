@@ -9,6 +9,15 @@ SANnav Management Portal is the Brocade web-based tool for SAN fabric discovery,
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Add a Fabric to SANnav Management
 
 Registering a fabric in SANnav allows centralised management, monitoring, and zoning across all switches in that fabric.

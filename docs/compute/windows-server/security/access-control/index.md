@@ -229,3 +229,13 @@ Get-ADUser -Filter {PasswordNeverExpires -eq $true -and Enabled -eq $true} `
   -Properties PasswordNeverExpires, Description |
   Select-Object Name, SamAccountName, Description
 ```
+
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

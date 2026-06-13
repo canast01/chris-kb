@@ -46,6 +46,16 @@ End-to-end deployment guide for a new VxRail cluster. Covers pre-deployment read
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Phase 1: Physical Readiness
 
 VxRail nodes ship pre-racked or are racked on-site. Before running the First Run Wizard every prerequisite below must pass — the wizard does not retry failed DNS or NTP lookups gracefully.

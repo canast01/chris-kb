@@ -10,6 +10,16 @@ tags:
 Backup Failures Troubleshooting reference covering Overview, Failure Classification, Diagnostic Flowchart, Commvault Troubleshooting, NetBackup Troubleshooting and 4 more sections.
 </div>
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Overview
 
 Backup failures directly degrade recovery capability. This guide covers failure classification and deep troubleshooting for Veeam Backup & Replication, Commvault, and Veritas NetBackup in enterprise environments. Address failures within the RTO window defined for each protection tier.

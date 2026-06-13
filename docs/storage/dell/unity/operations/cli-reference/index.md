@@ -67,6 +67,15 @@ Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity i
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## System & Status
 
 These commands show you the overall health of the array — software version, active alerts, license status, and remote support connectivity. Start here when something seems wrong.

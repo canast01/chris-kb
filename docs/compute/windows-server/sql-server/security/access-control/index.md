@@ -44,6 +44,15 @@ SQL Server access control — logins vs users, server/database roles, GRANT/DENY
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Login vs User
 
 - **Login**: server-level principal — authenticates to SQL Server instance

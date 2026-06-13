@@ -9,6 +9,16 @@ tags:
 Step-by-step guide to installing Git, configuring global settings, setting up SSH key authentication, and establishing a working local development environment.
 </div>
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Install Git
 
 **Linux (RHEL/CentOS 8+):**

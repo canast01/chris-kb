@@ -67,6 +67,15 @@ Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scal
 
 > Use `isi --help` or `isi <subcommand> --help` for full option lists.
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Cluster Status & Identity
 
 ```bash

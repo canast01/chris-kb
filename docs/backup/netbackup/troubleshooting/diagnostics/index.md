@@ -142,3 +142,14 @@ EOF
 # Include job IDs and time window when submitting to Veritas
 bpdbjobs -jobid <id> -report > /tmp/job_<id>_report.txt
 ```
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

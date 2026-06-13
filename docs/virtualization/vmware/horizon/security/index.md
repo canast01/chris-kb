@@ -92,3 +92,4 @@ Horizon security controls — AD authentication, RSA SecurID and SAML MFA, Conne
 </a>
 
 </div>
+

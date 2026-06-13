@@ -61,6 +61,15 @@ vSAN access control is implemented through vCenter's Role-Based Access Control (
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Custom Roles
 
 ### vSAN Read-Only Role (Monitoring)

@@ -117,6 +117,15 @@ Zerto provides continuous data protection (CDP) for vSAN-backed VMs. It replicat
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## vSAN Configuration Backup
 
 vSAN cluster configuration is stored in vCenter. The vSAN configuration itself (disk groups, policies, cluster settings) is not separately backed up — it is recovered by rebuilding the cluster from vCenter configuration.

@@ -18,6 +18,15 @@ Ansible is an agentless automation tool — it connects to remote hosts over SSH
 
 > Install with `pip install ansible` or your distro's package manager. Requires SSH access to managed hosts and a valid inventory file.
 
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Control Node and Inventory Topology
 
 ```mermaid

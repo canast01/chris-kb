@@ -56,3 +56,13 @@ Forward to SIEM via syslog: Management Console → System Settings → Syslog No
 - Any admin account login outside business hours
 - `enable_image_access` events (indicates failover test or actual DR)
 - User account creation or role changes
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

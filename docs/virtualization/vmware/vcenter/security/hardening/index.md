@@ -63,6 +63,15 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 ```
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## TLS Configuration
 
 vCenter 7.0+ enforces TLS 1.2 minimum. Verify after upgrading from older vSphere versions:

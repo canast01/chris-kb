@@ -57,6 +57,16 @@ enabling remote management, and turning on logging.
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Install PowerShell Core (Cross-Platform)
 
 **Windows**

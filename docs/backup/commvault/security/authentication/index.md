@@ -58,6 +58,15 @@ Authentication reference covering Two-Factor Authentication, CyberArk Integratio
 │  PKI            = Public Key Infrastructure; enterprise CA managing component certs                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Two-Factor Authentication
 
 Enable 2FA for Command Center:

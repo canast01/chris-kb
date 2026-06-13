@@ -68,6 +68,15 @@ All production safes enforce dual-control to prevent unilateral credential acces
 | Master Policy review | Quarterly review of base policy and platform-specific overrides |
 | Vault DR access | DR Vault is read-only replica; promotion only during declared disaster |
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Safe Access Hierarchy
 
 ```mermaid

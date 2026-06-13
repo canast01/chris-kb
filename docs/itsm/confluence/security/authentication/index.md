@@ -105,3 +105,13 @@ grep -i "authentication failure\|invalid credentials\|failed login" \
 # Check if any users are using local auth when SSO should be enforced
 # In Confluence Admin: User Directories > review which directory each user authenticates against
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

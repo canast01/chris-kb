@@ -43,6 +43,15 @@ MySQL hardening — removing defaults, binding to specific interfaces, disabling
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Post-Install Hardening Steps
 
 ```bash

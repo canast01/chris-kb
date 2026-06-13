@@ -57,3 +57,4 @@ EVS day-2 operations: cluster health, host management, vSAN capacity, lifecycle 
     <span class="kb-card-desc">health-check.sh, host-add.sh, vsan-rebalance.sh, hcx-status.sh</span>
   </a>
 </div>
+

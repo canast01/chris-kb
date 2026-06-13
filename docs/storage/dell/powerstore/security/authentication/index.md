@@ -63,6 +63,15 @@ Authentication reference covering Authentication Methods, Local Account Manageme
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Authentication Methods
 
 PowerStore Manager (the web UI) and REST API support three authentication mechanisms:

@@ -69,6 +69,15 @@ Nexus Dashboard and NDFC procedures — site registration, SAN fabric discovery,
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Overview
 
 This page covers the most common operational procedures performed through Nexus Dashboard and NDFC: site registration, fabric discovery, zoning, device alias management, firmware upgrades, alert handling, and NDI anomaly investigation.

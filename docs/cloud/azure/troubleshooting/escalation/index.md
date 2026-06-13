@@ -65,6 +65,16 @@ What to collect before opening a support case and how to engage Microsoft suppor
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Azure Vendor Support
 
 Azure Support plans range from Developer (business-hours email, general guidance) through Standard (24/7 phone, <2 hr critical response) and Professional Direct (24/7 phone, <1 hr critical response, ProDirect engineer) to Premier/Unified (dedicated support, <15 min critical response, proactive services). Support tickets are opened via the Azure Portal under Help + Support or programmatically via the Azure Support API. Before opening a ticket, collect the subscription ID, affected resource IDs, region, timestamp of the issue, and relevant diagnostic logs from Azure Monitor or the Activity Log.

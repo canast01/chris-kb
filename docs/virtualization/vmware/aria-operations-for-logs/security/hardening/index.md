@@ -13,6 +13,15 @@ Hardening reference covering Default Account Hardening, LDAPS-Only Authenticatio
 *Applies to: Aria Logs 8.x*
 </div>
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Default Account Hardening
 
 Change the `admin` password immediately after completing the setup wizard:

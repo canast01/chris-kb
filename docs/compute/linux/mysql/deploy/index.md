@@ -46,6 +46,16 @@ MySQL initial deployment — installation on RHEL/Ubuntu, post-install hardening
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Install on RHEL / Rocky
 
 ```bash

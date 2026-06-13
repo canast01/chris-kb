@@ -9,6 +9,15 @@ tags:
 Pure1 Security reference covering Access Control (RBAC), SSO Configuration (SAML 2.0), Authentication Flow (RSA Key), Audit Logging, Data Security and 1 more sections.
 </div>
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Access Control (RBAC)
 
 Pure1 uses role-based access control managed in the Pure1 portal. Assign the minimum required role to each user.

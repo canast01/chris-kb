@@ -69,3 +69,4 @@ NetApp SnapMirror — Security reference: Authentication, Access Control, Encryp
 <a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>
 <a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
 </div>
+

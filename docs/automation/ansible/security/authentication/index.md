@@ -146,3 +146,13 @@ ansible_ssh_common_args: >-
   -o ProxyJump=bastion.example.com
   -o StrictHostKeyChecking=yes
 ```
+
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

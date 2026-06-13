@@ -13,6 +13,15 @@ Install & Upgrade reference covering Version Matrix, Initial Deployment (New Env
 *Applies to: Aria Automation 8.x*
 </div>
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Version Matrix
 
 | Product Name | Version | vSphere Compatibility | Notes |

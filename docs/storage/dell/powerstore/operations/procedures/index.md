@@ -63,6 +63,15 @@ PowerStore operational procedures — block volume and NAS file system provision
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Provisioning a Block Volume
 
 ### Step-by-Step: Create and Map a Volume to a Host

@@ -60,6 +60,15 @@ Aria Operations: Alert Definitions and Policies reference covering Alert Policie
 
 Suppression rules can also be set at the policy level to automatically suppress alerts for objects placed in maintenance mode.
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Notification Rules and Outbound Plugins
 
 Notifications route alert data to email, PagerDuty, SNMP traps, or webhooks.

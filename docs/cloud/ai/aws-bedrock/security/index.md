@@ -62,6 +62,15 @@ Security for Bedrock spans IAM access control, network isolation with VPC endpoi
 ```
 
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## IAM Policies
 
 Follow least-privilege: grant only the model IDs and actions required for each workload.

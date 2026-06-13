@@ -12,6 +12,15 @@ Install & Upgrade reference covering Release Cadence, Decommission Procedure.
 *Applies to: Veeam 12.x*
 </div>
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Release Cadence
 
 Veeam releases major versions (VBR 12, 12.1, 12.2) annually with cumulative patches (P-releases) throughout the year.

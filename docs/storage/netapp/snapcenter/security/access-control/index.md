@@ -65,6 +65,15 @@ Part of the [SnapCenter Security](../index.md) reference.
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## RBAC
 
 SnapCenter implements role-based access control at the application level, layered on top of ONTAP-level permissions.

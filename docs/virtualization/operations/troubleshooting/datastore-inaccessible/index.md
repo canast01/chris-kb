@@ -64,6 +64,15 @@ Diagnosing inaccessible datastores across VMFS, NFS, and vSAN — APD/PDL states
 
 
 ---
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Datastore Inaccessible — APD vs PDL
 
 An inaccessible datastore is either **APD (All Paths Down)** — temporary, paths may recover — or **PDL (Permanent Device Loss)** — the storage array has returned SCSI sense codes indicating the LUN is gone.

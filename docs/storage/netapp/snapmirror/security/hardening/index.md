@@ -65,6 +65,15 @@ Part of the [SnapMirror Security](../index.md) reference.
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Hardening Checklist
 
 Apply this checklist to all clusters participating in SnapMirror relationships. It supplements the broader [ONTAP Security Hardening](../../../ontap/security/hardening/index.md) baseline, which should be applied first.

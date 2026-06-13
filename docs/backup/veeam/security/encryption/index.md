@@ -60,3 +60,13 @@ Configure Object Lock in `Compliance` mode:
 - VBR console → SOBR → Capacity Tier → Enable immutability
 - Set immutability period = retention period + 10 days buffer
 - Compliance mode: even bucket owner cannot delete during immutability period
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

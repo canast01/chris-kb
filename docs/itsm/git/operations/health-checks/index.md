@@ -67,6 +67,15 @@ git -C /backup/repo.git fsck --full
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 1. **Git service status** — On a GitLab server run `sudo gitlab-ctl status`; on a Gitea server run `systemctl status gitea`; on Bitbucket Server run `systemctl status bitbucket`; all component services (puma, gitaly, sidekiq, postgresql, nginx) must show `run:` status; any stopped service requires immediate investigation.

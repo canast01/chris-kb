@@ -40,6 +40,15 @@ VMware Backup Failure Runbook reference covering Identify Failed VMs, Review the
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Identify Failed VMs
 
 - Review the backup platform for failed or missed backup jobs

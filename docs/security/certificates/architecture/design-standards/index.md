@@ -77,3 +77,13 @@ All certificates must use Subject Alternative Names (SANs); the Common Name fiel
 | SAN usage | Mandatory — CN alone not sufficient |
 | Wildcards (external) | Restricted — approval required |
 | Revocation | CRL Distribution Points and OCSP required |
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

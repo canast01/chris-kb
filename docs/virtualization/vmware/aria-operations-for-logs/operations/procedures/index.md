@@ -60,6 +60,15 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Add a Syslog Log Source
 
 1. Configure the source device to forward syslog to the vRLI appliance IP on UDP/514 or TCP/514

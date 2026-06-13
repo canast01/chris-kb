@@ -67,6 +67,15 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## RBAC and Access Model
 
 ```mermaid

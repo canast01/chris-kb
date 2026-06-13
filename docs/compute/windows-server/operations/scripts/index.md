@@ -9,6 +9,15 @@ tags:
 <div class="kb-summary">
 Windows Server PowerShell scripts — remote health checks across multiple servers, certificate expiry monitoring, service health monitoring, script runner with logging, and module management.
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Script Deployment and Scheduling
 
 ```mermaid

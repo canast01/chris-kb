@@ -37,6 +37,15 @@ Authentication reference covering VRA Registered with vCenter SSO, Site Pairing 
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## VRA Registered with vCenter SSO
 
 VRA authenticates to vCenter using vCenter SSO credentials provided during initial registration. End-users authenticate to VR features through vCenter — no separate VR login.

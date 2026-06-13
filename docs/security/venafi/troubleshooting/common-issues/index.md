@@ -71,6 +71,16 @@ Known issues and resolution steps for frequent Venafi problems.
 | LDAP/AD auth failing in Venafi | Test LDAP bind from TPP server; verify service account password not expired |
 | Syslog events not appearing in SIEM | Check Log Server service; verify syslog target IP/port; check firewall |
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Known Issues
 
 Add known issues here as they come up.

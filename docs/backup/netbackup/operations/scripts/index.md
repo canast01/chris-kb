@@ -68,3 +68,13 @@ Automation scripts for NetBackup use the `admincmd` CLI tools and are typically 
 - Use `set -euo pipefail` at the top of every script.
 - Log rotation: keep 30 days of logs; use `logrotate` or a cron-based cleanup.
 - Credentials: service account API keys or passwords must be stored in the vault (CyberArk) and retrieved at runtime — never hard-coded.
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

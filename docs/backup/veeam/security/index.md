@@ -79,3 +79,4 @@ Veeam hardening — RBAC, immutable repositories, backup encryption, Linux harde
 </a>
 
 </div>
+

@@ -12,6 +12,16 @@ Part of the [Ansible Troubleshooting](../index.md) reference.
 *Applies to: Ansible 2.14+*
 </div>
 
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## When to Escalate
 
 Escalate when any of the following are true and cannot be resolved with standard diagnostics:

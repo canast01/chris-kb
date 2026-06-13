@@ -63,6 +63,15 @@ Backup configuration, restore procedures, and validation for Dell VPLEX.
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Overview
 
 VPLEX is a storage virtualisation layer; it does not store data itself — data resides on the backend arrays. VPLEX configuration backup covers the management and virtualisation layer. Data protection is the responsibility of the backend arrays and the applications using VPLEX volumes.

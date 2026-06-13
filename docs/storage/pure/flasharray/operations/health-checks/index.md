@@ -86,6 +86,15 @@ FlashArray Health Check Sequence
          OK — check Pure1 for fleet-level anomalies
 ```
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 1. **Array health** — `purediag --run basic` or Pure1 → Array → Health — verify all components are green

@@ -378,6 +378,15 @@ diff /tmp/pre-patch-packages.txt /tmp/post-patch-packages.txt
 
 ---
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Add a User Account
 
 Create a new local user account, set a password, assign group membership, and ensure a home directory is created.

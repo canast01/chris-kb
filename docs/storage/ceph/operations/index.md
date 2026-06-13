@@ -59,3 +59,4 @@ Ceph day-2 operations: cluster health monitoring, OSD management, pool tuning, C
     <span class="kb-card-desc">health-check.sh, osd-replace.sh, capacity-report.sh, pg-status.sh</span>
   </a>
 </div>
+

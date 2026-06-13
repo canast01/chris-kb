@@ -14,6 +14,16 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 
  The first step for any failure is to open the job statistics view in the console — the task-level error message and reason field usually point to the root cause without needing to open log files.
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Triage Decision Tree
 
 ```mermaid

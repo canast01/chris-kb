@@ -44,6 +44,15 @@ Step-by-step procedures for reviewing SIEM alerts, investigating security events
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Daily SIEM Alert Review
 
 Perform the morning triage of overnight SIEM alerts to identify threats requiring analyst investigation.

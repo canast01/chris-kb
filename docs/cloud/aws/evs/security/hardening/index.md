@@ -36,6 +36,15 @@ EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS V
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## NSX-T Micro-segmentation
 
 NSX-T DFW rules are evaluated top-to-bottom. The first matching rule wins. The default-deny rule placed at the bottom acts as a catch-all for any traffic not explicitly permitted by rules above it. This means you must explicitly allow every required traffic flow — the burden of proof is on the allow, not the deny.

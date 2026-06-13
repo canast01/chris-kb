@@ -12,6 +12,15 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Access Control Model Overview
 
 Git platforms implement access control at multiple layers:

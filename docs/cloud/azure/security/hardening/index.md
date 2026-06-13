@@ -65,6 +65,15 @@ Azure hardening applies the principle of least privilege, reduces the attack sur
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Microsoft Defender for Cloud
 
 Defender for Cloud is the primary security posture dashboard. It aggregates recommendations, assigns a Secure Score, and provides threat detection.

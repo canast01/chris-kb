@@ -64,6 +64,16 @@ VxRail LCM Failures reference covering Overview, Where It Fits, Daily Checks, He
 ```
 
 
+## Before you begin
+
+- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Overview
 
 Lifecycle Manager failures, pre-check errors, upgrade stops, and recovery workflow.

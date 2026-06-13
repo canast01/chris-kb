@@ -62,6 +62,15 @@ Weekly operations include reviewing the certificate expiry dashboard for certifi
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 1. **CA certificate expiry** — On the CA server, open the Certification Authority MMC snap-in, right-click the CA, select **Properties → General**, and note the CA certificate expiry date; alternatively run `certutil -verify -urlfetch <ca-cert-file>` to validate the chain; flag if expiry is within 6 months.

@@ -16,6 +16,15 @@ Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Linux server issues.
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Triage Order
 
 1. **Is the host reachable?** — ping, SSH, IPMI/iDRAC console

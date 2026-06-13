@@ -63,6 +63,16 @@ Common Issues reference covering Incident Triage, Common Symptoms and Resolution
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Incident Triage
 
 When S3 writes fail, geo-replication falls behind, or a node goes offline, work through this sequence first.

@@ -61,3 +61,13 @@ Access Control reference covering RBAC Roles, Audit Trail.
 Forward audit logs to SIEM via syslog:
 - Command Center: Manage → Alerts → configure syslog destination
 - Alert on: admin account creation, policy modifications, job deletion, encryption key access
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

@@ -19,6 +19,15 @@ tags:
 | Estimated time | 5–20 minutes |
 | Impact | Service unavailable during restart (seconds to minutes depending on startup time) |
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Process Flow
 
 ```text

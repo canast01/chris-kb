@@ -54,6 +54,16 @@ End-to-end deployment guide for VMware Horizon VDI and published applications. P
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role and SSH access to VCSA/ESXi hosts
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Phase 1 — Prerequisites
 
 **Exit criterion:** AD, SQL, DNS, vCenter, and PKI ready; service accounts created and tested.

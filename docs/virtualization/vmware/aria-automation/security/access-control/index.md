@@ -13,6 +13,15 @@ Access Control reference covering RBAC Model, Configuring AD Group Role Assignme
 *Applies to: Aria Automation 8.x*
 </div>
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## RBAC Model
 
 Aria Automation uses a **project-based access control** model. All resource provisioning is scoped to a project. Organisation-level roles control platform administration; project-level roles control what users can do within a project.

@@ -11,6 +11,16 @@ PostgreSQL common issues reference.
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Database — Performance Troubleshooting
 
 ```bash

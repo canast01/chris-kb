@@ -62,6 +62,15 @@ ESXi Access Control Model
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Exception Users
 
 Exception users in Normal Lockdown can still connect directly to the host via SSH. Keep this list minimal:

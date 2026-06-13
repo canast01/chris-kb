@@ -69,6 +69,15 @@ This page covers Purity//FB role-based access control (RBAC), NFS export policy 
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Admin RBAC
 
 Purity//FB uses role-based access control with the following built-in roles:

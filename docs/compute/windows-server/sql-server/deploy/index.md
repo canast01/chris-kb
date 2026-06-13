@@ -43,6 +43,16 @@ SQL Server initial deployment — installation checklist, post-install configura
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Pre-Install Checklist
 
 - Windows Server 2019 or 2022; all Windows Updates applied

@@ -64,6 +64,15 @@ ESXi Backup & Restore Flow
 ```
 The configuration bundle includes network settings, storage policies, service state, and advanced settings. It does not include VMFS datastores or VM data.
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## VM-Level Backup
 
 VM backup is handled by the backup solution (e.g., Veeam Backup & Replication) using VMware VADP. See the [integration page](../../architecture/integrations/index.md) for transport mode details.

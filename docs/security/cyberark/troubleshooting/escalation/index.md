@@ -79,3 +79,14 @@ CyberArk support is accessed through the CyberArk Support Portal at support.cybe
 | Standard Support | 4 hours | support.cyberark.com |
 | Premium Support | 1 hour | support.cyberark.com + phone line |
 | CyberArk Blue Team | Project/incident SLA | Separate engagement via account team |
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

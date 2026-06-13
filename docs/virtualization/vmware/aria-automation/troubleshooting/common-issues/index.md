@@ -94,3 +94,14 @@ kubectl logs -n prelude <pod-name> --previous
 # Restart a deployment (as last resort — pods should self-heal)
 kubectl rollout restart deployment/<deployment-name> -n prelude
 ```
+
+## Before you begin
+
+- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

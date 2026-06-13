@@ -11,6 +11,15 @@ SQL Server backup restore reference.
 *Applies to: Windows Server 2019 / 2022*
 </div>
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Database — Backup Validation
 
 ```bash

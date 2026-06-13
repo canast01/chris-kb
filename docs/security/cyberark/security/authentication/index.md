@@ -69,6 +69,15 @@ PVWA is accessible over HTTPS only (TLS 1.2 minimum, TLS 1.3 preferred). All pri
 | LDAP / AD auth | PVWA authenticates against AD; group-based safe membership |
 | Break-glass account | Emergency Vault Admin account in sealed safe; access via dual-control + incident ticket |
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## PVWA Authentication Flow
 
 ```mermaid

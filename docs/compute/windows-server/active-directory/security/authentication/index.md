@@ -65,6 +65,15 @@ Authentication reference covering Privileged Access and Kerberos Security Flow, 
 ```
 
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Privileged Access and Kerberos Security Flow
 
 ```mermaid

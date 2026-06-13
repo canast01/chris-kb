@@ -31,6 +31,16 @@ NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Commo
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Network admin credentials; console or SSH to devices
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Diagnostic Flow
 
 ```mermaid

@@ -13,6 +13,15 @@ Authentication reference covering Authentication Sources, Configuring Active Dir
 *Applies to: Aria Ops 8.x*
 </div>
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Authentication Sources
 
 Aria Operations supports multiple authentication sources. Users can authenticate against any configured source.

@@ -12,6 +12,15 @@ Encryption reference covering Secrets and Encryption Architecture, Secrets Manag
 *Applies to: Terraform 1.x*
 </div>
 
+## Before you begin
+
+- **Access:** Provider credentials configured (`terraform login` or env vars)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Secrets and Encryption Architecture
 
 ```mermaid

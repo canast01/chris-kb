@@ -44,6 +44,15 @@ Step-by-step procedures for enrolling users in MFA, resetting credentials, confi
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Enrol a User in MFA
 
 Register a new user's authenticator device so they can complete MFA challenges at login.

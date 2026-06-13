@@ -65,6 +65,15 @@ Install & Upgrade reference covering Unity OE Version Matrix, Upgrade Paths, Har
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Unity OE Version Matrix
 
 Unity OE (Operating Environment) releases follow a major.minor.patch scheme. Dell publishes end-of-support dates for each release; versions past their end-of-support date no longer receive security patches or bug fixes.

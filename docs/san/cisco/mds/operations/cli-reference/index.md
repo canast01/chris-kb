@@ -357,3 +357,13 @@ show snmp community
 # Create SNMPv3 user
 snmp-server user <user> <group> v3 auth sha <auth_pass> priv aes 128 <priv_pass>
 ```
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

@@ -64,6 +64,15 @@ Diagnosing ESXi hosts showing disconnected or not responding in vCenter — mana
 
 
 ---
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Quick Triage
 
 First, establish whether the host is truly unreachable or just disconnected in vCenter.

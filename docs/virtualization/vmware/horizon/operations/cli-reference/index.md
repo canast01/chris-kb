@@ -124,6 +124,15 @@ vdmadmin.exe -L -events -severity ERROR -n 50
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## vdmexport / vdmimport
 
 These tools back up and restore the Connection Server LDAP configuration.

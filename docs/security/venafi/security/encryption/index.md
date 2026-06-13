@@ -62,6 +62,15 @@ HSM integration protects the CA private keys and Venafi service credentials. Key
 ```
 
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Encryption Controls
 
 | Control | Detail |

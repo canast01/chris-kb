@@ -76,3 +76,14 @@ Veeam support is accessed via the Veeam Customer Support Portal at my.veeam.com.
 | Production | 2 hours | 24x7 | Standard enterprise |
 | ProSupport | 1 hour | 24x7 | Designated engineer |
 | ProSupport Plus | 30 minutes | 24x7 | TAM + proactive monitoring |
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

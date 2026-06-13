@@ -11,6 +11,15 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Data Lifecycle Overview
 
 ```mermaid

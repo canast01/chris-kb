@@ -76,3 +76,13 @@ ServiceNow integration enables certificate request workflows via ITSM tickets, r
 | ServiceNow | REST API / workflow connector | Certificate request approval workflow |
 | SIEM | Venafi Log Server syslog forwarding | Audit event centralisation |
 | Terraform | Venafi Terraform provider | Certificate provisioning in IaC pipelines |
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

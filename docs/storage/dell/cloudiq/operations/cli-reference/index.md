@@ -145,3 +145,13 @@ curl -s -X GET "${BASE}/systems?tag_id=${TAG_ID}" \
 curl -s -X DELETE "${BASE}/tags/${TAG_ID}" \
   -H "${AUTH}"
 ```
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

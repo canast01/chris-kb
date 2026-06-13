@@ -12,6 +12,15 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 *Applies to: Ansible 2.14+*
 </div>
 
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 ```bash

@@ -83,6 +83,15 @@ flowchart LR
     unisphere -->|"LDAP bind\ngroup-to-role mapping"| ldap
 ```
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Local Accounts
 
 VPLEX management access is provided through local accounts on the VPLEX Management Server (VMS).

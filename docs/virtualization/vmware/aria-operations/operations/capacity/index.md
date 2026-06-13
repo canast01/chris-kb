@@ -58,6 +58,15 @@ Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizi
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Capacity Planning Reports
 
 Run capacity planning reports to project future needs by cluster or datacenter.

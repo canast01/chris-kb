@@ -35,6 +35,15 @@ graph LR
   classDef stage fill:#1e3a5f,stroke:#2563eb,color:#fff
   class S1,S2,S3,S4,S5 stage
 ```
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Stage 1 — Architecture
 
 **Goal**: Understand how Venafi TLS Protect discovers, classifies, and enforces certificate policy across the enterprise, and how it integrates with CAs and downstream consumers.

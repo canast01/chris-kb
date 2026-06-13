@@ -11,6 +11,15 @@ PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, lda
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Authentication Methods
 
 | Method | Notes |

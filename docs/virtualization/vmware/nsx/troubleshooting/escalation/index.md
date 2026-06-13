@@ -93,3 +93,14 @@ curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/status"
 curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/transport-nodes/status"
 curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/alarms?status=OPEN&severity=CRITICAL"
 ```
+
+## Before you begin
+
+- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

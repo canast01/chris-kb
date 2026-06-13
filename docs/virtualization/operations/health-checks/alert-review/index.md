@@ -40,6 +40,15 @@ Alert Health Check reference covering Active Alerts Review, Aria Operations Aler
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Active Alerts Review
 
 - Review all critical alerts in vCenter — confirm each has an owner or action

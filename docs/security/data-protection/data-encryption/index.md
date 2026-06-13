@@ -61,3 +61,13 @@ ALTER DATABASE <dbname> SET ENCRYPTION ON;
 SELECT db_name(database_id), encryption_state, percent_complete
 FROM sys.dm_database_encryption_keys;
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

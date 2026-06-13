@@ -64,6 +64,15 @@ VxRail Post-Change Validation reference covering Overview, Where It Fits, Daily 
 ```
 
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Overview
 
 Validation after lifecycle, hardware, configuration, or support changes.

@@ -16,6 +16,15 @@ Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired 
 
 > Install with `brew install terraform` (macOS), `apt install terraform` (Debian), or download from terraform.io. Run `terraform init` in any new working directory before other commands.
 
+## Before you begin
+
+- **Access:** Provider credentials configured (`terraform login` or env vars)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## State Backend Topology
 
 ```mermaid

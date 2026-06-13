@@ -14,6 +14,16 @@ Diagnostics reference covering Windows Event Log Pipeline, Key Security Event ID
 
 Diagnostic procedures and log analysis.
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Windows Event Log Pipeline
 
 ```mermaid

@@ -64,3 +64,13 @@ volume show -percent-used <50 -fields volume,size,used,percent-used
 # Large files older than 90 days
 find /data -type f -size +1G -mtime +90 -ls | sort -k7 -rn | head -20
 ```
+
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

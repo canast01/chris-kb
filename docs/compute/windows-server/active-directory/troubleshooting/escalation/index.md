@@ -81,3 +81,14 @@ Active Directory support is provided through the Microsoft Support portal at sup
 | Microsoft Unified Support | < 2 hours callback | admin.microsoft.com / support.microsoft.com |
 | Microsoft Premier Support | < 1 hour callback | Premier portal |
 | FastTrack (migration) | Project-based | fasttrack.microsoft.com |
+
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

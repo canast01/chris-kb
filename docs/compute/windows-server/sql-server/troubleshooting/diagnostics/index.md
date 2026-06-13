@@ -44,6 +44,16 @@ SQL Server diagnostics — error log, Activity Monitor equivalent via DMVs, bloc
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Error Log
 
 ```sql

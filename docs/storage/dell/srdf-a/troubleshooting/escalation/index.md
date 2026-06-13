@@ -70,3 +70,14 @@ Dell SRDF/A support cases are opened via the Dell Support Portal (support.dell.c
 - **ProSupport**: Next business day parts/labour.
 - **ProSupport Plus**: 24×7 proactive monitoring and predictive issue detection.
 - **Mission Critical**: Dedicated TAM and 4-hour onsite SLA for P1 incidents.
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

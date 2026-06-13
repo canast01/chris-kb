@@ -12,6 +12,16 @@ Diagnostics reference covering Diagnostic Flow.
 *Applies to: Commvault 2024.x*
 </div>
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Diagnostic Flow
 
 ```mermaid

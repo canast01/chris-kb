@@ -54,6 +54,16 @@ Diagnostics reference covering Log Locations, Diagnostic Commands, Support Bundl
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Support Bundle Collection
 
 1. In the VBR console: Main Menu > Help > Support Information

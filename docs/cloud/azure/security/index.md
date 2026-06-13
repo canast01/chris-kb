@@ -93,3 +93,4 @@ Azure security posture — Defender for Cloud, Key Vault, Entra ID hardening, NS
 <a class="kb-card" href="defender-for-cloud/"><strong>Defender for Cloud</strong><span>CSPM posture management, workload protection plans, and alert triage.</span></a>
 
 </div>
+

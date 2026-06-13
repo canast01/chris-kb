@@ -85,3 +85,13 @@ $uri = "$tppUrl/vedsdk/certificates?ValidToLess=$expireBefore"
 $certs = Invoke-RestMethod -Uri $uri -Headers @{ "X-Venafi-Token" = $token }
 $certs.Certificates | Export-Csv -Path "expiring-certs.csv" -NoTypeInformation
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

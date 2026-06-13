@@ -62,6 +62,15 @@ Daily operations focus on confirming that the Vault service is running, CPM is s
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Run This Routine
 
 Run these checks each morning to confirm CyberArk Vault, CPM, and PSM are operating normally before users begin privileged access sessions.

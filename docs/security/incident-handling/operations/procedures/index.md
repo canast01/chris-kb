@@ -11,6 +11,15 @@ Standard procedures covering the full incident lifecycle: declaration through po
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Declare an Incident
 
 An incident is formally declared when an event meets severity criteria. Early declaration ensures timely escalation and resource mobilisation.

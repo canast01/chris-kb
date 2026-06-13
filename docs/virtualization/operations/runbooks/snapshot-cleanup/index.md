@@ -39,6 +39,15 @@ vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Ident
 
 Active resync is expected after a host returns from maintenance — wait for it to complete before taking further action.
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Check Capacity
 
 - Confirm vSAN usable capacity is within safe limits

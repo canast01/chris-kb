@@ -63,6 +63,15 @@ Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Tran
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Data-at-Rest Encryption (D@RE)
 
 PowerStore encrypts all data at rest using AES-256 encryption at the drive level. D@RE is enabled by default on all PowerStore models and cannot be disabled. Encryption is transparent to hosts — no host-side configuration is required.

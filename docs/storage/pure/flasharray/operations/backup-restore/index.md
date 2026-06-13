@@ -48,6 +48,15 @@ FlashArray provides multiple data protection tiers. Choose the tier that matches
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Protection Group Snapshot Configuration
 
 Protection groups (PGroups) are the primary vehicle for snapshot-based data protection. Every production volume set should belong to at least one protection group with an active snapshot schedule.

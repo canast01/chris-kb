@@ -76,3 +76,13 @@ Safe names follow the pattern `ENV-TEAM-PURPOSE` (e.g., `PROD-INFRA-SERVERS`, `D
 | Root / local admin rotation | 30 days |
 | Max safe member count | 20 (review if exceeded) |
 | Master Policy base | Require dual control, enforce check-in/out |
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

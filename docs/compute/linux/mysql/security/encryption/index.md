@@ -41,6 +41,15 @@ MySQL encryption — InnoDB tablespace encryption (TDE), SSL/TLS for connections
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## InnoDB Tablespace Encryption (TDE)
 
 Requires a keyring plugin. MySQL 8.0+ includes `component_keyring_file`.

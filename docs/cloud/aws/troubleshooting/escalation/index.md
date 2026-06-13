@@ -76,3 +76,14 @@ AWS Support plans range from Developer (business-hours email, general guidance) 
 - AWS Health Dashboard: `health.aws.amazon.com` — service event and account-specific health notifications
 - Trusted Advisor: automated checks for cost, security, fault tolerance, performance, and service limits
 - Support API: `aws support describe-cases`, `aws support create-case` (requires Business or Enterprise plan)
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

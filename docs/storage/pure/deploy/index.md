@@ -53,6 +53,16 @@ This guide provides an orientation to deploying Pure Storage infrastructure, cov
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## FlashArray Initial Config
 
 Pure FlashArray (//X and //C series) runs Purity//FA and is managed through the Purity web interface or the `purefa_info` / REST API.

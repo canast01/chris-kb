@@ -67,6 +67,15 @@ Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. T
 
 > Requires Solutions Enabler installed on a management host with connectivity to the array. All commands target a specific array via `-sid <SymmID>`.
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Discovery & Array Info
 
 Discover arrays, list directors and ports, view cache usage and storage resource pools.

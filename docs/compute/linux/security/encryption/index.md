@@ -245,3 +245,13 @@ update-crypto-policies --show
 # Find private key files readable by non-root
 find /etc /home /opt -name "*.key" -o -name "*.pem" 2>/dev/null | xargs ls -la 2>/dev/null | grep -v "^-r.------"
 ```
+
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

@@ -200,3 +200,13 @@ iptables -A OUTPUT -j DROP
 # Verify MID Server version is current
 cat /opt/servicenow/mid/agent/glide-agent.properties | grep "build"
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

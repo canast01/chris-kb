@@ -58,6 +58,16 @@ Diagnostics reference covering Alert Tuning, Capacity Planning, Dashboards, Repo
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Alert Tuning
 
 Alert tuning is important because too many low-value alerts create noise.

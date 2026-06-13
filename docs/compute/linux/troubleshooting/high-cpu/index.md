@@ -12,6 +12,16 @@ High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, D
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Overview
 
 High CPU utilization causes application latency, request queuing, and service instability. Effective diagnosis requires platform-specific tools to distinguish user-space runaway processes, kernel-level contention, JVM thread saturation, and hypervisor-level CPU ready time — each with different remediation paths.

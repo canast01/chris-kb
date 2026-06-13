@@ -294,3 +294,13 @@ awk -F: '$3 == 0 { print $1 }' /etc/passwd
 # Check for accounts with empty passwords
 awk -F: '$2 == "" { print $1 }' /etc/shadow
 ```
+
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

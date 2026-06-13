@@ -12,6 +12,16 @@ Common Issues reference covering Terraform Troubleshooting Decision Flow, Refres
 *Applies to: Terraform 1.x*
 </div>
 
+## Before you begin
+
+- **Access:** Provider credentials configured (`terraform login` or env vars)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Terraform Troubleshooting Decision Flow
 
 ```mermaid

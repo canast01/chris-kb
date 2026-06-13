@@ -47,6 +47,16 @@ Additional items:
 - Browser console errors (F12 > Console) if the issue is UI-related — export as a log file.
 - CloudIQ audit log export (Admin > Audit Log) for the relevant time window if the issue involves access or configuration.
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## SLA Tiers
 
 CloudIQ support SLA follows the ProSupport Plus contract of the managed storage system. There is no separate CloudIQ SLA.

@@ -72,3 +72,14 @@ Dell support for RecoverPoint is accessed via support.dell.com, with service req
   - Management console screenshot of affected CGs
 - **Compatibility matrix:** RecoverPoint compatibility matrix available on Dell's support site under RecoverPoint documentation
 - **Escalation:** Request Engineering Escalation in the SR for production-down or data-loss risk scenarios
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+

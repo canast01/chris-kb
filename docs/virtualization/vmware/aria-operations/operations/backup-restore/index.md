@@ -66,6 +66,15 @@ tags:
 ```bash
 ssh admin@vrops-prod-01.example.local
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Trigger an immediate backup using the vracli tool
 vracli backup --location <backup-id>
 ## <backup-id> is the ID of the configured external location (visible in UI)

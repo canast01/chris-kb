@@ -50,3 +50,4 @@ Security day-to-day operations — certificate lifecycle, PAM account management
 <a class="kb-card" href="event-correlation/"><strong>Event Correlation</strong><span>Correlating events across layers — log, metric, and topology-based root cause identification.</span></a>
 
 </div>
+

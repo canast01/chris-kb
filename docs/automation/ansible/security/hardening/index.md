@@ -186,3 +186,13 @@ from="10.0.50.10",no-agent-forwarding,no-X11-forwarding,no-port-forwarding ssh-e
     dest: "reports/{{ inventory_hostname }}-cis-{{ ansible_date_time.date }}.html"
     flat: true
 ```
+
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

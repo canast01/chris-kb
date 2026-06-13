@@ -69,3 +69,13 @@ Venafi RBAC is managed through built-in roles: Policy Master (full policy tree c
 | RBAC roles | Policy Master, Certificate Manager, Approver — scoped to policy folders |
 | API key rotation | Rotate on schedule and on personnel change; store in secrets manager |
 | Admin account review | Quarterly review of Venafi admin and service accounts |
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

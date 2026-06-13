@@ -58,6 +58,15 @@ Hardening reference covering Audit Log Forwarding, Appliance Patching.
 | Appliance hardening | Disable unused services; keep appliance patched to current release |
 | Service account rotation | Eyeglass service account credentials rotated every 90 days (coordinate with CyberArk policy) |
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Audit Log Forwarding
 
 All failover events are recorded in the Eyeglass audit log. Forward the audit log to a SIEM:

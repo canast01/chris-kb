@@ -43,6 +43,15 @@ Managing vSphere RBAC via PowerCLI: auditing existing permissions, creating auto
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Audit Existing Permissions
 
 ```powershell

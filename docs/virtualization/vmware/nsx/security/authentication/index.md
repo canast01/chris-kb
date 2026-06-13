@@ -161,3 +161,13 @@ set service syslog exporter siem-01 level info protocol TLS server 10.0.0.100 po
 # View recent auth events on NSX Manager node
 tail -100 /var/log/vmware/nsx-manager/audit.log | grep -i "login\|auth\|role"
 ```
+
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

@@ -55,6 +55,15 @@ Backup & Restore reference covering Purpose, Common checks, Incident notes, Chan
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Purpose
 
 Use this page for practical NetBackup Restores notes, checks, troubleshooting, commands, change notes, and field references.

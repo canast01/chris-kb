@@ -40,6 +40,15 @@ Virtualization Network Validation reference covering Overview, Pre-Checks, Steps
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Overview
 
 Use this after network changes, VLAN changes, host work, NSX changes, or VM connectivity issues.

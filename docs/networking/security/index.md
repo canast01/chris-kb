@@ -95,3 +95,13 @@ show crypto pki certificate
 show interface tunnel <id>
 show ip route | grep tunnel
 ```
+
+## Before you begin
+
+- **Access:** Network admin credentials; console or SSH to devices
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

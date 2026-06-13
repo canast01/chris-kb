@@ -10,6 +10,16 @@ tags:
 DNS Resolution Failures reference covering Overview, Failure Classification, Diagnostic Flowchart, DNS Server Health Checks, Zone Transfer Verification and 6 more sections.
 </div>
 
+## Before you begin
+
+- **Access:** Network admin credentials; console or SSH to devices
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Overview
 
 DNS failures cascade rapidly across infrastructure: Kerberos authentication breaks without PTR records, NFS mounts fail, application service discovery stops, and vMotion can fail. This guide provides structured diagnosis from failure type through to resolution across Windows DNS and BIND/named environments.

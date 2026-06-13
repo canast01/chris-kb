@@ -61,3 +61,13 @@ Eyeglass admin access is controlled through built-in roles: **admin** (full acce
 Enforce least privilege — assign read-only to personnel who only require visibility into DR state without the ability to trigger failover actions.
 
 OneFS API credentials stored in Eyeglass for cluster connectivity should use dedicated service accounts with the minimum required OneFS privileges. See the [Integrations](../../architecture/integrations/index.md) page for the required PowerScale role configuration.
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

@@ -12,6 +12,15 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 *Applies to: Jira 9.x / Cloud*
 </div>
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Health Check Overview
 
 ```mermaid

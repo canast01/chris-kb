@@ -10,6 +10,16 @@ tags:
 Authentication Failures Troubleshooting reference covering Overview, Symptom Classification, Diagnostic Flowchart, AD Account Lockout Investigation, LDAP Bind Failure Diagnosis and 4 more sections.
 </div>
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Overview
 
 Authentication failures span multiple subsystems: Active Directory (Kerberos and NTLM), LDAP bind operations, certificate-based authentication, and MFA. This guide provides structured diagnosis from symptom to root cause with enterprise-grade tooling.

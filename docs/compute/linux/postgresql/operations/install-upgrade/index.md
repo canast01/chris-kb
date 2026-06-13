@@ -42,6 +42,15 @@ PostgreSQL upgrade procedures — minor version (in-place), major version (pg_up
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Version Upgrade Path
 
 Minor versions (15.x → 15.y): in-place, same data directory.

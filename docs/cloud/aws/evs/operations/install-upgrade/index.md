@@ -37,6 +37,15 @@ VCF upgrades via SDDC Manager, ESXi patching lifecycle, NSX-T and HCX upgrade se
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## VCF Upgrade Order
 
 The correct upgrade sequence for VCF on EVS is fixed and must not be changed. Each component must be upgraded before the component it manages — if vCenter is on a newer version than SDDC Manager supports, SDDC Manager cannot perform lifecycle operations. If ESXi is upgraded before NSX-T, the NSX-T host transport node may enter a degraded state.

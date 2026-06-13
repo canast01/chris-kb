@@ -69,3 +69,4 @@ ONTAP — Security reference: Access Control, Encryption, Authentication, Harden
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>
 <a class="kb-card" href="hardening/"><strong>Hardening</strong><span>Security baselines and compliance configuration.</span></a>
 </div>
+

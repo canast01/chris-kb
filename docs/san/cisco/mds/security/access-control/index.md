@@ -12,6 +12,15 @@ Part of the [Cisco MDS](../../index.md) reference.
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Overview
 
 Access control on Cisco MDS operates at two levels: **management plane** (who can log into the switch and run commands) and **data plane** (which initiators can communicate with which targets via zoning). Both layers must be configured correctly for a secure SAN environment.

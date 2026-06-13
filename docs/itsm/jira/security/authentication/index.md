@@ -110,3 +110,13 @@ curl -u "admin:password" \
   <tracking-mode>COOKIE</tracking-mode>
 </session-config>
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

@@ -61,6 +61,15 @@ Install & Upgrade reference covering ESA Migration, Driver and Firmware.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Upgrade Procedure
 
 All health checks must pass before beginning an upgrade. Resolve any degraded objects or active resyncs before proceeding.

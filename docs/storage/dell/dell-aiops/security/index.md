@@ -9,6 +9,15 @@ tags:
 Dell AIOps Security reference covering Access Control (RBAC), SSO Integration, Audit Logging, Data Sovereignty, Network Security and 1 more sections.
 </div>
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Access Control (RBAC)
 
 Dell AIOps access control inherits from CloudIQ RBAC. Roles are assigned per user in the CloudIQ portal.

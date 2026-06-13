@@ -61,6 +61,15 @@ tags:
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```bash
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Option 1: Via UAG Admin UI (port 9443) → SSL Server Certificate → Upload
 ## Upload PKCS12 (.pfx) or PEM (cert + key)
 

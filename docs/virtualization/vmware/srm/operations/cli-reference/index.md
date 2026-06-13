@@ -98,6 +98,15 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 ---
 
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Test Failover
 
 Test failover runs in an isolated network bubble and does not affect production. Always run a test before a real recovery.

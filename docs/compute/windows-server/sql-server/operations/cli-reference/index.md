@@ -44,6 +44,15 @@ SQL Server CLI reference — sqlcmd, PowerShell SqlServer module, BCP, SQLCMD sc
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## sqlcmd
 
 ```cmd

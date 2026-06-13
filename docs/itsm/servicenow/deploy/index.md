@@ -50,6 +50,16 @@ Step-by-step guide to requesting a ServiceNow developer instance, configuring ad
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Request Development Instance
 
 ServiceNow is delivered as a SaaS product. Instances are provisioned by ServiceNow and accessed via a browser — there is no software to install on-premises for the application tier.

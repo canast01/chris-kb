@@ -11,6 +11,15 @@ PostgreSQL encryption — SSL/TLS for connections, pgcrypto for column-level enc
 *Applies to: RHEL / Ubuntu LTS*
 </div>
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## SSL/TLS for Connections
 
 PostgreSQL uses OpenSSL for SSL. Generated automatically during `initdb` on most distributions.

@@ -47,6 +47,15 @@ Backup and restore coverage for VxRail clusters. Covers VxRail Manager VM backup
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## VxRail Manager VM Backup
 
 VxRail Manager is a Linux appliance VM running on the first VxRail node. It holds:

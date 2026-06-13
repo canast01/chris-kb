@@ -56,3 +56,13 @@ Forward to SIEM using a log forwarder (Filebeat, Splunk UF) on the VBR server. A
 - Failed login attempts
 - Job deletion or modification outside maintenance windows
 - Encryption key management operations
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

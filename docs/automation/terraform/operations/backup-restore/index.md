@@ -40,3 +40,13 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Before you begin
+
+- **Access:** Provider credentials configured (`terraform login` or env vars)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

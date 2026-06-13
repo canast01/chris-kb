@@ -64,6 +64,15 @@ Part of the [Dell Flex on Demand](../index.md) reference.
 
 
 ---
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Metered Usage Reporter
 
 Queries the CloudIQ REST API to pull capacity metrics for all FOD-enrolled systems and prints a monthly usage report showing committed baseline, current consumed, and burst delta. Flags any system where consumption exceeds the committed tier.

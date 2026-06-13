@@ -14,6 +14,15 @@ Veeam Backup & Replication provides comprehensive recovery options ranging from 
 
 ---
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Restore Type Decision Tree
 
 ```mermaid

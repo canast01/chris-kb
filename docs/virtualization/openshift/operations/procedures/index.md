@@ -61,6 +61,15 @@ graph TD
     classDef step3 fill:#7c3aed,color:#fff
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Node Maintenance Procedure
 
 Full sequence for taking a node offline without losing workloads.

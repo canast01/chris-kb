@@ -136,3 +136,13 @@ test -f /backups/ansible/ssh/latest/ansible_ed25519 && echo "PASS: SSH key backu
 ansible-vault view group_vars/prod/vault.yml > /dev/null && echo "PASS: Vault decryption OK"
 test -f /backups/awx/awx-backup-$(date -d yesterday +%F).json && echo "PASS: AWX backup found"
 ```
+
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

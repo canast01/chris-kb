@@ -63,6 +63,15 @@ Assign the minimum role required for the automation task — use `LCM_CONTENT_DE
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Separation of Duties
 
 Apply the principle of least privilege across team functions:

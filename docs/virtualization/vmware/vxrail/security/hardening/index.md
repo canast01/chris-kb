@@ -71,6 +71,15 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## VxRail Manager Hardening
 
 ### Checklist

@@ -13,6 +13,15 @@ Encryption reference covering Secrets and Encrypted Properties, TLS Certificate 
 *Applies to: Aria Automation 8.x*
 </div>
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Secrets and Encrypted Properties
 
 Sensitive values (passwords, API tokens, SSH keys) must not be stored as plaintext in cloud templates. Use one of the following methods:

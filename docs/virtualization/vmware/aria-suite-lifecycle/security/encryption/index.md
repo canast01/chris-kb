@@ -63,6 +63,15 @@ Submit the generated CSR to the CA. Retrieve the signed certificate chain (leaf 
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Importing a Signed Certificate into Locker
 
 After the CA returns the signed certificate:

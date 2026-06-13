@@ -65,3 +65,13 @@ $newPass = [System.Web.Security.Membership]::GeneratePassword(32, 6)
 Set-ADAccountPassword -Identity ire-breakglass -NewPassword (ConvertTo-SecureString $newPass -AsPlainText -Force)
 # Print and seal in envelope — never store in digital form
 ```
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

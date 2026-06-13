@@ -52,6 +52,15 @@ Access Control reference covering Solutions Enabler RBAC, Preventing Accidental 
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Preventing Accidental Resync
 
 For async operations, accidentally re-syncing from target to source (after a failover test) destroys production data. Guard against this:

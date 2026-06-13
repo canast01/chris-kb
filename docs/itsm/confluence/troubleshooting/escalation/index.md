@@ -12,6 +12,16 @@ This page defines the escalation process for Confluence incidents: who handles w
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Escalation Matrix
 
 | Level | Team / Role | Handles | Escalate When |

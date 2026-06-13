@@ -63,6 +63,16 @@ Escalation reference covering Information to Collect Before Opening an SR, Suppo
 
 VCF support is managed through the [Broadcom Support Portal](https://support.broadcom.com) under the VMware Cloud Foundation product line. When opening an SR, the SoS health check bundle and the SDDC Manager support bundle are the two most important artefacts — Broadcom support will almost always request these as the first action, so collecting them before opening the ticket saves significant time. The VCF Support Matrix (available on the Broadcom compatibility guide) must be referenced to confirm that the versions of vCenter, ESXi, NSX, and vSAN in your environment are a supported combination before filing lifecycle-related SRs.
 
+## Before you begin
+
+- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Information to Collect Before Opening an SR
 
 - SDDC Manager version: Administration > About

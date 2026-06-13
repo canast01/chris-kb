@@ -109,3 +109,13 @@ flowchart TD
     Q --> |Yes| R([Recovery Complete])
     Q --> |No| S[Escalate /\nRestore alternate point]
 ```
+
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

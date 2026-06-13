@@ -68,3 +68,13 @@ The Digital Vault server must follow the CyberArk-supplied Windows Server harden
 | Vault firewall policy | CyberArk-defined inbound/outbound rules; deny-all default |
 | PVWA TLS | TLS 1.2+ only; valid internal CA certificate |
 | Master Policy review | Quarterly review of base policy and platform-specific overrides |
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

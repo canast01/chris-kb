@@ -63,6 +63,15 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 ```
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Force Logoff Disconnected Sessions Older Than N Hours
 
 ```powershell

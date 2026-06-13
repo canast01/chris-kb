@@ -63,6 +63,15 @@ Access Control reference covering RBAC, Sudoers Configuration, Audit Logging.
 ```
 
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## RBAC
 
 PowerPath does not have its own RBAC system — access control is delegated entirely to the host OS.

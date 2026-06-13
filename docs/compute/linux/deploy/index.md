@@ -9,6 +9,16 @@ This guide covers deploying a new Linux server from OS install through hardening
 
 ---
 
+## Before you begin
+
+- **Access:** root or sudo-capable account on target hosts
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Install the OS
 
 Boot from the RHEL/Rocky/Ubuntu Server ISO. Select **Minimal Install** (no GUI) to reduce the attack surface.

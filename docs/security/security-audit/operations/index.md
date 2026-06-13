@@ -47,6 +47,15 @@ Step-by-step procedures for conducting infrastructure security audits, reviewing
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Conduct Infrastructure Security Audit
 
 Perform a structured technical audit of the infrastructure estate to identify security weaknesses and configuration drift.

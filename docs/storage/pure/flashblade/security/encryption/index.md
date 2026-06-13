@@ -27,6 +27,15 @@ tags:
 
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Data at Rest
 
 All data written to FlashBlade drives is encrypted using XTS-AES-256. Encryption is always on and cannot be disabled. Drives are self-encrypting; when a drive is removed or replaced, data is cryptographically erased by destroying the drive encryption key.

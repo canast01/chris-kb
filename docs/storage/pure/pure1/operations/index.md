@@ -53,3 +53,13 @@ Daily operations begin with logging into the Pure1 dashboard and checking all ar
 
 - Export capacity forecast report from Pure1 and distribute to team
 - Review Pure1 Meta anomaly and workload recommendations
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+

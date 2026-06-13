@@ -52,6 +52,16 @@ Diagnostics reference covering Log Locations, Before Calling Support.
 
 For systems connected via a **proxy**, verify proxy settings in the SCG web UI under **Settings > Proxy** and confirm the proxy allows HTTPS to `cloudiq.dell.com` and `esrs3.emc.com` on port 443.
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Gather first:** recent error message text, event timestamps, and affected object names
+- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
+- **Escalation:** open a vendor support ticket before running any destructive step
+- **Logging:** document each command and output — required if escalation is needed
+
+---
+
 ## Log Locations
 
 | Log | Location | Use |

@@ -70,6 +70,15 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## VxRail Manager Roles
 
 VxRail Manager has two built-in access levels. When LDAP is not configured, only the local `mystic` account with Admin access exists.

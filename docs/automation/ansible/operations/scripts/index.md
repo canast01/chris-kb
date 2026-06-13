@@ -14,6 +14,15 @@ Part of the [Ansible Operations](../index.md) reference.
 
 ---
 
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Secret Rotation Workflow
 
 ```mermaid

@@ -222,3 +222,13 @@ git filter-repo --path secrets/old-secret.env --invert-paths
 # Force-push rewritten history (coordinate with all users)
 git push --force-with-lease origin main
 ```
+
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

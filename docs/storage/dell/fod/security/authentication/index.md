@@ -76,6 +76,15 @@ FOD metering access is managed through the underlying array management interface
 - **CloudIQ API**: OAuth2 client credentials for programmatic access to metered usage data.
 ---
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Related Reference
 
 - [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

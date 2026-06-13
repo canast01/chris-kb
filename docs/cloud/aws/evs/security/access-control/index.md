@@ -36,6 +36,15 @@ AWS IAM permissions for EVS cluster management, vSphere RBAC roles for VMs and i
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## AWS IAM for EVS
 
 ```json

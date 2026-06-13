@@ -65,6 +65,15 @@ Azure encrypts all data at rest by default using platform-managed keys (PMK). Cu
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Encryption Coverage by Service
 
 | Service | At Rest | In Transit | CMK Support |

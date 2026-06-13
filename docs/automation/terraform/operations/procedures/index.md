@@ -12,6 +12,15 @@ Terraform operational procedures — standard apply workflow, plan and apply str
 *Applies to: Terraform 1.x*
 </div>
 
+## Before you begin
+
+- **Access:** Provider credentials configured (`terraform login` or env vars)
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Standard Apply Workflow
 
 ```mermaid

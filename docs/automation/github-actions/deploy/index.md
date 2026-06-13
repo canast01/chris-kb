@@ -51,6 +51,16 @@ self-hosted runners, and enforcing status checks on protected branches.
 
 ---
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Environment:** DNS, NTP, and network connectivity verified before starting
+- **Change management:** change request approved; maintenance window scheduled
+- **Rollback:** snapshot or backup taken immediately before deployment begins
+- **Time estimate:** 30–90 minutes — do not start if less than 2 hours are available
+
+---
+
 ## Enable GitHub Actions on a Repository
 
 1. Open the repository on GitHub.

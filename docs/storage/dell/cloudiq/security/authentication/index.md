@@ -75,6 +75,15 @@ CloudIQ uses Dell account-based authentication for portal access. Accounts are m
 - **MFA**: Enforce multi-factor authentication on all Dell accounts that have access to CloudIQ. For federated accounts, MFA enforcement is managed by your IdP. For non-federated Dell accounts, enable MFA in **My Dell Account** settings.
 - **Session management**: CloudIQ sessions have a fixed idle timeout; users are required to re-authenticate after inactivity.
 
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## API Authentication
 
 API client credentials (client ID and client secret) provide programmatic access with the same permissions as the user account that created them.

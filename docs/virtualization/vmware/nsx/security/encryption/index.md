@@ -162,3 +162,13 @@ curl -sk -u 'admin:password' \
   -d "{\"pem_encoded\": \"$(cat siem-ca.crt | awk '{printf "%s\\n", $0}')\"}" \
   "https://<nsx-manager>/api/v1/trust-management/certificates?action=import"
 ```
+
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

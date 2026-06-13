@@ -64,6 +64,15 @@ Certificate policy standards enforced through the Venafi policy tree. All certif
 
 
 ---
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Policy Tree Naming Conventions
 
 Policy folders use lowercase-hyphenated names. Certificate objects (leaf nodes) use the FQDN as the object name.

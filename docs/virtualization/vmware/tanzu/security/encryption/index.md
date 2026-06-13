@@ -68,6 +68,15 @@ Encryption reference covering Kubernetes Secrets Encryption at Rest, TLS for All
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator role
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Kubernetes Secrets Encryption at Rest
 
 By default, Kubernetes Secrets are stored in etcd as base64-encoded (not encrypted). Enable encryption:

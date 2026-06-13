@@ -12,6 +12,15 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
 *Applies to: NetBackup 10.x*
 </div>
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Master → Media → Client Topology
 
 Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.

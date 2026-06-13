@@ -48,3 +48,4 @@ OpenShift security: RBAC, OAuth identity providers, etcd encryption, pod securit
     <span class="kb-card-desc">SCC, pod security admission, CIS benchmark, and audit logging</span>
   </a>
 </div>
+

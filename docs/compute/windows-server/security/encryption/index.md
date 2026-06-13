@@ -12,6 +12,15 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
 *Applies to: Windows Server 2019 / 2022*
 </div>
 
+## Before you begin
+
+- **Access:** Local Administrator or Domain Admin on target hosts
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## BitLocker — Drive Encryption
 
 BitLocker provides full-volume encryption for OS and data drives. On servers, it is typically combined with Active Directory key escrow so recovery keys are centrally stored.

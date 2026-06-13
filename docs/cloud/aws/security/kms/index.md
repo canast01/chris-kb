@@ -57,6 +57,15 @@ AWS KMS reference covering Overview, Where It Fits, Daily Checks, Health Command
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Overview
 
 AWS KMS notes for day-to-day infrastructure operations.

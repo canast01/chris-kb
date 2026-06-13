@@ -65,6 +65,15 @@ Use `grant_type=refresh_token` with the refresh token to get a new access token 
 
 ---
 
+## Before you begin
+
+- **Access:** Backup admin role on backup server; target system credentials
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+
 ## Backup Infrastructure Credentials Management
 
 VBR stores credentials for managed infrastructure components (proxies, repositories, tape servers, etc.) in its configuration database.

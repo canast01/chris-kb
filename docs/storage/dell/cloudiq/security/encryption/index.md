@@ -77,3 +77,13 @@ CloudIQ data encryption settings, key management integration, and encryption com
 | Data content | Telemetry contains configuration metadata and performance statistics only — no user data, file contents, or host data is transmitted |
 
 CloudIQ telemetry does not include: file names, directory paths, user credentials, application data, or any content stored on the managed arrays.
+
+## Before you begin
+
+- **Access:** Storage admin credentials (cluster admin or equivalent)
+- **Change management:** security changes require CAB approval in most environments
+- **Rollback plan:** document current state before any security control change
+- **Testing:** validate in a non-production environment first where possible
+
+---
+

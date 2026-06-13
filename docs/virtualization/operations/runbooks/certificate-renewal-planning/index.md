@@ -42,6 +42,15 @@ VMware Certificate Renewal Runbook reference covering Identify the Expiring Cert
 
 Only restart services after confirming the new certificate is applied.
 
+## Before you begin
+
+- **Access:** Admin credentials on all affected systems
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## Validate Integrations
 
 - vCenter browser access — no certificate warning

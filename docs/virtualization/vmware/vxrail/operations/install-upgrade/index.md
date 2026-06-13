@@ -50,6 +50,15 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## LCM Pre-Upgrade Checklist
 
 Complete this checklist before initiating any VxRail LCM upgrade. LCM will run its own pre-check, but these manual verifications catch issues that may not surface in the automated check.

@@ -120,6 +120,15 @@ Shut down the VM and take a snapshot before creating a pool.
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter read-only minimum; Administrator role for remediation steps
+- **Timing:** safe to run during business hours unless a step is marked ⚠ (causes interruption)
+- **Dependencies:** no active upgrades or migrations on the same infrastructure
+- **Logging:** capture command output — paste into the change record on completion
+
+---
+
 ## UAG Deployment
 
 UAG is deployed from OVA. Use PowerShell for repeatable deployment:
