@@ -16,6 +16,13 @@ Firewall port reference for PKI and certificate infrastructure. Covers certifica
 *Applies to: Microsoft ADCS / Venafi TPP / Let's Encrypt / ACME protocol*
 </div>
 
+## Before you begin
+
+- OCSP responder and CRL distribution point URLs are **embedded in every issued certificate** (AIA/CDP extensions) — all client zones must reach these URLs or certificate validation will fail silently.
+- ADCS DCOM (port 135 + dynamic range) is Windows-only; Linux/MDM enrollments use SCEP (80) or EST/ACME (443).
+- For Let's Encrypt HTTP-01, the server requesting the certificate must have **inbound port 80** reachable from Let's Encrypt validation IPs — cannot be blocked by a firewall or CDN.
+- DNS-01 challenge requires only outbound 443 to the DNS provider API — no inbound ports needed.
+
 ## Certificate Enrollment Protocols
 
 | Port | Protocol | Source | Destination | Purpose |
