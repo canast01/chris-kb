@@ -76,6 +76,8 @@ openssl s_client -connect host.corp.local:443 2>/dev/null | \
   openssl x509 -noout -enddate
 ```
 
+**Expected output (step 5):** `notAfter` shows the new expiry date (≥ 1 year from today). Service responds normally — test with `curl -sk https://host.corp.local/health` returning HTTP 200.
+
 ## CyberArk Password Rotation Check
 
 ```bash

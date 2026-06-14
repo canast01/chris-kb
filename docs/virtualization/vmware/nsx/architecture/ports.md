@@ -5,6 +5,8 @@ tags:
   - firewall
   - ports
   - overlay
+  - nsx-3
+  - nsx-4
 ---
 # NSX — Ports and Network Requirements
 

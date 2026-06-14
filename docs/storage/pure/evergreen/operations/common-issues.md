@@ -301,3 +301,13 @@ For controller upgrade or subscription issues, also have the Pure1 subscription 
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+## See also
+
+- [Evergreen — Backup & Restore](backup-restore.md)
+- [Evergreen — CLI Reference](cli-reference.md)
+- [Evergreen — Health Checks](health-checks.md)
+- [Evergreen — Operations](index.md)
+- [Evergreen — Architecture](../architecture/)
+- [Pure Storage Evergreen Security](../security/)
+- [Pure Storage Evergreen Troubleshooting](../troubleshooting/)

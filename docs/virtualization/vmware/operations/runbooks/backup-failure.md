@@ -113,3 +113,10 @@ Common backup errors:
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+## See also
+
+- [VMware Certificate Renewal Runbook](certificate-renewal-planning.md)
+- [vCenter Certificate Rotation Runbook](certificate-rotation.md)
+- [ESXi Host Maintenance Mode Runbook](esxi-host-maintenance.md)
+- [Virtualization Runbooks](index.md)

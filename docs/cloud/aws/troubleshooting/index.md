@@ -108,6 +108,8 @@ aws rds describe-db-instances --db-instance-identifier <db-id> \
 aws rds describe-events --source-identifier <db-id> --duration 60
 ```
 
+**Expected output:** Status query returns `["available", {"Address": "<endpoint>", "Port": <port>}]`. If status is `modifying`, `rebooting`, or `failing-over`, connection refusal is expected — wait for status to return to `available`.
+
 ## VPC Flow Logs — Analysing Traffic
 
 ```bash

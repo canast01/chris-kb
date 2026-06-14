@@ -75,6 +75,8 @@ openssl x509 -noout -dates -in /etc/ssl/certs/cert.crt
 openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt cert.crt
 ```
 
+**Expected output:** Chain check shows `verify return:1` for each cert in the chain and `Verification: OK` at the end. `openssl verify` returns `cert.crt: OK`. Absence of `OK` or presence of `verify error:num=` indicates a chain or trust store problem.
+
 See [TLS Troubleshooting](../../protocols/tls/troubleshooting/) for detailed steps.
 
 ## CyberArk Vault Connectivity
@@ -89,6 +91,8 @@ nc -zv vault.corp.local 1858
 # Verify CPM service running
 sc query CyberArk_CPM   # Windows
 ```
+
+**Expected output:** `nc` returns `Connection to vault.corp.local port 1858 [tcp] succeeded`. `sc query CyberArk_CPM` shows `STATE: 4 RUNNING`. If connection refused, check firewall rule for TCP 1858 between the CPM server and the Vault.
 
 ## MFA / Duo Troubleshooting
 

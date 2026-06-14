@@ -83,6 +83,8 @@ iostat -xz 1 5
 lsblk; ls -la /dev/mapper/
 ```
 
+**Expected output:** `multipath -ll` shows all paths in `active ready` state. `dmesg` grep returns no output. `iostat` shows `await` < 5 ms for SSD, < 20 ms for HDD under normal load.
+
 ## VMware APD Recovery
 
 ```bash
@@ -95,6 +97,8 @@ esxcli storage core path list | grep -E 'State:|Device:|Adapter:'
 # 2. Remove and re-add storage adapter in vCenter
 # 3. Rescan
 ```
+
+**Expected output:** `esxcli storage core path list` shows `State: active` for all paths. APD condition resolves in vCenter (datastore no longer shows "All Paths Down").
 
 ## Replication Lag Diagnosis
 

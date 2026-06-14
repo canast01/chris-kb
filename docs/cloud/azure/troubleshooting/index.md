@@ -133,6 +133,8 @@ az acr show --name <acr-name> --query 'networkRuleSet'
 kubectl run test-pod --rm -i --image=busybox -- nslookup kubernetes.default
 ```
 
+**Expected output:** Node conditions show `Ready True`. `kubectl top nodes` shows CPU and memory below 80%. DNS test returns an address for `kubernetes.default`. Events show `Pulled` and `Started` rather than `BackOff` or `ErrImagePull`.
+
 ## App Service 502/503
 
 1. Azure Portal → App Service → Diagnose and solve problems → Availability and Performance

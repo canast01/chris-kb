@@ -163,3 +163,13 @@ systemctl --failed                 # confirm no services broken by cleanup
 - Confirm the operation completed without errors in the log or management UI
 - Verify the expected state change is visible (service running, object created, config applied)
 - Document the outcome in the change record
+
+## See also
+
+- [Server Reboot Runbook](server-reboot.md)
+- [Service Restart Runbook](service-restart.md)
+- [Linux — Operational Runbooks](index.md)
+- [Linux — Architecture](../../architecture/)
+- [Linux Server — Initial Deployment](../../deploy/)
+- [Linux — Security](../../security/)
+- [Linux — Troubleshooting](../../troubleshooting/)

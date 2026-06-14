@@ -145,3 +145,10 @@ Get-VM <vmname> | Get-Snapshot | Remove-Snapshot -Confirm:$false
 - **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
 - **Events:** monitor the vCenter Events view for the affected object for 5 minutes
 - **Health check:** run the morning health-check sequence for the affected product tier
+
+## See also
+
+- [VMware Backup Failure Runbook](backup-failure.md)
+- [VMware Certificate Renewal Runbook](certificate-renewal-planning.md)
+- [vCenter Certificate Rotation Runbook](certificate-rotation.md)
+- [Virtualization Runbooks](index.md)

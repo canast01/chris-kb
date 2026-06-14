@@ -110,3 +110,10 @@ ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, 
 - All evacuated VMs are in Powered On state on remaining cluster hosts
 - vSAN health is green — no component degradation from the host removal
 - HA and DRS are enabled on the cluster
+
+## See also
+
+- [VMware Backup Failure Runbook](backup-failure.md)
+- [VMware Certificate Renewal Runbook](certificate-renewal-planning.md)
+- [vCenter Certificate Rotation Runbook](certificate-rotation.md)
+- [Virtualization Runbooks](index.md)

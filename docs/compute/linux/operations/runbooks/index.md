@@ -80,6 +80,8 @@ ulimit -a
 systemctl show <service> | grep -i limit
 ```
 
+**Expected output (step 2):** `Active: active (running)` after restart. If `Active: failed` or `Active: activating` for > 30 seconds, proceed to step 3.
+
 ## Disk Space Emergency
 
 ```bash
@@ -110,6 +112,8 @@ tar -tzf /backup/app-$(date +%F).tar.gz > /dev/null && echo "Archive OK"
 mysql -u root -p test_restore < /backup/mysql-$(date +%F).sql
 ```
 
+**Expected output:** `Archive OK` for the tar check. MD5 must match the stored hash from the backup job log. DB restore must complete without error output.
+
 ## Kernel and Package Update Runbook
 
 ```bash
@@ -125,3 +129,14 @@ apt-get upgrade -y --with-new-pkgs
 needs-restarting -r       # RHEL
 cat /var/run/reboot-required 2>/dev/null  # Ubuntu
 ```
+
+**Expected output:** `needs-restarting -r` exits 0 (no reboot needed) or exits 1 (reboot required — schedule via server-reboot runbook). `/var/run/reboot-required` absent = no reboot needed.
+
+## Verify
+
+| Step | Pass Criteria |
+|---|---|
+| Service recovery | `systemctl is-active <service>` returns `active` |
+| Disk cleanup | `df -h` shows affected mount < 80% |
+| Backup validation | `Archive OK` and MD5 hash match confirmed |
+| Package updates | `dnf check-update` exits 0 (no pending security updates) |

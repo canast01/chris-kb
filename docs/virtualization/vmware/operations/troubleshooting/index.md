@@ -142,6 +142,8 @@ esxcli storage core path list | grep -v Active   # check for dead paths
 esxcli network ip connection list | grep ESTABLISHED  # active connections
 ```
 
+**Expected output:** `storage core path list | grep -v Active` returns no output (all paths active). `hardware ipmi sel list` returns no critical hardware events. IPMI critical events require hardware replacement ticket.
+
 ## vSAN Health Check
 
 ```bash
@@ -153,6 +155,8 @@ esxcli vsan cluster get    # cluster UUID and node count
 # Via DCLI / RVC (legacy):
 rvc user@vcenter -c "vsan.health.health_summary /<dc>/computers/<cluster>"
 ```
+
+**Expected output:** `vsan health cluster list` shows all checks as `green`. `vsan cluster get` confirms node count matches expected cluster size. Any `yellow` or `red` check requires investigation before any scheduled maintenance.
 
 ## Horizon Connection Diagnosis
 

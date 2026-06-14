@@ -5,6 +5,8 @@ tags:
   - firewall
   - ports
   - vsphere
+  - vsphere-7
+  - vsphere-8
 ---
 # ESXi — Ports and Network Requirements
 

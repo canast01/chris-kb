@@ -50,12 +50,14 @@ Run these steps at the start of any virtualization operations shift or before a 
    ```bash
    curl -sk -o /dev/null -w "%{http_code}" https://<vcenter>/ui
    ```
+   **Expected output:** `200` — any other code (401, 5xx, or no response) indicates a vCenter problem.
 2. **ESXi host count** — vCenter → **Hosts and Clusters** → verify expected host count; investigate any hosts showing as disconnected or not responding.
 3. **vSAN health** — vCenter → **Cluster → Monitor → vSAN Health** → all checks should show green; flag any WARN or ERROR status and check the detail pane for the affected component.
 4. **NSX Manager cluster** — confirm all NSX Manager nodes report as Up:
    ```bash
    curl -sk -u 'admin:pw' https://<nsx>/api/v1/cluster/status
    ```
+   **Expected output:** JSON with `"mgmt_cluster_status": {"status": "STABLE"}` and all member nodes showing `"status": "UP"`.
 5. **VM alarm count** — vCenter → **Alarms → Active Alarms** → review count by severity; investigate any P1 (red) or P2 (yellow) alarms before proceeding with any change work.
 6. **DRS/HA status** — vCenter → **Cluster → Summary** → verify HA is Enabled with no admission control failures, and DRS is Enabled and not in manual-override mode.
 7. **vMotion queue** — vCenter → **Recent Tasks** → filter for vMotion tasks; any task running longer than 30 minutes indicates a stalled migration that needs investigation.
@@ -65,6 +67,15 @@ Run these steps at the start of any virtualization operations shift or before a 
     ```bash
     openssl s_client -connect <vcenter>:443 </dev/null 2>/dev/null | openssl x509 -noout -dates
     ```
+    **Expected output:** `notAfter` date ≥ 60 days from today. If fewer than 60 days remain, raise a certificate renewal ticket immediately.
+
+## Verify
+
+After completing the full routine:
+
+- All 10 steps completed with no escalation triggers — sign off in the shift log.
+- If any step triggered an escalation condition, confirm the incident ticket is open before signing off.
+- Re-run the affected check after any remediation to confirm resolution.
 
 ---
 

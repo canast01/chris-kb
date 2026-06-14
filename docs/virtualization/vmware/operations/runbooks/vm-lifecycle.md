@@ -101,3 +101,10 @@ Keep this page updated with local commands, screenshots, system names, and known
 - Decommissioned VM: removed from inventory and no orphaned VMDK files remain on datastores
 - Migrated VM: running on target host/datastore with no configuration changes
 - Template updated: version suffix updated, old template snapshot removed
+
+## See also
+
+- [VMware Backup Failure Runbook](backup-failure.md)
+- [VMware Certificate Renewal Runbook](certificate-renewal-planning.md)
+- [vCenter Certificate Rotation Runbook](certificate-rotation.md)
+- [Virtualization Runbooks](index.md)
