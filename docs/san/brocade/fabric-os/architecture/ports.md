@@ -1,0 +1,139 @@
+---
+tags:
+  - brocade
+  - fabric-os
+  - san
+  - networking
+  - firewall
+  - ports
+---
+# Brocade Fabric OS — Ports and Network Requirements
+
+<div class="kb-summary">
+Firewall port reference for Brocade Fabric OS (FOS) SAN switches. Covers management access (SSH, HTTPS, Telnet), SNMP monitoring, RADIUS/LDAP authentication, and NTP. Fibre Channel frame traffic is not IP-based and requires no firewall rules.
+
+*Applies to: Fabric OS 9.x (Brocade / Broadcom)*
+</div>
+
+```text
+┌─────────────────────────── Brocade FOS — Network Traffic Zones ───────────────────────────────────────┐
+│                                                                                                       │
+│  Management Zone          Switch Management Port (eth0)    External Services                          │
+│  ────────────────         ──────────────────────────       ─────────────────                          │
+│  Admin  ──22/443──► Switch management IP                   Switch ──123 UDP──► NTP                    │
+│  SNMP   ──161 ────►                                        Switch ──514 UDP──► Syslog                 │
+│  SANnav ──443 ────►                                        Switch ──162 UDP──► SNMP receiver          │
+│                                                                                                       │
+│  FC fabric traffic (F_port, E_port, N_port) is Fibre Channel protocol — no IP firewall rules needed   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+## Before you begin
+
+- All management traffic uses the dedicated Ethernet management port (eth0) — physically separate from FC ports
+- Telnet (port 23) is disabled by default in FOS 9.x and should remain disabled — use SSH exclusively
+- FC fabric traffic (ISL, zone enforcement, FLOGI, FSPF) is Fibre Channel protocol, not TCP/IP — no firewall rules apply
+- HTTPS (443) is used for the Web Tools GUI and REST API in FOS 9.x+
+
+---
+
+## Inbound — Admin Access to Switch Management Port
+
+| Port | Protocol | Source | Purpose |
+|---|---|---|---|
+| 22 | TCP | Jump hosts, SANnav, admin workstations | SSH — FOS CLI (primary management method) |
+| 443 | TCP | Admin browsers, SANnav, Brocade Network Advisor | HTTPS — Web Tools UI and REST API |
+| 23 | TCP | Legacy tooling (disable) | Telnet — disabled by default in FOS 9.x; keep closed |
+| 161 | UDP | SNMP monitoring systems | SNMP polling (GET/GETBULK) |
+
+---
+
+## Outbound — Switch to External Services
+
+| Port | Protocol | Destination | Purpose |
+|---|---|---|---|
+| 162 | UDP | SNMP trap receiver / SANnav | SNMP traps (hardware events, port state changes) |
+| 514 | UDP | Syslog server | FOS syslog event forwarding |
+| 123 | UDP | NTP servers | Time synchronisation — required for log timestamps and certificate validity |
+| 25 | TCP | SMTP relay | Email alerts (RASlog events) |
+
+---
+
+## Authentication — RADIUS and LDAP
+
+When RADIUS or LDAP/LDAPS is configured for admin authentication:
+
+| Port | Protocol | Destination | Purpose |
+|---|---|---|---|
+| 1812 | UDP | RADIUS server | RADIUS authentication (RFC 2865) |
+| 1813 | UDP | RADIUS server | RADIUS accounting |
+| 389 | TCP | LDAP server / Active Directory DC | LDAP — admin user lookup |
+| 636 | TCP | LDAP server / Active Directory DC | LDAPS (recommended) |
+
+---
+
+## SANnav to Switch Communication
+
+SANnav (Brocade SAN management platform) uses SSH to manage switches:
+
+| Port | Protocol | Source | Destination | Purpose |
+|---|---|---|---|---|
+| 22 | TCP | SANnav server | Switch management IP | SSH — SANnav CLI access for monitoring and config |
+| 443 | TCP | SANnav server | Switch management IP | REST API for FOS 9.x features |
+| 161 | UDP | SANnav server | Switch management IP | SNMP polling by SANnav |
+| 162 | UDP | Switch management IP | SANnav server | SNMP traps to SANnav |
+
+---
+
+## Inbound — SANnav Admin Access
+
+| Port | Protocol | Source | Purpose |
+|---|---|---|---|
+| 443 | TCP | Admin browsers | SANnav web UI and REST API |
+| 22 | TCP | Jump hosts | SANnav server SSH (OS access) |
+
+---
+
+## Firewall Zone Summary
+
+| From | To | Ports | Notes |
+|---|---|---|---|
+| Admin clients | Switch mgmt IP | 22, 443 | SSH and HTTPS |
+| SANnav | Switch mgmt IP | 22, 443, 161 UDP | Management and monitoring |
+| Switch mgmt IP | SANnav / SNMP receiver | 162 UDP | SNMP traps |
+| Switch mgmt IP | Syslog server | 514 UDP | Event log forwarding |
+| Switch mgmt IP | NTP server | 123 UDP | Time sync |
+| Switch mgmt IP | RADIUS / LDAP | 1812 UDP, 636 TCP | Authentication |
+
+---
+
+## Verify
+
+```bash
+# From admin workstation — test SSH to switch
+ssh admin@<switch-mgmt-ip>
+
+# From admin workstation — test HTTPS (Web Tools)
+curl -sk -o /dev/null -w "%{http_code}" https://<switch-mgmt-ip>/
+
+# From switch CLI — test NTP
+tsclockserver show
+
+# From switch CLI — test syslog connectivity
+syslogdiagshow
+
+# From switch CLI — test SNMP (from switch perspective)
+snmpconfig --show snmpv1
+
+# From monitoring server — test SNMP polling
+snmpget -v2c -c <community> <switch-mgmt-ip> 1.3.6.1.2.1.1.1.0
+```
+
+---
+
+## See also
+
+- [Brocade FOS — Architecture](how-it-works/)
+- [Brocade FOS — Operations](../operations/)
+- [Brocade SANnav — Ports](../../sannav/architecture/ports/)
