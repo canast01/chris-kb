@@ -52,13 +52,53 @@ This guide covers deploying a Cisco MDS 9000 series SAN switch from physical ins
 Connect via serial console (9600 baud, 8N1) for initial setup.
 
 ```text
----- System Admin Account Setup ----
-Do you want to enforce secure password standard? (yes/no) [n]: yes
-Enter the password for "admin": <enter password>
-Confirm the password for "admin": <confirm>
-
----- Basic System Configuration ----
-Would you like to enter the basic configuration dialog? (yes/no): yes
+┌───────────────────────── Cisco MDS Deployment — Initial Setup to Production ──────────────────────────┐
+│                                                                                                       │
+│  Day-0 setup: license, NTP, AAA; create VSANs and assign ports; zone initiators                       │
+│  to targets per VSAN; discover in NDFC; validate I/O with fctrace and fcping.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Phase 1: Day-0 Switch Setup          │  │           Phase 2: VSAN and Zoning          │   │
+│   │            Install NX-OS license             │  │         Create VSAN per fabric role         │   │
+│   │            Configure NTP servers             │  │           Assign FC ports to VSAN           │   │
+│   │            Set TACACS+/RADIUS AAA            │  │         Create device aliases (WWN)         │   │
+│   │        Enable features: fcoe/npv/etc         │  │         Create zones: 1 init + 1 tgt        │   │
+│   │           Configure mgmt IP + VRF            │  │          Activate zone set per VSAN         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Device aliases persist across reboots; always use aliases not raw WWNs in zones.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Phase 3: ISL and NDFC             │  │             Phase 4: Validation             │   │
+│   │         Configure TE port ISL trunks         │  │        show flogi database: HBA check       │   │
+│   │         Verify allowed VSANs on ISL          │  │         fcping: initiator to target         │   │
+│   │         Add switch to NDFC discovery         │  │          fctrace: path hop tracing          │   │
+│   │            Sync zone DB via NDFC             │  │         show zoneset active: confirm        │   │
+│   │           Enable SNMP v3 for NDFC            │  │        Host: rescan HBA after zoning        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS switches in SAN racks; cabled to host HBAs and storage ports; separate                           │
+│  A and B fabric physical paths; management network cable to mgmt0 port.                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VSAN          = Virtual SAN; logical fabric; keep prod storage on dedicated VSAN                     │
+│  Zone          = access control pair: one initiator (HBA) + one or more targets                       │
+│  Device alias  = human-readable WWN label; use instead of raw hex in zones                            │
+│  Zone set      = collection of zones activated as a group on a VSAN                                   │
+│  TE port       = trunked E port; ISL carrying multiple VSANs between switches                         │
+│  FLOGI         = Fabric Login; HBA login event; first step to reach storage                           │
+│  fcping        = FC-layer ping; confirms path between initiator and target WWN                        │
+│  fctrace       = FC path trace (like traceroute); shows hop-by-hop FCID path                          │
+│  NDFC          = Nexus Dashboard Fabric Controller; central MDS management                            │
+│  AAA           = Authentication, Authorization, Accounting; TACACS+ preferred                         │
+│  NTP           = required; fabric domain elections can fail if clocks diverge                         │
+│  Feature       = NX-OS capability flag; must enable (e.g. feature npv) before use                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Walk through the setup dialog:
