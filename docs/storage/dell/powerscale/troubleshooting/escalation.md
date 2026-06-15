@@ -7,166 +7,308 @@ search:
 ---
 # PowerScale — Escalation
 
-
 <div class="kb-summary">
-Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Procedure.
+How to escalate Dell PowerScale (Isilon) issues to Dell Technologies support: what data to collect, how to run isi_gather_info, step-by-step case creation on dell.com/support, and the escalation path when progress stalls.
 
-*Applies to: PowerScale (Isilon) 9.x*
+*Applies to: PowerScale (Isilon) OneFS 9.x*
 </div>
+
 ```text
-┌──────────────────────────────────── Dell PowerScale — Escalation ─────────────────────────────────────┐
+┌──────────────────────────────── Dell PowerScale — Escalation ─────────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     PowerScale escalation: severity triage, vendor support contact, and required artifacts    │   │
-│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
-│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate PowerScale issues to Dell support when a node is SMARTFAILed and data is unprotected,       │
+│  NFS or SMB access has stopped for client-facing workloads, SyncIQ replication has failed with        │
+│  no valid recovery point, or a OneFS upgrade has corrupted the cluster configuration.                 │
 │                                                                                                       │
-│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
+│   │  Run isi_gather_info on the cluster          │  │  Go to dell.com/support → My Cases          │   │
+│   │  Note OneFS version (isi version)            │  │  Select product by cluster serial number    │   │
+│   │  Capture isi status + isi storagepool list   │  │  Severity: P1 down / P2 degraded / P3 minor │   │
+│   │  Check isi alerts list --limit 50            │  │  Attach isi_gather_info bundle              │   │
+│   │  Write timeline: last healthy → first fault  │  │  For P1: also call Dell support             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
-│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
-│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
-│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
-│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  For P1: open portal case AND call Dell immediately.                                                  │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
-│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
-│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
-│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
-│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm bundle received        │  │  Do not remove a SMARTFAILed node prematurely│  │
+│   │  T2: PS SE assigned; deep cluster analysis   │  │  Do not format/rebuild without Dell         │   │
+│   │  TAM: engage for P1 or prolonged issues      │  │  Do not disable SupportAssist mid-case      │   │
+│   │  GPS: on-site senior engineer for complex    │  │  Do not start a OneFS upgrade mid-incident  │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
-│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
-│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
-│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
-│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
-│    Access zone        = logical container with separate authentication and export namespace per tenant│
-│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
-│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
-│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
-│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
-│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
-│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
+│  OneFS           = PowerScale distributed filesystem OS; all nodes share a single namespace           │
+│  SMARTFAIL       = controlled node/drive removal process; protects data during degraded state         │
+│  isi_gather_info = full cluster diagnostic bundle; mandatory for every Dell support case              │
+│  SyncIQ          = async replication to DR cluster; RPO-based schedule; one active at a time          │
+│  SmartPools      = tiering engine; moves files between All-Flash, Hybrid, Archive tiers               │
+│  SmartConnect    = DNS-based load balancing; distributes NFS/SMB connections across nodes             │
+│  SnapshotIQ      = space-efficient snapshots; accessed via .snapshot directory in each share          │
+│  isi CLI         = OneFS command-line interface; all management operations available                  │
+│  SupportAssist   = Dell's auto-case creation; triggers on hardware faults via phone-home              │
+│  ProSupport Plus = Dell's highest support tier; 24×7; P1 response in < 2 hours                        │
+│  TAM             = Technical Account Manager; escalation path for prolonged or critical issues        │
+│  GPS             = Global Priority Services; on-site or remote senior Dell engineering support        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+---
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** SSH access to any PowerScale node (admin user or root); OneFS web admin UI access; Dell support account at dell.com/support linked to the cluster service tag
+- **SupportAssist auto-cases:** PowerScale can automatically open Dell support cases for hardware faults if SupportAssist is configured. Check `isi phone_home settings view` to confirm call-home is active — if it is, a case may already exist before you call
+- **Do NOT remove a SMARTFAILed node** without Dell direction — SMARTFAIL is a controlled removal process; removing the node before SMARTFAIL completes can leave data components without sufficient protection
+- **Do NOT start a OneFS upgrade** during an active incident — upgrades in a degraded cluster state can fail mid-way and make the cluster config inconsistent
 
 ---
 
-## Support Portal
+## Pre-Escalation Self-Check
 
-Open and manage cases at [https://www.dell.com/support](https://www.dell.com/support). Log in with your Dell account and navigate to **My Cases** to track open cases.
+Run these before opening the case.
 
-SupportAssist for PowerScale (embedded in OneFS) can automatically open cases for hardware faults — confirm it is configured and calling home by running:
+| Check | Command | Expected result |
+|---|---|---|
+| OneFS version | `isi version` | Note full version + build |
+| Cluster node health | `isi status` | All nodes Online (`--`) |
+| Storage pool health | `isi storagepool list` | All pools show healthy; no unprotected data |
+| Active alerts | `isi alerts list --limit 50` | No CRITICAL or ERROR alerts |
+| Drive health | `isi statistics drive` | No drives in DEAD or SMARTFAIL state |
+| SyncIQ status | `isi sync policies list` | No policies in "needs attention" |
+| Active jobs | `isi job list` | No stuck jobs (check job pause/error state) |
+| SupportAssist | `isi phone_home settings view` | Enabled; last call-home successful |
+| NFS/SMB access | Mount a share and write a test file | Write succeeds; read returns same data |
+
+---
+
+## Step-by-Step Data Collection
+
+### 1. Get the OneFS version and cluster serial number
 
 ```bash
-isi phone_home settings view
-isi phone_home send --type test
+# SSH to any PowerScale node as admin
+ssh admin@<node-ip>
+
+# OneFS version (include in every case)
+isi version
+
+# Cluster name and serial numbers (required for case registration)
+isi cluster identity view
+isi license list   # shows cluster serial
+
+# Node list with serial numbers
+isi status -n
 ```
 
-Verify SupportAssist connectivity to Dell's SRS gateway before relying on auto-case creation.
-
-## Opening a Case
-
-Required information before calling or opening an online case:
-
-| Field | How to Obtain |
-|---|---|
-| Cluster serial number | `isi license list` or the chassis label on each node |
-| Node serial numbers | `isi status -n` or the node chassis label |
-| OneFS version | `isi version` |
-| Symptom description | Clear statement of what failed, when it started, and frequency |
-| Affected nodes | `isi status` output showing node state |
-| Client impact | Number of clients affected, protocols, affected paths under `/ifs` |
-
-For SMARTFAIL, drive, or node hardware faults, the severity should be set to **P1** (production down) or **P2** (degraded) depending on whether I/O has been interrupted.
-
-## Information to Collect
-
-Collect the full cluster diagnostic bundle using `isi_gather_info` before opening or escalating a case:
+### 2. Run isi_gather_info (full cluster diagnostic bundle)
 
 ```bash
-# Collect full cluster diagnostic bundle (runs on any node, gathers all nodes)
+# SSH to any node — isi_gather_info collects from all nodes automatically
 isi_gather_info
 
-# Show overall cluster node and drive health
-isi status
+# Bundle is written to /ifs/data/Isilon_Support/
+ls -lh /ifs/data/Isilon_Support/
 
-# List all storage pool tiers and their capacity usage
-isi storagepool list
-
-# Show per-drive statistics including I/O errors and firmware
-isi statistics drive
-
-# Show recent alerts (last 50)
-isi alerts list --limit 50
-
-# Show all active and recent cluster background jobs
-isi job list
-
-# Show installed OneFS version
-isi version
+# Copy to a local workstation for upload to Dell case
+scp admin@<node-ip>:/ifs/data/Isilon_Support/<bundle-filename>.tar.gz /tmp/
 ```
 
-The `isi_gather_info` output is written to `/ifs/data/Isilon_Support/` by default. Upload this file to the Dell support case using the **Secure Upload** link in the case portal.
+This bundle contains: OneFS logs, cluster config, hardware inventory, performance stats, alert history, and job state from every node.
 
-## SLA Tiers
+### 3. Capture current cluster status
 
-| Tier | Priority | Response Time | Coverage |
-|---|---|---|---|
-| ProSupport Plus | P1 — Production Down | 2 hours | 24x7x365 |
-| ProSupport Plus | P2 — Degraded Performance | 4 hours | 24x7x365 |
-| ProSupport Plus | P3 — Non-critical issue | Next business day | Business hours |
-| ProSupport Plus | P4 — General question | Next business day | Business hours |
-| ProSupport | P1 | 4 hours | 24x7x365 |
-| ProSupport | P2—P4 | Next business day | Business hours |
+```bash
+# Node and drive states
+isi status
 
-Confirm your cluster's support contract level in the Dell support portal under **My Products and Services**.
+# Storage pools and capacity
+isi storagepool list
 
-## Escalation Procedure
+# Drive statistics (I/O errors, SMARTFAIL drives)
+isi statistics drive | head -100
 
-If a P1 case is not progressing within the response SLA or a critical outage requires urgent escalation:
+# Active alerts
+isi alerts list --limit 100
 
-1. Call the Dell support line and request **escalation to a senior engineer** for your open case number.
-2. Contact your **Dell account team Technical Account Manager (TAM)** — TAMs have direct lines into the engineering team for critical production issues.
-3. For prolonged or complex outages, request engagement with **Dell Global Priority Services (GPS)** — GPS provides on-site or remote senior engineering support beyond standard TAM involvement.
-4. Reference the case number, cluster serial, and business impact statement (number of users/petabytes affected) in all escalation communications.
+# Active OneFS background jobs
+isi job list
+
+# SyncIQ policy status
+isi sync policies list
+isi sync reports list
+```
+
+### 4. Collect SupportAssist phone-home status
+
+```bash
+# SupportAssist configuration
+isi phone_home settings view
+
+# Send a test notification to confirm connectivity
+isi phone_home send --type test
+
+# Check last auto-case if SupportAssist triggered one
+isi events list | grep -i "support\|case\|esrs" | tail -20
+```
+
+### 5. Write the timeline
+
+```text
+OneFS version: 9.5.0.0 build XXXXXXXX
+Cluster: prod-ps-01 (cluster serial: XXXXXXXX)
+Nodes: 12 nodes (4x F200, 4x H600, 4x A300 archive tier)
+Protection level: N+2:1 on all pools
+Issue first observed: 2026-06-14 14:00 UTC
+Last known healthy state: 2026-06-14 12:00 UTC
+Changes in 24h before the issue:
+  - 12:00: Node 7 showed drive fault alert (Drive Bay 3: SSD DEAD)
+  - 14:00: Node 7 entered SMARTFAIL state automatically
+  - 14:05: isi status shows Node 7 in "SMARTFAILING" state; other nodes Online
+  - 14:10: isi storagepool list shows "H600 pool: DEGRADED - 1 device in SMARTFAIL"
+SupportAssist: case auto-created (Dell case number XXXXXXXX)
+Steps already taken:
+  - Did NOT remove Node 7 or pull the failed drive
+  - Did NOT initiate manual SMARTFAIL on additional nodes
+  - SyncIQ: replication from prod-ps-01 to dr-ps-01 still running
+Blast radius: H600 pool degraded; data protected at N+1 only; one more drive failure = data at risk
+```
 
 ---
 
-## Verify resolution
+## How to Open the Case on dell.com/support
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+1. Go to **dell.com/support** and sign in with your Dell account.
+
+2. Click **My Cases** → **Create New Case**.
+
+3. Under **Product**, select your PowerScale cluster by service tag (cluster serial number from `isi license list`).
+
+4. Under **Severity**, select:
+   - **Severity 1 — Production Down**: NFS/SMB access is completely unavailable; a node is offline with unprotected data; SMARTFAIL cannot complete; data loss is imminent; no workaround
+   - **Severity 2 — Degraded Performance**: A node or drive is in SMARTFAIL and data is at N+1 protection; SyncIQ replication is failing; performance is significantly degraded; workaround is incomplete
+   - **Severity 3 — Non-Critical Issue**: A storage pool is in a degraded but protected state; a background job is stuck; a specific protocol is partially failing; workaround exists
+   - **Severity 4 — General Question**: How-to question, pre-upgrade review, capacity planning
+
+5. In the **Summary** field: symptom + scope. Example: `PowerScale prod-ps-01 — Node 7 in SMARTFAIL, H600 pool degraded to N+1, drive failure risk imminent`.
+
+6. In the **Description** field, paste:
+   - OneFS version and cluster serial from Step 1
+   - `isi status` and `isi storagepool list` output from Step 3
+   - The alert details from Step 3
+   - The timeline from Step 5
+   - Note any Dell SupportAssist auto-case number if one was already created
+
+7. Under **Attachments**, upload the `isi_gather_info` bundle from Step 2.
+
+8. Click **Submit**. You receive a case number immediately.
+
+9. **Severity 1 only:** call Dell support after submission:
+    - North America: +1 800 945 3355 (24×7 for production-down)
+    - Reference the case number and state "Severity 1 — PowerScale node SMARTFAIL, data at risk" at the start of the call.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open case at dell.com/support with isi_gather_info bundle attached
+         ↓
+Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
+         ↓
+Step 3 — If no meaningful progress within 2 hours for P1:
+         → Reply in case: "Requesting escalation to PowerScale Senior Engineer"
+         → State: "[SMARTFAIL stuck / NFS access down / data at risk / node offline]"
+         ↓
+Step 4 — PowerScale T2 Senior Engineer assigned
+         → They will review the isi_gather_info bundle and may request SSH access
+         → Have SSH access to nodes and OneFS admin UI ready; confirm SupportAssist is enabled
+         ↓
+Step 5 — If issue requires hardware dispatch (failed node, drive replacement):
+         → Dell dispatches a field engineer with replacement hardware
+         → Provide physical access details (data center, rack, row)
+         ↓
+Step 6 — For prolonged P1 or complex cluster recovery:
+         → Request TAM engagement (Technical Account Manager)
+         → For on-site senior engineering: request Global Priority Services (GPS)
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Remove a SMARTFAILed node before SMARTFAIL completes | SMARTFAIL is a data migration process; removing the node early leaves data components without sufficient protection copies | Let SMARTFAIL complete fully (`isi status` shows node removed); only then power off and remove the node |
+| Pull a drive from a node showing as DEAD without Dell guidance | A DEAD drive may still hold the only copy of a component if SMARTFAIL has not yet migrated it | Confirm with Dell that the drive's data has been migrated to other drives before any physical removal |
+| Reformat or rebuild a node without Dell direction | Rebuilding destroys all node data; in a degraded cluster this can push the cluster below its protection threshold | Only reformat/rebuild with explicit Dell instructions and after confirming all data is protected on other nodes |
+| Disable SupportAssist during an active incident | SupportAssist provides Dell with real-time cluster telemetry that accelerates diagnosis | Keep SupportAssist enabled; if connectivity is an issue, arrange an alternate network path for call-home |
+| Start a OneFS upgrade during an active degraded state | Upgrades in a degraded cluster can fail mid-way, leaving the cluster in an inconsistent version state | Wait for the cluster to return to a fully healthy state before initiating any upgrade |
+| Run `isi job delete` on active protection or SMARTFAIL jobs | Cancelling a SMARTFAIL or FlexProtect job stops the data migration and leaves the cluster in a partially protected state | Let Dell direct any job cancellation; only stop jobs that Dell explicitly identifies as stuck |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# SSH to any PowerScale node as admin — paste these into every case update
+
+# OneFS version
+isi version
+
+# Node health overview
+isi status
+
+# Storage pool health (protection status)
+isi storagepool list
+
+# Drive states (DEAD/SMARTFAIL drives)
+isi statistics drive | grep -E "DEAD|SMARTFAIL|ERROR"
+
+# Active alerts
+isi alerts list --limit 50
+
+# Active background jobs
+isi job list
+
+# SyncIQ replication status
+isi sync policies list
+```
+
+---
+
+## Support SLA Reference
+
+| Tier | Severity | Definition | Initial Response SLA |
+|---|---|---|---|
+| ProSupport Plus | P1 — Production Down | NFS/SMB unavailable; node offline; data at risk | < 2 hours (24×7) |
+| ProSupport Plus | P2 — Degraded | Node/drive in SMARTFAIL; N+1 protection only; workaround partial | < 4 hours (24×7) |
+| ProSupport Plus | P3 — Non-Critical | Specific protocol issue; background job stuck; workaround exists | Next business day |
+| ProSupport Plus | P4 — General | How-to, planning, capacity review | Next business day |
+| ProSupport | P1 | As above | < 4 hours (24×7) |
+| ProSupport | P2–P4 | As above | Next business day |
 
 ---
 
 ## See also
 
-- [Powerscale — Diagnostics](diagnostics/)
-- [Powerscale — Common Issues](common-issues/)
+- [PowerScale — Diagnostics](diagnostics/)
+- [PowerScale — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `isi status` and confirm all nodes are Online (no SMARTFAIL or Degraded state)
+- Run `isi storagepool list` and confirm all pools show their full protection level (N+2:1 or configured policy)
+- Run `isi statistics drive` and confirm no drives in DEAD or SMARTFAIL state
+- Run `isi alerts list --limit 20` and confirm no active CRITICAL or ERROR alerts
+- Confirm NFS/SMB client access is restored: mount a share and write/read a test file
+- Check `isi sync reports list` to confirm SyncIQ replication has resumed and the last run succeeded
+- Run `isi_gather_info` again and attach to the Dell case as the post-resolution bundle
