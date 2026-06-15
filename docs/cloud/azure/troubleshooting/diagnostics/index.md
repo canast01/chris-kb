@@ -7,158 +7,284 @@ search:
 ---
 # Azure — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostic commands, log locations, and data collection procedures.
+Azure diagnostic commands: check account and subscription context with az cli, diagnose VM boot and network issues with Network Watcher, query Activity Log for recent changes, run Log Analytics KQL queries, inspect Key Vault access, and collect resource diagnostic data for Microsoft support.
 
-*Applies to: Azure*
+*Applies to: Microsoft Azure — all core IaaS services*
 </div>
+
 ```text
-┌────────────────────────────── Cloud Azure Troubleshooting — Diagnostics ──────────────────────────────┐
+┌──────────────────────────────────────── Azure — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Azure diagnostics: log collection, health checks, and performance analysis          │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here: az account show → az vm get-instance-view → Activity Log → NSG effective rules │    │
+│   │   VM not reachable: check NSG effective rules; use Network Watcher connectivity test          │   │
+│   │   Intermittent: check Activity Log for recent changes (deployments, NSG edits, scale events) │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               VM Diagnostics                 │  │         Network and Activity Log            │   │
+│   │   az vm get-instance-view: power/ext state   │  │   az network nic show-effective-nsg         │   │
+│   │   az vm boot-diagnostics get-boot-log        │  │   az network watcher test-connectivity      │   │
+│   │   az vm run-command invoke (cmd on VM)       │  │   az monitor activity-log list              │   │
+│   │   az vm extension list: extension status     │  │   Log Analytics: Heartbeat / SecurityEvent  │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│  Physical Infrastructure:                                                                             │
+│  Azure fabric (hypervisor) · VNet / NSG / UDR · VM (OS on managed disk) · Azure Monitor / Log Workspace│
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Cloud Azure Troubleshooting infrastructure · management network · monitoring             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Azure              = Cloud Azure Troubleshooting platform overview and core concepts               │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Key terms:                                                                                           │
+│  NSG              = Network Security Group; stateful firewall; rules evaluated in priority order      │
+│  UDR              = User-Defined Route; overrides Azure system routes; can redirect traffic           │
+│  Network Watcher  = Azure service for connectivity tests, packet capture, and flow log analysis       │
+│  Boot diagnostics = serial console log and screenshot from the VM hypervisor; works even if OS fails  │
+│  Activity Log     = Azure control-plane audit log; records all ARM API calls and state changes        │
+│  Log Analytics    = Azure Monitor log store; KQL queries over VM metrics, events, and security logs   │
+│  Run Command      = Azure feature to execute a script on a VM via the guest agent, no SSH needed      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([Azure Issue]) --> B{What type of problem?}
+    B -->|VM not reachable / SSH-RDP fails| C[az vm get-instance-view\nCheck power state and agent health]
+    B -->|Network connectivity error| D[az network nic show-effective-nsg\nFind deny rule]
+    B -->|Recent change caused regression| E[az monitor activity-log list\nFind the change event]
+    B -->|VM boot failure| F[az vm boot-diagnostics get-boot-log\nRead serial console output]
+    B -->|App error / log analysis| G[Log Analytics KQL\nHeartbeat or custom table]
+    B -->|Key Vault access denied| H[az keyvault show\nCheck access policies and firewall]
+    C --> I{Power state?}
+    I -->|Stopped / deallocated| J[az vm start --name vm -g rg\nVerify billing and quota]
+    I -->|Running but agent failed| K[az vm run-command invoke\nRun ipconfig or hostname]
+    D --> L{Rule found?}
+    L -->|Deny rule| M[az network nsg rule update\nor add allow rule with lower priority]
+    L -->|No rule; check UDR| N[az network nic show-effective-route-table\nBlackhole route?]
+    E --> O[Review change: who, what, when\nRoll back if recent deployment]
+    F --> P[Boot error in serial log\nCheck disk, kernel panic, fstab]
+    G --> Q[KQL: Heartbeat | where TimeGenerated > ago 1h\nCount by Computer]
+    H --> R[Check RBAC vs access policies\nCheck network ACLs on Key Vault]
+    J --> S[Collect resource diag\naz vm boot-diagnostics get-boot-log]
+    K --> S
+    M --> S
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    S --> T[Open Azure support request\nportal.azure.com → Help + support]
 
----
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I,L dark
+    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
+    class S,T escalate
+```
 
 ## Before you begin
 
-- **Access:** Admin credentials on all affected systems
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Verify your Azure CLI is logged in and targeting the correct subscription before running any commands
+- **Gather first:** the affected VM name and resource group, the specific error (HTTP error code, SSH failure, application error), and the approximate time the issue started
+- **Scope:** confirm whether the issue affects a single VM, a VNet, a subscription, or appears in the Azure Service Health dashboard (platform incident)
+- **Check Azure Status first:** visit status.azure.com — if the region is degraded, customer-side investigation is limited until Microsoft resolves the platform issue
 
 ---
 
-## VM Diagnostics
+## Step 1 — Verify subscription context
 
 ```bash
-# Boot diagnostics (serial console log)
-az vm boot-diagnostics get-boot-log --name <vm-name> -g <rg>
+# Confirm which account and subscription are active
+az account show
+# Check: id (subscription ID), name, state (Enabled), tenantId
 
-# Instance view — power state, extensions, disks
-az vm get-instance-view --name <vm-name> -g <rg> --output json
+# List all subscriptions accessible to this identity
+az account list -o table
 
-# Effective NSG rules on a NIC
-az network nic show-effective-nsg --name <nic-name> -g <rg>
+# Switch to the correct subscription
+az account set --subscription "<subscription-name-or-id>"
 
-# Effective routes on a NIC
-az network nic show-effective-route-table --name <nic-name> -g <rg>
-
-# Network Watcher — test connectivity
-az network watcher test-connectivity \
-  --source-resource <source-vm-id> \
-  --dest-address <destination-ip> --dest-port 443
-
-# Packet capture
-az network watcher packet-capture create \
-  --vm <vm-name> -g <rg> --name my-capture --storage-account <sa>
+# Verify access to the affected resource group
+az group show -n <rg-name>
+# Error "ResourceGroupNotFound" = wrong subscription; error 403 = insufficient RBAC
 ```
 
-## Activity Log
+---
+
+## Step 2 — Check VM state and health
 
 ```bash
-# Last 50 events
+# Get VM power state and guest agent / extension status
+az vm get-instance-view --name <vm-name> -g <rg> -o json
+# Key fields:
+#   statuses[].displayStatus: "VM running" (expected) or "VM stopped" / "VM deallocated"
+#   extensions[].statuses[].displayStatus: "Provisioning succeeded" (expected)
+#   extensions[].statuses[].message: extension error detail if failed
+
+# Start a stopped VM
+az vm start --name <vm-name> -g <rg>
+
+# List extensions and their statuses
+az vm extension list --vm-name <vm-name> -g <rg> -o table
+
+# Run a command on the VM via Azure guest agent (no SSH or RDP needed)
+az vm run-command invoke --command-id RunShellScript \
+  --name <vm-name> -g <rg> \
+  --scripts "df -h && ip addr show && ss -tulnp | grep LISTEN"
+# Use RunPowerShellScript for Windows VMs:
+# --scripts "Get-Service | Where-Object Status -eq Stopped"
+```
+
+---
+
+## Step 3 — Read boot diagnostics
+
+Boot diagnostics captures the VM's serial console output — available even when the OS is unresponsive or crashed.
+
+```bash
+# Get the serial console log (text)
+az vm boot-diagnostics get-boot-log --name <vm-name> -g <rg>
+# Look for:
+#   Kernel panic: system crashed; check disk or memory
+#   Starting: normal boot sequence
+#   GRUB error / fstab error: disk or volume mount failed
+#   cloud-init: cloud-init failure (SSH key injection, disk resize)
+
+# Enable boot diagnostics if not already enabled (requires storage account)
+az vm boot-diagnostics enable --name <vm-name> -g <rg> \
+  --storage "https://<sa-name>.blob.core.windows.net"
+
+# Get boot diagnostics screenshot (PNG of the VM console)
+az vm boot-diagnostics get-boot-log-uri --name <vm-name> -g <rg>
+```
+
+---
+
+## Step 4 — Check NSG and routing
+
+```bash
+# Show effective NSG rules applied to a VM's NIC
+az network nic show-effective-nsg --name <nic-name> -g <rg>
+# Columns: name, protocol, sourcePort, destinationPort, access (Allow/Deny), priority
+# Look for: a Deny rule that matches the traffic you expect to be allowed
+
+# Get the NIC name if unknown
+az network nic list --query "[?virtualMachine.id contains '${VM_NAME}'].{name: name, rg: resourceGroup}" -o table
+
+# Test connectivity from a source VM to a destination
+az network watcher test-connectivity \
+  --source-resource <source-vm-resource-id> \
+  --dest-address <destination-ip-or-fqdn> \
+  --dest-port 443
+# Returns: connectionStatus (Reachable/Unreachable), hop-by-hop path, and latency
+
+# Show effective routes on a NIC (to find blackhole routes)
+az network nic show-effective-route-table --name <nic-name> -g <rg> -o table
+# Look for: nextHopType = None (blackhole); addressPrefix matching your destination
+
+# Start a packet capture on a VM (requires Network Watcher extension on VM)
+az network watcher packet-capture create \
+  --vm <vm-name> -g <rg> \
+  --name diag-capture \
+  --storage-account <sa-name> \
+  --filters '[{"protocol":"TCP","localIPAddress":"","localPort":"","remoteIPAddress":"","remotePort":"443"}]'
+```
+
+---
+
+## Step 5 — Check Activity Log for recent changes
+
+```bash
+# Last 50 events in the subscription (sorted by most recent)
 az monitor activity-log list --max-events 50 \
-  --query '[*].[eventTimestamp,level,operationName.localizedValue,status.localizedValue]' \
+  --query '[*].[eventTimestamp,level,operationName.localizedValue,resourceGroupName,status.localizedValue]' \
   -o table
 
 # Filter by resource group and time window
 az monitor activity-log list \
   --resource-group <rg> \
-  --start-time <start-utc> \
-  --end-time <end-utc> \
-  --output json
-```
+  --start-time "2026-06-15T08:00:00Z" \
+  --end-time   "2026-06-15T12:00:00Z" \
+  --query '[*].[eventTimestamp,caller,operationName.localizedValue,status.localizedValue]' \
+  -o table
 
-## Log Analytics Queries
+# Filter for failed operations only
+az monitor activity-log list --resource-group <rg> --max-events 100 \
+  --query '[?status.value==`Failed`].[eventTimestamp,caller,operationName.localizedValue,properties.statusCode]' \
+  -o table
 
-```kusto
--- VM heartbeat (last seen)
-Heartbeat
-| summarize LastSeen = max(TimeGenerated) by Computer
-| where LastSeen < ago(5m)
-
--- Failed logins
-SecurityEvent
-| where EventID == 4625
-| summarize count() by Account, IpAddress
-
--- NSG denied flows
-AzureNetworkAnalytics_CL
-| where SubType_s == "FlowLog" and FlowStatus_s == "D"
-| project TimeGenerated, SrcIP_s, DestIP_s, DestPort_d, NSGName_s, NSGRule_s
-```
-
-## Key Vault Diagnostics
-
-```bash
-# Check Key Vault accessibility
-az keyvault show --name <kv-name> --query 'properties.provisioningState'
-
-# List access policies
-az keyvault show --name <kv-name> --query 'properties.accessPolicies'
-
-# Check firewall rules
-az keyvault show --name <kv-name> --query 'properties.networkAcls'
+# Look for: who made a change (caller), what operation (operationName), when (eventTimestamp)
+# Common patterns: NSG rule updates, VM extensions deployed/failed, scale events
 ```
 
 ---
 
-## Verify resolution
+## Step 6 — Query Log Analytics
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```kusto
+// VM heartbeat — find VMs that stopped reporting (may indicate crash or agent failure)
+Heartbeat
+| summarize LastSeen = max(TimeGenerated) by Computer
+| where LastSeen < ago(5m)
+| order by LastSeen asc
+
+// Failed Windows logins (brute force indicator)
+SecurityEvent
+| where EventID == 4625
+| summarize count() by Account, IpAddress, Computer
+| order by count_ desc
+
+// NSG denied flows (requires NSG flow logs enabled)
+AzureNetworkAnalytics_CL
+| where SubType_s == "FlowLog" and FlowStatus_s == "D"
+| project TimeGenerated, SrcIP_s, DestIP_s, DestPort_d, NSGName_s, NSGRule_s
+| order by TimeGenerated desc
+
+// VM CPU and memory (requires Azure Monitor agent)
+Perf
+| where ObjectName == "Processor" and CounterName == "% Processor Time"
+| summarize avg(CounterValue) by Computer, bin(TimeGenerated, 5m)
+| order by TimeGenerated desc
+```
+
+---
+
+## Step 7 — Check Key Vault access
+
+```bash
+# Verify Key Vault is accessible and show its state
+az keyvault show --name <kv-name> -o json
+# Check: properties.provisioningState = Succeeded; properties.enableSoftDelete = true
+
+# List access policies (RBAC-disabled vaults)
+az keyvault show --name <kv-name> \
+  --query 'properties.accessPolicies[].{objectId:objectId,permissions:permissions}' -o table
+
+# Check Key Vault firewall rules
+az keyvault show --name <kv-name> --query 'properties.networkAcls' -o json
+# If networkAcls.defaultAction = Deny: the caller's IP must be in ipRules or bypass = AzureServices
+
+# Check RBAC permissions for a specific principal (RBAC-enabled vaults)
+az role assignment list --scope "/subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<kv>" \
+  --assignee <object-id-or-upn> -o table
+
+# Test reading a secret from the Key Vault
+az keyvault secret show --vault-name <kv-name> --name <secret-name>
+# Error 403 = RBAC or access policy missing; Error 404 = secret does not exist
+```
+
+---
+
+## Log locations
+
+| Source | Command / Location | What to look for |
+|---|---|---|
+| Boot diagnostics | `az vm boot-diagnostics get-boot-log` | OS crash, fstab, kernel panic |
+| Activity Log | `az monitor activity-log list` | Recent changes: NSG rules, deployments |
+| VM guest OS | `az vm run-command invoke` or SSH | Application errors, OS-level issues |
+| Log Analytics | KQL via portal or `az monitor log-analytics query` | Heartbeat, security events, performance |
+| NSG flow logs | `AzureNetworkAnalytics_CL` in Log Analytics | Denied flows, source/destination |
+| Azure Service Health | `az monitor service-health alert list` | Platform-level incidents |
 
 ---
 
@@ -167,3 +293,11 @@ az keyvault show --name <kv-name> --query 'properties.networkAcls'
 - [Azure — Common Issues](../common-issues/)
 - [Azure — Escalation](../escalation/)
 - [Azure — Health Checks](../../operations/health-checks/)
+
+## Verify resolution
+
+- `az vm get-instance-view` shows `displayStatus: VM running` and guest agent `Provisioning succeeded`
+- `az network watcher test-connectivity` returns `connectionStatus: Reachable` for the previously failing path
+- Log Analytics `Heartbeat` query shows the VM appearing with `TimeGenerated` within the last 5 minutes
+- The original application error does not recur for 15 minutes after the fix
+- Activity Log shows no new Failed operations on the affected resource after the fix

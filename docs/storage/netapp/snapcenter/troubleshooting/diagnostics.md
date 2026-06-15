@@ -7,142 +7,253 @@ search:
 ---
 # SnapCenter — Diagnostics
 
-
 <div class="kb-summary">
-Part of the [SnapCenter Troubleshooting](index.md) reference.
+SnapCenter diagnostic commands: query failed jobs with Get-SmJob, inspect job detail with Get-SmJobSummaryReport, check host plugin status, verify ONTAP storage connections, inspect component log files, and generate the support bundle for NetApp cases.
 
-*Applies to: SnapCenter 5.x*
+*Applies to: NetApp SnapCenter 5.x*
 </div>
+
 ```text
 ┌─────────────────────────────────── NetApp SnapCenter — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        SnapCenter diagnostics: log collection, health checks, and performance analysis        │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here: Get-SmJob (failed) → Get-SmJobSummaryReport → check plugin host → check logs   │    │
+│   │   Job failure: read ErrorMessage column; then match to host plugin log for full stack trace   │   │
+│   │   Plugin connectivity: SnapCenter Server → host plugin is HTTPS; check firewall port 8145    │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          SnapCenter Server (Windows)         │  │            Plugin Host Agent                │   │
+│   │   Get-SmJob: list failed backup/clone jobs   │  │   Get-Service SnapCenter* (Windows)         │   │
+│   │   Get-SmHost: PlugInStatus per host          │  │   systemctl status spl (Linux)              │   │
+│   │   Get-SmStorageConnection: ONTAP clusters    │  │   /var/opt/snapcenter/spl/logs/ (Linux)     │   │
+│   │   Get-SmSupportBundle: collect all logs      │  │   C:\...\Snapcenter Plug-in Creator\log\    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│  Physical Infrastructure:                                                                             │
+│  SnapCenter Server (Windows) · plug-in hosts (Windows/Linux) · ONTAP clusters · IIS + MySQL repo      │
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Server           │  │          Windows VM         │  │       Central control       │   │
-│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
-│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
-│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
-│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   SQL plug-in    │  MSSQL backups   │       HTTPS       │   Windows auth   │  App-consistent  │   │
-│   │  Oracle plug-in  │  Oracle backups  │       HTTPS       │       SSH        │ RMAN integratio  │   │
-│   │  VMware plug-in  │  VM/VMDK backup  │   HTTPS/vCenter   │   vCenter SSO    │   vSphere API    │   │
-│   │ SAP HANA plug-in │   HANA backups   │       HTTPS       │     SAP auth     │   Backint API    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
-│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
-│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
-│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
-│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
-│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
-│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
-│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
-│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
-│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
-│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
-│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
+│  Key terms:                                                                                           │
+│  Plug-in       = host-side agent; quiesces the application (SQL, Oracle, VMware) before snapshot      │
+│  Resource group= set of resources sharing a backup policy and schedule in SnapCenter                  │
+│  Policy        = SnapCenter object defining snapshot frequency, retention, and replication type       │
+│  App-consistent= snapshot taken after application quiesce; guarantees recovery without log replay     │
+│  SMCore        = SnapCenter job execution engine; primary log for backup/restore job failures         │
+│  Port 8145     = SnapCenter plug-in communication port; must be open from server to each plug-in host │
+│  SMF           = SnapCenter MySQL database; stores job history, policies, and resource configs        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([SnapCenter Issue]) --> B{What type of problem?}
+    B -->|Backup or clone job failed| C[Get-SmJob Where Status = Failed\nRead ErrorMessage column]
+    B -->|Plugin host shows degraded| D[Get-SmHost - check PlugInStatus\nConnect to host on port 8145]
+    B -->|Storage connection error| E[Get-SmStorageConnection\nTest ONTAP cluster connectivity]
+    B -->|Restore failed| F[Get-SmJobSummaryReport -JobId\nCheck step where failure occurred]
+    C --> G[Get-SmJobSummaryReport -JobId\nGet full step trace]
+    G --> H{Error in which step?}
+    H -->|App quiesce step| I[Check application log\non plug-in host]
+    H -->|Snapshot step| J[Check SMCore log\nfor ONTAP error code]
+    H -->|Transfer/vault step| K[Check SnapMirror/SnapVault\nrelationship on ONTAP]
+    D --> L[Check plug-in service\nGet-Service SnapCenter*]
+    E --> M[Test-NetConnection ONTAP-ip -Port 443\nCheck credentials in storage connection]
+    F --> G
+    I --> N[Generate support bundle\nGet-SmSupportBundle]
+    J --> N
+    K --> N
+    L --> N
+    M --> N
+    N --> O[Open NetApp SR\nmysupport.netapp.com]
 
----
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,H dark
+    class C,D,E,F,G,I,J,K,L,M action
+    class N,O escalate
+```
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** SnapCenter admin role (SnapCenterAdmin); Windows admin on the SnapCenter server; ONTAP cluster admin credentials
+- **Gather first:** the failed job ID (from the SnapCenter Jobs view), the error message text, the resource group and policy involved, and whether the issue is new or recurring
+- **Scope:** confirm whether the failure affects one resource, one host, one ONTAP cluster, or all backups
+- **Plugin dependency:** most backup failures originate on the plug-in host — always check the plug-in service status and logs on the affected host
 
 ---
 
-## Diagnostic Commands
+## Step 1 — Check failed jobs
 
 ```powershell
-# Connect to SnapCenter via PowerShell
+# Connect to SnapCenter (run on the SnapCenter server or from a host with the module)
 Open-SmConnection -SMSbaseurl https://<snapcenter-server>:8146
 
-# List all jobs and filter by failed status
-Get-SmJob | Where-Object { $_.Status -eq "Failed" } | Select JobId, JobType, StartDateTime, ErrorMessage
+# List all failed jobs (last 24 hours)
+Get-SmJob | Where-Object { $_.Status -eq "Failed" -and $_.StartDateTime -gt (Get-Date).AddHours(-24) } |
+  Select-Object JobId, JobType, ResourceGroupName, StartDateTime, ErrorMessage |
+  Format-Table -AutoSize
 
-# List all resource groups and their current status
-Get-SmResourceGroup | Select ResourceGroupName, Status, LastRunTime
+# List all jobs regardless of status (for history review)
+Get-SmJob | Select-Object JobId, Status, JobType, ResourceGroupName, StartDateTime, EndDateTime |
+  Sort-Object StartDateTime -Descending | Select-Object -First 20
 
-# Check all registered hosts and plugin status
-Get-SmHost | Select HostName, HostType, PlugInStatus, HostStatus
+# Get the full job step trace for a specific failed job
+Get-SmJobSummaryReport -JobId <job-id>
+# Output: each step in the backup workflow with status, start/end time, and error details
+# Focus on the first step that shows "Failed" — all subsequent steps also fail after the first failure
+```
 
-# List backups for a specific resource
-Get-SmBackup -ResourceName <resource_name> | Select BackupName, BackupTime, BackupType, Status
+---
 
-# Get detailed information about a specific job
-Get-SmJobSummaryReport -JobId <job_id>
+## Step 2 — Check resource groups and hosts
 
-# List all ONTAP storage connections
-Get-SmStorageConnection | Select StorageName, Protocol, ClusterVersion
+```powershell
+# List all resource groups and their current protection status
+Get-SmResourceGroup | Select-Object ResourceGroupName, Status, LastRunTime, NextRunTime |
+  Sort-Object Status
+
+# Check all registered plug-in hosts and their status
+Get-SmHost | Select-Object HostName, HostType, PlugInStatus, HostStatus |
+  Where-Object { $_.PlugInStatus -ne "Installed" -or $_.HostStatus -ne "Reachable" }
+# Problem: PlugInStatus = "Degraded" or "Not Installed"; HostStatus = "Unreachable"
+
+# List all backups for a specific resource
+Get-SmBackup -ResourceName <resource-name> |
+  Select-Object BackupName, BackupTime, BackupType, Status |
+  Sort-Object BackupTime -Descending | Select-Object -First 10
+```
+
+---
+
+## Step 3 — Check ONTAP storage connections
+
+```powershell
+# List all registered ONTAP storage connections
+Get-SmStorageConnection | Select-Object StorageName, Protocol, ClusterVersion, Status
+
+# Test TCP connectivity to each ONTAP cluster management IP
+Get-SmStorageConnection | ForEach-Object {
+  $result = Test-NetConnection -ComputerName $_.StorageName -Port 443
+  [PSCustomObject]@{
+    StorageName = $_.StorageName
+    Port443     = $result.TcpTestSucceeded
+  }
+}
+# Expected: TcpTestSucceeded: True for all clusters
+
+# Verify ONTAP credentials are valid (try directly via REST)
+$creds = Get-Credential
+Invoke-RestMethod -Uri "https://<ontap-cluster>/api/cluster" `
+  -Authentication Basic -Credential $creds -SkipCertificateCheck
+```
+
+---
+
+## Step 4 — Check plug-in service on the host
+
+```powershell
+# On a Windows plug-in host
+Get-Service SnapCenter* | Select-Object Name, Status, StartType
+# Expected: all SnapCenter services Running
+
+# Start a stopped plug-in service
+Start-Service 'SnapCenter Plug-in for Windows' 2>/dev/null
+Start-Service 'SnapCenter SMCore Service' 2>/dev/null
+
+# Check Windows Event Log for plug-in errors
+Get-EventLog -LogName Application -Source "SnapCenter*" -Newest 50 |
+  Format-Table TimeGenerated, EntryType, Message -Wrap
 ```
 
 ```bash
-# On a Linux plugin host — check SnapCenter agent service
+# On a Linux plug-in host
 systemctl status spl
-journalctl -u spl -n 100
+# Expected: active (running)
 
-# On a Windows plugin host (PowerShell)
-Get-Service SnapCenter*
-Get-EventLog -LogName Application -Source "SnapCenter*" -Newest 50
+# Start if stopped
+systemctl start spl
+systemctl status spl
+
+# Check Linux plug-in log
+tail -100 /var/opt/snapcenter/spl/logs/spl.log
+grep -i "error\|exception\|fail" /var/opt/snapcenter/spl/logs/spl.log | tail -50
+
+# Test connectivity back to SnapCenter server (plug-in needs to reach server on 8146)
+curl -sk https://<snapcenter-server>:8146/api/3.0/version
 ```
-
-## Log Locations
-
-| Log Source | Location |
-|---|---|
-| SnapCenter Server web application logs | `C:\Program Files\NetApp\SnapCenter\SnapCenter Web App\log\` |
-| SnapCenter Scheduler service logs | `C:\Program Files\NetApp\SnapCenter\SnapCenter Scheduler\log\` |
-| SnapCenter SMCore logs (job engine) | `C:\Program Files\NetApp\SnapCenter\SMCore\log\` |
-| Windows plugin agent logs | `C:\Program Files\NetApp\SnapCenter\Snapcenter Plug-in Creator\log\` |
-| Linux plugin agent logs | `/var/opt/snapcenter/spl/logs/` |
-| SnapCenter Plug-in for VMware logs | `/var/log/netapp/snapcenter/` (inside the OVA appliance) |
-| MySQL repository logs | `C:\Program Files\NetApp\SnapCenter\MySQL Data\` → `mysql-error.log` |
-| IIS access/error logs | `C:\inetpub\logs\LogFiles\` |
-
-For a full support bundle (all logs + config):
-1. In SnapCenter GUI: Help → Support → Generate Support Bundle
-2. Alternatively, run PowerShell: `Get-SmSupportBundle -Path C:\temp\snapcenter-bundle`
 
 ---
 
-## Verify resolution
+## Step 5 — Inspect component logs on the SnapCenter server
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```powershell
+# SnapCenter log directory base
+$logBase = "C:\Program Files\NetApp\SnapCenter"
+
+# SMCore log — primary job engine log (most useful for backup/restore failures)
+Get-ChildItem "$logBase\SMCore\log\" | Sort-Object LastWriteTime -Descending | Select-Object -First 3
+Get-Content "$logBase\SMCore\log\SMCore.log" -Tail 200 |
+  Select-String -Pattern "Error|Exception|Failed|Warning" -CaseSensitive:$false
+
+# SnapCenter Web App log — UI and API errors
+Get-Content "$logBase\SnapCenter Web App\log\SnapCenter_Web_App.log" -Tail 100 |
+  Select-String -Pattern "Error|Exception" -CaseSensitive:$false
+
+# Scheduler log — shows why a scheduled job did not start
+Get-Content "$logBase\SnapCenter Scheduler\log\SnapCenterScheduler.log" -Tail 100
+
+# MySQL repository log — database errors
+Get-Content "C:\Program Files\NetApp\SnapCenter\MySQL Data\mysql-error.log" -Tail 50
+```
+
+---
+
+## Step 6 — Generate support bundle for NetApp SR
+
+```powershell
+# Generate a complete support bundle (all logs + configuration + DB state)
+# Via PowerShell (recommended for scripted collection):
+Get-SmSupportBundle -Path C:\Temp\snapcenter-support-$(Get-Date -Format yyyyMMdd-HHmm)
+
+# Via GUI:
+# SnapCenter → Help (? icon) → Support → Generate Support Bundle
+# Wait for completion (5–15 minutes) → Download the .zip
+
+# Include in the NetApp SR:
+# - Support bundle .zip
+# - SnapCenter version: Help → About
+# - Failed job ID and error message
+# - Whether the issue started after a version upgrade, ONTAP update, or config change
+```
+
+---
+
+## Log locations
+
+| Component | Path | What to look for |
+|---|---|---|
+| SMCore (job engine) | `C:\Program Files\NetApp\SnapCenter\SMCore\log\SMCore.log` | Backup/restore step failures, ONTAP errors |
+| Web App | `C:\Program Files\NetApp\SnapCenter\SnapCenter Web App\log\` | UI errors, API failures |
+| Scheduler | `C:\Program Files\NetApp\SnapCenter\SnapCenter Scheduler\log\` | Missed schedules, schedule engine errors |
+| Windows plug-in | `C:\Program Files\NetApp\SnapCenter\Snapcenter Plug-in Creator\log\` | App quiesce errors (SQL, Exchange) |
+| Linux plug-in (spl) | `/var/opt/snapcenter/spl/logs/spl.log` | Linux host plug-in errors |
+| VMware plug-in | `/var/log/netapp/snapcenter/` (inside the OVA) | VM backup and VMDK failures |
+| MySQL repository | `C:\Program Files\NetApp\SnapCenter\MySQL Data\mysql-error.log` | Database errors |
+| IIS (web server) | `C:\inetpub\logs\LogFiles\` | HTTP errors, certificate issues |
 
 ---
 
 ## See also
 
-- [Snapcenter — Common Issues](common-issues/)
-- [Snapcenter — Escalation](escalation/)
-- [Snapcenter — Health Checks](../operations/health-checks/)
+- [SnapCenter — Common Issues](common-issues/)
+- [SnapCenter — Escalation](escalation/)
+- [SnapCenter — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `Get-SmJob | Where-Object { $_.Status -eq "Failed" }` shows no new failures after the fix
+- `Get-SmHost` shows `PlugInStatus = Installed` and `HostStatus = Reachable` for all affected hosts
+- Trigger a manual backup via SnapCenter UI for the affected resource group — confirm it completes with `Status = Completed`
+- Verify the snapshot exists on ONTAP: `snap list -vserver <svm> -volume <vol>` shows the new snapshot
