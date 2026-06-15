@@ -3755,3 +3755,117 @@ def servicenow_arch_index():
     lines.append(txt_row())
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+@kb_diagram(
+    'confluence-arch-index',
+    'docs/itsm/confluence/architecture/index.md',
+    'Confluence Architecture Overview — spaces, pages, macros, Data Center clustering',
+)
+def confluence_arch_index():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Confluence Architecture Overview'))
+    lines.append(txt_row())
+    lines.append(txt_row('Atlassian Confluence is a team wiki and knowledge management platform. Content'))
+    lines.append(txt_row('lives in Spaces; each Space holds Pages in a tree hierarchy. Available as Cloud'))
+    lines.append(txt_row('SaaS or self-hosted Data Center (DC) with clustered app nodes.'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Content Layer'), bMid(L2, R2, 'Data Layer'))))
+    lines.append(R(merge(bMid(L1, R1, 'Spaces: top-level containers'), bMid(L2, R2, 'PostgreSQL or MS SQL Server'))))
+    lines.append(R(merge(bMid(L1, R1, 'Pages: hierarchical wiki articles'), bMid(L2, R2, 'Attachments on NFS or S3'))))
+    lines.append(R(merge(bMid(L1, R1, 'Macros: dynamic content blocks'), bMid(L2, R2, 'Lucene search index per node'))))
+    lines.append(R(merge(bMid(L1, R1, 'Templates: reusable page layouts'), bMid(L2, R2, 'Shared home dir for DC nodes'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Application Layer (Data Center)'), bMid(L2, R2, 'Integration Layer'))))
+    lines.append(R(merge(bMid(L1, R1, 'Tomcat app server; WAR deploy'), bMid(L2, R2, 'Jira: linked issues, roadmaps'))))
+    lines.append(R(merge(bMid(L1, R1, 'Nodes share DB + shared home'), bMid(L2, R2, 'REST API v2: page CRUD, search'))))
+    lines.append(R(merge(bMid(L1, R1, 'Synchrony: collaborative edit'), bMid(L2, R2, 'Marketplace: Atlassian SDK apps'))))
+    lines.append(R(merge(bMid(L1, R1, 'HAProxy or ELB in front'), bMid(L2, R2, 'SCIM provisioning (Cloud only)'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical infrastructure: DC nodes on bare-metal or VMs; shared PostgreSQL cluster;'))
+    lines.append(txt_row('NFS or S3-compatible store for attachments; load balancer (sticky sessions required)'))
+    lines.append(txt_row('for DC cluster; CDN or reverse proxy for Cloud tenants.'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Space          = top-level content container; has own permissions and home page'))
+    lines.append(txt_row('Page           = wiki article; versioned; supports inline comments'))
+    lines.append(txt_row('Macro          = dynamic block (TOC, Jira issues, roadmap, code snippet)'))
+    lines.append(txt_row('Data Center    = self-hosted; clustered active-active app nodes'))
+    lines.append(txt_row('Synchrony      = real-time collaborative editing service bundled with DC'))
+    lines.append(txt_row('Shared home    = NFS directory mounted by all DC nodes for config and attachments'))
+    lines.append(txt_row('Lucene         = embedded search index; rebuilt on startup or via reindex job'))
+    lines.append(txt_row('Template       = pre-structured page layout; global or space-level'))
+    lines.append(txt_row('Marketplace    = Atlassian app store; P2, DC, and Cloud compatible apps'))
+    lines.append(txt_row('REST API v2    = Confluence Cloud REST API; page, space, comment, user endpoints'))
+    lines.append(txt_row('Blueprint      = guided template with prompts; generates a structured page'))
+    lines.append(txt_row('Space key      = short unique identifier for a space (e.g. ENG, OPS, ARCH)'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'git-arch-index',
+    'docs/itsm/git/architecture/index.md',
+    'Git Architecture Overview — DAG, refs, objects, remotes, hosting platforms',
+)
+def git_arch_index():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'Git Architecture Overview'))
+    lines.append(txt_row())
+    lines.append(txt_row('Git is a distributed version control system. Every clone is a full copy of the'))
+    lines.append(txt_row('repository history. Content is stored as an immutable object DAG (directed acyclic'))
+    lines.append(txt_row('graph); branches and tags are lightweight pointers (refs) to commits.'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Object Store (.git/objects)'), bMid(L2, R2, 'Working Tree'))))
+    lines.append(R(merge(bMid(L1, R1, 'Blob: file content snapshot'), bMid(L2, R2, 'Checked-out files on disk'))))
+    lines.append(R(merge(bMid(L1, R1, 'Tree: directory listing'), bMid(L2, R2, 'Staging area (index) for commit'))))
+    lines.append(R(merge(bMid(L1, R1, 'Commit: tree+parent+author+msg'), bMid(L2, R2, '.git/index: staged changes'))))
+    lines.append(R(merge(bMid(L1, R1, 'Tag: annotated pointer to commit'), bMid(L2, R2, 'HEAD: current branch tip'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Refs and Remotes'), bMid(L2, R2, 'Hosting Platforms'))))
+    lines.append(R(merge(bMid(L1, R1, 'Branch: movable ref to commit'), bMid(L2, R2, 'GitHub: PRs, Actions, Packages'))))
+    lines.append(R(merge(bMid(L1, R1, 'Remote: named URL (origin)'), bMid(L2, R2, 'GitLab: CI/CD, MR, registry'))))
+    lines.append(R(merge(bMid(L1, R1, 'fetch/pull: sync remote refs'), bMid(L2, R2, 'Bitbucket: Jira integration'))))
+    lines.append(R(merge(bMid(L1, R1, 'push: send commits to remote'), bMid(L2, R2, 'Gitea/Forgejo: self-hosted'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical infrastructure: Git repos stored as bare repositories on disk; object'))
+    lines.append(txt_row('packs compress loose objects (git gc); remotes accessed via HTTPS or SSH; hosted'))
+    lines.append(txt_row('platforms add auth, access control, CI/CD pipelines, and code review workflows.'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('DAG            = directed acyclic graph; commit history; no cycles'))
+    lines.append(txt_row('Blob           = immutable snapshot of a single file; addressed by SHA-256'))
+    lines.append(txt_row('Tree           = directory snapshot; maps names to blobs and sub-trees'))
+    lines.append(txt_row('Commit         = tree + parent commit(s) + author metadata + message'))
+    lines.append(txt_row('Branch         = lightweight movable ref; file in .git/refs/heads/'))
+    lines.append(txt_row('HEAD           = ref to current branch (or detached commit in detached HEAD)'))
+    lines.append(txt_row('Remote         = named URL of another repository; push/pull target'))
+    lines.append(txt_row('origin         = conventional default remote name after git clone'))
+    lines.append(txt_row('Staging area   = index; accumulates changes before they become a commit'))
+    lines.append(txt_row('Pack file      = compressed bundle of many objects; created by git gc'))
+    lines.append(txt_row('Rebase         = re-apply commits on top of a different base; rewrites history'))
+    lines.append(txt_row('Merge commit   = commit with two parents; preserves branch topology'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

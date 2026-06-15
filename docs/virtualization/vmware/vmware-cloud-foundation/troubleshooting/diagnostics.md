@@ -35,30 +35,30 @@ Effective VCF troubleshooting requires knowing where logs live, how to collect d
 flowchart TD
     A([Issue Reported]) --> B{Which component\nis affected?}
 
-    B -->|SDDC Manager UI / API| C[Check SDDC Manager\nlogs & services]
-    B -->|Workload domain deploy\n/ LCM operation| D[Check LCM logs\n& task status]
-    B -->|NSX networking / overlay| E[Check NSX Manager\nstatus & transport nodes]
-    B -->|VM / vSphere operation| F[Check vCenter events\n& ESXi logs]
-    B -->|vSAN storage| G[Check vSAN health\n& disk group status]
-    B -->|All components degraded| H[Run SDDC Manager\nhealth check API]
+    B -->|SDDC Manager UI / API| C[Check SDDC Manager\nlogs and services]
+    B -->|LCM operation| D[Check LCM logs\nand task status]
+    B -->|NSX networking| E[Check NSX Manager\nand transport nodes]
+    B -->|VM / vSphere| F[Check vCenter events\nand ESXi logs]
+    B -->|vSAN storage| G[Check vSAN health\nand disk groups]
+    B -->|All components| H[Run SDDC Manager\nhealth check API]
 
     C --> C1{Services running?}
-    C1 -->|No| C2[Restart service:\nsystemctl restart vmware-vcf-opsmanager]
+    C1 -->|No| C2[Restart opsmanager:\nsystemctl restart\nvmware-vcf-opsmanager]
     C1 -->|Yes| C3[Review\nops-manager.log]
 
-    D --> D1[Review lcm-debug.log\n& lcm-ui.log]
-    D1 --> D2{Bundle download\nor apply issue?}
-    D2 -->|Bundle| D3[Check depot connectivity\n& proxy settings]
-    D2 -->|Apply/upgrade| D4[Check precheck results\n& compliance status]
+    D --> D1[Review lcm-debug.log\nand lcm-ui.log]
+    D1 --> D2{Bundle or\napply issue?}
+    D2 -->|Bundle| D3[Check depot\nconnectivity]
+    D2 -->|Apply/upgrade| D4[Check precheck\nand compliance]
 
-    E --> E1[Run: get logical-router\n& transport node status]
+    E --> E1[Check logical-router\nand transport nodes]
     E1 --> E2{Data plane up?}
-    E2 -->|No| E3[Check TEP reachability\n& MTU on uplinks]
+    E2 -->|No| E3[Check TEP reach\nand MTU on uplinks]
     E2 -->|Yes| E4[Check control\nplane connectivity]
 
-    F --> F1[Check vCenter\ntasks & events]
+    F --> F1[Check vCenter\ntasks and events]
     G --> G1[Run vSAN\nhealth check]
-    H --> H1[GET /v1/system/health-summary]
+    H --> H1[GET /v1/system/\nhealth-summary]
 ```
 ```text
 ┌──────────────────────────────── VMware Cloud Foundation — Diagnostics ────────────────────────────────┐
