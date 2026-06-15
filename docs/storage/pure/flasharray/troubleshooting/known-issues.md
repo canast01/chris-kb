@@ -13,6 +13,60 @@ Catalog of known FlashArray bugs, error codes, and workarounds covering host con
 *Applies to: Purity//FA 6.x*
 </div>
 
+```text
+┌─────────────────────────────────────────── Pure FlashArray ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          FlashArray: all-NVMe block and file array with inline dedup and compression          │   │
+│   │                          Protocols: FC · iSCSI · NVMe-oF · NFS · SMB                          │   │
+│   │                            Management: Purity GUI / purefa REST API                           │   │
+│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │         Controllers         │  │        Active-active        │  │           No SPOF           │   │
+│   │            Drives           │  │         DirectFlash         │  │         NVMe native         │   │
+│   │           Volumes           │  │       Thin provisioned      │  │        Instant clone        │   │
+│   │        ActiveCluster        │  │       Sync replication      │  │           Zero RPO          │   │
+│   │           SafeMode          │  │       Immutable snaps       │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  ActiveCluster   │ Stretch cluster  │    Internal RPC   │   Certificate    │  Active-active   │   │
+│   │     SafeMode     │ Locked snapshots │      Internal     │   Pure support   │ Eradicator lock  │   │
+│   │ Protection group │ Snap/replication │      Internal     │    Admin role    │   Policy-based   │   │
+│   │     ActiveDR     │     Async DR     │    Internal RPC   │   Certificate    │   RPO seconds    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashArray//X or //C controllers · DirectFlash NVMe modules · 25/100 GbE / 32Gb FC       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashArray         = Pure all-NVMe block/file array; inline dedup and compression always enabled   │
+│    DirectFlash        = Pure proprietary NVMe modules; direct flash access without SAS translation    │
+│    ActiveCluster      = synchronous active-active stretch cluster; hosts see a single namespace       │
+│    ActiveDR           = asynchronous replication to DR site; recovery point objective in seconds      │
+│    SafeMode           = admin-locked immutable snapshots; cannot be deleted even by array administra  │
+│    Protection group   = set of volumes and hosts sharing a snapshot and replication schedule          │
+│    purefa CLI         = REST CLI tool for FlashArray; purefa CLI connects via REST API key            │
+│    purearray          = purectl CLI command: purearray list and purearray show monitoring             │
+│    Volume tag         = user-defined key-value label on volumes for policy and reporting purposes     │
+│    Host group         = logical collection of hosts sharing volume access via a host group object     │
+│    Inline dedup       = content-based deduplication performed inline before data is written to flash  │
+│    Evergreen          = Pure architecture; controllers upgrade non-disruptively, shelves remain in p  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 ## Before you begin
 
 - FlashArray alerts appear in the web UI under `Health → Alerts` and via email if configured.
