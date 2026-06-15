@@ -13,6 +13,16 @@ Step-by-step guide to enabling Phone Home on Pure Storage FlashArray and FlashBl
 *Applies to: Pure1*
 </div>
 
+
+## Before you begin
+
+- **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
+- **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
+- **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available
+- **Logging:** record every IP address, hostname, and credential set assigned during this deployment
+
+---
+
 ```text
 ┌───────────────────────────────────────── Storage Pure Pure1 ──────────────────────────────────────────┐
 │                                                                                                       │

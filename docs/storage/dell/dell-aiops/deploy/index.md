@@ -63,6 +63,16 @@ Step-by-step guide to setting up Dell APEX AIOps, connecting storage arrays, ena
 *Applies to: Dell AIOps*
 </div>
 
+
+## Before you begin
+
+- **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
+- **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
+- **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available
+- **Logging:** record every IP address, hostname, and credential set assigned during this deployment
+
+---
+
 ## Prerequisites
 
 Before starting Dell APEX AIOps setup, confirm the following.

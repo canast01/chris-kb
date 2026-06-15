@@ -76,3 +76,7 @@ alerts = client.get_alerts(filter="state='open'")
 for alert in alerts.items:
     print(alert.summary, alert.severity)
 ```
+
+## See also
+
+- [Pure1 — Overview](../../)

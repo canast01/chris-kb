@@ -132,3 +132,7 @@ curl -s "https://api.bluexp.netapp.com/marketplace/api/v1/subscriptions" \
 curl -s "https://api.bluexp.netapp.com/marketplace/api/v1/capacity-pools" \
   -H "Authorization: Bearer $BLUEXP_TOKEN" | python3 -m json.tool
 ```
+
+## See also
+
+- [NetApp Keystone — Overview](../../)

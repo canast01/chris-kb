@@ -131,3 +131,10 @@ certutil -CRL
 # Notify Venafi to update its records
 # Venafi API: POST /vedsdk/certificates/revoke
 ```
+
+## See also
+
+- [Certificates — Authentication](authentication/)
+- [Certificates — Encryption](encryption/)
+- [Certificates — Security Hardening](hardening/)
+- [Certificates — Common Issues](../../troubleshooting/common-issues/)

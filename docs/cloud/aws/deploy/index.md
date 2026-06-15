@@ -5,6 +5,16 @@ tags:
 search:
   boost: 1.5
 ---
+
+## Before you begin
+
+- **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
+- **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
+- **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available
+- **Logging:** record every IP address, hostname, and credential set assigned during this deployment
+
+---
+
 # AWS — Account and Landing Zone Setup
 
 This guide covers building a multi-account AWS Landing Zone from scratch: AWS Organizations, IAM Identity Center, CloudTrail, AWS Config, VPC networking, IAM roles, GuardDuty, and Security Hub.

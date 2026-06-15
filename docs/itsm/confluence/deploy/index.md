@@ -13,6 +13,16 @@ Step-by-step guide to installing Confluence Data Center, configuring the databas
 *Applies to: Confluence Cloud / Data Center*
 </div>
 
+
+## Before you begin
+
+- **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
+- **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
+- **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available
+- **Logging:** record every IP address, hostname, and credential set assigned during this deployment
+
+---
+
 ```text
 ┌─────────────────────────────────── Confluence — Initial Deployment ───────────────────────────────────┐
 │                                                                                                       │

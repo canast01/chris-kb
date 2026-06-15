@@ -123,3 +123,10 @@ openssl s_client -connect host.corp.example.com:443 -status -tlsextdebug 2>&1 | 
 - [ ] Weak algorithm certs (SHA-1, RSA-1024) identified and replaced
 - [ ] Venafi TPP expiry alerting configured for all managed certificates
 - [ ] Emergency revocation procedure documented and tested annually
+
+## See also
+
+- [Certificates — Access Control](access-control/)
+- [Certificates — Authentication](authentication/)
+- [Certificates — Encryption](encryption/)
+- [Certificates — Common Issues](../../troubleshooting/common-issues/)

@@ -846,3 +846,7 @@ cd C:\Users\YourName\Desktop
 **What you should see**
 
 For each Keystone subscription, the script prints a row per month showing a text bar chart. The bar fills up proportionally to how much of your committed capacity was consumed that month. Green means well within limits, yellow means approaching the limit (90%+), and red with `*** OVER COMMITTED` means that month exceeded your committed capacity — which may trigger burst billing charges. This lets you spot growth trends at a glance.
+
+## See also
+
+- [NetApp Keystone — Overview](../../)

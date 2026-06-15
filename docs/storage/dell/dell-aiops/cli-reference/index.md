@@ -77,3 +77,7 @@ curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?\
 filter=severity%20eq%20'High'%20and%20state%20eq%20'ACTIVE'&limit=100" \
   -H "Authorization: Bearer ${TOKEN}" | jq '.results[] | {id,title,system_name}'
 ```
+
+## See also
+
+- [Dell AIOps — Overview](../../)

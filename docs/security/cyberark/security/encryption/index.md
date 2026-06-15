@@ -100,3 +100,10 @@ Session recordings are encrypted at rest using AES-256. Vault audit log integrit
 | DR replication certificate | Vault internal PKI; stored on DR host | Before certificate expiry (track in Venafi or calendar alert) |
 | PVWA TLS certificate | IIS certificate store | Per certificate validity; minimum annual renewal |
 | CPM service account credential | CyberArk Safe (self-managed by CPM) | 90-day CPM automatic rotation |
+
+## See also
+
+- [CyberArk — Access Control](access-control/)
+- [CyberArk — Authentication](authentication/)
+- [CyberArk — Security Hardening](hardening/)
+- [CyberArk — Common Issues](../../troubleshooting/common-issues/)

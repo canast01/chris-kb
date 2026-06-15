@@ -283,3 +283,7 @@ find ~ -name "*.gguf" 2>/dev/null
 echo "FROM /path/to/model.gguf" | ollama create my-local-model -f -
 ollama run my-local-model
 ```
+
+## See also
+
+- [Ollama — Overview](../../)

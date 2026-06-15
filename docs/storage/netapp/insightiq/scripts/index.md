@@ -77,3 +77,7 @@ curl -sk -u svc-insightiq https://<cluster-ip>:8080/platform/1/statistics/summar
 curl -sk -u svc-insightiq https://<cluster-ip>:8080/platform/3/statistics/current \
   -G --data-urlencode 'keys=node.ifs.bytes.in.rate,node.ifs.bytes.out.rate' | jq .
 ```
+
+## See also
+
+- [InsightIQ — Overview](../../)

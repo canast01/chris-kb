@@ -63,6 +63,16 @@ Step-by-step guide to connecting Dell storage systems to CloudIQ via the Secure 
 *Applies to: CloudIQ*
 </div>
 
+
+## Before you begin
+
+- **Access:** admin credentials for the target system and any upstream dependencies (DNS, NTP, vCenter, directory services)
+- **Timing:** safe to run during a scheduled maintenance window; allow 1-2 hours for initial deployment
+- **Dependencies:** network connectivity verified; DNS resolvable; NTP configured; any licence keys available
+- **Logging:** record every IP address, hostname, and credential set assigned during this deployment
+
+---
+
 ## Prerequisites
 
 Before starting CloudIQ setup, confirm the following are available.

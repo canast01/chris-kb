@@ -216,3 +216,7 @@ purealert list --severity error
 # Acknowledge an alert (by ID)
 purealert acknowledge --id 123
 ```
+
+## See also
+
+- [Evergreen — Overview](../../)

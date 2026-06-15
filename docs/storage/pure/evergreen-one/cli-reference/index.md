@@ -224,3 +224,7 @@ purehw list --type drive
 purehw list --type fan
 purehw list --type psu
 ```
+
+## See also
+
+- [Evergreen//ONE — Overview](../../)

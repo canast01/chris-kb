@@ -104,3 +104,10 @@ All certificate lifecycle events are captured in the Venafi audit log and should
 | Database port blocked externally | Confirm SQL port 1433 not reachable from DMZ or internet via firewall rule review | TPP app server should be the only permitted SQL client |
 | Quarterly account review completed | Evidence in change ticket; stale accounts deactivated | Accounts inactive > 90 days should be disabled |
 | HSM partition PIN changed on personnel change | Confirm with security team; document in HSM runbook | Required after any HSM admin departure |
+
+## See also
+
+- [Venafi — Access Control](access-control/)
+- [Venafi — Authentication](authentication/)
+- [Venafi — Encryption](encryption/)
+- [Venafi — Common Issues](../../troubleshooting/common-issues/)

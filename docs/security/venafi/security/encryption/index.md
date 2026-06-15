@@ -105,3 +105,10 @@ HSM integration protects the CA private keys and Venafi service credentials. Key
 | TPP encryption key for SQL | Annual; or on suspected compromise | DBA + Venafi admin; requires TPP service restart |
 | HSM partition PIN | On personnel change or annual | Security team |
 | Issuing CA certificate | Per CA validity period (typically 5 years) | PKI team; requires re-enrollment of all issued certificates |
+
+## See also
+
+- [Venafi — Access Control](access-control/)
+- [Venafi — Authentication](authentication/)
+- [Venafi — Security Hardening](hardening/)
+- [Venafi — Common Issues](../../troubleshooting/common-issues/)
