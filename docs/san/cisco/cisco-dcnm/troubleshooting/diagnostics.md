@@ -7,204 +7,324 @@ search:
 ---
 # Cisco DCNM — Diagnostics
 
-```bash
-ssh root@dcnm-dc1.corp.example.com
+<div class="kb-summary">
+Cisco DCNM (Data Center Network Manager) diagnostic commands: check all service health with appmgr status, query the REST health API, inspect PostgreSQL and Elasticsearch database state, test SSH and SNMP connectivity to managed switches, debug discovery failures, check HA replication lag, and collect the support bundle for Cisco TAC cases.
 
-# Generate support bundle
-/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh \
-  --output /tmp/dcnm-support-$(date +%Y%m%d).tar.gz
+*Applies to: Cisco DCNM 11.x / NDFC (Nexus Dashboard Fabric Controller) 12.x*
+</div>
 
-# This includes:
-# - All /var/log/dcnm/ logs
-# - Database schema dump (no sensitive data)
-# - OS resource state
-# - DCNM configuration (credentials masked)
-# - Installed package list
-# - Network configuration
-
-# Transfer to workstation for TAC case upload
-scp root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-$(date +%Y%m%d).tar.gz ./
-```
 ```text
 ┌────────────────────────────────────── Cisco DCNM — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
-│  DCNM diagnostics: service logs, DB health, REST health endpoint, NX-OS show commands.                │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: appmgr status → GET /rest/health → journalctl -u dcnm → DB and disk check     │     │
+│   │   Discovery failed: grep switch-IP /var/log/dcnm/discovery.log; test SSH and SNMP to switch │     │
+│   │   DB issues: pg_isready; check pmdb for retention; curl localhost:9200/_cluster/health       │    │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │          DCNM Platform Diagnostics           │  │             Database Diagnostics            │   │
-│   │         appmgr status: all services          │  │           appmgr db-status: check           │   │
-│   │         GET /rest/health: API check          │  │            PostgreSQL: pg_isready           │   │
-│   │           journalctl -u dcnm: log            │  │         Elasticsearch cluster health        │   │
-│   │          netstat -tlnp 443: listen           │  │           df -h: disk usage check           │   │
-│   │           top: CPU/RAM on DCNM VM            │  │         du -sh: data directory sizes        │   │
+│   │   appmgr status: all services health         │  │   pg_isready: PostgreSQL accept conns       │   │
+│   │   GET /rest/health: API health JSON          │  │   psql sane: schema and table sizes         │   │
+│   │   journalctl -u dcnm: service errors         │  │   Elasticsearch /_cluster/health: shards   │    │
+│   │   netstat -tlnp 443: ports listening         │  │   df -h: disk usage per mount              │    │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  appmgr status and journalctl are first-line; DB and disk status if data issues.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Switch-Level Diagnostics           │  │             TAC Escalation Data             │   │
-│   │          show interface fc: errors           │  │            Export DCNM logs: GUI            │   │
-│   │             show flogi database              │  │            show tech-support: MDS           │   │
-│   │             show zoneset active              │  │            Audit log export: CSV            │   │
-│   │              show system health              │  │           API debug: verbose mode           │   │
-│   │          show environment: sensors           │  │            Screenshots: UI issue            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DCNM VM · vSphere monitoring · Cisco MDS switch management ports · syslog server                     │
+│  Physical Infrastructure:                                                                             │
+│  DCNM VM (or NDFC on Nexus Dashboard) · PostgreSQL (sane + pmdb) · Elasticsearch · Cisco MDS/NX-OS    │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  appmgr status   = DCNM VM CLI; shows all service health in one view                                  │
-│  GET /rest/health = DCNM REST health endpoint; returns service status JSON                            │
-│  journalctl      = systemd log viewer; shows DCNM service errors and restarts                         │
-│  pg_isready      = PostgreSQL CLI; checks if DB accepts connections                                   │
-│  Elasticsearch   = DCNM analytics DB; cluster health API shows shard status                           │
-│  df -h           = disk free check; Elasticsearch fills disk causing failures                         │
-│  show tech-support= NX-OS MDS full diagnostic bundle; required for Cisco TAC                          │
-│  show flogi database= FC login database on MDS; verifies HBA access                                   │
-│  show zoneset active= NX-OS active zone set verification                                              │
-│  show system health= MDS overall health; checks modules and fabric state                              │
-│  show environment= MDS sensor data: temperature, fan, PSU readings                                    │
-│  Audit log CSV   = DCNM user action export; shared during security investigations                     │
+│  appmgr status   = DCNM CLI; shows all service health in one view                                     │
+│  GET /rest/health = DCNM REST health endpoint; returns per-service status JSON                        │
+│  sane DB         = DCNM configuration and topology database (PostgreSQL)                              │
+│  pmdb             = DCNM performance data database (PostgreSQL); stores collected metrics             │
+│  Elasticsearch   = DCNM analytics database; cluster health shows shard allocation status              │
+│  show tech-support= MDS/NX-OS full diagnostic bundle; required for Cisco TAC cases                    │
+│  show flogi database= FC login table on MDS; shows which HBAs logged in to which ports                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+```mermaid
+graph TD
+    A([DCNM Issue]) --> B{What type of problem?}
+    B -->|DCNM UI or API unresponsive| C[appmgr status\nGET /rest/health]
+    B -->|Switch discovery failing| D[grep switch-IP /var/log/dcnm/discovery.log\nTest SSH and SNMP to switch]
+    B -->|Performance data missing| E[appmgr db-status\nCheck pmdb size and retention]
+    B -->|Slow UI or API timeouts| F[Measure REST API response time\nCheck PostgreSQL slow queries]
+    B -->|HA failover or split-brain| G[dcnm-ha-status.sh\nCheck replication lag on standby]
+    B -->|Analytics or topology wrong| H[curl localhost:9200/_cluster/health\nCheck Elasticsearch shard state]
+    C --> I{Which service down?}
+    I -->|dcnm| J[journalctl -u dcnm -n 100\nCheck disk space: df -h]
+    I -->|postgres| K[pg_isready -U postgres\njournalctl -u postgresql -n 50]
+    I -->|elasticsearch| L[curl localhost:9200/_cluster/health\nCheck if disk is full]
+    D --> M[ssh -v dcnm_mgmt@switch-ip show version\nsnmpget -v3 switch-ip sysDescr.0]
+    E --> N[psql -U postgres pmdb\nSELECT count FROM pmdata; check retention]
+    F --> O[time curl REST /rest/inventory/switches\nSELECT pid,duration,query FROM pg_stat_activity WHERE state != idle]
+    G --> P[psql -U postgres\nSELECT now() - pg_last_xact_replay_timestamp]
+    H --> Q[curl localhost:9200/_cluster/health?pretty\nCheck status=red or yellow unassigned shards]
+    J --> R[Collect DCNM support bundle\ncollect-support-bundle.sh]
+    K --> R
+    L --> R
+    M --> R
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+    R --> S[Open Cisco TAC case\nAttach bundle and switch show tech-support]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
+    class R,S escalate
+```
+
+## Before you begin
+
+- **Access:** SSH to DCNM server (root or admin); DCNM admin UI credentials; SSH access to managed MDS/NX-OS switches
+- **Gather first:** the specific symptom (switch not discovered, no performance data for a fabric, UI unreachable), the switch name or fabric name affected, and when the issue started
+- **Scope:** confirm whether the issue affects one switch, one fabric, or the entire DCNM platform
+
+---
+
+## Step 1 — Check DCNM service status
+
 ```bash
-# Connect to DCNM database
+# SSH to DCNM
+ssh root@dcnm-dc1.corp.example.com
+
+# Check all DCNM application services
+appmgr status
+# Expected: all services showing "running" state
+# Problem: any service in "stopped" or "restarting" state
+
+# Check disk space (Elasticsearch fills disk causing cascading failures)
+df -h
+# Expected: all mounts < 80% used; /data often fills first
+
+# Check DCNM REST API health (no auth required)
+curl -sk https://localhost/rest/health | python3 -m json.tool
+# Expected: all components healthy
+
+# Check DCNM database status
+appmgr db-status
+# Expected: all databases connected
+
+# Check ports are listening
+netstat -tlnp | grep -E "443|5432|9200"
+# Expected: 443=DCNM HTTPS, 5432=PostgreSQL, 9200=Elasticsearch
+```
+
+---
+
+## Step 2 — Authenticate and check REST API
+
+```bash
+# Get DCNM API session cookie
+DCNM_HOST="https://dcnm-dc1.corp.example.com"
+curl -sk -c dcnm-cookie.txt -X POST "$DCNM_HOST/rest/logon" \
+  -H "Content-Type: application/json" \
+  -d '{"expirationTime":600000}' \
+  -u admin:<password> | python3 -m json.tool
+# Expected: token in response body; cookie saved to dcnm-cookie.txt
+
+# Get inventory of all switches
+curl -sk -b dcnm-cookie.txt "$DCNM_HOST/rest/inventory/switches" \
+  | python3 -c "
+import json,sys
+for sw in json.load(sys.stdin):
+    print(sw.get('ipAddress',''), '|', sw.get('logicalName',''), '|', sw.get('managementState',''))
+"
+# Expected: managementState = manageable or managed for all switches
+
+# Measure REST API response time (baseline < 3 seconds for < 200 switches)
+time curl -sk -b dcnm-cookie.txt "$DCNM_HOST/rest/inventory/switches" > /dev/null
+
+# Trigger manual rediscovery for a specific switch
+curl -sk -b dcnm-cookie.txt -X POST \
+  "$DCNM_HOST/rest/san/fabric/rediscover" \
+  -H "Content-Type: application/json" \
+  -d '{"fabricName": "DC1-FABRIC-A", "rediscoverAll": false,
+       "switchSerialNumbers": ["<serialNumber>"]}'
+```
+
+---
+
+## Step 3 — Check PostgreSQL database health
+
+```bash
+# Test if PostgreSQL accepts connections
+pg_isready -U postgres
+# Expected: /tmp/.s.PGSQL.5432 - accepting connections
+
+# Connect to DCNM configuration database
 psql -U postgres sane
 
--- Table sizes — find unexpected large tables
+-- Check table sizes (find unexpectedly large tables)
 SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size
 FROM pg_catalog.pg_statio_user_tables
-ORDER BY pg_relation_size(relid) DESC
-LIMIT 20;
+ORDER BY pg_relation_size(relid) DESC LIMIT 20;
 
--- Slow queries
-SELECT pid, now() - query_start AS duration, state, query
+-- Check slow queries
+SELECT pid, now() - query_start AS duration, state, left(query, 100)
 FROM pg_stat_activity
 WHERE state != 'idle'
-ORDER BY duration DESC
-LIMIT 10;
+ORDER BY duration DESC LIMIT 10;
 
--- Check for bloated tables (high dead tuple count)
+-- Check for table bloat (dead tuples)
 SELECT relname, n_dead_tup, n_live_tup,
   round(n_dead_tup::numeric/greatest(n_live_tup,1)*100, 1) AS dead_pct
 FROM pg_stat_user_tables
 WHERE n_dead_tup > 10000
 ORDER BY n_dead_tup DESC;
-
--- If bloat is high, run VACUUM
 \q
 
+# If bloat is high, run VACUUM
 sudo -u postgres vacuumdb --all --analyze
-```
-```bash
+
+# Check performance data database size
 psql -U postgres pmdb
-
--- Check size of performance data
-SELECT count(*) FROM pmdata;
+-- Check size
 SELECT pg_size_pretty(pg_database_size('pmdb'));
-
--- Find oldest and newest performance records
+-- Check oldest and newest data points
 SELECT min(collecttime), max(collecttime) FROM pmdata;
-
 \q
-
-# If pmdb is consuming excessive disk, reduce retention:
-# DCNM GUI: Administration > Settings > Data Retention
-# Set Performance Data retention to 14 days (from 30)
+# If pmdb is consuming excessive disk:
+# DCNM GUI → Administration → Settings → Data Retention
+# Reduce performance data retention to 14 days
 ```
+
+---
+
+## Step 4 — Test switch connectivity
+
 ```bash
-# Test SSH to a managed switch
+# Test SSH from DCNM to a managed switch
 ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
   dcnm_mgmt@<switch-ip> 'show version brief' 2>&1
+# Expected: MDS or NX-OS version string; failure = SSH auth or connectivity issue
 
-# Test SNMP v3 GET
+# Test SNMP v3 GET (confirm DCNM polling credentials work)
 snmpget -v3 -u dcnm_poll -l authPriv \
   -a SHA -A <auth-pass> -x AES -X <priv-pass> \
   <switch-ip> sysDescr.0
+# Expected: MDS IOS system description string; Error = SNMP credential mismatch
 
-# Capture SNMP trap traffic (confirm switches sending traps)
-tcpdump -i eth0 -n udp port 162 -c 50 -w /tmp/dcnm-trap-capture.pcap
+# Confirm SNMP traps are arriving from switches
+tcpdump -i eth0 -n udp port 162 -c 20
+# Each line = one trap from a switch; no output = switches not sending or firewall blocking
 
-# Analyse capture (requires tcpdump or Wireshark on workstation)
-tcpdump -r /tmp/dcnm-trap-capture.pcap -v
+# Capture SNMP trap traffic to file for analysis
+tcpdump -i eth0 -n udp port 162 -c 200 -w /tmp/dcnm-trap-capture.pcap
 ```
+
+---
+
+## Step 5 — Debug discovery and fabric issues
+
 ```bash
+# Search discovery log for a specific switch IP
+grep "<switch-ip>" /var/log/dcnm/discovery.log | tail -50
+# Look for: "Discovery failed", "unreachable", "auth failed", "timeout"
+
 # Enable discovery debug for a specific switch
 grep "10.20.1.5" /var/log/dcnm/discovery.log | tail -50
 
-# Manually trigger rediscovery via REST API
-curl -sk -b dcnm-cookie.txt -X POST \
-  "${DCNM_HOST}/rest/san/fabric/rediscover" \
-  -H "Content-Type: application/json" \
-  -d '{"fabricName": "DC1-FABRIC-A", "rediscoverAll": false,
-       "switchSerialNumbers": ["<serialNumber>"]}'
+# Check discovery.log for recent errors across all switches
+grep -i "error\|fail\|unreachable" /var/log/dcnm/discovery.log | tail -100
 
-# Check after 2 minutes:
-curl -sk -b dcnm-cookie.txt \
-  "${DCNM_HOST}/rest/inventory/switches/<serialNumber>" \
-  | python3 -m json.tool | grep "managementState"
+# Check journalctl for DCNM service-level errors
+journalctl -u dcnm -n 200 --no-pager | grep -i "error\|exception\|fail"
+
+# System resource snapshot (for performance baseline)
+echo "=== $(date) ===" >> /tmp/dcnm-perf.txt
+free -h >> /tmp/dcnm-perf.txt
+df -h >> /tmp/dcnm-perf.txt
+uptime >> /tmp/dcnm-perf.txt
+iostat -x 1 3 >> /tmp/dcnm-perf.txt
+ps aux --sort=-%cpu | head -15 >> /tmp/dcnm-perf.txt
 ```
+
+---
+
+## Step 6 — Check HA replication status
+
 ```bash
 # On either DCNM HA node
 /usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
-
 # Expected output:
 # Active Node: 10.10.5.10 (THIS NODE)
 # Standby Node: 10.10.5.11 (synchronized)
 # VIP: 10.10.5.15 (active)
 # DB Replication Lag: 0 ms
 
-# Check replication lag
+# Check PostgreSQL replication lag (on standby node)
 psql -U postgres -c "
 SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;"
-# On standby — if lag > 1 minute: investigate HA link or replication error
+# Expected: < 1 second; > 1 minute = investigate HA link or replication error
 
-# Check HA log for errors
-tail -f /var/log/dcnm/ha.log | grep -i "error\|fail\|disconnect"
+# Check HA log for failover events
+tail -100 /var/log/dcnm/ha.log | grep -i "error\|fail\|disconnect\|failover"
+
+# Check Elasticsearch cluster health (unassigned shards = topology data at risk)
+curl -s "localhost:9200/_cluster/health?pretty"
+# Expected: status=green; yellow=1+ replica unassigned; red=primary shard missing
 ```
+
+---
+
+## Step 7 — Collect support bundle for Cisco TAC
+
 ```bash
-# System resource snapshot
-echo "=== $(date) ===" >> /tmp/dcnm-perf.txt
-free -h >> /tmp/dcnm-perf.txt
-df -h >> /tmp/dcnm-perf.txt
-uptime >> /tmp/dcnm-perf.txt
-iostat -x 1 3 >> /tmp/dcnm-perf.txt
-ps aux --sort=-%cpu | head -10 >> /tmp/dcnm-perf.txt
+# Generate DCNM support bundle
+/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh \
+  --output /tmp/dcnm-support-$(date +%Y%m%d).tar.gz
+# Includes: all /var/log/dcnm/ logs, DB schema dump, OS state, DCNM config (masked)
 
-# Measure REST API response time
-time curl -sk -b dcnm-cookie.txt \
-  "${DCNM_HOST}/rest/inventory/switches" > /dev/null
-# Expected: < 3 seconds for < 200 switches
-# If > 10 seconds: DB query performance issue
+# Transfer to workstation
+scp root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-$(date +%Y%m%d).tar.gz ./
+
+# Also collect switch show tech-support for each affected switch
+# SSH to each MDS or NX-OS switch:
+ssh admin@<switch-ip>
+show tech-support > /tmp/show-tech-$(hostname)-$(date +%Y%m%d).txt
+exit
+# Transfer the show tech file: scp admin@<switch-ip>:/tmp/show-tech-*.txt ./
+
+# For the Cisco TAC case, include:
+# - DCNM support bundle .tar.gz
+# - show tech-support from affected switches
+# - Discovery log excerpt (grep for the affected switch IP)
+# - DCNM version: appmgr version or DCNM UI → About
+# - Fabric name and switch serial number / IP
 ```
 
-## Before you begin
-
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
 ---
 
----
+## Log locations
 
-## Verify resolution
-
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Source | Path / Command | What to look for |
+|---|---|---|
+| DCNM application | `journalctl -u dcnm` | Service crash and startup errors |
+| Discovery | `/var/log/dcnm/discovery.log` | Per-switch discovery attempts and failures |
+| HA events | `/var/log/dcnm/ha.log` | Failover events, replication lag |
+| PostgreSQL | `journalctl -u postgresql` | DB start/stop, replication errors |
+| Elasticsearch | `curl localhost:9200/_cluster/health` | Shard health and disk pressure |
+| DCNM general | `/var/log/dcnm/` | Full log directory; multiple components |
 
 ---
 
 ## See also
 
-- [Cisco Dcnm — Common Issues](common-issues/)
-- [Cisco Dcnm — Escalation](escalation/)
-- [Cisco Dcnm — Health Checks](../operations/health-checks/)
+- [Cisco DCNM — Common Issues](common-issues/)
+- [Cisco DCNM — Escalation](escalation/)
+
+## Verify resolution
+
+- `appmgr status` shows all services running
+- `curl -sk https://localhost/rest/health` returns all components healthy
+- `grep <switch-ip> /var/log/dcnm/discovery.log | tail -5` shows successful discovery
+- `time curl -sk -b dcnm-cookie.txt $DCNM_HOST/rest/inventory/switches` completes in < 5 seconds
+- `curl localhost:9200/_cluster/health` returns `"status":"green"` for Elasticsearch

@@ -8,220 +8,315 @@ search:
 ---
 # Aria Operations — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering Alert Tuning, Capacity Planning, Dashboards, Reports, Related Sections.
+Aria Operations (vROps) diagnostic commands: check cluster service health with cluster-mgmt-cli, query the REST API health endpoint, inspect analytics.log and collector.log for errors, check adapter collection status, verify disk space on data nodes, generate the vcops-support bundle for VMware SRs.
 
-*Applies to: Aria Ops 8.x*
+*Applies to: VMware Aria Operations 8.x (vRealize Operations Manager)*
 </div>
 
 ```text
-┌───────────────────────────────────── Aria Operations Diagnostics ─────────────────────────────────────┐
+┌───────────────────────────────────── Aria Operations — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │
-│  Support bundle generation, log analysis, and REST API diagnostics for vROps.                         │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: GET /suite-api/api/health → analytics.log → cluster-mgmt-cli status           │     │
+│   │   Adapter not collecting: collector.log; test adapter credentials from vROps UI              │    │
+│   │   Cluster node not joining: VAMI → Cluster Status; check NTP sync between nodes             │     │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │             Log File Diagnostics             │  │          REST API Diagnostic Checks         │   │
-│   │            /var/log/vmware/vcops/            │  │          GET /suite-api/api/health          │   │
-│   │         analytics.log: engine issues         │  │          GET /api/resources: count          │   │
-│   │        collector.log: adapter errors         │  │         GET /api/alerts: active list        │   │
-│   │         grep ERROR | tail to narrow          │  │         Compare before/after counts         │   │
+│   │   /var/log/vmware/vcops/analytics.log        │  │   GET /suite-api/api/health: cluster info  │    │
+│   │   /var/log/vmware/vcops/collector.log        │  │   GET /api/resources: resource count       │    │
+│   │   grep ERROR analytics.log | tail -50        │  │   GET /api/alerts: active alert list       │    │
+│   │   journalctl -u vmware-vcops: service events │  │   GET /api/adapterinstances: adapter state │    │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Logs reveal internal errors; REST API checks confirm cluster and collection health.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Support Bundle Generation           │  │             Cluster Diagnostics             │   │
-│   │            SSH: vcops-support gen            │  │          VAMI: Cluster status page          │   │
-│   │            VAMI: Admin > Support             │  │           cluster-mgmt-cli status           │   │
-│   │          Download ZIP from VAMI UI           │  │           Check node role + state           │   │
-│   │               Attach to GSS SR               │  │           Verify replica heartbeat          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster nodes on vSphere; SSH jump host; VAMI browser access on port 5480                      │
+│  Physical Infrastructure:                                                                             │
+│  vROps cluster nodes (master + replicas + data nodes) · VAMI port 5480 · vCenter adapter endpoint     │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  analytics.log       = Engine log; check for out-of-memory or processing errors                       │
-│  collector.log       = Adapter log; records collection attempts and failures                          │
-│  vcops-support       = CLI command to generate full support bundle ZIP                                │
-│  Support Bundle      = Compressed log + config archive; mandatory for GSS SR                          │
-│  GET /health         = REST endpoint; returns cluster component health summary                        │
-│  GET /resources      = Returns monitored object count; drop indicates issue                           │
-│  GET /alerts         = Returns active alert list; useful for volume diagnosis                         │
-│  cluster-mgmt-cli    = SSH CLI tool showing node roles and cluster join state                         │
-│  Replica Heartbeat   = Periodic signal from replica to master; loss = HA risk                         │
-│  VAMI Support Page   = Browser interface to download bundle without SSH                               │
-│  grep ERROR          = First-pass log scan to identify exceptions quickly                             │
-│  GSS SR              = Support case; attach bundle and describe issue timeline                        │
+│  analytics.log    = core analytics engine log; OOM errors, processing failures, alert generation      │
+│  collector.log    = adapter collection log; per-adapter data collection attempts and failures         │
+│  cluster-mgmt-cli = SSH CLI showing node roles and cluster join state                                 │
+│  vcops-support    = CLI command to generate the full support bundle ZIP                               │
+│  Replica node     = secondary analytics node; if replica heartbeat fails, HA at risk                  │
+│  Adapter instance = configured collection source (vCenter, NSX, third-party); each has status         │
+│  Resource kind    = type of monitored object (VirtualMachine, HostSystem, Datastore)                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+```mermaid
+graph TD
+    A([Aria Operations Issue]) --> B{What type of problem?}
+    B -->|vROps UI unresponsive or slow| C[GET /suite-api/api/health\ncluster-mgmt-cli status]
+    B -->|Adapter not collecting data| D[grep adapter-name /var/log/vmware/vcops/collector.log\nTest adapter from vROps UI → Administration → Adapters]
+    B -->|Missing resources in inventory| E[GET /api/resources?page=0\nCompare count before and after last collection]
+    B -->|Alerts missing or stale| F[GET /api/alerts?pageSize=10\nCheck analytics.log for alert engine errors]
+    B -->|Cluster node in error state| G[cluster-mgmt-cli status\nVAMI → Administration → Cluster Management]
+    B -->|Disk space warning| H[df -h /storage/db\nCheck analytics partition usage]
+    C --> I{Health status?}
+    I -->|Not running| J[journalctl -u vmware-vcops -n 100\nCheck disk space: df -h /storage/db]
+    I -->|Running but degraded| K[cluster-mgmt-cli status\nCheck replica node heartbeat]
+    D --> L[grep ERROR collector.log | tail -50\nCheck adapter credential or TLS error]
+    E --> M[Check adapter last collection time in vROps UI\nAdministration → Solutions → Adapter Instances]
+    F --> N[grep ERROR analytics.log | tail -50\nCheck for OOM: grep OutOfMemory analytics.log]
+    G --> O[Check NTP sync on all nodes\ntimedatectl; chronyc tracking]
+    H --> P[Check /storage/db partition\nVAMI → Administration → Disk Usage]
+    J --> Q[Collect vcops-support bundle\nvcops-support gen]
+    K --> Q
+    L --> Q
+    M --> Q
+    N --> Q
+    O --> Q
+    P --> Q
+    Q --> R[Open VMware SR\nmysupport.vmware.com]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P action
+    class Q,R escalate
+```
+
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** vROps admin UI credentials; SSH to the master node (`admin` user); VAMI access at port 5480
+- **Gather first:** the specific symptom (adapter showing no data, UI alert for node health, resource count dropped, specific alert not firing), the adapter or resource type affected, and when the issue started
+- **Scope:** confirm whether the issue affects one adapter instance, one resource type, or the entire vROps cluster
 
 ---
 
-## Alert Tuning
+## Step 1 — Check cluster service status
 
-Alert tuning is important because too many low-value alerts create noise.
+```bash
+# SSH to the vROps master node
+ssh admin@<vrops-master-ip>
 
-### Good Alert Tuning Should Include
+# Check cluster node roles and health
+cluster-mgmt-cli status
+# Expected output:
+# MASTER_NODE: ONLINE
+# REPLICA_NODE: ONLINE (synchronized)
+# DATA_NODES: all ONLINE
+# Problem: any node OFFLINE or DEGRADED
 
-- Clear severity levels
-- Actionable descriptions
-- Ownership or assignment
-- Escalation path
-- Suppression rules for known maintenance windows
-- Review of repeat alerts
-- Removal of stale or low-value alerts
+# Check vROps service status
+systemctl status vmware-vcops
+# Expected: active (running)
 
-### Common Checks
+# Recent service events
+journalctl -u vmware-vcops -n 100 --no-pager
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+# Disk space on the analytics and log partitions
+df -h
+# Expected: /storage/db < 80%; /var/log < 80%
+# Problem: /storage/db > 85% = risk of analytics failure
 
-### Incident Notes
-
-Capture:
-
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
-
-### Change Notes
-
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
+# Check NTP sync (time drift causes cluster join failures and alert timing issues)
+chronyc tracking | grep "System time"
+timedatectl status
+```
 
 ---
 
-## Capacity Planning
+## Step 2 — Query REST API health
 
-### Cluster CPU and Memory
+```bash
+# Get API auth token (admin credentials)
+TOKEN=$(curl -sk -X POST \
+  "https://<vrops-master-ip>/suite-api/api/auth/token/acquire" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"<password>","authSource":"LOCAL"}' \
+  | python3 -c "import json,sys; print(json.load(sys.stdin).get('token',''))")
 
-- Review CPU demand vs capacity per cluster
-- Identify clusters approaching the threshold where HA failover capacity would be impacted
-- Track CPU ready — high CPU ready indicates overcommitment
+echo $TOKEN
+# Expected: token string; empty = auth failed
 
-### Datastore and vSAN Capacity
+# Cluster health check (per-service component status)
+curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
+  "https://<vrops-master-ip>/suite-api/api/health" | python3 -m json.tool
+# Expected: all components online
 
-- Review datastore usage — alert when free space drops below 20%
-- For vSAN, track usable capacity and thin-provisioned risk
-- Review snapshot growth contribution to capacity
+# Resource count (drop indicates collection stopped)
+curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
+  "https://<vrops-master-ip>/suite-api/api/resources?pageSize=1" \
+  | python3 -c "import json,sys; print('Total resources:', json.load(sys.stdin).get('total','unknown'))"
 
-### VM Growth Trends
+# Active alerts (high count = analytics engine may be generating floods)
+curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
+  "https://<vrops-master-ip>/suite-api/api/alerts?pageSize=10" \
+  | python3 -c "import json,sys; print('Active alerts:', json.load(sys.stdin).get('total','unknown'))"
 
-- Use Aria Operations capacity reports to forecast VM count growth
-- Review which clusters are projected to run out of capacity soonest
-
-### Rightsizing
-
-- Review oversized VMs — high CPU and memory allocation with consistently low usage
-- Review undersized VMs — high CPU ready or memory ballooning under normal load
-- Use Aria Operations rightsizing recommendations as a starting point — validate before making changes
-
-### Monthly Review Process
-
-1. Run the capacity dashboard in Aria Operations
-2. Review cluster headroom report
-3. Review datastore free space report
-4. Review top growth VMs
-5. Review rightsizing recommendations
-6. Identify clusters or datastores needing action
-7. Document findings and recommendations in the monthly capacity review
-
----
-
-## Dashboards
-
-### Common Dashboards
-
-| Dashboard | Purpose |
-|---|---|
-| VMware Platform Health | Shows vCenter, clusters, hosts, datastores, and VM health |
-| Capacity Dashboard | Tracks CPU, memory, datastore, and vSAN capacity |
-| Alert Dashboard | Shows active alerts by severity |
-| VM Performance Dashboard | Shows CPU ready, memory pressure, disk latency, and network usage |
-| vSAN Dashboard | Shows disk group, capacity, object health, and resync status |
-| Login and Access Dashboard | Tracks authentication failures and access events |
+# Adapter instances and their collection status
+curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
+  "https://<vrops-master-ip>/suite-api/api/adapterinstances" \
+  | python3 -c "
+import json,sys
+for ai in json.load(sys.stdin).get('adapterInstancesInfoDto', []):
+    print(ai.get('id',''), '|', ai.get('name',''), '|', ai.get('collectorStatus',''))
+"
+# Problem: collectorStatus = Data Receiving/No Data = adapter collecting or not
+```
 
 ---
 
-## Reports
+## Step 3 — Inspect log files
 
-### Aria Operations Rightsizing Review
+```bash
+# Analytics engine errors (OOM, processing failures, alert engine)
+grep -i "ERROR\|Exception\|OutOfMemory\|FATAL" \
+  /var/log/vmware/vcops/analytics.log | tail -50
 
-Use Aria Operations to identify VMs that are oversized or undersized.
+# Adapter collection errors (adapter auth, TLS, timeout)
+grep -i "ERROR\|Exception\|fail\|timeout" \
+  /var/log/vmware/vcops/collector.log | tail -50
 
-#### Oversized VMs
+# Filter for a specific adapter by name (e.g., vCenter adapter)
+grep -i "VMware vCenter" /var/log/vmware/vcops/collector.log | tail -30
 
-- High CPU and memory allocation with consistently low demand
-- Review the CPU demand and memory demand charts over the last 30 days
-- Use Aria Operations rightsizing recommendations as a starting point
-- Validate with application owner before reducing resources
+# Follow analytics log in real time during a failing operation
+tail -f /var/log/vmware/vcops/analytics.log | grep -i "error\|warn\|exception"
 
-#### Undersized VMs
-
-- High CPU ready or memory ballooning under normal load
-- Indicates the VM needs more CPU or memory
-- Review trend data before increasing resources
-
-#### Resize Process
-
-1. Identify the VM and its application owner
-2. Review Aria Operations recommendations
-3. Get change approval from the application owner
-4. Schedule a maintenance window if a reboot is required
-5. Resize the VM
-6. Monitor CPU ready, memory, and application performance after resize
-7. Document before and after metrics
-
-#### Monthly Review
-
-- Run the rightsizing report monthly
-- Review top 10 oversized VMs
-- Review top 10 undersized VMs
-- Track progress on recommendations from previous months
+# Check for heap OOM errors specifically (common on undersized vROps nodes)
+grep "OutOfMemoryError" /var/log/vmware/vcops/analytics.log | tail -20
+# If present: check heap allocation in VAMI → Administration → JVM Memory
+```
 
 ---
 
-## Related Sections
+## Step 4 — Check adapter collection status
 
-- [Operations](../operations/index.md) — health checks and procedures
-- [Escalation](escalation/index.md) — opening vendor support cases
+```bash
+# Via vROps UI (most informative):
+# Navigate to: Administration → Solutions → Adapter Instances
+# For each adapter instance, check:
+# - Status: Collection State (collecting/not collecting)
+# - Last Updated: should be within the collection interval (typically 5 minutes)
+# - Messages: shows adapter-specific error if collection failed
+
+# Test adapter credentials from vROps UI:
+# Click adapter → Test Connection
+# This runs a live connectivity test from the vROps collector to the source
+
+# Via collector.log — find the last collection attempt for vCenter adapter
+grep "vCenter" /var/log/vmware/vcops/collector.log | \
+  grep -i "Start collection\|End collection\|error" | tail -30
+
+# Check if collection is happening every 5 minutes (expected interval)
+grep "Start collection" /var/log/vmware/vcops/collector.log | \
+  tail -10 | awk '{print $1, $2}'
+# Expected: entries every 5 minutes per adapter instance
+```
+
+---
+
+## Step 5 — Check vROps cluster node health
+
+```bash
+# Detailed node status
+cluster-mgmt-cli status
+# Shows: node ID, role, state, heartbeat timestamp
+
+# Check replica node heartbeat (loss of replica = HA risk)
+cluster-mgmt-cli -cmd showclusterstate
+# Expected: all nodes in ONLINE state; masterNodeId matches the master
+
+# Verify all nodes have NTP in sync (time drift > 5 minutes breaks cluster communication)
+for node in <master-ip> <replica-ip> <data-node-ip>; do
+  echo "=== $node ==="
+  ssh admin@$node "chronyc tracking | grep 'System time'"
+done
+
+# Check VAMI for disk allocation per node
+# Browse to: https://<vrops-node-ip>:5480
+# Navigate to: Administration → Disk Usage
+# Alert: /storage/db > 85% used
+
+# Restart vROps service if analytics engine is stuck (safe for planned restart)
+systemctl restart vmware-vcops
+# Allow 5–10 minutes for full service startup; monitor with:
+journalctl -u vmware-vcops -f
+```
+
+---
+
+## Step 6 — Check disk space and performance
+
+```bash
+# Storage partitions specific to vROps
+df -h /storage/db       # analytics data; should be < 80%
+df -h /var/log          # log partition
+df -h /data             # vROps data files
+
+# Large log files that can be safely removed (keep last 7 days)
+find /var/log/vmware/vcops/ -name "*.log.*" -mtime +7 | head -20
+find /var/log/vmware/vcops/ -name "*.log.*" -mtime +7 -delete
+
+# Check analytics DB size
+du -sh /storage/db/
+du -sh /storage/db/casa/  # CASA analytics store
+
+# vROps JVM heap usage (if analytics.log shows OOM)
+# Browse to: https://<vrops-master-ip>:5480
+# Navigate to: Administration → JVM Memory Configuration
+# Recommended: heap size = 70% of node RAM for dedicated nodes
+
+# Check for core dump files
+find / -name "core.*" -size +100M 2>/dev/null
+```
+
+---
+
+## Step 7 — Collect support bundle for VMware SR
+
+```bash
+# Via SSH on the master node (recommended method)
+ssh admin@<vrops-master-ip>
+vcops-support gen
+# Output: /tmp/vcops-support-<timestamp>.zip
+# Includes: all cluster logs, analytics DB snapshot, configuration, node states
+
+# Download the bundle
+scp admin@<vrops-master-ip>:/tmp/vcops-support-*.zip ./
+
+# Via VAMI (if SSH is unavailable)
+# Browse to: https://<vrops-master-ip>:5480
+# Navigate to: Administrator → Support → Generate Support Bundle → Download
+
+# Include in VMware SR:
+# - vcops-support ZIP bundle
+# - vROps version: vROps UI → Administration → About
+# - Node count and node IPs (master, replica, data nodes)
+# - Adapter instance name and adapter type that is failing
+# - Resource type and count that is missing or wrong
+# - Time window when data stopped appearing
+```
+
+---
+
+## Log locations
+
+| Component | Path | What to look for |
+|---|---|---|
+| Analytics engine | `/var/log/vmware/vcops/analytics.log` | OOM errors, alert engine failures, processing |
+| Adapter collector | `/var/log/vmware/vcops/collector.log` | Per-adapter collection attempts and failures |
+| vROps service | `journalctl -u vmware-vcops` | Service start/stop/crash events |
+| CASA data store | `/storage/db/casa/` | Analytics data files (size only; don't modify) |
+| Cluster state | `cluster-mgmt-cli status` | Node roles and heartbeat state |
 
 ---
 
 ## See also
 
-- [Aria Operations Common Issues](common-issues/)
+- [Aria Operations — Common Issues](common-issues/)
 - [Aria Operations — Escalation](escalation/)
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- `GET /suite-api/api/health` returns all components online with no degraded nodes
+- `cluster-mgmt-cli status` shows master and all replica/data nodes ONLINE
+- `grep -i error /var/log/vmware/vcops/collector.log | wc -l` shows no new errors after fixing adapter credentials
+- Adapter instance collection state shows "Data Receiving" and last updated time is within the collection interval
+- Resource count returned by `GET /api/resources?pageSize=1` matches expected inventory size
