@@ -422,6 +422,35 @@ for title, paths in sorted(_title_map.items()):
         warn(issues, f'"{title}" appears on {len(paths)} pages: {paths}')
 
 
+# ── Check 23: Backup retention ────────────────────────────────────────────────
+issues = check(23, 'Backup retention')
+_backup_dir = os.path.join(os.path.dirname(DOCS), 'backup')
+if os.path.isdir(_backup_dir):
+    _backups = sorted([
+        d for d in os.listdir(_backup_dir)
+        if os.path.isdir(os.path.join(_backup_dir, d)) and
+        len(d) == 15 and d[4] == '-' and d[7] == '-'  # YYYY-MM-DD_HHMMSS
+    ])
+    _count = len(_backups)
+    if _count > 10:
+        warn(issues, f'{_count} backup snapshots exist (cap is 10) — run: cd backup && ls -1d */ | sort | head -n {_count - 10} | xargs rm -rf')
+    elif _count == 0:
+        warn(issues, 'No backups found — backup.sh may not be running')
+    else:
+        # Check total size (du -sk, quick estimate)
+        try:
+            import subprocess as _sp
+            _result = _sp.run(['du', '-sk', _backup_dir], capture_output=True, text=True)
+            _kb = int(_result.stdout.split()[0]) if _result.returncode == 0 else 0
+            _gb = _kb / (1024 * 1024)
+            if _gb > 10:
+                warn(issues, f'Backup dir is {_gb:.1f} GB ({_count} snapshots) — run cleanup or reduce retention')
+        except Exception:
+            pass
+else:
+    warn(issues, f'Backup directory not found at {_backup_dir}')
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')

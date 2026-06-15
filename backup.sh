@@ -29,5 +29,12 @@ INFO
 
 echo "Backup created: $DEST"
 
-# Remove backups older than 10 days
-find "$BACKUP_ROOT" -maxdepth 1 -type d -name "????-??-??_*" -mtime +10 -exec rm -rf {} +
+# Keep only the 10 most recent backups; delete the rest
+KEEP=10
+BACKUP_COUNT=$(ls -1d "$BACKUP_ROOT"/????-??-??_* 2>/dev/null | wc -l | tr -d ' ')
+if [ "$BACKUP_COUNT" -gt "$KEEP" ]; then
+  DELETE_COUNT=$((BACKUP_COUNT - KEEP))
+  ls -1d "$BACKUP_ROOT"/????-??-??_* 2>/dev/null | sort | head -n "$DELETE_COUNT" | while IFS= read -r old; do
+    rm -rf "$old"
+  done
+fi
