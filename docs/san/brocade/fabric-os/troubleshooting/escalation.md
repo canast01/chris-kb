@@ -5,93 +5,302 @@ tags:
 search:
   boost: 1.5
 ---
-# Brocade Fabric OS — Troubleshooting Escalation
+# Brocade Fabric OS — Escalation
 
-```bash
-# Configure FTP/SCP target first (if not already set)
-ssave --ftp <ftp-server-ip> <username> <password> <path>
-# Or SCP:
-ssave --scp <username>@<scp-server-ip>:<path>
+<div class="kb-summary">
+How to escalate Brocade SAN switch issues to Broadcom TAC: what data to collect, how to run supportsave, step-by-step case creation on the Broadcom support portal, and the escalation path when progress stalls.
 
-# Run supportsave (takes 2–5 minutes)
-supportsave
+*Applies to: Brocade Fabric OS 9.x*
+</div>
 
-# The output archive includes:
-# - Running configuration
-# - All logs (raslog, auditlog, switch event log)
-# - Fabric database (zone, device, routing)
-# - Port statistics
-# - SNMP trap history
-```
 ```text
 ┌─────────────────────────── Brocade Fabric OS — Troubleshooting Escalation ────────────────────────────┐
 │                                                                                                       │
-│  Escalation path: internal SAN team → Broadcom TAC with supportshow bundle and timeline.              │
+│  Escalate Brocade SAN issues to Broadcom TAC when the fabric is down, a principal                     │
+│  switch has failed, or zoning changes have caused widespread initiator-target loss.                   │
+│  Run supportsave on ALL affected switches BEFORE opening the case.                                    │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Internal Escalation              │  │           Broadcom TAC Escalation           │   │
-│   │        SAN L1 → SAN L2: logs+timeline        │  │         Open case: support.broadcom         │   │
-│   │       SAN L2 → L3: supportsave bundle        │  │         Serial/contract number req.         │   │
-│   │           L3 → TAC: full diag data           │  │          Sev-1: fabric down in prod         │   │
-│   │          Incident manager for Sev-1          │  │          Remote: TAC SSH to switch          │   │
-│   │        Change freeze during incident         │  │          Escalation to engineering          │   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
+│   │  Run supportsave on each affected switch     │  │  Go to support.broadcom.com → sign in       │   │
+│   │  Capture fabricshow + cfgshow + errshow      │  │  Product: Brocade Fibre Channel Switches    │   │
+│   │  Note FOS version + switch serial number     │  │  Severity: Sev1 fabric down / Sev2 partial  │   │
+│   │  Verify which ISLs and ports are affected    │  │  Attach supportsave ZIP + errshow output    │   │
+│   │  Write timeline: last good → first failure   │  │  Include switch serial + chassis model      │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Collect supportsave from all affected switches before engaging Broadcom TAC.                         │
+│  For Sev1: open portal case AND call Broadcom TAC immediately.                                        │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Escalation Data Package            │  │             Escalation Criteria             │   │
-│   │         supportsave from each switch         │  │          Sev-1: fabric/storage down         │   │
-│   │         Fabric topology: fabricshow          │  │          Sev-2: degraded production         │   │
-│   │         Zone config: cfgshow output          │  │          Sev-3: non-critical issue          │   │
-│   │         Error timeline from errshow          │  │           Sev-4: general question           │   │
-│   │        Recent changes before failure         │  │          Post-incident: RCA request         │   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm supportsave received   │  │  Do not rezone or modify active zone config │   │
+│   │  T2: SAN SE assigned; provides guidance      │  │  Do not reboot switches without TAC OK      │   │
+│   │  T3: engineering review if SE cannot fix     │  │  Do not replace SFPs or ISL cables alone    │   │
+│   │  Change freeze until TAC gives go-ahead      │  │  Do not upgrade FOS mid-incident            │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Brocade FC switch · management Ethernet · serial console · Broadcom TAC upload portal                │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  supportsave     = saves full diagnostic bundle to SCP/FTP/USB; required for TAC                      │
-│  errshow         = error log snapshot; provides timeline of events before failure                     │
-│  fabricshow      = fabric topology; shows all domain IDs and switch names                             │
-│  cfgshow         = zone config snapshot; shows active and saved zone databases                        │
-│  Sev-1           = production down; fabric or storage completely inaccessible                         │
-│  RCA             = Root Cause Analysis; post-incident document requested from TAC                     │
-│  Broadcom TAC    = Technical Assistance Center; opened at support.broadcom.com                        │
-│  Incident manager= internal role; coordinates bridge call and vendor TAC engagement                   │
-│  Serial number   = switch chassis serial; required to open Broadcom support case                      │
-│  Change freeze   = no config changes during active Sev-1 incident investigation                       │
-│  Remote access   = TAC engineer SSH into switch via customer-granted access                           │
-│  Post-incident   = RCA + preventive actions + monitoring improvements after resolution                │
+│  supportsave   = full diagnostic bundle: logs, zone DB, config, port stats; run on all switches       │
+│  errshow       = event error log on each switch; shows hardware events and fabric changes             │
+│  fabricshow    = fabric topology: all domains, switches, and ISLs                                     │
+│  cfgshow       = zone configuration snapshot: active and saved zone databases                         │
+│  TAC           = Technical Assistance Center; Broadcom SAN support team                               │
+│  ISL           = Inter-Switch Link; E-port connections between FC switches                            │
+│  Principal     = switch elected as fabric principal; manages fabric services                          │
+│  Domain ID     = unique number (1–239) assigned to each switch in the fabric                          │
+│  FOS           = Fabric OS; Brocade switch operating system                                           │
+│  Sev1          = fabric completely down; all initiator-target paths lost; 24×7 SLA                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+---
+
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** SSH access to each Brocade switch (admin credentials); Broadcom support account with the switch serial numbers registered
+- **Do this first:** collect supportsave from ALL affected switches before touching anything. TAC will ask for it in their first response
+- **Enforce a change freeze:** no zoning changes, no FOS upgrades, no port disabling during the incident. Every change adds a variable and delays diagnosis
+- **Do NOT reboot** any switch unless Broadcom TAC explicitly instructs you to — reboots may break fabric stability and overwrite critical log data
 
 ---
 
+## Pre-Escalation Self-Check
+
+Run these from each switch's SSH session before opening the case.
+
+| Check | Command | Expected result |
+|---|---|---|
+| FOS version | `version` | Note full version string (e.g. `v9.2.1d`) |
+| Switch health | `switchstatusshow` | All LEDs/ports green; status HEALTHY |
+| Fabric status | `fabricshow` | All expected switches present; no unknown domains |
+| ISL status | `islshow` | All ISLs show state `Up` |
+| Port errors | `porterrshow` | No ports with high CRC, loss-of-sync, or loss-of-signal counts |
+| Zone config active | `cfgshow` | Active zone config matches expected baseline |
+| Recent errors | `errshow` | Review last 20 entries for hardware faults or segmentation events |
+| Principal switch | `fabricshow` | Only one principal switch per fabric; Domain ID stable |
+
 ---
 
-## Verify resolution
+## Step-by-Step Data Collection
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+Run on each affected Brocade switch. SSH as `admin`.
+
+### 1. Get the FOS version and switch serial number
+
+```bash
+# FOS version — include in TAC case description
+version
+
+# Switch information — chassis model + serial number
+switchshow | head -20
+
+# For the full chassis serial number (required to open TAC case)
+chassisshow | grep -i serial
+```
+
+### 2. Capture fabric state (before anything changes)
+
+```bash
+# Full fabric topology — shows all switches, domain IDs, and ISLs
+fabricshow
+
+# Zone configuration — active and saved databases
+cfgshow
+
+# ISL state — all inter-switch links
+islshow
+
+# Port-level error counters — look for CRC, loss-sync, loss-sig
+porterrshow
+```
+
+Copy the full output of each command into a text file. Paste this into the TAC case description — it gives TAC an immediate view of the fabric state at the time of the issue.
+
+### 3. Run supportsave on each affected switch (takes 2–5 minutes per switch)
+
+```bash
+# Configure the SCP destination first (do this once per switch)
+ssave --scp <username>@<scp-server-ip>:<path>
+
+# Run supportsave — generates a full diagnostic archive
+supportsave
+
+# The archive is transferred automatically to the SCP destination
+# It includes: running config, all logs, zone database, port stats, SNMP history
+```
+
+Run supportsave on **every** switch in the affected fabric, not just the one that appears to be the source. Fabric issues often show on the downstream switch, not the root cause switch.
+
+### 4. Capture the error log (timeline of events)
+
+```bash
+# Switch event log — last 100 entries; paste into TAC case
+errshow | head -100
+
+# For long-running incidents, save the full errshow to a file
+errshow > /tmp/errshow-$(hostname)-$(date +%Y%m%d).txt
+```
+
+### 5. Write the timeline
+
+```text
+FOS version: v9.2.1d build 2023120
+Switch affected: brocade-core-01.corp.local (Domain ID 1)
+Switch serial: BRCxxxxxxx (from chassisshow)
+Fabric: Fabric A (two-switch core-edge)
+Issue first observed: 2026-06-14 14:30 UTC
+Last known good state: 2026-06-14 09:00 UTC
+Changes in the 24h before the issue:
+  - 09:00: Firmware upgrade FOS 9.2.0 → 9.2.1d applied to brocade-edge-02
+  - 14:25: brocade-core-01 reported "ISL E-Port Isolated" on port 16
+  - 14:30: 12 hosts lost access to storage on fabric A
+Steps already taken:
+  - fabricshow: brocade-edge-02 now shows as unknown domain (not in fabric)
+  - ISL between core-01 port 16 and edge-02 port 0 is now disabled (zoning conflict)
+  - Did NOT change any zone configuration or reboot switches
+Blast radius: 12 hosts on fabric A cannot see storage; VMs on those hosts have I/O stalled
+```
+
+---
+
+## How to Open the Case on Broadcom Support Portal
+
+1. Go to **support.broadcom.com** and sign in with your Broadcom account. If you do not have one: click **Register** and use your company email — your switch serial numbers must be registered under your account for entitlement.
+
+2. Click **Open a New Case** in the top navigation.
+
+3. Under **Select Product Family**, choose **Brocade** → **Brocade Fibre Channel Switches**.
+
+4. Under **Product**, select your switch model (e.g. Brocade G720, Brocade X7).
+
+5. Under **Serial Number**, enter the chassis serial number from `chassisshow`. This is required to validate your support entitlement.
+
+6. Under **Severity**, select:
+   - **Severity 1 — Critical**: Fabric completely down; all hosts on this fabric cannot access storage; VMs have I/O stalled; production outage; no workaround
+   - **Severity 2 — High**: Partial fabric degradation; some hosts affected; ISLs down but alternate paths still exist; production impact with temporary workaround
+   - **Severity 3 — Medium**: Single switch or port issue; fabric topology intact; no immediate data path loss
+   - **Severity 4 — Low**: How-to question, pre-upgrade planning, or non-urgent configuration review
+
+7. In the **Summary** field: switch model + symptom + scope. Example: `Brocade G720 core-01 Domain 1 — ISL isolated after FOS 9.2.1d upgrade; 12 hosts lost fabric-A storage access at 14:30 UTC`.
+
+8. In the **Description** field, paste:
+   - FOS version and switch serial from Step 1
+   - fabricshow output showing the isolation
+   - errshow output around the time of failure
+   - The timeline from Step 5
+   - What you have already tried
+
+9. Under **Attachments**, upload:
+   - The supportsave archive from each affected switch (one ZIP per switch)
+   - The errshow text file from Step 4
+
+10. Click **Submit**. You will receive a case number by email immediately.
+
+11. **Severity 1 only:** call Broadcom TAC after submission:
+    - Find the number for your region at **support.broadcom.com → Contact Support**
+    - State "Severity 1 — fabric down, hosts have no storage access" at the start of the call.
+    - Have the case number and switch serial number ready.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open case at support.broadcom.com with supportsave bundles from all switches
+         ↓
+Step 2 — T1 TAC engineer acknowledges and confirms bundles received (typically 30 min–2 hr)
+         ↓
+Step 3 — If no meaningful progress in 2 hours for Sev1 or 1 business day for Sev2:
+         → Reply in the case: "Requesting escalation to Senior Brocade SAN Engineer"
+         → State: "Impact: [N] hosts cannot access storage on fabric [A/B]; I/O stalled"
+         ↓
+Step 4 — Senior SAN Engineer is assigned; they may request remote access to the switch
+         → Enable remote access: TAC will connect via SSH to the switch through your jump host
+         → Have the TAC tunnel or Webex session ready
+         ↓
+Step 5 — If issue requires firmware-level investigation or a code defect:
+         → Senior engineer escalates to Brocade Engineering
+         → Engineering may provide a patch FOS build if a defect is confirmed
+         ↓
+Step 6 — For full fabric down with no path to restore, or 24h+ without resolution:
+         → Request escalation to Broadcom TAC manager
+         → Add to case: "Escalation requested — fabric down, N hosts with no storage, Xh+ elapsed"
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Change or commit zone configuration during investigation | Changes enforcement state; makes TAC diagnosis harder | Freeze all zone changes until TAC gives explicit go-ahead |
+| Reboot the principal switch during an active incident | Can cause domain ID conflicts and worsen fabric stability | Only reboot if TAC says it is safe and has seen the current supportsave |
+| Replace SFPs or ISL cables without TAC guidance | The fault may be in switch firmware, not hardware | Let TAC confirm the hardware is the root cause first |
+| Upgrade FOS during the incident | Adds variables; may not fix the issue; can worsen state | Only upgrade FOS if TAC confirms it is the fix and provides the build |
+| Disable and re-enable ISL ports randomly | Can trigger additional segmentation events | Follow TAC's specific port sequence |
+| Remove switches from the fabric manually | Loses diagnostic data from those switches | Keep all switches connected; let TAC analyse the full topology |
+
+---
+
+## Useful Commands for Case Updates
+
+Paste these into case replies to show TAC the current state.
+
+```bash
+# Fabric topology (paste after every significant change or update)
+fabricshow
+
+# ISL state
+islshow
+
+# Port state with speed and status
+switchshow
+
+# Error log snapshot
+errshow | head -50
+
+# Port error counters (flag any high CRC or loss-of-sync)
+porterrshow
+
+# Zone config — confirm active config name
+cfgshow | grep -E "cfg:|Defined|Effective"
+
+# SNMP trap history (shows hardware events)
+snmpconfig --show
+
+# Firmware revision
+version
+```
+
+---
+
+## Support Tiers and SLA Reference
+
+| Severity | Definition | Initial Response SLA |
+|---|---|---|
+| Sev 1 — Critical | Fabric down; all hosts without storage; production outage | 30 minutes (24×7) |
+| Sev 2 — High | Partial fabric degradation; alternate paths exist | 4 hours |
+| Sev 3 — Medium | Single switch/port issue; no I/O impact | 1 business day |
+| Sev 4 — Low | How-to, planning, non-urgent configuration | 2 business days |
 
 ---
 
 ## See also
 
-- [Fabric Os — Diagnostics](diagnostics/)
-- [Fabric Os — Common Issues](common-issues/)
+- [Brocade Fabric OS — Diagnostics](diagnostics/)
+- [Brocade Fabric OS — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `fabricshow` and confirm all expected switches appear with correct domain IDs
+- Run `islshow` and confirm all ISLs show `Up`
+- Run `porterrshow` and confirm port error counters are not incrementing
+- Verify all initiator-target zones are active: `cfgshow` shows the expected active config
+- On the affected hosts: run an I/O test (e.g. `dd if=/dev/sdb bs=1M count=100 of=/dev/null`) and confirm storage is accessible
+- Monitor `errshow` for 15 minutes and confirm no new fabric isolation or port fault events

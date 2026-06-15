@@ -7,9 +7,8 @@ search:
 ---
 # Veeam — Escalation
 
-
 <div class="kb-summary">
-Veeam case creation, log export, and Veeam support escalation procedures for unresolved backup and restore failures.
+How to escalate Veeam backup issues to Veeam support: what data to collect, how to export the log bundle, step-by-step case creation on the Veeam portal, and the escalation path when progress stalls.
 
 *Applies to: Veeam 12.x*
 </div>
@@ -17,85 +16,238 @@ Veeam case creation, log export, and Veeam support escalation procedures for unr
 ```text
 ┌───────────────────────────────────────── Veeam — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    Veeam — Escalation Path                                    │   │
-│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
-│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
-│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
-│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate Veeam issues to vendor support when a job fails consistently with no                        │
+│  workaround, backup data is suspected corrupt, or a restore is failing in an                          │
+│  active DR scenario. Export the log bundle BEFORE opening the case.                                   │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Information to Collect Before Escalating                           │   │
-│   │                Product version: Veeam version string from About / version command             │   │
-│   │                           Full log bundle: Start-VBRInstantVMRecovery                         │   │
-│   │                     Symptom timeline: when first occurred; any changes made                   │   │
-│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
-│   │                    Error codes: exact error messages and exit codes from logs                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
+│   │  VBR Console: Help → Support Information     │  │  Go to my.veeam.com → sign in               │   │
+│   │  Export logs for the failing job session     │  │  Product: Veeam Backup & Replication        │   │
+│   │  Note Veeam version + build (Help → About)   │  │  Severity: S1 data loss / S2 major / S3     │   │
+│   │  Copy full error text from job statistics    │  │  Attach log ZIP + error text + timeline      │  │
+│   │  Write timeline: last success → first fail   │  │  Note job name + session ID in description  │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  For Sev1: open the portal case AND call Veeam support immediately after.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm logs received          │  │  Do not delete failed restore points        │   │
+│   │  T2: senior engineer assigned + session      │  │  Do not run Health Check mid-incident       │   │
+│   │  T3: engineering review for code-level fix   │  │  Do not re-run the failing job repeatedly   │   │
+│   │  Escalate if no progress within SLA          │  │  Do not clear the job history logs          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
-│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
-│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
-│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
-│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
-│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
-│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
-│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
-│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
-│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
-│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
-│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
-│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
-│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│  VBR            = Veeam Backup & Replication; the core product                                        │
+│  Backup Server  = Windows host running the VBR service; central coordinator                           │
+│  Backup Proxy   = data mover VM or host; moves data between source and repository                     │
+│  Log bundle     = Help → Support Information → Export Logs; required for all cases                    │
+│  Session ID     = unique ID of the job run (session); visible in job stats view                       │
+│  CBT            = Changed Block Tracking; VMware VADP mechanism for incremental backup                │
+│  SOBR           = Scale-Out Backup Repository; tiered extents; cloud offload                          │
+│  my.veeam.com   = Veeam Customer Support Portal; case creation and log upload                         │
+│  Sev1           = business-critical severity; active data loss or restore failure                     │
+│  ProSupport     = premium Veeam support tier; 1-hour Sev1 SLA; designated engineer                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-Veeam support is accessed via the Veeam Customer Support Portal at my.veeam.com. Cases are raised by selecting the product (Veeam Backup & Replication), specifying the version, and classifying severity. ProSupport tiers provide enhanced SLAs and a designated technical account manager for enterprise customers. Before opening a case, export the Veeam log bundle from the console to provide the full diagnostic context immediately.
 
-**Collecting log export**
-
-1. In the VBR console: Main Menu > Help > Support Information
-2. Click "Export Logs" — select the job or time range relevant to the issue
-3. The wizard packages logs from the Backup Server and relevant proxies into a single ZIP archive
-
-**Required information for a support case**
-
-- VBR version (Help > About)
-- Infrastructure type (VMware / Hyper-V / Agent)
-- Job name and session ID of the failing job
-- Error message from the job statistics view (copy the full text)
-- Log export ZIP from the console
-
-**Support tiers**
-
-| Tier | Sev 1 SLA | Availability | Notes |
-|---|---|---|---|
-| Production | 2 hours | 24x7 | Standard enterprise |
-| ProSupport | 1 hour | 24x7 | Designated engineer |
-| ProSupport Plus | 30 minutes | 24x7 | TAM + proactive monitoring |
+---
 
 ## Before you begin
 
-- **Access:** Backup admin role on backup server; target system credentials
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** Backup Administrator role on the Veeam Backup Server; access to VBR Console; Veeam support account (my.veeam.com) with active support entitlement
+- **Do this first:** collect all data below before retrying the job or changing configuration. Veeam will ask for the log bundle in their first response
+- **Do NOT retry the failing job** repeatedly — each retry session overwrites the most recent session log and makes it harder to diagnose the root cause
+- **Do NOT clear VBR logs** or job history during an active investigation — the logs are the primary diagnostic data
 
 ---
 
+## Pre-Escalation Self-Check
+
+Run these before opening the case. Many Veeam issues are resolvable without vendor support.
+
+| Check | Where to look | Expected result |
+|---|---|---|
+| Veeam version | VBR Console → Help → About | Note full version string (e.g. 12.1.2.172) |
+| Job failure error | VBR Console → Jobs → select job → Session → scroll to failed task | Read exact error text |
+| Proxy status | VBR Console → Backup Infrastructure → Backup Proxies | All proxies show Available |
+| Repository space | VBR Console → Backup Infrastructure → Backup Repositories | Free space > 15% |
+| Backup Server Windows Event Log | Event Viewer → Application + System logs around failure time | Note any unexpected errors |
+| vSphere connectivity | VBR Console → Managed Servers → right-click vCenter → Rescan | Completes without error |
+| CBT status (if incremental failing) | PowerShell: `Get-VM <vmname> | Select Name, @{N='CBT';E={$_.ExtensionData.Config.ChangeTrackingEnabled}}` | Should be True for tracked VMs |
+| Repository path accessible | From Backup Server: test-path the repository UNC path | Path resolves and is writable |
+
 ---
 
-## Verify resolution
+## Step-by-Step Data Collection
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+### 1. Get the Veeam version and build number
+
+In VBR Console: click the **Help** menu → **About**. Note the full version string (example: `Veeam Backup & Replication 12.1.2.172`). Include this in the case description.
+
+### 2. Get the job session ID and exact error text
+
+1. In VBR Console, click **Jobs** (left panel) → right-click the failing job → **Statistics**.
+2. In the session view, click the failed task (the VM or workload that failed).
+3. Copy the full error message including error code (example: `Error: The process cannot access the file because it is being used by another process. Failed to read CBT data.`).
+4. Note the **Session ID** shown at the top of the session statistics window.
+
+### 3. Export the Veeam log bundle
+
+1. In VBR Console: click the **Help** menu (hamburger/menu icon in top left) → **Support Information**.
+2. Click **Export Logs**.
+3. In the Export Wizard:
+   - Select **Backup Server** and any **Backup Proxy** involved in the failing job
+   - Select the **Time Range** that covers the period of the failure (set start time to 1 hour before the first failure)
+   - Click **Export**
+4. Wait for the wizard to collect logs from the Backup Server and Proxy nodes.
+5. The log bundle ZIP is saved to `C:\ProgramData\Veeam\Backup\` by default. Note the exact path.
+
+This ZIP file is the most important attachment for the support case. It contains all service logs, job session data, and configuration snapshots.
+
+### 4. Write the timeline
+
+```text
+Veeam version: 12.1.2.172
+Backup Server: veeam-backup-01.corp.local
+Job name: VMware_Gold_Production
+Session ID: a7f2c4b1-...
+Error text: "Failed to read CBT data (code 10040)" — exact copy from session stats
+Issue first observed: 2026-06-14 02:15 UTC (nightly backup run)
+Last known good backup: 2026-06-13 02:30 UTC (all VMs successful)
+Changes in the 24h before the issue:
+  - 2026-06-13 18:00: vCenter 8.0 U2b → U2c patched
+  - 2026-06-14 01:00: SOBR performance tier capacity extended
+Steps already taken:
+  - Manually triggered a retry: failed with same error
+  - Checked repository space: 22% free
+  - Proxy shows Available in console
+Blast radius: 47 VMs in the backup job failed; no successful backup for 24h
+```
+
+---
+
+## How to Open the Case on the Veeam Support Portal
+
+1. Go to **my.veeam.com** and sign in with your Veeam account. If you do not have one: click **Register** and use your company email — entitlement is linked to your Veeam license.
+
+2. Click **Open a Case** or navigate to **Support Cases** → **New Case**.
+
+3. Under **Product**, select **Veeam Backup & Replication**.
+
+4. Under **Version**, select your exact version from the drop-down (e.g. `12.1`).
+
+5. Under **Platform / Hypervisor**, select your environment (VMware vSphere, Hyper-V, Physical, etc.).
+
+6. Under **Severity**, select:
+   - **Severity 1 — Critical**: Active data loss (backup data known corrupt); restore is failing in an active DR scenario; entire backup infrastructure is offline; no workaround exists
+   - **Severity 2 — High**: All backup jobs failing; backup chain broken; significant data protection gap but no immediate data loss
+   - **Severity 3 — Medium**: Some jobs failing; single VM or job affected; workaround exists or impact is limited
+   - **Severity 4 — Low**: How-to question, configuration advice, or non-urgent inquiry
+
+7. In the **Summary** field: product + symptom + scope. Example: `VBR 12.1 — CBT read error on 47 VMware VMs since nightly run 2026-06-14 02:15 UTC; no backup for 24h`.
+
+8. In the **Description** field, paste:
+   - The Veeam version and build from Step 1
+   - The job name and Session ID from Step 2
+   - The exact error text from Step 2
+   - The timeline from Step 4
+   - Steps already tried
+
+9. Under **Attachments**, upload the log bundle ZIP from Step 3. If the file exceeds 200 MB, the portal will provide an FTP upload link — use that.
+
+10. Click **Submit**. You will receive a case number immediately by email.
+
+11. **Severity 1 only:** call Veeam support immediately after submission:
+    - North America: +1-888-VEEAM-7U (check my.veeam.com for current numbers)
+    - EMEA: check my.veeam.com → Support → Contact Us for your regional number
+    - State "Severity 1 — active DR restore failing" at the start of the call.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open case at my.veeam.com with log bundle attached
+         ↓
+Step 2 — T1 support acknowledges and confirms logs received (typically 1–2 hr)
+         ↓
+Step 3 — If no meaningful progress within SLA (1 hr for Sev1, 4 hr for Sev2):
+         → Reply in the case: "Requesting escalation to Senior Veeam Engineer"
+         → State impact: "[47 VMs unprotected / restore failing in DR / chain broken]"
+         ↓
+Step 4 — Senior engineer is assigned; they may request a live remote session
+         → Have VBR Console open and screen sharing ready (Teams/Zoom)
+         → Ensure SSH/RDP to Backup Server is accessible
+         ↓
+Step 5 — If issue requires code-level investigation or patch:
+         → Senior engineer escalates to Veeam Engineering
+         → Engineering may provide a hotfix build if a product bug is confirmed
+         ↓
+Step 6 — For active data loss or restore failure in a live DR scenario:
+         → Request escalation to Veeam ProSupport duty manager
+         → Add to case: "Escalation requested — active DR restore failing; data at risk"
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Delete failed restore points to "fix" the chain | Permanent data loss if those are your only backups for that period | Let Veeam support guide the chain repair procedure |
+| Re-run the failing job multiple times | Creates multiple failed sessions; each retry can overwrite diagnostic log state | Run once to confirm the failure, then stop and open a case |
+| Run Health Check on the failing chain mid-incident | Can attempt reads that fail and extend the incident | Wait for Veeam support to advise on Health Check timing |
+| Clear VBR log files from the Backup Server | Destroys diagnostic data that Veeam support needs | Leave logs in place; export via the Support Information wizard |
+| Reset CBT without Veeam guidance | Forces full backup; may not fix underlying issue | Let Veeam confirm whether CBT reset is the correct action |
+| Upgrade Veeam mid-incident | Adds variables; may change log format for the case | Freeze all changes until the case is resolved |
+
+---
+
+## Useful Commands for Case Updates
+
+```powershell
+# From Veeam Backup Server PowerShell (run as Administrator)
+# Connect to VBR server
+Connect-VBRServer -Server localhost
+
+# List failed sessions in last 24 hours
+Get-VBRSession | Where-Object {$_.Result -eq "Failed" -and $_.CreationTime -gt (Get-Date).AddHours(-24)} |
+  Select-Object Name, CreationTime, EndTime, Result | Format-Table -AutoSize
+
+# Show the exact error for a specific session
+Get-VBRSession | Where-Object {$_.Id -eq '<session-id>'} | Select-Object -ExpandProperty Log |
+  Where-Object {$_.Status -eq 'EFailed'} | Select-Object -ExpandProperty Title
+
+# Check CBT status for VMs in a job
+Get-VBRJob -Name "<job-name>" | Get-VBRJobObject | ForEach-Object {
+  $vm = Find-VBRObject -Entity $_.Object
+  [PSCustomObject]@{VM=$_.Name; CBT=$vm.ExtensionData.Config.ChangeTrackingEnabled}
+}
+
+# Proxy and repository availability
+Get-VBRViProxy | Select-Object Name, Host, Enabled, Type
+Get-VBRBackupRepository | Select-Object Name, FriendlyPath, IsOutOfDate
+```
+
+---
+
+## Support Tiers and SLA Reference
+
+| Tier | Sev 1 SLA | Availability | Notes |
+|---|---|---|---|
+| Standard | 4 hours | Business hours | For non-production environments |
+| Production | 2 hours | 24×7 | Standard enterprise support |
+| ProSupport | 1 hour | 24×7 | Designated senior engineer; proactive health checks |
+| ProSupport Plus | 30 minutes | 24×7 | TAM + proactive monitoring + quarterly reviews |
+
+Check your support tier under **My Contracts** at my.veeam.com.
 
 ---
 
@@ -103,3 +255,14 @@ Veeam support is accessed via the Veeam Customer Support Portal at my.veeam.com.
 
 - [Veeam — Diagnostics](../diagnostics/)
 - [Veeam — Common Issues](../common-issues/)
+
+---
+
+## Verify resolution
+
+- The failing job runs successfully and all expected VMs complete with status `Success`
+- Check the latest session statistics: no tasks in `Warning` or `Failed` state
+- Verify the backup chain integrity: VBR Console → Backup → right-click repository → Check → verify restore points are consistent
+- Confirm last restore point timestamp is within the expected RPO window
+- Run a test restore of one VM from the new restore point and confirm it powers on successfully
+- Monitor the next 2 backup runs to confirm the fix is stable
