@@ -7,186 +7,294 @@ tags:
 search:
   boost: 1.5
 ---
-# ESXi Diagnostics
-
+# ESXi — Diagnostics
 
 <div class="kb-summary">
-ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Troubleshooting, Host Disconnect Troubleshooting, Maintenance Mode Validation.
+ESXi diagnostic commands: read vmkernel.log and hostd.log for errors, use esxcli for live storage and network state, run esxtop in batch mode to capture CPU/memory/disk/network metrics, restart hostd and vpxa, test connectivity to vCenter, and collect the vm-support bundle for VMware SRs.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-ESXi Diagnostic Data Sources
 ```text
 ┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
-│  Log file locations, esxcli diagnostic commands, and support bundle collection.                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: vmkernel.log (storage/network/crash) → hostd.log → esxcli live state          │     │
+│   │   Host disconnected from vCenter: check vpxa.log; restart management agents                  │    │
+│   │   Performance issue: esxtop -b -d 2 -n 30 to capture metrics; check DAVG > 25ms            │      │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │                Key Log Files                 │  │          esxcli Diagnostic Commands         │   │
-│   │            /var/log/vmkernel.log             │  │             esxcli system stats             │   │
-│   │              /var/log/hostd.log              │  │           esxcli network stat get           │   │
-│   │              /var/log/vpxa.log               │  │           esxcli storage core path          │   │
-│   │            /var/log/fdm.log (HA)             │  │            esxcli vm process list           │   │
-│   │            /scratch/log (SD/USB)             │  │            esxcli system process            │   │
+│   │   /var/log/vmkernel.log: kernel/storage/net  │  │   esxcli storage core path list            │    │
+│   │   /var/log/hostd.log: VM ops and config      │  │   esxcli network ip interface list         │    │
+│   │   /var/log/vpxa.log: vCenter agent           │  │   esxcli vm process list                   │    │
+│   │   /var/log/fdm.log: HA membership            │  │   esxcli system stats                      │    │
+│   │   /var/log/syslog.log: OS syslog             │  │   esxcli storage vmfs extent list          │    │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Logs → esxcli live state → esxtop performance → support bundle for GSS.                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              esxtop Performance              │  │                Support Bundle               │   │
-│   │            esxtop interactive TUI            │  │          vm-support -w /tmp/bundle          │   │
-│   │             c=CPU, m=mem, d=disk             │  │           vCenter: Export Support           │   │
-│   │            n=network, i=interrupt            │  │           Includes logs + configs           │   │
-│   │             batch mode: -b -n 5              │  │             Upload to VMware SR             │   │
-│   │             DAVG > 25ms = issue              │  │             Keep for 30 days min            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 hosts, SAN/NAS storage, management network, syslog server for logs                               │
+│  Physical Infrastructure:                                                                             │
+│  x86 host · SAN/NAS storage · management network · vCenter server · syslog server                     │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  vmkernel.log = main ESXi kernel log; storage/network/crash events                                    │
-│  hostd.log   = host daemon log; VM operations, config changes                                         │
-│  vpxa.log    = vCenter agent log; connection issues to vCenter                                        │
-│  fdm.log     = HA agent log; cluster membership and failover events                                   │
-│  esxtop      = real-time performance tool; CPU/mem/disk/net metrics                                   │
-│  DAVG        = device average latency; > 25ms indicates storage issue                                 │
-│  KAVG        = kernel average latency; VMkernel queue delay                                           │
-│  vm-support  = CLI tool to create ESXi diagnostic bundle                                              │
-│  SR          = Service Request; VMware GSS support ticket                                             │
-│  /scratch    = persistent log path; on SD/USB hosts may be volatile                                   │
-│  batch mode  = esxtop -b -n N; captures N iterations non-interactively                                │
-│  Support bundle = zip of logs, configs, hardware state for GSS analysis                               │
+│  vmkernel.log  = main ESXi kernel log; first stop for storage errors, NMP path events, crashes        │
+│  hostd.log     = host daemon log; VM power-on/off, snapshot, config changes                           │
+│  vpxa.log      = vCenter agent log; host connection issues to vCenter                                 │
+│  fdm.log       = HA agent log; cluster membership and failover events                                 │
+│  esxtop        = real-time performance tool; CPU/mem/disk/net metrics per VM and host                 │
+│  DAVG          = device average latency in esxtop; > 25ms indicates storage issue                     │
+│  KAVG          = kernel average latency; queue depth inside VMkernel                                  │
+│  vm-support    = CLI tool to create ESXi diagnostic bundle                                            │
+│  /scratch      = persistent log path; on SD/USB hosts this may be volatile or missing                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-### Collect Support Bundle
 
-```bash
-vm-support -n -w /tmp/
-# Output: /tmp/esx-<hostname>-<date>.tgz
-# Or: vSphere Client → Host → Actions → Export System Logs
+```mermaid
+graph TD
+    A([ESXi Issue]) --> B{What type of problem?}
+    B -->|Host disconnected from vCenter| C[Check vpxa.log on host\nping vCenter from ESXi]
+    B -->|VM won't power on or fails| D[Check vmkernel.log\nCheck hostd.log for VM task error]
+    B -->|Storage I/O errors or latency| E[esxcli storage core path list\nesxtop -b DAVG check]
+    B -->|Network connectivity issue| F[esxcli network ip interface list\nesxcli network vm list]
+    B -->|High CPU or memory on host| G[esxtop interactive mode\nCheck CPU ready and balloon]
+    B -->|HA or vMotion failure| H[Check fdm.log\nCheck cluster events in vCenter]
+    C --> I{Management agent running?}
+    I -->|Yes, but still disconnected| J[Check vCenter connectivity\nping vcenter-ip from ESXi]
+    I -->|No| K[Restart management agents\n/etc/init.d/hostd restart\n/etc/init.d/vpxa restart]
+    D --> L[tail /var/log/vmkernel.log | grep vm-name\ntail /var/log/hostd.log | grep ERROR]
+    E --> M{Path state?}
+    M -->|Dead paths| N[esxcli storage core path list | grep dead\nCheck storage network and switch zoning]
+    M -->|Paths OK, latency high| O[Check storage array; check esxtop DAVG vs KAVG\nKAVG high = queue depth issue on host]
+    F --> P[esxcli network vm list -w vm-name\nCheck vmkping to test VMkernel adapters]
+    G --> Q[esxtop batch: esxtop -b -d 2 -n 30\nFilter CSV for %RDY > 10 or MCTLSZ > 0]
+    H --> R[tail /var/log/fdm.log | grep -i error\nCheck HA heartbeat datastores]
+    J --> S[Collect vm-support bundle\nvm-support -n -w /tmp/]
+    K --> S
+    L --> S
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    S --> T[Open VMware SR\nAttach bundle]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I,M dark
+    class C,D,E,F,G,H,J,K,L,N,O,P,Q,R action
+    class S,T escalate
 ```
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** SSH to the ESXi host (root); vSphere Client access to view events and alarms; the host management IP address
+- **Gather first:** the specific symptom (VM fails to power on, host disconnected from vCenter, storage error), the host name, and the time the issue started
+- **Scope:** confirm whether the issue affects one VM, one datastore, one VMkernel adapter, or the entire host
 
 ---
 
-## Performance Troubleshooting
+## Step 1 — Check log files
 
-### Common Symptoms
+```bash
+# SSH to the ESXi host
+ssh root@<esxi-host-ip>
 
-- High CPU ready time
-- High memory ballooning or swapping
-- High storage latency
-- Slow VM response
-- VM time drift
-- Host contention alarms
+# Most recent vmkernel errors (storage, network, hardware)
+tail -100 /var/log/vmkernel.log | grep -i "error\|warning\|fail\|SCSI\|NMP\|PSP"
 
-### Key Metrics
+# Most recent hostd errors (VM operations, config, snapshot)
+tail -100 /var/log/hostd.log | grep -i "error\|exception\|fail"
+
+# vCenter agent log (for host disconnection issues)
+tail -100 /var/log/vpxa.log | grep -i "error\|disconnect\|timeout\|fail"
+
+# HA agent log (for cluster membership and failover issues)
+tail -100 /var/log/fdm.log | grep -i "error\|fail\|partition"
+
+# Follow vmkernel.log in real time during a failing operation
+tail -f /var/log/vmkernel.log
+
+# Persistent log location (on hosts with scratch disk)
+ls /scratch/log/
+```
+
+---
+
+## Step 2 — Check live storage state
+
+```bash
+# List all storage paths and their state
+esxcli storage core path list
+# Key fields: Plugin=NMP, State=active/dead/standby, Is Local SAN=true/false
+# Problem: State=dead for all paths to a LUN = SAN connectivity issue
+
+# List dead paths only
+esxcli storage core path list | grep -A5 "State: dead"
+
+# Check NMP path selection policy and current path for each LUN
+esxcli storage nmp device list
+
+# Check VMFS datastores visible to this host
+esxcli storage vmfs extent list
+# Each datastore shows: partition, LUN UID, and datastore name
+
+# List HBAs and their state
+esxcli storage core adapter list
+# Expected: LinkState=link-up for FC HBAs; Status=online
+
+# Check storage SCSI error history
+grep "SCSI\|NMP\|LUN" /var/log/vmkernel.log | tail -50
+```
+
+---
+
+## Step 3 — Check network state
+
+```bash
+# List VMkernel adapters and their IPs
+esxcli network ip interface list
+# Shows: vmk0=management, vmk1=vMotion, vmk2=storage (typically)
+# Expected: all required VMkernel adapters listed with correct IPs
+
+# Test VMkernel adapter connectivity
+vmkping -I vmk0 <gateway-ip>     # management network
+vmkping -I vmk1 <vmotion-ip>     # vMotion network
+vmkping -I vmk2 <storage-ip>     # storage network (NFS/iSCSI)
+
+# List VMs and their network adapters (for per-VM network issues)
+esxcli network vm list
+
+# List port groups and their VLAN tags
+esxcli network vswitch standard list
+
+# Check uplink (physical NIC) state
+esxcli network nic list
+# Expected: Speed > 0 and Link=up for all active NICs
+
+# Check for packet drops on NICs
+esxcli network nic stats get -n vmnic0
+```
+
+---
+
+## Step 4 — Performance diagnostics with esxtop
+
+```bash
+# Interactive mode — press keys to switch views
+esxtop
+# c = CPU view    m = Memory view    d = Disk view    n = Network view
+
+# Batch mode — capture 30 samples at 2-second intervals to CSV
+esxtop -b -d 2 -n 30 > /tmp/esxtop.csv
+
+# Key thresholds to check in esxtop:
+# CPU:     %RDY (ready time)  > 10% per vCPU = problem
+#          %SWPWT              > 0            = swapping (memory pressure)
+# Memory:  MCTLSZ (balloon)   > 0            = host under memory pressure
+#          SZSWAP (swap)       > 0            = critical memory pressure
+# Disk:    DAVG (device avg lat) > 25ms       = storage problem
+#          KAVG (kernel avg lat) > 5ms        = ESXi queue depth issue
+# Network: DRPTX / DRPRX      > 0            = packet drops; check NIC and switch
+
+# Transfer the esxtop CSV for analysis
+scp root@<esxi-host>:/tmp/esxtop.csv /local/path/
+# Open in Performance Analyzer or Excel; filter by column headers
+```
+
+Key metrics thresholds:
 
 | Metric | Normal | Caution | Problem |
 |---|---|---|---|
-| CPU Ready | < 5% | 5–10% | > 10% |
-| Memory Balloon | ~0 | Any | Growing |
-| Memory Swap | 0 | Any | Growing |
-| Datastore Latency | < 10 ms | 10–20 ms | > 20 ms |
+| CPU Ready (%RDY) | < 5% | 5–10% | > 10% |
+| Memory Balloon (MCTLSZ) | 0 | Any | Growing |
+| Memory Swap (SZSWAP) | 0 | Any | Growing |
+| Datastore Latency (DAVG) | < 10 ms | 10–25 ms | > 25 ms |
+| Kernel Latency (KAVG) | < 2 ms | 2–5 ms | > 5 ms |
 
-### esxtop
+---
 
-```bash
-esxtop
-```
-
-Interactive mode keys:
-- `c` — CPU view
-- `m` — Memory view
-- `d` — Disk view
-- `n` — Network view
+## Step 5 — Troubleshoot host disconnection from vCenter
 
 ```bash
-# Batch capture (60 seconds, 2-second intervals)
-esxtop -b -d 2 -n 30 > /tmp/esxtop.csv
-```
+# On the ESXi host — check vpxa (vCenter agent) status
+/etc/init.d/vpxa status
 
-### First Actions
+# On the ESXi host — check hostd (host daemon) status
+/etc/init.d/hostd status
 
-1. Identify the affected VM or host
-2. Check CPU ready
-3. Check memory ballooning or swap
-4. Check datastore latency
-5. Check network packet drops
-6. Review recent changes
-
-## Host Disconnect Troubleshooting
-
-### Symptoms
-
-- ESXi host shows disconnected or not responding in vCenter
-- vCenter cannot manage the host
-- Host tasks fail or timeout
-- VMs may still be running but management is degraded
-
-### Likely Causes
-
-- Recent configuration change
-- DNS, certificate, or authentication issue
-- Resource pressure
-- Failed service (`hostd`, `vpxa`)
-- Storage or network dependency issue
-- Version or compatibility mismatch
-
-### Troubleshooting Workflow
-
-1. Confirm scope — is it one host or multiple?
-2. Check recent changes in vCenter Tasks & Events
-3. Review alarms and events on the affected host
-4. Validate management connectivity (ping, traceroute to management vmk0 IP)
-5. Check logs: `hostd.log`, `vpxa.log`, `vmkernel.log`
-6. Isolate the failing dependency (DNS, NTP, certificate, storage)
-7. Apply fix or escalate with evidence
-
-```bash
-# Restart management agents if host is accessible via SSH or console
+# Restart management agents (safe — does not affect running VMs)
 /etc/init.d/hostd restart
 /etc/init.d/vpxa restart
+
+# Verify vCenter is reachable from the ESXi management network
+ping <vcenter-ip>
+nc -zv <vcenter-ip> 443
+
+# Check NTP sync (time drift > 5 minutes can cause cert failures)
+esxcli system time get
+date
+
+# View recent vpxa errors
+grep -i "error\|fail\|timeout" /var/log/vpxa.log | tail -30
 ```
 
-## Maintenance Mode Validation
+---
 
-Use before placing a host into maintenance mode and before returning it to service.
+## Step 6 — Validate storage and network before maintenance
 
-### Pre-Checks
+```bash
+# Confirm host has no active storage I/O errors
+grep "SCSI\|I/O error\|NMP path" /var/log/vmkernel.log | tail -20
 
-- Confirm cluster has sufficient capacity to absorb workload
-- Confirm maintenance window if changes are planned
-- Confirm current health and check recent alerts and tasks
-- Confirm access to management tools
-- Confirm rollback path if configuration changes are made
+# Confirm VM count and state
+esxcli vm process list | wc -l
+# All VMs that will be vMotioned away during maintenance
 
-### Post-Maintenance Validation
+# Check cluster can absorb workload (run from vCenter)
+# vCenter → Cluster → Monitor → Resource Reservation
 
-- Confirm the host is Connected in vCenter
-- Confirm no new critical alarms
-- Confirm monitoring reflects the expected state
-- Confirm related systems still have access
-- Document the result
+# Confirm vMotion VMkernel adapter is active
+esxcli network ip interface list | grep -A5 vmk1
+```
 
-### Rollback
+---
 
-- Revert the changed setting if possible
-- Restore prior configuration from documented state
-- Escalate if rollback requires vendor support
+## Step 7 — Collect support bundle for VMware SR
+
+```bash
+# On the ESXi host
+vm-support -n -w /tmp/
+# Output: /tmp/esx-<hostname>-<date>.tgz
+# -n = no interactive prompt; -w = output directory
+
+# Transfer to a workstation
+scp root@<esxi-host>:/tmp/esx-*.tgz /local/path/
+
+# Alternative: vSphere Client
+# Host → Actions → Export System Logs
+# This downloads logs from vCenter for both the host and vCenter itself
+
+# Include in VMware SR:
+# - vm-support bundle .tgz
+# - esxtop CSV if performance is involved
+# - Specific error lines from vmkernel.log and hostd.log
+# - Time window and VM/datastore names involved
+```
+
+---
+
+## Log locations
+
+| Log | Path | What to look for |
+|---|---|---|
+| VMkernel | `/var/log/vmkernel.log` | Storage SCSI errors, NMP path events, hardware faults |
+| Host daemon | `/var/log/hostd.log` | VM power-on/off failures, snapshot errors, config |
+| vCenter agent | `/var/log/vpxa.log` | Host disconnection from vCenter, agent crashes |
+| HA agent | `/var/log/fdm.log` | Cluster partition, master election, failover events |
+| Syslog | `/var/log/syslog.log` | OS-level and kernel boot events |
+| Scratch | `/scratch/log/` | Persistent logs on hosts with scratch disk |
 
 ---
 
@@ -197,7 +305,7 @@ Use before placing a host into maintenance mode and before returning it to servi
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- `esxcli storage core path list` shows no dead paths for the affected storage
+- The host shows Connected in vCenter with no alarms after management agent restart
+- `esxtop` shows DAVG < 25ms for affected datastores and CPU %RDY < 10%
+- The operation that was failing (VM power-on, vMotion, snapshot) completes successfully

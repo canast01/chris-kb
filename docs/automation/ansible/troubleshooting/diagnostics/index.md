@@ -7,73 +7,175 @@ search:
 ---
 # Ansible — Diagnostics
 
-
 <div class="kb-summary">
-Part of the [Ansible Troubleshooting](../index.md) reference.
+Ansible diagnostic commands: progressively increase verbosity with -v to -vvvv, inspect variables with ansible.builtin.debug, test SSH connectivity, run ad-hoc modules, clear stale fact cache, query AWX/AAP job failures via REST API, and diagnose common module errors.
 
-*Applies to: Ansible 2.14+*
+*Applies to: Ansible 2.14+; AWX / Ansible Automation Platform 2.x*
 </div>
 
-## Before you begin
-
-- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
----
-
-## Diagnostic Workflow
-
-```mermaid
-flowchart TD
-    A[Issue Reported] --> B[--list-hosts\nWhich hosts targeted?]
-    B --> C[--syntax-check\nAny YAML errors?]
-    C --> D[ansible ping\nConnectivity OK?]
-    D --> E[--check --diff\nDry run — what changes?]
-    E --> F[-vvv\nFull connection + task detail]
-    F --> G{Error found?}
-    G -->|Yes| H[ansible.builtin.debug\nInspect variables]
-    G -->|No| I[--step\nInteractive task walkthrough]
-    H --> J[Resolved]
-    I --> J
-```
 ```text
 ┌──────────────────────────────────────── Ansible — Diagnostics ────────────────────────────────────────┐
+│                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Ansible diagnostic sequence: verify connectivity → check variables → inspect module output  │   │
-│   │   Increase verbosity progressively: -v (task results), -vv (input), -vvv (SSH debug), -vvvv   │   │
-│   │       AWX diagnostics: job event log, activity stream, kubectl logs for pod-level errors      │   │
+│   │   Start here: --list-hosts → --syntax-check → ansible -m ping → -vvv to trace the failure   │     │
+│   │   Wrong output: ansible.builtin.debug var=varname; then ansible -m setup for full facts      │    │
+│   │   AWX job failed: Job → Event Log in UI; or GET /api/v2/jobs/ID/job_events/ via API          │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │               CLI Diagnostics                │  │               AWX Diagnostics               │   │
-│   │          ansible host -m ping -vvv           │  │             Job → Event log tab             │   │
-│   │       ansible-playbook --syntax-check        │  │          Settings → Activity stream         │   │
-│   │         ansible -m debug -a "var=x"          │  │           kubectl logs -n awx task          │   │
-│   │       ANSIBLE_DEBUG=1 ansible-play...        │  │             awx jobs stdout <id>            │   │
-│   │       ansible-inventory --list --yaml        │  │           AWX: Support bundle zip           │   │
+│   │   ansible host -m ping -vvv                  │  │   GET /api/v2/jobs/ID/stdout/?format=txt   │    │
+│   │   ansible-playbook --syntax-check            │  │   GET /api/v2/jobs/ID/job_events/          │    │
+│   │   ansible -m debug -a "var=x"               │  │   kubectl logs -n awx pod-name             │     │
+│   │   ANSIBLE_DEBUG=1 ansible-playbook           │  │   GET /api/v2/jobs/?status=failed          │    │
+│   │   ansible-inventory --list --yaml            │  │   AWX UI: Job → Event Log tab              │    │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Activity stream    = AWX audit log; records every API call with user, timestamp, change detail│   │
-│   │         ANSIBLE_DEBUG=1    = env var enabling maximum debug output from Ansible itself        │   │
-│   │     --syntax-check     = parse playbook YAML without executing; catches syntax errors fast    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Physical Infrastructure:                                                                             │
+│  Ansible control node (or AWX/AAP pod) · SSH to managed hosts · inventory (static file / dynamic)     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│  -vvv              = show full SSH connection negotiation and task module details; use for conn errors│
+│  -vvvv             = adds Python module transfer trace; rarely needed; very verbose                   │
+│  ANSIBLE_DEBUG=1   = env var enabling maximum debug from Ansible internals                            │
+│  --syntax-check    = parse playbook YAML without executing; fastest way to find syntax errors         │
+│  --check --diff    = dry-run mode; shows what would change without applying it                        │
+│  hostvars          = Ansible magic variable containing facts for all hosts in the play                │
+│  ansible.builtin.setup = module that gathers all OS facts; use -m setup ad-hoc for inspection         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Variable Inspection
+```mermaid
+graph TD
+    A([Ansible Issue]) --> B{What type of problem?}
+    B -->|Connection error / UNREACHABLE| C[--syntax-check first\nThen ansible host -m ping -vvv]
+    B -->|Task fails or wrong output| D[Add debug var=varname task\nRun with -v to see task result]
+    B -->|Wrong hosts targeted| E[ansible-playbook --list-hosts\nCheck inventory and -l limit]
+    B -->|Variable not resolved| F[ansible-inventory --list\nCheck group_vars and host_vars]
+    B -->|AWX job failed| G[GET /api/v2/jobs/ID/stdout\nCheck event log for task result]
+    B -->|Slow execution| H[ANSIBLE_DEBUG=1 playbook\nProfile with callback_plugins]
+    C --> I{SSH error type?}
+    I -->|Permission denied publickey| J[ssh -vvv to confirm key loaded\ndeploy public key if missing]
+    I -->|Connection refused or timed out| K[Test TCP 22 with nc -zv\nCheck firewall and sshd service]
+    I -->|MODULE FAILURE python not found| L[ansible -m raw -a which python3\nInstall Python on target]
+    I -->|sudo prompt or timeout| M[Check NOPASSWD sudoers\nVerify ansible_become_password]
+    D --> N[ansible-playbook --check --diff\nSee what would change without applying]
+    E --> O[Check -i inventory path and ansible.cfg\nVerify host/group name spelling]
+    F --> P[ansible web01 -m setup -a filter=ansible_network*\nInspect all host facts]
+    G --> Q[kubectl logs -n awx -l app.kubernetes.io/name=task\nCheck AWX task pod errors]
+    J --> R[Collect playbook output with -vvv\nSave to file: 2>&1 | tee ansible-debug.txt]
+    K --> R
+    L --> R
+    M --> R
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
+    class R escalate
+```
+
+## Before you begin
+
+- **Access:** SSH key or service account with sudo on managed hosts; Ansible control node access; AWX admin credentials if using AWX/AAP
+- **Gather first:** the exact error message (full FAILED output block, not just the summary), the affected host or group, the task name, and whether this worked previously
+- **Scope:** confirm whether the issue affects one host, one task, one playbook, or all Ansible runs
+
+---
+
+## Step 1 — Validate playbook and inventory
+
+```bash
+# Check YAML syntax without executing
+ansible-playbook site.yml --syntax-check
+# Expected: no output (success); any output = syntax error with file and line number
+
+# Confirm which hosts would be targeted
+ansible-playbook site.yml -i inventory/ --list-hosts
+# Shows: the exact host list Ansible would connect to; check for typos or wrong groups
+
+# Show all inventory hosts and groups in YAML format
+ansible-inventory -i inventory/ --list --yaml | head -100
+
+# Confirm ansible.cfg is being read (shows active config)
+ansible --version
+# Shows: config file location, python version, and module search path
+
+# Check a single host's variable values
+ansible web01 -i inventory/ -m debug -a "var=hostvars['web01']"
+```
+
+---
+
+## Step 2 — Test connectivity
+
+```bash
+# Ping module — tests SSH, Python, and Ansible module execution
+ansible web01 -i inventory/ -m ping
+# Expected: "pong"
+# Problem: UNREACHABLE or FAILED → proceed to SSH debug
+
+# Test raw SSH as ansible user (bypasses Ansible entirely)
+ssh -i ~/.ssh/ansible_ed25519 -o BatchMode=yes ansible@web01.example.com "echo OK"
+
+# Verbose SSH debug (look for key exchange and auth method)
+ssh -vvv -i ~/.ssh/ansible_ed25519 ansible@web01.example.com
+
+# Test Python on target (common issue on minimal installs)
+ansible web01 -i inventory/ -m raw -a "which python3; python3 --version"
+
+# Test sudo escalation works
+ansible web01 -i inventory/ -m command -a "id" --become
+# Expected: uid=0(root) or the become_user
+
+# Test TCP 22 reachability
+nc -zv web01.example.com 22
+```
+
+---
+
+## Step 3 — Increase verbosity
+
+Each level adds more detail:
+
+```bash
+# -v = task results (show returned values)
+ansible-playbook site.yml -i inventory/ -v
+
+# -vv = show task input parameters
+ansible-playbook site.yml -i inventory/ -vv
+
+# -vvv = show SSH connection negotiation (use for connection failures)
+ansible-playbook site.yml -i inventory/ -vvv
+
+# -vvvv = add Python module transfer trace (very verbose; for module loading issues)
+ansible-playbook site.yml -i inventory/ -vvvv
+
+# Maximum debug (Ansible internal debug messages)
+ANSIBLE_DEBUG=1 ansible-playbook site.yml -i inventory/ 2>&1 | tee ansible-debug.txt
+
+# Step through interactively (prompts before each task)
+ansible-playbook site.yml -i inventory/ --step
+```
+
+---
+
+## Step 4 — Inspect variables and facts
 
 ```yaml
-# Print a variable value mid-play
-- name: Debug variable
+# Add this task inside the play to print a specific variable
+- name: Debug variable value
   ansible.builtin.debug:
     var: nginx_port
 
-# Print multiple variables
-- name: Debug connection info
+# Print multiple variables together
+- name: Debug connection context
   ansible.builtin.debug:
     msg: |
       Host: {{ inventory_hostname }}
@@ -82,115 +184,126 @@ flowchart TD
       OS: {{ ansible_distribution }} {{ ansible_distribution_major_version }}
       Python: {{ ansible_python_interpreter }}
 
-# Print all vars for a host
+# Dump all variables for a host (very verbose)
 - name: Dump all variables
   ansible.builtin.debug:
     var: hostvars[inventory_hostname]
 ```
 
 ```bash
-# From command line — show all facts for a host
+# From command line — gather all OS facts for a host
 ansible web01 -i inventory/ -m ansible.builtin.setup
 
 # Filter facts by prefix
 ansible web01 -i inventory/ -m ansible.builtin.setup -a "filter=ansible_network*"
 ansible web01 -i inventory/ -m ansible.builtin.setup -a "filter=ansible_os_family"
-```
 
-## SSH Connectivity Diagnostics
-
-```bash
-# Test raw SSH as ansible user
-ssh -i ~/.ssh/ansible_ed25519 -o BatchMode=yes ansible@web01.example.com "echo OK"
-
-# Test with verbose SSH
-ssh -vvv -i ~/.ssh/ansible_ed25519 ansible@web01.example.com
-
-# Check if Python exists on target
-ansible web01 -i inventory/ -m ansible.builtin.raw -a "which python3; python3 --version"
-
-# Check sudo works
-ansible web01 -i inventory/ -m ansible.builtin.command \
-  -a "sudo -l" --become-user root
-```
-
-## Module Execution Diagnostics
-
-```bash
-# Run a single module ad-hoc
-ansible web01 -i inventory/ -m ansible.builtin.service \
-  -a "name=nginx state=started" --check
-
-# Run with environment dumped
-ansible web01 -i inventory/ -m ansible.builtin.command \
-  -a "env" | grep -i path
-```
-
-## Fact Caching Issues
-
-```bash
-# Clear stale fact cache
+# Clear stale fact cache if using caching
 rm -rf /tmp/ansible_facts/
-
-# Force fact regather (ignore cache)
-ansible-playbook site.yml -e "gather_facts=true" --flush-cache
-
-# Check when facts were last gathered
-ls -la /tmp/ansible_facts/
-```
-
-## AWX / AAP Job Diagnostics
-
-```bash
-# Get job stdout via API
-curl -H "Authorization: Bearer $AWX_TOKEN" \
-  "https://awx.example.com/api/v2/jobs/1234/stdout/?format=txt"
-
-# Get job events (individual task results)
-curl -H "Authorization: Bearer $AWX_TOKEN" \
-  "https://awx.example.com/api/v2/jobs/1234/job_events/?page_size=50"
-
-# Check recently failed jobs
-curl -H "Authorization: Bearer $AWX_TOKEN" \
-  "https://awx.example.com/api/v2/jobs/?status=failed&page_size=10" \
-  | python3 -m json.tool
-```
-
-## Common Error Patterns
-
-| Error | Likely Cause | Fix |
-|---|---|---|
-| `UNREACHABLE! Connection refused` | SSH not running on target | Start sshd; check firewall |
-| `FAILED! Permission denied (publickey)` | SSH key not deployed | Deploy public key first |
-| `MODULE FAILURE — python not found` | No Python on target | `ansible -m raw -a "dnf install -y python3"` |
-| `[WARNING] No inventory was parsed` | Wrong inventory path | Check `-i` flag or ansible.cfg |
-| `FAILED — Timeout (12s) waiting for privilege escalation prompt` | sudo requires password | Add NOPASSWD to sudoers |
-| `Vault encrypted file, but no vault secret found` | Missing vault password | `--ask-vault-pass` or check vault_password_file |
-| `msg: Invalid/incorrect password` | Wrong become password | Check `ansible_become_password` var |
-| `ERROR! conflicting action statements: template, vars` | YAML parse error | Check task indentation |
-
-## Log Analysis
-
-```bash
-# ansible.cfg — enable logging
-[defaults]
-log_path = /var/log/ansible/ansible.log
-
-# Grep for failures
-grep "FAILED\|UNREACHABLE\|ERROR" /var/log/ansible/ansible.log
-
-# Count failures by host
-grep "FAILED" /var/log/ansible/ansible.log | \
-  grep -oP 'FAILED \[.*?\]' | sort | uniq -c | sort -rn
+ansible-playbook site.yml --flush-cache
 ```
 
 ---
 
-## Verify resolution
+## Step 5 — Dry run and diff
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```bash
+# Dry run — show what tasks would change without applying
+ansible-playbook site.yml -i inventory/ --check
+
+# Diff mode — show content changes (for file, template, copy tasks)
+ansible-playbook site.yml -i inventory/ --check --diff
+
+# Limit to a subset of hosts for safe dry-run testing
+ansible-playbook site.yml -i inventory/ --check --limit web01
+```
+
+---
+
+## Step 6 — AWX / AAP job diagnostics
+
+```bash
+# Get job stdout from AWX via REST API
+AWX_TOKEN="<your-awx-api-token>"
+JOB_ID=1234
+
+curl -H "Authorization: Bearer $AWX_TOKEN" \
+  "https://awx.example.com/api/v2/jobs/$JOB_ID/stdout/?format=txt" | tail -100
+
+# Get per-task event log (most detailed — shows every task result)
+curl -H "Authorization: Bearer $AWX_TOKEN" \
+  "https://awx.example.com/api/v2/jobs/$JOB_ID/job_events/?page_size=50" \
+  | python3 -c "
+import json,sys
+for e in json.load(sys.stdin).get('results', []):
+    if e.get('failed'):
+        print('FAILED task:', e.get('task',''), '|', e.get('host_name',''))
+        print('  msg:', str(e.get('event_data',{}).get('res',{}).get('msg',''))[:200])
+"
+
+# List recently failed AWX jobs
+curl -H "Authorization: Bearer $AWX_TOKEN" \
+  "https://awx.example.com/api/v2/jobs/?status=failed&page_size=10" \
+  | python3 -c "
+import json,sys
+for j in json.load(sys.stdin).get('results', []):
+    print(j.get('id'), '|', j.get('name',''), '|', j.get('finished',''))
+"
+
+# AWX pod logs (for AWX issues, not playbook failures)
+kubectl logs -n awx -l app.kubernetes.io/name=task --tail=100
+```
+
+---
+
+## Step 7 — Collect full debug output for escalation
+
+```bash
+# Capture everything — stdout, stderr, verbose output
+ANSIBLE_DEBUG=1 ansible-playbook site.yml -i inventory/ \
+  -l web01 -vvvv 2>&1 | tee ansible-debug-$(date +%Y%m%d-%H%M).txt
+
+# Include ansible version and environment info
+ansible --version >> ansible-debug-$(date +%Y%m%d-%H%M).txt
+
+# Confirm what's in ansible.cfg (mask any passwords before sharing)
+ansible-config dump --only-changed
+
+# For AWX: export job events from the UI
+# Job → Events tab → Export (downloads CSV of all task events)
+```
+
+---
+
+## Common error patterns
+
+| Error | Likely Cause | Fix |
+|---|---|---|
+| `UNREACHABLE! Connection refused` | SSH not running on target | Start sshd; check firewall rule for TCP 22 |
+| `FAILED! Permission denied (publickey)` | SSH key not deployed | Deploy public key to `authorized_keys` |
+| `MODULE FAILURE — python not found` | No Python on target | `ansible -m raw -a "dnf install -y python3"` |
+| `[WARNING] No inventory was parsed` | Wrong inventory path | Check `-i` flag or `inventory` in ansible.cfg |
+| `Timeout waiting for privilege escalation` | sudo requires password | Add `NOPASSWD` to sudoers for the ansible user |
+| `Vault encrypted file, but no vault secret found` | Missing vault password | `--ask-vault-pass` or check `vault_password_file` |
+| `msg: Invalid/incorrect password` | Wrong become password | Check `ansible_become_password` in host_vars |
+| `conflicting action statements` | YAML parse error in task | Check task indentation and key names |
+
+---
+
+## Log locations
+
+```bash
+# Enable persistent Ansible logging (add to ansible.cfg)
+# [defaults]
+# log_path = /var/log/ansible/ansible.log
+
+# Grep for all failures across the log
+grep "FAILED\|UNREACHABLE\|ERROR" /var/log/ansible/ansible.log
+
+# Count failures by host to find problematic targets
+grep "FAILED" /var/log/ansible/ansible.log | \
+  grep -oP 'FAILED \[.*?\]' | sort | uniq -c | sort -rn
+```
 
 ---
 
@@ -198,4 +311,10 @@ grep "FAILED" /var/log/ansible/ansible.log | \
 
 - [Ansible — Common Issues](../common-issues/)
 - [Ansible — Escalation](../escalation/)
-- [Ansible — Health Checks](../../operations/health-checks/)
+
+## Verify resolution
+
+- `ansible <host> -m ping` returns `pong` for all previously unreachable hosts
+- Re-run the failing playbook with `--check --diff` — confirm the tasks that were failing now show expected changes or no-change
+- `GET /api/v2/jobs/?status=failed&page_size=5` shows no new failures after the fix
+- The workflow or schedule that was failing completes successfully with exit code 0

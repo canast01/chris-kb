@@ -8,141 +8,295 @@ search:
 ---
 # vSphere Replication — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering VRA Log Locations, Collect VRA Support Bundle, Check VRA Service Status, Test Connectivity from Source ESXi to Target VRA, Check ESXi hbrsvc (Replication Source Service) and 4 more sections.
+vSphere Replication (VR) diagnostic commands: check VRA service status with systemctl, inspect HMS and VRMS logs, test replication port 31031 from the source ESXi host, verify hbrsvc on the source host, check the REST API health endpoint, capture replication traffic with pktcap-uw, and collect the VAMI support bundle for VMware SRs.
 
 *Applies to: vSphere Replication 8.x*
 </div>
 
-  VR Diagnostic Data Sources
 ```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  VRA Appliance (both sites)    ESXi Source Host                                                       │
-│  ┌───────────────────────┐     ┌─────────────────────────┐                                            │
-│  │ VAMI → Support Bundle │     │ /var/log/hbr.log        │                                            │
-│  │ /opt/vmware/logs/hms/ │     │ /var/log/hostd.log      │                                            │
-│  │ /opt/vmware/logs/vrms/│     │ /etc/init.d/hbrsvc stat │                                            │
-│  │ journalctl -u hms     │     │ nc -vz <VRA> 31031      │                                            │
-│  │ journalctl -u vrms    │     └─────────────────────────┘                                            │
-│  └───────────────────────┘                                                                            │
+┌───────────────────────────── vSphere Replication — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
-│  Connectivity Tests              vCenter                                                              │
-│  ┌───────────────────────┐     ┌─────────────────────────┐                                            │
-│  │ ESXi → VRA:31031      │     │ Monitor → Recent Tasks  │                                            │
-│  │ VRA → VRA:44046       │     │ filter "HBR" / "VR"     │                                            │
-│  │ openssl s_client :443 │     │ Export System Logs      │                                            │
-│  │ REST /api/rest/vr/    │     └─────────────────────────┘                                            │
-│  │   health (no auth)    │                                                                            │
-│  └───────────────────────┘                                                                            │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: GET /api/rest/vr/health on VRA → check hbrsvc on source ESXi                  │     │
+│   │   Replication lagging: nc -zv target-VRA 31031 from source ESXi; check firewall             │     │
+│   │   VRA unreachable: systemctl status hms vrms on the VRA appliance; check disk and NTP       │     │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              VRA Appliance Logs              │  │           ESXi Source Host Logs             │   │
+│   │   /opt/vmware/logs/hms/ (Home Mgmt Server)   │  │   /var/log/hbr.log: replication events     │    │
+│   │   /opt/vmware/logs/vrms/ (VR Mgmt Service)  │  │   /var/log/hostd.log: VM operations        │     │
+│   │   journalctl -u hms: HMS service events      │  │   /etc/init.d/hbrsvc status               │     │
+│   │   journalctl -u vrms: VRMS service events    │  │   nc -vz VRA-IP 31031: port check          │    │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  VRA appliance (source site) · VRA appliance (target site) · source ESXi hosts · vCenter (each site)  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│  VRA         = vSphere Replication Appliance; deployed as a VM at each site                           │
+│  HMS         = Home Management Server; VRA service handling vCenter registration and UI               │
+│  VRMS        = vSphere Replication Management Service; orchestrates replication workflows             │
+│  hbrsvc      = ESXi replication daemon on source host; sends replication data to target VRA           │
+│  hbr.log     = ESXi replication log; records per-VM replication transfer events                       │
+│  TCP 31031   = data port from source ESXi to target VRA; must be open in firewalls                    │
+│  TCP 44046   = inter-VRA management port; used between source and target VRA appliances               │
+│  pktcap-uw   = ESXi packet capture tool; captures traffic on VMkernel adapters to a pcap file         │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
----
+```mermaid
+graph TD
+    A([vSphere Replication Issue]) --> B{What type of problem?}
+    B -->|VRA UI or API unreachable| C[systemctl status hms vrms nginx\njournalctl -u hms -n 100]
+    B -->|Replication lag or stuck transfer| D[nc -zv target-VRA 31031 from source ESXi\nCheck hbrsvc on source ESXi]
+    B -->|Replication task stuck in vCenter| E[vCenter → Monitor → Recent Tasks\nFilter for HBR or vSphere Replication]
+    B -->|Certificate error| F[openssl s_client -connect VRA:443\nCheck notAfter date]
+    B -->|VRA services running but replication fails| G[Check hbr.log on source ESXi\nRead per-VM replication error]
+    B -->|VRA can't reach vCenter| H[Test TCP 443 to vCenter from VRA\nnc -zv vcenter-ip 443]
+    C --> I{Which service down?}
+    I -->|hms not running| J[systemctl start hms\nCheck disk: df -h /]
+    I -->|vrms not running| K[systemctl start vrms\njournalctl -u vrms -n 50 for error]
+    D --> L{Port 31031 reachable?}
+    L -->|No| M[Check firewall rules between sites\nVerify target VRA IP and routing]
+    L -->|Yes, still lagging| N[Check hbr.log for bandwidth or timeout errors\nCheck VMkernel adapter used for replication]
+    E --> O[Cancel stuck task if > 30 min\nvCenter → Recent Tasks → right-click Cancel]
+    F --> P[Check cert via VAMI\nhttps://VRA:5480 → Certificate → Renew]
+    G --> Q[tail /var/log/hbr.log | grep -i error\nCompare replication timestamps]
+    H --> R[Check DNS resolution of vCenter from VRA\nnslookup vcenter-fqdn]
+    J --> S[Collect VRA VAMI support bundle\nhttps://VRA:5480 → Support → Generate]
+    K --> S
+    M --> S
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    S --> T[Open VMware SR\nAttach bundle and replication task ID]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I,L dark
+    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
+    class S,T escalate
+```
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** SSH to the VRA appliance (`admin` user) at each site; SSH to the source ESXi hosts; vCenter Client access to view replication tasks
+- **Gather first:** the specific symptom (replication lag, error in vCenter UI, VRA unreachable), the VM name being replicated, the source and target site VRA IP addresses, and the time the issue started
+- **Scope:** confirm whether the issue affects one VM, one replication group, or all replications to/from a specific VRA
 
 ---
 
-## VRA Log Locations
+## Step 1 — Check VRA service status
 
 ```bash
-ssh admin@vra-london.example.local
+# SSH to the VRA appliance
+ssh admin@<vra-ip>
 
-# Main VRA application logs:
-/opt/vmware/logs/hms/          # Home Management Server logs
-/opt/vmware/logs/vrms/         # VRA management service
+# Check core VRA services
+systemctl status hms     # Home Management Server — must be active
+systemctl status vrms    # VR Management Service — must be active
+systemctl status nginx   # API gateway — must be active
 
-# System logs:
-/var/log/messages              # OS syslog
-journalctl -u hms -f           # Follow HMS log
-journalctl -u vrms -f          # Follow VRMS log
-journalctl -u nginx -f         # Follow nginx (API gateway) log
-```
+# Expected: all three should be active (running)
 
----
+# Recent service events (useful for crash or restart diagnosis)
+journalctl -u hms -n 100 --no-pager
+journalctl -u vrms -n 100 --no-pager
 
-## Collect VRA Support Bundle
+# Check disk space (full disk = VRA service failures)
+df -h /
+# Expected: < 80% used
 
-```text
-VRA VAMI (https://vra-london.example.local:5480)
-  → Support → Generate Support Bundle → Download
-
-The bundle includes: all VRA logs, configuration, service state
-```
-
-Manual collection if VAMI is unreachable:
-```bash
-ssh admin@vra-london.example.local
-/opt/vmware/support/support-bundle.sh
-# Bundle location: /tmp/vr-support-<timestamp>.tar.gz
-scp admin@vra-london.example.local:/tmp/vr-support-*.tar.gz /local/path/
-```
-
----
-
-## Check VRA Service Status
-
-```bash
-ssh admin@vra-london.example.local
-
-# Core services:
-systemctl status hms        # Should be: active (running)
-systemctl status vrms       # Should be: active (running)
-systemctl status nginx      # Should be: active (running)
-
-# If stopped:
+# Restart a specific service if stopped
 systemctl start hms
 systemctl start vrms
 ```
 
 ---
 
-## Test Connectivity from Source ESXi to Target VRA
+## Step 2 — Check VRA REST API health
 
 ```bash
-# SSH to source ESXi host
-ssh root@<source-esxi-ip>
+# Quick health check — no authentication required
+curl -sk "https://<vra-ip>/api/rest/vr/health"
+# Expected: 200 OK with JSON health response
 
-# Test replication data port (31031):
-nc -vz <target-vra-ip> 31031
-# Success: "Connection to <ip> 31031 port [tcp] succeeded!"
-# Failure: "Connection refused" or timeout → firewall issue
+# Get an authentication token for detailed queries
+TOKEN=$(curl -sk -X POST \
+  "https://<vra-ip>/api/rest/vr/authentication/token" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"<password>"}' \
+  | python3 -c "import json,sys; print(json.load(sys.stdin).get('token',''))")
 
-# Test VRA management port (44046):
-nc -vz <target-vra-ip> 44046
+echo $TOKEN
+# Expected: JWT string; empty = auth failed
 
-# VMkernel ping:
-vmkping -I vmk0 <target-vra-ip>
-
-# Or using vmkping on specific VMkernel adapter:
-vmkping -I vmk1 <target-vra-ip>
+# List all replications with their state and lag
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-ip>/api/rest/vr/replications" \
+  | python3 -c "
+import json,sys
+for r in json.load(sys.stdin).get('replications', []):
+    print(r.get('vmName',''), '|', r.get('replicationState',''), '|', 'lag:', r.get('rpo',''))
+"
+# Look for: replicationState = ERROR or lag exceeding the configured RPO
 ```
 
 ---
 
-## Check ESXi hbrsvc (Replication Source Service)
+## Step 3 — Read VRA logs
+
+```bash
+# SSH to VRA
+ssh admin@<vra-ip>
+
+# HMS log directory (management and vCenter registration events)
+ls /opt/vmware/logs/hms/
+tail -100 /opt/vmware/logs/hms/hms.log | grep -i "error\|exception\|fail"
+
+# VRMS log directory (replication workflow events)
+ls /opt/vmware/logs/vrms/
+tail -100 /opt/vmware/logs/vrms/vrms.log | grep -i "error\|exception\|fail"
+
+# Follow logs in real time during a failing operation
+journalctl -u hms -f
+journalctl -u vrms -f
+
+# Nginx log (API gateway; for 5xx errors from the UI or API)
+journalctl -u nginx -n 50 --no-pager | grep -i "error\|warn"
+```
+
+---
+
+## Step 4 — Test connectivity from source ESXi to target VRA
+
+All replication data flows from the source ESXi host to the **target** VRA on TCP 31031.
+
+```bash
+# SSH to the source ESXi host
+ssh root@<source-esxi-ip>
+
+# Test replication data port (31031) to the TARGET VRA
+nc -vz <target-vra-ip> 31031
+# Expected: "Connection to <ip> 31031 port [tcp] succeeded!"
+# Failure: "Connection refused" or timeout → firewall rule missing
+
+# Test VRA management inter-site port (44046)
+nc -vz <target-vra-ip> 44046
+# Expected: success
+# This port is used for VRA-to-VRA management communication
+
+# VMkernel ping to target VRA (tests Layer 3 from the VMK used for replication)
+vmkping -I vmk0 <target-vra-ip>
+
+# Check which VMkernel adapter is used for replication
+esxcli network ip interface list | grep -v "^--"
+# The hbrsvc daemon uses vmk0 by default unless overridden
+```
+
+If TCP 31031 test fails:
+1. Check firewall rules between the source and target networks
+2. Verify the target VRA IP address configured in vCenter → Site Recovery → vSphere Replication
+3. Confirm Layer 3 routing between sites for the management VLANs
+
+---
+
+## Step 5 — Check hbrsvc on source ESXi
 
 ```bash
 # SSH to source ESXi host
 ssh root@<source-esxi-host>
 
-# Check replication service:
+# Check the replication daemon
 /etc/init.d/hbrsvc status
+# Expected: Running
 
-# View hbr log:
-tail -100 /var/log/hostd.log | grep -i hbr
+# Restart hbrsvc if stopped (safe — does not delete replications)
+/etc/init.d/hbrsvc restart
+
+# View hbr.log for per-VM replication events
 tail -100 /var/log/hbr.log
+grep -i "error\|fail\|disconnect" /var/log/hbr.log | tail -30
 
-# List active replication tasks on this host:
+# Check for hbr activity in hostd.log
+grep -i "hbr\|replication" /var/log/hostd.log | tail -30
+
+# List active replication processes on this host
 esxcli vm process list | grep -i replication
 ```
+
+---
+
+## Step 6 — Verify VRA certificate
+
+Expired certificates cause TLS handshake failures between VRA and vCenter and between VRA appliances.
+
+```bash
+# Check source VRA management certificate
+echo | openssl s_client \
+  -connect <vra-source-fqdn>:443 \
+  -servername <vra-source-fqdn> 2>/dev/null \
+  | openssl x509 -noout -dates -subject -issuer
+# Expected: notAfter date > 30 days in the future
+
+# Check inter-site VRA certificate (port 44046)
+echo | openssl s_client \
+  -connect <vra-target-fqdn>:44046 2>/dev/null \
+  | openssl x509 -noout -dates -subject
+
+# If certificate is expired, renew via VAMI
+# Browse to: https://<vra-ip>:5480 → Certificate → Renew Certificate
+
+# Capture network traffic on the replication port for deep debugging
+# On source ESXi host:
+pktcap-uw --vmk vmk0 --dstport 31031 -o /tmp/hbr-capture.pcap --count 1000
+scp root@<esxi-host>:/tmp/hbr-capture.pcap /local/path/
+# Analyze in Wireshark: filter for TCP RST or TLS handshake failure
+```
+
+---
+
+## Step 7 — Collect VRA support bundle for VMware SR
+
+```bash
+# Via VAMI (recommended)
+# Browse to: https://<vra-ip>:5480
+# Navigate to: Support → Generate Support Bundle → Download
+# The bundle includes: all VRA logs, configuration, service state
+
+# Via SSH if VAMI is unreachable
+ssh admin@<vra-ip>
+/opt/vmware/support/support-bundle.sh
+# Output: /tmp/vr-support-<timestamp>.tar.gz
+
+# Transfer the bundle
+scp admin@<vra-ip>:/tmp/vr-support-*.tar.gz /local/path/
+
+# Include in VMware SR:
+# - VRA VAMI support bundle from both source and target sites
+# - hbr.log excerpt from the source ESXi host (grep for the affected VM name)
+# - Replication task ID from vCenter → Monitor → Recent Tasks
+# - VR version: VRA UI → About (vSphere Replication version)
+# - Network connectivity test results (nc -vz output for port 31031 and 44046)
+```
+
+---
+
+## Log locations
+
+| Component | Path / Command | What to look for |
+|---|---|---|
+| HMS (VRA) | `/opt/vmware/logs/hms/hms.log` | vCenter registration, management events |
+| VRMS (VRA) | `/opt/vmware/logs/vrms/vrms.log` | Replication workflow orchestration errors |
+| hbrsvc (ESXi) | `/var/log/hbr.log` | Per-VM replication transfer events and errors |
+| hostd (ESXi) | `/var/log/hostd.log` | VM operations and hbrsvc interaction |
+| VRA system | `journalctl -u hms` / `journalctl -u vrms` | Service start/stop and crash events |
 
 ---
 
@@ -151,56 +305,10 @@ esxcli vm process list | grep -i replication
 - [vSphere Replication — Common Issues](common-issues/)
 - [vSphere Replication — Escalation](escalation/)
 
-## Verify VRA Certificate
+## Verify resolution
 
-```bash
-# Check VRA management interface cert:
-echo | openssl s_client -connect vra-london.example.local:443 -servername vra-london.example.local 2>/dev/null \
-  | openssl x509 -noout -dates -subject -issuer
-
-# Check VRA inter-site port cert:
-echo | openssl s_client -connect vra-amsterdam.example.local:44046 2>/dev/null \
-  | openssl x509 -noout -dates -subject
-```
-
----
-
-## Review Replication Task Status in vCenter
-
-```text
-vCenter → Monitor → Recent Tasks
-  Filter by: "vSphere Replication" or "HBR" in task description
-  Stuck tasks: right-click → Cancel Task (only if truly stuck >30 min)
-```
-
----
-
-## REST API Health Check
-
-```bash
-# Quick health check (no auth required):
-curl -sk https://vra-london.example.local/api/rest/vr/health
-
-# Detailed status with auth:
-TOKEN=$(curl -sk -X POST \
-  https://vra-london.example.local/api/rest/vr/authentication/token \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"<pass>"}' | \
-  python3 -c "import json,sys; print(json.load(sys.stdin)['token'])")
-
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-london.example.local/api/rest/vr/replications" | \
-  python3 -m json.tool
-```
-
----
-
-## Capture Network Traffic on Replication Port
-
-```bash
-# On source ESXi host — capture replication traffic (TCP 31031):
-pktcap-uw --vmk vmk0 --dstport 31031 -o /tmp/hbr-capture.pcap --count 1000
-
-# Transfer and analyze in Wireshark:
-scp root@<esxi-host>:/tmp/hbr-capture.pcap /local/path/
-```
+- `curl -sk https://<vra-ip>/api/rest/vr/health` returns 200 OK from both source and target VRA
+- `GET /api/rest/vr/replications` shows all VMs with replicationState = SYNCING or IDLE (not ERROR)
+- `nc -zv <target-vra-ip> 31031` from the source ESXi host succeeds
+- vCenter → Monitor → Recent Tasks shows no stuck or failed replication tasks for the affected VM
+- The replication lag (RPO) for the affected VM is within the configured target

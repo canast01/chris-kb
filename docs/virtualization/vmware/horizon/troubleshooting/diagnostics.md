@@ -8,199 +8,293 @@ search:
 ---
 # Horizon — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log (Connection Server), Horizon Agent Logs in Guest VM, UAG Log Collection, Test Display Protocol Connectivity and 3 more sections.
+Horizon diagnostic commands: read Connection Server debug-*.log and vlsi-*.log logs, collect the support bundle from Horizon Admin UI, inspect Horizon Agent logs in the desktop VM, test UAG health and display protocol port connectivity, query the Horizon REST API for pool and session status, and use vdmadmin to list sessions and assignments.
 
 *Applies to: Horizon 8.x*
 </div>
 
-  Diagnostic Data Sources
 ```text
 ┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
-│  Horizon diagnostics use Connection Server logs, support bundles, Horizon admin UI,                   │
-│  and desktop agent logs to identify root causes of session and provisioning failures.                 │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: Horizon Admin UI → Events → filter ERROR → then Connection Server debug-*.log  │    │
+│   │   Session black screen: check agent debug-*.log and wsnm_*.log in the desktop VM             │    │
+│   │   UAG issue: curl https://uag:9443/rest/healthcheck; check esmanager.log via SSH             │    │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Connection Server Logs            │  │                  Agent Logs                 │   │
-│   │          C:\ProgramData\VMware\VDM           │  │          C:\ProgramData\VMware\VDM          │   │
-│   │           debug-*.log: main broker           │  │          debug-*.log on desktop VM          │   │
-│   │           vlsi-*.log: vCenter ops            │  │           wsnm_*.log: display path          │   │
-│   │          support bundle: zip via UI          │  │            Event log: Windows App           │   │
+│   │            Connection Server Logs            │  │                Agent Logs                   │   │
+│   │   C:\ProgramData\VMware\VDM\logs\            │  │   C:\ProgramData\VMware\VDM\logs\           │   │
+│   │   debug-*.log: broker decisions, auth, pool  │  │   debug-*.log on desktop VM                 │   │
+│   │   vlsi-*.log: vCenter API calls              │  │   wsnm_*.log: Blast/PCoIP session           │   │
+│   │   support bundle: Horizon Admin UI           │  │   Windows Event Viewer: Application log     │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Start with CS debug log; if session connects but black screen, check agent logs.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Admin UI Diagnostics             │  │               UAG Diagnostics               │   │
-│   │           Horizon Admin: Dashboard           │  │              UAG admin UI: 9443             │   │
-│   │          Events: filter by severity          │  │           /rest/healthcheck: 200?           │   │
-│   │          Pool: provisioning errors           │  │           UAG log: /opt/vmware/etc          │   │
-│   │          Sessions: filter by state           │  │          Cert: check UAG cert date          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Collect CS support bundle via Horizon Admin UI; agent logs from desktop VM;                          │
-│  UAG logs via SSH to UAG appliance.                                                                   │
+│  Physical Infrastructure:                                                                             │
+│  Connection Server (Windows) · UAG appliance · desktop VMs · Horizon Client · vCenter                 │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  debug-*.log   = CS main log; broker decisions, auth, pool operations                                 │
-│  vlsi-*.log    = vCenter API interaction log; provisioning details                                    │
-│  wsnm_*.log    = agent display protocol log; Blast/PCoIP session                                      │
-│  ProgramData   = Windows hidden folder; Horizon stores logs here                                      │
-│  Support bundle= Horizon Admin UI > Support > Generate Bundle                                         │
-│  Horizon Admin = web UI for Horizon management; port 443 on CS                                        │
-│  Events tab    = Horizon UI event log; filter by error/warning                                        │
-│  UAG admin     = port 9443; cert, edge service, health config                                         │
-│  /rest/healthcheck= UAG health endpoint; returns 200 OK if healthy                                    │
-│  UAG log       = /opt/vmware/etc/esmanager/; edge service logs                                        │
-│  Windows App log= Windows Event Viewer; Horizon Agent events here                                     │
-│  Pool error    = UI shows red error; hover for provisioning reason                                    │
+│  debug-*.log  = Connection Server main broker log; auth decisions, pool operations, session routing   │
+│  vlsi-*.log   = Connection Server vCenter interaction log; provisioning steps and API errors          │
+│  wsnm_*.log   = Horizon Agent display path log; Blast/PCoIP protocol events                           │
+│  UAG          = Unified Access Gateway; edge proxy for external Horizon clients                       │
+│  esmanager.log= UAG edge service log; connection brokering and edge service events                    │
+│  PCoIP / Blast= display protocols; Blast uses HTTPS:8443 / DTLS:8443; PCoIP uses UDP 4172             │
+│  vdmadmin.exe = Horizon CLI on Connection Server; lists sessions, pools, and assignments              │
+│  Pool error   = red status in Horizon Admin UI → Desktops → pool; hover for provisioning reason       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
----
+
+```mermaid
+graph TD
+    A([Horizon Issue]) --> B{What type of problem?}
+    B -->|Login failure or no session| C[Horizon Admin UI → Events\nFilter by ERROR and user account]
+    B -->|Black screen after session connects| D[Check Horizon Agent in desktop VM\ndebug-*.log and wsnm_*.log]
+    B -->|Desktop pool not provisioning| E[Horizon Admin UI → Pools → hover red error\nCheck vlsi-*.log for vCenter API errors]
+    B -->|External access not working| F[curl https://uag:9443/rest/healthcheck\nCheck UAG esmanager.log]
+    B -->|Slow session or low frame rate| G[Blast session: Ctrl+Alt+Shift+P\nCheck client → UAG → desktop network latency]
+    B -->|Connection Server health alarm| H[Get-WinEvent VMware Application events\nCheck CS debug-*.log]
+    C --> I{Error type?}
+    I -->|LDAP / auth error| J[Check AD connectivity on CS\nTest-NetConnection ad.domain.local -Port 389]
+    I -->|Entitlement error| K[Verify user is entitled to pool\nvdmadmin -A -d pool -list]
+    I -->|Certificate error| L[Check CS certificate in MMC\nCheck UAG certificate via curl]
+    D --> M[Check Horizon Agent service status\nGet-Service VMwareHorizonViewAgent]
+    E --> N[Check vCenter credentials in Horizon\nAdmins → vCenter → Edit → Test Connection]
+    F --> O[SSH to UAG; check gateway.log\ntail /opt/vmware/gateway/logs/gateway.log]
+    G --> P[Test Blast port from client\nnc -vz uag.example.com 8443]
+    H --> Q[Collect Connection Server support bundle\nHorizon Admin → Support → Generate Bundle]
+    J --> Q
+    K --> Q
+    L --> Q
+    M --> Q
+    N --> Q
+    O --> Q
+    P --> Q
+    Q --> R[Open VMware SR\nmysupport.vmware.com]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P action
+    class Q,R escalate
+```
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Horizon admin role; PowerShell on Connection Server(s); SSH to UAG appliance; access to the desktop VM (or RDP/console) if diagnosing agent issues
+- **Gather first:** the specific symptom (login fails with error code, pool shows red, session connects but black screen), the affected username, the pool name, and the time the issue started
+- **Scope:** confirm whether the issue affects one user, one pool, one Connection Server, or all Horizon sessions
 
 ---
 
-## Windows Event Log (Connection Server)
+## Step 1 — Check Horizon Admin UI events
 
 ```powershell
-# Horizon-specific event sources:
-Get-WinEvent -LogName "Application" -MaxEvents 50 | 
+# On a Connection Server — Windows Event Log for Horizon events
+Get-WinEvent -LogName "Application" -MaxEvents 100 |
   Where-Object { $_.ProviderName -like "*VMware*" } |
-  Select-Object TimeCreated, LevelDisplayName, Message
+  Select-Object TimeCreated, LevelDisplayName, Message |
+  Where-Object { $_.LevelDisplayName -eq "Error" } |
+  Format-List
 
-# VMware Horizon LDAP service (ADAM/AD LDS) errors:
-Get-WinEvent -LogName "ADAM (VMwareVDMDS)" -MaxEvents 20
+# ADAM (VMwareVDMDS) directory service errors (LDAP/AD connectivity)
+Get-WinEvent -LogName "ADAM (VMwareVDMDS)" -MaxEvents 20 |
+  Select-Object TimeCreated, LevelDisplayName, Message | Format-List
+
+# Check Connection Server service state
+Get-Service -Name "wsnm", "VMwareVDMDS", "cpsvc" |
+  Select-Object Name, Status, StartType
+# Expected: all Running
 ```
 
 ---
 
-## Horizon Agent Logs in Guest VM
+## Step 2 — Read Connection Server debug log
 
 ```powershell
-# Inside the desktop VM:
-C:\ProgramData\VMware\VDM\logs\
+# Log directory on Connection Server
+$logDir = "C:\ProgramData\VMware\VDM\logs"
+Get-ChildItem $logDir -Filter "debug-*.log" |
+  Sort-Object LastWriteTime -Descending | Select-Object -First 3
 
-# Or via Event Viewer in the guest:
-Get-WinEvent -LogName "Application" -ComputerName <desktop-vm-ip> |
-  Where-Object { $_.ProviderName -like "*Horizon*" -or $_.ProviderName -like "*VMware*" } |
-  Select-Object -First 20
+# Most recent errors in debug log
+Select-String -Path "$logDir\debug-*.log" -Pattern "ERROR" |
+  Select-Object -Last 50 | Select-Object -ExpandProperty Line
 
-# Check Horizon Agent service
-Get-Service -ComputerName <desktop-vm-ip> -Name "VMware Horizon View Agent"
+# Filter by specific user for login failures
+Select-String -Path "$logDir\debug-*.log" -Pattern "user.name@domain" |
+  Select-Object -Last 30 | Select-Object -ExpandProperty Line
+
+# vCenter API interaction log (for provisioning failures)
+Select-String -Path "$logDir\vlsi-*.log" -Pattern "ERROR\|Fault\|Exception" |
+  Select-Object -Last 30 | Select-Object -ExpandProperty Line
 ```
 
 ---
 
-## UAG Log Collection
+## Step 3 — Check Horizon Agent in the desktop VM
+
+```powershell
+# Inside the desktop VM (or remotely if you have access)
+$agentLogDir = "C:\ProgramData\VMware\VDM\logs"
+
+# Horizon Agent debug log (connection, entitlement, and agent startup)
+Select-String -Path "$agentLogDir\debug-*.log" -Pattern "ERROR\|FAIL" |
+  Select-Object -Last 30
+
+# Display protocol log (Blast/PCoIP session issues, black screen)
+Select-String -Path "$agentLogDir\wsnm_*.log" -Pattern "ERROR" |
+  Select-Object -Last 30
+
+# Check Horizon Agent service is running
+Get-Service -Name "VMware Horizon View Agent"
+# Expected: Status = Running
+
+# Check agent Windows Event Log
+Get-WinEvent -LogName "Application" |
+  Where-Object { $_.ProviderName -like "*Horizon*" -or $_.ProviderName -like "*VMware*" } |
+  Select-Object -First 20 | Select-Object TimeCreated, Message | Format-List
+```
+
+---
+
+## Step 4 — Test UAG health and display protocol ports
 
 ```bash
-# SSH to UAG appliance
-ssh root@uag.example.local
+# From a host that can reach the UAG — test the health endpoint
+curl -sk https://<uag-fqdn>:9443/rest/healthcheck
+# Expected: HTTP 200 OK; JSON with "ok":true
 
-# Log locations:
-/opt/vmware/gateway/logs/esmanager.log    # Edge Service Manager
-/opt/vmware/gateway/logs/gateway.log      # Main gateway log
-/var/log/messages                          # OS syslog
+# Test display protocol ports from a client or jump host
+nc -vz <uag-fqdn> 443   # HTTPS (required for all protocols)
+nc -vz <uag-fqdn> 8443  # Blast HTTPS / DTLS
+nc -vz <uag-fqdn> 4172  # PCoIP UDP (test with TCP first as approximation)
 
-# Collect UAG log bundle via REST API:
-curl -sk -X GET "https://uag.example.local:9443/rest/v1/config/logs/collect" \
+# Check path to UAG
+traceroute <uag-fqdn>
+
+# SSH to UAG appliance for log inspection
+ssh root@<uag-ip>
+tail -100 /opt/vmware/gateway/logs/esmanager.log
+tail -100 /opt/vmware/gateway/logs/gateway.log
+
+# Collect UAG log bundle via REST API
+curl -sk -X GET "https://<uag-fqdn>:9443/rest/v1/config/logs/collect" \
   -u admin:<password> -o uag-logs-$(date +%Y%m%d).zip
 ```
 
 ---
 
-## Test Display Protocol Connectivity
-
-```bash
-# From a client machine — test Blast port:
-nc -vz uag.example.local 8443
-
-# Test PCoIP:
-nc -vz uag.example.local 4172
-
-# Test HTTPS tunnel:
-nc -vz uag.example.local 443
-
-# Trace the path to UAG:
-traceroute uag.example.local
-```
-
----
-
-## Session Diagnostics with vdmadmin
+## Step 5 — Use vdmadmin for session and assignment diagnostics
 
 ```powershell
 # vdmadmin.exe is in C:\Program Files\VMware\VMware View\Server\tools\bin\
+$vdmadmin = "C:\Program Files\VMware\VMware View\Server\tools\bin\vdmadmin.exe"
 
-# List active sessions
-& "C:\Program Files\VMware\VMware View\Server\tools\bin\vdmadmin.exe" -L -d <pool-name>
+# List active sessions for a specific pool
+& $vdmadmin -L -d <pool-name>
+# Shows: user, machine, session state, protocol, start time
 
-# List user assignments
-& "vdmadmin.exe" -A -d <pool-name> -list
+# List user assignments to a dedicated desktop pool
+& $vdmadmin -A -d <pool-name> -list
+# Shows: which machines are assigned to which users
 
-# List all Connection Servers
-& "vdmadmin.exe" -S -list
+# List all Connection Servers in the pod
+& $vdmadmin -S -list
+# Shows: CS hostname, version, connection state
+
+# For floating pool — list current desktop state
+& $vdmadmin -M -d <pool-name> -list
 ```
 
 ---
 
-## Horizon REST API Diagnostics
+## Step 6 — Query Horizon REST API
 
 ```bash
-# Authenticate to Horizon REST API
-TOKEN=$(curl -sk -X POST https://horizon-cs01.example.local/rest/login \
+# Authenticate to Horizon REST API (Connection Server)
+TOKEN=$(curl -sk -X POST "https://<cs-fqdn>/rest/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","domain":"corp"}' \
   | python3 -c "import json,sys; print(json.load(sys.stdin).get('access_token',''))")
 
+echo $TOKEN
+# Expected: JWT string; empty = auth failed (check domain suffix)
+
 # Get Connection Server health
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  https://horizon-cs01.example.local/rest/monitor/connection-servers | python3 -m json.tool
+  "https://<cs-fqdn>/rest/monitor/connection-servers" \
+  | python3 -c "
+import json,sys
+for cs in json.load(sys.stdin):
+    print(cs.get('name',''), '|', cs.get('status',''), '|', cs.get('cs_replications_status',''))
+"
+# Expected: status = OK for all Connection Servers
 
-# Get pool summary
+# Get desktop pool summary
 curl -sk -H "Authorization: Bearer $TOKEN" \
-  https://horizon-cs01.example.local/rest/inventory/v1/desktop-pools | python3 -m json.tool
+  "https://<cs-fqdn>/rest/inventory/v1/desktop-pools" \
+  | python3 -c "
+import json,sys
+for p in json.load(sys.stdin):
+    print(p.get('name',''), '|', p.get('type',''), '|', p.get('enabled',''))
+"
+
+# Get active sessions count
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<cs-fqdn>/rest/monitor/v2/sessions" | python3 -m json.tool | head -30
 ```
 
 ---
 
-## Horizon Performance Tracker
+## Step 7 — Collect Horizon support bundle
 
-For diagnosing in-session performance (latency, frame rate, bandwidth):
+```powershell
+# Via Horizon Admin UI (recommended for CS logs + vCenter events)
+# Navigate to: Horizon Admin → Troubleshooting → Generate Support Bundle
+# Click: Generate → Download
+# The bundle includes: all CS log files, ADAM DB export, event log, vCenter events
 
-```text
-Inside a Blast session: Ctrl+Alt+Shift+P → opens Performance Tracker overlay
-Displays: frames per second, bandwidth, latency, packet loss
+# Via PowerShell on Connection Server (if UI is unavailable)
+# The bundle location after UI generation:
+Get-ChildItem "C:\ProgramData\VMware\VDM\logs\*bundle*" |
+  Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+# For escalation, include:
+# - Horizon support bundle (from CS or Admin UI)
+# - Horizon Agent debug log from affected desktop VM
+# - UAG log bundle (from UAG REST API)
+# - Session ID or username, time of failure, and error code from the UI or client
 ```
 
-High latency (>50ms) → check network path between client and UAG, or UAG and desktop.
-Low frame rate → check vGPU allocation, ESXi CPU contention, or display protocol settings.
+---
+
+## Log locations
+
+| Component | Path | What to look for |
+|---|---|---|
+| Connection Server | `C:\ProgramData\VMware\VDM\logs\debug-*.log` | Auth failures, pool provisioning errors, broker decisions |
+| CS vCenter ops | `C:\ProgramData\VMware\VDM\logs\vlsi-*.log` | vCenter API errors during provisioning |
+| Horizon Agent | `C:\ProgramData\VMware\VDM\logs\debug-*.log` (in desktop VM) | Agent startup, entitlement, and session errors |
+| Agent display | `C:\ProgramData\VMware\VDM\logs\wsnm_*.log` | Blast/PCoIP protocol session events |
+| UAG edge | `/opt/vmware/gateway/logs/esmanager.log` | Edge service brokering and connection errors |
+| UAG gateway | `/opt/vmware/gateway/logs/gateway.log` | Main UAG log; HTTPS and protocol routing |
+| Windows events | `Get-WinEvent -LogName Application` | VMware provider events for both CS and Agent |
 
 ---
 
 ## See also
 
-- [VMware Horizon — Common Issues](common-issues/)
+- [Horizon — Common Issues](common-issues/)
 - [Horizon — Escalation](escalation/)
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- `curl -sk https://<uag-fqdn>:9443/rest/healthcheck` returns `{"ok":true}` for all UAGs
+- The previously failing user can log in and reach a desktop without errors
+- Horizon Admin UI → Events shows no new ERROR-level events for the affected pool or user
+- Blast display protocol connectivity test (`nc -vz uag 8443`) succeeds from the affected client network
+- Pool provisioning shows green in Horizon Admin UI → Desktops
