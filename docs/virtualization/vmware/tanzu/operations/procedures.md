@@ -326,9 +326,15 @@ kubectl --kubeconfig <cluster-kubeconfig> get pods -n kube-system
 kubectl --kubeconfig <cluster-kubeconfig> get pods -n vmware-system-csi
 ```
 
+!!! warning "Do not skip Kubernetes minor versions"
+    TKG upgrade validation enforces sequential minor version upgrades. Skipping a version (e.g., 1.26 → 1.28) is unsupported and will leave the cluster in a broken state that requires VMware GSS to recover. If you are multiple versions behind, plan multiple sequential upgrade windows.
+
 One minor version at a time — do not skip versions (e.g., 1.26 → 1.27, not 1.26 → 1.28).
 
 ## Delete a TKG Workload Cluster
+
+!!! danger "Irreversible — all cluster VMs and workloads are permanently destroyed"
+    Deleting the TanzuKubernetesCluster object triggers the Supervisor to remove all control plane and worker VMs from vCenter inventory. Any workloads still running in the cluster will be terminated. Any PVCs bound to CNS volumes will be deleted. If PVs were created with `reclaimPolicy: Delete`, the underlying vSAN volumes are also deleted. Confirm all workloads are migrated and all data is backed up before proceeding.
 
 ```bash
 # 1. Drain workloads off the cluster first — notify application teams
@@ -441,7 +447,12 @@ crictl rmi --prune
 
 # 3. Check vSphere — confirm VM is powered on and has network
 # Supervisor: kubectl get virtualmachine -n my-namespace
+```
 
+!!! warning "--delete-emptydir-data causes data loss for pods using emptyDir volumes"
+    The `--delete-emptydir-data` flag silently deletes any data stored in emptyDir volumes on this node — including caches, temporary files, or any workload that incorrectly uses emptyDir for persistent state. Confirm no running pods rely on emptyDir before draining. This flag is only safe to use when you have confirmed all pods are stateless or all stateful pods have been rescheduled.
+
+```bash
 # 4. Force node drain and delete if unrecoverable
 kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data --force
 kubectl delete node <node-name>

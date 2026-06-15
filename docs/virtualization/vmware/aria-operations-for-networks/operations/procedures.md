@@ -253,6 +253,9 @@ Disabling stops collection but preserves historical data. Removing deletes the s
 
 **Remove permanently:**
 
+!!! warning "Historical flow data is permanently deleted"
+    Removing a data source purges all flow records collected from it within 24 hours. If you need this data for a security investigation, compliance audit, or capacity planning, export it via the CSV export before deleting.
+
 1. Click the **Actions** menu → **Delete**.
 2. Confirm the deletion dialog. Data purge occurs within 24 hours per the retention policy.
 
@@ -378,6 +381,9 @@ Before pushing rules to NSX, review each recommendation to remove false positive
 ---
 
 ## Push Rules to NSX (with write permissions)
+
+!!! danger "Implicit deny-all will block any traffic not covered by the generated rules"
+    The recommended rule set ends with an implicit **Deny All**. If any required flow was absent during the observation window — a batch job, a disaster recovery path, a monitoring agent — it will be silently blocked the moment the policy is pushed. Use a minimum 7-day observation window, manually verify known-good flows are present in the rule table, and have rollback access to NSX-T Manager ready before pushing to production.
 
 Publishes the approved DFW rule set directly into NSX-T as a new security policy. Requires the NSX-T data source credential to have the **Security Engineer** role.
 

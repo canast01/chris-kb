@@ -96,6 +96,9 @@ esxcli vsan debug resync list
 
 VxRail nodes use vSAN as the storage layer. Before entering maintenance mode, vSAN must evacuate all data objects from the node so no data is at risk. This is different from standard vSphere maintenance mode — use the **vSAN-aware** maintenance mode option.
 
+!!! warning "Verify cluster capacity before entering maintenance mode"
+    If the remaining nodes do not have enough free capacity to hold all evacuated objects, the **Full data migration** option will stall indefinitely and the host will never enter maintenance mode. Before starting, confirm that the cluster's used space is below approximately 60% so there is headroom for a single node's objects to be redistributed. If you are capacity-constrained, open a Dell support case before proceeding.
+
 ### Step 1 — Confirm Pre-Conditions
 
 ```bash
@@ -288,11 +291,17 @@ esxcli vsan debug resync list
 # Note: resync bytes will show active rebuild activity
 ```
 
+!!! danger "FTT exceeded — data is at risk of permanent loss"
+    If `esxcli vsan debug resync list` shows components with zero remaining replicas, vSAN cannot tolerate any further disk or node failure. Do not proceed with the replacement until you have escalated to Dell support and confirmed a recovery path. Replacing the disk at this point without guidance may not recover the objects.
+
 If vSAN shows **no remaining replicas** for any object (FTT exceeded), treat this as a P1 incident and restore immediately.
 
 ### Step 3 — Enter Node Maintenance Mode
 
 Before physically replacing the disk, put the node in maintenance mode using **Full data migration** (see [Node Maintenance Mode](#node-maintenance-mode-procedure) above).
+
+!!! warning "Do not hot-swap without maintenance mode if a rebuild is already active"
+    If vSAN has already started rebuilding objects to other nodes following the disk failure, those objects are temporarily under-replicated. Removing another disk (even the failed one) without first confirming the rebuild is complete risks exceeding FTT and losing data. Verify `esxcli vsan debug resync list` shows Remaining Bytes = 0, or consult Dell support before proceeding without full maintenance mode.
 
 If the disk failure has already caused vSAN to begin rebuilding on other nodes, you may be able to hot-swap without full maintenance mode — consult Dell support for guidance on whether in-place hot-swap is safe in your cluster configuration.
 
