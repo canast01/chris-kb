@@ -5,109 +5,144 @@ tags:
 search:
   boost: 1.5
 ---
-# ServiceNow — Diagnostic Tools
-
+# ServiceNow — Diagnostics
 
 <div class="kb-summary">
-Reference guide for ServiceNow's built-in diagnostic tools, log file locations, and support information gathering procedures. Use these before engaging ServiceNow support to accelerate resolution.
+ServiceNow diagnostic tools: check instance health and thread state via stats.do, inspect live DB queries in the DB Activity Monitor, run the System Diagnostics self-test suite, tail MID Server agent logs, enable per-session debug tracing, and collect instance and log information for ServiceNow HI support tickets.
 
-*Applies to: ServiceNow (Washington / Xanadu)*
+*Applies to: ServiceNow Washington / Xanadu*
 </div>
-
----
-
-## Before you begin
-
-- **Access:** Admin credentials on all affected systems
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
----
-
-## Diagnostic Tools Overview
-
-| Tool | URL / Path | Purpose |
-|---|---|---|
-| Stats page | `/stats.do` | Real-time memory, thread, session metrics |
-| Thread Monitor | `/thread_monitor.do` | Active Java threads with stack traces |
-| DB Activity Monitor | **System Diagnostics > DB Activity Monitor** | Live query analysis |
-| System Diagnostics | **System Diagnostics > Diagnostics** | Self-test suite |
-| Slow Query Analyzer | **System Diagnostics > Slow Queries** | Historical slow query log |
-| Log File Browser | **System Logs > All** | Application event log |
-| Node Log Browser | **System Diagnostics > Log File Browser** | Per-node application logs |
-| Session Debug | **System Diagnostics > Session Debug** | Per-session tracing |
-| Upgrade Monitor | **System Diagnostics > Upgrade Monitor** | Upgrade and patch status |
-| MID Server Log Viewer | **MID Server > Logs** | Remote MID Server log access |
-
----
-
-## Stats Page (`/stats.do`)
-
-The Stats page is the first place to check during any performance issue. It surfaces real-time system health without requiring admin access to the underlying infrastructure.
-
-Access: `https://<instance>.service-now.com/stats.do`
-
-### Key Sections
-
-**System Information:**
 
 ```text
 ┌─────────────────────────────────────── ServiceNow Diagnostics ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Diagnostic URLs (append to instance URL)                           │   │
-│   │                stats.do — node health: memory, threads, DB pool, request queue                │   │
-│   │              incident_list.do?sysparm_query= — direct table queries for any table             │   │
-│   │                 sys_log_list.do — application log; filter by source and level                 │   │
-│   │                  fixscripts.do — one-time scripts for data fixes (admin only)                 │   │
+│   │   Start here: /stats.do — memory, threads, DB pool, request queue depth                      │    │
+│   │   Slow instance: DB Activity Monitor → Slow Queries → identify table and query               │    │
+│   │   Integration failing: MID server log agent0.log.0 → ECC queue errors in UI                  │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   ┌──────────────────────────────────────────────┐                                                    │
-│   │           Performance Diagnostics            │                                                    │
-│   │           Transaction log analysis           │                                                    │
-│   │            Slow query log review             │                                                    │
-│   │        Script profiler (sys_ui_page)         │                                                    │
-│   │             Semaphore leak check             │                                                    │
-│   └──────────────────────────────────────────────┘                                                    │
-│                                                     ┌─────────────────────────────────────────────┐   │
-│                                                     │           Integration Diagnostics           │   │
-│                                                     │            ECC queue error review           │   │
-│                                                     │            REST message log check           │   │
-│                                                     │            MID server log tailing           │   │
-│                                                     │           Discovery status review           │   │
-│                                                     └─────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Performance Diagnostics            │  │           Integration Diagnostics           │   │
+│   │   stats.do — node heap, thread count         │  │   ECC queue error review in UI              │   │
+│   │   thread_monitor.do — Java thread dump        │  │   REST message log: sys_rest_message_fn     │  │
+│   │   Slow Queries — DB query > 10s              │  │   MID server log tailing: agent0.log.0      │   │
+│   │   Session Debug — per-request SQL trace      │  │   Discovery status: /discovery_status.do    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow SaaS nodes · MID server VM · log aggregation (Splunk/ELK)                                 │
+│  Check stats.do first → DB Activity Monitor → System Diagnostics → MID logs → Session Debug           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Application Log (sys_log)           │  │          Support Data Collection            │   │
+│   │   System Logs > All (UI nav)                 │  │   stats.do screenshot at time of issue      │   │
+│   │   Filter: source, level, time window         │  │   thread_monitor.do if perf-related         │   │
+│   │   Script log: gs.log()/gs.error() output     │  │   Log excerpts from System Logs > All       │   │
+│   │   Export as CSV for HI ticket submission     │  │   Background Script diagnostic snapshot     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ServiceNow SaaS nodes (multi-tenant, no file system access) · MID Server VM (on-prem or cloud)       │
+│  Log aggregation via Splunk/ELK integration or UI export only                                         │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  stats.do    = real-time node statistics page; memory heap, thread counts, queue depth                │
-│  sys_log     = application log table; records script errors and info messages                         │
-│  Transaction = single user request from arrival to response; logged with duration                     │
-│  Semaphore   = concurrency lock; leaks cause requests to queue and time out                           │
-│  Script profiler= measures script execution time; identifies slow business rules                      │
-│  ECC queue   = External Communication Channel; queues outbound REST/SOAP calls                        │
+│  stats.do    = real-time node statistics page; memory heap, thread counts, DB pool, queue depth       │
+│  sys_log     = application log table; records script errors, info messages, and warnings              │
+│  Transaction = single user HTTP request from arrival to response; logged with duration in ms          │
+│  Semaphore   = concurrency lock; leaks cause requests to queue and eventually time out                │
+│  Script profiler= measures script execution time per business rule; identifies slow rules             │
+│  ECC queue   = External Communication Channel; queues outbound REST and SOAP integration calls        │
 │  MID server log= agent.log on MID server host; shows discovery and integration errors                 │
-│  Slow query  = SQL taking >1s; logged in transaction log; requires index review                       │
-│  fixscripts.do= admin page to run server-side fix scripts for data corrections                        │
-│  Discovery   = ServiceNow CMDB auto-population via MID server network scans                           │
-│  REST message= outbound HTTP integration; result logged in sys_rest_message_fn                        │
-│  Queue depth = pending requests waiting for available thread; high depth = saturation                 │
+│  Slow query  = SQL taking > 1 second; logged in transaction log; needs index review                   │
+│  Session Debug= per-session diagnostic mode; captures SQL, ACL, business rule trace without impact    │
+│  Queue depth = pending requests waiting for an available thread; high depth = saturation              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-**Action:** Disable the offending Business Rule and investigate the script logic.
+
+```mermaid
+graph TD
+    A([ServiceNow Issue]) --> B{What type of problem?}
+    B -->|Slow page loads or timeouts| C[stats.do — check thread count and queue depth\nthread_monitor.do — look for blocked threads]
+    B -->|Slow database queries| D[DB Activity Monitor for live queries\nSlow Queries log for historical > 10 sec]
+    B -->|Integration or MID Server failing| E[ECC Queue in UI for error state messages\nMID server: tail agent0.log.0]
+    B -->|Script or Business Rule error| F[System Logs > All — filter by source and time\nSession Debug for per-session BR trace]
+    B -->|Scheduled job or workflow failing| G[System Diagnostics for self-test suite\nCheck failed scheduler jobs: sysauto table]
+    B -->|Unknown platform issue| H[Background Script diagnostic snapshot\nSystem Diagnostics > Diagnostics self-test]
+    C --> I{Thread or queue issue?}
+    I -->|Blocked threads in thread_monitor| J[Identify blocking transaction and table\nDisable offending Business Rule if causing lock]
+    I -->|High queue depth at stats.do| K[Scale check: contact ServiceNow support for node capacity\nIdentify runaway scheduled job or report]
+    D --> L[Identify slow query table and condition\nRequest index via HI portal for cloud instances]
+    E --> M[Check MID server connectivity to instance\nVerify MID server credentials: test connection in UI]
+    F --> N[Session Debug: enable SQL and BR trace\nReproduce issue and check session debug log]
+    G --> O[Sysauto table: filter state=error\nWorkflow Contexts for stuck workflows]
+    H --> P[Run Background Script snapshot\nCapture stats.do output and attach to ticket]
+    J --> Q[Collect stats.do screenshot + thread_monitor + log excerpt\nOpen ServiceNow HI support ticket]
+    K --> Q
+    L --> Q
+    M --> Q
+    N --> Q
+    O --> Q
+    P --> Q
+    Q --> R[Provide: instance name, version, affected node\nRepro steps, log excerpts, stats.do screenshot]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P action
+    class Q,R escalate
+```
+
+## Before you begin
+
+- **Access:** ServiceNow admin role; MID Server host SSH access (for integration issues)
+- **Gather first:** the specific symptom (slow page, script error, integration failure, scheduled job failing), the affected table or module name, and the time window when the issue occurred
+- **Scope:** confirm whether the issue affects one user, one instance node, one integration, or all users
 
 ---
 
-## DB Activity Monitor
+## Step 1 — Check instance health via stats.do
 
-Shows live database query activity. Access via **System Diagnostics > DB Activity Monitor**.
+The Stats page is the first place to check during any performance issue. It surfaces real-time system health.
 
-### Key Columns
+```text
+Access: https://<instance>.service-now.com/stats.do
+```
+
+Key metrics to check:
+
+| Metric | Location in stats.do | Problem Threshold |
+|---|---|---|
+| Heap used | System Information → Memory | > 85% of max heap |
+| Active threads | System Information → Threads | Near max (typically 200+) |
+| Request queue depth | System Information → Requests | > 50 queued requests |
+| DB pool usage | Database → Connection Pool | > 90% of pool connections |
+| Semaphore wait | System Information → Semaphores | Any semaphore with large wait count |
+
+```bash
+# Retrieve instance metrics via REST API
+curl -s -u "$SN_USER:$SN_PASS" \
+  "$SN_INSTANCE/api/now/table/sys_properties?sysparm_query=nameLIKEglide.buildtag&sysparm_fields=name,value" \
+  -H "Accept: application/json" | python3 -m json.tool
+
+# Check MID server status via API
+curl -s -u "$SN_USER:$SN_PASS" \
+  "$SN_INSTANCE/api/now/table/ecc_agent?sysparm_fields=name,status,version&sysparm_query=status!=Up" \
+  -H "Accept: application/json" | python3 -m json.tool
+# Expected: empty results (all MID servers Up)
+```
+
+---
+
+## Step 2 — Inspect DB Activity Monitor for slow queries
+
+```text
+Navigate to: System Diagnostics > DB Activity Monitor
+```
+
+Key columns:
 
 | Column | Meaning |
 |---|---|
@@ -117,23 +152,26 @@ Shows live database query activity. Access via **System Diagnostics > DB Activit
 | User | ServiceNow user who triggered the query |
 | Business Rule | Script that initiated the query |
 
-### Slow Query Threshold
+```text
+Slow query log: System Diagnostics > Slow Queries
+```
 
-ServiceNow logs queries exceeding 10 seconds to the Slow Query log. Access via **System Diagnostics > Slow Queries**.
+ServiceNow logs queries exceeding 10 seconds. For persistent slow queries:
 
-For persistent slow queries:
-
-1. Identify the table and query condition
-2. Check if an index exists: **System Definition > Tables & Columns** → select table → **Indexes** tab
-3. Add a composite index if one is missing (requires ServiceNow support for cloud instances — raise an HI request)
+1. Identify the table and query condition from the Slow Queries log
+2. Check if an index exists: System Definition > Tables & Columns → select table → Indexes tab
+3. Add a composite index if missing (requires HI request for cloud instances)
+4. For immediate relief: identify the Business Rule or report causing the query and disable it
 
 ---
 
-## System Diagnostics Module
+## Step 3 — Run System Diagnostics self-test
 
-Navigate to: **System Diagnostics > Diagnostics**
+```text
+Navigate to: System Diagnostics > Diagnostics
+```
 
-Runs a self-test suite covering:
+The self-test suite checks:
 
 - Database connectivity
 - Scheduler health
@@ -142,87 +180,59 @@ Runs a self-test suite covering:
 - File system access
 - Session manager
 
-Results are categorized as **Pass**, **Warning**, or **Fail**. Screenshot and attach to any support ticket.
+Results appear as Pass, Warning, or Fail. Screenshot and attach to any support ticket.
 
 ---
 
-## Log File Locations
+## Step 4 — Review application and MID Server logs
 
-### Application Logs (accessed via UI)
-
-ServiceNow cloud instances do not expose raw file system access. Logs are accessed through the UI.
+### Application logs (in-UI access only for SaaS instances)
 
 | Log | Navigation Path | Content |
 |---|---|---|
-| Application log | **System Logs > All** | All app events, errors, warnings |
-| Script log | **System Logs > Script Log Statements** | `gs.log()` / `gs.error()` output |
-| Email log | **System Logs > Emails** | Outbound email delivery log |
-| Transaction log | **System Diagnostics > Transactions** | Per-request timing data |
-| Import Set log | **System Import Sets > Transform Log** | Transform execution details |
-| Workflow log | **Workflow > Workflow Contexts** | Workflow execution history |
-| ECC Queue log | **MID Server > ECC Queue** | MID-instance message bus |
+| Application log | System Logs > All | All app events, errors, warnings |
+| Script log | System Logs > Script Log Statements | `gs.log()` / `gs.error()` output |
+| Email log | System Logs > Emails | Outbound email delivery log |
+| Transaction log | System Diagnostics > Transactions | Per-request timing data |
+| ECC Queue log | MID Server > ECC Queue | MID-instance message bus errors |
+| Workflow log | Workflow > Workflow Contexts | Workflow execution history |
 
-### MID Server Logs (on-premises)
-
-MID Server logs are stored on the host running the MID Server agent.
-
-**Linux:**
-
-```text
-/opt/servicenow/mid/agent/logs/
-├── agent0.log.0          # Current log (active)
-├── agent0.log.1          # Previous rotation
-├── agent0.log.2
-└── agent.err.0           # Error output stream
-```
-
-**Windows:**
-
-```text
-C:\ServiceNow\MID Server\agent\logs\
-├── agent0.log.0
-├── agent0.log.1
-└── agent.err.0
-```
-
-**Common log search commands:**
+### MID Server logs (on-premises host)
 
 ```bash
-# Find all ERROR lines in the last 500 lines
+# Linux MID Server: tail for errors
 tail -500 /opt/servicenow/mid/agent/logs/agent0.log.0 | grep -i "error\|exception\|failed"
 
 # Watch live log
 tail -f /opt/servicenow/mid/agent/logs/agent0.log.0
 
-# Find authentication failures
+# Auth failures (wrong credentials)
 grep -i "401\|unauthorized\|invalid credentials" /opt/servicenow/mid/agent/logs/agent0.log.0
 
-# Find connectivity issues
+# Connectivity issues (unreachable instance)
 grep -i "connection refused\|timeout\|unreachable" /opt/servicenow/mid/agent/logs/agent0.log.0
 ```
 
-### Increasing MID Server Log Verbosity
+Log file locations:
 
-Edit `/opt/servicenow/mid/agent/config.xml`:
+- **Linux:** `/opt/servicenow/mid/agent/logs/agent0.log.0` (current), `.log.1` (previous), `agent.err.0` (errors)
+- **Windows:** `C:\ServiceNow\MID Server\agent\logs\agent0.log.0`
 
-```xml
-<!-- Change INFO to DEBUG for verbose output -->
-<parameter name="loglevel" value="DEBUG"/>
-```
-
-Restart the MID Server service after changing. Remember to set back to `INFO` after debugging — DEBUG logs are verbose and fill disk quickly.
+To increase verbosity, edit `config.xml` — set `loglevel` to `DEBUG` and restart the MID Server service. Reset to `INFO` after debugging.
 
 ---
 
-## Session Debug
+## Step 5 — Enable Session Debug for targeted investigation
 
-Enable detailed debug output for a specific session without affecting all users.
+Session Debug captures granular diagnostic data for a specific session without impacting other users.
 
-Navigate to: **System Diagnostics > Session Debug**
+```text
+Enable: https://<instance>.service-now.com/session_debug.do
+```
 
-Available debug options:
+Available debug flags:
 
-| Option | What It Captures |
+| Flag | What It Captures |
 |---|---|
 | Business Rules | BR evaluation per request |
 | ACLs | Access control evaluation trace |
@@ -230,95 +240,21 @@ Available debug options:
 | GlideRecord | Record read/write operations |
 | Scripting | Script execution trace |
 
-**To enable for your own session:**
+After enabling, reproduce the issue. Debug output appears in **System Diagnostics > Session Debug Log**.
 
-```text
-https://<instance>.service-now.com/session_debug.do
-```
-
-Check the desired debug flags, then reproduce the issue. Debug output appears inline on pages or in **System Diagnostics > Session Debug Log**.
-
-**Caution:** SQL debug generates very large output. Only enable for targeted investigation and disable immediately after.
+**Caution:** SQL debug generates very large output. Enable only for targeted investigation and disable immediately after.
 
 ---
 
-## Support Information Gathering
+## Step 6 — Run Background Script diagnostic snapshot
 
-When raising a ServiceNow support ticket, gather the following before submitting:
-
-### Instance Information
-
-```bash
-# Retrieve via API
-curl -s -u "$SN_USER:$SN_PASS" \
-  "$SN_INSTANCE/api/now/table/sys_properties?sysparm_query=nameLIKEglide.buildtag&sysparm_fields=name,value" \
-  -H "Accept: application/json" | jq '.result[] | {name, value}'
-```
-
-- Instance name and URL
-- Current version and patch level (visible on `stats.do`)
-- Affected node ID(s) (visible on `stats.do` under System Information)
-
-### Reproducing the Issue
-
-- Exact steps to reproduce
-- User account used (provide a test account if possible)
-- Time of occurrence (UTC)
-- Expected vs. actual behavior
-
-### Log Excerpts
-
-From **System Logs > All** — filter to the time window of the issue, export as CSV or copy the relevant error messages.
-
-### Diagnostic Screenshots
-
-- `stats.do` output at time of issue (or closest available)
-- Thread Monitor (`thread_monitor.do`) if performance-related
-- System Diagnostics results if available
-
-### HI Portal Ticket Template
-
-```yaml
-Subject: [Instance: mycompany] <Short description of issue>
-
-Instance: mycompany.service-now.com
-Version: Yokohama Patch 5
-Affected node: app-node-02 (if known)
-Time of issue: 2026-05-08 09:15 UTC
-Impact: P2 — Department level degradation
-
-DESCRIPTION:
-<What is happening, what the expected behavior is>
-
-STEPS TO REPRODUCE:
-1.
-2.
-3.
-
-LOGS:
-[Paste relevant log excerpts]
-
-DIAGNOSTICS:
-[Attach stats.do screenshot]
-[Attach thread_monitor.do screenshot if relevant]
-
-BUSINESS IMPACT:
-<Number of users affected, business processes impacted>
-```
-
----
-
-## Diagnostic Script — Instance Snapshot
-
-Run this Background Script to capture a diagnostic snapshot:
+Navigate to: **System Definition > Scripts - Background**
 
 ```javascript
-// Navigate to: System Definition > Scripts - Background
-// Run this to capture key instance metrics
-
+// Run this to capture a key instance diagnostic snapshot
 var output = [];
 
-// Instance version
+// Instance version and node
 output.push('=== Instance Info ===');
 output.push('Version: ' + gs.getProperty('glide.buildtag'));
 output.push('Node: ' + gs.getNodeName());
@@ -339,7 +275,7 @@ jobs.query();
 jobs.next();
 output.push('Failed scheduled jobs: ' + jobs.getAggregate('COUNT'));
 
-// MID Server status
+// MID Servers not Up
 var mids = new GlideRecord('ecc_agent');
 mids.addQuery('status', '!=', 'Up');
 mids.query();
@@ -358,16 +294,65 @@ gs.print(output.join('\n'));
 
 ---
 
-## Verify resolution
+## Step 7 — Collect support information for HI ticket
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```text
+ServiceNow support portal: https://hi.service-now.com
+```
+
+HI ticket template:
+
+```yaml
+Subject: [Instance: mycompany] <Short description>
+
+Instance: mycompany.service-now.com
+Version: Xanadu Patch 3
+Affected node: (from stats.do System Information)
+Time of issue: 2026-06-15 09:15 UTC
+Impact: P2 — Department-level degradation
+
+DESCRIPTION:
+<What is happening vs expected behavior>
+
+STEPS TO REPRODUCE:
+1.
+2.
+
+LOGS:
+[Paste relevant log excerpts from System Logs > All]
+
+DIAGNOSTICS:
+[Attach stats.do screenshot]
+[Attach thread_monitor.do screenshot if performance-related]
+
+BUSINESS IMPACT:
+<Number of users affected, critical process affected>
+```
+
+---
+
+## Log locations
+
+| Source | Path / Tool | What to look for |
+|---|---|---|
+| Application log | System Logs > All | Script errors, workflow failures |
+| Transaction log | System Diagnostics > Transactions | Slow requests (>5 sec) |
+| Slow queries | System Diagnostics > Slow Queries | Queries > 10 seconds |
+| MID Server | `/opt/servicenow/mid/agent/logs/agent0.log.0` | Auth failures, timeouts |
+| ECC Queue | MID Server > ECC Queue | Error state messages |
+| Scheduler jobs | `sysauto` table, filter `state=error` | Failed scheduled jobs |
 
 ---
 
 ## See also
 
-- [Servicenow — Common Issues](../common-issues/)
-- [Servicenow — Escalation](../escalation/)
-- [Servicenow — Health Checks](../../operations/health-checks/)
+- [ServiceNow — Common Issues](../common-issues/)
+- [ServiceNow — Escalation](../escalation/)
+
+## Verify resolution
+
+- `stats.do` shows heap below 85%, thread count normal, queue depth at 0
+- DB Activity Monitor shows no queries exceeding 10 seconds
+- `GET /api/now/table/ecc_agent?sysparm_query=status!=Up` returns empty results
+- The affected Business Rule, workflow, or integration executes successfully on retest
+- System Logs > All shows no new Error-level events for the affected source since the fix
