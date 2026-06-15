@@ -6,85 +6,297 @@ tags:
 search:
   boost: 1.5
 ---
-# vRNI Escalation
+# Aria Operations for Networks — Escalation
 
-```bash
-ssh ubuntu@vrni.example.local
+<div class="kb-summary">
+How to escalate VMware Aria Operations for Networks (vRNI) issues to Broadcom support: what data to collect, how to generate the support bundle, step-by-step case creation on support.broadcom.com, and the escalation path when progress stalls.
 
-# Generate support bundle from CLI
-sudo /etc/init.d/support-bundle.sh
+*Applies to: Aria Operations for Networks (vRealize Network Insight) 6.x*
+</div>
 
-# Bundle is placed in:
-ls /data/support-bundles/
-# Transfer via SCP:
-scp ubuntu@vrni.example.local:/data/support-bundles/<bundle>.tar.gz /local/path/
-```
 ```text
-┌─────────────────────────────────────────── vRNI Escalation ───────────────────────────────────────────┐
+┌──────────────────────── VMware Aria Operations for Networks — Escalation ─────────────────────────────┐
 │                                                                                                       │
-│  Escalation triggers, Support Request process, and TAM engagement for vRNI.                           │
+│  Escalate Aria Ops for Networks (vRNI) issues to VMware GSS when the Platform VM is                   │
+│  completely unreachable, flow data has been missing for more than 2 hours, an upgrade is              │
+│  looping or has corrupted the platform, or data integrity issues are suspected.                       │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Escalation Triggers              │  │              SR Severity Levels             │   │
-│   │           Platform UI unreachable            │  │           P1: platform fully down           │   │
-│   │          All flows missing >2 hours          │  │          P2: flows missing/degraded         │   │
-│   │            Upgrade fails or loops            │  │             P3: feature/UI issue            │   │
-│   │          Data corruption suspected           │  │            P4: how-to / question            │   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
+│   │  Generate support bundle via SSH or VAMI     │  │  Go to support.broadcom.com → sign in       │   │
+│   │  Capture platform + proxy VM status          │  │  Product: VMware Aria Ops for Networks      │   │
+│   │  Note vRNI version (Settings → About)        │  │  Severity: P1 platform down / P2 flows lost │   │
+│   │  Collect data source status + error details  │  │  Attach bundle + data source status + log   │   │
+│   │  Write timeline: last flows → first failure  │  │  Include vRNI version and data source list  │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Triggers determine severity; SR opened with bundle; TAM engaged for P1/P2.                           │
+│  For P1: open portal case AND call Broadcom support immediately.                                      │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  SR Process                  │  │                TAM Engagement               │   │
-│   │          1. Generate support bundle          │  │             Notify TAM for P1/P2            │   │
-│   │         2. Open GSS SR with severity         │  │           TAM escalates internally          │   │
-│   │         3. Attach bundle + timeline          │  │           Provide change timeline           │   │
-│   │            4. Follow GSS guidance            │  │              Bridge call for P1             │   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm bundle received        │  │  Do not delete flow data or reconfigure     │   │
+│   │  T2: vRNI SE assigned; deep analysis         │  │  Do not run PAK upgrade during incident     │   │
+│   │  T3: engineering review for platform bug     │  │  Do not power off Platform VM mid-incident  │   │
+│   │  TAM: bridge call for P1 platform outage     │  │  Do not remove Proxy VM during diagnosis    │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM; support bundle generated via SSH or VAMI; GSS portal for SR                        │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  Support Bundle      = Compressed log archive; mandatory attachment for any SR                        │
-│  GSS                 = Global Support Services; VMware/Broadcom support portal                        │
-│  SR                  = Support Request; formal case opened with GSS                                   │
-│  P1 Severity         = Production down; requires 24/7 response and bridge call                        │
-│  P2 Severity         = Major degradation; business-hours priority response                            │
-│  TAM                 = Technical Account Manager; escalation point for P1/P2                          │
-│  Bridge Call         = Live conference with GSS, TAM, and customer for P1 issues                      │
-│  Change Timeline     = Log of recent changes provided to GSS to narrow root cause                     │
-│  Data Corruption     = Suspected invalid flow data; always P1 or P2 severity                          │
-│  Upgrade Loop        = PAK upgrade repeatedly fails or rolls back; escalate to GSS                    │
-│  Internal Escalation = TAM routes SR to engineering or BU team for complex issues                     │
-│  RCA                 = Root Cause Analysis; provided by GSS after P1/P2 resolution                    │
+│  Aria Ops for Networks = network visibility and analytics platform; formerly vRNI / vRealize NI       │
+│  Platform VM    = central analytics appliance; runs the UI, query engine, and flow database           │
+│  Proxy VM       = data collector deployed near data sources; sends flows to Platform VM               │
+│  Data source    = vCenter, NSX, switch, or firewall configured in vRNI to send flow telemetry         │
+│  Flow data      = IPFIX/sFlow/NetFlow records collected from data sources; core vRNI dataset          │
+│  Support bundle = SSH-generated or VAMI-generated; contains platform logs, flow DB state, config      │
+│  PAK file       = vRNI upgrade package; upgrade loops are a common escalation trigger                 │
+│  GSS            = Global Support Services; Broadcom/VMware support team                               │
+│  TAM            = Technical Account Manager; escalation for P1/P2 with bridge call                    │
+│  Bridge call    = live conference with GSS + TAM + customer for critical P1 issues                    │
+│  RCA            = Root Cause Analysis; provided by GSS after P1/P2 resolution                         │
+│  Data corruption = suspected invalid flow or topology data; always P1 or P2 severity                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+---
+
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** SSH ubuntu@ access to the Platform VM; vRNI UI admin access; Broadcom support account at support.broadcom.com with active Aria Ops for Networks entitlement
+- **Note:** The Platform VM SSH user is `ubuntu`, not `root` — run `sudo` for privileged commands
+- **Do NOT power off the Platform VM** during an active incident without GSS direction — the in-memory flow database may not survive an unclean shutdown
+- **Do NOT run a PAK upgrade** if the platform is already degraded — the upgrade process may fail and leave the platform in an unrecoverable state
+- **Do NOT remove or reconfigure Proxy VMs** during the investigation — the flow collection topology is what GSS uses to trace where data is being lost
 
 ---
+
+## Pre-Escalation Self-Check
+
+Run these before opening the case.
+
+| Check | Command / Location | Expected result |
+|---|---|---|
+| vRNI version | vRNI UI → Settings → Overview → Version | Note full version (e.g. 6.12.0) |
+| Platform VM status | vSphere Client: check power state of vRNI Platform VM | Powered on, VMware Tools running |
+| Proxy VM status | vSphere Client: check power state of all vRNI Proxy VMs | All powered on |
+| UI accessibility | Browse to `https://<vrni-fqdn>/` | Login page loads |
+| VAMI accessibility | Browse to `https://<vrni-fqdn>:5480` | VAMI login page loads |
+| Data source status | vRNI UI → Settings → Data Sources | All sources show Connected |
+| Flow data in UI | vRNI UI → Dashboard → Traffic Overview | Recent flows visible (within 15 min) |
+| Platform disk space | SSH: `df -h` | All partitions below 85% used |
+
+---
+
+## Step-by-Step Data Collection
+
+### 1. Get the vRNI version and platform VM health
+
+In the vRNI UI: click **Settings** (top right) → **Overview** → note the platform version and build number.
+
+```bash
+# SSH to the Platform VM as ubuntu
+ssh ubuntu@<vrni-fqdn>
+
+# Check platform service status
+sudo systemctl status vrni
+
+# Disk space (flow database fills the /var/log or /data partition)
+df -h
+
+# Memory and CPU
+free -h
+top -bn1 | head -20
+```
+
+### 2. Generate the support bundle
+
+**Method 1 — Via SSH (recommended for any severity):**
+
+```bash
+# SSH to the Platform VM as ubuntu
+ssh ubuntu@<vrni-fqdn>
+
+# Generate the support bundle
+sudo /etc/init.d/support-bundle.sh
+
+# Bundle is written to /data/support-bundles/
+ls -lh /data/support-bundles/
+
+# Copy to a local machine for upload
+scp ubuntu@<vrni-fqdn>:/data/support-bundles/<bundle-filename>.tar.gz /tmp/
+```
+
+**Method 2 — Via VAMI UI:**
+
+1. Browse to `https://<vrni-fqdn>:5480` and log in.
+2. Click **Support** → **Generate Support Bundle**.
+3. Download the resulting archive.
+
+### 3. Collect data source status and error details
+
+In the vRNI UI:
+1. Click **Settings** → **Data Sources**.
+2. Note the status of each data source (Connected / Disconnected / Error).
+3. For any source showing an error: click the source name and note the exact error message.
+4. Export the data source list: Settings → Data Sources → Export (or screenshot the list).
+
+```bash
+# From the Platform VM — check network connectivity to data sources
+# Replace <vcenter-ip> with an actual data source IP
+ping -c 4 <vcenter-ip>
+nc -zv <vcenter-ip> 443
+```
+
+### 4. Write the timeline
+
+```text
+vRNI version: 6.12.0 build XXXXXXXX
+Platform VM: vrni-platform-01.corp.local
+Proxy VMs: vrni-proxy-01 (vSphere), vrni-proxy-02 (NSX)
+Data sources: 3 vCenter + 2 NSX + 4 physical switches
+Issue first observed: 2026-06-14 09:00 UTC
+Last confirmed flow data: 2026-06-14 08:30 UTC
+Changes in 24h before the issue:
+  - 08:00: vRNI PAK upgrade from 6.11 to 6.12.0 applied
+  - 08:45: Upgrade completed; platform VM restarted
+  - 09:00: UI accessible but all data sources show "Disconnected"
+  - 09:10: Flow overview dashboard shows no data since 08:30 UTC
+Steps already taken:
+  - VAMI accessible; platform services appear running
+  - Data source "Test Connection" fails for all 9 sources
+  - Proxy VM ping to vCenter succeeds (network not the issue)
+  - Did NOT delete data sources or run another PAK upgrade
+Blast radius: All network flow analytics unavailable; 9 data sources disconnected
+```
+
+---
+
+## How to Open the SR on support.broadcom.com
+
+1. Go to **support.broadcom.com** and sign in with your Broadcom account.
+
+2. Click **Open a Support Request**.
+
+3. Under **Product Group**, select **VMware Cloud Foundation and Virtualization** → **VMware Aria Operations for Networks** (or search "vRealize Network Insight").
+
+4. Under **Version**, select your vRNI version from Step 1.
+
+5. Under **Severity**, select:
+   - **Severity 1 — Critical**: Platform VM completely unreachable; all flow data missing for more than 2 hours; data integrity issue suspected; production network visibility is blind; no workaround
+   - **Severity 2 — High**: All data sources disconnected but Platform VM is accessible; upgrade failed and platform is in an inconsistent state; Proxy VMs not collecting
+   - **Severity 3 — Medium**: Single data source in error; specific flow type missing; UI accessible with some data visible; workaround exists
+   - **Severity 4 — Low**: How-to question, pre-upgrade planning, data source configuration help
+
+6. In the **Summary** field: product + symptom + scope. Example: `vRNI 6.12 — all 9 data sources disconnected after PAK upgrade 6.11→6.12, flow data collection stopped since 08:30 UTC`.
+
+7. In the **Description** field, paste:
+   - vRNI version from Step 1
+   - Platform VM disk space and service status from Step 1
+   - Data source error messages from Step 3
+   - The timeline from Step 4
+
+8. Under **Attachments**, upload the support bundle from Step 2.
+
+9. Click **Submit**. You will receive a case number by email immediately.
+
+10. **Severity 1 only:** call Broadcom/VMware support after submission:
+    - North America: +1 877-486-9273 (24×7 for Severity 1)
+    - EMEA: +44 (0)3453 700 100
+    - State "Severity 1 — Aria Ops for Networks Platform VM down, all flow visibility lost" at the start of the call.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open case at support.broadcom.com with support bundle and data source status attached
+         ↓
+Step 2 — T1 support engineer acknowledges (Sev1: < 30 min; Sev2: < 2 hr)
+         ↓
+Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
+         → Reply: "Requesting escalation to Aria Networks Senior Engineer"
+         → State: "[platform down / all sources disconnected / flow data missing since X]"
+         ↓
+Step 4 — vRNI T2 Senior Engineer is assigned
+         → They will request SSH access to the Platform VM for a live session
+         → Have ubuntu@ SSH access and VAMI credentials ready
+         ↓
+Step 5 — If issue is a confirmed product bug (upgrade regression, flow DB corruption):
+         → T2 escalates to Aria Networks Engineering
+         → Engineering provides a targeted recovery procedure or hotfix
+         ↓
+Step 6 — For Sev1 with no resolution after 2 hours:
+         → Request CritSit escalation; contact your Broadcom TAM
+         → TAM convenes bridge call with GSS and Engineering
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Delete data sources during investigation | Data source config contains the connection history and last-good-state needed for GSS to trace the failure | Leave all data sources in place; only delete if GSS specifically instructs |
+| Run a PAK upgrade on a degraded platform | Upgrade on an already-broken platform may fail mid-way and leave the system unrecoverable | Wait for GSS to stabilise the current state before any upgrade |
+| Power off the Platform VM mid-incident | The in-memory flow database may not survive an unclean shutdown; adds data loss on top of the existing issue | Request a controlled shutdown from GSS; they will advise on safe power-cycle procedure |
+| Remove a Proxy VM during diagnosis | Changes the collection topology GSS is using to trace where data is being lost | Leave all Proxy VMs running; GSS will direct any proxy-level action |
+| Reconfigure or reset data source credentials | Changes the auth state GSS is examining; may trigger additional API errors on the data source side | Hold all credential changes until GSS confirms the issue is not auth-related |
+| Re-run the PAK upgrade immediately after failure | A failed upgrade may have left configuration in a partial state; re-running may make it unrecoverable | Let GSS examine the failed upgrade log before any retry |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# SSH to Platform VM as ubuntu — paste these into every case update
+
+# Platform service status
+sudo systemctl status vrni
+
+# Disk space (flow DB fills /data or /var/log)
+df -h
+
+# Memory and swap
+free -h
+
+# Check platform processes
+ps aux | grep -E 'java|cassandra|nginx'
+
+# Network connectivity to data sources
+ping -c 4 <vcenter-ip>
+nc -zv <vcenter-ip> 443
+
+# Recent platform log entries
+sudo tail -100 /var/log/vrni/platform.log | grep -i "error\|fail\|exception"
+```
+
+---
+
+## Support SLA Reference
+
+| Severity | Definition | Initial Response SLA |
+|---|---|---|
+| Sev 1 — Critical | Platform VM unreachable; all flow visibility lost; data integrity issue | < 30 min (24×7) |
+| Sev 2 — High | All sources disconnected; platform accessible but flow collection stopped | < 2 hours (24×7) |
+| Sev 3 — Medium | Single source failing; specific flow type missing; workaround exists | < 8 hours |
+| Sev 4 — Low | How-to, pre-upgrade, data source config, non-urgent question | Next business day |
 
 ---
 
 ## See also
 
 - [Aria Operations for Networks — Diagnostics](diagnostics/)
-- [vRNI Common Issues](common-issues/)
+- [Aria Operations for Networks — Common Issues](common-issues/)
+
+---
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- Browse to the vRNI UI and confirm the login page loads
+- Navigate to **Settings → Data Sources** and confirm all sources show **Connected**
+- Check the **Traffic Overview** dashboard: recent flow data should appear within the last collection interval (typically 5–10 minutes)
+- Run `df -h` on the Platform VM and confirm the flow data partition is not at or near 100%
+- Confirm a Proxy VM can reach a data source: `nc -zv <vcenter-ip> 443` from the Platform VM
+- Monitor for one full collection cycle (10–15 minutes) to confirm all data sources complete collection without errors
