@@ -9,21 +9,20 @@ search:
 ---
 # NSX — Diagnostics
 
-```bash
-# SSH to NSX Manager node
-# Live log tail
-tail -f /var/log/vmware/nsx-manager/manager.log
+<div class="kb-summary">
+NSX diagnostic commands: check cluster and transport node health with nsxcli, inspect manager and audit logs, diagnose Edge BGP routing, inspect DFW filters on ESXi hosts with vsipioctl, run Traceflow for hop-by-hop path analysis, capture packets on Edge and ESXi, and generate the NSX support bundle for VMware SRs.
 
-# Search for realisation errors
-grep -i "error\|fail\|exception" /var/log/vmware/nsx-manager/manager.log | tail -30
+*Applies to: NSX 4.x*
+</div>
 
-# Search audit log for admin actions
-grep -i "role\|login\|delete\|create" /var/log/vmware/nsx-manager/audit.log | tail -20
-```
 ```text
 ┌────────────────────────────────────────── NSX — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
-│  NSX log locations, Traceflow tool, IPFIX flow export, and support bundles.                           │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: nsxcli → get cluster status → get alarms → get transport-nodes                 │    │
+│   │   DFW rule drop: summarize-dvfilter on ESXi → vsipioctl getrules → Traceflow in NSX UI      │     │
+│   │   BGP not forming: Edge → vrf → get bgp neighbor summary → check underlay MTU (vmkping -d)  │     │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │                Key Log Files                 │  │                Traceflow Tool               │   │
@@ -47,133 +46,255 @@ grep -i "role\|login\|delete\|create" /var/log/vmware/nsx-manager/audit.log | ta
 │   │         Identify undocumented flows          │  │             Upload to VMware SR             │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager VMs, Edge VMs, ESXi nodes, IPFIX collector, management network                           │
+│  Physical Infrastructure:                                                                             │
+│  NSX Manager VMs (3-node cluster) · Edge VMs or BMs · ESXi transport nodes · IPFIX collector          │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
 │  proton log  = NSX Manager core process log; cluster/config events                                    │
 │  Traceflow   = NSX packet path simulation; shows rule hits and drops                                  │
 │  IPFIX       = IP Flow Info Export; protocol for DFW flow telemetry                                   │
 │  Aria NI     = Aria Network Insight; NSX flow analytics platform                                      │
-│  sFlow       = sampling protocol; alternative to IPFIX for flows                                      │
 │  BFD         = Bidirectional Forwarding Detection; fast link failure detect                           │
 │  nsx-syslog  = aggregated NSX system log; forwarded to SIEM                                           │
-│  Support bundle = NSX zip; all nodes logs + configs for GSS                                           │
-│  SR          = Service Request; VMware GSS support ticket                                             │
-│  Drop observation = Traceflow result showing which rule blocked packet                                │
-│  Flow visibility = map of who talks to whom; built from IPFIX data                                    │
-│  Bidirectional= Traceflow sends packets in both directions simultaneously                             │
+│  DFW filter  = per-vNIC firewall kernel module; rules realised from NSX Manager policy                │
+│  TEP         = Tunnel Endpoint; vmkernel interface on ESXi for Geneve overlay traffic                 │
+│  Geneve      = tunnel protocol used for NSX overlay (UDP port 6081)                                   │
+│  vsipioctl   = ESXi tool to inspect DFW filter rules and hit counts per vNIC                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+```mermaid
+graph TD
+    A([NSX Issue]) --> B{What type of problem?}
+    B -->|Manager cluster health warning| C[nsxcli: get cluster status\nget corfu-cluster status]
+    B -->|VM cannot reach another VM or service| D[NSX UI: Traceflow — inject packet\nCheck for rule drop or routing gap]
+    B -->|BGP not forming on Edge| E[Edge CLI: vrf then get bgp neighbor summary\nCheck underlay MTU with vmkping -d -s 1572]
+    B -->|DFW rule blocking unexpected traffic| F[summarize-dvfilter on ESXi host\nvsipioctl getrules -f filter-name]
+    B -->|Transport node not connected| G[get transport-node-status\nCheck TEP vmkernel IP and route]
+    B -->|Alarms in NSX UI| H[get alarms in nsxcli\nGET /api/v1/alarms?status=OPEN severity=CRITICAL]
+    C --> I{Cluster state?}
+    I -->|Manager node FAILED| J[Collect manager.log from failed node\nCheck corfu Raft quorum: get corfu-cluster status]
+    I -->|Services degraded| K[get services\nCheck disk and memory on the Manager VM]
+    D --> L{Traceflow result?}
+    L -->|Dropped by DFW rule| M[vsipioctl getrules -f filter-name on ESXi\nIdentify rule ID and section in NSX policy]
+    L -->|No route - routing drop| N[Edge: vrf then get route\nCheck T0/T1 route redistribution]
+    E --> O[Check Edge interface counters: get interface fp-eth0 counters\nVerify BGP config: get bgp config]
+    F --> P[vsipioctl getstats -f filter-name to see rule hit counts\nvsipioctl getaddrsets for security group members]
+    G --> Q[ESXi: vmkping -I vmk2 remote-tep-ip\nesxcli network ip interface ipv4 get to verify TEP IP]
+    H --> R[Review alarm source and recommended action\nCheck realisation: GET /policy/api/v1/infra/segments]
+    J --> S[Collect NSX support bundle\nOpen VMware SR]
+    K --> S
+    M --> S
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    S --> T[UI: System > Support Bundle\nAPI: POST /api/v1/node/support-bundles]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I,L dark
+    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
+    class S,T escalate
+```
+
+## Before you begin
+
+- **Access:** SSH to an NSX Manager node (admin user); NSX UI credentials; ESXi root SSH access; Edge node admin SSH access
+- **Gather first:** the specific symptom (VM unreachable, BGP down, DFW rule unexpected behavior, transport node alarm), affected segment or gateway name, and when the issue started
+- **Scope:** confirm whether the issue affects one VM, one segment, one Edge gateway, or the entire NSX Manager cluster
+
+---
+
+## Step 1 — Check NSX Manager cluster health
+
 ```bash
-# SSH to any NSX Manager node
+# SSH to NSX Manager node
+ssh admin@<nsx-manager-ip>
+
+# Enter NSX CLI
 nsxcli
 
-# Cluster and node health
+# Manager cluster and node status
 get cluster status
+# Expected: all 3 nodes STABLE
+
 get managers
-get clusters
+# Shows: node IDs, IPs, roles
+
 get corfu-cluster status
+# Corfu = NSX distributed control plane database (Raft)
+# Expected: all nodes connected; leader elected
 
-# Services
+# All NSX services
 get services
-get service http
-get service manager
-get service controller
+get service manager     # Management plane
+get service controller  # Control plane
+get service http        # API
 
-# Transport infrastructure
-get transport-nodes
-get transport-node-status
-get tunnel endpoints
-get tunnel status
-
-# Overlay
-get logical-switches
-get logical-routers
-
-# Alarms
-get alarms
-get alarms | grep -i "critical\|high"
-
-# Version
+# Version and node inventory
 get version
 get nodes
 ```
+
+---
+
+## Step 2 — Check alarms and transport node status
+
 ```bash
-# SSH to Edge node (admin user)
-# All routing commands require VRF context
+# All open alarms (from nsxcli)
+get alarms | grep -i "critical\|high"
 
-# List all logical routers (VRFs) on this Edge
+# Via REST API — open critical alarms with source and message
+curl -sk -u 'admin:<password>' \
+  "https://<nsx-manager>/api/v1/alarms?status=OPEN&severity=CRITICAL" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+print(f'Critical alarms: {d.get(\"result_count\",0)}')
+for a in d.get('results',[]):
+    src  = a.get('alarm_source',{}).get('display_name','?')
+    summ = a.get('summary','')[:120]
+    print(f'  {src}: {summ}')
+"
+
+# All transport nodes and their connection state
+get transport-nodes
+get transport-node-status
+# Expected: all nodes CONNECTED; problem = DISCONNECTED or DEGRADED
+
+# Transport node tunnel status
+get tunnel status
+get tunnel endpoints
+# Expected: all TEP tunnels UP; problem = DOWN or UNKNOWN
+
+# Via REST API — specific transport node state
+curl -sk -u 'admin:<password>' \
+  "https://<nsx-manager>/api/v1/transport-nodes/<tn-id>/state" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+print(f'State: {d.get(\"state\",\"?\")}')
+print(f'Transport failures: {d.get(\"transport_failures\",[])}')
+"
+```
+
+---
+
+## Step 3 — Diagnose TEP connectivity on ESXi hosts
+
+```bash
+# SSH to the ESXi host as root
+
+# Verify NSX VIBs are installed
+esxcli software vib list | grep -i nsx
+# Expected: nsx-vib entries present
+
+# TEP vmkernel interface IP
+esxcli network ip interface ipv4 get
+# Look for: vmk2 or vmk10 with the TEP IP assigned
+
+# TEP route to reach remote TEPs
+esxcli network ip route ipv4 list | grep <tep-subnet>
+
+# Test TEP connectivity to a remote ESXi host TEP
+vmkping -I vmk2 <remote-tep-ip>
+# Expected: 0% loss
+
+# Test MTU — Geneve requires 1600 bytes; test with DF bit set
+vmkping -I vmk2 -d -s 1572 <remote-tep-ip>
+# -d = DF bit; -s 1572 = data payload (adds 28 bytes = 1600 total)
+# Problem: packet loss = MTU mismatch on the physical underlay
+```
+
+---
+
+## Step 4 — Inspect DFW filters on ESXi
+
+```bash
+# SSH to ESXi host as root
+
+# List all DFW filter instances (one per vNIC)
+summarize-dvfilter
+# Or filter for a specific VM
+summarize-dvfilter | grep <vm-name>
+# Note the filter name (e.g., nic-123456-eth0-vmware-sfw.2)
+
+# View rules applied to a specific filter
+vsipioctl getrules -f <filter-name>
+# Shows: rule ID, action (pass/drop), source/dest IPs, ports, direction
+
+# View rule hit statistics (to identify which rule is blocking)
+vsipioctl getstats -f <filter-name>
+# Shows: per-rule packet/byte counters — high counts on a drop rule = culprit
+
+# View security group members (address sets) used in this filter
+vsipioctl getaddrsets -f <filter-name>
+
+# View service definitions
+vsipioctl getservices -f <filter-name>
+
+# VDS and VNI mapping (overlay to host port mapping)
+net-vdl2 -M all -s 0
+```
+
+---
+
+## Step 5 — Diagnose Edge node routing and BGP
+
+```bash
+# SSH to Edge node as admin
+
+# List all logical routers (T0/T1 VRFs) on this Edge
 get logical-routers
+# Note the vrf ID for the T0 gateway
 
-# Enter T0 gateway VRF
+# Enter the T0 VRF context
 vrf <vrf-id>
 
-# Routing
-get route
-get route detail
-get forwarding
-
-# BGP
+# BGP neighbor summary
 get bgp neighbor summary
+# Expected: all peers in Established state
+# Problem: Idle, Active, or Connect = BGP session not formed
+
+# BGP peer detail
 get bgp neighbor <peer-ip>
 get bgp neighbor <peer-ip> routes
 get bgp neighbor <peer-ip> advertised-routes
-get bgp config
 
-# Exit VRF context
+# Routing table
+get route
+get route detail
+
+# Exit VRF
 exit
 
-# Interface status
+# Edge interface counters (check for errors on uplink)
 get interfaces
 get interface fp-eth0
 get interface fp-eth0 counters
 
-# High Availability
+# Edge HA status
 get edge-cluster status
 get high-availability status
 get high-availability channels
 
-# System
-get node
+# Edge system resources
 get node cpu-usage
 get node memory
-get services
-get version
 ```
+
+---
+
+## Step 6 — Run Traceflow for hop-by-hop path analysis
+
 ```bash
-# SSH to ESXi host as root
+# Via NSX UI (recommended): Plan > Traceflow
+# Select source logical port, inject ICMP/TCP/UDP packet, view hop results
 
-# Verify NSX VIBs are installed
-esxcli software vib list | grep -i nsx
-
-# TEP vmkernel IP
-esxcli network ip interface ipv4 get
-
-# TEP route reachability
-esxcli network ip route ipv4 list | grep <tep-subnet>
-
-# Test TEP connectivity (replace vmk2 and IP with your TEP vmk)
-vmkping -I vmk2 <remote-tep-ip>
-vmkping -I vmk2 -d -s 1572 <remote-tep-ip>   # MTU test
-
-# DFW filter inspection
-summarize-dvfilter                             # List all filters
-summarize-dvfilter | grep <vm-name>           # Filter for a specific VM
-
-vsipioctl getrules -f <filter-name>           # Rules applied to this filter
-vsipioctl getstats -f <filter-name>           # Rule hit counts
-vsipioctl getaddrsets -f <filter-name>        # Security group memberships
-vsipioctl getservices -f <filter-name>        # Service definitions in rules
-
-# vDS and VNI mapping
-net-vdl2 -M all -s 0
-```
-```bash
-# Create a traceflow request
-curl -sk -u 'admin:password' \
+# Via REST API:
+curl -sk -u 'admin:<password>' \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{
@@ -189,118 +310,79 @@ curl -sk -u 'admin:password' \
         "ttl": 64,
         "protocol": 1
       },
-      "icmp_header": {
-        "icmp_type": 8,
-        "icmp_code": 0
-      },
+      "icmp_header": {"icmp_type": 8, "icmp_code": 0},
       "resource_type": "FieldsPacketData",
       "transport_type": "UNICAST"
     }
   }' \
   "https://<nsx-manager>/api/v1/traceflows"
 
-# Poll for results
-curl -sk -u 'admin:password' \
+# Poll for Traceflow results
+curl -sk -u 'admin:<password>' \
   "https://<nsx-manager>/api/v1/traceflows/<traceflow-id>"
-```
-```bash
-# SSH to Edge node
+# Look for: DROPPED observations with the rule ID that blocked the packet
 
-# Capture on physical uplink
-debug packet capture interface fp-eth0 count 500
-debug packet capture interface fp-eth0 filter "host 10.0.0.1 and tcp port 179" count 200
-
-# Capture on overlay interface (Geneve)
-debug packet capture interface nsx-geneve count 500
-
-# Write to file for Wireshark
-debug packet capture interface fp-eth0 file /tmp/edge-cap.pcap count 1000
-
-# Copy from Edge to external location
-scp /tmp/edge-cap.pcap user@jumphost:/tmp/
-```
-```bash
-# Capture on a physical NIC (vmnic)
-pktcap-uw --capture Uplink --switchport <portid> --outfile /tmp/vmnic-cap.pcap --count 500
-
-# Capture on a vDS port (VM's traffic)
-pktcap-uw --capture VmVnic --switchport <portid> --outfile /tmp/vm-cap.pcap --count 200
-
-# Find the portID for a VM's vNIC
-net-stats -l | grep <vm-name>
-
-# Capture with BPF filter
-pktcap-uw --capture Uplink --switchport <portid> --filter "port 6081" --outfile /tmp/geneve-cap.pcap
-```
-```bash
-# Check segment realisation
-curl -sk -u 'admin:password' \
+# Check policy realisation (segment, DFW policy, T0 gateway)
+curl -sk -u 'admin:<password>' \
   "https://<nsx-manager>/policy/api/v1/infra/segments/<segment-id>/state"
-
-# Check security policy realisation
-curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/policy/api/v1/infra/realized-state/realized-entities?intent_path=/infra/domains/default/security-policies/<policy-id>"
-
-# Check T0 gateway realisation
-curl -sk -u 'admin:password' \
+curl -sk -u 'admin:<password>' \
   "https://<nsx-manager>/policy/api/v1/infra/tier-0s/<t0-id>/state"
 ```
+
+---
+
+## Step 7 — Packet capture and collect support bundle
+
 ```bash
-curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/alarms?status=OPEN&severity=CRITICAL" | python3 -c "
-import sys, json
-d = json.load(sys.stdin)
-print(f'Critical alarms: {d.get(\"result_count\",0)}')
-for a in d.get('results',[]):
-    src  = a.get('alarm_source',{}).get('display_name','?')
-    summ = a.get('summary','')[:100]
-    ts   = a.get('timestamp_epoch','?')
-    print(f'  [{ts}] {src}: {summ}')
-"
-```
-```bash
-# Transport node should have a connection_state of "success" or "in_sync"
-curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/transport-nodes/<tn-id>/state" | python3 -c "
-import sys, json
-d = json.load(sys.stdin)
-print(f'State: {d.get(\"state\",\"?\")}')
-print(f'Transport failures: {d.get(\"transport_failures\",[])}')
-"
-```
-```bash
-# 1. NSX Manager support bundle (from any Manager node)
-# UI: System → Support Bundle → Download
-# Or via API:
-curl -sk -u 'admin:password' \
+# Packet capture on Edge node uplink
+ssh admin@<edge-ip>
+debug packet capture interface fp-eth0 count 500
+debug packet capture interface fp-eth0 filter "host 10.0.0.1 and tcp port 179" count 200
+debug packet capture interface nsx-geneve count 500    # Overlay traffic
+
+# Write to PCAP file for Wireshark
+debug packet capture interface fp-eth0 file /tmp/edge-cap.pcap count 1000
+scp /tmp/edge-cap.pcap user@jumphost:/tmp/
+
+# Packet capture on ESXi host (physical NIC)
+pktcap-uw --capture Uplink --switchport <portid> --outfile /tmp/vmnic-cap.pcap --count 500
+pktcap-uw --capture VmVnic --switchport <portid> --outfile /tmp/vm-cap.pcap --count 200
+pktcap-uw --capture Uplink --switchport <portid> --filter "port 6081" --outfile /tmp/geneve-cap.pcap
+
+# Find portID for a VM's vNIC
+net-stats -l | grep <vm-name>
+
+# Generate NSX support bundle (includes all Manager + Edge + transport node logs)
+curl -sk -u 'admin:<password>' \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{"log_age": 48}' \
   "https://<nsx-manager>/api/v1/node/support-bundles"
 
-# 2. Edge node tech support bundle (from each Edge node CLI)
+# Edge support bundle (from each Edge node)
+ssh admin@<edge-ip>
 collect tech-support
 
-# 3. Cluster status snapshot
+# Cluster status snapshot for the SR
 nsxcli
 get cluster status > /tmp/cluster-status.txt
 get transport-node-status >> /tmp/cluster-status.txt
 get tunnel status >> /tmp/cluster-status.txt
-
-# 4. DFW filter output from affected ESXi host
-summarize-dvfilter > /tmp/dvfilter.txt
-vsipioctl getrules -f <affected-filter> >> /tmp/dvfilter.txt
 ```
 
-## Before you begin
-
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
 ---
+
+## Log locations
+
+| Component | Path / Command | What to look for |
+|---|---|---|
+| NSX Manager | `/var/log/vmware/nsx-manager/manager.log` | Config realisation, cluster errors |
+| Audit log | `/var/log/vmware/nsx-manager/audit.log` | Admin actions, role changes |
+| BFD (routing) | `/var/log/bfd.log` (on Manager/Edge) | Fast link failure detection events |
+| NSX syslog | `/var/log/nsx-syslog` | Aggregated events; forward to SIEM |
+| ESXi DFW | `vsipioctl getstats -f <filter>` on ESXi | Per-rule drop hit counts |
+| Edge | `/var/log/nsx-*.log` on Edge VM | BGP, routing, packet forwarding errors |
+| Support bundle | `POST /api/v1/node/support-bundles` | All-in-one — required for VMware SR |
 
 ---
 
@@ -311,7 +393,9 @@ vsipioctl getrules -f <affected-filter> >> /tmp/dvfilter.txt
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- `get cluster status` in nsxcli shows all 3 Manager nodes STABLE
+- `get transport-node-status` shows all transport nodes CONNECTED
+- `get tunnel status` shows all TEP tunnels UP
+- Traceflow test from source VM to destination returns DELIVERED with no DROPPED observation
+- `get bgp neighbor summary` on the Edge shows all peers Established
+- `get alarms` returns no CRITICAL or HIGH severity open alarms

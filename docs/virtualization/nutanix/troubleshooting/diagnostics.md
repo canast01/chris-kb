@@ -9,294 +9,300 @@ tags:
 # Nutanix — Diagnostics
 
 <div class="kb-summary">
-Nutanix diagnostic tools — key log file locations, NCC full run and log collection, support bundle (log bay) generation, per-service debugging, and Insights (Pulse) data review.
+Nutanix diagnostic commands: run NCC health checks across the cluster, inspect node and disk health with ncli, review alerts and events in Prism, use allssh for cluster-wide CVM diagnostics, check storage pool capacity, and collect the NCC log bundle for Nutanix support.
 
-*Applies to: AOS 6.x · AHV*
+*Applies to: AOS 6.x · AHV · Prism Element / Prism Central*
 </div>
 
 ```text
-┌─────────────────────────────── Virtualization Nutanix Troubleshooting ────────────────────────────────┐
+┌─────────────────────────────── Nutanix — Diagnostics ─────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                    Nutanix: Virtualization Nutanix Troubleshooting platform                   │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │             Management: Virtualization Nutanix Troubleshooting management console             │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │   Start here: ncc health_checks run_all → cluster status → ncli host ls                      │    │
+│   │   CVM not joining: allssh 'genesis status' → check network between CVMs (port 2100)          │    │
+│   │   Disk failure: ncli disk ls → Prism → Hardware → Disk marked for removal                    │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           NCC and Cluster Health             │  │           Alerts and Event Review           │   │
+│   │   ncc health_checks run_all (all tests)      │  │   ncli alert ls (active alerts)             │   │
+│   │   cluster status (all CVM services)          │  │   ncli events ls limit=100                  │   │
+│   │   genesis status (cluster mgmt daemon)       │  │   Prism UI: Home → Alerts (red bell)        │   │
+│   │   ncli host ls (node connectivity)           │  │   ncli disk ls (disk health per node)       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  Run NCC first → then narrow to host/disk/network layer                                               │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          allssh Cluster-wide Checks          │  │           Support Bundle Collection         │   │
+│   │   allssh 'df -h' — CVM disk usage           │  │   ncc log_collector (full bundle)           │    │
+│   │   allssh 'uptime' — CVM restart history     │  │   Sent via Pulse or downloaded from Prism   │    │
+│   │   allssh 'nodetool ring' — Cassandra ring   │  │   SCP from /home/nutanix/send/              │    │
+│   │   allssh 'genesis status' — service state   │  │   Upload to Nutanix Portal for support      │    │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Nutanix Troubleshooting infrastructure · management network · monitoring  │
+│  Physical Infrastructure:                                                                             │
+│  Nutanix nodes (hybrid or all-flash) · per-node CVM (Controller VM, AOS services) · AHV hypervisor    │
+│  Prism Element (per-cluster UI) · Prism Central (multi-cluster management) · IPMI for hardware access │
 │                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Nutanix            = Virtualization Nutanix Troubleshooting platform overview and core concepts    │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Key terms:                                                                                           │
+│  NCC           = Nutanix Cluster Check; automated test suite; run_all performs all health checks      │
+│  CVM           = Controller VM; runs AOS storage stack per node; manages disk I/O                     │
+│  Genesis       = cluster management daemon; runs on each CVM; coordinates service startup             │
+│  Cassandra     = distributed metadata DB; stores vDisk metadata, extent group location                │
+│  Stargate      = data I/O service; handles VM read/write operations through the CVM                   │
+│  Curator       = background cluster maintenance service; handles scrubbing and rebalancing            │
+│  allssh        = wrapper that runs a command on all CVMs simultaneously                               │
+│  nodetool ring = Cassandra CLI; shows ring membership and replication state of all nodes              │
+│  Pulse         = Nutanix cloud telemetry; auto-uploads logs and health data to Nutanix                │
+│  Protection domain = DR/backup boundary; contains VMs or files replicated to a remote site            │
+│  ncli          = Nutanix CLI; available from any CVM; equivalent to Prism UI operations               │
+│  log_collector = ncc subcommand that collects all CVM logs into a support bundle                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([Nutanix Issue]) --> B{What type of problem?}
+    B -->|Cluster health alert or unknown failure| C[ncc health_checks run_all\ncluster status]
+    B -->|VM storage I/O slow or failing| D[ncli disk ls for disk errors\nallssh links http://0:2009/ for Stargate]
+    B -->|Node or CVM not responding| E[allssh genesis status\nncli host ls]
+    B -->|Alert in Prism - investigate| F[ncli alert ls\nncli events ls limit=100]
+    B -->|Storage capacity warning| G[ncli sp ls -- storage pool\nncli ctr ls -- container capacity]
+    B -->|DR or replication failure| H[ncli pd ls -- protection domain status\nCheck remote site reachability]
+    C --> I{NCC result?}
+    I -->|FAIL on hardware check| J[ncli disk ls for disk state\nPrism Hardware page for disk details]
+    I -->|FAIL on network check| K[allssh ping peer-cvm-ip\nCheck port 2100 CVM-to-CVM]
+    I -->|WARN on capacity| L[ncli sp ls\ndu -sh /home/nutanix/ on each CVM]
+    D --> M[allssh df -h for CVM disk usage\nRestart Stargate: genesis stop stargate; genesis start]
+    E --> N[allssh uptime to check recent CVM restarts\nIPMI for physical node status]
+    F --> O[ncli alert get id=alert-id for detail\nFollow recommended action in alert message]
+    G --> P[ncli ctr ls for per-container usage\nIdentify top consumer with du on datastore]
+    H --> Q[ncli pd ls for replication status\nTest network to remote site: ping remote-cvm-ip]
+    J --> R[Collect ncc log_collector bundle\nOpen Nutanix support case]
+    K --> R
+    L --> R
+    M --> R
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+    R --> S[Upload bundle to Nutanix portal\nProvide: cluster UUID, AOS version, NCC version]
 
----
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
+    class R,S escalate
+```
 
 ## Before you begin
 
-- **Access:** CVM SSH (nutanix) for log access and NCC; Prism Element admin for Log Collector and analysis charts
-- **Collect early:** Gather NCC output and support bundle as soon as you open a case — logs roll over on busy clusters
+- **Access:** SSH to any CVM as the `nutanix` user; Prism Element admin credentials; IPMI access for hardware-layer issues
+- **Gather first:** the specific symptom (NCC alert, VM I/O error, disk failure, node unreachable), the node number or CVM IP, and when the issue started
+- **Scope:** confirm whether the issue affects one node, one disk, one VM, or the full cluster
 
 ---
 
-## Quick Diagnostics Flow
+## Step 1 — Run NCC health checks
 
-```text
-1. Run NCC and capture output              → identifies most issues automatically
-2. Check service status (genesis status)   → identifies down services
-3. Read service-specific logs              → identifies root cause
-4. Collect support bundle                  → required for Nutanix GSS cases
+```bash
+# SSH to any CVM
+ssh nutanix@<cvm-ip>
+
+# Run all NCC health checks (most comprehensive; takes 5-10 minutes)
+ncc health_checks run_all
+# Output: per-check PASS/FAIL/WARN/INFO with explanation
+# Focus on: any FAIL or WARN entries
+
+# Run only hardware checks (faster for suspected hardware issue)
+ncc health_checks hardware_checks run_all
+
+# Network checks
+ncc health_checks network_checks run_all
+
+# Data protection checks (replication, DR)
+ncc health_checks data_protection_checks run_all
+
+# Run a single specific check
+ncc health_checks run_all --checks=<check_name>
 ```
 
 ---
 
-## NCC — Automated Diagnostics
+## Step 2 — Check cluster and host health
 
 ```bash
-# Full NCC run — captures all 400+ checks
-ncc --health_checks run_all 2>&1 | tee /tmp/ncc-$(date +%Y%m%d).txt
+# All AOS services on this CVM
+cluster status
+# Expected: all services in running state
+# Problem: any service in stopped or not_running state
 
-# Show only failures
-grep "^FAIL" /tmp/ncc-$(date +%Y%m%d).txt
-
-# Run a specific check
-ncc --health_checks disk_usage_check
-ncc --health_checks cluster_services_status_check
-ncc --health_checks data_resiliency_status_check
-
-# List all available NCC checks
-ncc --health_checks list
-
-# View previous NCC run results without re-running
-ncli ncc get-ncc-result | head -50
-```
-
----
-
-## Key Log Locations (CVM)
-
-All logs live on the CVM under `/home/nutanix/data/logs/`.
-
-| Service | Log file |
-|---|---|
-| Stargate (I/O) | `/home/nutanix/data/logs/stargate.INFO` / `.ERROR` |
-| Curator (background) | `/home/nutanix/data/logs/curator.INFO` / `.ERROR` |
-| Cassandra (metadata) | `/home/nutanix/data/logs/cassandra/system.log` |
-| Zeus / ZooKeeper | `/home/nutanix/data/logs/zookeeper/zookeeper.log` |
-| Cerebro (replication) | `/home/nutanix/data/logs/cerebro.INFO` |
-| Acropolis (AHV API) | `/home/nutanix/data/logs/acropolis.INFO` |
-| Prism gateway | `/home/nutanix/data/logs/prism_gateway.log` |
-| Genesis (service mgr) | `/home/nutanix/data/logs/genesis.out` |
-| NCC | `/home/nutanix/data/logs/ncc/` |
-| Alert manager | `/home/nutanix/data/logs/alert_manager.INFO` |
-
-```bash
-# Live tail Stargate errors (I/O issues)
-tail -f /home/nutanix/data/logs/stargate.ERROR
-
-# Check recent Curator activity (dedup, tiering, rebuild)
-tail -100 /home/nutanix/data/logs/curator.INFO | grep -i "scan\|task\|error"
-
-# Check Prism gateway errors (UI issues, API failures)
-tail -50 /home/nutanix/data/logs/prism_gateway.log | grep -i "error\|exception"
-
-# Find errors across all CVM logs from the last hour
-allssh "grep -l ERROR /home/nutanix/data/logs/*.ERROR 2>/dev/null"
-```
-
----
-
-## AHV Hypervisor Logs
-
-```bash
-# SSH to AHV host (requires root or nutanix user with IPMI console)
-ssh root@<ahv-host-ip>
-
-# Kernel messages — hardware errors, disk failures
-dmesg | grep -i "error\|fail\|warn\|crit" | tail -30
-
-# System journal — AHV OS and service messages
-journalctl -n 100 --no-pager | grep -i "error\|fail"
-
-# libvirt (VM management) logs
-cat /var/log/libvirt/libvirtd.log | tail -50
-
-# QEMU logs per VM (one file per VM)
-ls /var/log/libvirt/qemu/
-cat /var/log/libvirt/qemu/<vm-name>.log | tail -50
-```
-
----
-
-## Genesis Service Status Diagnostics
-
-```bash
-# On affected CVM — list all services and their state
+# Genesis (cluster management) status
 genesis status
+# Expected: genesis is running
 
-# Look for any service NOT in "UP" state
-genesis status | grep -v " UP$" | grep -v "^Genesis"
+# List all hosts and health
+ncli host ls
+# Expected: all hosts Connected, HealthStatus=Good
+# Problem: Node Status != UP or health != Good
 
-# Restart a specific failing service (safer than genesis restart)
-# (Nutanix GSS may guide specific service restarts for their service)
-# For most purposes:
-genesis restart   # restarts all CVM services — brief I/O disruption
+# Disk health across all nodes
+ncli disk ls
+# Look for: DiskStatus != NORMAL, or disk_status showing errors
+# Problem: MARKED_FOR_REMOVAL or FAILED state
 ```
 
 ---
 
-## Cassandra (Metadata Store) Diagnostics
+## Step 3 — Check alerts and events
 
 ```bash
-# Check ring health across all CVMs
-allssh "nodetool status"
-# Expected: all nodes UN (Up/Normal)
-# Problem: DN = Down, ? = Unknown status
+# Active (unresolved) alerts
+ncli alert ls
+# Prism UI equivalent: Home → Alerts (bell icon, red count)
 
-# Check compaction queue (large queue = catch-up after node recovery)
-allssh "nodetool compactionstats"
+# Alert detail for a specific alert
+ncli alert get id=<alert-id>
+# Shows: recommended actions, component, severity
 
-# Ring token distribution
-allssh "nodetool ring 2>/dev/null | head -5"
+# Recent events (last 100)
+ncli events ls limit=100
+# Useful for: seeing sequence of events leading to the issue
+
+# Hardware faults
+ncli host list | grep -i "health\|status"
+
+# Storage pool alerts
+ncli sp ls
+ncli ctr ls    # container capacity and health
 ```
 
 ---
 
-## Stargate (I/O) Diagnostics
-
-Stargate handles all cluster I/O. High Stargate errors indicate storage problems.
+## Step 4 — Run allssh for cluster-wide CVM diagnostics
 
 ```bash
-# Count errors in Stargate log
-grep -c "ERROR\|FATAL" /home/nutanix/data/logs/stargate.ERROR
+# Disk usage on ALL CVMs simultaneously
+allssh 'df -h'
+# Problem: / (root) filesystem > 80%
+# Common cause: log accumulation under /home/nutanix/data/logs/
 
-# Check for specific I/O patterns
-grep "disk" /home/nutanix/data/logs/stargate.ERROR | tail -20
-grep "timeout" /home/nutanix/data/logs/stargate.ERROR | tail -20
+# CVM uptime (recent restart = explains service outages)
+allssh 'uptime'
 
-# Check Stargate stats (Prism → Analysis → I/O metrics is easier)
-# CLI: check Stargate port for responsiveness
-curl -s http://localhost:2009/ | head -5
+# Memory pressure on CVMs
+allssh 'free -m'
+
+# CVM-to-CVM network reachability
+allssh 'ping -c 3 <peer-cvm-ip>'
+# Expected: 0% packet loss
+# Problem: loss or latency on CVM-to-CVM traffic (port 2100)
+
+# Cassandra ring status (distributed metadata DB)
+allssh 'nodetool ring'
+# Expected: all nodes in Up/Normal state
+# Problem: any node in Down or Leaving state
+
+# Genesis status on all CVMs
+allssh 'genesis status'
 ```
 
 ---
 
-## Curator (Background Jobs) Diagnostics
+## Step 5 — Check storage capacity and protection domains
 
 ```bash
-# What Curator tasks have run recently?
-curator_cli get_last_successful_scans
+# Storage pool health and capacity (SSD + HDD tiers)
+ncli sp ls
+# Columns: pool name, total, used, available capacity
 
-# Any active Curator tasks running now?
-curator_cli display_curator_tasks
+# Container/datastore capacity
+ncli ctr ls
+# Check: UsedCapacity vs. MaxCapacity per container
 
-# Details of a specific scan
-curator_cli get_last_successful_scans   # get scan_id
-curator_cli get_scan_info --scan_id=<id>
+# Protection domain (DR/backup) status
+ncli pd ls
+# Expected: State = ACTIVE or REPLICATING
+# Problem: State = ERROR or FAILED
+
+# Replication status for a specific PD
+ncli pd get-replication-status name=<pd-name>
+
+# Find largest directories in home (log accumulation)
+allssh 'du -sh /home/nutanix/data/logs/ 2>/dev/null'
 ```
 
 ---
 
-## Support Bundle (Log Bay) Collection
-
-A support bundle packages all relevant logs for Nutanix GSS.
-
-### Via Prism Element (recommended)
-
-```text
-Prism Element → Settings → Log Collector → Collect Logs
-  Time Range: last 4 hours (or cover the incident window)
-  Include NCC: Yes
-  Click Collect
-  Download the .zip when ready (may take 5–15 minutes)
-```
-
-### Via CLI
+## Step 6 — Advanced service diagnostics
 
 ```bash
-# Collect logs for last 4 hours
-logbay collect --start_time=$(date -d "4 hours ago" +%Y-%m-%dT%H:%M:%S) \
-               --end_time=$(date +%Y-%m-%dT%H:%M:%S)
+# Stargate (data I/O) page — shows I/O throughput and latency per node
+# Access from your browser while SSH-tunneled, OR via allssh:
+allssh 'links http://0:2009/ 2>/dev/null | head -40'
+# Shows: op latency, outstanding I/Os, disk queue depth
 
-# Monitor progress
-logbay status
+# Curator (background scrub/rebalance) status
+curl -sk http://0:2010/
+# Shows: curator role (master/slave), last scan time, scan status
 
-# Collected bundle location
-ls /home/nutanix/data/logbay/bundles/
+# Check service-level logs on a single CVM
+ls -lt /home/nutanix/data/logs/ | head -20
+# Most active logs at top
+tail -100 /home/nutanix/data/logs/stargate.FATAL 2>/dev/null
+tail -100 /home/nutanix/data/logs/cassandra/system.log | grep -i error
 
-# Upload directly to Nutanix support case (requires internet access)
-logbay upload --bundle=<bundle-file.tar.gz> --case=<support-case-number>
+# IPMI reachability for hardware-layer issues
+ping <node-ipmi-ip>
+ipmitool -H <node-ipmi-ip> -U ADMIN -P ADMIN chassis status
 ```
 
 ---
 
-## Prism Analysis — Performance Diagnostics
+## Step 7 — Collect NCC log bundle for Nutanix support
 
-For performance issues (latency, throughput), Prism Element provides built-in analysis charts:
+```bash
+# Collect full NCC log bundle (includes all CVM logs, service state, NCC output)
+ncc log_collector
+# Duration: 5-15 minutes depending on cluster size
+# Output: /home/nutanix/send/NCC_log_collector_<timestamp>.zip
 
-```text
-Prism Element → Analysis → create an Analysis Chart
-  Metrics: Storage I/O Bandwidth, Latency, IOPS, CPU usage
-  Scope: cluster, VM, storage container, or host
-  Time range: overlay the incident window
+# If Pulse (cloud telemetry) is enabled: bundle auto-uploads to Nutanix
+# If Pulse is disabled: SCP the bundle off a CVM
+scp nutanix@<cvm-ip>:/home/nutanix/send/NCC_log_collector*.zip ./
+
+# Alternative: from Prism UI
+# Prism Element → Health → Actions → Run NCC Checks → Download Log Bundle
+
+# For Prism Central issues: collect from PC CVM
+# SSH to the Prism Central CVM and run:
+# nutanix@pcvm:~$ ncc log_collector
+
+# Include in Nutanix SR:
+# - NCC log bundle ZIP
+# - Cluster UUID: ncli cluster list | grep UUID
+# - AOS version: ncli cluster list | grep Version
+# - NCC version: ncc --version
+# - Affected node serial / disk slot (for hardware issues)
 ```
 
-Key metrics to check during performance incidents:
-- **Read/Write latency > 10ms** → possible disk degradation or controller saturation
-- **IOPS at limit** → cluster IOPS ceiling; check disk tier (SSD vs HDD ratio)
-- **CPU steal on hosts** → AHV scheduling contention
-
 ---
 
+## Log locations
 
-
----
-
-## Verify
-
-- Root cause is identified and documented — log entry or NCC check maps to the symptom
-- Support bundle is collected and available for upload if escalation is needed
-- Log timestamps bracket the incident window; no unexplained errors remain
-- If a pattern is found (recurring Cassandra ring issue, repeated Stargate errors), open a proactive case
-
+| Component | Path / Command | What to look for |
+|---|---|---|
+| NCC health | `ncc health_checks run_all` | FAIL and WARN entries |
+| Cluster services | `cluster status` | Services not in running state |
+| Stargate (I/O) | `/home/nutanix/data/logs/stargate.FATAL` | I/O errors, disk failures |
+| Cassandra (metadata) | `/home/nutanix/data/logs/cassandra/system.log` | Ring membership errors |
+| Genesis (mgmt) | `genesis status` and genesis.out in logs dir | Service startup failures |
+| Full bundle | `ncc log_collector` | All-in-one — always provide for SR |
 
 ---
 
@@ -304,3 +310,11 @@ Key metrics to check during performance incidents:
 
 - [Nutanix — Common Issues](common-issues/)
 - [Nutanix — Escalation](escalation/)
+
+## Verify resolution
+
+- `ncc health_checks run_all` returns only PASS or INFO — no FAIL or WARN
+- `cluster status` shows all services running on all CVMs
+- `ncli host ls` shows all nodes Connected with HealthStatus=Good
+- `ncli disk ls` shows all disks with DiskStatus=NORMAL
+- VM I/O latency returns to baseline (check Prism → Analysis → Performance charts)

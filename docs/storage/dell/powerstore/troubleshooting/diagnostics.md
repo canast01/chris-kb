@@ -2,320 +2,331 @@
 tags:
   - dell
   - troubleshooting
+  - powerstore
 search:
   boost: 1.5
 ---
 # PowerStore — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering Diagnostic Data Collection, Component-Level Diagnostics, Event Log Analysis, Replication Diagnostics, Log Locations and 1 more sections.
+Dell PowerStore diagnostic commands: query cluster and hardware health via the REST API, list critical events, check volume and host connectivity, inspect per-appliance alert status, and generate a SupportAssist support bundle from PowerStore Manager for Dell cases.
 
-*Applies to: PowerStore 3.x*
+*Applies to: Dell PowerStore OS 3.x / 4.x*
 </div>
+
 ```text
 ┌──────────────────────────────────── Dell PowerStore — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        PowerStore diagnostics: log collection, health checks, and performance analysis        │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here: REST GET /api/rest/cluster → GET /api/rest/hardware → GET /api/rest/event      │    │
+│   │   I/O failures: GET /api/rest/volume with status filter → check host connectivity            │    │
+│   │   Appliance alerts: PowerStore Manager → Infrastructure → Alerts → filter by Severity        │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            REST API Health Checks            │  │             Alert and Event Review          │   │
+│   │   GET /api/rest/cluster (cluster state)      │  │   GET /api/rest/event (recent events)       │   │
+│   │   GET /api/rest/hardware (component health)  │  │   Filter: severity=in(Critical,Major)       │   │
+│   │   GET /api/rest/appliance (per-node state)   │  │   PowerStore Manager → Alerts page          │   │
+│   │   GET /api/rest/volume (volume health)       │  │   GET /api/rest/alert_email (email config)  │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
-│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
-│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
-│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
-│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  Check cluster → hardware → events → volume → host connectivity                                       │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   Volume group   │ Logical containe │      iSCSI/FC     │    Host group    │  Shared policy   │   │
-│   │Protection policy │ Snapshot/repl ru │      Internal     │    Admin role    │    Per volume    │   │
-│   │   Metro volume   │ Sync replication │    Internal RPC   │   Certificate    │     Zero RPO     │   │
-│   │     Snapshot     │     PiT copy     │      Internal     │    Admin role    │ Space-efficient  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Host and Volume Connectivity         │  │           Support Bundle Collection         │   │
+│   │   GET /api/rest/host (registered hosts)      │  │   PowerStore Manager → Settings → Support   │   │
+│   │   GET /api/rest/host_volume_mapping           │  │   SupportAssist → Collect Support Materials │  │
+│   │   GET /api/rest/fc_port (FC port health)     │  │   Includes: logs, alerts, config snapshot   │   │
+│   │   GET /api/rest/eth_port (iSCSI/NAS ports)  │  │   Upload to Dell SR via SFTP or TechDirect  │    │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
+│  Physical Infrastructure:                                                                             │
+│  PowerStore appliance (one or two nodes per appliance) · internal NVMe drives · SFP+ ports for FC/iSCSI│
+│  Management interface (dedicated 1 GbE) · optional MetroSync replication link between appliances      │
 │                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
-│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
-│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
-│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
-│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
-│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
-│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
-│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
-│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
-│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
-│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
-│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
+│  Key terms:                                                                                           │
+│  Appliance     = physical PowerStore unit; one or two engine nodes; manages its own NVMe drives       │
+│  Engine node   = compute node inside the appliance; runs PowerStore OS                                │
+│  Cluster       = one or more appliances joined for management; single Mgmt IP                         │
+│  REST API      = primary diagnostic and management interface; auth via cookie or bearer token         │
+│  SupportAssist = Dell remote support agent; auto-uploads health data; generates support bundles       │
+│  FC port       = Fibre Channel host-facing port; health shown in /api/rest/fc_port                    │
+│  Eth port      = Ethernet port; used for iSCSI, NFS/SMB (NAS), and replication                        │
+│  Volume        = block storage object; maps to LUNs presented to hosts                                │
+│  Storage group = set of volumes with shared access policy; similar to host group                      │
+│  MetroSync     = synchronous active-active replication between two PowerStore appliances              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([PowerStore Issue]) --> B{What type of problem?}
+    B -->|Cluster health warning or unknown fault| C[GET /api/rest/cluster\nGET /api/rest/hardware select=name,type,lifecycle_state]
+    B -->|I/O errors or volume not accessible| D[GET /api/rest/volume select=name,state\nGET /api/rest/host_volume_mapping]
+    B -->|Critical events in Alerts page| E[GET /api/rest/event filter=severity=Critical\nPowerStore Manager Alerts page]
+    B -->|FC or iSCSI host connectivity| F[GET /api/rest/fc_port select=name,current_speed,link_state\nGET /api/rest/eth_port]
+    B -->|NAS or file share issue| G[GET /api/rest/nas_server select=name,operational_status\nGET /api/rest/file_system]
+    B -->|Replication failure| H[GET /api/rest/replication_session\nCheck replication network path between appliances]
+    C --> I{Cluster state?}
+    I -->|Degraded or error| J[GET /api/rest/appliance select=name,model,service_tag,health\nCheck hardware component health]
+    I -->|OK but component alert| K[GET /api/rest/hardware filter failing components\nCheck physical drive or node LED]
+    D --> L[GET /api/rest/host select=name,os_type,initiators\nVerify host is logged in to correct target ports]
+    E --> M[GET /api/rest/event filter=severity=in.Critical.Major limit=50\nIdentify affected component from event description]
+    F --> N[Check cable and SFP physical state\nVerify FC zone contains both initiator and target WWPNs]
+    G --> O[GET /api/rest/nas_server\nCheck NTP sync: NAS depends on accurate time for Kerberos]
+    H --> P[GET /api/rest/replication_session\nCheck replication Ethernet port and MTU]
+    J --> Q[Collect SupportAssist bundle\nOpen Dell support case]
+    K --> Q
+    L --> Q
+    M --> Q
+    N --> Q
+    O --> Q
+    P --> Q
+    Q --> R[Provide: PowerStore OS version, appliance serial\nEvent log export and support bundle]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P action
+    class Q,R escalate
+```
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** PowerStore Manager admin credentials (HTTPS on port 443); SSH access requires Dell service account and is only used by Dell Support
+- **Gather first:** the specific symptom (volume not visible, performance degradation, hardware alert), the affected appliance serial, and when the issue started
+- **Scope:** confirm whether the issue affects one appliance, one volume/host, one protocol (FC/iSCSI/NAS), or the entire cluster
 
 ---
 
-## Diagnostic Data Collection
-
-Before contacting Dell Support or performing deep troubleshooting, collect the standard diagnostic dataset. This avoids repeated back-and-forth with support and establishes a timestamped baseline.
-
-### Generate a Support Package (Log Bundle)
-
-PowerStore's support package collects system logs, hardware health dumps, configuration state, and event history into a single archive. This is the primary diagnostic deliverable for Dell Support.
+## Step 1 — Check cluster and appliance health via REST API
 
 ```bash
-# Request a support package via REST API
-curl -k -X POST "https://<mgmt-ip>/api/rest/gather_support_materials" \
-  -H "DELL-EMC-TOKEN: <token>" \
+# Authenticate — PowerStore REST API uses cookie-based sessions
+curl -sk -c /tmp/ps-cookie.txt \
+  -X POST "https://<powerstore-mgmt-ip>/api/rest/login_session" \
   -H "Content-Type: application/json" \
-  -d '{
-    "node_ids": ["<node-a-id>", "<node-b-id>"],
-    "include_logs": true
-  }'
+  -d '{"username":"admin","password":"<password>"}' > /dev/null
+echo "Login complete"
 
-# Monitor the job until complete
-JOB_ID="<job-id from response>"
-curl -k -X GET "https://<mgmt-ip>/api/rest/job/${JOB_ID}" \
-  -H "DELL-EMC-TOKEN: <token>"
+# Cluster state (overall health)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/cluster?select=name,state,management_address,master_appliance_id" | \
+  python3 -m json.tool
+# Expected: "state": "Configured"
 
-# Download the support package when the job state is 'Completed'
-# PowerStore Manager → Settings → Support → Support Packages → Download
+# Per-appliance health (each physical unit in the cluster)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/appliance?select=name,model,service_tag,drive_failure_tolerance_level,health" | \
+  python3 -m json.tool
+# Expected: health values all in OK state
+
+# Hardware component health (drives, PSU, fans, nodes)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/hardware?select=name,model,type,lifecycle_state,slot" | \
+  python3 -c "
+import json,sys
+for h in json.load(sys.stdin):
+    if h.get('lifecycle_state') not in ['Healthy','Empty','']:
+        print(f\"{h['type']} {h['name']}: {h.get('lifecycle_state','?')}\")
+" 2>/dev/null || \
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/hardware?select=name,model,type,lifecycle_state,slot" | \
+  python3 -m json.tool
 ```
 
-Alternatively, initiate from the UI: **PowerStore Manager → Help → Collect Support Materials**.
+---
 
-### System State Snapshot
-
-```bash
-# Collect the full diagnostic state in a single script run
-# Save output to a timestamped file for reference
-
-OUTFILE="pstore_diag_$(date '+%Y%m%d_%H%M%S').txt"
-MGMT_IP="192.168.10.50"
-
-echo "PowerStore Diagnostics: ${MGMT_IP}" > "$OUTFILE"
-echo "Timestamp: $(date)" >> "$OUTFILE"
-
-# Authenticate
-TOKEN=$(curl -ks -X POST "https://${MGMT_IP}/api/rest/login_session" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"<password>"}' \
-  | jq -r '.token')
-
-AUTH=(-H "DELL-EMC-TOKEN: ${TOKEN}" -H "Accept: application/json")
-
-collect() {
-  echo "" >> "$OUTFILE"
-  echo "=== $1 ===" >> "$OUTFILE"
-  curl -ks -X GET "https://${MGMT_IP}/api/rest/${2}" "${AUTH[@]}" \
-    | python3 -m json.tool >> "$OUTFILE" 2>&1
-}
-
-collect "SOFTWARE_INSTALLED" "software_installed"
-collect "ALERTS_ACTIVE" "alert?state=active"
-collect "HARDWARE" "hardware"
-collect "DRIVES" "drive?select=name,health.state,life_remaining,drive_type,size"
-collect "NODES" "node?select=name,health.state,node_id"
-collect "POOLS" "pool?select=name,size_free,size_used,size_total,percent_used"
-collect "VOLUMES" "volume?select=name,size,health.state,type"
-collect "REPLICATION_SESSIONS" "replication_session?select=name,state,last_sync_time"
-collect "NAS_SERVERS" "nas_server?select=name,health.state,current_node_id"
-collect "HOSTS" "host?select=name,health.state,os_type"
-
-echo "Diagnostics written to: $OUTFILE"
-```
-
-## Component-Level Diagnostics
-
-### Drive Diagnostics
+## Step 2 — Check recent critical events
 
 ```bash
-# Full drive inventory with health state and remaining life
-curl -k -X GET "https://<mgmt-ip>/api/rest/drive?select=name,health.state,life_remaining,drive_type,size,firmware_version,model_number,serial_number" \
-  -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
-
-# Identify drives with low remaining life (< 10%)
-curl -k -X GET "https://<mgmt-ip>/api/rest/drive?select=name,life_remaining" \
-  -H "DELL-EMC-TOKEN: <token>" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for d in data:
-    lr = d.get('life_remaining')
-    if lr is not None and lr < 10:
-        print(f'LOW LIFE: {d[\"name\"]} — {lr}% remaining')
+# All Critical and Major events (most recent first)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/event?select=created_timestamp,description,severity,category&order=created_timestamp.desc&limit=50" | \
+  python3 -c "
+import json,sys
+for e in json.load(sys.stdin):
+    sev = e.get('severity','?')
+    if sev in ('Critical','Major','Warning'):
+        ts  = e.get('created_timestamp','?')
+        msg = e.get('description','?')
+        print(f'[{sev}] {ts}: {msg}')
 "
 
-# Get SMART data equivalent for a specific drive
-curl -k -X GET "https://<mgmt-ip>/api/rest/drive/<drive-id>?select=name,health,life_remaining,model_number,serial_number,firmware_version" \
-  -H "DELL-EMC-TOKEN: <token>"
+# Events for a specific time window (ISO 8601)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/event?select=created_timestamp,description,severity&filter=created_timestamp.gt.2026-06-15T00:00:00.000Z&order=created_timestamp.desc" | \
+  python3 -m json.tool
 ```
-
-### Node Diagnostics
-
-```bash
-# Node health summary
-curl -k -X GET "https://<mgmt-ip>/api/rest/node?select=name,health,node_id,model,firmware_version" \
-  -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
-
-# Hardware component health (fans, PSUs, memory)
-curl -k -X GET "https://<mgmt-ip>/api/rest/hardware" \
-  -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
-
-# Fan status
-curl -k -X GET "https://<mgmt-ip>/api/rest/fan?select=name,health.state" \
-  -H "DELL-EMC-TOKEN: <token>"
-
-# Power supply status
-curl -k -X GET "https://<mgmt-ip>/api/rest/power_supply?select=name,health.state" \
-  -H "DELL-EMC-TOKEN: <token>"
-```
-
-### Network Port Diagnostics
-
-```bash
-# FC port status and statistics
-curl -k -X GET "https://<mgmt-ip>/api/rest/fc_port?select=name,wwn,current_speed,health.state,node_id" \
-  -H "DELL-EMC-TOKEN: <token>"
-
-# Ethernet port status (management and iSCSI)
-curl -k -X GET "https://<mgmt-ip>/api/rest/eth_port?select=name,mac_address,link_speed,health.state,node_id" \
-  -H "DELL-EMC-TOKEN: <token>"
-
-# iSCSI portal status
-curl -k -X GET "https://<mgmt-ip>/api/rest/iscsi_portal?select=name,ip_address,iscsi_target_name,health.state" \
-  -H "DELL-EMC-TOKEN: <token>"
-```
-
-### Performance Metrics Diagnostics
-
-```bash
-# Get real-time appliance-level performance metrics
-curl -k -X GET "https://<mgmt-ip>/api/rest/appliance_metrics/query" \
-  -H "DELL-EMC-TOKEN: <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "entity": "appliance",
-    "entity_id": "<appliance-id>",
-    "metrics": ["avg_read_latency_ms", "avg_write_latency_ms", "total_iops", "read_iops", "write_iops", "avg_read_bandwidth_mb", "avg_write_bandwidth_mb"],
-    "interval": "last_5_minutes"
-  }'
-
-# Volume-level performance (identify hot volumes)
-curl -k -X GET "https://<mgmt-ip>/api/rest/volume_metrics/query" \
-  -H "DELL-EMC-TOKEN: <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "entity": "volume",
-    "metrics": ["avg_read_latency_ms", "avg_write_latency_ms", "read_iops", "write_iops"],
-    "interval": "last_1_hour",
-    "order_by": "write_iops desc",
-    "limit": 10
-  }'
-```
-
-## Event Log Analysis
-
-```bash
-# Retrieve all events from the last 24 hours
-curl -k -X GET "https://<mgmt-ip>/api/rest/event?select=created_timestamp,severity,message_key,arguments&order=created_timestamp desc" \
-  -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
-
-# Filter events by severity
-curl -k -X GET "https://<mgmt-ip>/api/rest/event?severity=Critical&order=created_timestamp desc" \
-  -H "DELL-EMC-TOKEN: <token>"
-
-# Filter events by type (e.g., drive events)
-curl -k -X GET "https://<mgmt-ip>/api/rest/event?resource_type=drive&order=created_timestamp desc" \
-  -H "DELL-EMC-TOKEN: <token>"
-```
-
-## Replication Diagnostics
-
-```bash
-# Full replication session detail including error reason
-curl -k -X GET "https://<mgmt-ip>/api/rest/replication_session?select=name,state,sync_state,last_sync_time,remaining_capacity_to_sync,failed_reason,role" \
-  -H "DELL-EMC-TOKEN: <token>" | python3 -m json.tool
-
-# Check remote system connectivity state
-curl -k -X GET "https://<mgmt-ip>/api/rest/remote_system?select=name,management_address,connection_state,data_connection_state" \
-  -H "DELL-EMC-TOKEN: <token>"
-
-# Metro Volume mediator status
-curl -k -X GET "https://<mgmt-ip>/api/rest/remote_system?select=name,metro_sync_status,mediator_address" \
-  -H "DELL-EMC-TOKEN: <token>"
-```
-
-## Log Locations
-
-PowerStore does not expose its internal OS logs directly to users — all diagnostic data is collected via the support package or REST API. Key log locations within the support package:
-
-| Log | Location in Support Package | Contents |
-|---|---|---|
-| System event log | `events/events.json` | All system events with timestamps and severity |
-| Hardware fault log | `hardware/faults.json` | Drive and component faults |
-| Replication log | `replication/sessions.json` | Replication session history and errors |
-| Upgrade log | `upgrade/upgrade.log` | Software upgrade history and errors |
-| Node service log | `nodes/node_<id>/service.log` | Node-level service events |
-| NAS server log | `nas/nas_server_<id>/logs/` | NAS server event and protocol logs |
-
-## Before Calling Dell Support
-
-Collect the following before opening a support case to minimise time to resolution:
-
-| Item | How to Collect |
-|---|---|
-| System serial number | PowerStore Manager → Hardware → Appliance → Serial Number |
-| PowerStoreOS version | `GET /api/rest/software_installed` |
-| Active alerts dump | `GET /api/rest/alert?state=active` (JSON output) |
-| Hardware health dump | `GET /api/rest/hardware` (JSON output) |
-| Replication session state | `GET /api/rest/replication_session` (JSON output) |
-| Support package | Initiate from PowerStore Manager → Help → Collect Support Materials |
-| Timeline of events | Note when the issue started and what changed immediately before |
-| Error messages | Exact text from PowerStore Manager alerts or REST API error responses |
-| Affected hosts | List of hosts experiencing I/O issues (if connectivity problem) |
-
-When opening the case:
-
-- **Product**: Dell PowerStore
-- **Serial number**: from hardware view
-- **Software version**: from software_installed API
-- **Problem description**: describe the symptom, when it started, and the impact on hosts and workloads
-- **Attach**: the support package and the system state JSON dump collected above
 
 ---
 
-## Verify resolution
+## Step 3 — Check volume and host connectivity
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```bash
+# List all volumes and their state
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/volume?select=name,state,size,wwn,appliance_id" | \
+  python3 -c "
+import json,sys
+for v in json.load(sys.stdin):
+    if v.get('state') != 'Ready':
+        print(f\"PROBLEM: {v['name']} state={v.get('state','?')}\")
+"
+
+# Registered hosts
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/host?select=name,os_type,description" | \
+  python3 -m json.tool
+
+# Host-to-volume mappings
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/host_volume_mapping?select=host_id,volume_id,logical_unit_number" | \
+  python3 -m json.tool
+# Look for: expected host-to-volume mappings present
+```
+
+---
+
+## Step 4 — Check FC and Ethernet port health
+
+```bash
+# FC port health (Fibre Channel host-facing ports)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/fc_port?select=name,current_speed,link_state,appliance_id,wwn" | \
+  python3 -c "
+import json,sys
+for p in json.load(sys.stdin):
+    link = p.get('link_state','?')
+    if link not in ('Up',''):
+        print(f\"FC port {p['name']}: link_state={link}, speed={p.get('current_speed','?')}\")
+"
+# Expected: all host-facing FC ports link_state = Up
+
+# Ethernet ports (iSCSI, NAS, replication)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/eth_port?select=name,link_state,current_speed,mac_address,appliance_id" | \
+  python3 -m json.tool
+# Expected: all enabled ports link_state = Up
+```
+
+---
+
+## Step 5 — Check NAS server and file system health
+
+```bash
+# NAS server status
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/nas_server?select=name,operational_status,current_node_id,health" | \
+  python3 -m json.tool
+# Expected: operational_status = Started
+
+# File systems
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/file_system?select=name,size_total,size_used,health" | \
+  python3 -m json.tool
+
+# NFS exports
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/nfs_export?select=name,path,export_hosts" | \
+  python3 -m json.tool
+
+# SMB shares
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/smb_share?select=name,path,file_system_id" | \
+  python3 -m json.tool
+```
+
+---
+
+## Step 6 — Check replication sessions
+
+```bash
+# Replication sessions (MetroSync or async replication)
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/replication_session?select=name,state,last_sync_timestamp,estimated_completion_timestamp,lag_time" | \
+  python3 -c "
+import json,sys
+for r in json.load(sys.stdin):
+    state = r.get('state','?')
+    lag   = r.get('lag_time','?')
+    ts    = r.get('last_sync_timestamp','?')
+    print(f\"{r['name']}: state={state}, lag={lag}, last_sync={ts}\")
+"
+# Expected: state = Synchronizing or Synchronized
+# Problem: state = Failed, Paused, or lag increasing
+
+# Replication remote system connectivity
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/remote_system?select=name,management_address,connection_state" | \
+  python3 -m json.tool
+# Expected: connection_state = Connected
+```
+
+---
+
+## Step 7 — Collect SupportAssist bundle for Dell case
+
+```bash
+# Via PowerStore Manager (recommended):
+# Settings → Support → SupportAssist → Collect Support Materials
+# Download the bundle ZIP
+
+# Via REST API (trigger bundle collection):
+curl -sk -b /tmp/ps-cookie.txt \
+  -X POST "https://<powerstore-mgmt-ip>/api/rest/support_instance?action=collect" \
+  -H "Content-Type: application/json" \
+  -d '{}' | python3 -m json.tool
+
+# Prepare for Dell SR:
+# PowerStore OS version: Settings → Software → Installed Software
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/software_installed?select=release_version" | \
+  python3 -m json.tool
+
+# Appliance serial numbers
+curl -sk -b /tmp/ps-cookie.txt \
+  "https://<powerstore-mgmt-ip>/api/rest/appliance?select=name,service_tag" | \
+  python3 -m json.tool
+
+# Include in Dell SR:
+# - SupportAssist support bundle ZIP
+# - PowerStore OS version
+# - Appliance service tag(s)
+# - Affected volume name, host name, or NAS server name
+# - Event log export (REST event query output)
+# - Time window of the issue
+```
+
+---
+
+## Log locations
+
+| Source | Path / Command | What to look for |
+|---|---|---|
+| Events | `GET /api/rest/event?filter=severity=in.Critical.Major` | Hardware faults, volume errors |
+| Hardware | `GET /api/rest/hardware` | Component lifecycle state |
+| Volumes | `GET /api/rest/volume` | Volume state (Ready vs. Offline) |
+| FC ports | `GET /api/rest/fc_port` | Link state for host-facing ports |
+| Replication | `GET /api/rest/replication_session` | State and lag time |
+| Full bundle | SupportAssist via PowerStore Manager | All logs — required for Dell SR |
 
 ---
 
 ## See also
 
-- [Powerstore — Common Issues](common-issues/)
-- [Powerstore — Escalation](escalation/)
-- [Powerstore — Health Checks](../operations/health-checks/)
+- [PowerStore — Common Issues](common-issues/)
+- [PowerStore — Escalation](escalation/)
+
+## Verify resolution
+
+- `GET /api/rest/cluster` returns `"state": "Configured"` with no health alerts
+- `GET /api/rest/hardware` shows no components with degraded lifecycle state
+- `GET /api/rest/event?filter=severity=in.Critical.Major` shows no new events since the fix
+- Host I/O test succeeds: mount the volume from the host and run a read/write test
+- `GET /api/rest/replication_session` shows all sessions Synchronizing with lag decreasing

@@ -2,308 +2,322 @@
 tags:
   - troubleshooting
   - windows
+  - active-directory
 search:
   boost: 1.5
 ---
 # Active Directory — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering DC Diagnostic Tool Map, Dcdiag Tests, Replication Diagnostics, Event Log Diagnostics, LDAP Diagnostics and 1 more sections.
+Active Directory diagnostic commands: run dcdiag tests on domain controllers, check replication health with repadmin, find FSMO role holders, test secure channels, review Directory Services and Security event logs, and collect netlogon debug logs for Microsoft support.
 
-*Applies to: Windows Server 2019 / 2022*
+*Applies to: Windows Server 2019 / 2022 AD DS*
 </div>
+
 ```text
-┌─────────────────────── Security Active Directory Troubleshooting — Diagnostics ───────────────────────┐
+┌──────────────────────────────────── Active Directory — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Active Directory diagnostics: log collection, health checks, and performance analysis     │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here: dcdiag /test:all /v → repadmin /replsummary → Event ID 1311/1388/2042          │    │
+│   │   Replication lag: repadmin /showrepl → /syncall /AdeP to force sync                         │    │
+│   │   Auth failures: Event 4771 (Kerberos) / 4625 (NTLM) → klist purge on client                │     │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              DC Health (dcdiag)              │  │           Replication (repadmin)            │   │
+│   │   dcdiag /test:all /v /s:<dc-fqdn>          │  │   repadmin /replsummary (quick view)        │    │
+│   │   dcdiag /test:dns — DNS SRV check          │  │   repadmin /showrepl — per-partner detail   │    │
+│   │   dcdiag /test:replications — repl check    │  │   repadmin /failcache — stuck operations    │    │
+│   │   dcdiag /test:netlogons — netlogon SVC     │  │   repadmin /syncall /AdeP — force sync      │    │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  Diagnose at domain layer first, then site/DC layer, then workstation layer                           │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Auth and Kerberos Checks           │  │            Support Data Collection          │   │
+│   │   nltest /sc_query:<domain> — secure chan    │  │   netlogon.log: nltest /dbflag:0x2080FFFF   │   │
+│   │   klist — cached Kerberos tickets            │  │   Event export: Directory Services + Sec    │   │
+│   │   Test-NetConnection DC 389/636/3268/88     │  │   dcdiag /test:all /v /f:dcdiag.log         │    │
+│   │   nslookup _ldap._tcp.dc._msdcs.<domain>   │  │   repadmin /replsummary > repadmin.txt      │     │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Security Active Directory Troubleshooting infrastructure · management network · monitor  │
+│  Physical Infrastructure:                                                                             │
+│  Domain controllers (on-prem VMs or bare metal) · DNS servers (usually co-located with DCs)           │
+│  AD-joined servers and workstations · site links for inter-site replication · bridgehead DCs          │
 │                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Active Directory   = Security Active Directory Troubleshooting platform overview and core concept  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Key terms:                                                                                           │
+│  dcdiag        = DC Diagnostic Tool; 30+ automated health tests; run on the DC under investigation    │
+│  repadmin      = Replication Admin Tool; shows per-partner sync state and lag time                    │
+│  KCC           = Knowledge Consistency Checker; auto-generates the replication topology               │
+│  FSMO          = Flexible Single Master Operations; 5 roles across DCs (PDC, RID, Infrastructure)     │
+│  Secure channel = authenticated RPC link between member and DC; owned by netlogon service             │
+│  USN           = Update Sequence Number; per-DC counter; replication halts if it rolls back           │
+│  Lingering obj = deleted object still on a DC that was offline past tombstone lifetime                │
+│  SRV record    = DNS service record; _ldap._tcp.dc._msdcs.<domain>; clients find DCs via these        │
+│  SYSVOL        = folder replicated by DFS-R; contains GPOs and logon scripts                          │
+│  Tombstone     = deleted AD object retained for 180 days so offline DCs can catch up                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([AD Issue]) --> B{What type of problem?}
+    B -->|Auth failure / users can't log in| C[nltest /sc_query domain\nTest-ComputerSecureChannel -Server DC]
+    B -->|Replication errors or stale data| D[repadmin /replsummary\nrepadmin /showrepl]
+    B -->|DC health failing / dcdiag errors| E[dcdiag /test:all /v /s:dc-fqdn\ndcdiag /test:dns]
+    B -->|Kerberos errors / ticket failures| F[klist on client\nEvent ID 4771 in Security log on DC]
+    B -->|Group Policy not applying| G[gpresult /h gp.html\nDFSR replication state for SYSVOL]
+    B -->|DNS resolution failures| H[nslookup _ldap._tcp.dc._msdcs.domain\nnltest /dsregdns to re-register]
+    C --> I{Secure channel state?}
+    I -->|Broken| J[Test-ComputerSecureChannel -Repair\nnetdom resetpwd /s:DC /ud:domain\admin /pd:*]
+    I -->|OK but auth still fails| K[Event 4625 in Security log on DC\nGet-ADUser to check lockout or disabled]
+    D --> L{Failure count?}
+    L -->|Greater than 0| M[repadmin /failcache\nrepadmin /syncall /AdeP to force sync]
+    L -->|Zero but data stale| N[Check tombstone lifetime\nrepadmin /showvector /latency]
+    E --> O[Review FAILED lines in dcdiag output\nFocus on: replications, services, netlogons, dns]
+    F --> P[Check KDC on DCs: Get-Service kdc\nVerify DC time sync: w32tm /query /status]
+    G --> Q[gpresult /scope computer /v\nCheck SYSVOL: dfsrdiag ReplicationState]
+    H --> R[Verify SRV records exist and resolve\nRun ipconfig /registerdns on the DC]
+    J --> S[Collect netlogon.log + dcdiag + repadmin output\nOpen Microsoft support case]
+    K --> S
+    M --> S
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    S --> T[Provide: dcdiag output, repadmin /replsummary\nDirectory Services event log, netlogon.log]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I,L dark
+    class C,D,E,F,G,H,J,K,M,N,O,P,Q,R action
+    class S,T escalate
+```
 
 ## Before you begin
 
-- **Access:** Local Administrator or Domain Admin on target hosts
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Domain Admin credentials (or delegated AD Diagnostic rights); RDP or console access to a domain controller; Remote Server Administration Tools (RSAT) installed on your workstation
+- **Gather first:** the specific symptom (login failure, GPO not applying, replication error event ID), the affected DC name and site name, and approximate time the issue started
+- **Scope:** confirm whether the issue affects one DC, one site, or the entire domain
 
 ---
 
-## DC Diagnostic Tool Map
-
-```mermaid
-graph TD
-    diag["AD Diagnostics"]
-    diag --> dcdiag["dcdiag /test:all /v\n(DC health — services, DNS,\nreplication, connectivity)"]
-    diag --> repadmin["repadmin /replsummary\n(replication partner health)"]
-    diag --> nltest["nltest /dsgetdc\nnltest /sc_verify\n(DC locator + secure channel)"]
-    diag --> eventLogs["Event Log queries\n(Directory Service / Security / System)"]
-    diag --> ldapTest["LDAP diagnostics\nldapsearch / openssl s_client :636"]
-    diag --> dnsTest["DNS checks\nnslookup SRV records\ndcdiag /test:dns"]
-
-    dcdiag --> replication["Identifies: replication\nDNS registration, connectivity"]
-    repadmin --> replErrors["Identifies: error codes\n1722 / 8453 / 8614"]
-    eventLogs --> kerbErrors["Event 4768/4769/4771\n(Kerberos) / 4624/4625 (logon)\n2889 (LDAP unsigned bind)"]
-```
-
-## Dcdiag Tests
+## Step 1 — Run dcdiag on the affected DC
 
 ```cmd
-# Full dcdiag run
-dcdiag /test:all /v /f:C:\dcdiag-output.txt
+:: Run ALL dcdiag tests — always start here
+dcdiag /test:all /v /s:<dc-fqdn> /f:C:\Logs\dcdiag.log
+:: Review output: look for "FAILED" lines
 
-# DNS-specific test
-dcdiag /test:dns /v
+:: Quick focused run: most common failure sources
+dcdiag /test:connectivity /test:dns /test:replications /test:services /test:netlogons /v
 
-# Connectivity test only
-dcdiag /test:connectivity
+:: DNS-specific test suite
+dcdiag /test:DNS /DnsBasic /DnsForwarders /DnsDelegation /DnsRecordRegistration /v
 
-# Run against a remote DC
-dcdiag /s:dc02.corp.example.com /test:replications
+:: Run against a remote DC from your workstation (requires RSAT)
+dcdiag /s:<remote-dc-fqdn> /test:all /v
 ```
 
-## Replication Diagnostics
+Common dcdiag failures:
 
-```cmd
-# Show replication status for all partners
-repadmin /showrepl
-
-# Show replication summary
-repadmin /replsummary
-
-# Show replication errors only
-repadmin /showrepl * /csv > C:\repl-errors.csv
-
-# Force replication from a specific source DC
-repadmin /replicate dc02.corp.example.com dc01.corp.example.com "DC=corp,DC=example,DC=com"
-```
-
-## Event Log Diagnostics
-
-```powershell
-# Check Directory Service log for replication errors
-Get-WinEvent -LogName "Directory Service" |
-    Where-Object {$_.Level -le 3} | Select-Object -First 20 TimeCreated, Id, Message
-
-# Check System log for Netlogon errors
-Get-WinEvent -LogName System -ProviderName Netlogon |
-    Select-Object -First 20 TimeCreated, Id, Message
-
-# Check for Kerberos errors in Security log
-Get-WinEvent -LogName Security |
-    Where-Object {$_.Id -in @(4768,4769,4771)} |
-    Select-Object -First 20 TimeCreated, Id, Message
-```
-
----
-
-## LDAP Diagnostics
-
-Active Directory exposes its directory over LDAP on port 389 (LDAPS on 636). LDAP queries are the foundation for searches, integrations, and automation against AD.
-
-### LDAP Search Basics
-
-Every LDAP search has four parts: base DN, scope, filter, and attributes.
-
-| Parameter | Description | Example |
-|---|---|---|
-| Base DN | Starting point in the tree | `DC=corp,DC=example,DC=com` |
-| Scope | base / one / sub | `sub` searches entire subtree |
-| Filter | Object selector syntax | `(objectClass=user)` |
-| Attributes | Fields to return | `sAMAccountName,mail` |
-
-```bash
-# Basic ldapsearch against AD (Linux/macOS)
-ldapsearch -H ldap://dc01.corp.example.com \
-    -D "cn=svc-ldap,ou=serviceaccounts,dc=corp,dc=example,dc=com" \
-    -w 'P@ssw0rd!' \
-    -b "DC=corp,DC=example,DC=com" \
-    -s sub \
-    "(sAMAccountName=jsmith)" \
-    cn mail memberOf
-
-# Search for all enabled users
-ldapsearch -H ldap://dc01.corp.example.com \
-    -D "cn=svc-ldap,ou=serviceaccounts,dc=corp,dc=example,dc=com" \
-    -w 'P@ssw0rd!' \
-    -b "DC=corp,DC=example,DC=com" \
-    "(&(objectClass=user)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))" \
-    sAMAccountName displayName mail
-```
-
-### LDAPS and Signing
-
-```powershell
-# Test LDAPS connectivity
-Test-NetConnection -ComputerName dc01.corp.example.com -Port 636
-
-# Verify LDAP channel binding / signing settings
-Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters" |
-    Select-Object "LDAPServerIntegrity", "LdapEnforceChannelBinding"
-
-# Check LDAP event log for bind failures
-Get-WinEvent -LogName "Directory Service" |
-    Where-Object {$_.Id -eq 2889} | Select-Object -First 10 TimeCreated, Message
-```
-
-### Troubleshooting LDAP Issues
-
-```bash
-# Test anonymous bind (should fail if hardening is applied)
-ldapsearch -H ldap://dc01.corp.example.com -x -b "" -s base
-
-# Test with explicit credentials and verbose output
-ldapsearch -H ldap://dc01.corp.example.com -v \
-    -D "cn=svc-ldap,ou=serviceaccounts,dc=corp,dc=example,dc=com" \
-    -w 'P@ssw0rd!' \
-    -b "DC=corp,DC=example,DC=com" "(cn=jsmith)"
-
-# Check TLS on LDAPS port
-openssl s_client -connect dc01.corp.example.com:636 -showcerts
-```
-
----
-
-## DNS Dependency
-
-Active Directory is fundamentally dependent on DNS. Every DC registration, client logon, and Kerberos ticket request relies on DNS SRV and A records being correct and resolvable. A broken DNS layer is the most common root cause of AD-wide outages.
-
-### SRV Records and DC Locator
-
-DCs register SRV records in DNS automatically via the Netlogon service. The DC Locator process uses these records to find the right DC for a given site and service.
-
-Key SRV record types:
-
-| Record | Purpose |
+| Test | FAILED means |
 |---|---|
-| `_ldap._tcp.<domain>` | Generic LDAP over TCP |
-| `_kerberos._tcp.<domain>` | Kerberos KDC (TCP) |
-| `_ldap._tcp.dc._msdcs.<domain>` | DC-specific LDAP |
-| `_kerberos._udp.<domain>` | Kerberos KDC (UDP) |
-| `_gc._tcp.<domain>` | Global Catalog |
-| `_ldap._tcp.<site>._sites.<domain>` | Site-scoped LDAP |
-
-```cmd
-# List all AD SRV records in DNS
-nslookup -type=SRV _ldap._tcp.corp.example.com
-nslookup -type=SRV _kerberos._tcp.corp.example.com
-nslookup -type=SRV _gc._tcp.corp.example.com
-```
-
-### Checking DNS Health
-
-```cmd
-# Run dcdiag DNS tests on local DC
-dcdiag /test:dns /v
-
-# Run against a specific DC
-dcdiag /test:dns /s:dc01.corp.example.com /v
-
-# Check that Netlogon has registered SRV records
-nltest /dsgetdc:corp.example.com
-
-# Force Netlogon to re-register DNS records
-nltest /dsregdns
-
-# Verify a DC can be found for a specific site
-nltest /dsgetdc:corp.example.com /site:LondonSite
-```
-
-### DC Locator Process
-
-When a client needs a DC it sends a DNS query for `_ldap._tcp.<site>._sites.<domain>`. If no site-scoped record is found it falls back to the domain-wide `_ldap._tcp.<domain>` SRV records. The client then sends an LDAP ping (CLDAP) to the returned DCs and selects the fastest responder.
-
-```powershell
-# Show which DC a machine is currently using
-(Get-ADDomainController -Discover).Name
-
-# Force rediscovery of a DC
-nltest /sc_reset:corp.example.com
-
-# Display the DC locator cache
-nltest /dclist:corp.example.com
-```
-
-### DNS Health Checks Runbook
-
-```powershell
-# Check all DCs have registered A records
-Get-ADDomainController -Filter * | ForEach-Object {
-    Resolve-DnsName $_.HostName -Type A -ErrorAction SilentlyContinue
-}
-
-# Confirm SRV records are present for every DC
-$domain = "corp.example.com"
-Resolve-DnsName "_ldap._tcp.$domain" -Type SRV
-Resolve-DnsName "_kerberos._tcp.$domain" -Type SRV
-
-# Check for DNS scavenging (stale record removal)
-Get-DnsServerZoneAging -Name "corp.example.com"
-```
-
-### Common DNS-Caused AD Failures
-
-- Missing SRV records after DC promotion: restart Netlogon and run `nltest /dsregdns`
-- Clients caching old DC addresses: flush with `ipconfig /flushdns`
-- Split-brain DNS: internal clients resolving to external IPs — ensure internal DNS is authoritative for the AD domain
-- Scavenging too aggressive: valid DC records deleted — review AgingEnabled and NoRefreshInterval settings
-- Wrong DNS server on DC NIC: DCs must point to AD-integrated DNS, not a public resolver
+| Connectivity | DC unreachable on port 389/88/135 |
+| Replications | AD replication errors between DC pairs |
+| Services | NTDS, KDC, or netlogon service not running |
+| Netlogons | Netlogon service not authenticating machines |
+| DNS | SRV records missing or DC cannot register DNS |
+| FSMOCheck | FSMO role holder unreachable |
 
 ---
 
-## Verify resolution
+## Step 2 — Check replication health
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```cmd
+:: Quick replication health overview
+repadmin /replsummary
+:: Columns: Source DC, Largest Delta, Fails, Total
+
+:: Detailed per-partner replication status
+repadmin /showrepl
+:: Look for: FAILED lines with error codes
+
+:: Force sync of all naming contexts from all partners
+repadmin /syncall /AdeP
+:: Flags: A=all partitions, d=DN format, e=enterprise, P=push
+
+:: Show failed replication operations stuck in cache
+repadmin /failcache
+```
+
+Common replication error codes:
+
+| Error | Meaning |
+|---|---|
+| 8453 | Replication access denied — check SPN / dcdiag /test:CheckSDRefDom |
+| 1256 | Remote DC unreachable — check network and firewall port 135/389 |
+| 8606 | Lingering objects — use repadmin /removelingeringobjects |
+| 8614 | DC offline longer than tombstone lifetime — demote and re-promote |
+
+---
+
+## Step 3 — Find FSMO role holders and verify DNS SRV records
+
+```powershell
+# FSMO role holder inventory
+netdom query fsmo
+# Expected: all 5 roles assigned to reachable DCs
+
+# List all DCs with site, IP, and role info
+Get-ADDomainController -Filter * |
+  Select Name, IPv4Address, Site, IsGlobalCatalog, OperationMasterRoles |
+  Format-Table -AutoSize
+
+# DNS DC locator SRV records — clients use these to find DCs
+nslookup -type=SRV _ldap._tcp.dc._msdcs.<domain>
+nslookup -type=SRV _kerberos._tcp.dc._msdcs.<domain>
+# Expected: one or more DC IPs returned
+
+# Re-register DC DNS records if missing (run on the DC itself)
+nltest /dsregdns
+ipconfig /registerdns
+
+# Site-specific DC locator SRV records
+nslookup -type=SRV _ldap._tcp.<site-name>._sites.dc._msdcs.<domain>
+```
+
+---
+
+## Step 4 — Test secure channel and Kerberos
+
+```powershell
+# Test secure channel from a member server
+nltest /sc_query:<domain>
+# Expected: Status = 0 0x0 NERR_Success
+
+# Test and optionally repair secure channel
+Test-ComputerSecureChannel -Server <dc-fqdn>
+Test-ComputerSecureChannel -Repair -Credential (Get-Credential)
+
+# Reset machine account password via netdom (alternative repair)
+netdom resetpwd /s:<dc-hostname> /ud:<domain>\<admin-user> /pd:*
+
+# List cached Kerberos tickets
+klist
+# Expired tickets cause auth failures — purge and re-auth
+klist purge
+
+# Verify all required DC ports are reachable
+Test-NetConnection -ComputerName <dc-fqdn> -Port 389    # LDAP
+Test-NetConnection -ComputerName <dc-fqdn> -Port 636    # LDAPS
+Test-NetConnection -ComputerName <dc-fqdn> -Port 3268   # Global Catalog
+Test-NetConnection -ComputerName <dc-fqdn> -Port 88     # Kerberos
+Test-NetConnection -ComputerName <dc-fqdn> -Port 135    # RPC endpoint mapper
+```
+
+---
+
+## Step 5 — Review Directory Services and Security event logs
+
+```powershell
+# Directory Services log — primary AD error source
+Get-EventLog -LogName "Directory Services" -Newest 100 |
+  Where-Object {$_.EntryType -match "Error|Warning"} |
+  Select TimeGenerated, EventID, Source, Message |
+  Format-List
+
+# Key replication event IDs
+Get-EventLog -LogName "Directory Services" -Newest 200 |
+  Where-Object {$_.EventID -in @(1311,1388,1864,2042,1722,1925)} |
+  Select TimeGenerated, EventID, Message
+
+# Auth failures in Security log
+Get-EventLog -LogName Security -Newest 100 |
+  Where-Object {$_.EventID -in @(4625,4771,4769,4768)} |
+  Select TimeGenerated, EventID, Message
+```
+
+Key event IDs:
+
+| Event ID | Source | Meaning |
+|---|---|---|
+| 1311 | Directory Services | Replication configuration error |
+| 1388 / 1988 | Directory Services | Lingering object conflict |
+| 1864 | Directory Services | No replication in 24 hours |
+| 2042 | Directory Services | DC offline past tombstone lifetime |
+| 4625 | Security | NTLM logon failure |
+| 4771 | Security | Kerberos pre-auth failure |
+
+---
+
+## Step 6 — Check Group Policy and SYSVOL replication
+
+```cmd
+:: GPO result for current user/computer
+gpresult /h C:\Logs\gpresult.html /f
+:: Open HTML report: see Applied and Denied GPOs with failure reason
+
+:: SYSVOL replication health (DFS-R)
+dfsrdiag ReplicationState
+
+:: Check DFS-R service
+Get-Service -Name DFSR
+
+:: Confirm SYSVOL share exists on this DC
+net share | findstr SYSVOL
+
+:: Force GPO refresh
+gpupdate /force
+```
+
+---
+
+## Step 7 — Collect support data for Microsoft case
+
+```cmd
+:: Enable verbose netlogon debug logging on the affected DC
+nltest /dbflag:0x2080FFFF
+:: Reproduce the issue, then collect: C:\Windows\debug\netlogon.log
+
+:: Disable logging after capture
+nltest /dbflag:0x0
+
+:: Export Directory Services event log
+wevtutil epl "Directory Services" C:\Logs\DirectoryServices.evtx
+wevtutil epl Security C:\Logs\Security.evtx
+
+:: Full dcdiag to file
+dcdiag /test:all /v /s:<dc-fqdn> /f:C:\Logs\dcdiag-full.log
+
+:: Replication state
+repadmin /replsummary > C:\Logs\replsummary.txt
+repadmin /showrepl >> C:\Logs\replication.txt
+repadmin /failcache >> C:\Logs\replication.txt
+
+:: System and network state
+systeminfo > C:\Logs\systeminfo.txt
+ipconfig /all > C:\Logs\ipconfig.txt
+netstat -an > C:\Logs\netstat.txt
+```
+
+---
+
+## Log locations
+
+| Source | Path / Command | What to look for |
+|---|---|---|
+| DC health | `dcdiag /test:all /v` | FAILED test entries |
+| Replication | `repadmin /replsummary` | Failure count and largest delta |
+| Netlogon | `C:\Windows\debug\netlogon.log` | Secure channel, auth, password errors |
+| Directory Services | Event Viewer → Windows Logs → Directory Services | Event IDs 1311, 1388, 1864, 2042 |
+| Security | Event Viewer → Windows Logs → Security | Event IDs 4625, 4771, 4769 |
+| SYSVOL | `dfsrdiag ReplicationState` | DFS-R sync errors and backlog count |
 
 ---
 
@@ -311,4 +325,11 @@ Get-DnsServerZoneAging -Name "corp.example.com"
 
 - [Active Directory — Common Issues](common-issues/)
 - [Active Directory — Escalation](escalation/)
-- [Active Directory — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `dcdiag /test:all /v /s:<dc-fqdn>` returns no FAILED tests
+- `repadmin /replsummary` shows 0 failures and delta < 15 minutes for all DC pairs
+- `nltest /sc_query:<domain>` returns `Status = 0 0x0 NERR_Success`
+- `klist purge` then re-authenticate the affected user — login succeeds
+- `Get-EventLog -LogName "Directory Services" -Newest 20` shows no new Error events
