@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 22 checks.
+KB site audit — 27 checks.
 
 Usage:
     python3 scripts/site_audit.py          # run all checks, print summary
@@ -449,6 +449,107 @@ if os.path.isdir(_backup_dir):
             pass
 else:
     warn(issues, f'Backup directory not found at {_backup_dir}')
+
+
+# ── Check 24: ASCII diagram coverage ─────────────────────────────────────────
+issues = check(24, 'ASCII diagram coverage')
+_SKIP_DIAG = {'tags.md', 'site-map.md', 'usage-metrics.md', 'site-quality.md'}
+_missing_diag = []
+for _path in all_md():
+    _rel = os.path.relpath(_path, DOCS)
+    if _rel in _SKIP_DIAG or _rel.startswith('stats/'):
+        continue
+    _c = open(_path).read()
+    if 'kb-card' in _c or 'kb-grid' in _c:
+        continue  # nav pages don't need diagrams
+    if not re.search(r'[┌│└┐┘]', _c):
+        _missing_diag.append(_rel)
+if _missing_diag:
+    for _p in _missing_diag[:12]:
+        warn(issues, f'No ASCII diagram: {_p}')
+    if len(_missing_diag) > 12:
+        warn(issues, f'... and {len(_missing_diag) - 12} more (run --full)')
+
+
+# ── Check 25: See also coverage ───────────────────────────────────────────────
+# Only flag leaf sub-pages inside known operational section types
+_SEE_ALSO_SECTIONS = {
+    'procedures', 'health-checks', 'cli-reference', 'scripts',
+    'backup-restore', 'install-upgrade', 'common-issues', 'diagnostics',
+    'escalation', 'access-control', 'authentication', 'encryption', 'hardening',
+}
+issues = check(25, 'See also cross-references')
+_missing_see = []
+for _path in all_md():
+    _rel = os.path.relpath(_path, DOCS)
+    if _rel.startswith('stats/') or _rel in {'tags.md', 'site-map.md', 'usage-metrics.md', 'site-quality.md'}:
+        continue
+    _parts = _rel.split(os.sep)
+    # parent directory must be one of the known operational section names
+    _parent = _parts[-2] if len(_parts) >= 2 else ''
+    if _parent not in _SEE_ALSO_SECTIONS:
+        continue
+    _c = open(_path).read()
+    if 'kb-card' in _c or 'kb-grid' in _c:
+        continue
+    if '## See also' not in _c:
+        _missing_see.append(_rel)
+if _missing_see:
+    for _p in _missing_see[:12]:
+        warn(issues, f'Missing "## See also": {_p}')
+    if len(_missing_see) > 12:
+        warn(issues, f'... and {len(_missing_see) - 12} more (run --full)')
+
+
+# ── Check 26: Before you begin coverage ──────────────────────────────────────
+issues = check(26, 'Before you begin prerequisites')
+_BYB_DIRS = {'deploy', 'operations', 'troubleshooting'}
+_missing_byb = []
+for _path in all_md():
+    _rel = os.path.relpath(_path, DOCS)
+    _parts = _rel.split(os.sep)
+    # only check files inside deploy/, operations/, or troubleshooting/ sub-dirs
+    if not any(p in _BYB_DIRS for p in _parts[:-1]):
+        continue
+    _c = open(_path).read()
+    if 'kb-card' in _c or 'kb-grid' in _c:
+        continue
+    # skip index.md landing pages (they're card-nav) and known-issues / escalation flat tables
+    _fname = os.path.basename(_path)
+    if _fname in ('known-issues.md',):
+        continue
+    if len(_parts) < 3:
+        continue
+    if '## Before you begin' not in _c and 'Before you begin' not in _c:
+        _missing_byb.append(_rel)
+if _missing_byb:
+    for _p in _missing_byb[:12]:
+        warn(issues, f'Missing "Before you begin": {_p}')
+    if len(_missing_byb) > 12:
+        warn(issues, f'... and {len(_missing_byb) - 12} more (run --full)')
+
+
+# ── Check 27: New platform section structure ──────────────────────────────────
+issues = check(27, 'New platform section structure (OpenShift, Ceph, EVS)')
+_NEW_SECTIONS = {
+    'virtualization/openshift': ['architecture', 'deploy', 'operations', 'security', 'troubleshooting'],
+    'storage/ceph':             ['architecture', 'deploy', 'operations', 'security', 'troubleshooting'],
+    'cloud/aws/evs':            ['architecture', 'deploy', 'operations', 'security', 'troubleshooting'],
+}
+for _section, _required in _NEW_SECTIONS.items():
+    _base = os.path.join(DOCS, _section)
+    if not os.path.isdir(_base):
+        warn(issues, f'Section missing: {_section}/')
+        continue
+    for _sub in _required:
+        _sub_path = os.path.join(_base, _sub)
+        if not os.path.isdir(_sub_path):
+            warn(issues, f'{_section}/{_sub}/ missing')
+        elif not os.path.exists(os.path.join(_sub_path, 'index.md')):
+            # flat .md files are OK for EVS
+            _flat = [f for f in os.listdir(_sub_path) if f.endswith('.md')]
+            if not _flat:
+                warn(issues, f'{_section}/{_sub}/ has no content')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────
