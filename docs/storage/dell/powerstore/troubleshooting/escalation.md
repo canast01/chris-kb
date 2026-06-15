@@ -7,235 +7,298 @@ search:
 ---
 # PowerStore — Escalation
 
-
 <div class="kb-summary">
-Escalation reference covering Support Portal, Opening a Support Case, Required Information for a Case, Case Priority Levels, Escalation Path and 4 more sections.
+How to escalate Dell PowerStore issues to Dell support: what data to collect, how to generate the support bundle, step-by-step case creation on the Dell portal, and the escalation path when progress stalls.
 
 *Applies to: PowerStore 3.x*
 </div>
+
 ```text
 ┌──────────────────────────────────── Dell PowerStore — Escalation ─────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     PowerStore escalation: severity triage, vendor support contact, and required artifacts    │   │
-│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
-│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate PowerStore issues to Dell when a controller is down, an appliance is                        │
+│  unreachable, I/O has completely stopped, or a drive failure has reduced redundancy.                  │
+│  Collect the support bundle and SupportAssist case BEFORE changing anything.                          │
 │                                                                                                       │
-│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
+│   │  Check SupportAssist for auto-opened case    │  │  Go to www.dell.com/support → sign in       │   │
+│   │  Run: GET /api/rest/alert?state=active        │  │  Product: PowerStore; enter service tag     │  │
+│   │  Note PowerStoreOS version + service tag     │  │  Severity: P1 down / P2 major / P3 minor    │   │
+│   │  Collect support bundle via PSM              │  │  Attach support bundle + alert output       │   │
+│   │  Write timeline: last good → first failure   │  │  Include affected volumes and host list     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
-│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
-│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
-│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
-│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  For P1: open portal case AND call Dell at +1 800 945 3355 immediately.                               │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
-│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
-│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
-│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
-│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm bundle received        │  │  Do not reboot a controller without Dell    │   │
+│   │  TAM: engages engineering for P1             │  │  Do not replace drives without Dell go-ahead│   │
+│   │  Duty Manager: request if SLA breached       │  │  Do not modify volumes or hosts mid-case    │   │
+│   │  Change freeze until Dell gives go-ahead     │  │  Do not disable SupportAssist during case   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
-│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
-│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
-│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
-│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
-│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
-│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
-│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
-│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
-│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
-│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
-│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
+│  PSM          = PowerStore Manager; browser-based GUI and REST API endpoint for all operations        │
+│  SupportAssist= Dell telemetry agent; automatically opens cases for qualifying hardware faults        │
+│  Service tag  = 7-character alphanumeric serial; required for all Dell support cases                  │
+│  ProSupport   = Dell support contract; required for 24×7 SLA; upgraded to ProSupport Plus for TAM     │
+│  T-model      = PowerStore block-only appliance; iSCSI, FC, and NVMe-oF connectivity                  │
+│  X-model      = PowerStore unified block + file appliance; adds NAS capabilities                      │
+│  Metro        = PowerStore synchronous replication between two sites; zero RPO                        │
+│  Applied-to   = host mapping object; volumes are applied-to a host or host group for access           │
+│  P1           = production system completely down; no hosts can access storage; 24×7 response         │
+│  Protection policy = PowerStore object defining snapshot schedule, retention, and replication         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+---
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** PowerStore Manager (PSM) admin credentials; Dell account at dell.com/support with ProSupport contract linked to the system service tag
+- **Check SupportAssist first:** if SupportAssist is enabled and connected, Dell may have already automatically opened a case for qualifying hardware faults. Check **PSM → Help → My Cases** before opening a duplicate
+- **Do NOT reboot a controller** without Dell guidance — in a degraded state a reboot may take the array offline. Dell support will tell you if a reboot is the right action
+- **Do NOT replace failed drives** without Dell confirming the replacement sequence — pulling drives in the wrong order from a degraded RAID group can cause data loss
 
 ---
 
-## Support Portal
+## Pre-Escalation Self-Check
 
-Dell PowerStore support cases are logged through the Dell support portal at [https://www.dell.com/support](https://www.dell.com/support). PowerStore is covered under the ProSupport or ProSupport Plus contract associated with the system's service tag.
+Run these before opening the case.
 
-Access the portal with a Dell account that is associated with your company's service contracts. If you do not have a Dell account, your account team can provision access.
+| Check | Where to look | Expected result |
+|---|---|---|
+| PowerStoreOS version | PSM → Help → About | Note full version string |
+| Service tag | PSM → Hardware → Appliance → Properties | 7-char tag e.g. `ABC1234` |
+| Active alerts | PSM → Alerts dashboard or REST API | Review all Critical/Major alerts |
+| Controller health | PSM → Hardware → Controllers | Both controllers show Online |
+| Drive health | PSM → Hardware → Drives | No drives in Failed or Degraded state |
+| Appliance health | PSM → Dashboard → Hardware Health | All appliances show Healthy |
+| Volume health | PSM → Storage → Volumes | No volumes in Degraded state |
+| SupportAssist status | PSM → Settings → Support → SupportAssist | Status: Connected |
+| Existing auto-case | PSM → Help → My Cases | Check for Dell-opened case before creating new |
 
-## Opening a Support Case
+---
 
-### Via PowerStore Manager (Recommended)
+## Step-by-Step Data Collection
 
-The fastest method for opening a case is directly from PowerStore Manager, which pre-populates the case with the system serial number, software version, and relevant logs:
+### 1. Get the PowerStoreOS version and service tag
 
-1. PowerStore Manager → **Help → Contact Support → Open Service Request**
-2. Describe the symptom and impact
-3. Attach additional diagnostics if available (support package, log dumps)
+In PSM: click **Help → About** and note the full PowerStoreOS version string.
 
-Dell SupportAssist (if enabled and connected) may already have automatically created a case for qualifying hardware faults — check **PowerStore Manager → Help → My Cases** before opening a duplicate.
+Then click **Hardware → Appliance → Properties** to find the service tag. The service tag is required for all Dell support cases. If PSM is unavailable:
 
-### Via Dell Support Portal
+```bash
+# PowerStore REST API — get the version (authenticated curl)
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/software_installed" \
+  -H "Authorization: Basic <base64-user:pass>"
 
-If PowerStore Manager is inaccessible:
+# Get the appliance model and serial number
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/appliance" \
+  -H "Authorization: Basic <base64-user:pass>"
+```
 
-1. Navigate to [https://www.dell.com/support](https://www.dell.com/support)
-2. Sign in and go to **My Products and Services → Service Requests → Create New**
-3. Select **PowerStore** as the product type
-4. Enter the system service tag (serial number)
+### 2. Capture all active alerts
 
-### Via Phone
+```bash
+# Get all active alerts via REST API — paste full output into the case description
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/alert?state=active" \
+  -H "Authorization: Basic <base64-user:pass>"
 
-| Region | Phone Number |
-|---|---|
-| Global (main) | +1 800 945 3355 |
-| UK | +44 0800 028 2847 |
-| Germany | +49 0800 000 3672 |
-| Australia | +61 1800 812 393 |
+# Alternative: PSM → Alerts → filter by Status=Active; Export to CSV
+```
 
-For P1 (critical production-down) issues, always call after opening the portal case — phone escalation is faster than portal-only for urgent issues.
+### 3. Check hardware health (controller and drive state)
 
-## Required Information for a Case
+In PSM: click **Hardware → Appliance** and screenshot the hardware topology view showing controller and drive status.
 
-Always collect this data before or immediately after opening the case:
+```bash
+# REST: check controller health
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/hardware?type=Node" \
+  -H "Authorization: Basic <base64-user:pass>"
 
-| Field | How to Obtain |
-|---|---|
-| System service tag / serial number | PowerStore Manager → Hardware → Appliance |
-| PowerStoreOS version | `GET /api/rest/software_installed` |
-| Appliance model | PowerStore Manager → Dashboard or `GET /api/rest/appliance` |
-| Active alerts at time of incident | `GET /api/rest/alert?state=active` |
-| Event log (last 24 hours) | `GET /api/rest/event?order=created_timestamp desc` |
-| Support package | PowerStore Manager → Help → Collect Support Materials |
-| Affected workloads | List volumes, hosts, and applications affected |
-| Timeline | When the issue started; what changed before it occurred |
-| Error message | Exact text from alerts or REST API responses |
-| Impact statement | Production down / degraded / single host / DR site |
+# REST: check drive health
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/hardware?type=Drive" \
+  -H "Authorization: Basic <base64-user:pass>"
+```
 
-## Case Priority Levels
+### 4. Collect the support bundle
 
-| Priority | Condition | Dell Response Time | Coverage |
-|---|---|---|---|
-| P1 — Critical | Production system down; all hosts have lost storage access | 2 hours initial response; continuous engagement | 24×7×365 |
-| P2 — High | Production system degraded; significant performance impact; DR capability lost | 4 hours initial response | 24×7×365 |
-| P3 — Medium | Degraded functionality; workaround available; non-production impacted | Next business day | Business hours |
-| P4 — Low | General question; documentation request; minor issue with workaround | Next business day | Business hours |
+The support bundle packages all PSM logs, configuration data, and event history.
 
-ProSupport Plus subscribers receive enhanced SLAs including proactive mission-critical support and next-business-day onsite hardware replacement.
+1. In PSM: click **Help → Collect Support Materials**.
+2. Select the affected appliance(s).
+3. Click **Collect** and wait 5–15 minutes for the bundle to be generated.
+4. Download the resulting archive when the collection completes.
+
+This archive is the most important attachment for the Dell support case.
+
+If PSM is inaccessible:
+
+```bash
+# REST: trigger a support bundle collection
+curl -k -X POST "https://<powerstore-mgmt-ip>/api/rest/support_material" \
+  -H "Authorization: Basic <base64-user:pass>" \
+  -H "Content-Type: application/json" \
+  -d '{"appliance_ids": ["<appliance-id>"]}'
+```
+
+### 5. Write the timeline
+
+```text
+PowerStoreOS version: 3.5.0.0.0.14
+Service tag: ABC1234
+Appliance model: PowerStore 1200T
+Issue first observed: 2026-06-14 14:30 UTC
+Last known good state: 2026-06-14 12:00 UTC
+Changes in 24h before the issue:
+  - 12:00: Firmware update applied via PSM to both controllers
+  - 14:30: Alert fired: "Node A hardware fault — node degraded"
+  - 14:35: 4 hosts lost I/O access to volumes on this appliance
+Steps already taken:
+  - Reviewed PSM alerts: 3 Critical alerts for hardware fault on Node A
+  - Checked SupportAssist: no automatic case found
+  - Did NOT reboot controllers or replace drives
+Blast radius: 4 ESXi hosts cannot access storage; 20 VMs have I/O stalled
+```
+
+---
+
+## How to Open the SR on www.dell.com/support
+
+1. Go to **www.dell.com/support** and sign in with your Dell account. The account must be linked to a ProSupport or ProSupport Plus contract associated with the system service tag.
+
+2. Click **Get Support** → **Service Requests** → **Create a New Service Request**.
+
+3. Under **Product**, search for **PowerStore** and select your appliance model.
+
+4. Enter the **Service Tag** (7-character code from Step 1). This validates entitlement and links Dell's system database to the case.
+
+5. Under **Problem Type**, select **Hardware** for physical faults or **Software** for PSM, REST API, or data management issues.
+
+6. Under **Severity**, select:
+   - **P1 — Critical**: Both controllers unreachable; all hosts have lost storage access; no I/O can proceed; production is down; no workaround
+   - **P2 — High**: Single controller degraded; drive failure reducing redundancy; significant I/O performance degradation; Metro or replication broken; production impacted
+   - **P3 — Medium**: Non-critical feature affected; alert that has a workaround; one volume unavailable while other volumes remain accessible
+   - **P4 — Low**: How-to question, planning, documentation request, or non-urgent configuration review
+
+7. In the **Description** field, paste:
+   - PowerStoreOS version and service tag from Step 1
+   - Active alerts from Step 2
+   - Hardware state from Step 3
+   - The timeline from Step 5
+
+8. Under **Attachments**, upload the support bundle from Step 4. If the file is too large for the portal, Dell will provide a secure upload link.
+
+9. Click **Submit**. You will receive a case number by email immediately.
+
+10. **P1 only:** call Dell support immediately after submission:
+    - Global: **+1 800 945 3355** (24×7 for ProSupport P1)
+    - UK: +44 0800 028 2847
+    - Germany: +49 0800 000 3672
+    - State "P1 — PowerStore controller degraded / hosts have no storage" at the start of the call.
+
+---
 
 ## Escalation Path
 
-### Level 1 — Open a P1/P2 Case
-
-For any production-impacting issue, open the case at P1 or P2 priority immediately. Include the impact statement in the case description — this determines initial routing.
-
-### Level 2 — Request Technical Account Manager (TAM) Escalation
-
-If you have a ProSupport Plus contract with a TAM assigned, contact your TAM directly for critical escalations:
-
-- TAMs can escalate to engineering and expedite hardware dispatch
-- TAM contact details are in your Dell account profile under **My Team**
-
-### Level 3 — Executive Escalation
-
-For prolonged P1 incidents (P1 open for more than 4 hours without satisfactory progress):
-
-1. Call Dell support and request escalation to the **Duty Manager** or **Global Escalation Team**
-2. Contact your **Dell account executive** and request formal executive escalation
-3. Dell's escalation process triggers a bridge call with engineering involvement and executive sponsorship
-
-## SupportAssist — Automated Case Creation
-
-With SupportAssist enabled and connected, PowerStore automatically creates service requests for qualifying hardware faults (drive failures, power supply faults, node hardware alerts). These cases are pre-populated with diagnostic data and sent directly to Dell's proactive monitoring team.
-
-Verify SupportAssist is connected: **PowerStore Manager → Settings → Support → SupportAssist → Status: Connected**.
-
-If SupportAssist shows disconnected:
-
-```bash
-# Test outbound connectivity to Dell SRS
-curl -k https://esrs3.emc.com   # Should return a 200 or redirect
-
-# Check proxy configuration if behind a proxy
-# PowerStore Manager → Settings → Support → SupportAssist → Proxy Settings
-
-# Verify DNS resolution
-nslookup esrs3.emc.com   # From the management network
+```text
+Step 1 — Check SupportAssist for auto-opened case; if none, open case at dell.com/support
+         ↓
+Step 2 — Dell support engineer acknowledges (P1: within 1 hr; P2: within 4 hr)
+         ↓
+Step 3 — If no meaningful progress in 1 hour for P1 or 4 hours for P2:
+         → Reply in case: "Requesting escalation to Senior Engineer / TAM"
+         → State: "[hosts have no storage / Node A down / Metro broken]"
+         ↓
+Step 4 — TAM (Technical Account Manager) assigned for ProSupport Plus contracts
+         → TAM escalates to engineering and can expedite hardware dispatch
+         → Have PSM and REST API access ready for a remote session
+         ↓
+Step 5 — If hardware is confirmed failed:
+         → Dell initiates hardware dispatch per your ProSupport contract SLA
+         → For NBD: next business day; for 4h: parts dispatched within 4 hours
+         ↓
+Step 6 — For P1 open more than 4 hours with no resolution:
+         → Call Dell support and request escalation to the Duty Manager
+         → Contact your Dell Account Executive for executive-level escalation
 ```
-
-## Remote Support Sessions
-
-Dell Support engineers can initiate remote sessions through SupportAssist. These sessions are:
-
-- Initiated by Dell from the SRS cloud — Dell engineers cannot initiate sessions without your consent
-- Routed through the SRS gateway (not directly to your management IP)
-- Audited — all session activity is logged
-
-To permit a remote session:
-
-1. The Dell support engineer will provide a session ID
-2. In PowerStore Manager → **Help → Remote Support Sessions → Approve Session** — enter the session ID
-3. The session is active for the duration specified; it terminates automatically at expiry
-
-You can monitor active remote sessions and revoke them at any time from the same Remote Support Sessions view.
-
-## Diagnostic Resources
-
-| Resource | URL | Use |
-|---|---|---|
-| Dell Support Portal | [https://www.dell.com/support](https://www.dell.com/support) | Case management, downloads, knowledge base |
-| Dell PowerStore Documentation | [https://www.dell.com/support/home/en-us/product-support/product/powerstore/docs](https://www.dell.com/support/home/en-us/product-support/product/powerstore/docs) | Official product documentation |
-| Dell Security Advisories | [https://www.dell.com/support/security](https://www.dell.com/support/security) | CVEs and security patches for PowerStoreOS |
-| Dell PowerStore Interoperability Matrix | [https://elabnavigator.dell.com](https://elabnavigator.dell.com) | Host OS, HBA, switch, and software compatibility |
-| Dell Community Forums | [https://www.dell.com/community](https://www.dell.com/community) | Peer knowledge base; useful for non-critical questions |
-
-## Escalation Checklist (P1 Incident)
-
-Use this checklist when a P1 incident is declared:
-
-- [ ] Support case opened at P1 priority with impact statement (production down)
-- [ ] Dell support engineer on the bridge call or acknowledged via portal
-- [ ] Support package attached to the case or upload in progress
-- [ ] System serial number, software version, and hardware model confirmed with support
-- [ ] Timeline documented: when the issue started; what changed; which hosts are affected
-- [ ] SupportAssist confirmed — check if Dell has an existing automated case for this incident
-- [ ] Internal incident declared; application owners and management notified
-- [ ] TAM contacted if ProSupport Plus (can expedite engineering engagement)
-- [ ] Change freeze enacted — no additional changes until the P1 is resolved
-- [ ] If hardware fault: confirm Dell has dispatched the replacement component (check case notes)
-- [ ] DR failover readiness assessed — if site is at risk, evaluate failing over to DR
 
 ---
 
-## Verify resolution
+## What NOT to Do
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Reboot a controller without Dell guidance | May cause both nodes to enter a recovery state simultaneously, taking the array offline | Wait for Dell to confirm the exact command and timing for the reboot |
+| Replace failed drives without Dell confirmation | Pulling drives in the wrong order from a degraded RAID group can cause unrecoverable data loss | Let Dell provide the replacement procedure and part number |
+| Modify volumes or host mappings mid-case | Changes the configuration Dell is analysing; may fix symptoms while masking the root cause | Freeze all storage configuration changes until the case is closed |
+| Disable SupportAssist during the case | Severs Dell's telemetry visibility; prevents automatic dispatch of replacement parts | Leave SupportAssist enabled; it accelerates diagnosis and part dispatch |
+| Apply a PSM firmware update mid-incident | Changes the PSM software version and log format mid-investigation | Freeze all firmware and software updates until Dell advises |
+| Open multiple parallel cases for the same appliance | Splits Dell's diagnostic context; delays assignment | Use one case; add all updates to the same service request |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# Active alerts snapshot — paste into every case update
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/alert?state=active" \
+  -H "Authorization: Basic <base64-user:pass>"
+
+# Hardware health
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/hardware?type=Node" \
+  -H "Authorization: Basic <base64-user:pass>"
+
+# Drive health
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/hardware?type=Drive" \
+  -H "Authorization: Basic <base64-user:pass>"
+
+# Recent event log (last 50 events)
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/event?order=created_timestamp%20desc&limit=50" \
+  -H "Authorization: Basic <base64-user:pass>"
+
+# Volume health
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/volume?select=name,state,size" \
+  -H "Authorization: Basic <base64-user:pass>"
+
+# Replication session state (Metro / async)
+curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/replication_session" \
+  -H "Authorization: Basic <base64-user:pass>"
+```
+
+---
+
+## Support SLA Reference
+
+| Priority | Definition | Initial Response SLA |
+|---|---|---|
+| P1 — Critical | Array completely down; all I/O stopped; data inaccessible | 1 hour (24×7 — requires ProSupport 24×7) |
+| P2 — High | Single controller degraded; drive failure; replication broken | 4 hours (24×7 — requires ProSupport 24×7) |
+| P3 — Medium | Non-critical feature degraded; workaround available | Next business day |
+| P4 — Low | How-to, planning, documentation, advisory review | Next business day |
 
 ---
 
 ## See also
 
-- [Powerstore — Diagnostics](diagnostics/)
-- [Powerstore — Common Issues](common-issues/)
+- [PowerStore — Diagnostics](diagnostics/)
+- [PowerStore — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Check PSM → Dashboard → Hardware Health: all appliances show Healthy
+- Check PSM → Alerts: no active Critical or Major alerts related to the original issue
+- Run REST `GET /api/rest/hardware?type=Node` and confirm both controllers show `Online`
+- Run REST `GET /api/rest/hardware?type=Drive` and confirm no drives in `Failed` or `Degraded` state
+- Confirm hosts can access storage: run an I/O test from an affected host
+- Check PSM → Storage → Volumes: all volumes show `Ready` state
+- Monitor for 15 minutes after the fix before confirming resolution to Dell

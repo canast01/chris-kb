@@ -7,218 +7,300 @@ search:
 ---
 # FlashArray — Escalation
 
-
 <div class="kb-summary">
-Escalation reference covering Support Portal, Opening a Case, Information to Collect, Before Calling Support, SLA Tiers and 1 more sections.
+How to escalate Pure Storage FlashArray issues to Pure support: what data to collect, how to generate the diagnostic bundle, step-by-step case creation on the Pure support portal, and the escalation path when progress stalls.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
+
 ```text
 ┌──────────────────────────────────── Pure FlashArray — Escalation ─────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     FlashArray escalation: severity triage, vendor support contact, and required artifacts    │   │
-│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
-│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate Pure FlashArray issues to Pure support when a controller is down,                           │
+│  all hosts have lost I/O access, drive failures have reduced RAID redundancy,                         │
+│  or an ActiveCluster pod has partitioned. Pure1 phone-home detects most hardware                      │
+│  faults automatically — check for an existing case before opening a new one.                          │
 │                                                                                                       │
-│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
+│   │  Check Pure1 for auto-opened case            │  │  Go to support.purestorage.com → sign in    │   │
+│   │  Run: purealert list + purearray list        │  │  Product: FlashArray; enter array serial    │   │
+│   │  Note Purity version + array serial number   │  │  Severity: P1 down / P2 major / P3 minor    │   │
+│   │  Run: purediag --send (if phone-home active) │  │  Attach purediag bundle + purealert output  │   │
+│   │  Write timeline: last good → first failure   │  │  Include affected volumes and host count    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         Controllers         │  │        Active-active        │  │           No SPOF           │   │
-│   │            Drives           │  │         DirectFlash         │  │         NVMe native         │   │
-│   │           Volumes           │  │       Thin provisioned      │  │        Instant clone        │   │
-│   │        ActiveCluster        │  │       Sync replication      │  │           Zero RPO          │   │
-│   │           SafeMode          │  │       Immutable snaps       │  │      Ransomware resist      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  For P1: open portal case AND call Pure at +1-650-729-4088 immediately.                               │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
-│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
-│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
-│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
-│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + review Pure1 telemetry         │  │  Do not pull drives without Pure guidance   │   │
+│   │  Field engineer: dispatched for HW failures  │  │  Do not run purearray reset without Pure    │   │
+│   │  Engineering: for code-level Purity bugs     │  │  Do not delete protection groups mid-case   │   │
+│   │  AE: engage for P1 running > 2 hours         │  │  Do not disable phone-home during case      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: FlashArray//X or //C controllers · DirectFlash NVMe modules · 25/100 GbE / 32Gb FC       │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FlashArray         = Pure all-NVMe block/file array; inline dedup and compression always enabled   │
-│    DirectFlash        = Pure proprietary NVMe modules; direct flash access without SAS translation    │
-│    ActiveCluster      = synchronous active-active stretch cluster; hosts see a single namespace       │
-│    ActiveDR           = asynchronous replication to DR site; recovery point objective in seconds      │
-│    SafeMode           = admin-locked immutable snapshots; cannot be deleted even by array administr...│
-│    Protection group   = set of volumes and hosts sharing a snapshot and replication schedule          │
-│    purefa CLI         = REST CLI tool for FlashArray; purefa CLI connects via REST API key            │
-│    purearray          = purectl CLI command: purearray list and purearray show monitoring             │
-│    Volume tag         = user-defined key-value label on volumes for policy and reporting purposes     │
-│    Host group         = logical collection of hosts sharing volume access via a host group object     │
-│    Inline dedup       = content-based deduplication performed inline before data is written to flash  │
-│    Evergreen          = Pure architecture; controllers upgrade non-disruptively, shelves remain in ...│
+│  Purity//FA    = Pure FlashArray operating system; manages all array operations                       │
+│  DirectFlash   = Pure proprietary NVMe modules; no SAS translation layer                              │
+│  ActiveCluster = synchronous active-active replication; two arrays appear as one namespace            │
+│  ActiveDR      = async replication to DR site; RPO in seconds; promoted on DR activation              │
+│  SafeMode      = admin-locked immutable snapshot mode; cannot be disabled without Pure involvement    │
+│  Protection group = volumes sharing a snapshot and replication schedule                               │
+│  Pod           = ActiveCluster logical unit; volumes in a pod replicate synchronously                 │
+│  Pure1         = cloud-based telemetry and management portal; receives phone-home data                │
+│  purediag      = CLI tool to generate and optionally send a diagnostic bundle to Pure                 │
+│  Evergreen     = Pure support model; controller upgrades are non-disruptive; shelves persist          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-
-```text
-Pure Support Escalation Path
-  Array alert / incident
-          │
-          ▼
-  Pure1 portal ──► Array auto-detected fault?
-          │ Yes ──► Pure may auto-open case + dispatch parts
-          │ No  ──► Open case manually at support.purestorage.com
-          │
-          ▼
-  Case opened ──► Support engineer reviews Pure1 telemetry
-          │
-          ▼
-  If needed: purediag --send ──► diagnostic bundle to case
-          │
-          ▼
-  Pure TAC ──► Remote session / field engineer dispatch
-```
+---
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** FlashArray admin credentials (SSH to array management IP or web GUI); Pure support account at support.purestorage.com with the array registered in Pure1
+- **Check Pure1 first:** if phone-home is enabled, Pure may have already automatically opened a case for qualifying hardware faults (drive failures, controller faults, capacity thresholds). Log into **pure1.purestorage.com → Support → Cases** before opening a duplicate
+- **Do NOT pull failed drives** without Pure guidance — the replacement procedure and sequencing is critical to avoid losing RAID redundancy
+- **Do NOT disable phone-home** during the case — Pure1 telemetry is what the support engineer uses for remote diagnosis; disabling it delays resolution
 
 ---
 
-## Support Portal
+## Pre-Escalation Self-Check
 
-Pure Storage support is accessed at **[https://support.purestorage.com](https://support.purestorage.com)**.
+Run these from the FlashArray CLI (SSH to management IP, then `purectl` or direct CLI commands).
 
-**Account setup:**
+| Check | Command | Expected result |
+|---|---|---|
+| Purity version | `purearray list` | Note full Purity//FA version string |
+| Array serial | `purearray list` | Note the serial number for the case |
+| Controller health | `purearray list --controller` | Both CT0 and CT1 show `ready` |
+| Active alerts | `purealert list` | No unflagged Critical or Error alerts |
+| Drive health | `puredrive list` | No drives in `failed` or `degraded` state |
+| Volume accessibility | `purevol list` | No volumes in `unhealthy` state |
+| Port state | `pureport list` | All connected ports show `connected` |
+| ActiveCluster pod state | `purepod list` | All pods show `online` and `uniform` |
+| Replication group state | `purepgroup list` | All pgroups show expected replication status |
+| Pure1 auto-case | pure1.purestorage.com → Support → Cases | Check for existing auto-opened case |
 
-1. Request an account from your Pure account team or register using your company email on the support portal
-2. Your Pure1 login (pure1.purestorage.com) uses the same credentials — link your array serial number to your Pure1 organisation during onboarding
-3. Once the array is registered in Pure1, it automatically appears in the support portal for case association
-4. Add all relevant team members (storage admins, on-call engineers) as sub-users in the portal so they can open and track cases independently
+---
 
-**Pure1 integration with support:**
+## Step-by-Step Data Collection
 
-- Cases opened via the support portal are automatically linked to the array's Pure1 data
-- Pure Support engineers can view array telemetry, alert history, and diagnostic data from Pure1 without requiring a manual diagnostic upload in most situations
-- For critical issues, the support engineer may request you run `purediag --send` to push a fresh diagnostic bundle directly to the case
-
-## Opening a Case
-
-When opening a support case, provide the following minimum information to avoid delays:
-
-| Field | Where to Find It |
-|---|---|
-| Array serial number | `purearray list` (Serial field) or Pure1 portal |
-| Purity//FA version | `purearray list` (Version field) |
-| Symptom description | Clear description of what is wrong, when it started, and what changed before the issue |
-| Business impact | Number of affected hosts/VMs, applications impacted, whether the issue is production-down or degraded |
-| Steps already taken | List of diagnostic commands run and their output |
-| Severity / priority | P1 (production down) through P4 (general question) — see SLA tiers below |
-
-Set the severity accurately — Pure uses it to determine response time and resource allocation.
-
-## Information to Collect
-
-Run and capture the following before or immediately after opening a case:
+### 1. Get the Purity version and array serial number
 
 ```bash
-# Array identity and version
+# Array identity, version, and serial — SSH to array management IP
 purearray list
 
-# Controller health
-purearray list --controller
-
-# All active alerts
-purealert list
-
-# Drive health and status
-puredrive list
-
-# Array capacity and data reduction
-purearray list --space
-
-# Host connectivity
-purehost list --connection
-
-# Port status (FC/iSCSI/NVMe)
-pureport list
-
-# ActiveCluster pod status (if applicable)
-purepod list
-
-# Replication group status (if applicable)
-purepgroup list
-
-# Snapshot space usage (if capacity-related)
-puresnap list --space
-
-# Generate and save a full diagnostic bundle
-purediag --output /tmp/diag_$(hostname)_$(date +%Y%m%d_%H%M).tgz
-# Or send directly to Pure Support if phone-home is active:
-purediag --send
+# Example output:
+# Name         Version     ID             Model     Status
+# flasharray1  6.4.10      <uuid>         FA-X70R4  ready
 ```
 
-## Before Calling Support
+Note the **Version** field (e.g. `6.4.10`) and the **Serial** field — both required for the support case.
 
-- [ ] Array name and serial number: `purearray list`
-- [ ] Purity//FA version: `purearray list` (Version field)
-- [ ] Active alerts: `purealert list` — copy full output
-- [ ] Drive status: `puredrive list` — copy full output
-- [ ] Controller status: `purearray list --controller`
-- [ ] Relevant performance data: `purearray monitor` output at time of issue
-- [ ] Host connection details if the issue is host-facing: `purehost list --connection`
-- [ ] Pod status for ActiveCluster issues: `purepod list`
-- [ ] Diagnostic bundle: `purediag --output /tmp/diag_<date>.tgz` and upload to case
-- [ ] Symptom description: what changed before the issue, when it started, and business impact
-- [ ] Change log: any changes made in the 24 hours before the issue (firmware, zoning, network, OS patching)
+### 2. Capture current array state
 
-## SLA Tiers
+```bash
+# All active alerts — most important data for the case
+purealert list
 
-| Severity | Response Time | Description |
-|---|---|---|
-| P1 — Critical | 1 hour | Production system down or data at risk; array inaccessible or both controllers failed |
-| P2 — High | 4 hours | Production significantly degraded; single controller down, drive failures reducing redundancy, or replication broken |
-| P3 — Medium | Next business day | Non-critical issue with a workaround in place; performance degradation, non-urgent configuration questions |
-| P4 — Low | Best effort | General questions, documentation requests, feature enquiries, non-impacting observations |
+# Controller health (CT0 and CT1)
+purearray list --controller
 
-> Response time = time from case submission to first contact from a Pure Support engineer. Resolution time varies by issue complexity.
+# Drive health — flag any 'failed' or 'degraded' entries
+puredrive list
 
-Severity can be escalated after the case is opened if the situation worsens — call the Pure Support hotline directly for P1 issues rather than relying solely on the web portal.
+# Volume health
+purevol list
 
-**Support hotlines** (available 24x7 for P1/P2):
+# Port state (FC, iSCSI, NVMe-oF)
+pureport list
 
-- Global: +1-650-729-4088
-- EMEA: +44 808 189 0119
-- Specific regional numbers available on the support portal after login
+# Host connections
+purehost list --connection
+
+# Array capacity and data reduction ratios
+purearray list --space
+```
+
+Save all CLI output to a text file for pasting into the case.
+
+### 3. Check ActiveCluster pod state (if ActiveCluster is configured)
+
+```bash
+# Pod health — shows whether pods are Online and synchronized
+purepod list
+
+# If a pod is not Online, check the mediator status
+purepod list --mediator
+
+# Pod member volumes
+purepod list --member-type volume
+```
+
+### 4. Generate and send the diagnostic bundle
+
+```bash
+# If phone-home is enabled (recommended) — sends bundle directly to Pure TAC
+purediag --send
+
+# If phone-home is disabled — generate a local bundle for manual upload
+purediag --output /tmp/diag_$(hostname)_$(date +%Y%m%d_%H%M).tgz
+
+# Copy from the array to a management host
+scp pureuser@<array-mgmt-ip>:/tmp/diag_*.tgz /tmp/
+```
+
+Note: `purediag --send` ties the bundle to the array's Pure1 account. When you open the case, Pure support can retrieve the bundle from Pure1 directly using the array serial number.
+
+### 5. Write the timeline
+
+```text
+Purity version: 6.4.10
+Array: flasharray-prod-01 (serial: <array-serial>)
+Model: FlashArray //X70R4
+Issue first observed: 2026-06-14 14:30 UTC
+Last known good state: 2026-06-14 12:00 UTC
+Changes in 24h before the issue:
+  - 12:00: Purity upgrade from 6.4.9 → 6.4.10 applied via web GUI
+  - 14:30: Alert fired: "CT0 hardware fault — controller degraded"
+  - 14:35: 6 hosts lost access to volumes on CT0's preferred paths
+Steps already taken:
+  - purealert list: 2 Critical alerts for CT0 hardware fault
+  - purearray list --controller: CT0 shows degraded; CT1 shows ready
+  - purediag --send: bundle sent at 14:40 UTC
+  - Pure1 portal: no automatic case found for this array
+  - Did NOT reboot controllers or pull drives
+Blast radius: 6 ESXi hosts have partial path loss; VMs are I/O retrying on CT1 paths
+```
+
+---
+
+## How to Open the SR on support.purestorage.com
+
+1. Go to **support.purestorage.com** and sign in with your Pure account. If you do not have one: click **Register** and use your company email — your account must be linked to the array in Pure1. Request access from your Pure account team if needed.
+
+2. First check **Support → Cases** to see if Pure has already auto-opened a case for this fault. If yes, add your notes to the existing case.
+
+3. Click **Open a New Case** (or **Create Case**).
+
+4. Under **Product**, select **FlashArray**.
+
+5. Under **Array**, select your array from the registered array list (linked via Pure1). If the array does not appear, enter the serial number manually.
+
+6. Under **Purity Version**, enter your Purity//FA version from Step 1.
+
+7. Under **Severity**, select:
+   - **P1 — Critical**: Both controllers unreachable; all hosts have lost I/O access; production completely halted; data inaccessible; no workaround
+   - **P2 — High**: Single controller degraded; drive failures reducing RAID redundancy; ActiveCluster pod partitioned; significant I/O impact; alternate paths still functional
+   - **P3 — Medium**: Non-critical issue with a workaround; isolated performance degradation; non-production host affected; slow alert not affecting I/O
+   - **P4 — Low**: How-to, pre-upgrade planning, documentation request, or general advisory question
+
+8. In the **Subject** field: array model + symptom + scope. Example: `FlashArray //X70R4 flasharray-prod-01 — CT0 controller degraded after Purity 6.4.10 upgrade, 6 hosts have partial path loss`.
+
+9. In the **Description** field, paste:
+   - Purity version and array serial from Step 1
+   - The full `purealert list` output from Step 2
+   - The `purearray list --controller` and `puredrive list` output from Step 2
+   - The timeline from Step 5
+
+10. Under **Attachments**, upload the purediag bundle if you generated it locally (Step 4). If you used `--send`, note that in the description: "purediag --send executed at 14:40 UTC".
+
+11. Click **Submit**. You will receive a case number by email immediately.
+
+12. **P1 only:** call Pure support immediately after submission:
+    - Global: **+1-650-729-4088** (24×7)
+    - EMEA: +44 808 189 0119
+    - State "P1 — FlashArray controller down / hosts have no storage / production halted" at the start of the call.
+
+---
 
 ## Escalation Path
 
-If a case is not progressing at the expected pace:
-
-1. **Request escalation in the case** — add a case note requesting escalation to a senior support engineer or support manager
-2. **Call the support hotline** — reference the existing case number; ask for a duty manager or case escalation
-3. **Contact your Pure account team** — your Account Executive (AE) and Systems Engineer (SE) have escalation paths into the Pure Support management chain; use this channel for P1 situations where the standard process is not moving fast enough
-4. **Pure executive escalation** — for sustained high-severity incidents, your AE can engage the VP of Customer Support directly
-5. **Pure1 case tracking** — all cases are visible in Pure1 portal > Support > Cases; use this to track status and add attachments without calling
+```text
+Step 1 — Check Pure1 for auto-opened case; if none, open case at support.purestorage.com
+         ↓
+Step 2 — Pure TAC engineer reviews Pure1 telemetry + purediag bundle (P1: within 1 hr)
+         ↓
+Step 3 — If no meaningful progress in 1 hour for P1 or 4 hours for P2:
+         → Add to case: "Requesting escalation to Senior Engineer / TAC Manager"
+         → State: "[CT0 down / hosts have no I/O / 6 ESXi hosts affected]"
+         → Call support hotline to reinforce the escalation request
+         ↓
+Step 4 — Senior engineer assigned; they will initiate a remote session via Pure1 tooling
+         → Have SSH access to the array and web GUI available
+         → Confirm the purediag bundle was received (support engineer confirms via Pure1)
+         ↓
+Step 5 — If hardware is confirmed failed:
+         → Pure dispatches a field engineer with replacement hardware
+         → For Evergreen support: controller replacement is non-disruptive if one CT is still running
+         ↓
+Step 6 — For P1 unresolved after 2 hours:
+         → Contact your Pure Account Executive (AE) directly
+         → AE has an escalation path to VP of Customer Support for sustained P1 incidents
+```
 
 ---
 
-## Verify resolution
+## What NOT to Do
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Pull a failed drive without Pure guidance | The replacement sequence is critical; removing the wrong drive first can lose RAID redundancy | Wait for Pure to confirm which drive to replace and the exact sequence |
+| Run `purearray reset` without Pure | Factory resets the array; destroys all data and configuration | This is never the right action during a P1 incident — escalate instead |
+| Delete protection groups or pods mid-case | Changes the replication topology Pure is analysing | Freeze all replication configuration changes |
+| Disable phone-home (Pure1 connectivity) | Severs the telemetry channel Pure uses for remote diagnosis and automated dispatch | Leave phone-home enabled; it dramatically accelerates diagnosis |
+| Apply a Purity upgrade mid-incident | Changes the OS version under investigation; upgrade may be blocked by the current fault | Freeze all upgrades until the case is resolved |
+| Open multiple cases for the same array | Splits diagnostic context; Pure1 may link the telemetry to the wrong case | Use one case; add all updates to the same SR number |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# Array state snapshot — paste into every case update
+purearray list
+purearray list --controller
+purealert list
+
+# Drive health (flag any 'failed' or 'degraded' entries)
+puredrive list
+
+# Volume health
+purevol list
+
+# Port and host connectivity
+pureport list
+purehost list --connection
+
+# ActiveCluster pod state
+purepod list
+
+# Replication group state
+purepgroup list
+
+# Performance snapshot (latency and throughput)
+purearray monitor
+
+# Send updated diagnostic bundle to Pure1
+purediag --send
+```
+
+---
+
+## Support SLA Reference
+
+| Severity | Definition | Initial Response SLA |
+|---|---|---|
+| P1 — Critical | Both controllers down; all I/O stopped; data inaccessible | 1 hour (24×7) |
+| P2 — High | Single controller degraded; drive failures; pod partitioned | 4 hours (24×7) |
+| P3 — Medium | Non-critical issue; workaround available; limited impact | Next business day |
+| P4 — Low | How-to, planning, documentation, advisory | Best effort |
 
 ---
 
@@ -226,3 +308,16 @@ If a case is not progressing at the expected pace:
 
 - [FlashArray — Diagnostics](diagnostics/)
 - [FlashArray — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `purearray list --controller` and confirm both CT0 and CT1 show `ready`
+- Run `purealert list` and confirm no Critical or Error alerts remain active
+- Run `puredrive list` and confirm all drives show `healthy` (or replacement confirmed by Pure)
+- Run `purehost list --connection` and confirm all expected host connections are active
+- Run `purevol list` and confirm all volumes show expected status
+- For ActiveCluster: run `purepod list` and confirm all pods show `online` and `uniform`
+- Confirm hosts can access storage: run an I/O test from one affected host
+- Monitor for 15 minutes after the fix before confirming resolution to Pure
