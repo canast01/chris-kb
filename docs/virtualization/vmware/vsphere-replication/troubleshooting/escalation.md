@@ -8,38 +8,54 @@ search:
 ---
 # vSphere Replication — Escalation
 
-
 <div class="kb-summary">
-Escalation reference covering Before Opening a Support Case, Severity Definitions, If SRM is Also Involved, VMware Support Portal, Escalation Path and 1 more sections.
+How to escalate VMware vSphere Replication issues to Broadcom support: what data to collect from both sites, step-by-step case creation on support.broadcom.com, and the escalation path when progress stalls.
 
 *Applies to: vSphere Replication 8.x*
 </div>
 
-  VR Escalation Path
 ```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Step 1: Collect (both sites)                                                                         │
-│  ┌─────────────────────────────────────────────────────────┐                                          │
-│  │ VRA support bundle (VAMI) │ ESXi hbr.log / hostd.log    │                                          │
-│  │ vCenter system logs       │ Replication status capture  │                                          │
-│  │ VR / vSphere / SRM version│ Symptom timeline + errors   │                                          │
-│  └─────────────────────────────────────────────────────────┘                                          │
-│                  │                                                                                    │
-│                  ▼                                                                                    │
-│  Step 2: Severity Assessment                                                                          │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │ Sev 1: active recovery failing  → open SR + call NOW │                                             │
-│  │ Sev 2: all replications down    → open SR (urgent)   │                                             │
-│  │ Sev 3: subset RPO violation     → open SR (normal)   │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-│                  │                                                                                    │
-│                  ▼                                                                                    │
-│  Step 3: Escalation Triggers                                                                          │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │ Sev 1 unresolved >2h → Critical Escalation Team      │                                             │
-│  │ Recurring / SLA breach → TAM engagement              │                                             │
-│  │ Suspected defect      → VR Engineering via SR        │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
+┌──────────────────────────────── VMware vSphere Replication — Escalation ──────────────────────────────┐
+│                                                                                                       │
+│  Escalate vSphere Replication issues to VMware GSS when an active DR recovery is failing,             │
+│  all replications are stopped with no RPO data flowing, the VRA appliance is inaccessible,            │
+│  or replication is permanently broken with no recovery path.                                          │
+│  Collect data from BOTH protected and recovery sites before opening the case.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
+│   │  VRA VAMI bundle from BOTH sites             │  │  Go to support.broadcom.com → sign in       │   │
+│   │  ESXi hbr.log and hostd.log (source host)    │  │  Product: VMware vSphere Replication        │   │
+│   │  vCenter system logs (both sites)            │  │  Severity: P1 active recovery / P2 all down │   │
+│   │  Replication status screenshot + VR version  │  │  Attach both-site bundles + hbr logs        │   │
+│   │  Write timeline: last sync → first failure   │  │  Include SRM case number if open in parallel│   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  For P1 (active recovery failing): open portal case AND call Broadcom support immediately.            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm both-site bundles      │  │  Do not restart VRA without GSS direction   │   │
+│   │  T2: VR SE assigned; deep analysis           │  │  Do not configure new replications mid-case │   │
+│   │  T3: engineering review for VR code bug      │  │  Do not remove/re-add SRM pairing           │   │
+│   │  CritSit: active recovery failing > 2 hours  │  │  Do not reconfigure ESXi vmkernels mid-case │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VRA          = vSphere Replication Appliance; per-site virtual appliance that orchestrates VR        │
+│  hbr.log      = ESXi host-based replication log; shows replication traffic per-VM at host level       │
+│  hbrsrv.log   = VRA server log; shows VR orchestration, site-pair status, and RPO tracking            │
+│  VRMS         = vSphere Replication Management Server; part of VRA; manages the replication config    │
+│  RPO          = Recovery Point Objective; max acceptable data age at the recovery site                │
+│  Site pair    = the logical connection between protected-site VRA and recovery-site VRA               │
+│  GSS          = Global Support Services; Broadcom/VMware support team                                 │
+│  CritSit      = Critical Situation; Broadcom war room; triggered when recovery is actively failing    │
+│  Recovery site = DR datacenter; VMs are started here during failover                                  │
+│  Protected site = primary datacenter; VMs run here and replicate to the recovery site                 │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -47,82 +63,223 @@ Escalation reference covering Before Opening a Support Case, Severity Definition
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** VRA VAMI admin access (`https://<vra-ip>:5480`) on both sites; SSH root access to ESXi source hosts; vCenter admin access on both sites; Broadcom support account at support.broadcom.com with active vSphere Replication entitlement
+- **Bundles from BOTH sites are required** — GSS will ask for the protected-site VRA bundle and the recovery-site VRA bundle in their first response. Collect them immediately before any state changes
+- **Do NOT restart the VRA appliance** without GSS direction — VRA restart during an active replication may cause the VMs to go into a "Not Configured" state that requires re-seeding
+- **If SRM is also involved:** open a single VMware Support case (SRM and VR teams collaborate internally) and include SRM bundles from both sites in addition to VRA bundles
 
 ---
 
-## Before Opening a Support Case
+## Pre-Escalation Self-Check
 
-Collect from both protected and recovery sites:
+Run these before opening the case.
 
-| Item | How to Collect |
-|---|---|
-| VRA support bundle (both sites) | VRA VAMI → Support → Generate Support Bundle |
-| ESXi hostd log (source host) | SSH to ESXi → `/var/log/hostd.log` |
-| ESXi hbr log | SSH to ESXi → `/var/log/hbr.log` |
-| vCenter logs | vCenter → Administration → Export System Logs |
-| Replication status screenshot | vCenter → Site Recovery → Replications (capture status at time of issue) |
-| VR version | VRA VAMI → Summary → Version |
-| vSphere version | vCenter → About |
-| SRM version (if paired with SRM) | SRM admin UI → About |
-| Symptom timeline | When issue started, what action preceded it, expected behavior |
-| Error messages | Exact text from vCenter Tasks/Events or VRA VAMI |
+| Check | Where to look | Expected result |
+|---|---|---|
+| VR version | VRA VAMI → Summary → Version | Note full VR version + build |
+| VRA appliance status | VRA VAMI → Summary → Services | All services Running |
+| Site pair status | vSphere Client → Site Recovery → Sites | Site pair Connected |
+| Replication status | vSphere Client → Site Recovery → Replications | All replications OK; no RPO violations |
+| RPO trend | vSphere Client → Site Recovery → Replications → each VM | RPO trend not increasing |
+| vCenter connectivity | VRA VAMI → Configuration → vCenter Server | vCenter Connected |
+| ESXi hbr.log | SSH to source ESXi: `tail -100 /var/log/hbr.log` | No repeated error entries |
+| VR version at recovery site | Recovery site VRA VAMI → Summary | Matches protected-site VR version |
 
 ---
 
-## Severity Definitions
+## Step-by-Step Data Collection
 
-| Severity | Condition |
-|---|---|
-| Sev 1 | Active DR recovery operation failing; VMs cannot be recovered |
-| Sev 2 | All replications failing; DR capability degraded but no active recovery |
-| Sev 3 | Subset of VMs in RPO violation or single VR configuration issue |
-| Sev 4 | General how-to question, minor issue |
+### 1. Get the VR version and VRA status
 
-For Sev 1 (active recovery operation blocked): create case AND call VMware Support immediately.
+1. Browse to the protected-site VRA VAMI at `https://<vra-protected-ip>:5480`.
+2. Click **Summary** → note the VR version and build number.
+3. Click **Services** → note which services are Running and which (if any) are Stopped.
+4. Repeat on the recovery-site VRA (`https://<vra-recovery-ip>:5480`).
+
+### 2. Generate the VRA support bundle (both sites)
+
+1. In the VRA VAMI: click **Support** → **Download Support Bundle**.
+2. Wait 3–10 minutes for the bundle to generate.
+3. Download the resulting archive.
+
+Repeat this on BOTH the protected-site and recovery-site VRA appliances.
+
+```bash
+# Alternative: generate via VRA CLI (SSH to VRA)
+ssh root@<vra-ip>
+
+# Trigger support bundle generation
+/etc/rc3.d/*vrms/scripts/vr-support.sh
+
+# Bundle is written to /tmp/
+ls -lh /tmp/vr-support*.zip
+```
+
+### 3. Collect ESXi replication logs from the source host
+
+```bash
+# SSH to the source ESXi host as root
+ssh root@<source-esxi-ip>
+
+# VR host-based log (shows per-VM replication traffic at the ESXi level)
+tail -300 /var/log/hbr.log | grep -i "error\|fail\|exception\|warn"
+
+# Host daemon log (general ESXi host operations)
+tail -200 /var/log/hostd.log | grep -i "replication\|vr\|hbr"
+
+# Copy log off the host
+scp root@<source-esxi-ip>:/var/log/hbr.log /tmp/hbr-$(hostname).log
+```
+
+### 4. Export vCenter system logs
+
+In vSphere Client:
+1. Navigate to the vCenter → **Actions** → **Export System Logs**.
+2. Select all components.
+3. Export and download.
+
+Repeat on the vCenter at the recovery site.
+
+### 5. Capture replication status
+
+In vSphere Client at both sites:
+1. Navigate to **Site Recovery** → **Replications**.
+2. Take a screenshot showing the replication status of all VMs at the time of the issue.
+3. Note which VMs are in **Error**, **RPO Violation**, or any state other than **OK**.
+
+### 6. Write the timeline
+
+```text
+VR version: 8.8.0 build XXXXXXXX (protected site)
+VR version: 8.8.0 build XXXXXXXX (recovery site)
+vCenter (protected): vcenter-prod.corp.local (vSphere 8.0.2)
+vCenter (recovery): vcenter-dr.corp.local (vSphere 8.0.2)
+Issue first observed: 2026-06-14 08:00 UTC
+Last confirmed replication: 2026-06-14 06:00 UTC
+Changes in 24h before the issue:
+  - 07:00: vSphere 8.0.1 to 8.0.2 upgrade completed on protected-site vCenter
+  - 08:00: All 200 VMs show "Not Configured" replication status
+  - 08:10: VRA VAMI at protected site shows vCenter connection: Disconnected
+Steps already taken:
+  - VRA VAMI: vCenter server shows disconnected despite correct credentials
+  - vSphere Client: site pair shows "Not Configured" (was Connected before upgrade)
+  - Did NOT restart VRA or reconfigure the site pair
+Blast radius: All 200 VMs no longer replicating; DR capability at risk
+SRM involvement: SRM 8.8 paired at both sites; SRM SR opened in parallel (case XXXXXXX)
+```
 
 ---
 
-## If SRM is Also Involved
+## How to Open the SR on support.broadcom.com
 
-If using SRM to manage VR-based protection groups:
-1. Open a single VMware Support case — SRM and VR teams collaborate internally
-2. Include: SRM support bundle (from both sites) in addition to VRA bundles
-3. Specify: the issue is in the "vSphere Replication" layer vs "SRM orchestration" layer if known
+1. Go to **support.broadcom.com** and sign in with your Broadcom account.
 
----
+2. Click **Open a Support Request**.
 
-## VMware Support Portal
+3. Under **Product Group**, select **VMware Cloud Foundation and Virtualization** → **VMware vSphere Replication**.
 
-1. **Portal:** support.broadcom.com → Log Case
-   - Product: VMware vSphere Replication
-   - Version: [VR version]
-   - Attach: VRA support bundles from both sites, ESXi logs, symptom description
+4. Under **Version**, select your VR version from Step 1.
 
-2. For Sev 1: after creating case, call VMware Support and reference case number
+5. Under **Severity**, select:
+   - **Severity 1 — Critical**: Active DR recovery operation is failing; VMs cannot be started at the recovery site; data is at immediate risk; no workaround
+   - **Severity 2 — High**: All replications are stopped; DR capability is degraded; no active recovery in progress; data at risk if replication is not restored
+   - **Severity 3 — Medium**: A subset of VMs are in RPO violation; single VR configuration issue; workaround exists
+   - **Severity 4 — Low**: General how-to question, pre-upgrade planning, minor UI issue
+
+6. In the **Summary** field: product + symptom + scope. Example: `vSphere Replication 8.8 — all 200 VMs show Not Configured after protected-site vCenter upgrade 8.0.1 to 8.0.2, VRA vCenter connection lost`.
+
+7. In the **Description** field, paste:
+   - VR versions from both sites (Step 1)
+   - VRA service status from Step 1
+   - The key error from Step 3 (hbr.log or VAMI message)
+   - The timeline from Step 6
+   - Include the SRM case number if a parallel SRM case is open
+
+8. Under **Attachments**, upload:
+   - VRA support bundles from BOTH sites (Step 2)
+   - ESXi hbr.log from the source host (Step 3)
+   - vCenter system logs from both sites (Step 4)
+
+9. Click **Submit**. You will receive a case number by email immediately.
+
+10. **Severity 1 only:** call Broadcom/VMware support after submission:
+    - North America: +1 877-486-9273 (24×7 for Severity 1)
+    - EMEA: +44 (0)3453 700 100
+    - State "Severity 1 — vSphere Replication — active recovery failing, DR capability lost" at the start of the call.
 
 ---
 
 ## Escalation Path
 
-| Escalation | Trigger |
-|---|---|
-| Technical Account Manager | Recurring issue, SLA breach |
-| Critical Escalation Team | Sev 1 unresolved within 2 hours |
-| VR Engineering | Suspected defect — escalate via support case |
+```text
+Step 1 — Open case at support.broadcom.com with both-site VRA bundles and ESXi hbr.log
+         ↓
+Step 2 — T1 support engineer acknowledges (Sev1: < 30 min; Sev2: < 2 hr)
+         ↓
+Step 3 — If no meaningful progress in 30 minutes for Sev1 or 2 hours for Sev2:
+         → Reply in case: "Requesting escalation to vSphere Replication Senior Engineer"
+         → State: "[all replications down / active recovery failing / DR capability lost]"
+         ↓
+Step 4 — VR T2 Senior Engineer is assigned
+         → They will review hbrsrv.log and the site-pair configuration
+         → Have VRA SSH access and vCenter credentials for both sites ready
+         ↓
+Step 5 — If the issue is specific to the SRM + VR integration:
+         → VMware handles SRM and VR under the same case (they coordinate internally)
+         → Include the SRM recovery plan log in the case if SRM is also affected
+         ↓
+Step 6 — For Sev1 with active recovery failing, unresolved after 2 hours:
+         → Request CritSit escalation; contact your Broadcom TAM or Account Executive
+```
 
 ---
 
-## Useful Resources
+## What NOT to Do
 
-- vSphere Replication Documentation: docs.vmware.com/vsphere-replication
-- Interoperability Matrix: interopmatrix.vmware.com (VR ↔ vSphere ↔ SRM)
-- VMware KB: kb.vmware.com (search "vSphere Replication")
-- vSphere Replication Community: communities.vmware.com/community/vmtn/vsphere/vspherereplication
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Restart the VRA appliance without GSS direction | VRA restart during an active or broken replication can push VMs into "Not Configured" state, requiring full re-seeding | Let GSS review VRA logs before any appliance restart |
+| Configure new replications during the investigation | Adding new replications changes the VRA state and configuration GSS is analysing | Freeze all replication configuration changes until the case is resolved |
+| Remove and re-add the SRM site pairing | Breaks the SRM to VR integration state; requires full re-configuration which takes hours | Only un-pair if GSS explicitly directs you to after reviewing the pair configuration |
+| Reconfigure ESXi vmkernels (vSAN, management, VR vmk) | Changes the network topology VR uses for replication traffic; disrupts active replications | Freeze all vmkernel changes during the incident |
+| Power off VMs at the protected site while GSS is diagnosing | Changes the replication state GSS is tracking; may force recovery site VMs into an inconsistent snapshot state | Hold all VM power operations at the protected site until GSS advises |
+| Run vSphere Replication re-configure on an already-broken replication | Changes the seed state for that VM; GSS may need the original seed data for recovery | Leave all existing replications in their current state; let GSS direct any re-seed |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# SSH to the VRA appliance as root — paste into every case update
+
+# VR appliance service status
+service vmware-vrms status
+service vmware-h4 status
+
+# VRA server log (orchestration, site-pair, RPO tracking)
+tail -200 /var/log/vmware/hbrsrv/hbrsrv.log | grep -i "error\|fail\|exception"
+```
+
+```bash
+# SSH to the source ESXi host as root
+
+# Per-VM replication status at host level
+tail -200 /var/log/hbr.log | grep -i "error\|fail"
+
+# Replication vmkernel (ensure VR vmk is present)
+esxcli network ip interface list | grep -i "replication\|hbr"
+```
+
+---
+
+## Support SLA Reference
+
+| Severity | Definition | Initial Response SLA |
+|---|---|---|
+| Sev 1 — Critical | Active DR recovery failing; DR capability lost; data at risk | < 30 min (24×7) |
+| Sev 2 — High | All replications down; DR capability degraded; no active recovery | < 2 hours (24×7) |
+| Sev 3 — Medium | Subset of VMs in RPO violation; single VR config issue; workaround exists | < 8 hours |
+| Sev 4 — Low | How-to, planning, compatibility question, minor issue | Next business day |
 
 ---
 
@@ -131,9 +288,13 @@ If using SRM to manage VR-based protection groups:
 - [vSphere Replication — Diagnostics](diagnostics/)
 - [vSphere Replication — Common Issues](common-issues/)
 
+---
+
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- In vSphere Client → Site Recovery → **Sites**: site pair shows Connected
+- Check **Replications**: all replications show **OK** with no RPO violations
+- Confirm the RPO trend is decreasing (data is flowing from protected to recovery site)
+- Verify on the VRA VAMI at both sites: all services show Running; vCenter connection shows Connected
+- Run `tail -50 /var/log/hbr.log` on the source ESXi and confirm no error entries
+- Monitor for 30 minutes to confirm all VMs maintain their replication and RPO stays within policy
