@@ -7,100 +7,298 @@ search:
 ---
 # Active Directory — Escalation
 
-
 <div class="kb-summary">
-Active Directory support is provided through the Microsoft Support portal at support.microsoft.com, with Service Requests (SRs) raised under the Windows Server or Microsoft 365/Entra product family.
+How to escalate Active Directory issues to Microsoft support: what data to collect, how to run dcdiag and repadmin, step-by-step case creation on support.microsoft.com, and the escalation path when progress stalls.
 
-*Applies to: Windows Server 2019 / 2022*
+*Applies to: Windows Server 2019 / 2022 Active Directory Domain Services*
 </div>
+
 ```text
-┌─────────────────────── Security Active Directory Troubleshooting — Escalation ────────────────────────┐
+┌──────────────────────────── Active Directory — Escalation ────────────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Active Directory escalation: severity triage, vendor support contact, and required artifacts │   │
-│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
-│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate Active Directory issues to Microsoft support when authentication is down across the         │
+│  domain, replication has split-brain with USN rollback, FSMO roles are lost or seized,                │
+│  a DC is in a tombstone-reactivation state, or the domain cannot be joined or left.                   │
 │                                                                                                       │
-│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
+│   │  Run dcdiag /v on all affected DCs           │  │  Go to support.microsoft.com → sign in      │   │
+│   │  Run repadmin /showrepl * /csv               │  │  Product: Windows Server — Active Directory  │  │
+│   │  Export Security + System event logs (72h)   │  │  Severity: A (down) / B (degraded) / C/D   │    │
+│   │  Collect netlogon.log from affected DCs      │  │  Attach dcdiag + repadmin + event logs      │   │
+│   │  Write timeline: last auth OK → first fail   │  │  For Sev A: also call Microsoft CSS          │  │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  For Sev A (auth down / replication split-brain): open case AND call Microsoft CSS immediately.       │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
+│                                                                                name                   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm dcdiag received        │  │  Do not seize FSMO roles without CSS        │   │
+│   │  T2: AD SE assigned; deep replication review │  │  Do not tombstone-reactivate DCs            │   │
+│   │  ADLDS/Schema: schema or DIT issues go to    │  │  Do not run metadata cleanup without CSS    │   │
+│   │  Sev A + CritSit for auth-down impacts       │  │  Do not restart all DCs simultaneously      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
-│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
-│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
-│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
-│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Physical: Security Active Directory Troubleshooting infrastructure · management network · monitor  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Active Directory   = Security Active Directory Troubleshooting platform overview and core concept  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  FSMO          = Flexible Single Master Operations; 5 AD roles; loss of PDC Emulator = auth impact    │
+│  USN rollback  = replication failure where a DC's USN counter is rolled back; causes split-brain      │
+│  Tombstone     = deleted AD object; 180-day default lifetime; reactivation causes replication storm   │
+│  dcdiag        = DC diagnostic tool; runs dozens of tests; mandatory for every AD support case        │
+│  repadmin      = replication admin tool; shows per-NC, per-DC replication status and errors           │
+│  netlogon.log  = DC Netlogon service log; shows auth failures, KDC errors, and DC discovery           │
+│  KDC           = Kerberos Distribution Center; runs on every DC; issues Kerberos tickets              │
+│  DIT           = Directory Information Tree; the NTDS.DIT file; core AD database on each DC           │
+│  CSS           = Customer Support Services; Microsoft support engineers                               │
+│  USN           = Update Sequence Number; tracks changes per DC; rollback = dangerous state            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-
- For critical AD outages (authentication down, replication split-brain, FSMO role loss), use the Severity A case classification and request an on-call engineer; Microsoft Premier or Unified Support contracts include faster SLA and proactive engagement. Microsoft FastTrack is available for AD-to-Entra ID migration projects at qualifying licence levels.
-
-**Data to collect before opening a case:**
-
-- `dcdiag /v /f:dcdiag.txt` — full diagnostic output from all affected DCs
-- `repadmin /showrepl * /csv > repl.csv` — replication status across forest
-- `netlogon.log` from `%SystemRoot%\debug\` on affected DCs
-- Security and System event logs (last 72 hours) from affected DCs
-- `ipconfig /all` and `nslookup` output to confirm DNS configuration
-- AD domain and forest functional level (`Get-ADDomain`, `Get-ADForest`)
-
-| Support Tier | SLA (Sev A) | Portal |
-|---|---|---|
-| Microsoft Unified Support | < 2 hours callback | admin.microsoft.com / support.microsoft.com |
-| Microsoft Premier Support | < 1 hour callback | Premier portal |
-| FastTrack (migration) | Project-based | fasttrack.microsoft.com |
+---
 
 ## Before you begin
 
-- **Access:** Local Administrator or Domain Admin on target hosts
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** Domain Admin or Enterprise Admin credentials; Local Administrator on each affected DC; Microsoft support account at support.microsoft.com with a Microsoft Unified or Premier Support contract
+- **Do NOT seize FSMO roles** without Microsoft CSS direction — seizing an FSMO role that is still reachable creates a USN conflict that can cascade into a forest-wide replication failure
+- **Do NOT run metadata cleanup** (`ntdsutil` metadata cleanup) without CSS guidance — removing a DC's metadata while the DC is still partially reachable creates orphaned objects that cause replication failures
+- **Do NOT restart all DCs simultaneously** — losing all DCs at once removes all authentication capability and may interrupt any in-progress replication that could be key diagnostic data
 
 ---
 
+## Pre-Escalation Self-Check
+
+Run these on every affected DC before opening the case.
+
+| Check | Command | Expected result |
+|---|---|---|
+| DC services | `dcdiag /test:services` | All services PASS |
+| Replication health | `repadmin /replsummary` | No failures listed |
+| FSMO holders | `netdom query fsmo` | All 5 roles assigned to live DCs |
+| Sysvol replication | `dcdiag /test:sysvolcheck` | PASS |
+| Kerberos / secure channel | `nltest /sc_verify:<domain>` | Successful secure channel |
+| DNS resolution | `nslookup <domain> <dc-ip>` | Returns DC IPs |
+| Time sync | `w32tm /query /status` | Offset < 5 minutes vs. PDC Emulator |
+| AD replication lag | `repadmin /showrepl * /errorsonly` | No errors listed |
+
 ---
 
-## Verify resolution
+## Step-by-Step Data Collection
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+### 1. Run dcdiag on all affected DCs
+
+```powershell
+# Run on EACH affected DC — the /v flag gives full verbose output
+dcdiag /v /f:C:\temp\dcdiag-$(hostname).txt
+
+# Additional specific tests
+dcdiag /test:Replications /v
+dcdiag /test:DFSREvent /v
+dcdiag /test:SysVolCheck /v
+
+# From any DC: test all DCs in the domain
+dcdiag /a /v /f:C:\temp\dcdiag-allDCs.txt
+```
+
+### 2. Capture replication status
+
+```powershell
+# Full replication status — all DCs, all NCs
+repadmin /showrepl * /csv > C:\temp\replication-$(Get-Date -Format 'yyyyMMddHHmm').csv
+
+# Failed replications only
+repadmin /replsummary
+
+# Replication errors across the forest
+repadmin /showrepl * /errorsonly
+
+# Replication partners and last replication time
+repadmin /showrepl
+
+# FSMO role holders
+netdom query fsmo
+```
+
+### 3. Export Security and System Event logs
+
+```powershell
+# Export Windows Security event log (last 72 hours)
+wevtutil epl Security C:\temp\Security-$(hostname)-$(Get-Date -Format 'yyyyMMdd').evtx
+
+# Export System event log
+wevtutil epl System C:\temp\System-$(hostname)-$(Get-Date -Format 'yyyyMMdd').evtx
+
+# Export Directory Service event log (AD-specific events)
+wevtutil epl "Directory Service" C:\temp\DS-$(hostname)-$(Get-Date -Format 'yyyyMMdd').evtx
+
+# Repeat on EACH affected DC
+```
+
+### 4. Collect the Netlogon log
+
+```powershell
+# Netlogon log is in %SystemRoot%\debug\netlogon.log
+# Enable if not already active
+nltest /dbflag:0x2080ffff
+
+# Copy the log
+Copy-Item "$env:SystemRoot\debug\netlogon.log" C:\temp\netlogon-$(hostname).log
+Copy-Item "$env:SystemRoot\debug\netlogon.bak" C:\temp\netlogon-backup-$(hostname).log
+```
+
+### 5. Collect AD domain and forest info
+
+```powershell
+# Domain and forest functional levels
+Get-ADDomain | Select-Object DNSRoot, DomainMode, PDCEmulator
+Get-ADForest | Select-Object Name, ForestMode, SchemaMaster
+
+# All DCs in the domain
+Get-ADDomainController -Filter * | Select-Object Name, IPv4Address, IsGlobalCatalog, OperationMasterRoles
+
+# Sites and subnets
+Get-ADReplicationSite -Filter * | Select-Object Name, Description
+Get-ADReplicationSubnet -Filter * | Select-Object Name, Site
+
+# Network config on this DC
+ipconfig /all
+```
+
+### 6. Write the timeline
+
+```text
+Domain: corp.local
+Forest functional level: Windows Server 2016
+DCs: dc01.corp.local, dc02.corp.local, dc03.corp.local (3 DCs, 2 sites)
+FSMO holders: PDC Emulator and RID Master on dc01; Schema and Domain Naming on dc01
+Issue first observed: 2026-06-14 09:00 UTC
+Last confirmed authentication: 2026-06-14 08:30 UTC
+Changes in 24h before the issue:
+  - 08:00: dc01 rebooted for Windows Update
+  - 08:30: Users in Site B (dc03) report Kerberos errors (KDC_ERR_C_PRINCIPAL_UNKNOWN)
+  - 09:00: dc03 replication to dc01 shows error 8453 (replication access denied)
+Steps already taken:
+  - repadmin /replsummary: dc03 shows 2 failures, dc01 shows 0
+  - dcdiag on dc03: Replications test FAIL (error 8453)
+  - netlogon.log on dc03: "NO_CLIENT_SITE" messages + KDC errors
+  - Did NOT seize FSMO roles or run metadata cleanup
+Blast radius: Users in Site B cannot authenticate; dc03 out of sync with dc01
+```
+
+---
+
+## How to Open the Case on support.microsoft.com
+
+1. Go to **support.microsoft.com** and sign in with your Microsoft account associated with your support contract.
+
+2. Click **Create a support request** (or navigate via the Microsoft 365 Admin Center → Support → New service request).
+
+3. Under **Product**, select **Windows Server** → **Active Directory Domain Services**.
+
+4. Under **Severity**, select:
+   - **Severity A — Critical**: Authentication is completely down for a significant portion of users; DC replication has split-brain or USN rollback; FSMO roles are lost; no workaround; business operations halted
+   - **Severity B — High**: Replication failing between specific DCs; some authentication failures; DC joined the domain but not fully functional; workaround exists but incomplete
+   - **Severity C — Moderate**: Single DC health issue; specific AD operation failing; workaround available; no significant user impact
+   - **Severity D — Low**: How-to question, pre-migration planning, documentation request
+
+5. In the **Summary** field: symptom + scope. Example: `Active Directory — dc03 replication to dc01 failing error 8453, Site B users cannot authenticate via Kerberos`.
+
+6. In the **Description** field, paste:
+   - Domain and forest functional levels from Step 5
+   - FSMO role holders from Step 5
+   - The repadmin error from Step 2
+   - The timeline from Step 6
+
+7. Under **Attachments**, upload:
+   - dcdiag output from all affected DCs (Step 1)
+   - The replication CSV from Step 2
+   - Event logs (Security, System, Directory Service) from affected DCs (Step 3)
+   - Netlogon logs from affected DCs (Step 4)
+
+8. Click **Submit**. You receive a case number immediately.
+
+9. **Severity A only:** call Microsoft CSS after submission. The call-back phone number and direct phone support line are listed in your Microsoft Unified Support or Premier Support contract portal. State "Severity A — Active Directory authentication down, replication split-brain, case number XXXXXXXX" when connected.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open case at support.microsoft.com with dcdiag + repadmin + event logs attached
+         ↓
+Step 2 — Microsoft CSS T1 engineer acknowledges (Sev A: < 2 hr; Sev B: < 4 hr)
+         ↓
+Step 3 — If no meaningful progress within 2 hours for Sev A:
+         → Reply in case: "Requesting escalation to Active Directory Senior Engineer"
+         → State: "[auth down / replication split-brain / FSMO lost]"
+         ↓
+Step 4 — AD T2 Senior CSS Engineer assigned
+         → They will review repadmin output and may request a remote session
+         → Have RDP or local console access to each affected DC ready
+         ↓
+Step 5 — If issue involves the AD schema, forest, or cross-domain trust:
+         → CSS may involve the AD Engineering team directly
+         → Schema changes and forest-level recovery require Engineering involvement
+         ↓
+Step 6 — For Sev A with authentication down and no resolution:
+         → Request CritSit escalation via the case
+         → Contact your Microsoft account team or Technical Account Manager
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Seize FSMO roles without CSS guidance | Seizing a role that is still held by a live DC creates a USN conflict; two DCs with the same role cause forest-wide replication corruption | Verify the FSMO holder is truly unreachable; only seize after CSS confirms the holder cannot be recovered |
+| Run `ntdsutil` metadata cleanup without CSS | Removing DC metadata while the DC is partially reachable creates orphaned AD objects and disrupts replication | Let CSS confirm the DC is permanently removed and cannot come back before any metadata cleanup |
+| Tombstone-reactivate a DC (restore from backup past tombstone lifetime) | Reactivating a DC with objects that are beyond the tombstone lifetime causes a replication storm | Restore from a backup taken within the tombstone lifetime (180 days); or decommission and rebuild |
+| Restart all DCs simultaneously | Removes all authentication and replication; may interrupt an in-progress replication that is diagnostic data | Restart one DC at a time; always leave at least one DC per site fully running |
+| Apply Group Policy changes during a replication failure | GP changes replicate via AD and SYSVOL; applying changes to a broken replication may cause inconsistent policy across DCs | Freeze all GP changes until replication is restored and CSS advises it is safe to proceed |
+| Run `dcpromo /forceremoval` on a live DC without CSS direction | Force-removes the DC from the domain without proper cleanup; leaves orphaned metadata and broken replication links | Only use force removal if CSS has confirmed the DC cannot be properly demoted |
+
+---
+
+## Useful Commands for Case Updates
+
+```powershell
+# Paste these into every case update
+
+# Replication summary (errors)
+repadmin /replsummary
+
+# Replication failures only
+repadmin /showrepl * /errorsonly
+
+# FSMO role holders (confirm all 5 are reachable)
+netdom query fsmo
+
+# DC services status
+dcdiag /test:services
+
+# Time sync status (Kerberos requires < 5 min skew)
+w32tm /query /status
+
+# Secure channel to domain
+nltest /sc_verify:<domain-fqdn>
+
+# Sysvol replication status
+dfsrdiag ReplicationState /member:* 2>&1
+```
+
+---
+
+## Support SLA Reference
+
+| Severity | Definition | Initial Response SLA |
+|---|---|---|
+| Sev A — Critical | Auth down; replication split-brain; FSMO lost; no workaround | < 2 hours callback (Unified/Premier) |
+| Sev B — High | Replication failing; partial auth issues; DC not fully functional | < 4 hours (business hours) |
+| Sev C — Moderate | Single DC issue; specific AD operation failing; workaround available | < 8 hours (business hours) |
+| Sev D — Low | How-to, planning, documentation, non-urgent question | Next business day |
 
 ---
 
@@ -108,3 +306,15 @@ Active Directory support is provided through the Microsoft Support portal at sup
 
 - [Active Directory — Diagnostics](diagnostics/)
 - [Active Directory — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `repadmin /replsummary` and confirm no failures listed for any DC
+- Run `dcdiag /v` on each previously affected DC and confirm all tests PASS
+- Run `netdom query fsmo` and confirm all 5 FSMO roles are assigned to live, reachable DCs
+- Verify user authentication: have a user in the affected site log in and confirm Kerberos ticket is issued (run `klist` — confirm TGT present, no error)
+- Check `netlogon.log` on previously affected DCs: no new KDC errors or auth failures in the last 10 minutes
+- Run `w32tm /query /status` on all DCs and confirm time offset is within 5 minutes of the PDC Emulator
+- Monitor for 30 minutes to confirm replication stays healthy across all DCs
