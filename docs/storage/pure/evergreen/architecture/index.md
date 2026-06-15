@@ -14,21 +14,53 @@ Architecture reference for Pure Storage Evergreen. Covers the non-disruptive con
 ![Evergreen Architecture](../../../../assets/evergreen-architecture-overview.svg)
 
 ```text
-Evergreen Controller Refresh — Non-Disruptive
-  Current generation controllers (CT0 / CT1)
-  └── NVMe flash shelves (data at rest)
-          │
-          ▼  Pure engineer arrives with new controller chassis
-  Step 1: New CT0' installed, old CT0 removed
-          │  I/O served by CT1 + CT0' during transition
-          ▼
-  Step 2: New CT1' installed, old CT1 removed
-          │  I/O served by CT0' + CT1' — refresh complete
-          ▼
-  NVMe shelves reconnected to new controllers
-  └── Data untouched — hosts see no interruption
-
-  Pure1 manages schedule + lifecycle tracking
+┌───────────────────────── Pure Evergreen — Subscription Upgrade Architecture ──────────────────────────┐
+│                                                                                                       │
+│  Evergreen subscription ensures non-disruptive controller upgrades for life of contract;              │
+│  customer owns/leases hardware; Pure delivers new controllers without downtime.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Subscription Model              │  │                Upgrade Model                │   │
+│   │           Customer purchases array           │  │          New controllers delivered          │   │
+│   │        Evergreen: software + support         │  │         Shelf + drives stay in place        │   │
+│   │       Annual: Purity upgrades included       │  │          Controller swap: < 30 min          │   │
+│   │          Term: 3 or 5 year options           │  │         No migration of data needed         │   │
+│   │          No forklift: ever promised          │  │          IO: continues during swap          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Evergreen is the foundation; Evergreen//One adds Pure managing the hardware for you.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Upgrade Generations              │  │         Evergreen vs Evergreen//One         │   │
+│   │          //X: NVMe director upgrade          │  │            Evergreen: you own HW            │   │
+│   │          //C: capacity NVMe upgrade          │  │         Evergreen//One: Pure owns HW        │   │
+│   │          //XL: extreme performance           │  │         Both: no forklift guarantee         │   │
+│   │          Director modules: hot-swap          │  │          Both: Pure does controller         │   │
+│   │        Same shelf across generations         │  │          //One: STaaS billing model         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  FlashArray chassis with drive shelves; new controllers arrive in 2U modules;                         │
+│  Pure engineer does the swap on-site; drives and shelves are re-used.                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Evergreen      = Pure subscription model; controller upgrades included in contract                   │
+│  Forklift       = replacing entire storage array; Evergreen specifically avoids this                  │
+│  Controller     = FlashArray compute module; upgrades move to new generation                          │
+│  Director module= FlashArray controller; single or dual per chassis; hot-swap                         │
+│  Purity//FA     = FlashArray OS; upgrades included in Evergreen subscription                          │
+│  Non-disruptive = IO continues during controller swap; no maintenance window                          │
+│  //X series     = NVMe-optimized FlashArray generation (current)                                      │
+│  //C series     = capacity-optimized; QLC NVMe for colder workloads                                   │
+│  //XL series    = extreme performance; enterprise-scale block storage                                 │
+│  Evergreen//One = STaaS variant; Pure manages hardware; customer just consumes                        │
+│  Shelf reuse    = drive enclosures remain across controller generations                               │
+│  3/5-year term  = common contract length; upgrade entitlement during term                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 <div class="kb-grid kb-grid-3">
