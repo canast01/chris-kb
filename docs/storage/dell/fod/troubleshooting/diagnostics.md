@@ -7,118 +7,213 @@ search:
 ---
 # FOD — Diagnostics
 
-
 <div class="kb-summary">
-Part of the [Flex on Demand](../index.md) reference.
+Dell Flex on Demand diagnostic commands: inspect the FoD license key file, verify array serial number binding, check currently active licenses with symlicense, and perform a dry-run install to diagnose key rejection errors before opening a Dell SR.
 
-*Applies to: Dell FOD*
+*Applies to: Dell Flex on Demand (FoD) / APEX Flex on Demand*
 </div>
+
 ```text
 ┌─────────────────────────────────────── Dell FoD — Diagnostics ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            FoD diagnostics: log collection, health checks, and performance analysis           │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here: symlicense list → check key file SN → symlicense preview → check firmware      │    │
+│   │   Key rejected: compare VENDOR_SN in .lic to chassis label SN — mismatch = wrong key         │    │
+│   │   Feature not activating after successful import: check firmware meets FoD minimum version    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             License Inspection               │  │           Key File Validation               │   │
+│   │      symlicense -sid <SID> list             │  │    grep VENDOR_SN /path/to/fod-key.lic      │    │
+│   │      symlicense -sid <SID> preview           │  │    grep ExpiryDate /path/to/fod-key.lic    │    │
+│   │      symcfg -sid <SID> list -v              │  │    symcfg list (find SID + SN)              │    │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│  Physical Infrastructure:                                                                             │
+│  Dell array with FoD-capable firmware · Dell licensing portal · array management (Unisphere / CLI)    │
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         License type        │  │        Permanent/Term       │  │       Feature-specific      │   │
-│   │          Activation         │  │         Key → array         │  │        Instant unlock       │   │
-│   │            Scope            │  │         Per-array SN        │  │       Non-transferable      │   │
-│   │           Features          │  │       Replication/Tier      │  │       Product-defined       │   │
-│   │            Audit            │  │        License report       │  │          Compliance         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │       Access      │       Auth       │      Notes       │   │
-│   │   FoD license    │  Feature unlock  │  Portal download  │   Entitlement    │   Array-bound    │   │
-│   │  License portal  │  Purchase/track  │       HTTPS       │    SSO login     │ licensing.dell.  │   │
-│   │  Array firmware  │ FoD enforcement  │     Array mgmt    │    Admin role    │  Validates key   │   │
-│   │   Audit report   │ Compliance check │     DDMC/array    │    Read-only     │  Monthly review  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Dell array with FoD-capable firmware · Dell licensing portal · array management          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FoD                = Feature on Demand; software capabilities locked in firmware, unlocked by li...│
-│    License key        = alphanumeric string generated at purchase; applied via GUI, CLI, or REST API  │
-│    Permanent license  = perpetual feature unlock; tied to specific array serial number                │
-│    Term license       = time-limited feature unlock; expires unless renewed through Dell portal       │
-│    Entitlement        = purchased right to use a feature; tracked in Dell software licensing portal   │
-│    License transfer   = FoD licenses are non-transferable between different array serial numbers      │
-│    Replication FoD    = unlocks synchronous or asynchronous array replication features                │
-│    Tier FoD           = unlocks FAST VP or cloud tiering between performance and capacity tiers       │
-│    License audit      = periodic reconciliation of active features versus licensed entitlements       │
-│    LicenseManager     = Dell tool for bulk license management across multiple array systems           │
-│    Array serial       = unique array identifier; FoD licenses are cryptographically bound to it       │
-│    FoD portal         = licensing.dell.com; purchase, download, and track all FoD license keys        │
+│  Key terms:                                                                                           │
+│  FoD            = Flex on Demand; software capabilities locked in firmware, unlocked by license key   │
+│  VENDOR_SN      = array serial number in the .lic file; must match the chassis label SN exactly       │
+│  SN re-binding  = re-issuing a FoD key for a replacement array with a new serial number               │
+│  symlicense     = Solutions Enabler CLI for license operations: list, install, preview, show          │
+│  preview        = dry-run install; checks if the key is valid for this array without activating       │
+│  Permanent key  = perpetual unlock; tied to the array SN                                              │
+│  Term key       = time-limited unlock; expires unless renewed                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([FoD Key Issue]) --> B[symlicense -sid SID list\nCheck current licenses]
+    B --> C{Issue type?}
+    C -->|Key rejected on install| D[grep VENDOR_SN fod-key.lic\nCompare to array SN]
+    C -->|Feature not activating| E[symlicense preview\nDry-run install check]
+    C -->|Key expired| F[Check ExpiryDate in .lic\nCheck term renewal status]
+    D --> G{SN match?}
+    G -->|Mismatch| H[Contact Dell Licensing\nRequest key re-issue]
+    G -->|Match| I[Check firmware version\nsymcfg list -v grep firmware]
+    E --> J{Preview result?}
+    J -->|Key valid| K[Check firmware minimum\nand feature flag state]
+    J -->|Preview fails| L[Contact Dell TAC\nwith symlicense output]
+    F --> M[Renew via Dell portal\nlicensing.dell.com]
+    I --> L
+    K --> L
+    H --> N[Open Dell SR\nsupport.dell.com — route to Licensing]
 
----
-
-```bash
-# CloudIQ REST API — get capacity metrics for a system (requires CloudIQ API token)
-curl -s -H "Authorization: Bearer <cloudiq_token>" \
-  "https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems?system_id=<system_id>" | jq .
-
-# PowerMax — show current thin pool utilisation (metered capacity is tracked here)
-symcfg -sid <SID> -pool -dp list
-
-# PowerStore — show capacity summary via PowerStore REST API
-curl -s -k -u "admin:<pass>" \
-  "https://<powerstore-host>/api/rest/capacity" | jq .
-
-# PowerScale — show total cluster usable capacity and used
-isi storagepool list
-
-# Confirm CloudIQ telemetry is active (check SCG/CloudIQ agent status)
-systemctl status dell-cloudiq-agent 2>/dev/null || \
-  service dell-cloudiq-agent status 2>/dev/null || echo "Agent not found on this host"
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,C,G,J dark
+    class B,D,E,F,H,I,K,M action
+    class L,N escalate
 ```
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Solutions Enabler access to the array (gatekeeper LUNs or Unisphere); the FoD `.lic` license file received from Dell
+- **Gather first:** array serial number (from `symcfg list` or chassis label), the exact error from the failed key import, and the Dell order number for the key purchase
+- **Do not retry a failed import:** if `symlicense install` failed with an error, do not retry until you understand the error — repeated failed imports on some platforms increment a counter that requires Dell Licensing team to reset
+- **Protect the key file:** do not share the `.lic` file publicly; it contains a cryptographically signed key bound to your array SN — upload only through the Dell SR secure attachment portal
 
 ---
 
-## Log Locations
+## Step 1 — List current active licenses
 
-| Log | Location |
-|---|---|
-| SCG telemetry logs | `/var/log/dsagw/` on the SCG host |
-| Unisphere audit log | Unisphere GUI → Settings → Audit Log |
-| APEX Console audit | APEX Console → Administration → Audit |
+```bash
+# List all FoD and regular licenses currently active on the array
+symlicense -sid <SID> list
+# Output columns: License Name, Feature, Status, Expiry
+# Expected: FoD features show Status = Enabled
+# Problem: the feature you expect to be active is Missing or Expired
+
+# Show a specific feature's license detail
+symlicense -sid <SID> show -feature <feature-name>
+# Feature names: COD, CLOUD_TIERING, SRDF_ASYNC, SRDF_SYNC, etc.
+# Shows: installed date, expiry, key ID, and SN the key is bound to
+```
 
 ---
 
-## Verify resolution
+## Step 2 — Check array serial number
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+The FoD key is cryptographically bound to the array serial number. A serial number mismatch is the most common cause of key rejection.
+
+```bash
+# List all arrays visible from this SE host
+symcfg list
+# Output columns: SID, Name, Microcode, Model, Size (GB)
+# Note the SID you are working with
+
+# Get the full array configuration including serial number
+symcfg -sid <SID> list -v
+# Look for: "System Serial Number" or "Array Serial Number" in the output
+# This value must match the VENDOR_SN field in the .lic key file
+
+# Alternative: check array management web UI
+# Unisphere → System → Properties → Serial Number
+
+# Compare to chassis label
+# The serial number is on a physical label on the front of the array
+# Photo the label if there is any mismatch concern
+```
+
+---
+
+## Step 3 — Inspect the FoD key file
+
+The `.lic` file is plain text. You can open it with any text editor or inspect specific fields:
+
+```bash
+# Check which array serial number the key is bound to
+grep -E "VENDOR_SN|SN|SERIAL" /path/to/fod-key.lic
+# Expected: VENDOR_SN=<your-array-SN>
+# If VENDOR_SN does not match your array SN → key was generated for a different array
+
+# Check expiry date
+grep -i "expiry\|expire\|date" /path/to/fod-key.lic
+# Expected: either no expiry line (perpetual) or a future date
+# If expired: contact Dell Account team to renew the term license
+
+# Check which features this key enables
+grep -i "feature\|increment" /path/to/fod-key.lic
+# Lists the specific features (e.g., CLOUD_TIERING, SRDF_ASYNC, COD_CAPACITY)
+
+# DO NOT edit any field in the .lic file
+# License files have cryptographic signatures — edited files will always be rejected
+```
+
+---
+
+## Step 4 — Dry-run the key install (preview)
+
+Before installing a key on the array, use `preview` to validate it without activating:
+
+```bash
+# Test whether the key file is valid for this array (no changes made)
+symlicense -sid <SID> preview -file /path/to/fod-key.lic
+# Expected output (if key is valid):
+#   Feature: CLOUD_TIERING
+#   Status: Will be enabled
+#   Expiry: <date or None>
+#   Ready to install.
+
+# If preview fails with "SYMAPI_C_INVALID_LICENSE":
+#   The key SN does not match the array SN → request re-issue from Dell Licensing
+
+# Capture preview output for the SR
+symlicense -sid <SID> preview -file /path/to/fod-key.lic 2>&1 | tee /tmp/fod-preview-$(date +%F).txt
+```
+
+---
+
+## Step 5 — Check firmware version compatibility
+
+```bash
+# Check firmware version on the array
+symcfg -sid <SID> list -v | grep -i "microcode\|firmware\|enginuity"
+# Compare to the minimum firmware version listed in the Dell FoD documentation for the feature
+
+# For Unisphere-based arrays (Unity/PowerStore):
+uemcli -d <mgmt-ip> /sys/general show
+# Look for: "Model", "Software version", and "Serial Number"
+```
+
+---
+
+## Step 6 — Collect diagnostic output for Dell SR
+
+```bash
+# All-in-one diagnostic snapshot
+{
+  echo "=== Array list ==="
+  symcfg list
+  echo "=== Current licenses ==="
+  symlicense -sid <SID> list
+  echo "=== Firmware version ==="
+  symcfg -sid <SID> list -v | grep -i "microcode\|firmware"
+  echo "=== Key preview (if key available) ==="
+  symlicense -sid <SID> preview -file /path/to/fod-key.lic 2>&1
+  echo "=== Key file SN field ==="
+  grep -E "VENDOR_SN|SN" /path/to/fod-key.lic
+} > /tmp/fod-diag-$(date +%F-%H%M).txt
+
+# Attach to SR: fod-diag-<date>.txt
+# Include: Dell order number, SN from chassis label, expected feature name
+```
 
 ---
 
 ## See also
 
-- [Fod — Common Issues](common-issues/)
-- [Fod — Escalation](escalation/)
-- [Fod — Health Checks](../operations/health-checks/)
+- [FOD — Common Issues](common-issues/)
+- [FOD — Escalation](escalation/)
+- [FOD — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `symlicense -sid <SID> list` shows the expected feature with `Status = Enabled`
+- `symlicense -sid <SID> show -feature <feature-name>` shows the correct expiry date
+- Test the activated feature (e.g., create a cloud tiering pool, initiate a replication job) to confirm it functions
+- In Unisphere: navigate to Licensing → Current Licenses and confirm the feature is visible and active

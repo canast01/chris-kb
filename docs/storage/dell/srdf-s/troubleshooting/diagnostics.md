@@ -7,129 +7,229 @@ search:
 ---
 # SRDF/S — Diagnostics
 
-
 <div class="kb-summary">
-Part of the [SRDF/S Troubleshooting](index.md) reference.
+SRDF/S diagnostic commands: check pair state and link health with symrdf, measure WAN round-trip time, collect RF port statistics, read SRDF event logs, and bundle diagnostics for Dell TAC cases. SRDF/S adds WAN RTT to every host write — latency and link health are the primary diagnostic focus.
 
-*Applies to: SRDF/S*
+*Applies to: Dell PowerMax / SRDF/S (Synchronous)*
 </div>
 
----
-
-## Before you begin
-
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
----
-
-## SRDF/S Triage Flow
-
-```mermaid
-flowchart TD
-    alert["Alert or Issue Reported"]
-    collectState["Collect Pair State\nsymrdf query -g group -v"]
-    pairOk{"Pairs\nSynchronized?"}
-    collectEvents["Collect Array Events\nsymevent list -sid SID -type rdf -last 100"]
-    collectRTT["Measure WAN RTT\nping -c 20 dr-site-ip"]
-    rttOk{"RTT ≤ 5ms?"}
-    collectLinkStats["Collect Link Stats\nsymstat -sid sid -type rdf -v"]
-    notifyNetwork["Notify Network Team\nRTT exceeds SRDF/S budget"]
-    bundleDiags["Bundle Diagnostics\nsymrdf query > diag.txt"]
-    openSupport["Open Dell SR if\nno clear root cause"]
-    resolved["Resolved\nDocument in incident ticket"]
-
-    alert --> collectState
-    collectState --> pairOk
-    pairOk -->|"No"| collectEvents
-    pairOk -->|"Yes — latency issue"| collectRTT
-    collectEvents --> collectRTT
-    collectRTT --> rttOk
-    rttOk -->|"No"| notifyNetwork
-    rttOk -->|"Yes"| collectLinkStats
-    collectLinkStats --> bundleDiags
-    notifyNetwork --> bundleDiags
-    bundleDiags --> openSupport
-    openSupport --> resolved
-
-    style alert fill:#be123c,color:#fff
-    style resolved fill:#15803d,color:#fff
-    style notifyNetwork fill:#b45309,color:#fff
-```
 ```text
 ┌──────────────────────────────────────── SRDF/S — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  SRDF/S — Diagnostic Commands                                 │   │
-│   │                       Collect these before opening a vendor support case                      │   │
-│   │                                           symrdf query                                        │   │
-│   │                                        symrdf -rdfg list                                      │   │
-│   │                       Check system logs: /var/log/ or Windows Event Viewer                    │   │
+│   │   Start here: symrdf query → check pair state → ping RTT → check RF ports → collect logs     │    │
+│   │   SRDF/S adds WAN RTT to every host write ACK — RTT > 5ms = latency impact on all writes     │    │
+│   │   Pair Partitioned: replication interrupted; resolve network issue before resuming            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Log Collection                │  │               Live Diagnostics              │   │
-│   │            Application log bundle            │  │             Network connectivity            │   │
-│   │            OS syslog (journalctl)            │  │              Storage path check             │   │
-│   │             Core dump if crashed             │  │              Process list check             │   │
-│   │             Config export/backup             │  │              Port reachability              │   │
-│   │                 symrdf query                 │  │              symrdf -rdfg list              │   │
+│   │          Pair State Diagnostics              │  │           Link and Performance              │   │
+│   │     symrdf query -g <group> -v              │  │     ping <dr-site-ip> (RTT check)           │    │
+│   │     symrdf query -sid -rdfg                 │  │     symstat -sid -type rdf -v               │    │
+│   │     symrdf verify -sid -rdfg               │  │     symcfg list -rdfg all                   │     │
+│   │     symevent list -type rdf                 │  │     symcfg -sid -rdfg <n> -v                │    │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │  Physical Infrastructure:                                                                             │
 │  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
-│  Key terms:                                                                                           │
 │                                                                                                       │
-│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
-│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│  Key terms:                                                                                           │
+│  SRDF/S     = Synchronous SRDF; every R1 write is held until R2 confirms — RTT adds to host latency   │
+│  R1          = source volume; write pended until R2 confirms receipt                                  │
+│  R2          = target volume; must acknowledge each write before R1 releases it to the host           │
+│  RTT         = Round-Trip Time between R1 and R2 arrays; directly added to host write latency         │
+│  RF port     = Remote Fabric port on PowerMax; dedicated FC port for SRDF replication traffic         │
+│  RDFG        = RDF Group; logical grouping of SRDF pairs sharing the same link and parameters         │
+│  Synchronized= healthy state: R1 and R2 are in lock-step; no outstanding writes                       │
+│  Consistent  = transient state: write in transit from R1 to R2; normal under load                     │
+│  Partitioned = link interrupted; R2 is frozen at point of interruption; data may diverge              │
+│  Failover    = R2 becomes R/W; R1 is set Not Ready; production continues from DR site                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([SRDF/S Issue]) --> B[symrdf query -g group -v\nCheck pair state]
+    B --> C{Pair state?}
+    C -->|Synchronized| D[Latency complaint\nMeasure WAN RTT]
+    C -->|Partitioned / Suspended| E[symevent list -type rdf\nFind interruption event]
+    C -->|Not Synchronized| F[Check RF ports\nsymcfg list -rdfg all]
+    D --> G[ping -c 20 dr-site-ip\nAverage RTT × 2 = host write latency added]
+    G --> H{RTT > 5ms?}
+    H -->|Yes| I[Notify network team\nRTT exceeds SRDF/S budget]
+    H -->|No| J[symstat -type rdf -v\nCheck link utilization]
+    E --> K[Fix network issue\nThen symrdf establish]
+    F --> L[symcfg -sid -rdfg n -v\nCheck port and speed]
+    I --> M[Collect diagnostics\nBundle for Dell SR]
+    J --> M
+    K --> M
+    L --> M
+    M --> N[Open Dell TAC SR\nsupport.dell.com]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,C,H dark
+    class B,D,E,F,G,I,J,K,L action
+    class M,N escalate
+```
+
+## Before you begin
+
+- **Access:** Solutions Enabler with gatekeeper LUNs to both PowerMax arrays; Unisphere for PowerMax admin access; network team contact for WAN link investigation
+- **Gather first:** the RDFG number, current pair state from `symrdf query`, and whether hosts are experiencing write latency or I/O suspension
+- **RTT baseline:** establish the normal WAN RTT before an incident so you have a baseline for comparison — document it in your CMDB
+- **Do not force failover** without confirming the link interruption is unresolvable — SRDF/S failover means R1 hosts will lose access to their volumes; it is a disruptive operation
+- **Logging:** collect `symrdf query` output immediately when an issue is reported — pair state can change and logs lose context if collected too late
+
 ---
 
-## Diagnostic Data Export for Dell Support
+## Step 1 — Check SRDF pair state
 
 ```bash
-# Export array event log
-symevent list -sid <SID> -type rdf -output csv > /tmp/rdf_events_$(date +%Y%m%d).csv
+# List all SRDF groups on this array
+symrdf -sid <SID> list -rdfg all
+# Output: RDFG number, mode (S = Sync), pair count, state, link state
 
-# Capture full pair state baseline
-symrdf query -g <group> -detail > /tmp/srdf_diagnostic_$(date +%Y%m%d_%H%M).txt
-symcfg list -rdfg all >> /tmp/srdf_diagnostic_$(date +%Y%m%d_%H%M).txt
-symcfg -sid <r1_sid> list -rdfg <rdf_group_number> -v >> /tmp/srdf_diagnostic_$(date +%Y%m%d_%H%M).txt
+# Detailed pair state for a specific RDFG
+symrdf query -sid <SID> -rdfg <rdfg-number>
+# Key output columns:
+#   R1_ST:      R1 state — should be "Ready"
+#   R2_ST:      R2 state — should be "Write Disabled"
+#   R2_PAIR_ST: pair state — should be "Synchronized" or "Consistent"
+#   LINK_ST:    RF link state — should be "Ready"
+#   MODE:       should be "S" (Sync)
 
-# Collect Unisphere logs via GUI
-# Unisphere for PowerMax → System → Export Logs
+# Verbose output including per-device detail
+symrdf query -g <group-name> -detail
+# Shows each device in the group with its individual pair state
+
+# States and what they mean:
+#   Synchronized: healthy — R1 and R2 are in lock-step
+#   Consistent:   normal transient — write in transit from R1 to R2
+#   Partitioned:  link interrupted — R2 frozen; data may diverge if sustained
+#   Suspended:    manually paused; R2 frozen at point of suspension
+#   Failed Over:  DR failover is active; R2 is now R/W
+```
+
+**Decision flow:**
+- `Synchronized / Consistent` but hosts see high latency → measure RTT (Step 2)
+- `Partitioned` → network link between sites was interrupted; fix network first, then `symrdf establish` to re-sync
+- `Suspended` → check who suspended and why; resume only after confirming data is consistent
+- `Not Synchronized` → RF port or link issue; proceed to Step 4
+
+---
+
+## Step 2 — Measure WAN round-trip time
+
+SRDF/S holds every host write until R2 confirms receipt. The WAN RTT is directly added to host write latency.
+
+```bash
+# Measure RTT between production and DR sites
+# Run from a host on the production network that can reach the DR network
+ping -c 100 <dr-site-ip>
+# Key statistics:
+#   avg RTT:     the baseline latency addition to all host writes
+#   max RTT:     worst-case latency spike
+#   packet loss: any loss causes SRDF/S to retry; > 0% = link quality issue
+
+# For more detailed latency analysis (on Linux)
+mtr --report --report-cycles 100 <dr-site-ip>
+# Shows per-hop latency; identifies where latency is being added in the path
+
+# For Windows from the DR site
+pathping <production-site-ip> /n 100
+```
+
+**SRDF/S latency impact:**
+- Maximum recommended RTT is typically **5 ms** for SRDF/S (check Dell sizing guide for your use case)
+- A 5 ms RTT adds 5 ms to every synchronous host write on R1 volumes
+- RTT > 5 ms: engage the network team to investigate WAN link quality, QoS, or congestion
+
+---
+
+## Step 3 — Check SRDF event log
+
+```bash
+# Show SRDF-specific events from the array event log
+symevent list -sid <SID> -type rdf -last 100
+# Shows: event time, severity, message (e.g., "SRDF link became not ready", "pair partitioned")
+
+# Export to CSV for the Dell SR
+symevent list -sid <SID> -type rdf -last 200 -output csv > /tmp/rdf_events_$(date +%F).csv
+
+# Filter to error-level events only
+symevent list -sid <SID> -type rdf -severity error -last 100
+
+# Check Unisphere alert log
+# Unisphere for PowerMax → Monitor → Alerts
+# Filter to: Category = SRDF; Severity = Warning, Error, Critical
 ```
 
 ---
 
-## Verify resolution
+## Step 4 — Check RF director ports and link statistics
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```bash
+# List all SRDF director ports on the array
+symcfg -sid <SID> list -rdf -v
+# Shows: director number, port number, link status, bandwidth
+
+# Detailed RDFG configuration
+symcfg -sid <SID> list -rdfg <rdfg-number> -v
+# Shows:
+#   Director: RA director handling this RDFG
+#   Cycle time: for SRDF/A; not applicable for SRDF/S
+#   Link speed: should match the provisioned link capacity
+#   Mode: S (Sync) for SRDF/S
+
+# Collect link performance statistics (samples over 60 seconds)
+symstat -sid <SID> -type rdf -delta_t 60
+# Key metrics:
+#   Write Response Time (ms): should equal WAN RTT; spikes = WAN congestion
+#   Link Utilization (%): > 80% = bandwidth saturation; consider link upgrade
+#   Throughput (MB/s): compare to link capacity; high = high write workload
+```
+
+---
+
+## Step 5 — Collect diagnostic bundle for Dell SR
+
+```bash
+# Complete SRDF/S diagnostic snapshot
+{
+  echo "=== symrdf list (all RDFGs) ==="
+  symrdf -sid <SID> list -rdfg all
+  echo "=== symrdf query (pair state) ==="
+  symrdf query -sid <SID> -rdfg <rdfg-number>
+  echo "=== symcfg rdf (RF port state) ==="
+  symcfg -sid <SID> list -rdf -v
+  echo "=== symcfg RDFG detail ==="
+  symcfg -sid <SID> list -rdfg <rdfg-number> -v
+  echo "=== symevent rdf (last 200 events) ==="
+  symevent list -sid <SID> -type rdf -last 200
+  echo "=== symstat rdf performance ==="
+  symstat -sid <SID> -type rdf -delta_t 60
+} > /tmp/srdf-s-diag-$(date +%F-%H%M).txt
+
+# Collect Unisphere logs via GUI
+# Unisphere for PowerMax → System → Export Logs
+# Select: time range covering the incident window
+```
 
 ---
 
 ## See also
 
-- [Srdf S — Common Issues](common-issues/)
-- [Srdf S — Escalation](escalation/)
-- [Srdf S — Health Checks](../operations/health-checks/)
+- [SRDF/S — Common Issues](common-issues/)
+- [SRDF/S — Escalation](escalation/)
+- [SRDF/S — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `symrdf query -sid <SID> -rdfg <rdfg-number>` shows `R2_PAIR_ST=Synchronized`, `LINK_ST=Ready`
+- WAN RTT is within acceptable bounds (typically ≤ 5 ms); host write latency has returned to baseline
+- `symevent list -type rdf` shows no new error events in the last 15 minutes
+- `symstat -type rdf` shows Write Response Time back to expected value
+- Monitor host application performance for 30 minutes after the fix to confirm write latency is stable
