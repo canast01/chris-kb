@@ -367,6 +367,9 @@ Run an action outside of a subscription to validate logic and debug input/output
 
 ## Force-Delete a Stuck Deployment
 
+!!! warning "Force-delete removes the vRA record but may not clean up underlying infrastructure"
+    The force-delete API call removes the deployment record from vRA's database but does not guarantee the destroy workflow ran against the cloud account. After force-deleting, manually verify in vCenter (for vSphere deployments) or the cloud console (for AWS/Azure) that the VMs, disks, and networks created by the deployment have been removed. Orphaned VMs continue to consume resources and incur cost.
+
 A deployment stuck in `CREATE_FAILED`, `DELETE_FAILED`, or `UPDATE_FAILED` cannot be removed through the normal UI delete flow. Use the API to force-delete it.
 
 ```bash
@@ -440,6 +443,9 @@ echo | openssl s_client -connect vra-prod-01.example.local:443 -servername vra-p
 ## Rotate the Postgres Password
 
 vRA stores its configuration database password in `vracli`. Rotate this password when following periodic credential rotation policy or after a Postgres administrator password change.
+
+!!! warning "vracli rcs restart causes a full vRA service outage"
+    `vracli rcs restart` stops and restarts all vRA microservices. During the restart (typically 5–10 minutes), the vRA UI, API, and catalog are unavailable. Active blueprint deployments in flight at the time of the restart may fail. Schedule this operation during a maintenance window and notify users before proceeding.
 
 ```bash
 # SSH to the vRA primary appliance

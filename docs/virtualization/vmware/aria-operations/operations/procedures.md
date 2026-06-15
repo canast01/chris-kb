@@ -223,6 +223,9 @@ Super metrics aggregate metrics from multiple objects or calculate derived value
 
 ## Reclaim Idle VM Resources
 
+!!! warning "Approved actions immediately right-size or power off VMs via vCenter"
+    When you click **Approve**, Aria Operations schedules the action against vCenter without further confirmation. A "power off" recommendation will power off the VM. Review the VM name, owner, and application tag before approving — idle resource detection does not distinguish between genuinely unused VMs and batch-scheduled or after-hours workloads that happen to be quiet during the observation window.
+
 1. Aria Ops → **Optimize** → **Reclamation** → **Idle VMs**
 2. Review the list of VMs with sustained low CPU, memory, and network utilisation
 3. Each VM shows projected savings (vCPU, memory, storage)
@@ -390,6 +393,9 @@ Business hours apply per-policy; assign different policies to production vs. non
 ---
 
 ## Configure Data Retention (Rollup Periods)
+
+!!! warning "Reducing retention permanently purges historical metrics"
+    When you lower a retention period, Aria Operations triggers a background Cassandra compaction to delete older data. Purged metrics cannot be recovered. If the historical data is needed for a capacity planning report or trend analysis, export it via the API or generate the required reports before reducing retention.
 
 Default retention: raw metrics 6 months, hourly rollup 1 year, daily rollup 5 years. Reduce raw retention to save disk; extend daily rollup for long-term capacity trending.
 

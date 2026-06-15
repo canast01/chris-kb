@@ -117,6 +117,9 @@ For VMware product logs, use the native integration rather than generic syslog:
 
 Reduce retention to free disk space or increase it if disk has capacity.
 
+!!! warning "Reducing retention permanently deletes historical log data"
+    When you lower the Log Retention Period, vRLI purges all events older than the new value at the next maintenance window. This data cannot be recovered from the appliance. If the logs are required for a security investigation or compliance audit, archive them first (see **Archive Log Data to NFS** below) before reducing the retention period.
+
 1. vRLI → **Administration** → **Configuration** → **General**
 2. Under **Retention**, set **Log Retention Period** (default: 30 days)
 3. Reducing the retention period causes vRLI to purge older data during the next maintenance window

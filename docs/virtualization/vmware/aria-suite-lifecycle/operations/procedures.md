@@ -191,6 +191,9 @@ All subsequently deployed Aria products automatically use the registered VIDM as
 
 ## Rotate All Passwords for an Environment
 
+!!! warning "External integrations using the rotated credentials will break immediately"
+    LCM rotates passwords within the Aria product stack, but any external system that authenticates using these credentials — ITSM connectors, monitoring agents, custom ABX actions, CI/CD pipelines — will fail the moment the rotation completes. Before rotating, enumerate all external callers and prepare to update their stored credentials immediately after rotation. Step 6 is time-critical.
+
 1. LCM → Lifecycle Operations → Environments → select the environment
 2. Click **Rotate Passwords** → select scope: **All Products** (or select individual products)
 3. Confirm the operation — LCM generates new passwords and updates them across all product nodes
@@ -201,6 +204,9 @@ All subsequently deployed Aria products automatically use the registered VIDM as
 ---
 
 ## Decommission an Environment
+
+!!! danger "Permanently deletes all product VMs across the entire environment"
+    Step 3 triggers LCM to power off and delete every product VM (Aria Operations, Aria Automation, Aria Logs, vIDM) registered in this environment from vCenter. There is no undo. Confirm all integrations are removed, all data is archived, and all dependent services are decommissioned before proceeding.
 
 1. Confirm all workloads have been migrated off the environment — no active VMs or services should depend on it
 2. Remove all external integrations pointing to the environment (cloud accounts, monitoring adapters, ITSM plugins)
@@ -230,6 +236,9 @@ Rollback: if the update fails, revert to the pre-upgrade snapshot from vCenter a
 ---
 
 ## Configure Custom SSL Certificates for LCM
+
+!!! warning "All managed Aria products lose trust with LCM when the cert changes"
+    LCM uses its certificate as a trust anchor for all managed product integrations. After replacing the cert, every registered Aria product (Aria Operations, Aria Automation, Aria Logs, vIDM) will report a trust failure against LCM until re-registered or reconfigured to trust the new cert. Plan a maintenance window, notify all users, and execute step 5 immediately after the cert change.
 
 Changing the LCM appliance certificate affects all browser sessions and all managed-product trust anchors. Plan a maintenance window and notify all users.
 
