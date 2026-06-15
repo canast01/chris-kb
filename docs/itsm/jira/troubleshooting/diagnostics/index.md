@@ -7,67 +7,12 @@ search:
 ---
 # Jira — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering Diagnostic Flow, JVM Heap Analysis, Thread Dump Capture and Analysis, Database Slow Query Analysis, Support ZIP Collection and 1 more sections.
+Jira diagnostic commands: check instance health via the /status endpoint and REST serverInfo API, inspect JVM heap with jmap and jcmd to identify memory leaks, capture three thread dumps 10 seconds apart to diagnose deadlocks and blocking, run PostgreSQL pg_stat_statements and pg_stat_activity to identify slow JQL queries, and generate support.zip from the Atlassian Support Tools for escalation.
 
-*Applies to: Jira 9.x / Cloud*
+*Applies to: Jira 9.x / Data Center*
 </div>
 
-## Before you begin
-
-- **Access:** Admin credentials on all affected systems
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
----
-
-## Diagnostic Flow
-
-```mermaid
-flowchart TD
-    ISSUE([Issue Reported]) --> BASIC[Collect Basic Info\nversion, error message, affected users]
-
-    BASIC --> LOGS[Review Application Logs\natlassian-jira.log, catalina.out]
-
-    LOGS --> LOG_FINDING{Error found\nin logs?}
-
-    LOG_FINDING -- Yes --> CLASSIFY{Error type?}
-    LOG_FINDING -- No --> HTTP[Check HTTP\nResponse Times]
-
-    CLASSIFY -- OOM/Heap --> HEAP[JVM Heap Analysis\njmap / heap dump]
-    CLASSIFY -- Thread deadlock/hang --> THREAD[Thread Dump\nAnalysis]
-    CLASSIFY -- DB error --> DB[Database Diagnostics\npg_stat_activity, slow queries]
-    CLASSIFY -- Plugin error --> PLUGIN[Plugin Diagnostics\nDisable/enable, cache clear]
-
-    HTTP --> HTTP_SLOW{Response\n> 3s?}
-    HTTP_SLOW -- Yes --> PROFILE[DB slow query log\nJVM profiling]
-    HTTP_SLOW -- No --> CLUSTER[Check Cluster\nHeartbeat & Hazelcast]
-
-    HEAP --> ANALYSE[Analyse with MAT\nIdentify leak]
-    THREAD --> DEADLOCK{Deadlock\ndetected?}
-    DEADLOCK -- Yes --> RESTART[Restart affected node\nCapture support.zip]
-    DEADLOCK -- No --> POOL[Check thread pool\nconfiguration]
-    DB --> FIX_DB[Resolve DB issue\nkill long queries, tune config]
-    PLUGIN --> FIX_PLUGIN[Update or remove\noffending plugin]
-    PROFILE --> FIX_PERF[Add indexes, optimise JQL\nincrease resources]
-    CLUSTER --> FIX_CLUSTER[Investigate network\nrestart node]
-
-    ANALYSE --> SUPPORT{Issue resolved?}
-    RESTART --> SUPPORT
-    FIX_DB --> SUPPORT
-    FIX_PLUGIN --> SUPPORT
-    FIX_PERF --> SUPPORT
-    FIX_CLUSTER --> SUPPORT
-
-    SUPPORT -- No --> ESCALATE[Collect support.zip\nEscalate to L3/Atlassian]
-    SUPPORT -- Yes --> DONE([Resolved — Document RCA])
-
-    style DONE fill:#2d8a4e,color:#fff
-    style ESCALATE fill:#c0392b,color:#fff
-```
 ```text
 ┌───────────────────────────────────────── Jira — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -93,13 +38,13 @@ flowchart TD
 │   │              support-zip export              │  │              journalctl -u jira             │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSH to Jira VMs · PostgreSQL admin access · NFS mount visibility                                     │
+│  Physical Infrastructure:                                                                             │
+│  SSH to Jira VMs (as root or jira user) · PostgreSQL server (psql admin) · NFS mount for JIRA_HOME    │
+│  Jira node count: check Admin > System > Cluster Nodes for Data Center deployments                    │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
 │  kill -3 PID    = sends SIGQUIT to JVM; thread dump printed to catalina.out                           │
-│  jmap -histo    = histogram of JVM heap; lists top objects by class name                              │
+│  jmap -histo    = histogram of JVM heap; lists top objects by class name and retained size            │
 │  pg_stat_activity = PostgreSQL running queries; find blocking and long-running SQL                    │
 │  catalina.out   = Tomcat stdout log; JIRA_INSTALL/logs/catalina.out                                   │
 │  atlassian-jira.log = Jira application log; JIRA_HOME/log/atlassian-jira.log                          │
@@ -114,11 +59,91 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([Issue Reported]) --> B[Collect basic info: version, error message, affected users]
+    B --> C[curl status endpoint + grep catalina.out for ERROR OOM Exception]
+    C --> D{Error found in logs?}
+    D -->|Yes| E{Error type?}
+    D -->|No| F[Check HTTP response times: load a Jira project board]
+    E -->|OOM or heap| G[JVM Heap Analysis:\njmap histo and jcmd GC.heap_info]
+    E -->|Thread deadlock or hang| H[Thread Dump Capture:\njcmd Thread.print x3 10s apart]
+    E -->|DB error| I[Database: pg_stat_activity\nand pg_stat_statements slow queries]
+    E -->|Plugin error| J[Plugin: disable plugin in Admin\nand clear index cache]
+    F --> K{Response > 3 seconds?}
+    K -->|Yes| L[DB slow query log + JVM profiling with jstat]
+    K -->|No| M[Data Center: check Hazelcast cluster\nand node heartbeat in Admin > Cluster Nodes]
+    G --> N[Analyse heap dump with Eclipse MAT\nIdentify retained object class]
+    H --> O{Deadlock detected in dump?}
+    O -->|Yes| P[Restart affected node\nCapture support.zip before restart]
+    O -->|No| Q[Check thread pool: count BLOCKED threads\nIdentify lock holder in dump]
+    I --> R[Cancel or terminate long queries\nRequest missing index via DBA]
+    J --> S[Update or remove offending plugin\nClear plugin cache and restart node]
+    L --> T[Add indexes, optimise JQL\nIncrease JVM heap or node count]
+    M --> U[Investigate management network\nRestart affected cluster node]
+    N --> V{Issue resolved?}
+    P --> V
+    Q --> V
+    R --> V
+    S --> V
+    T --> V
+    U --> V
+    V -->|No| W[Collect support.zip\nEscalate to Atlassian Support]
+    V -->|Yes| X([Resolved — document RCA])
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,D,E,K,O,V dark
+    class B,C,F,G,H,I,J,L,M,N,P,Q,R,S,T,U action
+    class W,X escalate
+```
+
+## Before you begin
+
+- **Access:** SSH to Jira server(s) as root or jira OS user; PostgreSQL admin access (`psql -U postgres`); Jira Admin account for the web UI
+- **Gather first:** the exact error message from the UI, the Jira version from Admin > System Information, the number of affected users, and whether the symptom started after a recent change (plugin install, upgrade, DB migration)
+- **Scope:** confirm whether the issue affects one project, one user, or all users — a single slow project often points to a JQL index issue, while all-user slowness points to JVM or DB saturation
+
 ---
 
-## JVM Heap Analysis
+## Step 1 — Check instance health
 
-### Check Live Heap Usage
+```bash
+# Confirm the Jira application is running
+curl -s http://localhost:8080/status
+# Expected: {"state":"RUNNING"}
+
+# Recent application errors
+JIRA_INSTALL=/opt/atlassian/jira
+grep -i "ERROR\|OOM\|Exception" "${JIRA_INSTALL}/logs/catalina.out" | tail -50
+
+# Full server info via REST API
+curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
+  "${JIRA_URL}/rest/api/2/serverInfo" | python3 -m json.tool
+
+# System health check (Data Center only)
+curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
+  "${JIRA_URL}/rest/api/2/cluster/health" | python3 -m json.tool
+
+# Current reindex status
+curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
+  "${JIRA_URL}/rest/api/2/reindex" | python3 -m json.tool
+
+# Disk usage on JIRA_HOME
+df -h /var/atlassian/application-data/jira/
+ls -lh /var/atlassian/application-data/jira/data/attachments/
+
+# System memory
+free -h
+top -b -n1 | grep java | head -5
+```
+
+---
+
+## Step 2 — JVM heap analysis
+
+### Check live heap usage
 
 ```bash
 JIRA_PID=$(pgrep -f 'atlassian-jira' | head -1)
@@ -133,7 +158,7 @@ jmap -histo:live "${JIRA_PID}" | head -35
 jcmd "${JIRA_PID}" VM.flags | grep -E "HeapSize|Xmx|Xms"
 ```
 
-### Capture Heap Dump
+### Capture heap dump
 
 ```bash
 JIRA_PID=$(pgrep -f 'atlassian-jira' | head -1)
@@ -157,7 +182,7 @@ echo "Heap dump: ${DUMP_FILE} ($(du -sh ${DUMP_FILE} | cut -f1))"
    - Lucene IndexSearcher not closed
    - Scheduled tasks accumulating results
 
-### GC Log Analysis
+### GC log analysis
 
 ```bash
 GC_LOG=/opt/atlassian/jira/logs/gc.log
@@ -180,11 +205,11 @@ grep "Pause" "${GC_LOG}" | awk '{
 
 ---
 
-## Thread Dump Capture and Analysis
+## Step 3 — Thread dump capture and analysis
 
 Thread dumps reveal: deadlocks, blocked threads, thread pool saturation, slow external calls.
 
-### Capture Thread Dumps
+### Capture thread dumps
 
 ```bash
 JIRA_PID=$(pgrep -f 'atlassian-jira' | head -1)
@@ -202,7 +227,7 @@ done
 echo "Thread dumps in: ${DUMP_DIR}"
 ```
 
-### Parse Thread Dumps
+### Parse thread dumps
 
 ```bash
 DUMP_FILE="${DUMP_DIR}/dump-1-*.txt"
@@ -221,7 +246,7 @@ grep -B2 "http-nio-8080" "${DUMP_FILE}" | grep "Thread.State: RUNNABLE"
 grep -A10 "Found.*deadlock" "${DUMP_FILE}"
 ```
 
-### Thread States Interpretation
+### Thread states interpretation
 
 | State | Meaning | Concern |
 |---|---|---|
@@ -234,7 +259,7 @@ A healthy Jira shows mostly `TIMED_WAITING` threads (idle pool workers). Many `B
 
 ---
 
-## Database Slow Query Analysis
+## Step 4 — Database slow query analysis
 
 ### Enable pg_stat_statements
 
@@ -247,7 +272,7 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
 -- pg_stat_statements.track = all
 ```
 
-### Identify Slow Queries
+### Identify slow queries
 
 ```sql
 -- Top 20 slowest queries by average execution time
@@ -283,7 +308,7 @@ JOIN pg_stat_activity AS blocking
 WHERE blocked.datname = 'jiradb';
 ```
 
-### Kill Long-Running Queries
+### Kill long-running queries
 
 ```sql
 -- Cancel query (graceful)
@@ -301,7 +326,7 @@ WHERE datname = 'jiradb'
   AND query_start < now() - interval '10 minutes';
 ```
 
-### Missing Index Detection
+### Missing index detection
 
 ```sql
 -- Tables with high sequential scan count (candidates for indexing)
@@ -316,7 +341,7 @@ LIMIT 20;
 
 ---
 
-## Support ZIP Collection
+## Step 5 — Support ZIP collection
 
 The Jira `support.zip` bundles all diagnostic information needed for Atlassian support escalation.
 
@@ -333,7 +358,7 @@ Options to include (recommended set):
 - [x] Plugin information
 - [ ] Attachments (usually too large)
 
-### Generate via Script (Headless)
+### Generate via script (headless)
 
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
@@ -353,7 +378,7 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 
 The zip file is created in `<jira-home>/export/support/`. Retrieve and attach to your Atlassian support ticket.
 
-### What the Support ZIP Contains
+### What the Support ZIP contains
 
 | Included File | Purpose |
 |---|---|
@@ -367,25 +392,9 @@ The zip file is created in `<jira-home>/export/support/`. Retrieve and attach to
 
 ---
 
-## Additional Diagnostic Commands
+## Step 6 — Additional diagnostic commands
 
-### Jira Instance Information
-
-```bash
-# Full server info
-curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
-  "${JIRA_URL}/rest/api/2/serverInfo" | python3 -m json.tool
-
-# System health check (Data Center)
-curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
-  "${JIRA_URL}/rest/api/2/cluster/health" | python3 -m json.tool
-
-# Check current index status
-curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
-  "${JIRA_URL}/rest/api/2/reindex" | python3 -m json.tool
-```
-
-### Database Record Counts
+### Database record counts
 
 ```sql
 -- Issue count by project
@@ -400,12 +409,9 @@ LIMIT 20;
 SELECT COUNT(*) AS attachments,
        pg_size_pretty(SUM(filesize)) AS total_size
 FROM fileattachment;
-
--- Comment count
-SELECT COUNT(*) FROM jiraaction WHERE actiontype = 'comment';
 ```
 
-### JMX Monitoring (Optional)
+### JMX monitoring (optional)
 
 Enable JMX in `setenv.sh` for external monitoring:
 
@@ -416,11 +422,6 @@ Enable JMX in `setenv.sh` for external monitoring:
 -Dcom.sun.management.jmxremote.authenticate=false
 -Dcom.sun.management.jmxremote.ssl=false
 -Djava.rmi.server.hostname=<node-ip>
-```
-
-Connect with JConsole or VisualVM:
-```text
-jconsole <node-ip>:9999
 ```
 
 Key MBeans to monitor:
@@ -435,11 +436,16 @@ Key MBeans to monitor:
 
 ---
 
-## Verify resolution
+## Log locations
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Log | Path | What to look for |
+|---|---|---|
+| Application log | `JIRA_HOME/log/atlassian-jira.log` | Plugin errors, workflow exceptions, auth failures |
+| Tomcat stdout | `JIRA_INSTALL/logs/catalina.out` | JVM startup errors, OOM, thread dump output |
+| GC log | `JIRA_INSTALL/logs/gc.log` | Full GC frequency and pause durations |
+| Access log | `JIRA_INSTALL/logs/access_log.*.txt` | HTTP request timing per endpoint |
+| PostgreSQL slow queries | `pg_stat_statements` + pg log | Slow or blocking JQL queries |
+| Support ZIP | `JIRA_HOME/export/support/` | All-in-one — required for Atlassian SR |
 
 ---
 
@@ -448,3 +454,12 @@ Key MBeans to monitor:
 - [Jira — Common Issues](../common-issues/)
 - [Jira — Escalation](../escalation/)
 - [Jira — Health Checks](../../operations/health-checks/)
+
+## Verify resolution
+
+- `curl -s http://localhost:8080/status` returns `{"state":"RUNNING"}`
+- `jcmd $JIRA_PID GC.heap_info` shows heap below 80% of max (-Xmx) between GC cycles
+- `grep -c "BLOCKED" /tmp/jira-thread-dumps-*/dump-1-*.txt` returns a low count (< 5)
+- A Jira project board loads in under 3 seconds (browser network tab)
+- `grep -i "OOM\|OutOfMemoryError" /opt/atlassian/jira/logs/catalina.out` returns no new entries after the fix
+- PostgreSQL: `SELECT count(*) FROM pg_stat_activity WHERE state != 'idle'` shows normal connection count for the cluster size

@@ -7,110 +7,113 @@ search:
 ---
 # Dell VPLEX — Diagnostics
 
-
 <div class="kb-summary">
-Systematic diagnostic procedures for VPLEX faults. Work through the relevant section based on the reported symptom. Collect all outputs before calling Dell Support — they will ask for this data.
+VPLEX diagnostic commands: run health-check --full and ll /clusters/*/health-indications/ for a fast system-wide health view, inspect distributed device sync state and rebuild progress for Metro out-of-sync scenarios, check director hardware with ll /engines/*/directors/*/hardware/, verify Witness and ICL connectivity for Metro quorum health, confirm storage view and initiator-port configuration when hosts lose access, and collect the support bundle with collect-support-log for Dell GSS escalation.
 
-*Applies to: VPLEX*
+*Applies to: VPLEX VS2 / VS6*
 </div>
+
 ```text
 ┌────────────────────────────────────── Dell VPLEX — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           VPLEX diagnostics: log collection, health checks, and performance analysis          │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here — run in order and stop at first non-ok result:                                  │   │
+│   │   1. vplexcli -q -e "health-check --full"                                                    │    │
+│   │   2. ll /clusters/*/health-indications/                                                       │   │
+│   │   3. ll /distributed-storage/distributed-devices/*/health-indications/                        │   │
+│   │   4. ll /engines/*/directors/*/hardware/                                                      │   │
+│   │   5. ll /clusters/*/cluster-witness/                                                          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Cluster and Device Health           │  │         Host Access and Metro               │   │
+│   │   health-check --full: overall health        │  │   storage-views: host access objects        │   │
+│   │   health-indications: per-cluster detail     │  │   initiator-ports: HBA WWN registration     │   │
+│   │   distributed-devices: Metro sync state      │  │   cluster-witness: Witness connectivity     │   │
+│   │   rebuild-progress: resync 0% → 100%         │  │   inter-cluster-links: ICL latency <5ms     │   │
+│   │   consistency-groups: CG suspend reason      │  │   virtual-volumes: volume operational state  │  │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│  Physical Infrastructure:                                                                             │
+│  VPLEX VS2/VS6 engine chassis · Director pairs (A+B per engine) · Backend FC arrays                   │
+│  ICL (Inter-Cluster Link): dark fibre or DWDM for Metro (≤5ms RTT required)                           │
+│  Witness VM at third site for Metro quorum · Management Server (VMS) embedded Linux VM                │
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
-│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
-│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
-│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
-│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │  Virtual volume  │ Virtualised LUN  │      FC/iSCSI     │    FC zoning     │   Multi-vendor   │   │
-│   │  Metro cluster   │   Sync stretch   │   Inter-cluster   │   Certificate    │    2-site max    │   │
-│   │     Witness      │  Quorum arbiter  │       HTTPS       │   Certificate    │     3rd site     │   │
-│   │     WAN-COM      │ Geo replication  │   Encrypted WAN   │   Certificate    │     Geo only     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
-│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
-│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
-│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
-│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
-│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
-│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
-│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
-│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
-│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
-│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
-│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
+│  Key terms:                                                                                           │
+│  Virtual volume     = VPLEX-abstracted LUN presented to hosts; backed by array LUNs                   │
+│  VPLEX Metro        = synchronous active-active stretch; same VV from two sites                       │
+│  Distributed device = virtual volume spanning two clusters; rebuilt automatically after ICL restore   │
+│  Witness            = third-site quorum arbiter; grants I/O rights to one cluster on ICL loss         │
+│  ICL                = Inter-Cluster Link; VPLEX Metro requires ≤5ms round-trip latency                │
+│  Director           = engine's compute module; Director A + B in each engine for redundancy           │
+│  Consistency group  = set of VVs that failover together maintaining write-order fidelity              │
+│  health-indications = VPLEX CLI attribute tree; per-object health state with fault reason             │
+│  WAN-COM            = WAN communication module in VPLEX Geo for async replication traffic             │
+│  Local device       = RAID device of backend volumes on one cluster; leaf of distributed device       │
+│  Storage view       = host access object: binds initiator-ports + target-ports + virtual-volumes      │
+│  Management Server  = embedded Linux VM (VMS); serves web UI and vplexcli; SSH as service user        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-
 ```mermaid
-flowchart TD
-    symptom(["Reported symptom\nor alert"]) --> hcFull
+graph TD
+    A([VPLEX Issue]) --> B{What type of problem?}
+    B -->|System health alarm| C[health-check --full\nll /clusters/*/health-indications/]
+    B -->|Host path failure or volume unavailable| D[ll /clusters/*/exports/storage-views/\nll /virtual-volumes/ device name]
+    B -->|Metro device out-of-sync or degraded| E[ll /distributed-storage/distributed-devices/*/health-indications/\nCheck rebuild-progress attribute]
+    B -->|Director hardware fault| F[ll /engines/*/directors/*/hardware/\nCheck director health state]
+    B -->|Witness or quorum issue| G[ll /clusters/*/cluster-witness/\nping cluster-2-mgmt-IP from VMS]
+    B -->|CG suspended — I/O halted| H[ll /distributed-storage/consistency-groups/\nCheck CG state and suspension reason]
+    C --> I{Health indication?}
+    I -->|Cluster non-ok| J[Drill to affected cluster\nll /clusters/cluster-N/health-indications/]
+    I -->|All clusters ok| K[Check distributed device sync state\nll /distributed-storage/distributed-devices/*/]
+    D --> L{Storage view intact?}
+    L -->|View missing initiator or volume| M[Confirm HBA WWN: ll /clusters/*/exports/initiator-ports/\nAdd missing initiator or VV to view]
+    L -->|View correct but host not seeing LUN| N[Host: multipath -ll or powermt display dev=all\nESXi: esxcli storage core adapter rescan --all]
+    E --> O{Device state?}
+    O -->|out-of-sync: rebuild in progress| P[Monitor rebuild-progress until 100%\nDo not interrupt rebuild]
+    O -->|degraded: one cluster leg unreachable| Q[Check ICL: ll /clusters/*/communication/inter-cluster-links/\nCheck director health on affected cluster]
+    O -->|suspended: I/O halted| R[DANGER: confirm active leg with Dell Support\nbefore device resume command]
+    F --> S[Check director pair health state\nminor-failure or major-failure needs TAC]
+    G --> T[Restore ICL if interrupted\nVerify Witness reachable from both clusters]
+    H --> U[Do not resume CG without understanding cause\nCheck ICL and Witness first]
+    J --> V[Collect support bundle and open Dell case]
+    K --> V
+    M --> V
+    N --> V
+    P --> V
+    Q --> V
+    R --> V
+    S --> V
+    T --> V
+    U --> V
+    V --> W[collect-support-log -f /var/log/support_bundle.tar.gz\nscp bundle to jump host and attach to Dell GSS SR]
 
-    hcFull["health-check --full\nIdentify faulted components"]
-    hcFull --> clusterHI
-
-    clusterHI["ll /clusters/*/health-indications/\nWhich cluster is non-ok?"]
-    clusterHI --> distDevHI
-
-    distDevHI["ll /distributed-storage/distributed-devices/*/health-indications/\nAny device out-of-sync?"]
-    distDevHI --> dirHW
-
-    dirHW["ll /engines/*/directors/*/hardware/\nDirector hardware fault?"]
-    dirHW --> witnessChk
-
-    witnessChk["ll /clusters/*/cluster-witness/\nWitness connected?"]
-    witnessChk --> cgChk
-
-    cgChk["ll /distributed-storage/consistency-groups/\nAny CG suspended?"]
-    cgChk --> svChk
-
-    svChk["ll /clusters/*/exports/storage-views/\nStorage views intact?"]
-    svChk --> collect
-
-    collect["Collect support bundle\ncollect-support-log"]
-    collect --> dellSupport(["Open Dell Support case\nwith all data"])
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I,L,O dark
+    class C,D,E,F,G,H,J,K,M,N,P,Q,R,S,T,U action
+    class V,W escalate
 ```
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** SSH to VMS as `service` user (`ssh service@<VMS_IP>`); vplexcli is available from the VMS shell; Unisphere for VPLEX web UI credentials; host-side access (SSH to Linux host or vSphere for ESXi)
+- **Gather first:** the specific symptom (health-check output, affected virtual volume name, director health state, CG name), which cluster is affected (cluster-1 or cluster-2), and the approximate time the issue started
+- **Scope:** confirm whether the issue affects one virtual volume, one cluster, or a full Metro topology — `health-check --full` gives a system-wide view in seconds; always run this first
 
 ---
 
-## Initial Triage Sequence
+## Step 1 — Initial triage sequence
 
 Run these commands in order at the start of any VPLEX investigation:
 
 ```bash
+# SSH to VMS
+ssh service@<VMS_IP>
+
 # 1. Overall system health — quickest way to identify faulted components
 vplexcli -q -e "health-check --full"
 
@@ -136,9 +139,11 @@ vplexcli -q -e "ll /clusters/*/exports/storage-views/"
 
 Record the output of each command with a timestamp before making any changes.
 
-## Distributed Device Diagnostics
+---
 
-### Out-of-Sync Distributed Device
+## Step 2 — Distributed device diagnostics
+
+### Out-of-sync distributed device
 
 An out-of-sync distributed device means one leg is not receiving writes — the most common cause is an ICL interruption between Metro clusters.
 
@@ -153,41 +158,16 @@ vplexcli -q -e "ll /distributed-storage/distributed-devices/<device_name>/"
 vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"
 vplexcli -q -e "ll /clusters/cluster-2/communication/inter-cluster-links/"
 
-# Check which leg is the active (winning) leg
-vplexcli -q -e "ll /distributed-storage/distributed-devices/<device_name>/" \
-  | grep -i "active-leg\|service-status"
-```
-
-**Resolution sequence:**
-
-1. Confirm the ICL is healthy (see ICL Diagnostics below).
-2. Once the ICL is restored, VPLEX begins automatic resync — monitor with:
-
-```mermaid
-flowchart TD
-    outOfSync["Distributed device\nout-of-sync detected"]
-    checkICL["Check ICL status\nll /clusters/*/communication/inter-cluster-links/"]
-    iclUp{ICL healthy?}
-    fixICL["Engage network team\nRestore WAN / dark fibre circuit"]
-    waitResync["Monitor auto-resync\nll /distributed-storage/distributed-devices/name/\nrebuild-progress: 0% → 100%"]
-    resyncOk{Resync started\nautomatically?}
-    manualRebuild["device rebuild\n--device /distributed-storage/..."]
-    inSync(["Device in-sync\nFull Metro redundancy restored"])
-
-    outOfSync --> checkICL --> iclUp
-    iclUp -->|No| fixICL --> checkICL
-    iclUp -->|Yes| waitResync --> resyncOk
-    resyncOk -->|Yes| inSync
-    resyncOk -->|"No (after 10 min)"| manualRebuild --> inSync
-```
-
-```bash
 # Monitor resync progress (repeat until rebuild-progress: 100%)
 vplexcli -q -e "ll /distributed-storage/distributed-devices/<device_name>/" \
   | grep -i "health-state\|rebuild-progress\|service-status"
 ```
 
-3. Do not interrupt a rebuild in progress — allow it to complete before any further maintenance.
+**Resolution sequence:**
+
+1. Confirm the ICL is healthy (see Step 4 — ICL Diagnostics).
+2. Once the ICL is restored, VPLEX begins automatic resync — monitor `rebuild-progress: 0% → 100%`.
+3. Do not interrupt a rebuild in progress.
 4. If the device does not begin resyncing automatically after the ICL is restored, initiate manually:
 
 ```bash
@@ -195,7 +175,7 @@ vplexcli -q -e "device rebuild \
   --device /distributed-storage/distributed-devices/<device_name>"
 ```
 
-### Degraded Distributed Device (One Leg Unreachable)
+### Degraded distributed device (one leg unreachable)
 
 A degraded device means one cluster leg is unreachable — I/O continues on the surviving leg only.
 
@@ -212,7 +192,7 @@ vplexcli -q -e "ll /engines/*/directors/*/hardware/"
 
 If the cluster is unreachable due to a site failure and the Witness has granted quorum to the surviving cluster, I/O continues normally. After site recovery: restore ICL, confirm Witness connectivity, then allow the distributed device to rebuild automatically.
 
-### Suspended Distributed Device (I/O Halted)
+### Suspended distributed device (I/O halted)
 
 A suspended device indicates VPLEX could not determine a safe winner — typically ICL down with Witness also unreachable.
 
@@ -231,19 +211,19 @@ vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"
 **Do not manually resume I/O until the cause of suspension is understood.** Resuming a suspended distributed device without verifying which leg has the most recent writes risks data divergence.
 
 Recovery procedure:
-
-1. Restore the ICL (if it was interrupted).
+1. Restore the ICL (if interrupted).
 2. Restore Witness connectivity.
 3. Once both ICL and Witness are healthy, VPLEX typically resumes automatically.
-4. If manual resume is required (after confirming the active leg with Dell support):
+4. If manual resume is required (only after confirming the active leg with Dell Support):
 
 ```bash
-# Resume I/O on the confirmed active leg only
 vplexcli -q -e "device resume \
   --device /distributed-storage/distributed-devices/<device_name>"
 ```
 
-## Director Diagnostics
+---
+
+## Step 3 — Director diagnostics
 
 ```bash
 # List all engines and their directors
@@ -262,31 +242,30 @@ vplexcli -q -e "ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/"
 vplexcli -q -e "ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/A0-FC00/"
 ```
 
-### Director Health States
+### Director health states
 
 | State | Meaning | Action |
 |---|---|---|
 | `ok` | Director fully operational | Normal |
 | `minor-failure` | A component is degraded but director is operational | Investigate the specific component; plan replacement |
-| `major-failure` | Director is impaired; redundancy reduced | Escalate to Dell support; plan director replacement |
-| `unknown` | Director is not responding to management queries | Check management network connectivity to the director; escalate |
+| `major-failure` | Director is impaired; redundancy reduced | Escalate to Dell Support; plan director replacement |
+| `unknown` | Director is not responding to management queries | Check management network; escalate |
 
-A single director failure within a pair does not interrupt I/O — the surviving director continues serving hosts with cache mirroring on the surviving NVRAM. However, the pair is now in a degraded state with no fault tolerance until the failed director is replaced.
+A single director failure within a pair does not interrupt I/O — the surviving director continues serving hosts. However, the pair is now in a degraded state with no fault tolerance until the failed director is replaced.
 
-## ICL Diagnostics (Metro)
+---
+
+## Step 4 — ICL diagnostics (Metro)
 
 ```bash
 # Show inter-cluster link status and latency
 vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"
 vplexcli -q -e "ll /clusters/cluster-2/communication/inter-cluster-links/"
 
-# Check current ICL link bandwidth and utilisation
-# (Available in Unisphere for VPLEX → Metro → ICL Status)
-
 # Ping between cluster management interfaces (from VMS)
 ping -c 10 <cluster-2-mgmt-IP>
 
-# Measure ICL RTT using a test (from VMS or network equipment)
+# Measure ICL RTT
 ping -c 100 -i 0.1 <cluster-2-ICL-IP>
 ```
 
@@ -295,11 +274,11 @@ ping -c 100 -i 0.1 <cluster-2-ICL-IP>
 1. Check for network congestion on the WAN or dark fibre segment.
 2. Check for ICL port errors: `ll /engines/*/directors/*/hardware/ports/` — look for ICL ports.
 3. Engage the WAN/network team to investigate the carrier circuit.
-4. If RTT exceeds 5ms during a period of sustained high write I/O, check ICL bandwidth — the circuit may be saturated.
+4. If RTT exceeds 5ms during sustained high write I/O, check ICL bandwidth — the circuit may be saturated.
 
-## Storage View Diagnostics
+---
 
-If a host reports it cannot see a VPLEX volume:
+## Step 5 — Storage view diagnostics
 
 ```bash
 # Confirm the storage view exists for this host
@@ -315,12 +294,15 @@ vplexcli -q -e "ll /clusters/cluster-1/exports/initiator-ports/<initiator_name>/
 # Confirm the expected volume is in the storage view
 vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/<view_name>/" \
   | grep -i "virtual-volumes"
+
+# Check virtual volume operational status
+vplexcli -q -e "ll /virtual-volumes/<volume_name>/"
 ```
 
-Host-side verification steps:
+### Host-side verification
 
 ```bash
-# Linux (Device Mapper Multipath): list all known paths
+# Linux: list all known paths (Device Mapper Multipath)
 multipath -ll
 
 # Linux: rescan for new volumes after storage view changes
@@ -331,27 +313,11 @@ esxcli storage core adapter rescan --all
 
 # EMC PowerPath: display all known device paths
 powermt display dev=all
-
-# Confirm SAN zoning includes this host HBA → VPLEX FE port
-# (From the SAN switch management console)
 ```
 
-If the zone is active, the storage view is correctly configured, and the host still cannot see the volume, check that the virtual volume's `operational-status` is `ok`:
+---
 
-```bash
-vplexcli -q -e "ll /virtual-volumes/<volume_name>/"
-```
-
-## Log Analysis
-
-### VMS Log Files
-
-| Log | Path | Key Content |
-|---|---|---|
-| vplexcli command history | `/var/log/VPlex/cli/vplexcli.log` | All CLI commands with timestamps — search for recent config changes |
-| Management events | `/var/log/VPlex/vplexmanagement.log` | Health state changes, director events, configuration updates |
-| Unisphere web log | `/var/log/VPlex/` | Web UI access and API activity |
-| VMS OS auth log | `/var/log/secure` or `/var/log/auth.log` | SSH login events |
+## Step 6 — Log analysis
 
 ```bash
 # SSH to VMS and review recent management log events
@@ -369,43 +335,25 @@ grep -i "storage-view\|initiator" /var/log/VPlex/cli/vplexcli.log | tail -50
 grep -i "$(date +%Y-%m-%d)" /var/log/VPlex/cli/vplexcli.log | tail -100
 ```
 
-### Collecting a Support Bundle
+---
 
-Always collect a support bundle before Dell Support engagement and before any invasive recovery action:
+## Step 7 — Collect support bundle
+
+Always collect a support bundle before Dell Support engagement and before any invasive recovery action.
 
 ```bash
 # From within vplexcli (interactive session)
 collect-support-log -f /var/log/support_bundle.tar.gz
 
-# From VMS OS shell (one-shot):
+# From VMS OS shell (one-shot)
 ssh service@<VMS_IP> "vplexcli -q -e 'collect-support-log -f /var/log/support_bundle.tar.gz'"
 
 # Copy the bundle off the VMS to a jump host
-scp service@<VMS_IP>:/var/log/support_bundle.tar.gz admin@<jump_host>:/tmp/vplex_support_$(date +%Y%m%d_%H%M).tar.gz
+scp service@<VMS_IP>:/var/log/support_bundle.tar.gz \
+  admin@<jump_host>:/tmp/vplex_support_$(date +%Y%m%d_%H%M).tar.gz
 ```
 
-The support bundle contains: director firmware versions, hardware inventory, GeoSynchrony version, current configuration snapshot, recent logs from all directors, and health check output.
-
-## GeoSynchrony Version and System Information
-
-```bash
-# Show GeoSynchrony (firmware) version on cluster-1
-vplexcli -q -e "ll /clusters/cluster-1/system-volumes/version/"
-
-# Show back-end array inventory
-vplexcli -q -e "ls /storage-elements/storage-arrays"
-
-# Show detailed information about a back-end array
-vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/"
-
-# List all unclaimed storage volumes on a back-end array
-vplexcli -q -e "ls /storage-elements/storage-arrays/array-A/storage-volumes"
-
-# Show VPLEX engine serial numbers and hardware revision (for support case)
-vplexcli -q -e "ll /engines/engine-1-1/"
-```
-
-## Pre-Support-Call Data Collection Checklist
+### Pre-support-call data collection checklist
 
 Gather all of the following before opening a Dell Support case:
 
@@ -415,27 +363,38 @@ Gather all of the following before opening a Dell Support case:
 - [ ] Distributed device health: `ll /distributed-storage/distributed-devices/*/health-indications/`
 - [ ] Director hardware health: `ll /engines/*/directors/*/hardware/`
 - [ ] Witness status: `ll /clusters/*/cluster-witness/`
-- [ ] Consistency group state: `ll /distributed-storage/consistency-groups/`
+- [ ] CG state: `ll /distributed-storage/consistency-groups/`
 - [ ] ICL status: `ll /clusters/*/communication/inter-cluster-links/`
 - [ ] Storage view list: `ll /clusters/*/exports/storage-views/`
 - [ ] Support bundle: `collect-support-log -f /var/log/support_bundle.tar.gz`
-- [ ] Approximate time the issue started (UTC)
-- [ ] Description of any recent changes (upgrades, array changes, zoning, host additions)
 - [ ] Host-side path output: `powermt display dev=all` or `multipath -ll` from affected hosts
 - [ ] VMS management log excerpt covering the incident timeframe
+- [ ] Approximate time the issue started (UTC) and description of any recent changes
 
 ---
 
-## Verify resolution
+## Log locations
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Log | Path | What to look for |
+|---|---|---|
+| vplexcli command history | `/var/log/VPlex/cli/vplexcli.log` | All CLI commands with timestamps — recent config changes |
+| Management events | `/var/log/VPlex/vplexmanagement.log` | Health state changes, director events, configuration updates |
+| VMS OS auth log | `/var/log/secure` or `/var/log/auth.log` | SSH login events |
+| Support bundle | `/var/log/support_bundle.tar.gz` | All-in-one — required for Dell GSS SR |
 
 ---
 
 ## See also
 
-- [Vplex — Common Issues](common-issues/)
-- [Vplex — Escalation](escalation/)
-- [Vplex — Health Checks](../operations/health-checks/)
+- [VPLEX — Common Issues](common-issues/)
+- [VPLEX — Escalation](escalation/)
+- [VPLEX — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `vplexcli -q -e "health-check --full"` shows no FAILED or WARNING components
+- `vplexcli -q -e "ll /clusters/*/health-indications/"` shows all clusters in `ok` health state
+- `vplexcli -q -e "ll /distributed-storage/distributed-devices/*/health-indications/"` shows all devices `in-sync` with `rebuild-progress: 100%`
+- `vplexcli -q -e "ll /clusters/*/cluster-witness/"` shows Witness `connected` from both clusters (Metro only)
+- Host-side `multipath -ll` or `powermt display dev=all` shows all paths active with no faulted paths
+- `vplexcli -q -e "ll /distributed-storage/consistency-groups/"` shows no CGs in `suspended` state

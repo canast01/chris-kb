@@ -7,55 +7,21 @@ search:
 ---
 # FabricOS — Diagnostics
 
-
 <div class="kb-summary">
-Part of the [Troubleshooting](index.md) reference.
+Brocade FabricOS diagnostic commands: check hardware sensors and MAPS alerts with sensorshow and mapsdashboard, inspect per-port state and SFP optical levels with portshow and sfpshow, diagnose fabric segmentation with fabricshow and nsallshow, identify slow-drain devices and credit starvation with portbufshow, and collect the full supportsave diagnostic bundle for Broadcom TAC escalation.
 
 *Applies to: Brocade FOS 9.x*
 </div>
 
----
-
-## Before you begin
-
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
----
-
-## MAPS Policy → Alert → Action Flow
-
-```mermaid
-flowchart LR
-    subgraph "MAPS Policy"
-        policy["dflt_conservative_policy\nor custom policy"]
-        rules["Rules:\nCRC threshold\nITW threshold\nBB credit zero\nISL util %\nTemp / Fan / PSU"]
-        policy --> rules
-    end
-
-    subgraph "Monitoring"
-        counters["Port error counters\nSFP optical levels\nEnvironmental sensors\nISL throughput"]
-        rules -->|"compare"| counters
-    end
-
-    subgraph "Alert Actions"
-        alert["MAPS Alert triggered"]
-        snmpTrap["SNMP Trap → SANnav\n/ Monitoring platform"]
-        syslog["Syslog event → SIEM"]
-        raslog["RAS log entry\nerrshow output"]
-        email["Email notification\n(if configured)"]
-        alert --> snmpTrap & syslog & raslog & email
-    end
-
-    counters -->|"threshold exceeded"| alert
-```
 ```text
 ┌─────────────────────────────────── Brocade Fabric OS — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │
-│  Diagnostics: error logs, portshow, MAPS rules, raslog, supportshow, and port tests.                  │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: switchstatusshow → errshow | head -50 → mapsdashboard --show                   │    │
+│   │   Port offline or flapping: portshow slot/port → sfpshow slot/port (Rx power, link errors)   │    │
+│   │   Fabric segmented: fabricshow → nsallshow (missing devices) → cfgshow (zone mismatch)       │    │
+│   │   Slow drain / credit zero: portbufshow → bottleneckmon --show → identify offending HBA      │    │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │           Log & Event Diagnostics            │  │         Port & Hardware Diagnostics         │   │
@@ -79,15 +45,15 @@ flowchart LR
 │   │        licenseshow: FOS license check        │  │           pcap: port frame capture          │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Brocade FC switch · serial console · USB drive for supportsave · syslog server                       │
+│  Physical Infrastructure:                                                                             │
+│  Brocade FC switch or director chassis · SFP transceivers · FC cables · serial console                │
+│  USB drive or SCP server for supportsave · syslog server for SIEM integration                         │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
 │  errshow         = displays fabric error log; most recent errors first with severity                  │
 │  raslog          = RAS (Reliability/Availability/Serviceability) detailed event log                   │
 │  portshow        = per-port status: state, speed, SFP type, credits, error counters                   │
-│  portstatsshow   = per-port frame counter snapshot; use twice for delta                               │
+│  portstatsshow   = per-port frame counter snapshot; run twice for delta comparison                    │
 │  porttest        = in-service loopback; port must be disabled first                                   │
 │  sensorshow      = hardware sensor readings: temperature, fan RPM, PSU voltage                        │
 │  diagstatus      = blade/chassis diagnostic test results and pass/fail status                         │
@@ -96,183 +62,89 @@ flowchart LR
 │  MAPS            = Monitoring and Alerting Policy Suite; tracks thresholds over time                  │
 │  pcap            = port frame capture; captures FC frames for protocol analysis                       │
 │  syslogdipadd    = adds a syslog server IP; Fabric OS sends events to SIEM                            │
+│  BB credits      = buffer-to-buffer credits; starvation causes I/O stall (slow drain)                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Environmental Sensors
+```mermaid
+graph TD
+    A([FabricOS Issue]) --> B{What type of problem?}
+    B -->|Hardware alarm or environmental fault| C[sensorshow: temp fan PSU status\nswitchstatusshow: overall health]
+    B -->|MAPS alert triggered| D[mapsdashboard --show\nmapsdb --show for threshold breach detail]
+    B -->|Port offline or link flapping| E[portshow slot/port: state speed credits\nsfpshow slot/port: Rx Tx power levels]
+    B -->|Host cannot see storage target| F[nsallshow: confirm WWN in name server\ncfgshow + zoneshow: verify zone membership]
+    B -->|Fabric segmented or domain conflict| G[fabricshow: domain IDs and principal switch\ntopologyshow: ISL topology]
+    B -->|I/O errors or CRC errors on port| H[portstatsshow slot/port: error counters\nportlogshow slot/port: FLOGI FLOGO RESET events]
+    B -->|High latency or I/O slowdown| I[portbufshow: BB credit zero count\nbottleneckmon --show: slow drain detection]
+    C --> J{Sensor state?}
+    J -->|FAILED or OUT_OF_RANGE| K[Check hardware: fan replacement PSU swap\nEscalate to Broadcom TAC for blade]
+    J -->|All OK| L[Continue to errshow for software root cause]
+    D --> M[Review MAPS category: PORT ISL SWITCH FABRIC\nIdentify threshold breach and affected resource]
+    E --> N{SFP optical levels?}
+    N -->|Rx power below threshold| O[Replace SFP or check cable loss budget\nTest with sfpshow on remote port]
+    N -->|Levels OK| P[porttest loopback: disable port first\nPorttest PASS = HBA or cable issue]
+    F --> Q[portloginshow: confirm FLOGI for this HBA WWN\nalishow: confirm alias includes correct WWN]
+    G --> R[errshow for E_Port segmentation messages\nCheck domain ID conflict: switchshow on each switch]
+    H --> S[portstatsreset to baseline, recheck after 5 min\nHigh CRC = cable or SFP; high Link Reset = HBA driver]
+    I --> T[Identify zero-credit port: portbufshow on suspect ports\nIsolate slow-drain HBA: portdisable then monitor]
+    K --> U[Collect supportsave before and after replacement\nOpen Broadcom TAC case]
+    L --> U
+    M --> U
+    O --> U
+    P --> U
+    Q --> U
+    R --> U
+    S --> U
+    T --> U
+    U --> V[supportsave -h scp-server -u user -d /backups/\nRun on both switches in HA pair]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,J,N dark
+    class C,D,E,F,G,H,I,K,L,M,O,P,Q,R,S,T action
+    class U,V escalate
+```
+
+## Before you begin
+
+- **Access:** SSH to the Fabric OS switch as admin; serial console access for unresponsive switches; SCP server or USB drive accessible for `supportsave`
+- **Gather first:** the specific symptom (port offline, MAPS alert category, I/O error on which host and storage target, fabric segmentation message), the affected switch name and domain ID, and the approximate time the issue started
+- **Scope:** confirm whether the issue affects one port, one switch, or the entire fabric — `switchstatusshow` gives an overall switch health verdict before drilling into specifics
+
+---
+
+## Step 1 — Check environmental sensors and switch health
 
 ```bash
-# All environmental sensors in one output
+# Overall switch health summary
+switchstatusshow
+# Expected: Switch Status: HEALTHY
+
+# All environmental sensors
 sensorshow
 
 # Individual sensor categories
-fanshow         # Fan tray status and RPM
-psshow          # Power supply status and input voltage
-tempshow        # Temperature sensors — blade, chassis, asic
+fanshow        # Fan tray status and RPM
+psshow         # Power supply status and input voltage
+tempshow       # Temperature sensors — blade, chassis, ASIC
 
-# High-level environmental summary (included in switchstatusshow)
-switchstatusshow
+# Recent error log entries
+errshow | head -50
+# Shows most recent fabric errors with timestamp, severity, and message
+
+# Full RAS event log (detailed)
+raslog --show | head -100
+
+# Firmware and license status
+firmwareshow
+licenseshow
 ```
 
 All sensors should report `OK`. A sensor in `FAILED`, `ABSENT`, or `OUT_OF_RANGE` state requires immediate attention. Temperature thresholds vary by platform — refer to the hardware installation guide for the specific chassis.
 
----
-
-## Port Diagnostics
-
-### Port Status and Detail
-
-```bash
-# Full port detail — state, speed, connected WWN, buffer credits
-portshow <slot/port>
-
-# Port configuration — speed, state, trunk membership, QoS settings
-portcfgshow <slot/port>
-
-# Port error counter summary (all ports)
-porterrshow
-
-# Per-port detailed error counters
-portstatsshow <slot/port>
-
-# Reset port counters (do this after baselining, not before)
-portstatsreset <slot/port>
-
-# SFP optical levels — Tx/Rx power, temperature, voltage
-sfpshow <slot/port>
-sfpshow               # All installed SFPs
-```
-
-### SFP Optical Levels
-
-`sfpshow` output shows each SFP's measured Tx power, Rx power, temperature, and voltage. Thresholds are defined by the SFP vendor.
-
-Key fields to check:
-
-| Field | Normal Range | Alarm Condition |
-|---|---|---|
-| Rx Power | -10 to 0 dBm (short-range) | Below -10 dBm = weak signal — SFP or cable |
-| Tx Power | -4 to 0 dBm | Below -8 dBm = failing SFP |
-| Temperature | 0–70°C | Above 80°C = SFP thermal issue |
-| Voltage | 3.0–3.6V | Outside range = SFP power issue |
-
-If Rx power is within range but Tx power is low, the SFP is failing. Replace the SFP first. If Rx power is low but the remote Tx power is fine, the problem is the cable or the local SFP's receive path.
-
-### Port Event Log
-
-The port log captures low-level link events — FLOGI (fabric login), PLOGI (port login), link resets, and error events. This is the most detailed per-port trace available.
-
-```bash
-# Show recent events on a port
-portlogshow <slot/port>
-
-# Dump the full port log buffer
-portlogdump <slot/port>
-
-# Clear the port log (rarely needed — do not clear before collecting diagnostics)
-portlogclear <slot/port>
-```
-
-Common events in `portlogshow`:
-
-| Event | Meaning |
-|---|---|
-| `FLOGI` | Host or target logged into the fabric — normal |
-| `FLOGO` | Device logged out — could be HBA driver restart or cable pull |
-| `RESET` | Link reset — normal during link negotiation; not normal repeatedly |
-| `LIP` | Loop Initialisation Primitive — FC-AL legacy; investigate if seen on F_Port |
-| `SC` | State change notification |
-| `ERR` | Error event — check timestamp and error code |
-
-### Port Loop-back Test
-
-Use `porttest` to verify the switch port hardware is functioning correctly. The port must be offline (disabled) and the SFP removed before running this test.
-
-```bash
-# Disable the port
-portdisable <slot/port>
-
-# Remove the SFP (or leave in for internal loopback — check FOS documentation for platform)
-# Run the internal loopback test
-porttest <slot/port>
-
-# Re-enable the port after testing
-portenable <slot/port>
-```
-
-`porttest` result of `PASS` confirms the switch port ASIC and internal data path are functioning. A `FAIL` result indicates switch hardware damage — escalate to Broadcom TAC for blade replacement.
-
-### Fabric Diagnostic (spinFab)
-
-`spinFab` sends test frames across the fabric between two switch ports to verify inter-switch frame forwarding.
-
-```bash
-# Run spinFab between two ports on the same or different switches
-spinfab -ports <slot/port>,<slot/port>
-```
-
-Use spinFab to validate a new ISL is forwarding frames correctly after cabling, or to verify frame delivery after a fabric topology change.
-
----
-
-## Fabric-Level Diagnostics
-
-### Fabric and Name Server
-
-```bash
-# All switches in fabric — domain IDs, principal switch, WWN
-fabricshow
-
-# Physical ISL topology
-topologyshow
-
-# All devices registered in the name server
-nsshow         # Local switch name server
-nsallshow      # Name server across entire fabric
-
-# Look up a specific device
-nslookup <wwpn>
-
-# FLOGI database — devices that have logged into the fabric
-portloginshow
-```
-
-### ISL Diagnostics
-
-```bash
-# ISL port status and throughput
-islshow
-
-# Trunk group membership and master port
-trunkshow
-
-# Per-port real-time throughput (ISL and host/storage ports)
-portperfshow
-
-# Detailed ISL statistics
-portstatsshow <isl-slot/port>
-```
-
-### Routing and Path
-
-```bash
-# Show the routing table
-topologyshow
-
-# Show FSPF (Fibre Channel Shortest Path First) topology
-fspfshow
-
-# Trace the path a specific target WWN would take
-pathinfo <target-wwn>
-
-# Show domain routing table
-routeshow
-```
-
-### MAPS Dashboard
-
-MAPS (Monitoring and Alerting Policy Suite) aggregates health metrics across all ports and reports against configured thresholds.
+### MAPS dashboard
 
 ```bash
 # Current health dashboard — summary of all MAPS categories
@@ -304,60 +176,196 @@ MAPS categories:
 
 ---
 
-## Log Locations
+## Step 2 — Port diagnostics
 
-| Log | Access Command | Contents |
+### Port status and detail
+
+```bash
+# Full port detail — state, speed, connected WWN, buffer credits
+portshow <slot/port>
+
+# Port configuration — speed, state, trunk membership, QoS settings
+portcfgshow <slot/port>
+
+# Port error counter summary (all ports)
+porterrshow
+
+# Per-port detailed error counters
+portstatsshow <slot/port>
+
+# Reset port counters (do this after baselining, not before)
+portstatsreset <slot/port>
+
+# SFP optical levels — Tx/Rx power, temperature, voltage
+sfpshow <slot/port>
+sfpshow               # All installed SFPs
+```
+
+### SFP optical levels
+
+`sfpshow` output shows each SFP's measured Tx power, Rx power, temperature, and voltage.
+
+| Field | Normal Range | Alarm Condition |
 |---|---|---|
-| RAS log (hardware and fabric events) | `errshow` / `errdump` | Hardware alerts, fabric topology changes, port events |
-| Audit log (security and config changes) | `auditlog --show` | Login events, zone changes, config modifications |
-| Port event log | `portlogshow <slot/port>` | Per-port FLOGI, link state, errors |
-| MAPS alerts | `mapsdb --show` | Threshold breach events across all monitored resources |
-| System message log | `rasshow` | System-level RAS events with severity |
-| Firmware download log | `firmwaredownloadstatus` | Firmware upgrade history and status |
+| Rx Power | -10 to 0 dBm (short-range) | Below -10 dBm = weak signal — SFP or cable |
+| Tx Power | -4 to 0 dBm | Below -8 dBm = failing SFP |
+| Temperature | 0–70°C | Above 80°C = SFP thermal issue |
+| Voltage | 3.0–3.6V | Outside range = SFP power issue |
+
+If Rx power is within range but Tx power is low, the SFP is failing. If Rx power is low but the remote Tx power is fine, the problem is the cable or the local SFP's receive path.
+
+### Port event log
+
+```bash
+# Show recent events on a port
+portlogshow <slot/port>
+
+# Dump the full port log buffer
+portlogdump <slot/port>
+```
+
+Common events in `portlogshow`:
+
+| Event | Meaning |
+|---|---|
+| `FLOGI` | Host or target logged into the fabric — normal |
+| `FLOGO` | Device logged out — HBA driver restart or cable pull |
+| `RESET` | Link reset — normal during negotiation; not normal repeatedly |
+| `LIP` | Loop Initialisation Primitive — FC-AL legacy; investigate on F_Port |
+| `ERR` | Error event — check timestamp and error code |
+
+### Port loopback test
+
+```bash
+# Disable the port before testing
+portdisable <slot/port>
+
+# Run internal loopback test (SFP may need to be removed — check platform docs)
+porttest <slot/port>
+
+# Re-enable the port after testing
+portenable <slot/port>
+```
+
+`porttest PASS` confirms switch port ASIC is functioning. `porttest FAIL` indicates switch hardware damage — escalate to Broadcom TAC.
+
+### Fabric diagnostic (spinFab)
+
+```bash
+# Send test frames across the fabric between two switch ports
+spinfab -ports <slot/port>,<slot/port>
+```
 
 ---
 
-## Data Collection for TAC Cases
+## Step 3 — Fabric-level diagnostics
 
-### supportsave — Full Diagnostic Bundle
-
-`supportsave` collects a complete diagnostic snapshot and saves it to a remote server. This is the single most important thing to do when opening a Broadcom TAC case.
+### Fabric and name server
 
 ```bash
-# Configure SCP destination (if not already set)
-# Interactive — prompts for server IP, username, password, path
-supportshow --ftp <ftp-server-ip>
+# All switches in fabric — domain IDs, principal switch, WWN
+fabricshow
 
-# Run supportsave — saves to the configured destination
-supportsave
+# Physical ISL topology
+topologyshow
 
-# Alternative: run directly with SCP parameters
-supportsave -h <scp-server-ip> -u <username> -p <password> -d /backups/supportsave/
+# All devices registered in the name server
+nsshow         # Local switch name server
+nsallshow      # Name server across entire fabric
+
+# Look up a specific device
+nslookup <wwpn>
+
+# FLOGI database — devices that have logged into the fabric
+portloginshow
 ```
 
-`supportsave` takes 3–8 minutes on a director and produces a `.tar.gz` archive. Upload this to the TAC SR immediately — it contains:
-
-- Running configuration
-- All logs (RAS log, audit log, port logs)
-- Fabric database (zone configuration, name server state, routing)
-- Port statistics and SFP data
-- SNMP trap history
-- Platform diagnostics (ASIC registers, CP health)
-
-### supportshow — Console Diagnostic Dump
-
-`supportshow` prints the full diagnostic bundle to the console — useful for capturing to a terminal log when SCP is not available.
+### ISL diagnostics
 
 ```bash
-# Dump all diagnostics to console (pipe to a log file from your terminal)
+# ISL port status and throughput
+islshow
+
+# Trunk group membership and master port
+trunkshow
+
+# Per-port real-time throughput (ISL and host/storage ports)
+portperfshow
+
+# Detailed ISL statistics
+portstatsshow <isl-slot/port>
+```
+
+### Routing and path
+
+```bash
+# FSPF routing topology
+fspfshow
+
+# Trace the path a specific target WWN would take
+pathinfo <target-wwn>
+
+# Domain routing table
+routeshow
+```
+
+---
+
+## Step 4 — Buffer credit diagnostics
+
+Buffer-to-buffer (BB) credits control flow on each FC link. Credit starvation causes I/O to stall. This is the primary mechanism behind slow-drain device impact.
+
+```bash
+# Show BB credit status on a port
+portbufshow <slot/port>
+
+# MAPS monitors for zero-credit conditions
+mapsdb --show | grep -i credit
+mapsdb --show | grep -i slow
+
+# Bottleneck detection status
+bottleneckmon --show
+
+# Enable bottleneck detection if not active
+bottleneckmon --enable
+```
+
+When a port shows persistent zero BB credits, the connected device is not returning credits fast enough — it is the slow-drain device. Identify it, disable the port temporarily, and work with the host or storage team to resolve the queue depth or driver issue.
+
+---
+
+## Step 5 — Collect TAC support bundle
+
+`supportsave` is the single most important thing to do when opening a Broadcom TAC case.
+
+### supportsave — full diagnostic bundle
+
+```bash
+# Run supportsave with SCP parameters
+supportsave -h <scp-server-ip> -u <username> -p <password> -d /backups/supportsave/
+
+# Alternative: configure SCP destination interactively first
+supportshow --ftp <ftp-server-ip>
+supportsave
+```
+
+`supportsave` takes 3–8 minutes on a director and produces a `.tar.gz` archive. Upload it to the TAC SR immediately. It contains:
+
+- Running configuration, zone database, name server state
+- All logs (RAS log, audit log, port logs)
+- Port statistics, SFP data, SNMP trap history
+- Platform diagnostics (ASIC registers, CP health)
+
+### supportshow — console diagnostic dump
+
+```bash
+# Dump all diagnostics to console (capture with terminal logging enabled)
 supportshow
 ```
 
 Capture the output by enabling logging in your SSH client (PuTTY: Session → Logging; SecureCRT: File → Log Session) before running `supportshow`.
 
-### Targeted Data Collection
-
-For targeted investigations, collect the specific commands relevant to the symptom and include them in the SR notes.
+### Targeted data collection
 
 ```bash
 # Port-specific issue — collect all port data
@@ -390,46 +398,32 @@ porterrshow
 
 ---
 
-## Buffer Credit Diagnostics
+## Log locations
 
-Buffer-to-buffer (BB) credits control flow on each FC link. Credit starvation causes I/O to stall. This is the primary mechanism behind slow drain device impact.
-
-```bash
-# Show BB credit status on a port
-portbufshow <slot/port>
-
-# Identify ports with zero BB credits (credit starvation)
-# Run portbufshow on all suspect ports
-
-# MAPS monitors for zero-credit conditions — check
-mapsdb --show | grep -i credit
-mapsdb --show | grep -i slow
-```
-
-Bottleneck detection commands:
-
-```bash
-# Show bottleneck detection status
-bottleneckmon --show
-
-# Enable bottleneck detection if not active
-bottleneckmon --enable
-```
-
-When a port shows persistent zero BB credits, the connected device is not returning credits fast enough. The connected device is the slow drain device. Identify it, disable the port temporarily, and work with the host or storage team to resolve the queue depth or driver issue.
-
----
-
-## Verify resolution
-
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Log | Access Command | Contents |
+|---|---|---|
+| RAS log (hardware and fabric events) | `errshow` / `errdump` | Hardware alerts, fabric topology changes, port events |
+| Audit log (security and config changes) | `auditlog --show` | Login events, zone changes, config modifications |
+| Port event log | `portlogshow <slot/port>` | Per-port FLOGI, link state, errors |
+| MAPS alerts | `mapsdb --show` | Threshold breach events across all monitored resources |
+| System message log | `rasshow` | System-level RAS events with severity |
+| Firmware download log | `firmwaredownloadstatus` | Firmware upgrade history and status |
+| TAC bundle | `supportsave` | All-in-one — required for Broadcom TAC SR |
 
 ---
 
 ## See also
 
-- [Fabric Os — Common Issues](common-issues/)
-- [Fabric Os — Escalation](escalation/)
-- [Fabric Os — Health Checks](../operations/health-checks/)
+- [Fabric OS — Common Issues](common-issues/)
+- [Fabric OS — Escalation](escalation/)
+- [Fabric OS — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `switchstatusshow` returns `Switch Status: HEALTHY` with no degraded components
+- `sensorshow` shows all sensors reporting `OK` (temperature, fan, PSU)
+- `portshow <slot/port>` shows the affected port in `Online` state with expected speed and `No_Light` or `Online` — not `Faulty` or `No_Module`
+- `sfpshow <slot/port>` shows Rx power within the normal range (-10 to 0 dBm for short-range)
+- `errshow | head -20` shows no new ERROR-level events since the fix was applied
+- `nsallshow | grep <wwpn>` confirms the host or target WWN is registered in the fabric name server
+- `mapsdashboard --show` shows no active threshold violations in the affected port or category
