@@ -783,6 +783,8 @@ def get_page_type(path):
         'operations': 'ops_landing',
         'security': 'sec_landing',
         'troubleshooting': 'ts_landing',
+        'known-issues': 'known_issues',
+        'ports': 'ports',
     }
     if last in types_map:
         return types_map[last]
@@ -915,6 +917,16 @@ def build_diagram(path, meta):
              f'Protocols: {protos}',
              f'Management: {mgmt}',
              'Sections: Architecture · Operations · Security · Troubleshooting']),
+        'known_issues':   (f'{name} — Known Issues and Error Codes',
+            [f'{abbr} known issues: catalog of bugs, error codes, and confirmed workarounds',
+             'Each entry includes affected version, root cause, fix, and resolved-in version',
+             'Cross-reference vendor KB articles using the KB ID in each table row',
+             'Open a vendor SR if no workaround is listed and the issue affects production']),
+        'ports':          (f'{name} — Ports and Network Requirements',
+            [f'{abbr} network requirements: management, data, and replication port reference',
+             'Use this page to build firewall change requests and validate network segmentation',
+             f'Protocols: {protos}',
+             'Zones: client → management plane → data plane → external services']),
     }
 
     title, summary4 = T.get(page_type, T['product_landing'])
@@ -945,6 +957,8 @@ def build_diagram(path, meta):
         'ts_landing':      f'  Check health → review changes → examine logs → diagnose → resolve',
         'arch_landing':    f'  Design → deploy → configure → validate → monitor → optimise',
         'product_landing': f'  Architecture → Operations → Security → Troubleshooting → Escalation',
+        'known_issues':    f'  Identify error code → match category → apply workaround → verify → open SR if unsolved',
+        'ports':           f'  Client zone → management plane → data path → external services / replication',
     }
     flow = flows.get(page_type, flows['product_landing'])
 
@@ -995,6 +1009,16 @@ def build_diagram(path, meta):
                              ('P2', 'Major degraded', '1 hour', 'L2 engineer', '4 hr biz hrs'),
                              ('P3', 'Minor degraded', '4 hours', 'L2 engineer', '8 hr biz hrs'),
                              ('P4', 'No impact', 'Next biz day', 'L1 support', '2 biz days')]),
+        'known_issues':    ([('Category', 'Typical error', 'First check', 'Common fix', 'Severity'),
+                             ('Connectivity', 'Path loss/timeout', 'Network / zoning', 'Reconnect host', 'P2/P3'),
+                             ('Auth / access', 'Login failure', 'Account / cert', 'Reset creds', 'P2'),
+                             ('Capacity', 'Nearfull / full', 'Usage report', 'Add/free space', 'P1 if full'),
+                             ('Firmware/bug', 'Known vendor bug', 'Release notes', 'Apply patch', 'Per SLA')]),
+        'ports':           ([('Zone', 'Port/Protocol', 'Source', 'Destination', 'Purpose'),
+                             ('Management', '443 TCP', 'Admin hosts', 'Management IP', 'GUI / REST API'),
+                             ('Management', '22 TCP', 'Jump hosts', 'Management IP', 'SSH CLI'),
+                             ('Data', 'Fabric/iSCSI', 'Hosts', 'Array data ports', 'I/O path'),
+                             ('Replication', '443/Fabric', 'Array', 'Remote array', 'Replication')]),
     }
 
     sec_rows5 = sec_tables.get(page_type, meta.get('sec_rows5', [
@@ -1074,7 +1098,7 @@ def insert_diagram(path, diagram_text):
     after = content[insert_at:]
     if '┌' in after or '┐' in after:
         return False
-    fenced = '\n\n```\n' + diagram_text + '\n```\n'
+    fenced = '\n\n```text\n' + diagram_text + '\n```\n'
     new_content = content[:insert_at] + fenced + content[insert_at:]
     with open(path, 'w') as f:
         f.write(new_content)
