@@ -5,105 +5,312 @@ tags:
 search:
   boost: 1.5
 ---
-# CyberArk Vendor Support
-
+# CyberArk — Escalation
 
 <div class="kb-summary">
-CyberArk support is accessed through the CyberArk Support Portal at support.cyberark.com, where Service Requests (SRs) are raised by product area (Vault, CPM, PSM, PVWA).
+CyberArk PAM support escalation: how to run the DiagnosticTool, collect component logs, open a case at support.cyberark.com, and follow the escalation path for Vault, CPM, PSM, and PVWA failures.
 
-*Applies to: CyberArk PAM*
+*Applies to: CyberArk PAM (Self-Hosted) 12.x / 13.x*
 </div>
+
 ```text
-┌─────────────────────────── Security Cyberark Troubleshooting — Escalation ────────────────────────────┐
+┌─────────────────────────── Security — CyberArk Escalation ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Cyberark escalation: severity triage, vendor support contact, and required artifacts     │   │
 │   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
 │   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   │         Before escalating: collect DiagnosticTool bundle, event timeline, change history      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Detect issue → triage severity → collect artifacts → open SR → update                              │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Escalation Triggers (P1/P2)         │  │           Required Artifacts                │   │
+│   │       Vault service not responding           │  │        DiagnosticTool output (Vault)        │   │
+│   │       PVWA login page returning 503          │  │        PVWA event log (last 48h)            │   │
+│   │       CPM failing all password changes       │  │        CPM log: PMConsole.log               │   │
+│   │       PSM sessions refusing connections      │  │        PSM log: PSMConsole.log              │   │
+│   │       PrivateArk DB inaccessible             │  │        System Health from PVWA UI           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
-│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
-│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
-│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
-│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   │    Vault      = PrivateArk Server (Windows service); stores credentials in encrypted Vault    │   │
+│   │    CPM        = Central Policy Manager; rotates passwords on managed accounts                 │   │
+│   │    PSM        = Privileged Session Manager; proxy for RDP/SSH sessions to target systems      │   │
+│   │    PVWA       = Password Vault Web Access; the web UI for end users and admins                │   │
+│   │    DR Vault   = Passive replication target; becomes primary on Vault failover                 │   │
+│   │    DiagTool   = CyberArk DiagnosticTool; run on Vault server to collect support bundle       │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Security Cyberark Troubleshooting infrastructure · management network · monitoring       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Cyberark           = Security Cyberark Troubleshooting platform overview and core concepts         │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
-│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-
- For Severity 1 issues (Vault down, authentication unavailable), call the CyberArk emergency support line referenced in the portal after creating the SR online. CyberArk Blue Team services provide incident response for PAM-related security incidents under a separate engagement.
-
-**Data to collect before opening a case:**
-
-- CyberArk `DiagnosticTool` output — run from the Vault server to collect component versions, logs, and configuration summary
-- Vault version, CPM version, PSM version, PVWA version (from PVWA → Administration → System Health)
-- Safe count and account count (from PVWA Dashboard)
-- Windows Event logs from Vault server (Application and System, last 48 hours)
-- PrivateArk Server log (`%ProgramFiles(x86)%\CyberArk\Password Vault\Logs\`)
-- Error messages and exact steps to reproduce the issue
-
-| Support Tier | Sev 1 Response | Portal |
-|---|---|---|
-| Standard Support | 4 hours | support.cyberark.com |
-| Premium Support | 1 hour | support.cyberark.com + phone line |
-| CyberArk Blue Team | Project/incident SLA | Separate engagement via account team |
-
 ## Before you begin
 
-- **Access:** Admin credentials on all affected systems
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Admin credentials to PVWA (`Administrator` account or equivalent); RDP/local access to the Vault server
+- **Gather first:** PVWA System Health page status, exact error message, and affected usernames or Safe names
+- **Scope:** confirm whether the issue affects a single user/Safe, a specific component (CPM, PSM), or the entire Vault service
+- **Do not restart:** do not restart PrivateArk Server (the Vault service) without CyberArk support guidance — it can leave the Vault in an inconsistent state during a recovery operation
+- **Security incidents:** if the issue involves suspected unauthorised access or a compromised account, contact both CyberArk support AND your internal security team simultaneously
 
 ---
+
+## Severity Levels
+
+| Severity | Definition | Response SLA | Contact |
+|---|---|---|---|
+| P1 — Critical | Vault completely down; all password retrieval failing; entire PAM platform inaccessible | 1 hour (24×7) | Open SR + call CyberArk emergency line |
+| P2 — High | PSM sessions failing for all users; CPM unable to rotate any passwords; PVWA degraded | 4 hours (business hours + on-call) | Open SR online |
+| P3 — Medium | Single component degraded (one CPM, one PSM connector); workaround available | 1 business day | Open SR online |
+| P4 — Low | Non-critical UI issue; documentation question; feature request | 2 business days | Open SR online |
+
+## Pre-Escalation Triage Checklist
+
+| Check | Where to Check | Expected |
+|---|---|---|
+| Vault service running | Vault server: `services.msc` → PrivateArk Server | Status: Running |
+| Vault port reachable | From PVWA server: `Test-NetConnection -ComputerName <vault> -Port 1858` | `TcpTestSucceeded: True` |
+| PVWA accessible | Browse to `https://<pvwa-fqdn>/PasswordVault/` | Login page loads |
+| System Health green | PVWA → Admin → System Health | All components green |
+| DR Vault sync current | PVWA → Admin → System Health → Vault DR | Sync time < 30 min ago |
+| CPM service running | CPM server: `services.msc` → CyberArk Password Manager | Status: Running |
+| PSM service running | PSM server: `services.msc` → CyberArk Privileged Session Manager | Status: Running |
+| Disk space on Vault | Vault server: `dir C:\PrivateArk\Safe` | < 80% full |
+
+---
+
+## Step-by-Step Data Collection
+
+Collect all of the following before opening an SR.
+
+### 1. Run the CyberArk DiagnosticTool on the Vault server
+
+```powershell
+# RDP to the Vault server as a local admin (not a domain account)
+# Navigate to the DiagnosticTool directory
+cd "C:\Program Files (x86)\CyberArk\Password Vault\Diagnostics"
+
+# Run the tool — collects logs, configuration, and component health
+.\DiagnosticTool.exe
+
+# The tool creates an output ZIP in the same directory
+# Example: DiagnosticToolOutput_2026-06-15_11-00-00.zip
+Get-ChildItem "C:\Program Files (x86)\CyberArk\Password Vault\Diagnostics\*.zip" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+```
+
+### 2. Collect component versions
+
+```powershell
+# Vault version — from PVWA Admin UI
+# PVWA → Administration → System Health → click Vault component
+
+# Or check registry on Vault server:
+Get-ItemProperty HKLM:\SOFTWARE\WOW6432Node\CyberArk\CyberArk* | Select-Object PSChildName, DisplayVersion
+
+# Get PVWA version
+Get-Content "C:\inetpub\wwwroot\PasswordVault\Version.txt"
+
+# Get CPM version (on CPM server)
+Get-ItemProperty HKLM:\SOFTWARE\WOW6432Node\CyberArk\CyberArk* | Select-Object PSChildName, DisplayVersion
+
+# Get PSM version (on PSM server)
+Get-ItemProperty HKLM:\SOFTWARE\WOW6432Node\CyberArk\CyberArk* | Select-Object PSChildName, DisplayVersion
+```
+
+### 3. Collect component logs manually (if DiagnosticTool fails)
+
+```powershell
+# Vault server — PrivateArk Server log
+$logPath = "C:\PrivateArk\Logs"
+Get-ChildItem $logPath -Filter "*.log" | Sort-Object LastWriteTime -Descending | Select-Object -First 5
+Copy-Item "$logPath\ITAlog.log" C:\Temp\
+Copy-Item "$logPath\PrivateArk.log" C:\Temp\
+
+# Windows Event logs from Vault server (Application + System, last 48h)
+$start = (Get-Date).AddHours(-48)
+Get-WinEvent -LogName Application -StartTime $start | Export-Csv C:\Temp\AppEventLog.csv -NoTypeInformation
+Get-WinEvent -LogName System    -StartTime $start | Export-Csv C:\Temp\SysEventLog.csv -NoTypeInformation
+
+# PVWA logs
+$pvwaLog = "C:\inetpub\wwwroot\PasswordVault\Logs"
+Copy-Item "$pvwaLog\CyberArk.log" C:\Temp\
+
+# CPM log (on CPM server)
+Copy-Item "C:\Program Files (x86)\CyberArk\Password Manager\Logs\PMConsole.log" C:\Temp\
+
+# PSM log (on PSM server)
+Copy-Item "C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log" C:\Temp\
+```
+
+### 4. Capture PVWA System Health
+
+```powershell
+# API approach — get component health programmatically
+$pvwaUrl = "https://<pvwa-fqdn>/PasswordVault"
+
+# Get auth token
+$body = @{username="Administrator"; password="<password>"} | ConvertTo-Json
+$auth = Invoke-RestMethod -Uri "$pvwaUrl/API/auth/CyberArk/Logon" -Method POST -Body $body -ContentType "application/json"
+$token = $auth
+
+# Get system health
+Invoke-RestMethod -Uri "$pvwaUrl/API/ComponentsMonitoringSummary" `
+  -Method GET -Headers @{Authorization = "Bearer $token"} |
+  ConvertTo-Json -Depth 10 | Out-File C:\Temp\SystemHealth.json
+
+# Logoff
+Invoke-RestMethod -Uri "$pvwaUrl/API/auth/Logoff" -Method POST -Headers @{Authorization = "Bearer $token"}
+```
+
+### 5. Write the timeline
+
+```text
+CyberArk Vault version: 13.2.0
+PVWA version: 13.2.0
+CPM version: 13.2.0
+PSM version: 13.2.0
+
+Vault server: vault01.corp.local (Windows Server 2022)
+PVWA server: pvwa01.corp.local
+
+Issue first observed: 2026-06-15 09:30 UTC
+Last known good state: 2026-06-15 08:00 UTC
+
+Error observed:
+  - Users receiving "Vault connection error" on PVWA login
+  - CPM jobs showing "PSMGW008E: Cannot connect to vault"
+  - ITAlog showing repeated "Authentication failure" entries
+
+Steps already taken:
+  - Verified PrivateArk Server service is running
+  - Confirmed port 1858 reachable from PVWA server
+  - Did NOT restart PrivateArk Server
+
+Changes in 24h before issue:
+  - Windows Update applied to Vault server (KB5034441)
+  - No CyberArk config changes
+
+Blast radius:
+  - All PVWA users cannot log in
+  - CPM cannot perform any password changes
+```
+
+---
+
+## How to Open a CyberArk Support Case
+
+1. Go to **support.cyberark.com** and sign in with your CyberArk account.
+   - If no account: click **Register** and use your company email linked to your CyberArk contract.
+
+2. Click **Open a Case** (top navigation).
+
+3. Under **Product**, select the affected component: **Privileged Access Manager — Self-Hosted** (or the appropriate product).
+
+4. Under **Version**, enter the exact version string.
+
+5. Under **Severity**, select:
+   - **Severity 1**: Vault completely down; no users can authenticate; production PAM unavailable
+   - **Severity 2**: PSM or CPM failing for all users; PVWA degraded; workaround not available
+   - **Severity 3**: Single component failing with a workaround; non-critical account rotation failing
+   - **Severity 4**: How-to question; feature request; documentation
+
+6. In the **Summary** field: `CyberArk 13.2.0 — PVWA login failing for all users — Vault connection error since 09:30 UTC`.
+
+7. In the **Description**, paste:
+   - Component versions (Vault, PVWA, CPM, PSM)
+   - System Health screenshot description
+   - Timeline (from step 5 above)
+   - Key error messages from ITAlog and PVWA logs
+   - What you have already verified
+
+8. Upload attachments:
+   - `DiagnosticToolOutput_<date>.zip`
+   - `ITAlog.log` and `PrivateArk.log` from the Vault
+   - `CyberArk.log` from PVWA
+   - `PMConsole.log` from CPM (if CPM-related)
+   - `PSMConsole.log` from PSM (if PSM-related)
+
+9. Click **Submit**. You receive a case number by email.
+
+10. **Severity 1 only:** On the case page, use the phone number shown for your region. Call immediately — the portal response alone is not fast enough for P1.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open SR at support.cyberark.com with DiagnosticTool bundle attached
+         ↓
+Step 2 — For Sev 1: call CyberArk emergency support phone immediately after opening SR
+         (phone number shown on support portal; available 24×7)
+         ↓
+Step 3 — CyberArk T1 reviews bundle and triages issue (typically 30 min–1 h for Sev 1)
+         ↓
+Step 4 — If no meaningful progress in 2 hours for Sev 1 or 1 business day for Sev 2:
+         → Reply in the case: "Requesting escalation to Senior Engineer"
+         → State: "Impact: [n] users cannot authenticate to PAM; CPM halted"
+         ↓
+Step 5 — For security incidents (suspected unauthorised Vault access, account compromise):
+         → Simultaneously engage CyberArk Blue Team Services through your account team
+         → Blue Team provides incident response under a separate engagement contract
+         ↓
+Step 6 — For P1 unresolved > 4 hours:
+         → Request Critical Situation engagement via your CyberArk account manager
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Restart PrivateArk Server without CyberArk guidance | Can interrupt an in-progress replication to DR Vault; may cause Safe inventory inconsistency | Open SR first; restart only when CyberArk support confirms it is safe |
+| Delete Vault log files to free up disk space | Logs are the primary diagnostic artifact; CyberArk support will need them | Archive logs to another disk; open SR immediately if disk is full on the Vault |
+| Modify PrivateArk.ini or DBParm.ini without CyberArk approval | These files control Vault encryption and storage parameters; incorrect values can corrupt the Vault | Only change these files with explicit written guidance in the SR |
+| Attempt to unlock a Safe from PVWA while the Vault shows an error | May cause split-brain in Safe state | Wait for Vault to return to a stable state before making administrative changes |
+| Grant the Vault service account domain admin rights as a "fix" | Violates least-privilege; creates new security risk | The Vault service account needs only local privileges on the Vault server |
+
+---
+
+## Useful Commands for Case Updates
+
+```powershell
+# Quick state snapshot for each case update
+Get-Service "PrivateArk*","CyberArk*" | Select-Object Name, Status, StartType
+
+# Test Vault connectivity from PVWA server
+Test-NetConnection -ComputerName <vault-hostname> -Port 1858
+
+# Last 50 ITAlog entries (on Vault server)
+Get-Content "C:\PrivateArk\Logs\ITAlog.log" -Tail 50
+
+# Safe count and account count via PVWA API (substitute token from auth step)
+Invoke-RestMethod -Uri "https://<pvwa>/PasswordVault/API/Safes?limit=1" `
+  -Method GET -Headers @{Authorization = "Bearer $token"} |
+  Select-Object -ExpandProperty Total
+
+# CPM pending jobs count
+Get-Content "C:\Program Files (x86)\CyberArk\Password Manager\Logs\PMConsole.log" -Tail 100 |
+  Where-Object { $_ -match "ERROR|FAIL|pending" }
+
+# Windows Event log for PrivateArk-specific errors
+Get-WinEvent -LogName Application -MaxEvents 100 |
+  Where-Object { $_.ProviderName -like "*CyberArk*" -or $_.ProviderName -like "*PrivateArk*" } |
+  Select-Object TimeCreated, Id, LevelDisplayName, Message | Format-List
+```
+
+---
+
+## See also
+
+- [CyberArk — Common Issues](../common-issues/)
+- [CyberArk — Diagnostics](../diagnostics/)
+- [CyberArk — Procedures](../../operations/procedures/)
 
 ---
 
 ## Verify resolution
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
-
-## See also
-
-- [CyberArk — Common Issues](common-issues/)
-- [CyberArk — Diagnostics](diagnostics/)
-- [CyberArk — Procedures](../../operations/procedures/)
+- Confirm PVWA login page loads and users can authenticate
+- Run PVWA System Health check — all components green
+- Verify CPM can perform a password change on a test account
+- Open a PSM session to a test target and confirm connection completes
+- Monitor System Health for 30 minutes after the fix before closing the SR

@@ -7,9 +7,8 @@ search:
 ---
 # CloudIQ — Escalation
 
-
 <div class="kb-summary">
-Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation.
+CloudIQ support escalation: how to collect the SCG log bundle and API traces, open a Dell support case, set severity, and follow the escalation path for CloudIQ data gaps, connectivity failures, and SaaS platform incidents.
 
 *Applies to: CloudIQ*
 </div>
@@ -23,11 +22,8 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
 │   │         CloudIQ data issues: note system name, time window, expected vs actual values         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │              Before Escalating               │  │               Escalation Steps              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
 │   │          SCG version (scg version)           │  │         Open SR at support.dell.com         │   │
 │   │           Connectivity test output           │  │            Attach SCG log bundle            │   │
 │   │           SCG log bundle collected           │  │           Note affected system IDs          │   │
@@ -37,61 +33,266 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    SR             = Service Request; Dell support case opened at support.dell.com                     │
-│    CloudIQ org ID = Unique identifier for your CloudIQ tenant; visible in Settings > Org              │
+│    SCG            = Secure Connect Gateway; on-premises gateway that sends telemetry to CloudIQ       │
+│    Org ID         = Unique identifier for your CloudIQ tenant; visible in Settings > Organization     │
 │    Backend check  = Dell CloudIQ SRE team investigates ingest pipeline for missing data               │
+│    SR             = Service Request; Dell support case opened at support.dell.com                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Additional items:
-
-- SCG application logs from `/var/log/dsagw/` (compress and attach to the case).
-- CloudIQ API error response body with HTTP status code and timestamp.
-- Browser console errors (F12 > Console) if the issue is UI-related — export as a log file.
-- CloudIQ audit log export (Admin > Audit Log) for the relevant time window if the issue involves access or configuration.
-
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Storage admin credentials on affected arrays; CloudIQ admin role (Settings access); Dell support portal account with entitlement to the affected systems
+- **Gather first:** affected system name and serial number, time window of the data gap or error, and whether SCG shows connectivity to the affected array
+- **Status check:** check the Dell support portal status page before escalating — CloudIQ SaaS maintenance windows are announced there
+- **Scope:** confirm whether the issue affects one system, all systems in the org, or the CloudIQ platform globally (check other tenants if you have access)
 
 ---
 
-## SLA Tiers
-
-CloudIQ support SLA follows the ProSupport Plus contract of the managed storage system. There is no separate CloudIQ SLA.
+## Severity Levels
 
 | Priority | Condition | Response Time | Coverage |
 |---|---|---|---|
-| P1 | CloudIQ outage causing inability to monitor production systems | 2 hours | 24x7x365 |
-| P2 | Degraded CloudIQ functionality (partial data, delayed alerts) | 4 hours | 24x7x365 |
-| P3 | Non-critical CloudIQ issue (UI display, API edge case) | Next business day | Business hours |
+| P1 | CloudIQ completely unavailable; unable to monitor any production systems | 2 hours | 24×7×365 |
+| P2 | Degraded CloudIQ functionality: partial data, delayed alerts, missing metrics | 4 hours | 24×7×365 |
+| P3 | Non-critical issue: UI display error, API edge case, one system missing data | Next business day | Business hours |
 | P4 | General question or enhancement request | Next business day | Business hours |
 
-## Escalation
+## Pre-Escalation Triage Checklist
 
-For SaaS platform-level issues (CloudIQ dashboard unavailable, systemic reporting failures across all systems):
+| Check | Where | Expected |
+|---|---|---|
+| CloudIQ UI accessible | Browse to `cloudiq.dell.com` | Dashboard loads |
+| SCG service running | SCG web UI → Status | Service: Running |
+| SCG connected to CloudIQ | SCG web UI → Connectivity | Connection status: Connected |
+| Array registered in CloudIQ | CloudIQ → Infrastructure → Systems | Affected system appears in list |
+| SCG connectivity to array | SCG web UI → Managed Systems | Array shows last contact < 5 min |
+| SCG disk space | SCG appliance: `df -h` | Root volume < 80% full |
+| SCG version current | SCG web UI → About | Version within last 2 releases |
+| API accessible | `curl -sk https://cloudiq.dell.com/cloudiq/api/v1/systems -H "Authorization: Bearer <token>"` | HTTP 200 |
 
-1. Open a P1 support case and specify that the issue is a **CloudIQ SaaS platform issue** affecting all managed systems.
-2. Contact your **Dell account team** and request escalation to the **CloudIQ product team**. The CloudIQ engineering team can investigate SaaS-side infrastructure issues that front-line support cannot resolve.
-3. Check [https://www.dell.com/support/incidents-outages](https://www.dell.com/support/incidents-outages) or the Dell support portal for any announced CloudIQ service incidents before escalating — platform maintenance or incidents may already be tracked.
-4. For prolonged SaaS outages affecting contractual monitoring obligations, request engagement through **Dell Global Priority Services** via your account team.
+---
+
+## Step-by-Step Data Collection
+
+### 1. Collect SCG version and connectivity info
+
+```bash
+# SSH to SCG appliance (or access SCG console)
+ssh admin@<scg-hostname>
+
+# Check SCG version
+scg version
+
+# Check SCG service status
+scg status
+
+# Test connectivity to CloudIQ
+scg connectivity test
+
+# Test connectivity to a specific managed array
+scg system connectivity --system-id <system-serial-number>
+```
+
+### 2. Collect SCG log bundle
+
+```bash
+# From the SCG CLI:
+scg logs collect --output /tmp/scg-logs-$(date +%F).zip
+
+# Alternative: from the SCG web UI
+# Navigate to: Admin → Support → Collect Support Bundle
+# Download the resulting ZIP file
+
+# The logs bundle contains:
+#   - SCG application logs from /var/log/dsagw/
+#   - Connectivity test results
+#   - System registration details
+#   - Error trace for the last 48 hours
+```
+
+### 3. Collect application logs manually (if scg logs collect fails)
+
+```bash
+# Application logs directory
+ls -lt /var/log/dsagw/ | head -10
+tar czf /tmp/scg-applogs-$(date +%F).tar.gz /var/log/dsagw/*.log /var/log/dsagw/*.log.*
+
+# Check for specific error patterns
+grep -i "error\|exception\|connection refused\|timeout" /var/log/dsagw/application.log | tail -100
+
+# Check system registration
+scg system list
+scg system status --system-id <system-serial-number>
+```
+
+### 4. Collect CloudIQ API diagnostics
+
+```bash
+# Get CloudIQ OAuth token (from CloudIQ Settings → API Keys)
+TOKEN="<your-api-key>"
+
+# List all systems in CloudIQ
+curl -sk "https://cloudiq.dell.com/cloudiq/api/v1/systems" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Accept: application/json" | python3 -m json.tool > /tmp/cloudiq-systems.json
+
+# Get last ingestion time for a specific system
+SYSTEM_ID="<system-id-from-cloudiq-ui>"
+curl -sk "https://cloudiq.dell.com/cloudiq/api/v1/systems/${SYSTEM_ID}" \
+  -H "Authorization: Bearer $TOKEN" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+print(f'System: {data.get(\"system_name\")}')
+print(f'Type: {data.get(\"system_type\")}')
+print(f'Last telemetry: {data.get(\"last_seen_timestamp\")}')
+print(f'Health: {data.get(\"system_health_score\")}')
+"
+
+# If UI issue — browser console errors
+# F12 → Console tab → reload the page → Export Console as file
+```
+
+### 5. Write the timeline
+
+```text
+CloudIQ Org: mycompany (Org ID: found in Settings > Organization)
+Affected system: PowerStore-1000T SN: CKM00xxxxxxxx
+SCG version: 5.18.0.1
+SCG hostname: scg01.corp.local
+
+Issue first observed: 2026-06-15 08:00 UTC
+Last data seen in CloudIQ: 2026-06-14 20:00 UTC
+
+Error observed:
+  - CloudIQ dashboard shows system offline for 12 hours
+  - SCG connectivity test: PASS to CloudIQ; FAIL to PowerStore-1000T
+  - SCG log: "Connection timeout to 10.10.10.50 (PowerStore Management IP)"
+
+Steps already taken:
+  - Verified SCG service is running
+  - Confirmed PowerStore Management IP is reachable from SCG host (ping OK)
+  - Ran scg connectivity test — shows timeout at HTTPS handshake stage
+
+Changes in prior 24h:
+  - TLS certificate on PowerStore management interface was rotated
+
+Blast radius:
+  - PowerStore metrics unavailable in CloudIQ for 12 hours
+  - Capacity and performance alerts not firing for this system
+```
+
+---
+
+## How to Open a Dell Support Case
+
+1. Go to **support.dell.com** and sign in with your Dell account (linked to your ProSupport contract).
+
+2. Click **Create Service Request** or **Start Support Request**.
+
+3. Under **Product**, search for and select the storage system in question (or select CloudIQ directly if the issue is platform-wide).
+
+4. Under **Category**, select **CloudIQ / Data Connectivity** or **Monitoring and Analytics**.
+
+5. Under **Priority**, select:
+   - **P1**: CloudIQ completely down; all systems unmonitored; production SLA at risk
+   - **P2**: Degraded CloudIQ; missing data for one or more systems; alert delays
+   - **P3**: Non-critical display or API issue; one system missing data
+   - **P4**: General question
+
+6. In the **Summary** field: `CloudIQ — PowerStore SN CKM00xxx data not appearing since 2026-06-14 20:00 UTC — SCG connectivity test failing`.
+
+7. In the **Description**, paste:
+   - SCG version and hostname
+   - Affected system name, type, and serial number
+   - CloudIQ Org ID (Settings → Organization)
+   - Timeline (from step 5 above)
+   - Output of `scg connectivity test`
+   - What you have already checked
+
+8. Upload attachments:
+   - `scg-logs-<date>.zip` — full SCG log bundle
+   - `cloudiq-systems.json` — API response with system status
+   - Browser console export (if UI issue)
+   - `scg-applogs-<date>.tar.gz` (if bundle collection failed)
+
+9. Click **Submit**. Case number arrives by email.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open Dell support case at support.dell.com with SCG log bundle attached
+         ↓
+Step 2 — Dell T1 reviews SCG logs and triage begins (typically 4 hours for P2)
+         ↓
+Step 3 — If issue is SCG-side (connectivity, certificate, proxy):
+         → Dell T1/T2 guidance on SCG reconfiguration
+         → Common: update trust store after certificate rotation; proxy exception for CloudIQ endpoints
+         ↓
+Step 4 — If issue is CloudIQ SaaS-side (ingest pipeline, missing data in backend):
+         → Dell escalates to CloudIQ product team for backend investigation
+         → Request: "Requesting CloudIQ SRE to check ingest pipeline for system ID [id] since [timestamp]"
+         ↓
+Step 5 — If no progress in 4 hours for P1 / 1 business day for P2:
+         → Add case update: "Requesting escalation — [n] systems unmonitored since [date]"
+         → Contact Dell account team to expedite if SaaS team investigation is needed
+         ↓
+Step 6 — For sustained SaaS outages affecting contractual monitoring obligations:
+         → Request engagement through Dell Global Priority Services via your account team
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Delete and re-register the SCG appliance to fix connectivity | Loses SCG configuration, system registrations, and historical data | Fix the connectivity issue (certificate, proxy, firewall); re-register only as a last resort with Dell guidance |
+| Restart SCG services during active data collection | Interrupts the log bundle collection and loses in-memory error state | Stop `scg logs collect` first; restart services; then collect a new log bundle after restart |
+| Update the SCG version during an active P1 incident | SCG updates can change connectivity parameters and mask the original cause | Complete the incident first; schedule SCG update during a maintenance window |
+| Remove and re-add the affected storage system from CloudIQ | Deletes historical data for the system in CloudIQ (irreversible) | Leave the system registered; fix the ingest issue through Dell support |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# Quick state snapshot for case updates
+scg version
+scg status
+scg connectivity test
+scg system list | grep -E "System Name|Status|Last Contact"
+
+# Check SCG disk space (low disk causes log collection failures)
+df -h /var/log
+
+# Test CloudIQ API endpoint reachability from SCG
+curl -sk -o /dev/null -w "%{http_code} %{time_total}s\n" \
+  https://cloudiq.dell.com/cloudiq/api/v1/systems
+
+# Count recent errors in SCG application log
+grep -c "ERROR" /var/log/dsagw/application.log
+
+# Show last 50 errors in SCG log
+grep "ERROR" /var/log/dsagw/application.log | tail -50
+```
 
 ---
 
 ## Verify resolution
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+- Confirm `scg connectivity test` passes for the previously affected system
+- Verify the system appears in CloudIQ dashboard with a last-seen timestamp within the last 5 minutes
+- Check CloudIQ health score and capacity metrics are populating for the affected system
+- Monitor for 30 minutes to confirm data continues to arrive (metrics update every 5–15 minutes)
+- Confirm alerts are firing correctly for the recovered system (test by temporarily reducing a threshold)
 
 ---
 
 ## See also
 
-- [Cloudiq — Diagnostics](diagnostics/)
-- [Cloudiq — Common Issues](common-issues/)
+- [CloudIQ — Diagnostics](diagnostics/)
+- [CloudIQ — Common Issues](common-issues/)
