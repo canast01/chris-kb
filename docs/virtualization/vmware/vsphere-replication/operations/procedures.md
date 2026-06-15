@@ -176,6 +176,9 @@ Relocate a VM's replica files to a different datastore at the target site — fo
 
 Permanently removes the replication configuration for a VM. Use when decommissioning a workload, removing a VM from the DR scope, or cleaning up after a migration.
 
+!!! warning "DR coverage removed immediately"
+    As soon as replication is removed, the VM has no DR copy. If you also choose "Remove replica files," the only recovery point for this VM is your backup. Confirm the VM is either decommissioned, covered by an alternate DR mechanism, or that removal has been approved in the change record before proceeding.
+
 **Steps:**
 
 1. Navigate to **vCenter → Site Recovery → Replications**.
@@ -192,6 +195,9 @@ Permanently removes the replication configuration for a VM. Use when decommissio
 ## Test a Replication (Non-Disruptive)
 
 Validates that the replica is bootable and application-consistent without affecting the source VM or ongoing replication. Required for DR testing and compliance audits.
+
+!!! danger "Choose Test — not Recovery"
+    The Recover wizard presents two options: **Test** (non-disruptive, source VM keeps running) and **Recovery** (actual DR failover — powers off the source VM, powers on the replica, and breaks the replication relationship permanently). Selecting **Recovery** in a test context requires a full failback procedure to restore replication. Always select **Test** for DR drills.
 
 **How it works:** vSphere Replication creates a temporary isolated copy of the replica in a sandbox network at the target site. The source VM continues running and replication continues uninterrupted during the test.
 

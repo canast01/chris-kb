@@ -298,6 +298,9 @@ Run a rescan after adding new LUNs, zoning changes, or after plugging in a new H
 
 Unmount a datastore before decommissioning a LUN or performing storage maintenance. Mount to bring a new NFS share or VMFS volume into inventory.
 
+!!! danger "Data corruption risk"
+    Unmounting a VMFS datastore while VMs are still registered to it — even powered-off VMs — causes immediate data corruption. Confirm zero VMs are registered before unmounting. If VMs exist, unregister or migrate them first.
+
 **Unmount (VMFS or NFS):**
 
 1. Confirm no VMs are registered on the datastore:
@@ -345,6 +348,9 @@ esxcli storage filesystem mount --uuid <datastore-uuid>
 ## Enable Lockdown Mode
 
 Lockdown mode prevents direct root login to the ESXi host — all management must go through vCenter. Enable it to reduce the attack surface in production clusters.
+
+!!! danger "Host lockout risk"
+    If vCenter becomes unavailable after lockdown mode is enabled, and no Exception Users are configured, there is no way to log in to the host — not even via SSH or the DCUI. Physical console access to disable lockdown via DCUI is the only recovery. Before enabling, add at least one Exception User (a break-glass local account) and confirm vCenter HA or a backup vCenter is available.
 
 **Note:** before enabling, ensure at least one Exception User is configured in DCUI access, and confirm vCenter is reachable and healthy. Lockdown mode cannot be toggled from the host CLI after it is enabled.
 
@@ -495,6 +501,9 @@ Forwarding ESXi logs to a central syslog server (e.g., Syslog-NG, Graylog, vReal
 
 Use this procedure when the host has no internet access and patches are delivered as `.zip` bundles from the VMware patch depot or a local repository.
 
+!!! warning "Host reboot required"
+    Applying an ESXi patch requires a full host reboot. All VMs must be migrated off the host (maintenance mode) before applying the patch. Applying on a host with running VMs will either fail at apply time or cause an unplanned outage when the host reboots. Ensure HA admission control confirms the cluster can tolerate this host being offline.
+
 **Prerequisites:** patch bundle `.zip` transferred to a datastore the host can access; host in maintenance mode.
 
 1. Put the host in maintenance mode (see Maintenance Window procedure above).
@@ -581,6 +590,9 @@ Quick Boot allows ESXi to restart without a full hardware POST, reducing patch r
 ## Put Host in Image-Based Management (vLCM)
 
 vSphere Lifecycle Manager (vLCM) image-based management replaces baseline patching with a declarative desired-image model. All hosts in a vLCM-managed cluster must use the same image; the cluster cannot mix baseline and image management.
+
+!!! warning "All hosts in the cluster will reboot"
+    Switching a cluster to vLCM and remediating moves every host through maintenance mode and reboots it in sequence. For a 4-node cluster with DRS, this takes 30–60 minutes. Verify HA admission control before starting — if a host is already degraded, vLCM remediation can exceed the cluster's failover capacity and block VM migrations. Firmware packages (if included in the image) may add additional driver reloads that extend the reboot time.
 
 **Prerequisites:** vCenter 7.0 U1+ with Lifecycle Manager; cluster currently using baselines; all hosts on a compatible hardware/driver matrix for the target image.
 

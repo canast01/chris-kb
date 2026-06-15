@@ -215,6 +215,9 @@ Expanding a workload domain adds capacity to an existing cluster by pulling comm
 
 Deleting a workload domain permanently removes the vCenter, NSX, and all associated clusters from VCF management. Hosts return to the free pool. This operation is irreversible — ensure all workloads are migrated before proceeding.
 
+!!! danger "Irreversible — all data in the domain is permanently destroyed"
+    SDDC Manager will destroy the vCenter, NSX Manager cluster, and all VMs that are registered in the domain. If any VMs remain on the vSAN datastore when deletion begins, those VMs are deleted. There is no undo. Complete the pre-requisites checklist and take a final SDDC Manager backup before proceeding.
+
 **Pre-requisites (mandatory before initiating delete):**
 
 - All VMs are powered off or migrated to another domain
@@ -248,6 +251,9 @@ Deleting a workload domain permanently removes the vCenter, NSX, and all associa
 ## Rotate Passwords (All Components)
 
 SDDC Manager centrally manages credentials for all VCF components (ESXi, vCenter, NSX, SDDC Manager itself, and PSC). Password rotation should be performed on a scheduled basis and is mandatory after any suspected credential compromise.
+
+!!! warning "Do not rotate passwords directly in individual product UIs"
+    Changing a password in vCenter, NSX, or ESXi outside of SDDC Manager causes credential drift — SDDC Manager loses the ability to manage that component until the password is re-synced. If drift has already occurred, use SDDC Manager → Password Management → Remediate to correct it before rotating.
 
 **Note:** Rotation is orchestrated by SDDC Manager — do not rotate passwords directly in individual product UIs, as this will cause credential drift and break SDDC Manager's ability to manage those components.
 
@@ -356,6 +362,9 @@ The Lifecycle Management (LCM) Precheck validates the environment against a set 
 ## Apply a VCF Upgrade Bundle
 
 VCF upgrades are applied via the LCM module in SDDC Manager. The upgrade order is fixed: SDDC Manager → vCenter → NSX → ESXi hosts → vSAN. Never upgrade components out of order.
+
+!!! warning "Do not interrupt once started — partial upgrade states are unrecoverable without VMware GSS"
+    Closing the SDDC Manager browser session or losing connectivity to the appliance mid-upgrade does not stop the upgrade task, but it may leave the UI unable to track progress. Do not power off SDDC Manager, vCenter, or NSX Manager nodes during the upgrade. If a step fails, open a VMware GSS case before attempting any manual recovery — out-of-order component upgrades are not supported and can leave VCF in an unrecoverable state.
 
 **Pre-requisites:** precheck has completed with zero ERRORs; a maintenance window is scheduled; all VMs with HA/DRS enabled are in a known state; snapshots of management VMs are taken.
 
