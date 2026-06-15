@@ -65,24 +65,24 @@ FlashArray diagnostic commands: run the first-response sequence (<code>purealert
 
 ```mermaid
 graph TD
-    A([FlashArray Issue]) --> B[purealert list: identify failure domain\npurearray list --controller: CT0 CT1 health]
+    A([FlashArray Issue]) --> B[purealert list: find failure domain\npurearray list --controller: CTs]
     B --> C{Failure domain?}
-    C -->|Controller fault| D[purearray list --controller: status and role\npurehw list --type ct: component detail]
-    C -->|Drive fault| E[puredrive list: drive states\npuredrive list --progress: rebuild status]
-    C -->|Host path missing| F[purehost list --connection: path count\npureport list --type fc: port state]
-    C -->|Performance degraded| G[purearray monitor: real-time latency\npurevol monitor --latency: per-volume]
-    C -->|Replication issue| H[purepod list: pod status + mediator\npurepgroup list --replication: async status]
-    C -->|Capacity warning| I[purearray list --space: array capacity\npuresnap list --space: snapshot consumers]
+    C -->|Controller fault| D[purearray list --controller: state\npurehw list --type ct: component]
+    C -->|Drive fault| E[puredrive list: drive states\npuredrive list --progress: rebuild]
+    C -->|Host path missing| F[purehost list --connection: paths\npureport list --type fc: port state]
+    C -->|Performance degraded| G[purearray monitor: latency\npurevol monitor --latency: volumes]
+    C -->|Replication issue| H[purepod list: pod status + mediator\npurepgroup list --replication]
+    C -->|Capacity warning| I[purearray list --space: capacity\npuresnap list --space: consumers]
     D --> J{Controller status?}
-    J -->|offline| K[Open P1 case immediately\nDo not restart until Pure Support authorises]
-    J -->|not ready| L[Monitor for recovery\nCheck host I/O is continuing on surviving CT]
+    J -->|offline| K[Open P1 case immediately\nHold: wait for Pure Support auth]
+    J -->|not ready| L[Monitor for recovery\nVerify host I/O on surviving CT]
     E --> M{Drive state?}
-    M -->|failed| N[Open support case\nDo not pull drive without Pure Support authorisation]
+    M -->|failed| N[Open support case\nHold: wait for Pure Support auth]
     M -->|recovering| O[Monitor puredrive list --progress\nDo not interrupt rebuild]
-    F --> P[pureport list --initiator: check initiator visible\nVerify FC zone contains correct WWN pair]
-    G --> Q[purevol monitor: identify noisy-neighbour volume\nCheck purearray list --space for above 90%]
-    H --> R[Check network reachability to remote array\npurepod list --mediator: mediator connectivity]
-    K --> S[purediag --output /tmp/fa_diag.tgz or purediag --send\nOpen Pure Support case with bundle]
+    F --> P[pureport list --initiator: visible?\nVerify FC zone: correct WWN pair]
+    G --> Q[purevol monitor: noisy neighbour\npurearray list --space: above 90%]
+    H --> R[Check reachability to remote array\npurepod list --mediator: connect]
+    K --> S[purediag --send or --output .tgz\nOpen Pure Support case with bundle]
     L --> S
     N --> S
     O --> S

@@ -66,15 +66,15 @@ Data Domain diagnostic commands: check filesystem state with <code>filesys statu
 graph TD
     A([Data Domain Issue]) --> B[alerts show current\nfilesys status\nfilesys show space]
     B --> C{Hardware alert active?}
-    C -->|Yes| D[disk show state: identify failed or unknown\nenclosure show hardware: fan PSU temp\nOpen Dell support case]
+    C -->|Yes| D[disk show state: failed or unknown\nenclosure show hardware: fans PSUs\nOpen Dell support case]
     C -->|No| E{Filesystem not Running?}
-    E -->|Yes| F[filesys enable\nMonitor: filesys status until Running\nCheck space: filesys show space]
+    E -->|Yes| F[filesys enable\nMonitor filesys status till Running\nCheck space: filesys show space]
     E -->|No| G{Replication in Error?}
-    G -->|Yes| H[replication show errors: error detail\nnet ping <destination-dd>: connectivity\nreplication disable then enable to reset]
+    G -->|Yes| H[replication show errors: detail\nnet ping <dst-dd>: connectivity\nreplication disable then re-enable]
     G -->|No| I{DDBoost auth failure?}
-    I -->|Yes| J[ddboost user list: confirm user exists\nddboost show clients: client connected?\nlog view audit | grep ddboost]
+    I -->|Yes| J[ddboost user list: user exists?\nddboost show clients: connected?\nlog view audit | grep ddboost]
     I -->|No| K{Capacity > 80%?}
-    K -->|Yes| L[filesys clean start\nIdentify top consumers: replication show stats\nExpire old backups via backup application]
+    K -->|Yes| L[filesys clean start\nreplication show stats: consumers\nExpire old backups via backup app]
     K -->|No| M[support bundle generate\nOpen Dell support case]
     D --> M
     F --> M

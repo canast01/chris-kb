@@ -64,18 +64,18 @@ ECS diagnostic commands: authenticate to the Management REST API and check clust
 
 ```mermaid
 graph TD
-    A([ECS Issue Reported]) --> B[GET /vdc/nodes: cluster node health\nGET /vdc/alerts: active alerts]
+    A([ECS Issue Reported]) --> B[GET /vdc/nodes: cluster health\nGET /vdc/alerts: active alerts]
     B --> C{All nodes GOOD?}
     C -->|No — node DEGRADED| D[SSH to affected node\nsystemctl status storageos caspian]
     D --> E{Service running?}
-    E -->|No| F[Check logs: journalctl -u storageos\ndf -h /data/ — disk full?\nRestart service only if logs confirm safe]
-    E -->|Yes| G[nodetool status: Cassandra ring\necho srvr | nc localhost 2181: ZK mode\nlsblk: check for disk errors]
+    E -->|No| F[journalctl -u storageos: logs\ndf -h /data/ — disk full?\nRestart only if logs confirm safe]
+    E -->|Yes| G[nodetool status: Cassandra ring\necho srvr | nc 2181: ZK mode\nlsblk: check for disk errors]
     C -->|Yes| H{S3 API functional?}
-    H -->|No — 403 or 500| I[aws s3api head-bucket: confirm auth\nCheck IAM user + bucket policy\nVerify addressing style and namespace]
+    H -->|No — 403 or 500| I[aws s3api head-bucket: auth check\nCheck IAM user + bucket policy\nVerify addr style and namespace]
     H -->|Yes| J{Geo-replication lag growing?}
-    J -->|Yes| K[nc -zv remote-vdc-node 9100: WAN port\nCheck remote VDC health via /vdc/nodes\nMonitor WAN bandwidth utilisation]
-    J -->|No| L[Tail ECS logs for transient errors\ntail -f /var/log/ecs/*.log | grep -iE error]
-    F --> M[Collect support bundle\nPOST /vdc/support-bundle or Portal → Support → Collect Logs\nOpen Dell support case]
+    J -->|Yes| K[nc -zv remote-node 9100: WAN port\nGET /vdc/nodes: remote VDC health\nMonitor WAN bandwidth]
+    J -->|No| L[Tail ECS logs for transient errors\ntail /var/log/ecs/*.log | grep ERR]
+    F --> M[Collect support bundle\nPOST /vdc/support-bundle or Portal\nOpen Dell support case]
     G --> M
     I --> M
     K --> M

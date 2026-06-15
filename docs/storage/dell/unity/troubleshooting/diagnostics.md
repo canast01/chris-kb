@@ -67,14 +67,14 @@ graph TD
     START(["Host reports I/O errors"]) --> SP{Both SPs online?}
     SP -->|No| SPCK["uemcli /env/sp show -detail\nWait 60 sec — SP may be recovering"]
     SPCK --> SPSTILL{SP still offline?}
-    SPSTILL -->|Yes| P1["Open Dell P1 support case immediately"]
+    SPSTILL -->|Yes| P1["Open Dell P1 case immediately"]
     SPSTILL -->|No| POOL
     SP -->|Yes| POOL{Pool and disk groups healthy?}
-    POOL -->|No| DRIVE["uemcli /stor/config/disk show\nDrive failure? Replace and monitor rebuild\nNo pool changes during rebuild"]
+    POOL -->|No| DRIVE["uemcli /stor/config/disk show\nReplace drive and monitor rebuild\nNo pool changes during rebuild"]
     POOL -->|Yes| ACL{LUN has host access?}
     ACL -->|No| ADDACL["Add host access\nuemcli /stor/config/lunacl create"]
     ACL -->|Yes| NIC{Network interface up?}
-    NIC -->|No| NICFIX["uemcli /net/port/fc show\nRestore physical port or recheck LIF"]
+    NIC -->|No| NICFIX["uemcli /net/port/fc show\nRestore port or recheck LIF"]
     NIC -->|Yes| ALT{Active alerts in last 2 hours?}
     ALT -->|Yes| ALINV["uemcli /prac/alert show -detail\nInvestigate alert root cause"]
     ALT -->|No| BUNDLE["uemcli /sys/serviceinfo collect\nOpen Dell support case"]

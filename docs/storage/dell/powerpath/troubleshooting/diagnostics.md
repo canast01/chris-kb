@@ -66,18 +66,18 @@ PowerPath diagnostic commands: check path state and count with <code>powermt dis
 graph TD
     A([PowerPath issue or path loss]) --> B[powermt display dev=all\nCount dead vs alive paths]
     B --> C{Dead paths?}
-    C -->|No dead paths| D[powermt check_registration\nConfirm license is valid and not expired]
-    C -->|Dead paths found| E[powermt display ports class=all\nIdentify which HBA ports show dead paths]
+    C -->|No dead paths| D[powermt check_registration\nConfirm license valid and current]
+    C -->|Dead paths found| E[powermt display ports class=all\nIdentify HBA ports with dead paths]
     E --> F{HBA port state?}
-    F -->|Port offline or missing| G[lsmod | grep emcp: module loaded?\ndmesg | grep emcpower: kernel events\nSystemctl status PowerPath: service]
-    F -->|Port online| H[Check fabric layer\nBrocade: nsshow → is initiator logged in?\nCisco: show fcns database]
+    F -->|Port offline or missing| G[lsmod | grep emcp: module loaded?\ndmesg | grep emcpower: kern log\nSystemctl status PowerPath: service]
+    F -->|Port online| H[Check fabric layer\nBrocade nsshow: initiator visible?\nCisco: show fcns database]
     G --> I{Module loaded?}
     I -->|No| J[Reinstall or reload emcp module\nCheck kernel version compatibility\nmodinfo emcp | grep version]
-    I -->|Yes| K[Check HBA port state in /sys/class/fc_host\nCheck for link_failure_count or loss_of_signal]
+    I -->|Yes| K[/sys/class/fc_host: port state\nCheck link_failure_count value]
     H --> L{Initiator in name server?}
-    L -->|No| M[Check FC zone configuration\nConfirm zone contains this initiator WWN\nCheck portlogshow for FLOGI events]
+    L -->|No| M[Check FC zone configuration\nZone must contain initiator WWN\nCheck portlogshow for FLOGI events]
     L -->|Yes| N[Check array side\nConfirm FA port is Online\nConfirm host WWN is registered]
-    J --> O[powermt restore\nVerify paths recover with powermt display dev=all]
+    J --> O[powermt restore\nVerify: powermt display dev=all]
     K --> O
     M --> O
     N --> O

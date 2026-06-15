@@ -66,18 +66,18 @@ ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</
 graph TD
     A([ONTAP Issue]) --> B[cluster show: node health\nsystem health status show\nstorage failover show: HA state]
     B --> C{Symptom scope?}
-    C -->|Cluster or node| D[system node show: node state and uptime\ncluster ring show: cluster services\nstorage failover interconnect show: HA link]
-    C -->|Storage or disk| E[storage aggregate show -state !online\nstorage disk show -broken\nstorage disk show -raid-state reconstructing]
-    C -->|Volume or space| F[volume show -state !online\nvolume show percent-used > 90%\nvolume efficiency show: dedup compression]
-    C -->|Network or LIF| G[network interface show -status-oper down\nnetwork interface show -is-home false\ncluster ping-cluster: interconnect health]
+    C -->|Cluster or node| D[system node show: state and uptime\ncluster ring show: cluster services\nstorage failover interconnect show]
+    C -->|Storage or disk| E[aggr show -state !online\nstorage disk show -broken\ndisk show -raid-state recon]
+    C -->|Volume or space| F[volume show -state !online\nvolume show percent-used > 90%\nvolume efficiency show: dedup]
+    C -->|Network or LIF| G[net int show -status-oper down\nnet int show -is-home false\ncluster ping-cluster: ICL health]
     C -->|Protocol| H{Which protocol?}
     H -->|NFS| I[nfs connected-client show\nvserver export-policy check-access\nstatistics start -object nfsv3]
     H -->|CIFS/SMB| J[vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2]
     H -->|iSCSI| K[iscsi session show\nlun mapping show\nlun igroup show]
     H -->|FC| L[fcp adapter show\nfcp initiator show\nfcp topology show]
-    C -->|SnapMirror| M[snapmirror show -health false\nsnapmirror lag show\nnetwork interface show -role intercluster]
+    C -->|SnapMirror| M[snapmirror show -health false\nsnapmirror lag show\nnet int show -role intercluster]
     C -->|Performance| N[statistics start -object volume\nqos statistics performance show\nsystem node run sysstat]
-    D --> O[system node autosupport invoke -node * -type all -message case-number\nOpen NetApp support case]
+    D --> O[autosupport invoke: all nodes\nOpen NetApp support case]
     E --> O
     F --> O
     G --> O
