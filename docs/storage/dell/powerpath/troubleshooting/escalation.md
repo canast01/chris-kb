@@ -7,168 +7,307 @@ search:
 ---
 # PowerPath — Escalation
 
-
 <div class="kb-summary">
-Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
+How to escalate Dell EMC PowerPath multipath issues to Dell Technologies support: what data to collect, how to capture path state and system logs, step-by-step case creation on dell.com/support, and the escalation path when progress stalls.
 
-*Applies to: PowerPath*
+*Applies to: PowerPath for Linux / Windows; PowerPath/VE for ESXi*
 </div>
+
 ```text
-┌───────────────────────────────────── Dell PowerPath — Escalation ─────────────────────────────────────┐
+┌──────────────────────────────── Dell EMC PowerPath — Escalation ──────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     PowerPath escalation: severity triage, vendor support contact, and required artifacts     │   │
-│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
-│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
-│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate PowerPath issues to Dell support when all paths to a production LUN are dead and I/O        │
+│  has stopped, a host cannot detect any paths after an HBA or zoning change, PowerPath is              │
+│  presenting the wrong path count and ALUA trespass is not occurring, or a PowerPath upgrade           │
+│  has broken the driver leaving the host unable to see storage devices.                                │
 │                                                                                                       │
-│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
+│   │  powermt version (PP version)                │  │  Go to dell.com/support → My Cases          │   │
+│   │  powermt display dev=all (all path states)   │  │  Product: Dell EMC PowerPath (OS variant)   │   │
+│   │  powermt display ports class=all (HBA ports) │  │  Severity: P1 all paths dead / P2 degraded │    │
+│   │  dmesg / journalctl for I/O error context    │  │  Attach powermt output + kernel logs        │   │
+│   │  Write timeline: last working → first failure│  │  For P1: also call Dell support             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Driver           │  │        powermt daemon       │  │           OS-level          │   │
-│   │            Paths            │  │        Active-active        │  │         ≥4 paths/LUN        │   │
-│   │            Policy           │  │        Adaptive/ALUA        │  │        Array-specific       │   │
-│   │           Failover          │  │         Auto reroute        │  │          <5 sec RTO         │   │
-│   │          Management         │  │           pp_mgmt           │  │         Centralised         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  For P1: open portal case AND call Dell immediately.                                                  │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
-│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
-│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
-│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
-│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm powermt output received│  │  Do not unclaim paths without Dell guidance │   │
+│   │  T2: PP SE assigned; deep driver review      │  │  Do not remove and re-add storage devices   │   │
+│   │  E-Lab: compatibility questions (self-service│  │  Do not restart powermt daemon mid-incident │   │
+│   │  TAM: engage for prolonged P1 issues         │  │  Do not upgrade HBA driver during incident  │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Host OS (Windows/Linux) · HBA or iSCSI NIC ports · FC/IP switches · Dell arrays          │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perform...│
-│    powermt            = CLI utility; powermt display, powermt check, powermt save are core commands   │
-│    Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths      │
-│    Path health        = alive or dead status per path; dead paths trigger automatic I/O failover      │
-│    Adaptive policy    = load-balancing that distributes I/O across all active paths evenly            │
-│    CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)         │
-│    ALUA               = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred p...│
-│    Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays           │
-│    Ghost path         = stale path entry in PowerPath no longer backed by a physical device           │
-│    powermt check      = validates all paths and refreshes device table; run after fabric changes      │
-│    pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts    │
-│    License key        = host-based license required per server; applied via powermt config license    │
+│  powermt         = PowerPath CLI; powermt display, powermt check, powermt save are core commands      │
+│  pseudo device   = virtual block device aggregating all physical paths to one LUN                     │
+│  path health     = alive or dead status per physical path; dead = automatic I/O rerouting             │
+│  ALUA            = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred paths    │
+│  trespass        = LUN ownership transfer between SP-A and SP-B on Unity/VNX arrays                   │
+│  ghost path      = stale path entry in PowerPath no longer backed by a physical device                │
+│  powermt check   = validates all paths and refreshes device table; run after fabric changes           │
+│  E-Lab Navigator = Dell's compatibility database; authoritative for OS/kernel/driver matrix           │
+│  PowerPath/VE    = PowerPath for VMware ESXi; manages paths as a kernel module on the ESXi host       │
+│  CLARiiON policy = active/passive path policy for older VNX/CLARiiON arrays                           │
+│  Adaptive policy = active-active load-balancing policy distributing I/O across all paths              │
+│  license key     = host-based license required per server; applied via powermt config license         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+---
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** Root or Administrator access on the affected host; `powermt` command available (in PATH); Dell support account at dell.com/support linked to a valid PowerPath support contract
+- **Check the E-Lab Navigator first:** for path count or compatibility questions after an OS or kernel upgrade, check `elabnavigator.dell.com` — the compatibility matrix may resolve the issue without a support case
+- **Do NOT restart the powermt daemon** (`service powermt restart` or equivalent) during an active I/O outage without Dell guidance — restarting the daemon resets path tables and can cause brief additional I/O disruption
+- **Do NOT unclaim paths** (`powermt set dev=... unclaim`) without Dell guidance — unclaiming paths removes them from PowerPath management, leaving the device with no I/O path
 
 ---
 
-## Support Portal
+## Pre-Escalation Self-Check
 
-Dell EMC Support: [https://www.dell.com/support](https://www.dell.com/support)
+Run these before opening the case.
 
-- Log in with your MyDell account linked to your support contract
-- Navigate to **Cases** to open or track cases
-- The E-Lab Interoperability Navigator ([https://elabnavigator.dell.com](https://elabnavigator.dell.com)) is the authoritative source for PowerPath compatibility with OS versions and array firmware
+| Check | Command | Expected result |
+|---|---|---|
+| PowerPath version | `powermt version` | Note full version string |
+| License status | `powermt check_registration` | License valid for this host |
+| All device paths | `powermt display dev=all` | All paths show `alive` state |
+| Dead paths | `powermt display dev=all \| grep -i dead` | Empty output (no dead paths) |
+| HBA port status | `powermt display ports class=all` | All ports show `alive` |
+| Path count per device | `powermt display dev=all \| grep paths` | Expected count (4+ paths per device) |
+| Kernel messages | `dmesg \| grep -i "emcp\|powerpath" \| tail -20` | No recent I/O errors |
+| E-Lab check | elabnavigator.dell.com | OS/kernel/PP version combination is supported |
 
-## Opening a Case
+---
 
-1. Confirm the affected host and the PowerPath version are covered by an active support contract
-2. Collect the information listed in the next section before opening the case
-3. Go to [https://www.dell.com/support](https://www.dell.com/support) → **Contact Support** → **Create Service Request**
-4. Select product: **Dell EMC PowerPath** (specify the platform variant: PowerPath for Linux, Windows, AIX, or PowerPath/VE for ESXi)
-5. Set severity:
-   - **Severity 1** — host has lost all paths to storage; production I/O failing
-   - **Severity 2** — degraded path count (some paths dead); risk of failover impact
-   - **Severity 3** — non-critical issue (policy question, licensing enquiry, unexpected path count)
-   - **Severity 4** — general enquiry or configuration question
+## Step-by-Step Data Collection
 
-## Information to Collect
+### 1. Get the PowerPath version and license state
 
 ```bash
-# PowerPath version
+# PowerPath version (include full string in case description)
 powermt version
 
-# License registration status
+# License registration status (must be valid for support)
 powermt check_registration
 
-# All device and path state (save full output)
-powermt display dev=all
-
-# All HBA port states
-powermt display ports class=all
-
-# Load balancing policy and options
-powermt display options
-
-# OS and kernel version (Linux)
+# On Linux — OS and kernel version
 uname -r
 cat /etc/os-release
-
-# OS version (Windows — run in PowerShell)
-# Get-ComputerInfo | Select-Object OsName, OsVersion, OsBuildNumber
-
-# HBA driver version (Linux Fibre Channel)
-systool -c fc_host -v 2>/dev/null | grep -E "driver_version|firmware_version|port_name"
-
-# Recent PowerPath-related kernel messages (Linux)
-dmesg | grep -i "emcp\|PowerPath" | tail -50
-journalctl -k --since "1 hour ago" | grep -i "emcp\|powerpath"
-
-# System logs for I/O errors around the time of the issue (Linux)
-grep -i "emcp\|scsi\|hba" /var/log/messages | tail -100
 ```
 
-Also provide:
-- Description of the issue and approximate time it started
-- Array model and firmware version that the host is connected to
-- Zoning or LUN masking changes made recently
-- Output of `powermt display dev=<affected device>` for the specific device(s) affected
-- Any relevant OS or HBA driver upgrade activity
+```powershell
+# On Windows — PowerShell
+powermt version
+Get-ComputerInfo | Select-Object OsName, OsVersion, OsBuildNumber
+```
 
-## SLA Tiers
+### 2. Capture all device and path states
 
-| Severity | Description | Initial Response Target | Update Frequency |
-|---|---|---|---|
-| Severity 1 | Complete path loss / production I/O failure | 30 minutes | Every 2 hours until resolved |
-| Severity 2 | Degraded path count / elevated risk | 2 hours | Every 4 hours |
-| Severity 3 | Non-critical issue | Next business day | As updated |
-| Severity 4 | General question | 2 business days | As updated |
+```bash
+# Full device table with all path states — the most important output for Dell
+powermt display dev=all > /tmp/pp-dev-all-$(date +%Y%m%d%H%M).txt
 
-Response times are subject to your support contract tier (ProSupport, ProSupport Plus, or Mission Critical).
+# HBA and target port states
+powermt display ports class=all >> /tmp/pp-dev-all-$(date +%Y%m%d%H%M).txt
+
+# Load balancing policy and options
+powermt display options >> /tmp/pp-dev-all-$(date +%Y%m%d%H%M).txt
+
+# Save the current PowerPath configuration (state snapshot)
+powermt save
+```
+
+### 3. Capture kernel and system log messages
+
+```bash
+# Linux — kernel ring buffer for PowerPath and SCSI errors
+dmesg | grep -i "emcp\|PowerPath\|scsi\|hba" > /tmp/pp-dmesg-$(date +%Y%m%d).txt
+
+# Linux — journal from the systemd perspective (last 2 hours)
+journalctl -k --since "2 hours ago" | grep -i "emcp\|powerpath" >> /tmp/pp-dmesg-$(date +%Y%m%d).txt
+
+# Linux — system messages around the time of the issue
+grep -i "emcp\|scsi\|hba\|powerpath" /var/log/messages 2>/dev/null | tail -200 >> /tmp/pp-dmesg-$(date +%Y%m%d).txt
+```
+
+```powershell
+# Windows — PowerPath driver event log entries
+Get-EventLog -LogName System -Source "*powerpath*" -Newest 100 | Export-Csv /tmp/pp-events.csv
+```
+
+### 4. Capture HBA driver information
+
+```bash
+# Linux Fibre Channel HBA driver and firmware version
+systool -c fc_host -v 2>/dev/null | grep -E "driver_version|firmware_version|port_name|port_state"
+
+# Or for each HBA port
+cat /sys/class/fc_host/host*/symbolic_name
+cat /sys/class/fc_host/host*/port_state
+cat /sys/class/fc_host/host*/driver_version 2>/dev/null
+
+# iSCSI initiator (if applicable)
+cat /etc/iscsi/initiatorname.iscsi
+iscsiadm -m session 2>/dev/null
+```
+
+### 5. Write the timeline
+
+```text
+Host: db-prod-01.corp.local (RHEL 9.2, kernel 5.14.0-284.el9.x86_64)
+PowerPath version: 6.4.0.1 (Linux)
+Storage arrays connected: Unity XT 480F (2 paths via FC), PowerMax 8500 (4 paths via FC)
+Fabric: Brocade 32G; 2 fabrics; 2 HBAs (QLogic QLE2772)
+Issue first observed: 2026-06-15 09:00 UTC
+Last confirmed healthy: 2026-06-15 08:00 UTC
+Changes in 24h before the issue:
+  - 08:00: QLogic HBA firmware upgraded from 9.03.xx to 9.08.xx
+  - 09:00: powermt display dev=all: 8 devices show 0 alive paths; I/O stopping on db-prod-01
+  - 09:05: dmesg: "emcp: dev=sdb, path dead (HBA qla2xxx port XXXXXXXX)"
+E-Lab Navigator check: QLogic 9.08.xx firmware NOT in compatibility matrix for PowerPath 6.4.0.1 + RHEL 9.2
+Steps already taken:
+  - Did NOT restart the powermt daemon
+  - Did NOT unclaim any paths
+  - Confirmed fabric switch zoning is unchanged; other hosts on same fabric show live paths
+Blast radius: db-prod-01 has lost all PowerPath-managed paths; all database LUNs inaccessible; Oracle DB halted
+```
+
+---
+
+## How to Open the Case on dell.com/support
+
+1. Go to **dell.com/support** and sign in with your Dell account.
+
+2. Click **My Cases** → **Create New Case**.
+
+3. Under **Product**, select **Dell EMC PowerPath** and specify the variant:
+   - **PowerPath for Linux** — RedHat, SUSE, Oracle Linux, etc.
+   - **PowerPath for Windows** — Server 2019/2022
+   - **PowerPath/VE** — VMware ESXi
+
+4. Under **Severity**, select:
+   - **Severity 1 — Production Down**: All paths to one or more production LUNs are dead; I/O has stopped; application is down; no workaround
+   - **Severity 2 — Degraded**: Some paths are dead but I/O continues via remaining paths; risk of failover if another path fails; ALUA trespass not working correctly
+   - **Severity 3 — Non-Critical**: Unexpected path count (not minimum path loss); ghost paths; policy displaying incorrectly; license warning; workaround exists
+   - **Severity 4 — General**: Compatibility question (also check E-Lab Navigator first), how-to, upgrade planning
+
+5. In the **Summary** field: host + symptom. Example: `PowerPath 6.4.0.1 on RHEL 9.2 — all paths dead after QLogic HBA firmware upgrade 9.08.xx, Oracle DB halted on db-prod-01`.
+
+6. In the **Description** field, paste:
+   - PowerPath version and OS/kernel version from Step 1
+   - `powermt display dev=all` output (or excerpt showing the dead paths) from Step 2
+   - HBA driver and firmware version from Step 4
+   - Any E-Lab Navigator compatibility finding
+   - The timeline from Step 5
+
+7. Under **Attachments**, upload:
+   - The `pp-dev-all-*.txt` file from Step 2
+   - The kernel log from Step 3
+
+8. Click **Submit**. You receive a case number immediately.
+
+9. **Severity 1 only:** call Dell support after submission:
+    - North America: +1 800 945 3355 (24×7 for production-down)
+    - State "Severity 1 — PowerPath all paths dead on production host, application halted, case XXXXXXXX" at the start of the call.
+
+---
 
 ## Escalation Path
 
-1. **Case comment**: Request escalation directly within the support case if response time or progress is insufficient
-2. **Technical Account Manager (TAM)**: Contact your TAM to drive priority Sev1/Sev2 cases
-3. **Mission Critical support line**: Available 24x7 for Mission Critical contract holders; bypasses standard queue
-4. **E-Lab Navigator**: For compatibility questions (OS upgrade, kernel update), the E-Lab Navigator is self-service and does not require a support case
+```text
+Step 1 — Open case at dell.com/support with powermt output + kernel log attached
+         ↓
+Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
+         ↓
+Step 3 — If no meaningful progress within 2 hours for P1:
+         → Reply in case: "Requesting escalation to PowerPath Senior Engineer"
+         → State: "[all paths dead / I/O stopped / host down / driver issue]"
+         ↓
+Step 4 — PowerPath T2 Senior Engineer assigned
+         → They will review powermt output and kernel logs
+         → May request SSH access to the host or a remote desktop session
+         ↓
+Step 5 — If issue is a confirmed driver/firmware incompatibility:
+         → T2 engages Dell EMC PowerPath Engineering
+         → Engineering provides a targeted fix or defines the rollback procedure
+         ↓
+Step 6 — For prolonged P1 with application down:
+         → Request TAM engagement
+         → TAM can arrange bridge call with Engineering and coordinate hardware dispatch if needed
+```
 
 ---
 
-## Verify resolution
+## What NOT to Do
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Restart the powermt daemon during active I/O loss | Restarting resets path tables; on a partially recovered system this can re-trigger the I/O error state | Let Dell assess the current path state before any daemon restart |
+| Unclaim paths without Dell guidance | Unclaiming removes paths from PowerPath management; if the underlying issue is the array side, unclaiming may leave the device with no managed path | Confirm with Dell which paths need to be unclaimed and in what sequence |
+| Remove and re-add storage devices at the OS level | Force-removing and re-scanning SCSI devices can corrupt the PowerPath device table and cause device ID mismatches | Only rescan with Dell's explicit instruction and specific `powermt check` command sequence |
+| Upgrade the HBA driver or firmware during an incident | Adding a new driver version to an already-broken path state creates an additional variable and may delay root cause identification | Freeze all HBA and driver changes until Dell confirms the path issue is resolved |
+| Upgrade PowerPath without E-Lab Navigator confirmation | Installing a PowerPath version that is not validated for the current OS/kernel/HBA combination will reproduce the issue | Check elabnavigator.dell.com before any PowerPath upgrade to confirm the combination is supported |
+| Disable or bypass PowerPath to use native multipath | Switching to native multipath mid-incident changes the device naming and LUN presentation, risking filesystem corruption if the switchover is not done cleanly | Only switch to native multipath with Dell's documented migration procedure |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# SSH to affected host as root — paste into every case update
+
+# PowerPath version
+powermt version
+
+# All device and path states (most important)
+powermt display dev=all | head -80
+
+# Dead paths count
+powermt display dev=all | grep -i dead
+
+# HBA port states
+powermt display ports class=all
+
+# Recent kernel errors
+dmesg | grep -i "emcp\|powerpath" | tail -20
+```
+
+---
+
+## Support SLA Reference
+
+| Tier | Severity | Definition | Initial Response SLA |
+|---|---|---|---|
+| ProSupport Plus | P1 — Production Down | All paths dead; I/O stopped; application halted | < 2 hours (24×7) |
+| ProSupport Plus | P2 — Degraded | Some paths dead; I/O continuing via reduced paths; elevated risk | < 4 hours (24×7) |
+| ProSupport Plus | P3 — Non-Critical | Ghost paths; unexpected path count; license warning | Next business day |
+| ProSupport Plus | P4 — General | Compatibility question, how-to, planning | Next business day |
+| ProSupport | P1 | As above | < 4 hours (24×7) |
 
 ---
 
 ## See also
 
-- [Powerpath — Diagnostics](diagnostics/)
-- [Powerpath — Common Issues](common-issues/)
+- [PowerPath — Diagnostics](diagnostics/)
+- [PowerPath — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `powermt display dev=all` and confirm all paths for all devices show `alive` state
+- Run `powermt display dev=all | grep -i dead` and confirm empty output (no dead paths)
+- Run `powermt display ports class=all` and confirm all HBA ports are alive
+- Confirm application I/O has resumed: check application logs and confirm no SCSI errors in `dmesg`
+- Run `powermt check` to refresh the device table and confirm path count is correct
+- Run `powermt save` to persist the current verified configuration
+- Monitor `dmesg | grep -i emcp` for 15 minutes to confirm no new I/O errors appear
