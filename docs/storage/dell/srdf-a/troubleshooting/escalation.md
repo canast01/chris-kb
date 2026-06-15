@@ -7,95 +7,291 @@ search:
 ---
 # SRDF/A — Escalation
 
-
 <div class="kb-summary">
-SRDF/A escalation procedures — case creation and Dell EMC support triage for async replication failures.
+How to escalate Dell SRDF/A (Symmetrix Remote Data Facility Asynchronous) replication issues to Dell Technologies support: what data to collect, how to capture symrdf diagnostics, step-by-step case creation on dell.com/support, and the escalation path when progress stalls.
 
-*Applies to: SRDF/A*
+*Applies to: SRDF/A on PowerMax 2500 / 8500 running PowerMaxOS 10.x*
 </div>
 
 ```text
-┌───────────────────────────────────────── SRDF/A — Escalation ─────────────────────────────────────────┐
+┌───────────────────────────────────── Dell SRDF/A — Escalation ────────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    SRDF/A — Escalation Path                                   │   │
-│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
-│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
-│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
-│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate SRDF/A issues to Dell support when all SRDF groups are suspended and the DR array           │
+│  is no longer receiving new write cycles, the SRDF link has failed and replication lag is             │
+│  growing beyond RPO limits, a planned failover cannot be completed because R2 volumes cannot          │
+│  be made read-write, or an SRDF/A upgrade has disrupted the cycle consistency mechanism.              │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Information to Collect Before Escalating                           │   │
-│   │               Product version: SRDF/A version string from About / version command             │   │
-│   │                                  Full log bundle: symrdf query                                │   │
-│   │                     Symptom timeline: when first occurred; any changes made                   │   │
-│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
-│   │                    Error codes: exact error messages and exit codes from logs                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
+│   │  symrdf query -g <group> -v (SRDF state)     │  │  Go to dell.com/support → My Cases          │   │
+│   │  symcfg -sid <SID> list -ra all (RDF ports)  │  │  Select product by array SID (both sites)   │   │
+│   │  symevent -sid <SID> list -last 500          │  │  Severity: P1 all groups suspended / P2 lag │   │
+│   │  symdf list -sid <SID> (all SRDF groups)     │  │  Attach symrdf output + event log           │   │
+│   │  Write timeline: last sync cycle → first err │  │  For P1: also call Dell support             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  For P1: open portal case AND call Dell immediately.                                                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm symrdf data received   │  │  Do not run symrdf failover without Dell    │   │
+│   │  T2: PowerMax SE assigned; RDF analysis      │  │  Do not split SRDF groups unilaterally      │   │
+│   │  Engineering: for RDF cycle state issues     │  │  Do not use --force flags without Dell      │   │
+│   │  TAM: engage for P1 data loss risk           │  │  Do not establish (resync) without Dell OK  │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
-│  R1            = source SRDF volume on production array; host writes flow here                        │
-│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
-│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
-│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
-│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
-│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
-│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
-│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
-│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
-│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
-│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
-│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
-│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│  SRDF/A          = Symmetrix Remote Data Facility Asynchronous; cycle-based async replication         │
+│  R1              = source SRDF volume; production array; host writes flow here                        │
+│  R2              = target SRDF volume; DR array; receives data asynchronously per cycle               │
+│  Delta Set       = batch of writes accumulated per cycle; shipped to R2 atomically                    │
+│  Cycle Time      = SRDF/A replication interval (15–60 sec); determines maximum RPO                    │
+│  RDF Group       = logical grouping of SRDF pairs sharing an RDF link; managed together               │
+│  symrdf          = Solutions Enabler CLI for SRDF: establish, split, failover, restore                │
+│  Suspended       = SRDF group state where replication is paused; R2 frozen at last committed cycle    │
+│  symdf list      = lists all SRDF groups and their current pair state                                 │
+│  FCIP            = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN                         │
+│  SID             = Symmetrix ID; 12-digit array serial; used in all symcli commands                   │
+│  Solutions Enabler= Dell CLI toolkit; all PowerMax and SRDF management; symcfg, symrdf, symevent      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-> Part of the [SRDF/A](../index.md) reference.
 
-Dell SRDF/A support cases are opened via the Dell Support Portal (support.dell.com) under the relevant PowerMax array service tag. When opening a case, classify the severity appropriately: P1 for active replication failure with no workaround, P2 for degraded replication with workaround in place. Collect the required diagnostics before calling to accelerate triage.
-
-**Required information for SR:**
-
-| Item | Command / Source |
-|---|---|
-| Pmax serial numbers (both sites) | `symcfg list` |
-| SRDF group IDs | `symrdf list` |
-| Replication lag stats | `symrdf query -g <group> -v` |
-| Array event log | Unisphere for PowerMax → Events |
-| Solutions Enabler version | `symcli -version` |
-| syminq output | `syminq` |
-
-**Support tiers:**
-- **ProSupport**: Next business day parts/labour.
-- **ProSupport Plus**: 24×7 proactive monitoring and predictive issue detection.
-- **Mission Critical**: Dedicated TAM and 4-hour onsite SLA for P1 incidents.
+---
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** Solutions Enabler (symcli) on a host connected to the production PowerMax; Unisphere access (admin credentials) for both arrays; Dell support account at dell.com/support linked to both array serial numbers
+- **Both arrays required:** SRDF/A issues require data from both R1 (production) and R2 (DR) arrays — capture `symrdf` output and `symevent` from both SIDs
+- **Do NOT run `symrdf failover`** without Dell direction — an SRDF/A failover makes R2 read-write; in a suspended state, R2 may not have the latest write cycle; the data gap must be confirmed before any failover decision
+- **Do NOT use `--force` flags** on symrdf commands without Dell guidance — force flags on SRDF bypass consistency checks and can leave SRDF groups in an unrecoverable state
 
 ---
 
+## Pre-Escalation Self-Check
+
+Run these before opening the case.
+
+| Check | Command | Expected result |
+|---|---|---|
+| Production SID | `symcfg list` | Note 12-digit Symmetrix ID for R1 array |
+| DR SID | `symcfg list` (on DR-side SE host) | Note 12-digit Symmetrix ID for R2 array |
+| SRDF group states | `symdf list -sid <R1-SID>` | All groups in Synchronized or Consistent state |
+| SRDF pair state detail | `symrdf query -g <group>` | Pair state: Synchronized; R1/R2 state: Ready/WriteDisabled |
+| RDF director ports | `symcfg -sid <SID> list -ra all` | All RDF directors Online |
+| WAN link bandwidth | Unisphere → SRDF → Performance | Replication link utilized but not saturated |
+| Recent events | `symevent -sid <SID> list -last 100` | No SRDF-related FAULT or CRITICAL events |
+
 ---
 
-## Verify resolution
+## Step-by-Step Data Collection
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+### 1. Get array serial numbers and Solutions Enabler version
+
+```bash
+# On the production SE host
+
+# Both registered arrays
+symcfg list
+
+# Solutions Enabler version
+symcli -version
+
+# Microcode version on R1
+symcfg -sid <R1-SID> show | grep -i microcode
+```
+
+### 2. Capture SRDF group and pair state
+
+```bash
+# All SRDF groups on the R1 array
+symdf list -sid <R1-SID> > /tmp/srdf-groups-$(date +%Y%m%d%H%M).txt
+
+# Detailed state of all affected SRDF groups
+for GROUP in $(symdf list -sid <R1-SID> | grep -v '^-' | awk '{print $1}' | grep '^[0-9]'); do
+  echo "=== Group $GROUP ===" >> /tmp/srdf-detail-$(date +%Y%m%d%H%M).txt
+  symrdf query -g $GROUP -v >> /tmp/srdf-detail-$(date +%Y%m%d%H%M).txt
+done
+
+# RDF director status on both arrays
+symcfg -sid <R1-SID> list -ra all > /tmp/srdf-rdf-ports-$(date +%Y%m%d).txt
+symcfg -sid <R2-SID> list -ra all >> /tmp/srdf-rdf-ports-$(date +%Y%m%d).txt
+```
+
+### 3. Capture the event log from both arrays
+
+```bash
+# Last 500 events from the production array (R1)
+symevent -sid <R1-SID> list -last 500 > /tmp/srdf-events-r1-$(date +%Y%m%d).txt
+
+# Last 500 events from the DR array (R2)
+symevent -sid <R2-SID> list -last 500 > /tmp/srdf-events-r2-$(date +%Y%m%d).txt
+
+# Filter for SRDF-related events
+grep -iE "SRDF|RDF|replication|suspend|fault" /tmp/srdf-events-r1-$(date +%Y%m%d).txt
+```
+
+### 4. Capture SRDF link performance and WAN state
+
+```bash
+# RDF group performance stats (bandwidth and latency)
+symrdf -g <group-number> -sid <R1-SID> perf summary
+
+# Check the SRDF/A cycle time and current lag
+symrdf query -g <group> -v | grep -iE "cycle|lag|delta|consistent"
+
+# FCIP link state (if SRDF uses FCIP)
+symcfg -sid <R1-SID> list -ra all | grep -i "fcip\|iscsi"
+```
+
+### 5. Write the timeline
+
+```text
+R1 array: PowerMax 8500, SID: 000XXXXXXXXXX (production, Site A)
+R2 array: PowerMax 2500, SID: 000YYYYYYYYYY (DR, Site B)
+PowerMaxOS: 10.1.0.2 (both)
+Solutions Enabler: 10.1.0.18
+SRDF configuration: SRDF/A async; 3 RDF groups (Group 1: Oracle, Group 2: SAP, Group 3: SQL)
+Cycle time: 30 seconds; expected RPO: < 60 seconds
+SRDF link: FCIP 10 Gbps over MPLS between Site A and Site B
+Issue first observed: 2026-06-15 11:00 UTC
+Last confirmed sync cycle: 2026-06-15 10:30 UTC (30-minute gap so far)
+Changes in 24h before the issue:
+  - 10:30: MPLS circuit maintenance; brief interruption
+  - 11:00: symdf list: all 3 SRDF groups now show "Suspended"
+  - 11:05: Unisphere alert: "SRDF Group 1: link error — cycle abandoned"
+  - 11:10: R2 array read-write disabled on all SRDF devices; DR inaccessible
+Steps already taken:
+  - Did NOT run symrdf failover
+  - Did NOT run symrdf establish (resync)
+  - MPLS circuit restored at 10:45 but groups remain Suspended
+  - symrdf query -g 1: Pair state = Suspended; R1 state = Ready; R2 state = WriteDisabled
+Blast radius: DR completely unavailable; R2 volumes not accepting writes; RPO growing (currently ~30 min)
+```
+
+---
+
+## How to Open the Case on dell.com/support
+
+1. Go to **dell.com/support** and sign in with your Dell account.
+
+2. Click **My Cases** → **Create New Case**.
+
+3. Under **Product**, enter the R1 (production) array serial number (12-digit Symmetrix ID). Select **Dell PowerMax** as the product family.
+
+4. Under **Severity**, select:
+   - **Severity 1 — Production Down**: All SRDF groups suspended and DR is completely unavailable; a failover is required but R2 volumes cannot be made read-write; replication link has been down for more than RPO; data loss has already occurred with growing gap
+   - **Severity 2 — Degraded**: SRDF/A lag is growing and approaching RPO; some SRDF groups suspended but others are replicating; resync is failing after a maintenance window; workaround is partial
+   - **Severity 3 — Non-Critical**: A single SRDF group is suspended; others are healthy; replication is active at reduced performance; workaround exists
+   - **Severity 4 — General**: How-to, SRDF/A cycle time tuning, WAN bandwidth planning, DR test procedure
+
+5. In the **Summary** field: symptom + scope. Example: `PowerMax 8500 SRDF/A — 3 RDF groups suspended after MPLS maintenance, DR site not receiving cycles, RPO breach growing`.
+
+6. In the **Description** field, paste:
+   - R1 and R2 SIDs and PowerMaxOS versions
+   - `symdf list` output from Step 2
+   - The key `symrdf query` result (pair state, R1/R2 state)
+   - The event log SRDF-related entries from Step 3
+   - The timeline from Step 5
+
+7. Under **Attachments**, upload:
+   - `srdf-groups-*.txt` and `srdf-detail-*.txt` from Step 2
+   - `srdf-events-r1-*.txt` and `srdf-events-r2-*.txt` from Step 3
+
+8. Click **Submit**. You receive a case number immediately.
+
+9. **Severity 1 only:** call Dell support after submission:
+    - North America: +1 800 945 3355 (24×7 for production-down)
+    - State "Severity 1 — SRDF/A all groups suspended, DR not receiving cycles, RPO breach, case XXXXXXXX" at the start of the call.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open case at dell.com/support with symrdf output + event logs from both arrays
+         ↓
+Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
+         ↓
+Step 3 — If no meaningful progress within 2 hours for P1:
+         → Reply in case: "Requesting escalation to PowerMax/SRDF Senior Engineer"
+         → State: "[groups suspended / link down / failover blocked / RPO breach]"
+         ↓
+Step 4 — PowerMax T2 Senior Engineer assigned
+         → They will review the symrdf data and may request a remote SE session
+         → Confirm SRS-VE is deployed and Dell can connect remotely
+         → Have Solutions Enabler host and Unisphere access ready
+         ↓
+Step 5 — If issue is an SRDF/A code-level problem (cycle consistency mechanism, delta set corruption):
+         → T2 escalates to PowerMax SRDF Engineering
+         → Engineering may provide targeted recovery commands
+         ↓
+Step 6 — For P1 with DR unavailable > 2 hours:
+         → Request TAM engagement
+         → TAM to arrange engineering bridge and confirm failover decision if data loss is imminent
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Run `symrdf failover` without Dell confirming the R2 state | An SRDF/A failover makes R2 read-write; in a suspended state, R2 may not contain the last committed write cycle; failing over prematurely locks in the data gap | Let Dell confirm the last consistent R2 cycle time and the exact data gap before any failover decision |
+| Run `symrdf establish` (resync) without Dell direction | Establishing re-sends all data from R1 to R2; on large SRDF groups this can take hours and extends the DR gap during the sync; in some states it can widen the gap by overwriting R2 with an older R1 image | Let Dell assess whether an establish or an incremental resync is appropriate for the current pair state |
+| Use `--force` flags on symrdf commands | Force flags bypass SRDF consistency checks; on an SRDF/A group these can destroy the cycle consistency mechanism and make the group unrecoverable | Only use --force on Dell's explicit instruction with the full command provided |
+| Split an SRDF group to "free" R2 for temporary access | Splitting makes R2 read-write but permanently breaks the replication relationship; restore requires a full resync | Only split if Dell confirms that no resync from the current state is possible |
+| Make any changes to R1 production volumes or masking views during a suspended state | Changes to production during an SRDF suspension affect the data that needs to be synced when replication resumes | Freeze all storage changes on R1 until SRDF resumes replication |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# Run on Solutions Enabler host with R1 connectivity — paste into every case update
+
+# SRDF group states (all groups)
+symdf list -sid <R1-SID>
+
+# Detailed pair state for affected group
+symrdf query -g <group-number> -v | head -30
+
+# RDF director states
+symcfg -sid <R1-SID> list -ra all | grep -E "ONLINE|OFFLINE"
+
+# Recent SRDF events (last 20)
+symevent -sid <R1-SID> list -last 20 | grep -iE "SRDF|RDF|suspend|fault"
+```
+
+---
+
+## Support SLA Reference
+
+| Tier | Severity | Definition | Initial Response SLA |
+|---|---|---|---|
+| ProSupport Plus | P1 — Production Down | All SRDF groups suspended; DR unavailable; failover blocked; data loss growing | < 2 hours (24×7) |
+| ProSupport Plus | P2 — Degraded | SRDF lag growing; some groups suspended; resync failing; RPO at risk | < 4 hours (24×7) |
+| ProSupport Plus | P3 — Non-Critical | Single group suspended; others healthy; workaround exists | Next business day |
+| ProSupport Plus | P4 — General | How-to, cycle tuning, WAN bandwidth planning | Next business day |
+| ProSupport | P1 | As above | < 4 hours (24×7) |
 
 ---
 
 ## See also
 
-- [Srdf A — Diagnostics](diagnostics/)
-- [Srdf A — Common Issues](common-issues/)
+- [SRDF/A — Diagnostics](diagnostics/)
+- [SRDF/A — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `symdf list -sid <R1-SID>` and confirm all SRDF groups show Synchronized or Consistent state
+- Run `symrdf query -g <group>` for each group and confirm R1 state = Ready, R2 state = WriteDisabled, pair state = Synchronized
+- Confirm the SRDF/A cycle is completing: run `symrdf query -g <group> -v` and confirm the cycle time matches the configured interval
+- Run `symevent -sid <R1-SID> list -last 50` and confirm no new SRDF FAULT or CRITICAL events
+- Check the SRDF/A lag is back within the RPO target in Unisphere → SRDF → Performance
+- Monitor SRDF group state for 15 minutes to confirm no groups transition to Suspended again

@@ -7,112 +7,299 @@ search:
 ---
 # SRDF/S — Escalation
 
-
 <div class="kb-summary">
-Escalation reference covering Required Information for Support Request, Support Tiers, When to Escalate.
+How to escalate Dell SRDF/S (Symmetrix Remote Data Facility Synchronous) replication issues to Dell Technologies support: what data to collect, how to capture symrdf diagnostics, step-by-step case creation on dell.com/support, and the escalation path when progress stalls.
 
-*Applies to: SRDF/S*
+*Applies to: SRDF/S (Metro) on PowerMax 2500 / 8500 running PowerMaxOS 10.x*
 </div>
 
 ```text
-┌───────────────────────────────────────── SRDF/S — Escalation ─────────────────────────────────────────┐
+┌───────────────────────────────────── Dell SRDF/S — Escalation ────────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    SRDF/S — Escalation Path                                   │   │
-│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
-│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
-│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
-│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│  Escalate SRDF/S issues to Dell support when host I/O has stopped because the synchronous             │
+│  link has failed and SRDF/S is not failing over automatically, the pair state is stuck in             │
+│  Partitioned and write latency has increased dramatically, a failover at the DR site is               │
+│  required but R2 volumes cannot be activated, or an SRDF/S Metro relationship is split and            │
+│  both R1 and R2 are showing inconsistency errors.                                                     │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Information to Collect Before Escalating                           │   │
-│   │               Product version: SRDF/S version string from About / version command             │   │
-│   │                                  Full log bundle: symrdf query                                │   │
-│   │                     Symptom timeline: when first occurred; any changes made                   │   │
-│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
-│   │                    Error codes: exact error messages and exit codes from logs                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the Case             │   │
+│   │  symrdf query -g <group> -v (pair state)     │  │  Go to dell.com/support → My Cases          │   │
+│   │  symcfg -sid <SID> list -ra all (RDF ports)  │  │  Select product by array SID (both sites)   │   │
+│   │  symevent -sid <SID> list -last 500          │  │  Severity: P1 I/O stopped / P2 latency high │   │
+│   │  symdf list -sid <SID> (all SRDF groups)     │  │  Attach symrdf output + event log           │   │
+│   │  Write timeline: link failure → I/O impact   │  │  For P1: also call Dell support             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
+│  For P1 (host I/O stopped, SRDF/S link failure): open case AND call Dell immediately.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  T1: triage + confirm symrdf data received   │  │  Do not run symrdf failover without Dell    │   │
+│   │  T2: PowerMax SE assigned; RDF Metro analysis│  │  Do not use --force on symrdf commands      │   │
+│   │  Engineering: for SRDF/S Adaptive Copy issues│  │  Do not modify host masking during incident │   │
+│   │  TAM: engage for P1 host I/O stopped         │  │  Do not change link topology mid-case       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
-│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+│  SRDF/S          = SRDF Synchronous; zero-RPO replication; every host write must commit to R2         │
+│  R1              = source SRDF volume; production array; host writes must be confirmed at R2 first    │
+│  R2              = target SRDF volume; DR array; every write on R1 is synchronous to R2 before ACK    │
+│  Synchronized    = normal SRDF/S state; R1 and R2 are identical at every write                        │
+│  Partitioned     = link failure state; R1 and R2 are diverging; I/O may continue with SDDF            │
+│  SDDF            = Semi-Synchronous Disk Data Facility; fallback mode during link degradation         │
+│  Adaptive Copy   = optional mode allowing SRDF/S to accept host I/O even with link failure            │
+│  symrdf          = Solutions Enabler CLI for SRDF: establish, failover, restore, split                │
+│  Metro           = SRDF/S deployment at < 200 km; typically sub-millisecond latency on dark fiber     │
+│  SID             = Symmetrix ID; 12-digit array serial; used in all symcli commands                   │
+│  RDF Director    = dedicated SRDF port on PowerMax; provides the link to the remote array             │
+│  WriteDisabled   = state of R2 when SRDF relationship is intact; R2 accepts writes from R1 only       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-> Part of the [SRDF/S Troubleshooting](index.md) reference.
-
-Dell SRDF/S support cases are opened at support.dell.com under the relevant PowerMax array service tag. P1 cases (active production replication failure with data risk) trigger a 30-minute callback SLA under ProSupport Plus and Mission Critical contracts. Collect all required diagnostics before calling to avoid delays during triage.
 
 ---
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access required:** Solutions Enabler (symcli) on a host with connectivity to both the R1 (production) and R2 (DR) PowerMax arrays; Unisphere access for both arrays; Dell support account at dell.com/support linked to both array serial numbers
+- **Both arrays required:** SRDF/S issues always require data from both R1 and R2 — `symrdf` output and `symevent` must be captured from both SIDs
+- **Do NOT run `symrdf failover`** without Dell direction — SRDF/S failover makes R2 read-write; the critical question is whether R1 and R2 were in sync at the moment of failure; this must be confirmed before any failover
+- **Do NOT use `--force` flags** on symrdf commands — force flags on SRDF/S bypass synchronization checks and can leave the pair in an inconsistent state that cannot be restored without a full resync
 
 ---
 
-## Required Information for Support Request
+## Pre-Escalation Self-Check
 
-| Item | Command / Source |
-|---|---|
-| Pmax serial numbers (both sites) | `symcfg list` |
-| SRDF group ID and current state | `symrdf query -g <group> -v` |
-| Pair state history | Array event log (Unisphere → Events) |
-| Solutions Enabler version | `symcli -version` |
-| Site RTT measurement | Network team latency report |
-| Array event log export | Unisphere for PowerMax → Export Logs |
+Run these before opening the case.
 
----
-
-## Support Tiers
-
-| Tier | Coverage | P1 SLA |
+| Check | Command | Expected result |
 |---|---|---|
-| **ProSupport** | 8×5 NBD for non-critical; 24×7 for P1 | 24×7 phone support |
-| **ProSupport Plus** | 24×7 proactive health monitoring; predictive issue detection | 30-minute callback |
-| **Mission Critical** | Dedicated TAM, 4-hour onsite SLA for P1 SRDF failures | 4-hour onsite |
+| Production SID | `symcfg list` | Note 12-digit Symmetrix ID for R1 array |
+| DR SID | `symcfg list` (on DR-side SE host or same host if registered) | Note 12-digit Symmetrix ID for R2 array |
+| SRDF group states | `symdf list -sid <R1-SID>` | All groups in Synchronized state |
+| SRDF pair state | `symrdf query -g <group>` | Pair state: Synchronized; R1: Ready; R2: WriteDisabled |
+| RDF director ports | `symcfg -sid <SID> list -ra all` | All RDF directors Online |
+| Host I/O state | Application and OS I/O error logs | No SCSI or FC errors on production hosts |
+| Link latency | Unisphere → SRDF → Performance | Link latency within expected range (typically < 1 ms) |
+| Recent events | `symevent -sid <SID> list -last 100` | No SRDF FAULT or CRITICAL events |
 
 ---
 
-## When to Escalate
+## Step-by-Step Data Collection
 
-- Pair state `Invalid` with data risk and no clear root cause
-- Failover refused with errors not covered by known field notes
-- R2 data consistency in question after unplanned failover
-- SRDF group port offline with no clear physical cause
-- Resync repeatedly failing or stalling beyond expected window
+### 1. Get array serial numbers and Solutions Enabler version
+
+```bash
+# On the Solutions Enabler host
+
+# All registered arrays (should show both R1 and R2 SIDs)
+symcfg list
+
+# Solutions Enabler version
+symcli -version
+
+# Microcode version on R1 and R2
+symcfg -sid <R1-SID> show | grep -i microcode
+symcfg -sid <R2-SID> show | grep -i microcode
+```
+
+### 2. Capture SRDF group and pair state from both arrays
+
+```bash
+# All SRDF groups on R1
+symdf list -sid <R1-SID> > /tmp/srdf-s-groups-$(date +%Y%m%d%H%M).txt
+
+# All SRDF groups on R2 (should mirror R1)
+symdf list -sid <R2-SID> >> /tmp/srdf-s-groups-$(date +%Y%m%d%H%M).txt
+
+# Detailed pair state for each affected SRDF group
+symrdf query -g <group-number> -v > /tmp/srdf-s-detail-$(date +%Y%m%d%H%M).txt
+
+# Check for Partitioned state specifically
+symrdf query -g <group-number> -v | grep -iE "Synchronized|Partitioned|Consistent|Invalid|pair state"
+```
+
+### 3. Capture RDF director and link state
+
+```bash
+# RDF directors on R1
+symcfg -sid <R1-SID> list -ra all > /tmp/srdf-s-rdf-$(date +%Y%m%d).txt
+
+# RDF directors on R2
+symcfg -sid <R2-SID> list -ra all >> /tmp/srdf-s-rdf-$(date +%Y%m%d).txt
+
+# RDF port-level details
+symcfg -sid <R1-SID> list -ra all -v | grep -iE "port|status|online|offline"
+
+# SRDF link bandwidth and latency (Unisphere alternative)
+symrdf -sid <R1-SID> -g <group-number> perf summary
+```
+
+### 4. Capture event log from both arrays
+
+```bash
+# Last 500 events from R1 (production)
+symevent -sid <R1-SID> list -last 500 > /tmp/srdf-s-events-r1-$(date +%Y%m%d).txt
+
+# Last 500 events from R2 (DR)
+symevent -sid <R2-SID> list -last 500 > /tmp/srdf-s-events-r2-$(date +%Y%m%d).txt
+
+# Filter for SRDF events
+grep -iE "SRDF|RDF|partition|fault|link" /tmp/srdf-s-events-r1-$(date +%Y%m%d).txt | head -50
+```
+
+### 5. Write the timeline
+
+```text
+R1 array: PowerMax 8500, SID: 000XXXXXXXXXX (production, Site A — primary data center)
+R2 array: PowerMax 2500, SID: 000YYYYYYYYYY (DR, Site B — DR site; 50 km apart)
+PowerMaxOS: 10.1.0.2 (both)
+Solutions Enabler: 10.1.0.18
+SRDF configuration: SRDF/S synchronous (zero RPO); 1 RDF group (Group 5: 400 devices)
+Link: Dark fiber 10 Gbps; normal latency 0.3 ms round-trip
+Host connectivity: 48 production hosts connected to R1 via FC
+Issue first observed: 2026-06-15 11:30 UTC
+Last confirmed Synchronized state: 2026-06-15 11:25 UTC
+Changes in 24h before the issue:
+  - 11:25: Network team patched fiber amplifier on the dark fiber link
+  - 11:30: symdf list: Group 5 transitions to "Partitioned" state
+  - 11:32: Production hosts: SCSI I/O latency increase from 0.4 ms to 45 ms (SRDF/S holding writes)
+  - 11:35: SRDF Adaptive Copy NOT enabled; hosts now queueing I/O; some applications timing out
+Steps already taken:
+  - Did NOT run symrdf failover
+  - Did NOT enable Adaptive Copy
+  - Fiber team: investigating if amplifier patch caused link instability
+  - symrdf query -g 5: Pair state = Partitioned; R1 = Ready; R2 = WriteDisabled
+Blast radius: 48 production hosts experiencing I/O delays (holding writes pending R2 ACK); applications queuing
+```
 
 ---
 
-## Verify resolution
+## How to Open the Case on dell.com/support
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+1. Go to **dell.com/support** and sign in with your Dell account.
+
+2. Click **My Cases** → **Create New Case**.
+
+3. Under **Product**, enter the R1 (production) array serial number. Select **Dell PowerMax** as the product family.
+
+4. Under **Severity**, select:
+   - **Severity 1 — Production Down**: SRDF/S link failure has stopped host I/O (writes queueing indefinitely); Partitioned state with no automatic recovery; I/O timeouts causing application outages; failover required but blocked
+   - **Severity 2 — Degraded**: SRDF/S in Partitioned state but Adaptive Copy is buffering writes; link is intermittent; latency has increased but I/O has not stopped; failover not yet required
+   - **Severity 3 — Non-Critical**: SRDF/S degraded to a lower performance mode but synchronized; specific device group has a pair state warning; workaround available
+   - **Severity 4 — General**: How-to, link sizing, Metro architecture planning, cycle time tuning
+
+5. In the **Summary** field: symptom + impact. Example: `PowerMax 8500 SRDF/S Metro — Group 5 Partitioned since 11:30 UTC, 48 production hosts experiencing I/O latency, applications queuing`.
+
+6. In the **Description** field, paste:
+   - R1 and R2 SIDs and PowerMaxOS versions from Step 1
+   - `symdf list` output from Step 2
+   - `symrdf query` pair state detail from Step 2
+   - RDF director states from Step 3
+   - The event log SRDF entries from Step 4
+   - The timeline from Step 5
+
+7. Under **Attachments**, upload:
+   - `srdf-s-groups-*.txt` and `srdf-s-detail-*.txt` from Steps 1 and 2
+   - `srdf-s-rdf-*.txt` from Step 3
+   - `srdf-s-events-r1-*.txt` and `srdf-s-events-r2-*.txt` from Step 4
+
+8. Click **Submit**. You receive a case number immediately.
+
+9. **Severity 1 only:** call Dell support after submission:
+    - North America: +1 800 945 3355 (24×7 for production-down)
+    - State "Severity 1 — SRDF/S Partitioned, host I/O queuing, applications timing out, case XXXXXXXX" at the start of the call.
+
+---
+
+## Escalation Path
+
+```text
+Step 1 — Open case at dell.com/support with symrdf output + event logs from both arrays
+         ↓
+Step 2 — Dell T1 engineer acknowledges (P1: < 2 hr ProSupport Plus; P2: < 4 hr)
+         ↓
+Step 3 — If no meaningful progress within 1 hour for P1 (I/O impacting applications):
+         → Reply: "Requesting escalation to PowerMax SRDF/S Senior Engineer"
+         → State: "[Partitioned state / I/O queuing / host latency / link failure]"
+         ↓
+Step 4 — PowerMax T2 Senior Engineer assigned
+         → SRDF/S P1s are urgent — T2 may request immediate remote session via SRS-VE
+         → Have Solutions Enabler host, Unisphere, and fiber/network team contact ready
+         ↓
+Step 5 — If issue requires deciding between Adaptive Copy, failover, or link restore:
+         → Dell will provide explicit command sequence and risk assessment for each option
+         → Do not make this decision independently
+         ↓
+Step 6 — For P1 with I/O stopped > 30 minutes:
+         → Request TAM engagement immediately
+         → TAM to arrange engineering bridge and coordinate failover decision if link cannot be restored
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Run `symrdf failover` without Dell confirming R2 pair consistency | SRDF/S failover makes R2 read-write; if the link failed mid-write, R2 may have inconsistent data from the last write that was not fully committed | Let Dell confirm whether the last write cycle at the moment of failure was complete before any failover |
+| Enable Adaptive Copy without Dell direction | Adaptive Copy allows writes to continue to R1 without waiting for R2; this extends the data gap and changes the RPO exposure; the correct response depends on the business decision | Confirm with Dell and the business whether extending the data gap is acceptable before enabling Adaptive Copy |
+| Use `--force` on symrdf commands | Force flags bypass SRDF/S write-ordering and consistency checks; on a Partitioned group, a forced operation can permanently diverge R1 and R2 | Only use force on Dell's explicit instruction |
+| Modify host masking views or disconnect hosts during the incident | Changing host access during an SRDF/S Partitioned state changes the I/O state Dell is trying to diagnose | Freeze all host-side changes until Dell confirms the SRDF state is understood |
+| Pull or replace the RDF director HBA before Dell confirms it as the faulty component | Pulling the wrong component can extend the outage | Let Dell review the RDF director logs before any hardware change |
+| Start a PowerMax microcode upgrade during the incident | Microcode upgrades on a PowerMax with a Partitioned SRDF/S group are blocked and will fail; attempting an upgrade will add a new error state | Wait for SRDF/S to return to Synchronized before any upgrade |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# Run on Solutions Enabler host — paste into every case update
+
+# SRDF group states
+symdf list -sid <R1-SID>
+
+# Pair state detail for affected group
+symrdf query -g <group-number> -v | grep -iE "pair state|R1 state|R2 state|synchronized|partitioned"
+
+# RDF director states
+symcfg -sid <R1-SID> list -ra all | grep -E "ONLINE|OFFLINE"
+symcfg -sid <R2-SID> list -ra all | grep -E "ONLINE|OFFLINE"
+
+# Recent SRDF events (last 20)
+symevent -sid <R1-SID> list -last 20 | grep -iE "SRDF|RDF|partition|fault"
+```
+
+---
+
+## Support SLA Reference
+
+| Tier | Severity | Definition | Initial Response SLA |
+|---|---|---|---|
+| ProSupport Plus | P1 — Production Down | SRDF/S Partitioned; I/O stopped or queuing; host application outage | < 2 hours (24×7) |
+| ProSupport Plus | P2 — Degraded | Partitioned with Adaptive Copy; latency elevated; RPO exposure growing | < 4 hours (24×7) |
+| ProSupport Plus | P3 — Non-Critical | Performance degraded but synchronized; pair state warning on subset | Next business day |
+| ProSupport Plus | P4 — General | How-to, link sizing, Metro architecture planning | Next business day |
+| ProSupport | P1 | As above | < 4 hours (24×7) |
 
 ---
 
 ## See also
 
-- [Srdf S — Diagnostics](diagnostics/)
-- [Srdf S — Common Issues](common-issues/)
+- [SRDF/S — Diagnostics](diagnostics/)
+- [SRDF/S — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `symdf list -sid <R1-SID>` and confirm all SRDF groups show Synchronized state
+- Run `symrdf query -g <group>` for each group and confirm R1 = Ready, R2 = WriteDisabled, pair state = Synchronized
+- Confirm host I/O latency has returned to baseline: check application logs and Unisphere performance metrics
+- Run `symcfg -sid <SID> list -ra all` on both arrays and confirm all RDF directors are Online
+- Run `symevent -sid <R1-SID> list -last 50` and confirm no new SRDF FAULT or CRITICAL events
+- Monitor SRDF/S pair state for 15 minutes to confirm the groups remain in Synchronized state and do not transition to Partitioned again
