@@ -8,232 +8,337 @@ search:
 ---
 # Tanzu — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering Collect Cluster Diagnostics, Supervisor Control Plane VM Access, TKG Cluster Events, Harbor Logs, Describe Stuck or Failing Pods and 3 more sections.
+VMware Tanzu diagnostic commands: collect the tanzu diagnostics bundle, access Supervisor control plane VMs via SSH, inspect TKG cluster events and pod describe output, check CSI driver logs for PVC failures, diagnose Pinniped authentication errors, check Harbor registry logs, and enable verbose tanzu CLI logging.
 
-*Applies to: Tanzu 3.x*
+*Applies to: VMware Tanzu Kubernetes Grid 2.x / vSphere with Tanzu 8.x*
 </div>
+
 ```text
-┌────────────────────────────── Virtualization Vmware Tanzu — Diagnostics ──────────────────────────────┐
+┌───────────────────────────────── VMware Tanzu — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Vmware diagnostics: log collection, health checks, and performance analysis          │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here: kubectl get events -A --sort-by .lastTimestamp → kubectl describe pod          │    │
+│   │   Supervisor issue: SSH to control plane VM → journalctl -u kube-apiserver                   │    │
+│   │   PVC not bound: kubectl get pods -n vmware-system-csi; check CSI controller log            │     │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Cluster-Level Diagnostics          │  │             Component Diagnostics           │   │
+│   │   kubectl get events -A --sort-by timestamp  │  │   kubectl logs -n vmware-system-csi         │   │
+│   │   kubectl cluster-info dump --all-namespaces │  │   kubectl logs -n pinniped-supervisor       │   │
+│   │   tanzu diagnostics collect: full bundle     │  │   docker-compose logs core (Harbor VM)      │   │
+│   │   kubectl describe pod: events section       │  │   TANZU_LOG_LEVEL=debug tanzu cluster ...   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│  Physical Infrastructure:                                                                             │
+│  ESXi hosts · Supervisor control plane VMs · TKG workload cluster nodes · Harbor VM or k8s deploy     │
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Virtualization Vmware Tanzu infrastructure · management network · monitoring             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Vmware             = Virtualization Vmware Tanzu platform overview and core concepts               │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Key terms:                                                                                           │
+│  Supervisor      = vSphere 8 built-in Kubernetes control plane; runs as VMs on ESXi hosts             │
+│  TKG             = Tanzu Kubernetes Grid; manages guest Kubernetes clusters inside the Supervisor     │
+│  vmware-system-csi= namespace where the vSphere CSI driver runs; required for PV binding              │
+│  Pinniped        = Tanzu identity federation; bridges vSphere SSO to Kubernetes RBAC                  │
+│  tanzu diagnostics= CLI subcommand that collects logs and state from management + workload clusters   │
+│  kubectl cluster-info dump= full cluster state snapshot; nodes, pods, events, configs                 │
+│  TANZU_LOG_LEVEL  = env var to set tanzu CLI debug verbosity; debug = most verbose                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([Tanzu Issue]) --> B{What type of problem?}
+    B -->|Pod stuck in Pending / CrashLoopBackOff| C[kubectl get events -A --sort-by lastTimestamp\nkubectl describe pod -n namespace pod-name]
+    B -->|PVC not bound or volume mount fails| D[kubectl get pods -n vmware-system-csi\nkubectl logs CSI controller pod]
+    B -->|Cluster create or upgrade fails| E[tanzu diagnostics collect --management-cluster\nTANZU_LOG_LEVEL=debug tanzu cluster create]
+    B -->|Supervisor control plane issue| F[SSH to supervisor control plane VM\njournalctl -u kube-apiserver -n 100]
+    B -->|Auth / kubeconfig fails| G[kubectl logs -n pinniped-supervisor\ncheck tanzu cluster kubeconfig get]
+    B -->|Harbor image pull error| H[kubectl logs -n harbor harbor-core pod\ndocker-compose logs core registry nginx]
+    C --> I{Event type?}
+    I -->|FailedScheduling| J[kubectl get nodes; check taints and resource requests\nDescribe node for allocatable CPU and memory]
+    I -->|ImagePullBackOff| K[Check image registry URL and imagePullSecrets\nTest pull from node: crictl pull image-url]
+    I -->|CrashLoopBackOff| L[kubectl logs pod-name --previous\nCheck exit code and stderr]
+    D --> M[kubectl get pvc -n namespace\nkubectl describe pvc pvc-name for binding error]
+    E --> N[kubectl cluster-info dump --all-namespaces\ntar czf cluster-dump.tar.gz /tmp/cluster-dump]
+    F --> O[journalctl -u etcd -n 100\nkubectl get pods -n kube-system]
+    G --> P[kubectl get pods -n pinniped-concierge\nCheck OIDC identity provider in Tanzu config]
+    H --> Q[curl -sk https://harbor-fqdn/api/v2.0/health\nCheck Harbor certificate if SSL error]
+    J --> R[Collect full diagnostics bundle\ntanzu diagnostics collect]
+    K --> R
+    L --> R
+    M --> R
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+    R --> S[Open VMware SR\nAttach diagnostics bundle]
 
----
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
+    class R,S escalate
+```
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** kubeconfig for the management cluster and affected workload cluster; SSH access to the Supervisor control plane VMs (SSH key from vCenter → Workload Management → Supervisor); Harbor admin credentials
+- **Gather first:** the specific symptom (pod stuck, image pull error, PVC not bound, cluster create failed), the namespace and pod or cluster name, and the time the issue started
+- **Scope:** confirm whether the issue affects one pod, one namespace, one workload cluster, or the Supervisor itself
 
 ---
 
-## Collect Cluster Diagnostics
+## Step 1 — Check cluster events and pod state
 
 ```bash
-# Tanzu diagnostics bundle (management cluster)
-tanzu diagnostics collect --management-cluster
-
-# kubectl cluster dump (workload cluster)
+# Set the kubeconfig to the affected workload cluster
+tanzu cluster kubeconfig get <cluster-name> --admin
 kubectl config use-context <cluster-context>
-kubectl cluster-info dump --output-directory=/tmp/cluster-dump --all-namespaces
-tar czf cluster-dump-$(date +%Y%m%d).tar.gz /tmp/cluster-dump/
-```
 
----
-
-## Supervisor Control Plane VM Access
-
-```bash
-# The Supervisor control plane VMs run on ESXi hosts — access via SSH
-# Default SSH key is in vCenter:
-# Workload Management → Supervisor → Control Plane VMs → SSH Key
-
-# Get Supervisor control plane VM IPs from vCenter
-# vCenter → Workload Management → Supervisor → Control Plane VMs
-
-ssh -i ~/.ssh/supervisor_key root@<supervisor-control-plane-ip>
-
-# Check Supervisor API server log:
-journalctl -u kube-apiserver -f
-
-# Check etcd:
-journalctl -u etcd -f
-
-# Check all Supervisor system pods:
-kubectl get pods -n kube-system
-kubectl get pods -n vmware-system-tkg
-```
-
----
-
-## TKG Cluster Events
-
-```bash
-# Get all events sorted by time (best first view for diagnosing recent issues)
+# All events across all namespaces, sorted by most recent last
 kubectl get events -A --sort-by='.lastTimestamp' | tail -50
+# Look for: Warning events; FailedScheduling, BackOff, FailedMount, OOMKilled
 
-# Get events for a specific namespace
+# Events for a specific namespace
 kubectl get events -n production --sort-by='.lastTimestamp'
 
-# Get events for a specific pod
-kubectl describe pod <pod-name> -n production | tail -30
-```
+# All non-Running pods (find the stuck ones)
+kubectl get pods -A --field-selector=status.phase!=Running,status.phase!=Succeeded
 
----
-
-## Harbor Logs
-
-```bash
-# If Harbor is deployed as OVA (VM-based):
-ssh admin@harbor.example.local
-docker-compose -f /opt/docker-compose.yml logs --tail=100 core
-docker-compose -f /opt/docker-compose.yml logs --tail=100 registry
-docker-compose -f /opt/docker-compose.yml logs --tail=100 nginx
-
-# If Harbor is deployed on Kubernetes:
-kubectl logs -n harbor \
-  $(kubectl get pods -n harbor -l component=core -o jsonpath='{.items[0].metadata.name}') \
-  --tail=100
-
-kubectl logs -n harbor \
-  $(kubectl get pods -n harbor -l component=registry -o jsonpath='{.items[0].metadata.name}') \
-  --tail=100
-```
-
----
-
-## Describe Stuck or Failing Pods
-
-```bash
-# Describe pod — shows scheduling decisions, container state, events
+# Describe a specific failing pod
 kubectl describe pod <pod-name> -n <namespace>
+# Look for: Events section at the bottom — shows exactly what failed and why
 
-# Get previous container logs (if container crashed and restarted)
-kubectl logs <pod-name> -n <namespace> --previous
+# Container logs (current run)
+kubectl logs <pod-name> -n <namespace> --tail=100
 
-# Follow live logs
-kubectl logs <pod-name> -n <namespace> -f
+# Previous container logs (if pod restarted — crash loop)
+kubectl logs <pod-name> -n <namespace> --previous --tail=100
 
-# Multi-container pods — specify container
-kubectl logs <pod-name> -n <namespace> -c <container-name>
+# Multi-container pod: specify container name
+kubectl logs <pod-name> -n <namespace> -c <container-name> --tail=100
 ```
 
 ---
 
-## CSI Driver Logs (for PVC Issues)
+## Step 2 — Diagnose Supervisor control plane issues
+
+The Supervisor runs as 3 VMs on ESXi. Access requires the SSH key stored in vCenter.
 
 ```bash
-# vSphere CSI driver runs in vmware-system-csi namespace
-kubectl get pods -n vmware-system-csi
+# Get Supervisor control plane VM IPs
+# vCenter → Workload Management → Supervisor → Control Plane VMs → note all 3 IPs
 
-# Check CSI controller logs:
-kubectl logs -n vmware-system-csi \
-  $(kubectl get pods -n vmware-system-csi -l app=vsphere-csi-controller -o jsonpath='{.items[0].metadata.name}') \
-  -c vsphere-csi-controller --tail=100
+# SSH to a Supervisor control plane VM
+# SSH key location: vCenter → Workload Management → Supervisor → SSH Key → Download
+ssh -i ~/.ssh/supervisor_key root@<supervisor-control-plane-ip>
 
-# Check CSI node daemon logs (runs on each node):
-kubectl logs -n vmware-system-csi \
-  -l app=vsphere-csi-node \
-  -c vsphere-csi-node --tail=50
+# Check the API server log
+journalctl -u kube-apiserver -n 200 --no-pager | grep -i "error\|fail\|panic"
+
+# Check etcd health
+journalctl -u etcd -n 100 --no-pager | grep -i "error\|fail"
+
+# Check system pod state from the Supervisor context
+export KUBECONFIG=/root/.kube/config
+kubectl get pods -n kube-system | grep -v Running
+kubectl get pods -n vmware-system-tkg | grep -v Running
+kubectl get pods -n vmware-system-csi | grep -v Running
+
+# Check TKG machine and cluster state
+kubectl get clusters -A
+kubectl get machines -A
+kubectl get tanzukubernetesclusters -A
 ```
 
 ---
 
-## Pinniped Auth Failure Diagnostics
+## Step 3 — Collect the diagnostics bundle
 
 ```bash
-# Check Pinniped supervisor pods
-kubectl get pods -n pinniped-supervisor
-kubectl logs -n pinniped-supervisor \
-  $(kubectl get pods -n pinniped-supervisor -l app=pinniped-supervisor -o jsonpath='{.items[0].metadata.name}') \
-  --tail=50
+# Collect full diagnostics from the management cluster
+tanzu diagnostics collect --management-cluster
+# Output: tanzu-diagnostics-<timestamp>.tar.gz in current directory
+# Includes: management cluster logs, plugin state, kubeconfig
 
-# Check Pinniped concierge (per workload cluster)
-kubectl get pods -n pinniped-concierge
-kubectl logs -n pinniped-concierge \
-  $(kubectl get pods -n pinniped-concierge -o jsonpath='{.items[0].metadata.name}') \
-  --tail=50
+# Full Kubernetes cluster state dump (works with any kubeconfig)
+kubectl cluster-info dump \
+  --output-directory=/tmp/cluster-dump \
+  --all-namespaces
+tar czf cluster-dump-$(date +%Y%m%d).tar.gz /tmp/cluster-dump/
 
-# Test OIDC flow manually:
-tanzu cluster kubeconfig get my-cluster
-kubectl get pods -n default  # If this fails with auth error, check Pinniped logs
-```
+# Include in bundle: events from the failing cluster
+kubectl get events -A --sort-by='.lastTimestamp' -o yaml > /tmp/cluster-events.yaml
 
----
+# Enable verbose tanzu CLI logging for a failing operation
+TANZU_LOG_LEVEL=debug tanzu cluster create my-cluster \
+  --file cluster.yaml 2>&1 | tee tanzu-debug-$(date +%Y%m%d).log
 
-## Enable Verbose tanzu CLI Logging
-
-```bash
-# Run tanzu commands with verbose logging
-TANZU_LOG_LEVEL=debug tanzu cluster create my-cluster --file config.yaml 2>&1 | tee tanzu-debug.log
-
-# Or set log level via flag:
+# High-verbosity kubectl output
 tanzu cluster list -v 9
 ```
 
 ---
 
+## Step 4 — Diagnose CSI driver and PVC issues
+
+PVCs that stay in Pending state indicate a problem with the vSphere CSI driver.
+
+```bash
+# Check PVC status in the affected namespace
+kubectl get pvc -n <namespace>
+# Expected: STATUS = Bound
+# Problem: STATUS = Pending (volume not provisioned)
+
+# Describe the PVC for the binding error
+kubectl describe pvc <pvc-name> -n <namespace>
+# Events section shows: ProvisioningFailed, WaitForFirstConsumer, etc.
+
+# Check CSI controller pod
+kubectl get pods -n vmware-system-csi
+# Expected: all pods Running
+
+# CSI controller logs (provisioning decisions)
+CSI_CTRL=$(kubectl get pods -n vmware-system-csi \
+  -l app=vsphere-csi-controller \
+  -o jsonpath='{.items[0].metadata.name}')
+kubectl logs -n vmware-system-csi $CSI_CTRL \
+  -c vsphere-csi-controller --tail=100 | grep -i "error\|fail\|provision"
+
+# CSI node DaemonSet logs (mount issues on specific nodes)
+kubectl logs -n vmware-system-csi \
+  -l app=vsphere-csi-node \
+  -c vsphere-csi-node --tail=50 | grep -i "error\|fail\|mount"
+
+# Check StorageClass exists and is correct
+kubectl get storageclass
+kubectl describe storageclass <storage-class-name>
+```
+
+---
+
+## Step 5 — Diagnose Pinniped authentication failures
+
+Pinniped federates vSphere SSO to Kubernetes RBAC. Auth failures prevent kubectl from working.
+
+```bash
+# Check Pinniped supervisor pods (management cluster)
+kubectl get pods -n pinniped-supervisor
+# Expected: all Running
+
+# Check Pinniped supervisor logs (OIDC broker)
+PINNIPED_POD=$(kubectl get pods -n pinniped-supervisor \
+  -l app=pinniped-supervisor \
+  -o jsonpath='{.items[0].metadata.name}')
+kubectl logs -n pinniped-supervisor $PINNIPED_POD --tail=100 | \
+  grep -i "error\|fail\|warn"
+
+# Check Pinniped concierge (per workload cluster)
+kubectl get pods -n pinniped-concierge
+kubectl logs -n pinniped-concierge \
+  $(kubectl get pods -n pinniped-concierge -o jsonpath='{.items[0].metadata.name}') \
+  --tail=50 | grep -i "error"
+
+# Test kubeconfig for a specific workload cluster
+tanzu cluster kubeconfig get <cluster-name>
+kubectl get pods -n default
+# If this fails with Unauthorized: check Pinniped logs for identity provider error
+
+# Check Pinniped JWTAuthenticator or WebhookAuthenticator configuration
+kubectl get jwtauthenticator -A
+kubectl describe jwtauthenticator -n pinniped-concierge
+```
+
+---
+
+## Step 6 — Check Harbor registry logs
+
+```bash
+# If Harbor is deployed as an OVA (VM-based):
+ssh admin@harbor.example.local
+
+# Core (API server)
+docker-compose -f /opt/docker-compose.yml logs --tail=100 core | \
+  grep -i "error\|fail\|warn"
+
+# Registry (blob store)
+docker-compose -f /opt/docker-compose.yml logs --tail=100 registry | \
+  grep -i "error"
+
+# Nginx (request logs)
+docker-compose -f /opt/docker-compose.yml logs --tail=100 nginx
+
+# If Harbor is deployed on Kubernetes:
+kubectl get pods -n harbor
+
+# Core component
+HARBOR_CORE=$(kubectl get pods -n harbor -l component=core \
+  -o jsonpath='{.items[0].metadata.name}')
+kubectl logs -n harbor $HARBOR_CORE --tail=100 | grep -i "error\|warn"
+
+# Registry component
+HARBOR_REG=$(kubectl get pods -n harbor -l component=registry \
+  -o jsonpath='{.items[0].metadata.name}')
+kubectl logs -n harbor $HARBOR_REG --tail=100 | grep -i "error"
+
+# Harbor API health check
+curl -sk "https://<harbor-fqdn>/api/v2.0/health" | python3 -m json.tool
+# Expected: all components "status": "healthy"
+```
+
+---
+
+## Step 7 — Enable verbose CLI logging for escalation
+
+```bash
+# Maximum verbose output for tanzu CLI operations
+TANZU_LOG_LEVEL=debug tanzu cluster create my-cluster \
+  --file cluster.yaml 2>&1 | tee tanzu-debug-$(date +%Y%m%d-%H%M).log
+
+# Verbose kubectl output
+kubectl get nodes -v 9 2>&1 | tee kubectl-debug.log
+
+# Full namespace dump for a stuck workload cluster
+kubectl get all -n <namespace> -o yaml > /tmp/namespace-dump.yaml
+
+# Collect all cluster-scoped resources
+kubectl get clusterrole,clusterrolebinding,storageclass,pv -o yaml \
+  > /tmp/cluster-scoped.yaml
+
+# What to include in VMware SR:
+# - tanzu diagnostics collect output (tar.gz)
+# - kubectl cluster-info dump output (tar.gz)
+# - TANZU_LOG_LEVEL=debug output for the failing tanzu command
+# - Supervisor control plane SSH log excerpts (kube-apiserver, etcd)
+# - Tanzu and vSphere versions: tanzu version; kubectl version
+```
+
+---
+
+## Log locations
+
+| Component | Path / Command | What to look for |
+|---|---|---|
+| Cluster events | `kubectl get events -A --sort-by=.lastTimestamp` | Pod scheduling, image pull, volume failures |
+| Supervisor API server | `journalctl -u kube-apiserver` (on Supervisor VM) | Control plane API errors |
+| Supervisor etcd | `journalctl -u etcd` (on Supervisor VM) | etcd leader election, disk errors |
+| CSI controller | `kubectl logs -n vmware-system-csi csi-controller` | PV provisioning failures |
+| Pinniped supervisor | `kubectl logs -n pinniped-supervisor` | OIDC identity provider errors |
+| Harbor core | `docker-compose logs core` or `kubectl logs -n harbor` | Image push/pull API errors |
+
+---
+
 ## See also
 
-- [Virtualization Vmware Tanzu — Common Issues](common-issues/)
+- [Tanzu — Common Issues](common-issues/)
 - [Tanzu — Escalation](escalation/)
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- `kubectl get pods -A --field-selector=status.phase!=Running,status.phase!=Succeeded` returns no pods
+- `kubectl get pvc -n <namespace>` shows all PVCs with STATUS = Bound
+- `kubectl get events -A --sort-by=.lastTimestamp | tail -10` shows no new Warning events
+- `curl -sk https://<harbor-fqdn>/api/v2.0/health` returns all components healthy
+- Image pull from Harbor succeeds and the affected pod reaches Running state
