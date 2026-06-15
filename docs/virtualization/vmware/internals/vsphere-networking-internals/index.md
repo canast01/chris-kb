@@ -11,6 +11,56 @@ vSphere Distributed Switch separates control plane (vCenter) from data plane (ES
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```text
+┌──────────────────────────── vSphere Networking — VDS, NIOC, and VMkernel ─────────────────────────────┐
+│                                                                                                       │
+│  VDS separates control plane (vCenter) from data plane (ESXi kernel module);                          │
+│  NIOC traffic pools, teaming policy, and VMkernel adapters control all traffic.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               VDS Architecture               │  │              NIOC Traffic Pools             │   │
+│   │        Control plane: vCenter config         │  │          NIOC version 3: vSphere 6+         │   │
+│   │        Data plane: ESXi kernel module        │  │        Traffic types: VM/vMotion/mgmt       │   │
+│   │       Uplink: pNIC -> uplink portgroup       │  │          vSAN/FT/NFS separate pools         │   │
+│   │        dvPort: VM vNIC connects here         │  │           Shares: relative weight           │   │
+│   │      vCenter failure: data plane stays       │  │          Reservation/Limit per type         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  VDS config state cached on ESXi; hosts retain networking if vCenter goes down.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Teaming Policies               │  │              VMkernel Adapters              │   │
+│   │         Active/standby: manual order         │  │         vmk0: management (required)         │   │
+│   │        Route by originating virt port        │  │         vMotion: separate vmk needed        │   │
+│   │           Route by source MAC hash           │  │         vSAN: dedicated vmk per node        │   │
+│   │       Route by IP hash (EtherChannel)        │  │           NFC: storage traffic vmk          │   │
+│   │       Failback: return to active pNIC        │  │       Isolation: vmk per traffic type       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical NICs (pNICs) on ESXi hosts; TOR switch for inter-host traffic;                              │
+│  LACP or EtherChannel required for IP hash teaming policy.                                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VDS          = vSphere Distributed Switch; managed from vCenter                                      │
+│  VSS          = vSphere Standard Switch; per-host; no vCenter dependency                              │
+│  dvPort       = distributed virtual port; persistent VM network connection                            │
+│  Uplink port  = VDS port bound to physical NIC (pNIC)                                                 │
+│  NIOC         = Network I/O Control; bandwidth scheduler on shared pNICs                              │
+│  Traffic pool = NIOC classification: VM, vMotion, management, vSAN, FT, NFC                           │
+│  Shares       = relative bandwidth weight in contention; higher = more                                │
+│  Reservation  = guaranteed minimum bandwidth per traffic pool                                         │
+│  Limit        = maximum bandwidth cap per traffic pool                                                │
+│  VMkernel     = ESXi kernel adapter for host-initiated IP traffic                                     │
+│  vMotion vmk  = dedicated VMkernel for live migration traffic                                         │
+│  IP hash      = teaming policy requiring EtherChannel/LAG on the switch                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ```mermaid
 graph LR
     classDef vc fill:#2563eb,color:#fff,stroke:none
@@ -35,7 +85,6 @@ graph LR
     VMNIC1 --> PHSW
     VMNIC2 --> PHSW
 ```
-
 ## DVS Architecture
 
 The vSphere Distributed Switch (vDS) splits function across two planes:

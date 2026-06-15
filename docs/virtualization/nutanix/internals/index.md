@@ -19,53 +19,53 @@ Deep dive into AOS distributed architecture — the five core services (Stargate
 
 ## Architecture Overview
 
-```
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                        AOS DATA PATH                                                                  │
+```text
+┌───────────────────────── Nutanix Internals — AOS Data Path and Microservices ─────────────────────────┐
 │                                                                                                       │
-│  VM Write                                                                                             │
-│     │                                                                                                 │
-│     ▼                                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────┐                                     │
-│  │  STARGATE  (I/O Controller — one per CVM)                    │                                     │
-│  │  • Receives all VM I/O from hypervisor via iSCSI/NFS/SMB     │                                     │
-│  │  • Applies inline compression, dedup, erasure coding         │                                     │
-│  │  • Writes to local SSD first (oplog) then flushes to extent  │                                     │
-│  │  • Routes reads/writes to correct CVM for each data extent   │                                     │
-│  └──────────────────────────────────────────────────────────────┘                                     │
-│            │                        │                                                                 │
-│            ▼                        ▼                                                                 │
-│  ┌─────────────────┐    ┌───────────────────────────────┐                                             │
-│  │  LOCAL SSD TIER │    │  MEDUSA  (Metadata key-value) │                                             │
-│  │  (oplog/cache)  │    │  • Stores vDisk → extent maps │                                             │
-│  │  Fast landing   │    │  • Backed by Cassandra ring   │                                             │
-│  │  zone for all   │    │  • Maps logical blocks to     │                                             │
-│  │  writes         │    │    physical extent locations  │                                             │
-│  └─────────────────┘    └───────────────────────────────┘                                             │
-│            │                        │                                                                 │
-│            ▼                        ▼                                                                 │
-│  ┌──────────────────────────────────────────────────────────────┐                                     │
-│  │  CASSANDRA  (Metadata ring — distributed across all CVMs)    │                                     │
-│  │  • Apache Cassandra modified for Nutanix                     │                                     │
-│  │  • Stores all cluster metadata: extent locations, RF map     │                                     │
-│  │  • Ring topology: each CVM owns token range of keyspace      │                                     │
-│  │  • RF=3 for metadata even on RF=2 storage clusters           │                                     │
-│  └──────────────────────────────────────────────────────────────┘                                     │
+│  VM write hits Stargate in local CVM; buffered in OpLog (SSD); Curator manages                        │
+│  replication RF2/RF3 to remote CVMs; Medusa stores metadata in Cassandra.                             │
 │                                                                                                       │
-│  ┌──────────────────────────────────────────────────────────────┐                                     │
-│  │  ZEUS / ZOOKEEPER  (Cluster config and leader election)      │                                     │
-│  │  • Maintains authoritative cluster configuration             │                                     │
-│  │  • Leader election for services (Stargate, Curator leaders)  │                                     │
-│  │  • Configuration versioned — zeus_config_printer shows it    │                                     │
-│  └──────────────────────────────────────────────────────────────┘                                     │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Write Data Path                │  │                Read Data Path               │   │
+│   │       VM write -> Stargate (local CVM)       │  │           Metadata: Medusa lookup           │   │
+│   │           OpLog: SSD write buffer            │  │         Hit local node: direct read         │   │
+│   │         Replica: async to remote CVM         │  │          Remote node: Stargate RPC          │   │
+│   │         Flush: OpLog -> extent store         │  │            Cache: in-memory + SSD           │   │
+│   │          Extent store: HDD capacity          │  │          Dedup: fingerprint lookup          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  ┌──────────────────────────────────────────────────────────────┐                                     │
-│  │  CURATOR  (Background jobs — scan and fix)                   │                                     │
-│  │  • Runs periodic full and partial scans across cluster       │                                     │
-│  │  • Tasks: dedup, compression, erasure coding, tiering        │                                     │
-│  │  • Rebuilds degraded extents after disk/node failure         │                                     │
-│  │  • Rebalances data across nodes after node add/remove        │                                     │
-│  └──────────────────────────────────────────────────────────────┘                                     │
+│  OpLog ensures write latency < 500 us; flush to HDD is asynchronous background.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              AOS Microservices               │  │               Cluster Services              │   │
+│   │          Stargate: I/O path handler          │  │        Zookeeper: distributed config        │   │
+│   │          Curator: background tasks           │  │           Cassandra: metadata + KV          │   │
+│   │           Medusa: metadata service           │  │            Chronos: job scheduler           │   │
+│   │         Cerebro: replication engine          │  │           Ergon: async task engine          │   │
+│   │        Genesis: service lifecycle mgr        │  │           Prism: UI + API gateway           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  NVMe/SSD for OpLog + cache; HDD for extent store; 10/25 GbE for CVM-to-CVM                           │
+│  replication and Stargate RPC; dedicated storage VLAN recommended.                                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Stargate      = I/O path handler in CVM; serves NFS/iSCSI to AHV VMs                                 │
+│  OpLog         = SSD write buffer; absorbs burst writes; async flush to HDD                           │
+│  Extent store  = persistent HDD storage; data written after OpLog flush                               │
+│  Medusa        = metadata service; tracks where each data block lives                                 │
+│  Curator       = background maintenance; dedup, compression, rebalance                                │
+│  Cerebro       = replication engine; handles PD snapshots and Leap DR                                 │
+│  Genesis       = service manager; starts/stops CVM services                                           │
+│  Cassandra     = distributed KV store; cluster metadata and Medusa backend                            │
+│  Zookeeper     = distributed coordination; leader election and config                                 │
+│  RF2           = 2 copies of every block across 2 different CVMs                                      │
+│  Fingerprint   = content hash used for inline deduplication comparison                                │
+│  Ergon         = async task framework; tracks long-running ops (clones, moves)                        │
+│                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 

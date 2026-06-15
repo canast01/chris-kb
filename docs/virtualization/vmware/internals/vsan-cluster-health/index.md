@@ -13,6 +13,56 @@ vSAN health is tracked at the component level through a state machine: ACTIVE �
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
+```text
+┌──────────────────────────── vSAN Cluster Health — Component State Machine ────────────────────────────┐
+│                                                                                                       │
+│  vSAN tracks component health via ACTIVE->ABSENT->DEGRADED->REBUILDING->ACTIVE;                       │
+│  CLOM schedules rebuilds; resync throttle and proactive rebalance are tunable.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Component State Machine            │  │           CLOM Rebuild Scheduling           │   │
+│   │         ACTIVE: healthy + accessible         │  │        CLOM: Cluster Level Object Mgr       │   │
+│   │      ABSENT: node offline, 60 min grace      │  │          Monitors object components         │   │
+│   │        DEGRADED: data at risk (< FTT)        │  │      Schedules rebuild on healthy disk      │   │
+│   │        REBUILDING: resync in progress        │  │         Resync throttle: IOPS limit         │   │
+│   │         ABSENT -> DEGRADED at 60 min         │  │       Default throttle: 0 (unlimited)       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Absent grace period: 60 min — host returning within 60 min skips rebuild.                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Skyline Health Checks             │  │              Stretched Cluster              │   │
+│   │        vSAN -> Skyline Health in VCSA        │  │            Witness host: 3rd site           │   │
+│   │         Categories: Network/HW/Perf          │  │           Preferred/secondary site          │   │
+│   │         HCL checks: daily automated          │  │        FTT=1 spans both sites RAID-1        │   │
+│   │        Proactive rebalance: space var        │  │          RPO=0: synchronous writes          │   │
+│   │         Auto-remediate: disk re-add          │  │         Witness quorum: site failure        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ESXi hosts with NVMe/SSD cache + capacity disks; vSAN VMkernel adapter on                            │
+│  dedicated NIC; 10 GbE minimum for production; 25 GbE recommended.                                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CLOM         = Cluster Level Object Manager; rebuild and placement engine                            │
+│  Component    = smallest vSAN storage unit; replica or witness of an object                           │
+│  DEGRADED     = component below FTT; rebuild scheduled immediately                                    │
+│  ABSENT       = component missing; 60 min grace before DEGRADED state                                 │
+│  FTT          = Failures to Tolerate; storage policy value (1, 2, or 3)                               │
+│  Resync throttle= IOPS limit on rebuild I/O; 0=unlimited; set non-zero during peak                    │
+│  Proactive rebalance= moves data when space usage diverges across nodes                               │
+│  HCL          = Hardware Compatibility List; Skyline checks daily against VMware                      │
+│  Witness      = tie-breaker component; quorum only; no data stored                                    │
+│  Stretched cluster= vSAN across 2 sites + witness; RPO=0 synchronous                                  │
+│  Skyline Health= vSAN built-in health framework; 200+ checks; in VCSA UI                              │
+│  Space variance= difference in disk usage % across nodes; trigger for rebalance                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ```mermaid
 graph TD
     classDef active fill:#15803d,color:#fff,stroke:none
@@ -35,7 +85,6 @@ graph TD
     ACT -->|replaced while active| STA
     STA -->|garbage collected\nby CLOM| ACT
 ```
-
 ## Health Checks Taxonomy
 
 vSAN Health Service categorizes checks across five domains, accessible via **vSAN → Monitor → Health Service**:

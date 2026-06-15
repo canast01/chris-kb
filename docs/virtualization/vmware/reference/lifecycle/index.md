@@ -14,6 +14,55 @@ Version lifecycle and End of General Support (EOGS) / End of Technical Guidance 
 *Source: [Broadcom Product Lifecycle Policy](https://support.broadcom.com/lifecycle-policy) — verify dates before planning upgrades.*
 </div>
 
+```text
+┌───────────────────────── VMware Product Lifecycle — EOGS and EOTG Reference ──────────────────────────┐
+│                                                                                                       │
+│  EOGS = no new patches; EOTG = no technical guidance; use Broadcom lifecycle                          │
+│  policy page to plan upgrades and assess risk of running unsupported versions.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Support Phases                │  │                Risk by Phase                │   │
+│   │          GA: full support + patches          │  │          GA: all patches + guidance         │   │
+│   │        EOGS: no new security patches         │  │          EOGS: unpatched CVEs risk          │   │
+│   │         EOTG: no technical guidance          │  │          EOTG: no support available         │   │
+│   │          EOL: product discontinued           │  │             EOL: plan migration             │   │
+│   │        Extended support: paid option         │  │          Extended: CVE patches only         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Run unsupported version = accept CVE risk; regulatory compliance may prohibit.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Key Product Lifecycles            │  │               Upgrade Planning              │   │
+│   │           vSphere 7: EOGS Oct 2025           │  │         Verify: support.broadcom.com        │   │
+│   │          vSphere 8: GA 2022, active          │  │            Lead time: 6-12 months           │   │
+│   │           NSX-T 3.x: EOGS Oct 2025           │  │          Test: staging before prod          │   │
+│   │           NSX 4.x: active support            │  │           Change freeze: avoid Q4           │   │
+│   │           VCF 5.x: active support            │  │        Rollback plan: snapshot first        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Hardware lifecycle runs parallel — server EoL affects OS/hypervisor support;                         │
+│  plan hardware refresh alongside software upgrade to avoid stranded costs.                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EOGS          = End of General Support; last day new patches released                                │
+│  EOTG          = End of Technical Guidance; no more support responses                                 │
+│  EOL           = End of Life; product discontinued; migrate off                                       │
+│  GA            = General Availability; release date of version                                        │
+│  CVE           = Common Vulnerabilities and Exposures; tracked by NVD                                 │
+│  Extended support= paid programme; CVE patches only; higher cost                                      │
+│  Lifecycle page = support.broadcom.com/lifecycle-policy; authoritative                                │
+│  Version N-2   = two major versions behind current; approaching EOGS                                  │
+│  Security patch = CVE fix; critical patches issued after EOGS is rare                                 │
+│  Upgrade window= planned maintenance; verify compat matrix first                                      │
+│  Staging test  = validate upgrade path in non-production first                                        │
+│  Change freeze = period where no upgrades allowed; typically Q4 retail                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Lifecycle Phase Definitions
 
 | Phase | What it means |

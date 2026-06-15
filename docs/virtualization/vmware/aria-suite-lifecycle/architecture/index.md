@@ -12,6 +12,55 @@ Central management appliance for deploying and upgrading the full VMware Aria Su
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
 
+```text
+┌────────────────────── Aria Suite Lifecycle — Orchestrated Lifecycle Management ───────────────────────┐
+│                                                                                                       │
+│  Central appliance for deploying and upgrading Aria Suite; orchestrates pre-check                     │
+│  -> snapshot -> stage -> upgrade -> post-check; Locker vault for creds/certs.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               LCM Architecture               │  │               Upgrade Workflow              │   │
+│   │         Single management appliance          │  │          Pre-check: compat + health         │   │
+│   │          Locker: creds + cert vault          │  │           Snapshot: rollback point          │   │
+│   │          Binary repo: local or CDN           │  │           Stage: download + verify          │   │
+│   │           PostgreSQL: LCM database           │  │         Upgrade: rolling per product        │   │
+│   │          Request tracker: audit log          │  │         Post-check: health validate         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Order: IDM -> vRSLCM -> Aria Ops -> Aria Logs -> Aria Automation (dependency order).                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Managed Products               │  │                 Locker Vault                │   │
+│   │               Aria Operations                │  │         Passwords: product accounts         │   │
+│   │           Aria Operations for Logs           │  │        Certificates: PEM format store       │   │
+│   │               Aria Automation                │  │          Licenses: per-product keys         │   │
+│   │         Aria Operations for Networks         │  │         Passwords: rotate via LCM UI        │   │
+│   │            Identity Manager (IDM)            │  │          Cert renewal: LCM-managed          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Photon OS appliance (Aria LCM VM); vCenter access for snapshot operations;                           │
+│  HTTPS to VMware CDN or local binary repo for downloading product binaries.                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  LCM           = Aria Suite Lifecycle Manager; formerly vRSLCM                                        │
+│  Locker        = integrated credential/cert/license vault in LCM                                      │
+│  Environment   = logical grouping of Aria products managed as a unit                                  │
+│  Binary repo   = product installer repository; local NFS or CDN                                       │
+│  Pre-check     = compatibility matrix validation before upgrade starts                                │
+│  Stage         = download binary + verify checksum before maintenance                                 │
+│  Snapshot      = VM snapshot before upgrade; rollback if upgrade fails                                │
+│  Post-check    = health validation; services up and APIs responding                                   │
+│  IDM           = Identity Manager; must be upgraded before other products                             │
+│  Request       = LCM async task; each upgrade is a tracked request                                    │
+│  Audit log     = LCM request history; shows who ran what upgrade when                                 │
+│  Rolling       = upgrades one product node at a time within a product                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ![Aria Suite Lifecycle Architecture](../../../../assets/aria-suite-lifecycle-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
