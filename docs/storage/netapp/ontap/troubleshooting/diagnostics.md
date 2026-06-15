@@ -7,95 +7,107 @@ search:
 ---
 # ONTAP — Diagnostics
 
-
 <div class="kb-summary">
-Systematic diagnostic procedures for ONTAP. Start with cluster-level health, then narrow to the affected subsystem. Always collect an AutoSupport bundle before calling NetApp support.
+ONTAP diagnostic commands: check cluster and HA health with <code>cluster show</code> and <code>storage failover show</code>, inspect aggregate and disk state with <code>storage aggregate show-status</code> and <code>storage disk show -broken</code>, check volume state and capacity with <code>volume show -state !online</code>, diagnose NFS/CIFS/iSCSI/FC protocols with per-protocol statistics, trace SnapMirror lag with <code>snapmirror show -health false</code>, analyse EMS events with <code>event log show -severity CRITICAL</code>, and generate an AutoSupport bundle before calling NetApp support.
 
 *Applies to: ONTAP 9.x*
 </div>
+
 ```text
 ┌───────────────────────────────────── NetApp ONTAP — Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           ONTAP diagnostics: log collection, health checks, and performance analysis          │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
+│   │  Start here: cluster show → system health status show → storage failover show             │       │
+│   │  Disk/aggregate: storage disk show -broken → storage aggregate show -state !online        │       │
+│   │  Volume: volume show -state !online → volume show percent-used > 90%                      │       │
+│   │  Network: network interface show -status-oper down → cluster ping-cluster                 │       │
+│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │     Cluster, Node, and HA Health        │  │          Storage and Disk Diagnostics        │       │
+│   │   cluster show: node health/eligibility │  │   storage aggregate show -state !online      │       │
+│   │   system node show: uptime + state      │  │   storage aggregate show-status: RAID detail │       │
+│   │   storage failover show: HA state       │  │   storage disk show -broken: failed disks    │       │
+│   │   cluster ring show: cluster services   │  │   storage disk show -raid-state recon.       │       │
+│   │   system health alert show: any alerts  │  │   storage shelf show: shelf health           │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │       Volume, SVM, and Protocol         │  │        SnapMirror and Performance            │       │
+│   │   volume show -state !online: offline   │  │   snapmirror show -health false: unhealthy   │       │
+│   │   network interface show -oper down     │  │   snapmirror lag show: per-relationship lag  │       │
+│   │   vserver nfs show + connected-client   │  │   statistics start -object volume: latency   │       │
+│   │   vserver cifs session show: sessions   │  │   qos statistics performance show: throttle  │       │
+│   │   iscsi session show: connected hosts   │  │   event log show -severity CRITICAL: EMS     │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
-│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
-│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
-│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
-│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  Physical Infrastructure:                                                                             │
+│  AFF/FAS HA node pairs · cluster interconnect (10/25/100 GbE) · client access network                 │
+│  Disk shelves (SAS/NVMe) · MetroCluster or SM-BC for site-level HA · ONTAP Mediator (SM-BC)           │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │       SVM        │ Tenant isolation │   All protocols   │  Kerberos/NTLM   │  Virtual server  │   │
-│   │    SnapMirror    │  DR replication  │    SM protocol    │   Certificate    │  Async or sync   │   │
-│   │    FlexClone     │  Instant clone   │      Internal     │    Admin role    │ Space-efficient  │   │
-│   │      SM-BC       │ Zero-RPO active- │    SM protocol    │     Mediator     │     SAN only     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
-│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
-│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
-│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
-│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
-│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
-│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
-│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
-│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
-│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
-│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
-│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
+│  Key terms:                                                                                           │
+│  ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, Select         │
+│  SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vols    │
+│  Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node            │
+│  FlexVol            = flexible thin-provisioned volume within an aggregate; most common container     │
+│  FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads     │
+│  SnapMirror         = async or sync replication between ONTAP systems for DR and backup               │
+│  SnapVault          = backup-oriented SnapMirror variant; independent retention at destination        │
+│  FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot         │
+│  Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS            │
+│  ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios          │
+│  SM-BC              = SnapMirror Business Continuity; sync zero-RPO active-active SAN replication     │
+│  vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common cmds       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([ONTAP Issue]) --> B[cluster show: node health\nsystem health status show\nstorage failover show: HA state]
+    B --> C{Symptom scope?}
+    C -->|Cluster or node| D[system node show: node state and uptime\ncluster ring show: cluster services\nstorage failover interconnect show: HA link]
+    C -->|Storage or disk| E[storage aggregate show -state !online\nstorage disk show -broken\nstorage disk show -raid-state reconstructing]
+    C -->|Volume or space| F[volume show -state !online\nvolume show percent-used > 90%\nvolume efficiency show: dedup compression]
+    C -->|Network or LIF| G[network interface show -status-oper down\nnetwork interface show -is-home false\ncluster ping-cluster: interconnect health]
+    C -->|Protocol| H{Which protocol?}
+    H -->|NFS| I[nfs connected-client show\nvserver export-policy check-access\nstatistics start -object nfsv3]
+    H -->|CIFS/SMB| J[vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2]
+    H -->|iSCSI| K[iscsi session show\nlun mapping show\nlun igroup show]
+    H -->|FC| L[fcp adapter show\nfcp initiator show\nfcp topology show]
+    C -->|SnapMirror| M[snapmirror show -health false\nsnapmirror lag show\nnetwork interface show -role intercluster]
+    C -->|Performance| N[statistics start -object volume\nqos statistics performance show\nsystem node run sysstat]
+    D --> O[system node autosupport invoke -node * -type all -message case-number\nOpen NetApp support case]
+    E --> O
+    F --> O
+    G --> O
+    I --> O
+    J --> O
+    K --> O
+    L --> O
+    M --> O
+    N --> O
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,C,H dark
+    class B,D,E,F,G,I,J,K,L,M,N action
+    class O escalate
+```
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** SSH to cluster management IP or node management IP as admin; node shell (`system node run -node <node>`) for advanced per-node commands; SP/BMC console for unresponsive nodes
+- **Gather first:** `cluster show` (node count and health), `system health status show` (overall health), the affected SVM and volume or protocol, and the specific symptom (error message, offline resource, slow response time)
+- **Scope:** confirm whether the issue is cluster-wide (all SVMs affected), node-specific (one node or aggregate), SVM-specific (one protocol or tenant), or volume-specific — `event log show -severity CRITICAL` and `system health alert show` give the fastest cross-component view
+- **AutoSupport:** always trigger an AutoSupport before calling NetApp — `system node autosupport invoke -node * -type all -message "case <SR> - <description>"`
 
 ---
 
-## Diagnostic Scope: Broad to Narrow
+## Step 1 — First response
 
-```mermaid
-flowchart TD
-    first["First Response\ncluster show\nsystem health status show\nstorage failover show"] --> scope{"Symptom scope?"}
-    scope -->|"Cluster / Node"| clusterDiag["Cluster & Node\ncluster ring show\nsystem node run sysconfig\nstorage failover interconnect show"]
-    scope -->|"Storage / Disk"| storDiag["Storage\nstorage aggregate show-status\nstorage disk show -broken\nStorage disk show -raid-state reconstructing"]
-    scope -->|"Volume / Space"| volDiag["Volume\nvolume show -state !online\nvolume show percent-used\nvolume efficiency show"]
-    scope -->|"Network / LIF"| netDiag["Network\nnetwork interface show -is-home false\nnetwork port show\ncluster ping-cluster"]
-    scope -->|"Protocol"| protoDiag{"Which protocol?"}
-    protoDiag -->|NFS| nfsDiag["nfs connected-client show\nstatistics start -object nfsv3\nvserver export-policy check-access"]
-    protoDiag -->|SMB| smbDiag["vserver cifs domain info\nvserver cifs session show\nstatistics start -object smb2"]
-    protoDiag -->|iSCSI| iscsiDiag["iscsi session show\nlun mapping show\niscsi tpgroup show"]
-    protoDiag -->|FC| fcDiag["fcp adapter show\nfcp initiator show\nfcp topology show"]
-    scope -->|"SnapMirror"| smDiag["snapmirror show -health false\nsnapmirror history show\nnetwork interface show -role intercluster"]
-    scope -->|"Performance"| perfDiag["statistics start -object volume\nqos statistics performance show\nsystem node run sysstat"]
-```
-
-## First Response — Always Run These First
+Run these commands immediately on any ONTAP incident.
 
 ```bash
 # Overall cluster health summary
@@ -127,7 +139,7 @@ If any of these commands return unexpected results, follow the relevant subsyste
 
 ---
 
-## Cluster and Node Diagnostics
+## Step 2 — Cluster and node diagnostics
 
 ```bash
 # Cluster node count and status
@@ -154,7 +166,7 @@ cluster ring show
 cluster show -fields node,epsilon
 ```
 
-### Storage Failover Diagnostics
+### Storage failover diagnostics
 
 ```bash
 # Detailed HA failover state
@@ -182,7 +194,7 @@ HA state interpretation:
 
 ---
 
-## Storage — Aggregate and Disk Diagnostics
+## Step 3 — Storage — aggregate and disk diagnostics
 
 ```bash
 # Aggregate health — show any not online
@@ -206,7 +218,7 @@ storage shelf show
 storage shelf show -detail
 ```
 
-### RAID Reconstruction Monitoring
+### RAID reconstruction monitoring
 
 When a disk fails and a spare is available, ONTAP automatically starts RAID reconstruction. Monitor progress:
 
@@ -222,14 +234,14 @@ storage aggregate show-status -aggregate <aggr_name>
 # Look for "Parity reconstruction" or "Data reconstruction" with a percentage
 ```
 
-Typical reconstruction times depend on disk type and size:
+Typical reconstruction times:
 - NVMe SSD: hours to a day for large capacities
 - SAS HDD: 6–24 hours per TB depending on disk RPM and aggregate workload
 - SATA HDD: 12–48+ hours per TB
 
 ---
 
-## Volume Diagnostics
+## Step 4 — Volume diagnostics
 
 ```bash
 # Volume state — identify offline or restricted volumes
@@ -255,14 +267,11 @@ volume clone show -fields flexclone,parent-volume,parent-snapshot
 
 # Volume move status
 volume move show
-
-# Volume rehost status (SVM migration)
-volume rehost -vserver <src_svm> -volume <vol> -destination-vserver <dest_svm>
 ```
 
 ---
 
-## Network Diagnostics
+## Step 5 — Network diagnostics
 
 ```bash
 # LIF status — identify any down interfaces
@@ -291,9 +300,18 @@ network ping -lif <lif_name> -vserver <svm> -destination <target_ip>
 
 # Check cluster interconnect connectivity
 cluster ping-cluster -node <node_name>
+
+# Trace route from a LIF (ONTAP 9.8+)
+network traceroute -lif <lif_name> -vserver <svm> -destination <ip>
+
+# DNS resolution check
+vserver services name-service dns check -vserver <svm>
+
+# LDAP connectivity check
+vserver services name-service ldap check -vserver <svm>
 ```
 
-### MTU / Jumbo Frame Verification
+### MTU / Jumbo frame verification
 
 ```bash
 # Check ONTAP port MTU settings
@@ -302,14 +320,13 @@ network port show -fields node,port,mtu
 # Ping with large payload to test jumbo frames end-to-end
 network ping -lif <lif_name> -vserver <svm> -destination <target_ip> -packet-size 8972
 # 8972 bytes = 9000 byte jumbo frame minus IP/ICMP headers
-# Ping should succeed if switches and target support jumbo frames
 ```
 
 ---
 
-## Protocol-Specific Diagnostics
+## Step 6 — Protocol-specific diagnostics
 
-### NFS Diagnostics
+### NFS diagnostics
 
 ```bash
 # NFS service status per SVM
@@ -322,7 +339,8 @@ nfs connected-client show -vserver <svm>
 vserver export-policy rule show -vserver <svm> -policyname <policy>
 
 # Test client IP against export policy
-vserver export-policy check-access -vserver <svm> -volume <vol> -client-ip <ip> -authentication-method sys -protocol nfs3
+vserver export-policy check-access -vserver <svm> -volume <vol> -client-ip <ip> \
+  -authentication-method sys -protocol nfs3
 
 # NFS statistics (read/write ops and latency)
 statistics start -object nfsv3 -sample-id nfs-diag
@@ -331,7 +349,7 @@ statistics stop -sample-id nfs-diag
 statistics show -sample-id nfs-diag
 ```
 
-### CIFS/SMB Diagnostics
+### CIFS/SMB diagnostics
 
 ```bash
 # CIFS server and domain status
@@ -349,15 +367,13 @@ vserver cifs session show -vserver <svm> -fields node,connection-count,open-file
 vserver cifs session file show -vserver <svm>
 
 # CIFS SMB statistics
-statistics start -object smb1 -sample-id smb-diag
 statistics start -object smb2 -sample-id smb2-diag
 # wait 30 seconds
-statistics stop -sample-id smb-diag
 statistics stop -sample-id smb2-diag
-statistics show -sample-id smb-diag
+statistics show -sample-id smb2-diag
 ```
 
-### iSCSI Diagnostics
+### iSCSI diagnostics
 
 ```bash
 # iSCSI service status
@@ -366,9 +382,6 @@ iscsi show -vserver <svm>
 # iSCSI sessions (connected initiators)
 iscsi session show -vserver <svm>
 iscsi session show -vserver <svm> -fields initiator-name,lif,tpgroup,connection-count
-
-# iSCSI initiators
-iscsi initiator show -vserver <svm>
 
 # iSCSI target portal groups
 iscsi tpgroup show -vserver <svm>
@@ -382,7 +395,7 @@ lun mapping show -vserver <svm> -igroup <igroup_name>
 lun igroup show -vserver <svm>
 ```
 
-### FC / FCoE Diagnostics
+### FC / FCoE diagnostics
 
 ```bash
 # FC service status
@@ -403,7 +416,7 @@ fcp topology show
 
 ---
 
-## SnapMirror Diagnostics
+## Step 7 — SnapMirror diagnostics
 
 ```bash
 # All relationships with health and lag
@@ -433,9 +446,9 @@ network interface show -role intercluster
 
 ---
 
-## Performance Diagnostics
+## Step 8 — Performance diagnostics
 
-ONTAP statistics require a start/stop sample cycle. The first sample after `statistics start` is discarded — always let it run for at least 30 seconds before stopping to get meaningful data.
+ONTAP statistics require a start/stop sample cycle. Let it run for at least 30 seconds before stopping to get meaningful data.
 
 ```bash
 # Volume-level performance statistics
@@ -450,13 +463,6 @@ statistics show -sample-id vol-perf | grep -E "total_latency|read_latency|write_
 # Filter for IOPS
 statistics show -sample-id vol-perf | grep -E "total_ops|read_ops|write_ops"
 
-# NFS-specific statistics
-statistics start -object nfsv3 -sample-id nfs-perf
-statistics start -object nfsv4_1 -sample-id nfs4-perf
-
-# iSCSI statistics
-statistics start -object iscsi_lif -sample-id iscsi-perf
-
 # Volume-specific statistics (single volume)
 statistics show -object volume -instance <vol_name> -counter read_latency,write_latency,total_ops
 
@@ -468,15 +474,15 @@ qos statistics workload performance show
 system node run -node <node_name> sysstat -c 10 -x 2
 ```
 
-### Latency Interpretation
+### Latency interpretation
 
 | Metric | Acceptable | Warning | Critical |
 |---|---|---|---|
-| NFS read latency | <2ms | 2–10ms | >10ms |
-| NFS write latency | <3ms | 3–10ms | >10ms |
-| iSCSI/FC read latency | <1ms | 1–5ms | >5ms |
-| iSCSI/FC write latency | <1ms | 1–5ms | >5ms |
-| Volume total_latency | <2ms | 2–10ms | >10ms |
+| NFS read latency | < 2 ms | 2–10 ms | > 10 ms |
+| NFS write latency | < 3 ms | 3–10 ms | > 10 ms |
+| iSCSI/FC read latency | < 1 ms | 1–5 ms | > 5 ms |
+| iSCSI/FC write latency | < 1 ms | 1–5 ms | > 5 ms |
+| Volume total_latency | < 2 ms | 2–10 ms | > 10 ms |
 
 High latency root causes to investigate:
 - Aggregate over 80% used (WAFL metadata overhead)
@@ -486,7 +492,7 @@ High latency root causes to investigate:
 
 ---
 
-## EMS Event Log Analysis
+## Step 9 — EMS event log analysis
 
 ```bash
 # Recent events by severity
@@ -509,9 +515,6 @@ event log show -messagename disk.*
 # Events related to SnapMirror
 event log show -messagename snapmirror.*
 
-# Events related to callhome (AutoSupport triggers)
-event log show -messagename callhome.*
-
 # Show event details including description
 event log show -messagename <message_name> -detail
 ```
@@ -531,75 +534,7 @@ Common EMS messages and their meaning:
 
 ---
 
-## Log Locations
-
-| Log Source | Location / Command |
-|---|---|
-| EMS event log | `event log show` (CLI); `/mroot/etc/log/ems` (node shell) |
-| AutoSupport history | `system node autosupport history show -node <node>` |
-| Audit log (admin actions) | `security audit log show` |
-| CIFS/SMB audit | SVM-level audit log configured to NAS volume via `vserver audit` |
-| Crash dumps / core files | `system node coredump show`; files at `/mroot/etc/crash/` |
-| Disk firmware log | `storage disk show -fields firmware-revision`; in AutoSupport |
-| Node syslog | `system node run -node <node> syslog` (node shell) |
-| SP / BMC logs | `system service-processor log show -node <node>` |
-| Core file listing | `system node coredump show -node <node>` |
-
----
-
-## AutoSupport Bundle
-
-AutoSupport bundles are the primary support artifact. Generate one before calling support:
-
-```bash
-# Generate AutoSupport tied to a support case
-system node autosupport invoke -node * -type all -message "case <SR-number> - <description>"
-
-# Verify delivery
-system node autosupport history show -node * -most-recent 5
-# Status should show: sent-successful
-```
-
-If AutoSupport delivery is failing:
-
-```bash
-# Check AutoSupport configuration
-system node autosupport show
-
-# Test connectivity to NetApp endpoints
-system node autosupport check show
-
-# Check proxy configuration if the cluster cannot reach the internet directly
-system node autosupport show -fields proxy-url,transport
-```
-
----
-
-## Network Diagnostics
-
-```bash
-# Ping from a specific LIF to a client or target
-network ping -lif <lif_name> -vserver <svm> -destination <ip>
-
-# Check port health and link status
-network port show -fields node,port,health-status,link-status,mtu
-
-# Check cluster interconnect
-cluster ping-cluster -node <node_name>
-
-# Trace route from a LIF (ONTAP 9.8+)
-network traceroute -lif <lif_name> -vserver <svm> -destination <ip>
-
-# DNS resolution check
-vserver services name-service dns check -vserver <svm>
-
-# LDAP connectivity check
-vserver services name-service ldap check -vserver <svm>
-```
-
----
-
-## Coredump and System Panic Analysis
+## Step 10 — Coredump and panic analysis
 
 ```bash
 # List core dump files
@@ -620,16 +555,62 @@ A node panic followed by an automatic HA takeover is normal ONTAP behavior — t
 
 ---
 
-## Verify resolution
+## Step 11 — AutoSupport bundle
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+AutoSupport bundles are the primary support artifact. Generate one before calling NetApp support:
+
+```bash
+# Generate AutoSupport tied to a support case
+system node autosupport invoke -node * -type all -message "case <SR-number> - <description>"
+
+# Verify delivery
+system node autosupport history show -node * -most-recent 5
+# Status should show: sent-successful
+```
+
+If AutoSupport delivery is failing:
+
+```bash
+# Check AutoSupport configuration
+system node autosupport show
+
+# Test connectivity to NetApp endpoints
+system node autosupport check show
+
+# Check proxy configuration
+system node autosupport show -fields proxy-url,transport
+```
+
+---
+
+## Log locations
+
+| Log Source | Location / Command |
+|---|---|
+| EMS event log | `event log show` (CLI); `/mroot/etc/log/ems` (node shell) |
+| AutoSupport history | `system node autosupport history show -node <node>` |
+| Audit log (admin actions) | `security audit log show` |
+| CIFS/SMB audit | SVM-level audit log configured to NAS volume via `vserver audit` |
+| Crash dumps / core files | `system node coredump show`; files at `/mroot/etc/crash/` |
+| Disk firmware log | `storage disk show -fields firmware-revision`; in AutoSupport |
+| Node syslog | `system node run -node <node> syslog` (node shell) |
+| SP / BMC logs | `system service-processor log show -node <node>` |
+| Core file listing | `system node coredump show -node <node>` |
 
 ---
 
 ## See also
 
-- [Ontap — Common Issues](common-issues/)
-- [Ontap — Escalation](escalation/)
-- [Ontap — Health Checks](../operations/health-checks/)
+- [ONTAP — Common Issues](common-issues/)
+- [ONTAP — Escalation](escalation/)
+
+## Verify resolution
+
+- `cluster show` returns all nodes with `health: true` and `eligibility: true`
+- `storage failover show` shows `Connected, Not in takeover` for all HA pairs
+- `system health status show` returns `ok`
+- `storage disk show -broken` returns no broken disks (or the same pre-existing broken disks that were there before the incident)
+- `volume show -state !online` returns no unexpectedly offline volumes
+- `network interface show -status-oper down` returns no operationally-down LIFs
+- For SnapMirror: `snapmirror show -health false` returns no unhealthy relationships
+- `event log show -severity CRITICAL -time-range 1h` shows no new critical events after the fix was applied

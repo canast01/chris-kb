@@ -7,46 +7,109 @@ search:
 ---
 # FlashArray — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering First-Response Sequence, Alert Triage, Controller Diagnostics, Drive Diagnostics, Path Failover Decision Tree and 7 more sections.
+FlashArray diagnostic commands: run the first-response sequence (<code>purealert list</code>, <code>purearray list --controller</code>, <code>puredrive list</code>) to identify the failure domain, inspect controller and hardware component health with <code>purehw list</code>, check drive rebuild with <code>puredrive list --progress</code>, verify FC port state and host paths with <code>pureport list</code> and <code>purehost list --connection</code>, investigate performance with <code>purearray monitor --latency</code>, check ActiveCluster pod and mediator state with <code>purepod list --mediator</code>, and collect a diagnostic bundle with <code>purediag --output</code>.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
 
 ```text
-FlashArray Diagnostic Sequence
-  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │  1. purearray list           ─ version + status  │
-  │  2. purearray list --controller ─ CT0/CT1 health │
-  │  3. purealert list           ─ failure domain    │
-  │  4. puredrive list           ─ drive state       │
-  │  5. purehost list            ─ host paths        │
-  │  6. purepod list             ─ replication state │
-  │  7. purearray monitor        ─ live performance  │
-  └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                         │  if escalating
-                         ▼
-  Pure1 telemetry ──► Support case ──► purediag --send
+┌────────────────────────────────── Pure FlashArray — Diagnostics ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
+│   │  Start here: purealert list → identify failure domain → purearray list --controller       │       │
+│   │  Controller fault: purehw list --type ct → purehw list --type nvram: component detail     │       │
+│   │  Drive fault: puredrive list --progress → wait for rebuild; do not pull drives            │       │
+│   │  Path missing: pureport list --type fc → pureport list --initiator → check FC zone       │        │
+│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
+│                                                                                                       │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │         Alert and Controller            │  │          Drive and Storage Pool              │       │
+│   │   purealert list: failure domains       │  │   puredrive list: state for all drives       │       │
+│   │   purearray list --controller: CT0/CT1  │  │   puredrive list --progress: rebuild %       │       │
+│   │   purehw list: all hardware components  │  │   purearray list --space: capacity and DR    │       │
+│   │   purehw list --type nvram: NVRAM state │  │   puresnap list --space: snapshot consumers  │       │
+│   │   purearray list: version + overall     │  │   purevol list --space: per-volume usage     │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
+│                                                                                                       │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │      Path and Host Connectivity         │  │       Performance and Replication            │       │
+│   │   pureport list --type fc: port state   │  │   purearray monitor: real-time latency       │       │
+│   │   pureport list --initiator: HBA WWNs   │  │   purevol monitor --latency: per-volume      │       │
+│   │   purehost list --connection: paths     │  │   purepod list: ActiveCluster pod state      │       │
+│   │   purenetwork list: iSCSI/repl IPs      │  │   purepod list --mediator: mediator health   │       │
+│   │   purehost list --wwn: registered WWNs  │  │   purepgroup list --replication: async DR    │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  FlashArray controller chassis (CT0/CT1) · NVMe/SAS drive bays · FC or Ethernet ports (CT0.FC0)       │
+│  FC switches or direct-connect cables · iSCSI network (VLAN) · Pure1 management portal                │
+│  Mediator server (ActiveCluster) · SCP server or purediag phone-home for bundle collection            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│  purealert list      = all active Purity alerts; start here to identify the failure domain            │
+│  purearray list      = array version, status, space usage with --space flag                           │
+│  purearray monitor   = real-time IOPS, latency, bandwidth (1-second refresh)                          │
+│  purehw list         = hardware component inventory with health state per component                   │
+│  puredrive list      = per-drive state: healthy, recovering, failed, evicting, unhealthy              │
+│  pureport list       = FC and Ethernet port state; --initiator shows connected HBA WWNs               │
+│  purehost list       = registered hosts and initiators; --connection shows volume paths               │
+│  purepod list        = ActiveCluster pod state; --mediator checks mediator reachability               │
+│  purepgroup list     = protection group replication schedule and status                               │
+│  purediag            = collect diagnostic bundle; --send uses phone-home; --output saves locally      │
+│  pureaudit list      = admin audit trail: who changed what and when                                   │
+│  Pure1 Meta          = AI anomaly detection in Pure1 portal; supplements CLI diagnostics              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Structured diagnostic approach for identifying and isolating FlashArray issues. Start with alert triage, then drill into the specific failure domain.
+```mermaid
+graph TD
+    A([FlashArray Issue]) --> B[purealert list: identify failure domain\npurearray list --controller: CT0 CT1 health]
+    B --> C{Failure domain?}
+    C -->|Controller fault| D[purearray list --controller: status and role\npurehw list --type ct: component detail]
+    C -->|Drive fault| E[puredrive list: drive states\npuredrive list --progress: rebuild status]
+    C -->|Host path missing| F[purehost list --connection: path count\npureport list --type fc: port state]
+    C -->|Performance degraded| G[purearray monitor: real-time latency\npurevol monitor --latency: per-volume]
+    C -->|Replication issue| H[purepod list: pod status + mediator\npurepgroup list --replication: async status]
+    C -->|Capacity warning| I[purearray list --space: array capacity\npuresnap list --space: snapshot consumers]
+    D --> J{Controller status?}
+    J -->|offline| K[Open P1 case immediately\nDo not restart until Pure Support authorises]
+    J -->|not ready| L[Monitor for recovery\nCheck host I/O is continuing on surviving CT]
+    E --> M{Drive state?}
+    M -->|failed| N[Open support case\nDo not pull drive without Pure Support authorisation]
+    M -->|recovering| O[Monitor puredrive list --progress\nDo not interrupt rebuild]
+    F --> P[pureport list --initiator: check initiator visible\nVerify FC zone contains correct WWN pair]
+    G --> Q[purevol monitor: identify noisy-neighbour volume\nCheck purearray list --space for above 90%]
+    H --> R[Check network reachability to remote array\npurepod list --mediator: mediator connectivity]
+    K --> S[purediag --output /tmp/fa_diag.tgz or purediag --send\nOpen Pure Support case with bundle]
+    L --> S
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    I --> S
 
----
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,C,J,M dark
+    class B,D,E,F,G,H,I,L,O,P,Q,R action
+    class K,N,S escalate
+```
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** SSH to the FlashArray management IP as `pureuser` or cluster admin; Pure1 portal access for historical analytics and AI recommendations
+- **Gather first:** `purealert list` (failure domain and severity), `purearray list` (version and model), `purearray list --controller` (CT0/CT1 status), and the specific symptom — host I/O error, alert text, drive state, or replication lag
+- **Scope:** confirm whether the issue affects a single host (connectivity / zoning), a volume (performance, space), a drive (hardware fault), or the entire array (controller fault, capacity) — `purealert list` maps directly to the affected component
 
 ---
 
-## First-Response Sequence
+## Step 1 — First-response sequence
 
-When an incident is reported, run these commands in order. Capture all output to a file for the support case.
+When an incident is reported, run these commands in order. Capture all output for the support case.
 
 ```bash
 # 1. Check array reachability and Purity version
@@ -83,7 +146,7 @@ purediag --output /tmp/fa_diag_$(date +%Y%m%d_%H%M).tgz
 
 ---
 
-## Alert Triage
+## Step 2 — Alert triage
 
 Alerts are the first place to look. Purity generates alerts for hardware faults, replication failures, capacity thresholds, and software events.
 
@@ -117,7 +180,7 @@ purealert list --filter "state='closed'"
 
 ---
 
-## Controller Diagnostics
+## Step 3 — Controller diagnostics
 
 ```bash
 # Show both controllers with status, role, and Purity version
@@ -151,7 +214,7 @@ If one controller is `not ready` or `offline`: hosts with proper multipathing ar
 
 ---
 
-## Drive Diagnostics
+## Step 4 — Drive diagnostics
 
 ```bash
 # List all drives and their state
@@ -181,37 +244,11 @@ puredrive list --total
 | `evicting` | Purity is migrating data off the drive — wait for eviction to complete; do not interrupt |
 | `unhealthy` | Drive is operating but reporting errors — open a support case; monitor closely |
 
-**Multiple drive failures:**
-
-If two or more drives are in `failed` state simultaneously, the array may be at risk of data loss depending on the protection scheme. Open a P1 case immediately. Do not pull any drives until a Pure Support engineer authorises the replacement sequence.
+If two or more drives are in `failed` state simultaneously, open a P1 case immediately. Do not pull any drives until a Pure Support engineer authorises the replacement sequence.
 
 ---
 
-## Path Failover Decision Tree
-
-```mermaid
-flowchart TD
-  A["Host reports missing\nor degraded paths"] --> B["purehost list --connection\n(check path count per host)"]
-  B --> C{"Path count\nas expected?"}
-  C -->|"Zero paths"| D["Check FC zoning on switches\nor iSCSI network reachability"]
-  C -->|"One path missing"| E["pureport list --type fc\n(identify which port is down)"]
-  E --> F{"Array port\nstate?"}
-  F -->|"down"| G["Check SFP and cable\non array port\nOpen support case if port stays down"]
-  F -->|"up"| H["pureport list --initiator\n(is host initiator WWN visible?)"]
-  H --> I{"Initiator\nvisible?"}
-  I -->|"No"| J["FC zone issue — initiator\nnot presented to target port\nFix zone on FC switch"]
-  I -->|"Yes"| K["Check host HBA state\nand driver on host side"]
-  C -->|"All paths present"| L["Issue is host-side\nCheck MPIO driver config\nand ALUA settings"]
-
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef good fill:#15803d,stroke:#166534,color:#fff
-  class C,F,I decision
-  class D,G,J,K fix
-  class L good
-```
-
-## Port and Connectivity Diagnostics
+## Step 5 — Port and connectivity diagnostics
 
 ```bash
 # List all ports (FC, Ethernet, NVMe-oF)
@@ -239,14 +276,13 @@ purenetwork list
 ```text
 Host reports path missing
     ↓
-pureport list --type fc
-    ↓ Is the port in 'up' state?
-    
+pureport list --type fc → Is the port in 'up' state?
+
 No: Port is down
     → Check physical SFP and cable on the array
     → Check the FC switch port connected to this array port
     → Open a support case if port remains down after physical check
-    
+
 Yes: Port is up — check zoning
     → pureport list --initiator — is the host initiator WWN visible?
     → If not: FC fabric is not presenting the initiator to the target port
@@ -259,7 +295,6 @@ Yes: Port is up — check zoning
 ```bash
 # Confirm iSCSI interfaces are up and have IPs
 purenetwork list
-# Look for iSCSI interfaces with valid IP addresses
 
 # From the host — test IP reachability to the array iSCSI IP
 ping -c 4 <array_iscsi_ip>
@@ -273,7 +308,7 @@ Get-IscsiSession
 
 ---
 
-## Host and Volume Connectivity Diagnostics
+## Step 6 — Host and volume connectivity
 
 ```bash
 # List all hosts and their registered initiators
@@ -304,14 +339,13 @@ purehost list --connection | grep prod-oracle-data-01
 ```text
 Host does not see volume
     ↓
-purehost list --connection
-    ↓ Is the volume connected to the host or its host group?
-    
+purehost list --connection → Is the volume connected to the host or its host group?
+
 No: Volume is not connected
     → purehgroup connect <hgroup> --vol <vol>
     → or: purehost connect <host> --vol <vol>
     → Then rescan HBA on the host
-    
+
 Yes: Volume is connected — check initiator registration
     → purehost list --wwn (for FC) or purehost list --iqn (for iSCSI)
     → Compare host HBA WWN/IQN against what is registered
@@ -321,7 +355,7 @@ Yes: Volume is connected — check initiator registration
 
 ---
 
-## Performance Diagnostics
+## Step 7 — Performance diagnostics
 
 ```bash
 # Real-time array performance (1-second refresh)
@@ -366,11 +400,11 @@ pureport monitor --bandwidth
 **High latency investigation flow:**
 
 ```text
-purearray monitor — note read/write latency and queue depth
+purearray monitor → note read/write latency and queue depth
     ↓
-purevol monitor --latency — identify which volumes have the highest latency
+purevol monitor --latency → identify which volumes have the highest latency
     ↓
-puredrive list — check for active drive rebuilds (rebuilds consume controller resources)
+puredrive list → check for active drive rebuilds (rebuilds consume controller resources)
     ↓
 Check for active QoS limits: purevol list --space (check bw_limit / iops_limit fields)
     ↓
@@ -382,7 +416,7 @@ If a specific volume is the culprit — consider applying a temporary QoS limit:
 
 ---
 
-## Replication and ActiveCluster Diagnostics
+## Step 8 — Replication and ActiveCluster diagnostics
 
 ```bash
 # List all pods and their status
@@ -414,7 +448,7 @@ purepgroup list --schedule
 **Pod unhealthy or paused — diagnostic flow:**
 
 ```text
-purepod list — note the pod status and which arrays are members
+purepod list → note the pod status and which arrays are members
     ↓
 Is the inter-array replication link up?
     → purenetwork list — confirm replication interface IPs are correct
@@ -433,7 +467,7 @@ If pod is paused: purepod replica-link resume (for async) or investigate network
 
 ---
 
-## Capacity Diagnostics
+## Step 9 — Capacity diagnostics
 
 ```bash
 # Overall array capacity and data reduction
@@ -452,11 +486,11 @@ purepgroup list --space
 **Unexpected capacity growth — investigation flow:**
 
 ```text
-purearray list --space — confirm overall capacity % and snapshot %
+purearray list --space → confirm overall capacity % and snapshot %
     ↓
-puresnap list --space --sort size- — identify largest snapshot consumers
+puresnap list --space --sort size- → identify largest snapshot consumers
     ↓
-purepgroup list --schedule — check retention settings
+purepgroup list --schedule → check retention settings
     ↓
 Are snapshots being created faster than the schedule expires them?
     → Reduce snap-per-day or snap-for-days in the protection group schedule
@@ -469,19 +503,9 @@ Is volume used capacity unexpectedly high?
 
 ---
 
-## Log Locations and Analysis
+## Step 10 — Diagnostic bundle and Pure1 portal
 
-| Log / Data Source | Access Method |
-|---|---|
-| Purity array events log | `purearray list --log` — shows controller events, upgrades, failovers |
-| Admin audit log | `pureaudit list` — all admin actions with timestamp and user |
-| Alert history | `purealert list --filter "state='closed'"` — resolved alerts |
-| Replication log | `purepgroup list --replication` |
-| Diagnostic bundle (all logs) | `purediag --output /tmp/diag.tgz` — comprehensive bundle for support |
-| Pure1 event timeline | Pure1 portal > Arrays > select array > Events |
-| Syslog (external SIEM) | Forwarded via `puresyslog` configuration — all Purity events in syslog format |
-
-**Collecting the diagnostic bundle for support:**
+### Collect diagnostic bundle for support
 
 ```bash
 # Save diagnostic bundle locally
@@ -489,18 +513,14 @@ purediag --output /tmp/fa_diag_$(hostname)_$(date +%Y%m%d_%H%M).tgz
 
 # Or send directly to Pure Support (requires active phone-home connection)
 purediag --send
-# Confirm with `purearray phonehome list` that phone-home is active before using --send
+# Confirm with purearray phonehome list that phone-home is active before using --send
 ```
 
-The diagnostic bundle includes controller logs, Purity event logs, drive health data, performance metrics, configuration snapshots, and network interface state. It is the primary input for Pure Support triage. Always collect it before or immediately after opening a support case — do not wait for the support engineer to request it.
+The diagnostic bundle includes controller logs, Purity event logs, drive health data, performance metrics, configuration snapshots, and network interface state. Always collect it before or immediately after opening a support case.
 
----
-
-## Pure1 Portal Diagnostics
+### Pure1 portal diagnostics
 
 Pure1 provides historical analytics and AI-driven anomaly detection that complement real-time CLI diagnostics.
-
-**Key views for incident triage:**
 
 | Pure1 View | Path | Use |
 |---|---|---|
@@ -508,18 +528,22 @@ Pure1 provides historical analytics and AI-driven anomaly detection that complem
 | Historical performance | Arrays > select array > Performance | Correlate latency spikes with events (upgrades, VM migrations, replication spikes) |
 | Capacity trend | Arrays > select array > Capacity | Project days-to-full; identify snapshot growth |
 | Alert history | Arrays > select array > Alerts | Full alert history including acknowledged/resolved alerts |
-| Event timeline | Arrays > select array > Events | Ordered timeline of all array events including controller restarts, drive events, and Purity upgrades |
+| Event timeline | Arrays > select array > Events | Ordered timeline of controller restarts, drive events, and Purity upgrades |
 | Support cases | Support > Cases | Track open cases and add attachments |
-
-Pure1's AI-driven recommendations (Pure1 Meta) surface workload anomalies and right-sizing recommendations that may not be visible in real-time CLI output. Review these weekly during normal operations and immediately during a performance incident.
 
 ---
 
-## Verify resolution
+## Log locations
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Log / Data Source | Access Method |
+|---|---|
+| Purity array events log | `purearray list --log` — controller events, upgrades, failovers |
+| Admin audit log | `pureaudit list` — all admin actions with timestamp and user |
+| Alert history | `purealert list --filter "state='closed'"` — resolved alerts |
+| Replication log | `purepgroup list --replication` |
+| Diagnostic bundle (all logs) | `purediag --output /tmp/diag.tgz` — comprehensive bundle for support |
+| Pure1 event timeline | Pure1 portal > Arrays > select array > Events |
+| Syslog (external SIEM) | Forwarded via `puresyslog` configuration — all Purity events in syslog format |
 
 ---
 
@@ -527,4 +551,12 @@ Pure1's AI-driven recommendations (Pure1 Meta) surface workload anomalies and ri
 
 - [FlashArray — Common Issues](common-issues/)
 - [FlashArray — Escalation](escalation/)
-- [FlashArray — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `purealert list --filter "state='open'"` returns no active alerts related to the incident
+- `purearray list --controller` shows both CT0 and CT1 with `ready` status
+- `puredrive list | grep -v healthy` returns only drives in expected non-healthy states (e.g., `recovering` that was already in progress)
+- `purehost list --connection` shows the expected number of paths for each affected host
+- `purearray monitor --latency` shows read and write latency below 1 ms
+- For replication issues: `purepod list` shows all pods in a healthy state and `purepod list --mediator` shows mediator reachable
