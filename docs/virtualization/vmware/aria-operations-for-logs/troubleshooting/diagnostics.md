@@ -8,121 +8,254 @@ search:
 ---
 # Aria Operations for Logs — Diagnostics
 
-```bash
-# Watch main application log in real time
-tail -f /var/log/loginsight/runtime.log
+<div class="kb-summary">
+Aria Operations for Logs (vRLI) diagnostic commands: inspect runtime.log and ingestion.log, check cluster node health via API, diagnose Cassandra performance, test syslog agent connectivity, verify NTP, and collect the VAMI support bundle for VMware SR cases.
 
-# Search for errors across all logs
-grep -i "error\|exception\|fail" /var/log/loginsight/runtime.log | tail -100
-grep -i "error\|drop"           /var/log/loginsight/ingestion.log | tail -50
-grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail -50
-```
+*Applies to: VMware Aria Operations for Logs 8.x (vRealize Log Insight)*
+</div>
+
 ```text
-┌─────────────────────────────── Aria Operations for Logs — Diagnostics ────────────────────────────────┐
+┌─────────────────────────── Aria Operations for Logs — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
-│  Diagnose vRLI problems using system monitor, runtime logs, API checks, and support bundle.           │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: runtime.log → cluster node API → ingestion.log → agent liagentd              │      │
+│   │   No data ingested: check liagentd on agent host; check syslog port 9543 or 514             │     │
+│   │   Slow queries: check Cassandra compaction (nodetool compactionstats) and heap usage         │    │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │             Built-in Diagnostics             │  │               Log File Review               │   │
-│   │       Admin → System Monitor: disk/CPU       │  │       /var/log/loginsight/runtime.log       │   │
-│   │         Admin → Cluster: node status         │  │       /var/log/loginsight/queries.log       │   │
-│   │        API: GET /api/v1/cluster/nodes        │  │        /var/log/loginsight/alerts.log       │   │
-│   │      Explore: search for ingest errors       │  │        /var/log/vmware/vra/ (if LCM)        │   │
+│   │   Admin → System Monitor: disk/CPU/EPS       │  │   /var/log/loginsight/runtime.log           │   │
+│   │   Admin → Cluster: node status               │  │   /var/log/loginsight/ingestion.log         │   │
+│   │   GET /api/v1/cluster/nodes (REST)           │  │   /var/log/loginsight/query.log             │   │
+│   │   VAMI :9543 → Support → Download bundle     │  │   /var/log/vmware/loginsight-agent/         │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Generate support bundle from VAMI before contacting VMware support for complex issues.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Support Bundle                │  │             Network Diagnostics             │   │
-│   │       VAMI → Support → Download bundle       │  │       netstat -tulpn: ports listening       │   │
-│   │      Includes: logs + config + DB state      │  │        tcpdump: verify syslog packets       │   │
-│   │      LCM logscraper: multi-product diag      │  │       nc -zv host 514: test port reach      │   │
-│   │       Upload to VMware SR for analysis       │  │      curl -k :443/api/v1: API reachable     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI appliance · VAMI at :9543 · LCM logscraper · AD/LDAP · firewall                                 │
+│  Physical Infrastructure:                                                                             │
+│  vRLI appliance (master + optional workers) · Cassandra DB · NTP · syslog sources · liagent hosts     │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  System Monitor    = vRLI Admin section showing real-time disk/CPU/RAM/ingestion metrics              │
-│  runtime.log       = Main vRLI log; Java exceptions, startup errors, cluster events                   │
-│  queries.log       = Records slow or failed queries; diagnose search performance                      │
-│  alerts.log        = Alert firing log; check if alerts fired and notifications sent                   │
-│  Cluster nodes API = GET /api/v1/cluster/nodes; shows node state and role                             │
-│  VAMI support bundle= Downloads all vRLI logs and config in one archive                               │
-│  LCM logscraper    = Multi-product diagnostic tool for Aria Suite managed environments                │
-│  tcpdump           = Capture syslog packets on vRLI NIC to confirm devices are sending                │
-│  nc -zv            = Netcat port test; confirm syslog port reachable from source host                 │
-│  curl -k           = Quick API connectivity test; check vRLI REST API responds                        │
-│  netstat -tulpn     = List listening ports; verify 514, 6514, 443, 9543 are open                      │
-│  VMware SR         = Support Request; provide bundle + timeline + version details                     │
+│  runtime.log   = Main vRLI log; Java exceptions, startup errors, cluster events                       │
+│  ingestion.log = Records parse failures and dropped events; check when EPS is low                     │
+│  query.log     = Slow and failed queries; diagnose search timeout and performance issues              │
+│  liagentd      = vRLI agent daemon on source hosts; sends logs over port 9543                         │
+│  VAMI          = Virtual Appliance Management Interface at https://vRLI-IP:5480                       │
+│  nodetool      = Cassandra management CLI on the vRLI appliance; check compaction and heap            │
+│  EPS           = Events Per Second; the primary ingestion throughput metric                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
-# Check ingestion stats
-curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.example.local/api/v2/cluster/stats" | \
-  jq '{eventsPerSecond: .eventsIngested, diskPct: .diskUsagePercent}'
 
-# Verify syslog listener is running
-ss -tulnp | grep -E "514|1514|9543"
-# Expected: ports 514 (UDP), 1514 (TCP), 9543 (TCP) listening
+```mermaid
+graph TD
+    A([vRLI Issue]) --> B{What type of problem?}
+    B -->|No data / low EPS| C[Check liagentd on agent host\nsystemctl status liagentd]
+    B -->|UI or API error| D[tail -f /var/log/loginsight/runtime.log\nLook for Java exceptions]
+    B -->|Slow queries| E[nodetool compactionstats\nCheck Cassandra compaction]
+    B -->|Alert not firing| F[Check /var/log/loginsight/alerts.log\nCheck notification config]
+    C --> G{Agent running?}
+    G -->|No| H[systemctl start liagentd\nCheck liagent.log for error]
+    G -->|Yes| I[nc -zv vRLI-IP 9543\nTest port reachability]
+    D --> J[GET /api/v1/cluster/nodes\nCheck cluster node state]
+    E --> K{Compaction active?}
+    K -->|Yes| L[Wait for completion\n15-30 min; monitor nodetool]
+    K -->|No| M[nodetool info | grep Heap\nHeap > 90% = problem]
+    I --> N[Check ingestion.log\nfor parse failures or drops]
+    J --> N
+    F --> N
+    H --> N
+    L --> N
+    M --> N
+    N --> O[Collect VAMI support bundle\nUpload to VMware SR]
 
-# Test syslog reception (from a syslog source)
-logger -n vrli-prod-01.example.local -P 514 -d "test message from diagnostic"
-# Check if the test event appears in Interactive Analytics within 30 seconds
-
-# Check for ingestion errors (parse failures, dropped events)
-grep -i "drop\|parse error\|overflow" /var/log/loginsight/ingestion.log | tail -50
-```
-```bash
-# Check Cassandra compaction status — long compaction can cause query slowness
-ssh admin@vrli-prod-01.example.local
-nodetool compactionstats
-
-# Check Cassandra heap usage — if heap > 90%, queries slow significantly
-nodetool info | grep -i "heap"
-
-# Check current query load
-tail -50 /var/log/loginsight/query.log | grep -i "slow\|timeout\|error"
-```
-```bash
-# On the agent host — check agent service
-systemctl status liagentd
-
-# Check agent log
-tail -100 /var/log/vmware/loginsight-agent/liagent.log | grep -i "error\|connect\|ssl"
-
-# Test connectivity from agent to Aria Ops for Logs on port 9543
-nc -zv vrli-prod-01.example.local 9543
-# Expected: Connection to vrli-prod-01.example.local 9543 port [tcp/*] succeeded!
-
-# Verify agent configuration
-grep -v "^#\|^$" /var/lib/loginsight-agent/liagent.ini
-```
-```bash
-# Check NTP on the Aria Ops for Logs appliance
-chronyc tracking
-chronyc sources -v
-
-# If NTP is drifting: restart chronyd and check sources
-systemctl restart chronyd
-chronyc sources
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,G,K dark
+    class C,D,E,F,H,I,J,L,M,N action
+    class O escalate
 ```
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** SSH to the vRLI appliance as `admin`; VAMI access at `https://<vRLI-IP>:5480`; vRLI admin UI access
+- **Gather first:** the symptom (no ingestion, UI error, slow search, alert not firing), the time the issue started, and the current EPS from Admin → System Monitor
+- **Scope:** confirm whether the issue affects a single agent source, a specific content pack, or all ingestion
+- **NTP:** clock skew between the vRLI appliance and source hosts causes event timestamp mismatches that look like missing data — always verify NTP first
 
 ---
+
+## Step 1 — Check appliance health
+
+```bash
+# SSH to vRLI appliance
+ssh admin@<vRLI-IP>
+
+# Watch main application log in real time
+tail -f /var/log/loginsight/runtime.log
+
+# Search for errors across all core logs
+grep -i "error\|exception\|fail" /var/log/loginsight/runtime.log | tail -100
+grep -i "error\|drop"           /var/log/loginsight/ingestion.log | tail -50
+grep -i "slow\|timeout\|error"  /var/log/loginsight/query.log | tail -50
+
+# Check disk usage — vRLI stops accepting events if disk exceeds threshold
+df -h /storage /dev/sdb
+# Expected: < 80% on storage partition; > 80% = ingestion pauses
+```
+
+---
+
+## Step 2 — Check cluster node health
+
+```bash
+# Via REST API (run from any host that can reach vRLI)
+curl -sk -u 'admin:<password>' \
+  "https://<vRLI-IP>/api/v1/cluster/nodes" | \
+  python3 -m json.tool
+# Expected: each node shows "state": "ACTIVE"
+
+# Check ingestion statistics
+curl -sk -u 'admin:<password>' \
+  "https://<vRLI-IP>/api/v2/cluster/stats" | \
+  python3 -c "import sys,json; d=json.load(sys.stdin); print('EPS:', d.get('eventsIngested'), 'Disk%:', d.get('diskUsagePercent'))"
+# Expected: eventsIngested > 0 if senders are active
+
+# Via UI: Admin → Cluster (top navigation)
+# Each node shows: Status, Role (master/worker), Disk, CPU, Memory
+```
+
+---
+
+## Step 3 — Check syslog and ingestion
+
+```bash
+# Verify syslog listeners are running
+ss -tulnp | grep -E "514|1514|9543"
+# Expected: UDP/TCP 514 (syslog), TCP 1514 (structured syslog), TCP 9543 (liagent)
+
+# Test sending a test syslog event from a source host
+logger -n <vRLI-IP> -P 514 -d "test message from diagnostic $(date)"
+# Then search Interactive Analytics in vRLI UI for "test message" — should appear within 30 seconds
+
+# Check for parse failures or dropped events
+grep -i "drop\|parse error\|overflow\|reject" /var/log/loginsight/ingestion.log | tail -50
+# Problem: "Dropping event" or "parse error" lines with high count
+```
+
+---
+
+## Step 4 — Check Cassandra performance
+
+Slow search queries in vRLI are commonly caused by Cassandra compaction or heap saturation.
+
+```bash
+# SSH to vRLI appliance; Cassandra runs locally
+ssh admin@<vRLI-IP>
+
+# Check if Cassandra compaction is active (compaction = temporary slowness)
+nodetool compactionstats
+# Expected: 0 pending compactions = good
+# If compaction is active: wait 15–30 minutes before further investigation
+
+# Check Cassandra heap usage
+nodetool info | grep -i "heap"
+# Expected: Heap Memory (Used/Max) < 90%
+# > 90% heap = queries slow; > 95% = OOM risk; requires memory increase or GC tuning
+
+# Check recent Cassandra errors
+grep -i "error\|warn\|exception" /var/log/loginsight/cassandra/system.log | tail -50
+```
+
+---
+
+## Step 5 — Check agent (liagent) on source hosts
+
+For sources using the vRLI agent rather than syslog:
+
+```bash
+# On the agent host
+systemctl status liagentd
+# Expected: active (running)
+
+# Check agent log for errors
+tail -100 /var/log/vmware/loginsight-agent/liagent.log | grep -i "error\|connect\|ssl\|fail"
+# Common errors:
+#   "connection refused" → vRLI port 9543 not reachable
+#   "SSL handshake failed" → certificate mismatch or expired cert on vRLI
+#   "authentication failed" → agent key no longer valid
+
+# Test connectivity from agent to vRLI
+nc -zv <vRLI-IP> 9543
+# Expected: "succeeded"
+
+# Check agent configuration
+grep -v "^#\|^$" /var/lib/loginsight-agent/liagent.ini
+# Verify: hostname (the vRLI address), proto=cfapi, ssl=yes/no
+
+# Restart agent if configuration was changed
+systemctl restart liagentd
+systemctl status liagentd
+```
+
+---
+
+## Step 6 — Check NTP
+
+Clock skew between vRLI and event sources causes events to appear out of order or "missing" when searched by time range.
+
+```bash
+# On the vRLI appliance
+ssh admin@<vRLI-IP>
+
+# Check NTP sync status
+chronyc tracking
+# Expected: "System time" offset < 0.1 seconds; "Leap status: Normal"
+
+# Show NTP sources
+chronyc sources -v
+# Expected: at least one source with "*" (currently selected); offset < 10ms
+
+# If NTP is drifting: restart chronyd
+systemctl restart chronyd
+chronyc sources
+```
+
+---
+
+## Step 7 — Collect VAMI support bundle for VMware SR
+
+```bash
+# Via VAMI (recommended — most complete)
+# 1. Browse to https://<vRLI-IP>:5480
+# 2. Navigate to: Support → Generate Support Bundle
+# 3. Wait for bundle creation (3–10 minutes depending on log volume)
+# 4. Download the .gz file
+
+# Via SSH (if VAMI is unavailable)
+ssh admin@<vRLI-IP>
+/usr/lib/loginsight/application/bin/generate-support-bundle
+# Output: /tmp/support-bundle-<timestamp>.tar.gz
+scp admin@<vRLI-IP>:/tmp/support-bundle-*.tar.gz ./
+
+# Include in the VMware SR:
+# - Support bundle (.tar.gz)
+# - Timeline: when the issue started, any recent changes
+# - vRLI version: Admin → About
+```
+
+---
+
+## Log locations
+
+| Component | Path | What to look for |
+|---|---|---|
+| Main application | `/var/log/loginsight/runtime.log` | Java exceptions, cluster events, startup errors |
+| Ingestion | `/var/log/loginsight/ingestion.log` | Dropped events, parse failures |
+| Query performance | `/var/log/loginsight/query.log` | Slow queries, timeouts |
+| Cassandra | `/var/log/loginsight/cassandra/system.log` | Compaction errors, GC pauses |
+| Alerts | `/var/log/loginsight/alerts.log` | Alert fire/no-fire events, notification errors |
+| Agent (on source host) | `/var/log/vmware/loginsight-agent/liagent.log` | Connection, SSL, auth errors |
 
 ---
 
@@ -133,7 +266,8 @@ chronyc sources
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- Admin → System Monitor: EPS is at or above the expected baseline for this environment
+- Interactive Analytics: a test event sent via `logger` appears within 30 seconds
+- `nodetool compactionstats` shows 0 pending compactions
+- `ss -tulnp | grep 9543` confirms the agent listener is running
+- The original symptom (missing data, slow search, alert failure) does not recur after 10 minutes of monitoring

@@ -7,139 +7,300 @@ search:
 ---
 # CyberArk — Diagnostics
 
-
 <div class="kb-summary">
-Use this page for practical CyberArk troubleshooting notes, checks, commands, change notes, and field references.
+CyberArk PAM diagnostic commands: check Vault, PVWA, CPM, and PSM Windows service status, test Vault port 1858 connectivity, inspect component log files, diagnose LDAP and RADIUS auth issues, and collect the PrivateArk diagnostic bundle for CyberArk support cases.
 
-*Applies to: CyberArk PAM*
+*Applies to: CyberArk PAM (Privilege Access Manager) — Vault, PVWA, CPM, PSM*
 </div>
+
 ```text
-┌─────────────────────────── Security Cyberark Troubleshooting — Diagnostics ───────────────────────────┐
+┌───────────────────────────────────────── CyberArk — Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Cyberark diagnostics: log collection, health checks, and performance analysis         │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+│   │   Start here: check Vault service → PVWA IIS → CPM pm.log → PSM PSMConsole.log               │    │
+│   │   All PVWA/CPM/PSM components connect to Vault on TCP 1858 — test this first                  │   │
+│   │   Password rotation failures: CPM logs show exact error code from the target platform         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Vault and PVWA                     │  │            CPM and PSM                      │   │
+│   │   Get-Service 'PrivilegeVault'               │  │   Get-Service 'CyberArk Central Policy Mgr' │   │
+│   │   Test-NetConnection vault01 -Port 1858      │  │   Get-Service 'Cyber-Ark Priv Session Mgr'  │   │
+│   │   IIS: Get-WebApplication PasswordVault      │  │   CPM log: C:\...\Password Manager\Logs\    │   │
+│   │   PVWA log: C:\inetpub\...\PasswordVault\Logs│  │   PSM log: C:\...\PSM\Logs\PSMConsole.log   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│  Physical Infrastructure:                                                                             │
+│  PrivateArk Vault server · PVWA (IIS on Windows) · CPM server · PSM server · LDAP / RADIUS            │
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Security Cyberark Troubleshooting infrastructure · management network · monitoring       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Cyberark           = Security Cyberark Troubleshooting platform overview and core concepts         │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Key terms:                                                                                           │
+│  Vault          = PrivateArk Vault; the encrypted credential store; all components connect to :1858   │
+│  PVWA           = Password Vault Web Access; the web UI; runs on IIS                                  │
+│  CPM            = Central Policy Manager; performs automatic password rotation on target systems      │
+│  PSM            = Privileged Session Manager; records and proxies privileged sessions                 │
+│  Port 1858      = Vault communication port; all CyberArk components require this to be open           │
+│  pm.log         = CPM activity log; records each rotation attempt and the result code                 │
+│  PSMConsole.log = PSM connection log; records session launch attempts and errors                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+flowchart TD
+    A([CyberArk issue reported]) --> B{Which component?}
+    B -->|Login failure / PVWA error| C[Check PVWA IIS app pool\nGet-WebApplication PasswordVault]
+    B -->|Password rotation failed| D[Check CPM service\nGet-Service CyberArk Central Policy Manager]
+    B -->|PSM session fails to launch| E[Check PSM service\nGet-Service Cyber-Ark Privileged Session Manager]
+    B -->|LDAP / MFA not working| F[Test LDAPS port 636\nTest RADIUS port 1812]
+    C --> G[Test-NetConnection vault01 -Port 1858\nVault reachable?]
+    D --> H[Review pm.log\nFind rotation error code]
+    E --> I[Review PSMConsole.log\nFind session launch error]
+    F --> J[Check PVWA auth config\nAuth Methods in PVWA Admin]
+    G --> K{Vault reachable?}
+    K -->|No| L[Check firewall rules\nbetween component and Vault]
+    K -->|Yes| M[Collect component logs\nfor CyberArk support]
+    H --> M
+    I --> M
+    J --> M
+    L --> M
+    M --> N[Open CyberArk SR\nmy.cyberark.com]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,K dark
+    class C,D,E,F,G,H,I,J,L action
+    class M,N escalate
+```
 
 ## Before you begin
 
-- **Access:** Admin credentials on all affected systems
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Windows admin access on the Vault, PVWA, CPM, and PSM servers; PVWA admin role for audit log review
+- **Gather first:** the exact error message the user sees (copy from the PVWA error page or component log), the affected account name, and the Safe it belongs to
+- **Scope:** confirm whether the issue affects one account, one Safe, one component (e.g., CPM only), or all users
+- **Vault connectivity first:** all CyberArk components depend on TCP 1858 to the Vault — verify this before investigating the individual component
 
 ---
 
-## CyberArk Diagnostic Flow
+## Step 1 — Check Vault service status
 
-```mermaid
-flowchart TD
-    issue["CyberArk issue reported\n(login failure / rotation failed / session error)"]
-    issue --> component{"Which component?"}
-    component -->|"can't log in to PVWA"| pvwaCheck["Check PVWA IIS app pool\nGet-WebApplication PasswordVault\nVerify PVWA → Vault :1858"]
-    component -->|"password rotation failed"| cpmCheck["Check CPM service\nGet-Service 'CyberArk Central Policy Manager'\nReview pm.log for error code"]
-    component -->|"PSM session fails"| psmCheck["Check PSM service\nGet-Service 'Cyber-Ark Privileged Session Manager'\nReview PSMConsole.log"]
-    component -->|"LDAP / MFA issues"| authCheck["Test LDAPS :636 from PVWA\nTest RADIUS :1812 to Duo Proxy\nCheck PVWA auth configuration"]
-    pvwaCheck --> vaultConn["Test-NetConnection vault01 -Port 1858"]
-    cpmCheck --> vaultConn
-    psmCheck --> vaultConn
-    vaultConn --> vaultOK{"Vault reachable?"}
-    vaultOK -->|"no"| networkFix["Check firewall rules\nbetween component and Vault"]
-    vaultOK -->|"yes"| logsReview["Review component logs\nCheck SIEM for audit events"]
+```powershell
+# On the PrivateArk Vault server (Windows)
+
+# Check Vault service
+Get-Service 'PrivilegeVault' | Select-Object Name, Status, StartType
+# Expected: Status = Running
+
+# Start if stopped
+Start-Service 'PrivilegeVault'
+
+# Check Vault event log
+Get-EventLog -LogName Application -Source "PrivateArk" -Newest 50 |
+  Select-Object TimeGenerated, EntryType, Message |
+  Format-List
+
+# Vault log file location
+# C:\Program Files (x86)\PrivateArk\Server\Logs\
+Get-Content "C:\Program Files (x86)\PrivateArk\Server\Logs\traces.log" -Tail 100
 ```
 
-## Common Checks
+---
 
-- Confirm current health
-- Review active alerts
-- Check recent changes
-- Confirm dependencies
-- Check logs, events, and monitoring
-- Capture current state before changes
+## Step 2 — Test Vault connectivity from each component
 
-## Incident Notes
+Run these from the PVWA, CPM, and PSM servers, not from the Vault itself:
 
-Capture:
+```powershell
+# Test TCP 1858 to Vault (the critical port for all CyberArk components)
+Test-NetConnection -ComputerName <vault-hostname> -Port 1858
+# Expected: TcpTestSucceeded: True
+# If False: firewall rule missing between this server and the Vault
 
-- Symptom
-- Start time
-- Impact
-- System or service name
-- Error message
-- What changed
-- What was checked
-- Next action
+# Test TCP 443 for REST API (required by PVWA and newer CPM versions)
+Test-NetConnection -ComputerName <vault-hostname> -Port 443
 
-## Change Notes
-
-- Confirm change approval
-- Confirm maintenance window
-- Confirm rollback plan
-- Capture current state
-- Make one change at a time
-- Validate after the change
-
-## Useful Commands
-
-Add tested commands here.
+# Check from multiple components — port 1858 must be open from:
+# - Each PVWA server → Vault
+# - Each CPM server → Vault
+# - Each PSM server → Vault
+# - Each DR Vault → Primary Vault
+```
 
 ---
 
-## Verify resolution
+## Step 3 — Check PVWA (Password Vault Web Access)
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```powershell
+# On the PVWA server (Windows + IIS)
+
+# Check the PasswordVault IIS application pool
+Import-Module WebAdministration
+Get-WebApplication -Name "PasswordVault"
+Get-WebConfiguration -PSPath "IIS:\" -Filter "system.applicationHost/applicationPools/add[@name='PasswordVault']" |
+  Select-Object name, state
+# Expected: state = Started
+
+# Restart PVWA application pool if stopped
+Restart-WebAppPool -Name "PasswordVault"
+
+# PVWA application log
+$pvwaLog = "C:\inetpub\wwwroot\PasswordVault\Logs\"
+Get-ChildItem $pvwaLog | Sort-Object LastWriteTime -Descending | Select-Object -First 5
+Get-Content "$pvwaLog\error.log" -Tail 100
+
+# IIS access log (W3C format)
+$iisLog = "C:\Windows\System32\LogFiles\W3SVC1\"
+Get-ChildItem $iisLog | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+# Look for 500 errors: Get-Content <log-file> | Select-String " 500 "
+```
+
+---
+
+## Step 4 — Check CPM (password rotation failures)
+
+```powershell
+# On the CPM server
+
+# Check CPM service
+Get-Service 'CyberArk Central Policy Manager' | Select-Object Name, Status
+# Expected: Running
+
+# Start if stopped
+Start-Service 'CyberArk Central Policy Manager'
+
+# CPM log location
+$cpmLog = "C:\Program Files (x86)\CyberArk\Password Manager\Logs\"
+Get-ChildItem $cpmLog | Sort-Object LastWriteTime -Descending | Select-Object -First 5
+
+# Show recent rotation errors in pm.log
+Get-Content "$cpmLog\pm.log" -Tail 200 |
+  Select-String -Pattern "error|fail|ERR|cannot|refused" -CaseSensitive:$false
+
+# Common CPM error codes and meanings:
+# PACP035E - Authentication failure on target system (wrong current password)
+# PACP069E - Target host not reachable (firewall / network)
+# PACP014E - Dual control approval required but no approver available
+# ITATS528E - Account locked out on target platform
+
+# Test connectivity from CPM to a target system (e.g., a Windows host for AD account rotation)
+Test-NetConnection -ComputerName <target-hostname> -Port 445  # for Windows LDAP/local account
+Test-NetConnection -ComputerName <target-hostname> -Port 22   # for Linux SSH account
+```
+
+---
+
+## Step 5 — Check PSM (session launch failures)
+
+```powershell
+# On the PSM server
+
+# Check PSM service
+Get-Service 'Cyber-Ark Privileged Session Manager' | Select-Object Name, Status
+# Expected: Running
+
+# PSM console log
+$psmLog = "C:\Program Files (x86)\CyberArk\PSM\Logs\"
+Get-Content "$psmLog\PSMConsole.log" -Tail 200 |
+  Select-String -Pattern "error|fail|ERR|cannot|session" -CaseSensitive:$false
+
+# PSM trace log (verbose — only enable temporarily)
+Get-Content "$psmLog\PSMTrace.log" -Tail 100
+
+# Common PSM errors:
+# "Failed to connect to Vault" - port 1858 blocked between PSM and Vault
+# "PSM Connection Client failed" - target platform plugin not found or misconfigured
+# "RDP session initialization failed" - target RDP firewall or NLA issue
+# "Shadow user credentials expired" - PSM shadow user in Vault needs password reset
+
+# Check PSM shadow user (the internal account PSM uses to create sessions)
+# PVWA → Administration → Component Details → PSM Servers → check Shadow User details
+```
+
+---
+
+## Step 6 — Check LDAP and MFA authentication
+
+```powershell
+# Test LDAPS connectivity from PVWA server
+Test-NetConnection -ComputerName <ldap-server> -Port 636
+# Expected: TcpTestSucceeded: True for LDAPS
+# If using plain LDAP (not recommended): port 389
+
+# Test RADIUS connectivity (for Duo, RSA, etc.)
+Test-NetConnection -ComputerName <radius-proxy-server> -Port 1812
+# Note: RADIUS uses UDP — Test-NetConnection tests TCP; use a dedicated UDP test if needed
+
+# Check PVWA auth method configuration
+# PVWA → Administration → LDAP Integration
+# Verify: LDAP Server address, Base DN, Bind User, SSL/TLS setting
+
+# Simulate an LDAP bind (confirms credentials and SSL)
+# From PVWA server PowerShell:
+$ldap = New-Object System.DirectoryServices.DirectoryEntry(
+  "LDAP://<ldap-server>:636/DC=corp,DC=local",
+  "bind-user@corp.local",
+  "bind-password"
+)
+$ldap.name   # Should return the domain root name if bind succeeds
+
+# Check PVWA authentication log
+Get-Content "C:\inetpub\wwwroot\PasswordVault\Logs\CyberArk.WebApplication.log" -Tail 200 |
+  Select-String -Pattern "LDAP|auth|login|fail" -CaseSensitive:$false
+```
+
+---
+
+## Step 7 — Collect logs for CyberArk support
+
+```powershell
+# Collect all relevant log files to a single directory
+$dest = "C:\Temp\CyberArk-Diag-$(Get-Date -Format yyyyMMdd-HHmm)"
+New-Item -ItemType Directory -Path $dest
+
+# Vault logs (run on Vault server)
+Copy-Item "C:\Program Files (x86)\PrivateArk\Server\Logs\*" $dest -Recurse -Force
+
+# PVWA logs (run on PVWA server)
+Copy-Item "C:\inetpub\wwwroot\PasswordVault\Logs\*" $dest -Force
+
+# CPM logs (run on CPM server)
+Copy-Item "C:\Program Files (x86)\CyberArk\Password Manager\Logs\*" $dest -Force
+
+# PSM logs (run on PSM server)
+Copy-Item "C:\Program Files (x86)\CyberArk\PSM\Logs\*" $dest -Force
+
+# Compress
+Compress-Archive -Path $dest -DestinationPath "$dest.zip"
+Write-Host "Diagnostic bundle: $dest.zip"
+
+# Attach to the CyberArk SR at my.cyberark.com
+# Include: component versions, exact error message, account name, Safe name, time of failure
+```
+
+---
+
+## Log locations
+
+| Component | Log path | What to look for |
+|---|---|---|
+| Vault | `C:\Program Files (x86)\PrivateArk\Server\Logs\traces.log` | Service errors, Vault startup failures |
+| PVWA | `C:\inetpub\wwwroot\PasswordVault\Logs\` | Login errors, auth failures, IIS 500 errors |
+| CPM | `C:\Program Files (x86)\CyberArk\Password Manager\Logs\pm.log` | Rotation error codes (PACP, ITATS prefix) |
+| PSM | `C:\Program Files (x86)\CyberArk\PSM\Logs\PSMConsole.log` | Session launch failures |
+| Windows Event Log | `Get-EventLog -LogName Application -Source "PrivateArk"` | Service crashes, critical errors |
+
+---
 
 ## See also
 
 - [CyberArk — Common Issues](common-issues/)
 - [CyberArk — Escalation](escalation/)
 - [CyberArk — Procedures](../../operations/procedures/)
+
+## Verify resolution
+
+- All CyberArk services are running: Vault, PVWA app pool, CPM, PSM
+- `Test-NetConnection <vault-hostname> -Port 1858` returns `TcpTestSucceeded: True` from all component servers
+- PVWA login succeeds for an affected user; confirm with an audit log entry in PVWA → Audit → Audit Log
+- A password rotation test account rotates successfully: PVWA → Accounts → select account → CPM → Verify Now
+- PSM session launch succeeds to a test target; the session recording appears in PVWA → Monitoring
