@@ -255,3 +255,9 @@ Target resolution time: expired internal certificate — 2 hours. Expired extern
 - Confirm the original symptom no longer occurs
 - Check logs for any residual errors related to the issue
 - Monitor for 10–15 minutes to confirm the fix is stable
+
+## See also
+
+- [Certificates — Common Issues](common-issues/)
+- [Certificates — Diagnostics](diagnostics/)
+- [Certificates — Procedures](../../operations/procedures/)

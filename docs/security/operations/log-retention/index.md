@@ -123,3 +123,9 @@ aws s3 ls s3://<bucket>/logs/$(hostname)/
 - Archive job last-run timestamp is within the scheduled window
 - Log server/index disk utilisation is below 80%
 - A spot test — querying logs from 12 months ago — returns results, confirming retention is active
+
+## See also
+
+- [Security Operations — Event Correlation](../event-correlation/)
+- [Security Operations — Runbooks](../runbooks/)
+- [Security Monitoring Overview](../../security-monitoring/)

@@ -219,3 +219,12 @@ ss -tlnp | grep 11434
 - Confirm the original symptom no longer occurs
 - Check logs for any residual errors related to the issue
 - Monitor for 10–15 minutes to confirm the fix is stable
+
+## See also
+
+- [Cli Reference](cli-reference/)
+- [Gpu Usage](gpu-usage/)
+- [Install Notes](install-notes/)
+- [Models](models/)
+- [Testing](testing/)
+- [Ollama — Overview](../)

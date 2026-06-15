@@ -104,3 +104,23 @@ purearray set --proxy https://<proxy-host>:<port>
 - Confirm the original symptom no longer occurs
 - Check logs for any residual errors related to the issue
 - Monitor for 10–15 minutes to confirm the fix is stable
+
+## See also
+
+- [Alerts](alerts/)
+- [Architecture](architecture/)
+- [Capacity](capacity/)
+- [Cli Reference](cli-reference/)
+- [Deploy](deploy/)
+- [Design Standards](design-standards/)
+- [Health](health/)
+- [Integration](integration/)
+- [Learning Path](learning-path/)
+- [Lifecycle](lifecycle/)
+- [Operations](operations/)
+- [Performance](performance/)
+- [Scripts](scripts/)
+- [Security](security/)
+- [Support](support/)
+- [Vendor Support](vendor-support/)
+- [Pure1 — Overview](../)

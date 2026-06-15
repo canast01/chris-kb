@@ -313,3 +313,9 @@ Escalate to backup vendor TAC or infrastructure team when:
 - Confirm the original symptom no longer occurs
 - Check logs for any residual errors related to the issue
 - Monitor for 10–15 minutes to confirm the fix is stable
+
+## See also
+
+- [DR Operations — Known Issues](../known-issues/)
+- [DR Operations — Troubleshooting Overview](../)
+- [DR Operations — Overview](../../)
