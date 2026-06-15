@@ -429,7 +429,7 @@ if os.path.isdir(_backup_dir):
     _backups = sorted([
         d for d in os.listdir(_backup_dir)
         if os.path.isdir(os.path.join(_backup_dir, d)) and
-        len(d) == 15 and d[4] == '-' and d[7] == '-'  # YYYY-MM-DD_HHMMSS
+        len(d) == 17 and d[4] == '-' and d[7] == '-'  # YYYY-MM-DD_HHMMSS
     ])
     _count = len(_backups)
     if _count > 10:
@@ -443,7 +443,7 @@ if os.path.isdir(_backup_dir):
             _result = _sp.run(['du', '-sk', _backup_dir], capture_output=True, text=True)
             _kb = int(_result.stdout.split()[0]) if _result.returncode == 0 else 0
             _gb = _kb / (1024 * 1024)
-            if _gb > 10:
+            if _gb > 15:
                 warn(issues, f'Backup dir is {_gb:.1f} GB ({_count} snapshots) — run cleanup or reduce retention')
         except Exception:
             pass
