@@ -6,6 +6,8 @@ AOS distributed architecture, AHV hypervisor, Prism management plane, and cluste
 *Applies to: AOS 6.x · AHV*
 </div>
 
+![Nutanix Architecture Overview](../../../assets/nutanix-architecture-overview.svg)
+
 ```text
 ┌─────────────────────────────── Nutanix Architecture — AOS HCI Cluster ────────────────────────────────┐
 │                                                                                                       │
