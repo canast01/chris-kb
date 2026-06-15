@@ -65,7 +65,14 @@ PowerShell automation tools for routine Active Directory health checks, auditing
 ```
 
 
- Audit scripts require at minimum Read access to the domain; replication and GPO tasks require Domain Admin rights.
+## Before you begin
+
+- **Access:** Read access to the domain for audit and reporting scripts; Domain Admin for GPO replication and account provisioning scripts
+- **Timing:** safe to run any time; avoid peak business hours for domain-wide LDAP queries to reduce DC load
+- **Dependencies:** ActiveDirectory PowerShell module (`RSAT-AD-PowerShell` feature or domain-joined Windows Server); service account with least-privilege AD rights stored in a secrets vault
+- **Logging:** all scripts write timestamped output; redirect to a central log share (`\\server\logs\ad-scripts\`) for audit trail
+
+---
 
 ## Audit Script Workflow
 

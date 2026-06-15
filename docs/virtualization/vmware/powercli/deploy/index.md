@@ -47,6 +47,15 @@ Installing PowerCLI, first connection to vCenter, service account setup, certifi
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Before you begin
+
+- **Access:** local administrator rights to install the module; vCenter read-only minimum for connections; internet access or a pre-staged offline package for Gallery install
+- **Timing:** safe to run any time; no infrastructure changes until you actively connect to vCenter
+- **Dependencies:** PowerShell 5.1 (Windows) or PowerShell 7+ (cross-platform); .NET Framework 4.7.2+ for Windows PowerShell 5.1
+- **Logging:** record the PowerCLI version installed (`Get-PowerCLIVersion`) and capture the connection test output
+
+---
+
 ## Prerequisites
 
 - PowerShell 5.1 (Windows built-in) or PowerShell 7+ (cross-platform)

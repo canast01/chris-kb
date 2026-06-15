@@ -37,6 +37,14 @@ Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Regist
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator at both protected and recovery sites; access to the VR appliance VAMI (`https://<vra-ip>:5480`)
+- **Timing:** VRS deployment is non-disruptive; site pairing requires a brief VR service restart — safe during business hours
+- **Dependencies:** vCenter deployed and healthy at both sites; TCP 31031 open between sites (replication traffic); TCP 443 between VR appliances (management); DNS resolves VR FQDN from both sites
+- **Logging:** record VR appliance IPs and FQDNs; capture the site pairing confirmation and certificate fingerprints
+
+---
 
 !!! warning "Host enters maintenance mode"
     ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.

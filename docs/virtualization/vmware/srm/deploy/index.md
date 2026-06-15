@@ -56,6 +56,15 @@ End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. P
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator and SRM Administrator at both the protected and recovery sites
+- **Timing:** plan a maintenance window; SRM deployment touches production networking at both sites
+- **Dependencies:** vCenter deployed at both sites; DNS resolves across sites; network ports open (TCP 443, 8043, 9086); replication mechanism (vSphere Replication or SRA) ready
+- **Logging:** capture appliance deployment wizard output and any certificate warnings; record IP addresses and FQDNs assigned during deployment
+
+---
+
 ## Phase 1 — Prerequisites
 
 **Exit criterion:** Both sites operational; network ports confirmed open; DNS resolves; replication mechanism in place.

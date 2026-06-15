@@ -68,6 +68,14 @@ Install and Upgrade reference covering Prerequisites for vSphere with Tanzu (Sup
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator; vSphere Namespace Administrator role for Workload Management; `kubectl vsphere` access after deployment
+- **Timing:** Workload Management enablement triggers ESXi remediation — plan a maintenance window; hosts reboot in sequence
+- **Dependencies:** vSphere 7.x+ with a supported vSAN or vSAN ESA cluster; NSX-T or VDS networking pre-configured; Supervisor control plane VIP range reserved in IPAM; DNS entries for Supervisor VIP created
+- **Logging:** capture every wizard step and record all IP addresses assigned during Supervisor configuration
+
+---
 
 !!! warning "Host enters maintenance mode"
     ESXi remediation puts hosts into maintenance mode, triggering DRS evacuation. Confirm DRS is Fully Automated and HA admission control is satisfied before starting.

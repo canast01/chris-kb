@@ -50,6 +50,15 @@ PowerCLI and bash scripts for VxRail automation. Includes vSAN health summary, c
 
 ---
 
+## Before you begin
+
+- **Access:** vCenter Administrator; ESXi SSH access; iDRAC credentials for hardware health scripts
+- **Timing:** all scripts are read-only unless explicitly noted; safe to run during business hours
+- **Dependencies:** VMware.PowerCLI module installed; active vCenter connection (`Connect-VIServer`); iDRAC management network reachable for hardware query scripts
+- **Logging:** redirect output to a timestamped log file (`Tee-Object -FilePath "vxrail-$(Get-Date -f yyyyMMdd).log"`); attach to the change record on completion
+
+---
+
 ## Prerequisites
 
 All PowerCLI scripts require the VMware.PowerCLI module and an active vCenter connection:
