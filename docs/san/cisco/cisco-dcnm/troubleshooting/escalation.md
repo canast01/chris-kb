@@ -5,152 +5,334 @@ tags:
 search:
   boost: 1.5
 ---
-# Cisco DCNM — Troubleshooting Escalation
+# Cisco DCNM — Escalation
 
-```bash
-# 1. DCNM version
-cat /var/dcnm/version
+<div class="kb-summary">
+How to escalate Cisco DCNM (Data Center Network Manager) issues to Cisco TAC: what data to collect, how to generate the DCNM support bundle and MDS show tech-support, step-by-step case creation on case.cisco.com, and the escalation path when progress stalls.
 
-# 2. DCNM support bundle
-/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh \
-  --output /tmp/dcnm-support-$(date +%Y%m%d).tar.gz
+*Applies to: Cisco DCNM 11.x — standalone VM or Native HA deployment managing MDS / Nexus SAN fabrics*
+</div>
 
-# 3. Appliance resource state
-free -h
-df -h
-uptime
-
-# 4. Java heap state at time of issue
-DCNM_PID=$(ps aux | grep "[d]cnm-server" | awk '{print $2}' | head -1)
-jstat -gcutil ${DCNM_PID} 1s 5
-
-# 5. OS-level resource snapshot
-top -b -n 1 > /tmp/top-snapshot-$(date +%Y%m%d).txt
-```
 ```text
-┌─────────────────────────────── Cisco DCNM — Troubleshooting Escalation ───────────────────────────────┐
+┌──────────────────────────────── Cisco DCNM — Escalation ──────────────────────────────────────────────┐
 │                                                                                                       │
-│  DCNM escalation: internal L2/L3 → Cisco TAC with log bundle, case severity, remote.                  │
+│  Escalate DCNM issues to Cisco TAC when DCNM is completely unavailable and fabric management          │
+│  has stopped, zone pushes or fabric discovery are failing and no zone changes can be made,            │
+│  a DCNM upgrade has left the appliance in a failed state and it cannot be restarted, or               │
+│  the DCNM database is corrupted and no configuration data can be retrieved.                           │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Internal Escalation Path           │  │             Cisco TAC Escalation            │   │
-│   │         L1 → L2: basic checks + logs         │  │            Open case: TAC portal            │   │
-│   │          L2 → L3: logs + show-tech           │  │           DCNM version + NX-OS ver          │   │
-│   │         L3 → TAC: full data package          │  │           Sev-1: fabric management          │   │
-│   │          Incident bridge for Sev-1           │  │           Remote: TAC SSH to DCNM           │   │
-│   │        No config changes during inc.         │  │           RCA expected post-close           │   │
+│   │          Step 1 — Collect Data               │  │          Step 2 — Open the SR               │   │
+│   │  cat /var/dcnm/version (DCNM version)        │  │  Go to case.cisco.com → sign in with CCO   │    │
+│   │  collect-support-bundle.sh (bundle)          │  │  Product: DCNM; managed switch NX-OS vers   │   │
+│   │  appmgr status (service state)               │  │  Severity: Sev-1 DCNM down / Sev-2 partial │    │
+│   │  show tech-support on each affected MDS      │  │  Attach support bundle + show tech files    │   │
+│   │  Write timeline: last working → first error  │  │  For Sev-1: also call +1-800-553-2447       │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  Collect DCNM logs and MDS show tech-support before opening a Cisco TAC case.                         │
+│  For Sev-1 (DCNM completely down / fabric management unavailable): open SR AND call TAC.              │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Escalation Data Package            │  │           Severity Classification           │   │
-│   │          DCNM logs: journalctl dump          │  │           Sev-1: DCNM down; fabric          │   │
-│   │          appmgr status + db-status           │  │           Sev-2: zone push failing          │   │
-│   │          show tech-support: per MDS          │  │          Sev-3: partial monitoring          │   │
-│   │             Audit log CSV export             │  │           Sev-4: general question           │   │
-│   │        Timeline: events before issue         │  │            CSAT after case close            │   │
+│   │          Step 3 — Escalation Path            │  │         What NOT to Do                      │   │
+│   │  TAC SE: triage + review support bundle      │  │  Do not restart DCNM before collecting logs │   │
+│   │  DCNM SME: if Sev-1 unresolved > 2 hours    │  │  Do not make zone changes during incident   │    │
+│   │  Engineering: for DB corruption or code bug  │  │  Do not upgrade DCNM mid-incident           │   │
+│   │  TAM: engage for prolonged Sev-1 outages     │  │  Do not reboot appliance without TAC OK     │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DCNM VM · management Ethernet · Cisco TAC upload portal · serial console access                      │
 │                                                                                                       │
 │  Key terms:                                                                                           │
 │                                                                                                       │
-│  journalctl dump = full DCNM service log; gzip and share to Cisco TAC                                 │
-│  appmgr status   = DCNM VM CLI; service health output for TAC review                                  │
+│  DCNM            = Data Center Network Manager; Cisco fabric management platform for MDS/Nexus        │
+│  appmgr          = DCNM VM CLI; manages DCNM services; key commands: status, stop, start, logs        │
+│  support bundle  = collect-support-bundle.sh output; primary artifact for Cisco TAC                   │
 │  show tech-support= NX-OS MDS full diagnostic bundle; one per affected switch                         │
-│  Audit log CSV   = DCNM action log export; shows what changed before incident                         │
-│  Sev-1           = DCNM completely down; fabric management unavailable                                │
-│  Sev-2           = DCNM partially working; zone changes or discovery failing                          │
-│  Cisco TAC       = Technical Assistance Center; opened at tools.cisco.com                             │
-│  TAC remote      = Cisco engineer SSHs into DCNM VM with customer permission                          │
+│  Native HA       = 3-appliance DCNM HA deployment; primary + standby + compute nodes                  │
+│  TAC             = Technical Assistance Center; Cisco L3 support; opened at case.cisco.com            │
+│  CCO             = Cisco Connection Online; account required for case.cisco.com                       │
+│  Sev-1           = complete DCNM outage; fabric management unavailable; Cisco SLA: 1-hour callback    │
 │  RCA             = Root Cause Analysis; Cisco provides after Sev-1 case closure                       │
-│  CSAT            = Customer Satisfaction survey; sent after TAC case closure                          │
-│  Incident bridge = conference call coordinating all responders during Sev-1                           │
-│  No config changes= freeze all DCNM and MDS changes during active incident                            │
+│  sane            = DCNM PostgreSQL database; fabric topology and configuration store                  │
+│  pmdb            = DCNM performance management database; holds historical metrics                     │
+│  Audit log CSV   = DCNM action log export; shows all configuration changes before the incident        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Before you begin
+
+- **Access required:** Root or admin SSH access to the DCNM VM; DCNM admin web console credentials; Cisco CCO account at case.cisco.com; credentials for each managed MDS or Nexus switch
+- **Do NOT restart DCNM services** before collecting the support bundle — a restart clears the in-memory service state and logs that TAC needs to diagnose the issue; collect the bundle first, then restart if directed by TAC
+- **Do NOT make zone changes** during an active DCNM incident — if DCNM is partially functional, zone pushes in an unstable state can corrupt the zone database or leave switches in a mixed state
+- **Do NOT upgrade DCNM mid-incident** — do not attempt a DCNM upgrade to resolve the issue unless explicitly directed by TAC with a targeted bugfix version
+
+---
+
+## Pre-Escalation Self-Check
+
+Run these before opening the case.
+
+| Check | Command | Expected result |
+|---|---|---|
+| DCNM version | `cat /var/dcnm/version` | Note full version (e.g., 11.5.4.0) |
+| Service state | `appmgr status` | All services Running |
+| Database state | `appmgr database-status` | Database running; no errors |
+| Disk space | `df -h` | DCNM data volumes below 80% used |
+| Memory | `free -h` | Sufficient free memory; no OOM in `dmesg` |
+| Java heap | Run: see Step 3 | GC utilization below 95% |
+| Managed switch reachability | DCNM UI → Switches | All managed MDS switches in Manageable state |
+| Fabric replication | DCNM UI → Fabrics | Fabrics in normal sync state |
+
+---
+
+## Step-by-Step Data Collection
+
+### 1. Get the DCNM version and deployment type
+
 ```bash
-# Database diagnostics
+# SSH to the DCNM VM as root or admin
+
+# DCNM version string
+cat /var/dcnm/version
+
+# For Native HA: check which node is primary
+appmgr ha-status
+
+# DCNM deployment mode
+appmgr show-deployment-mode
+```
+
+### 2. Collect the DCNM support bundle
+
+```bash
+# This is the primary artifact for Cisco TAC — collect BEFORE any restart
+# Run as root; the bundle takes 5–10 minutes to generate
+
+/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh \
+  --output /tmp/dcnm-support-$(date +%Y%m%d%H%M).tar.gz
+
+# Verify the bundle was created
+ls -lh /tmp/dcnm-support-*.tar.gz
+
+# Transfer to your workstation for upload to the TAC case
+scp root@<dcnm-vm>:/tmp/dcnm-support-$(date +%Y%m%d%H%M).tar.gz ./
+```
+
+### 3. Capture DCNM service state and resource snapshot
+
+```bash
+# All DCNM service states
+appmgr status > /tmp/dcnm-services-$(date +%Y%m%d).txt
+
+# Database health
+appmgr database-status >> /tmp/dcnm-services-$(date +%Y%m%d).txt
+
+# OS resources (disk, memory, CPU)
+df -h >> /tmp/dcnm-services-$(date +%Y%m%d).txt
+free -h >> /tmp/dcnm-services-$(date +%Y%m%d).txt
+uptime >> /tmp/dcnm-services-$(date +%Y%m%d).txt
+
+# Java heap utilization for the DCNM server process
+DCNM_PID=$(ps aux | grep "[d]cnm-server" | awk '{print $2}' | head -1)
+if [ -n "$DCNM_PID" ]; then
+  jstat -gcutil "${DCNM_PID}" 1s 10 >> /tmp/dcnm-services-$(date +%Y%m%d).txt
+fi
+
+# DCNM application log tail (most recent errors)
+tail -500 /var/log/dcnm/dcnm.log > /tmp/dcnm-log-tail-$(date +%Y%m%d).txt 2>/dev/null || \
+  journalctl -u dcnm --since "4 hours ago" > /tmp/dcnm-log-tail-$(date +%Y%m%d).txt
+```
+
+### 4. Capture database diagnostics
+
+```bash
+# Connect to DCNM PostgreSQL and capture key table sizes
 psql -U postgres sane -c "
 SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size
 FROM pg_catalog.pg_statio_user_tables
 ORDER BY pg_relation_size(relid) DESC
-LIMIT 20;" > /tmp/db-sizes-$(date +%Y%m%d).txt
+LIMIT 20;" > /tmp/dcnm-db-$(date +%Y%m%d).txt
 
-psql -U postgres -c "SELECT pg_size_pretty(pg_database_size('sane')), pg_size_pretty(pg_database_size('pmdb'));" >> /tmp/db-sizes-$(date +%Y%m%d).txt
-
-# 10-minute resource collection
-for i in {1..10}; do
-  echo "=== $(date) ==="
-  free -h; df -h /var/lib/pgsql; uptime
-  sleep 60
-done > /tmp/dcnm-perf-$(date +%Y%m%d).txt
+# Total database sizes
+psql -U postgres -c "
+SELECT datname, pg_size_pretty(pg_database_size(datname))
+FROM pg_database
+ORDER BY pg_database_size(datname) DESC;" >> /tmp/dcnm-db-$(date +%Y%m%d).txt
 ```
+
+### 5. Collect show tech-support from affected MDS switches
+
 ```bash
-# Upgrade log
-cp /var/log/dcnm/install.log /tmp/
+# SSH to each affected MDS switch and run show tech-support
+# This is required in addition to the DCNM support bundle
 
-# Current and previous DCNM version
-cat /var/dcnm/version
-# Include in case: source version, target version, and exact error message
-```
-```yaml
-Product: Cisco Data Center Network Manager (DCNM)
-Version: 11.x.x (from /var/dcnm/version)
-Deployment: Standalone / Native HA
-Hypervisor: VMware ESXi 7.0 U3 (or KVM)
-Managed switches: [MDS 9710 x2, MDS 9396T x4, NX-OS 8.4(2a)]
+ssh admin@<mds-switch-ip>
+show tech-support > /tmp/mds-tech-$(hostname)-$(date +%Y%m%d).txt
+exit
 
-Problem description:
-[Concise description of the symptom — what is broken or degraded]
-
-Business impact:
-[e.g., "Zone changes cannot be pushed to fabric; fabric is operational but no
- configuration changes can be made via DCNM"]
-
-When did the issue start:
-[Date and time — what was happening at that time]
-
-What changed before the issue:
-[e.g., "DCNM was upgraded from 11.4.1 to 11.5.4 on 2026-05-06 at 14:00 UTC"]
-
-Steps taken to troubleshoot:
-1. [what was checked]
-2. [what was tried]
-3. [result]
-
-Attachments:
-- dcnm-support-20260507.tar.gz (support bundle)
-- discovery-issue.log
-- ssh-test.txt / snmp-test.txt
+# Transfer the tech-support file
+scp admin@<mds-switch-ip>:/tmp/mds-tech-*.txt ./
 ```
 
-## Before you begin
+### 6. Export the DCNM audit log
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+In the DCNM UI:
+1. Navigate to **Administration** → **Credentials** → **Audit Log**.
+2. Set the time range to cover 48 hours before the incident.
+3. Click **Export** → **CSV**.
+4. Save the file and include it in the TAC case attachment.
+
+### 7. Write the timeline
+
+```text
+DCNM version: 11.5.4.0
+Deployment: Standalone VM (VMware ESXi 7.0 U3)
+VM resources: 16 vCPU, 32 GB RAM, 500 GB disk
+Managed fabrics: SAN Fabric A (MDS 9710 x2, MDS 9396T x4), SAN Fabric B (MDS 9396T x2)
+Managed switch NX-OS: 8.4(2a) on all MDS switches
+Issue first observed: 2026-06-15 14:00 UTC
+Last confirmed healthy: 2026-06-15 12:00 UTC
+Changes in 24h before the issue:
+  - 11:30: DCNM upgraded from 11.5.2 to 11.5.4.0 (upgrade completed successfully per UI)
+  - 12:00: DCNM appeared healthy post-upgrade
+  - 14:00: All managed switches moved to "Unreachable" state in DCNM; fabric discovery stopped
+  - 14:05: appmgr status: sne-service is in "Stopped" state; attempting restart fails
+  - 14:10: Disk utilization on /var/lib/pgsql: 95% — database may have run out of space
+Steps already taken:
+  - Did NOT restart the entire DCNM VM
+  - Did NOT make any zone changes
+  - Verified MDS switches are reachable via SSH independently — switches operational, only DCNM is down
+  - Checked /var/dcnm/version: confirms upgrade applied (11.5.4.0)
+Blast radius: All DCNM fabric management unavailable; no zone changes can be pushed; monitoring stopped
+```
 
 ---
 
+## How to Open the SR on case.cisco.com
+
+1. Go to **case.cisco.com** and sign in with your Cisco CCO account.
+
+2. Click **Create New Case**.
+
+3. Under **Product**, type "Data Center Network Manager" and select **Cisco DCNM**.
+
+4. Enter the DCNM version string from Step 1.
+
+5. Under **Severity**, select:
+   - **Severity 1 — Production Down**: DCNM is completely unavailable and no fabric management can be performed; zone changes cannot be pushed to any fabric; a production fabric is degraded and DCNM data is required for recovery
+   - **Severity 2 — Major Impact**: DCNM UI is accessible but a core function is broken (zone push failing, fabric discovery stopped for specific fabrics, performance data unavailable); workaround is partial
+   - **Severity 3 — Moderate Impact**: DCNM functioning with minor issues; some features not working but fabric management is intact; workaround available
+   - **Severity 4 — Minimal Impact**: How-to, DCNM configuration question, best practice, upgrade planning question
+
+6. In the **Summary** field: version + symptom. Example: `DCNM 11.5.4.0 — sne-service stopped after upgrade, all managed switches Unreachable, fabric management unavailable`.
+
+7. In the **Description** field, paste:
+   - DCNM version and deployment type (Step 1)
+   - `appmgr status` output (Step 3)
+   - Key log errors from the DCNM log (Step 3)
+   - Database size findings if relevant (Step 4)
+   - The timeline from Step 7
+
+8. Under **Attachments**, upload:
+   - `dcnm-support-*.tar.gz` from Step 2 (primary artifact)
+   - `mds-tech-*.txt` from Step 5 for each affected MDS switch
+   - Audit log CSV from Step 6
+   - `dcnm-db-*.txt` if database issue is suspected
+
+9. Click **Submit**. You receive a case number immediately.
+
+10. **Severity 1 only:** call Cisco TAC after submission:
+    - North America: +1-800-553-2447 (24×7)
+    - State "Severity 1 — DCNM completely down, fabric management unavailable, case XXXXXXXX" at the start of the call.
+
 ---
 
-## Verify resolution
+## Escalation Path
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+```text
+Step 1 — Open SR at case.cisco.com with support bundle + MDS show tech-support attached
+         ↓
+Step 2 — Cisco TAC SE acknowledges (Sev-1: < 1 hr; Sev-2: < 2 hr — requires SMARTnet 24×7)
+         ↓
+Step 3 — If no meaningful progress within 2 hours for Sev-1:
+         → Reply in case: "Requesting escalation to DCNM SME"
+         → State: "[DCNM down / zone push failing / database corrupted / upgrade failed]"
+         ↓
+Step 4 — Cisco DCNM Subject Matter Expert assigned
+         → They will review the support bundle and may request a remote session (WebEx)
+         → Have SSH access to the DCNM VM ready for the TAC engineer
+         ↓
+Step 5 — If issue is a confirmed code-level bug or database corruption:
+         → SME escalates to Cisco DCNM Engineering
+         → Engineering may provide a targeted patch or database recovery procedure
+         ↓
+Step 6 — For Sev-1 unresolved > 2 hours:
+         → Request Duty Manager escalation during the TAC call
+         → Engage Cisco account team and TAM for executive escalation
+```
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Restart DCNM before collecting the support bundle | A restart clears the in-memory service state and the current log buffer; TAC needs state data from the moment of failure | Run `collect-support-bundle.sh` before any restart; then restart only if TAC directs it |
+| Make zone changes while DCNM is unstable | A zone push from an unstable DCNM can push an incomplete zone database to the MDS fabric, leaving switches with mixed active/inactive zone configurations | Freeze all zone changes until DCNM is stable and confirmed healthy |
+| Upgrade DCNM to try to resolve the issue | Applying a new DCNM version to an already-broken installation may compound the failure state and make root cause harder to determine | Only upgrade with TAC providing the specific target version and documented procedure |
+| Delete DCNM PostgreSQL database files to free disk space | The DCNM databases (sane and pmdb) contain all fabric topology and historical configuration data; deleting them requires a full DCNM rediscovery and configuration rebuild | Expand the disk allocated to the DCNM VM; let TAC identify which tables are safe to archive |
+| Reboot the DCNM VM without TAC direction | A VM reboot may recover a hung service but may also mask the root cause; TAC often needs the state before restart | Reboot only on TAC's explicit direction after the support bundle has been collected |
+| Remove and re-add managed switches in DCNM | Removing a switch from DCNM management deletes its configuration history; re-adding triggers a full rediscovery that may fail if the underlying issue is on the DCNM side | Let TAC investigate the discovery failure before any switch removal from management |
+
+---
+
+## Useful Commands for Case Updates
+
+```bash
+# SSH to DCNM VM — paste into every case update
+
+# DCNM service states
+appmgr status
+
+# Disk utilization (watch for /var/lib/pgsql filling up)
+df -h
+
+# DCNM service log tail (last 100 lines)
+tail -100 /var/log/dcnm/dcnm.log 2>/dev/null || journalctl -u dcnm --since "30 min ago"
+
+# Database running check
+appmgr database-status
+```
+
+---
+
+## Support SLA Reference
+
+| Contract | Severity | Definition | Initial Response SLA |
+|---|---|---|---|
+| SMARTnet 24×7 | Sev-1 | DCNM completely unavailable; fabric management down | < 1 hour (24×7) |
+| SMARTnet 24×7 | Sev-2 | Core function broken; zone push failing; workaround partial | < 2 hours (24×7) |
+| SMARTnet 24×7 | Sev-3 | Partial feature loss; workaround available | < 4 hours (business hours) |
+| SMARTnet 24×7 | Sev-4 | How-to, general question | Next business day |
+| SMARTnet 8×5 | Sev-1 | As above | < 2 hours (business hours) |
 
 ---
 
 ## See also
 
-- [Cisco Dcnm — Diagnostics](diagnostics/)
-- [Cisco Dcnm — Common Issues](common-issues/)
+- [Cisco DCNM — Diagnostics](diagnostics/)
+- [Cisco DCNM — Common Issues](common-issues/)
+
+---
+
+## Verify resolution
+
+- Run `appmgr status` and confirm all DCNM services are Running
+- Verify the DCNM UI is accessible and all managed MDS switches show Manageable state in the fabric view
+- Run a test zone push to a non-production VSAN to confirm zone distribution is working
+- Check DCNM UI → Fabrics and confirm all fabrics are in normal sync state
+- Run `df -h` and confirm disk utilization is below 80% on all DCNM volumes
+- Monitor `appmgr status` over 15 minutes to confirm no services cycle back to a stopped state
