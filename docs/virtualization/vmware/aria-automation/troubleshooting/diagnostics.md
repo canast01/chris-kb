@@ -8,154 +8,290 @@ search:
 ---
 # Aria Automation — Diagnostics
 
-```yaml
-formatVersion: 1
-inputs:
-  vmName:
-    type: string
-    title: VM Name
-    default: my-vm
-  cpuCount:
-    type: integer
-    title: CPU Count
-    default: 2
-    enum: [2, 4, 8]
+<div class="kb-summary">
+Aria Automation diagnostic commands: query failed deployments and requests via REST API, inspect Kubernetes pod logs with kubectl, check PostgreSQL health, diagnose ABX action failures, and collect the LCM support bundle for VMware cases.
 
-resources:
-  Cloud_vSphere_Machine_1:
-    type: Cloud.vSphere.Machine
-    properties:
-      name: ${input.vmName}
-      image: ubuntu-22-04
-      flavor: medium
-      cpuCount: ${input.cpuCount}
-      memoryInMB: 4096
-      networks:
-        - network: ${resource.Cloud_vSphere_Network_1.id}
-          assignment: static
-      tags:
-        - key: owner
-          value: ${env.requestedBy}
+*Applies to: VMware Aria Automation 8.x (vRealize Automation)*
+</div>
 
-  Cloud_vSphere_Network_1:
-    type: Cloud.vSphere.Network
-    properties:
-      networkType: existing
-      name: VLAN-100-Servers
-```
 ```text
 ┌──────────────────────────────────── Aria Automation — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
-│  Collect vRA logs and support bundle before engaging VMware support for complex issues.               │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: GET /deployment/api/deployments?status=FAILED → pod logs → PostgreSQL health   │    │
+│   │   Deployment stuck: check catalog request status; then check pod logs for Java exceptions     │   │
+│   │   ABX action failure: check ABX run history in vRA UI → Action Runs → read stderr output     │    │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │                Log Collection                │  │                Support Bundle               │   │
-│   │        kubectl logs -n prelude --all         │  │           LCM: Logscraper utility           │   │
-│   │      /var/log/vmware/vra/ on appliance       │  │       VAMI → Support → Generate bundle      │   │
-│   │       journalctl -u vra-cluster -n 500       │  │        Includes k8s pod logs + config       │   │
-│   │          ABX run history in vRA UI           │  │       Upload to VMware SR for analysis      │   │
+│   │   kubectl logs -n prelude --all-containers   │  │   LCM: vRSLCM → Support → logscraper       │    │
+│   │   /var/log/vmware/vra/ on appliance          │  │   VAMI → Support → Generate bundle          │   │
+│   │   journalctl -u vra-cluster -n 500           │  │   Includes k8s pod logs + config + DB state │   │
+│   │   ABX run history: vRA UI → Action Runs      │  │   Upload to VMware SR for analysis          │   │
 │   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  API-level diagnostics: check connectivity, auth, and response codes systematically.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               API Diagnostics                │  │                DB Diagnostics               │   │
-│   │      curl -k /csp/gateway/am/api/login       │  │        psql -U postgres vra DB access       │   │
-│   │       GET /deployment/api/deployments        │  │    Check replication: pg_stat_replication   │   │
-│   │       Check 401/403/500 response codes       │  │       Check bloat: pg_stat_user_tables      │   │
-│   │       Swagger UI /vco/api/docs testing       │  │       Vacuum: VACUUM ANALYZE public.*       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA Linux appliances · k3s Kubernetes · Postgres · vIDM · LCM logscraper                             │
+│  Physical Infrastructure:                                                                             │
+│  vRA Linux appliance(s) · k3s Kubernetes cluster · PostgreSQL · vIDM (identity) · NSX / vCenter       │
 │                                                                                                       │
 │  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM logscraper    = LCM utility collecting logs from all Aria products into one archive              │
-│  Support bundle    = vRA-generated diagnostic archive; includes pod logs, configs, DB state           │
-│  kubectl logs --all = Collect logs from all pods across the prelude namespace at once                 │
-│  journalctl        = Linux log viewer for systemd; captures vra-cluster startup messages              │
-│  ABX run history   = Per-action execution log in vRA UI showing inputs, outputs, and errors           │
-│  Swagger UI        = /vco/api/docs and /automation-ui/api/docs; test APIs interactively               │
-│  401/403 response  = Unauthorised/forbidden; check token expiry or role assignment                    │
-│  500 response      = Internal server error; look at pod logs for stack trace                          │
-│  pg_stat_replication= Postgres view showing standby lag; high lag indicates DB issue                  │
-│  VACUUM ANALYZE    = Postgres maintenance command; reclaims space and updates query stats             │
-│  psql access       = Direct Postgres client on vRA appliance; use only for diagnostics                │
-│  VMware SR         = Support Request; opened with support bundle attached for complex issues          │
+│  prelude namespace = Kubernetes namespace where all vRA micro-services run                            │
+│  ABX               = Action-Based eXtensibility; serverless functions triggered by vRA events         │
+│  Deployment        = vRA object representing a provisioned blueprint; has lifecycle state             │
+│  Catalog request   = user-submitted service catalog order; tracks through request workflow            │
+│  LCM logscraper   = LCM utility collecting logs from all Aria products into one archive               │
+│  vIDM              = VMware Identity Manager; handles vRA authentication and SSO                      │
+│  PostgreSQL        = vRA internal database; stores deployments, policies, and catalog items           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
-# List all deployments
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  https://<vra-fqdn>/deployment/api/deployments \
-  | python3 -m json.tool
 
-# Get a specific deployment
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  https://<vra-fqdn>/deployment/api/deployments/<deployment-id> \
-  | python3 -m json.tool
+```mermaid
+graph TD
+    A([Aria Automation Issue]) --> B{What type of problem?}
+    B -->|Deployment stuck or failed| C[GET /deployment/api/deployments\nFilter by status=FAILED]
+    B -->|Catalog request error| D[GET /catalog/api/requests\nFilter by requestState=FAILED]
+    B -->|ABX action failure| E[vRA UI → Extensibility → Action Runs\nCheck stderr and error code]
+    B -->|UI or API error| F[kubectl logs -n prelude\nLook for Java exceptions]
+    B -->|Authentication failure| G[Check vIDM connectivity\nGET /csp/gateway/am/api/login]
+    C --> H[GET /deployment/api/deployments/id/events\nRead FAILED event message]
+    H --> I{Error source?}
+    I -->|vCenter / infra error| J[Check vCenter Cloud Account\nvRA → Infrastructure → Cloud Accounts]
+    I -->|Blueprint error| K[Validate blueprint YAML\nCheck resource property types]
+    I -->|Network / IP error| L[Check IP range in vRA\nvRA → Infrastructure → Networks]
+    D --> M[GET /catalog/api/requests/id/events\nRead error detail]
+    E --> N[Check ABX action code\nVerify inputs and environment vars]
+    F --> O[kubectl logs -n prelude pod-name --tail=200\nFilter for ERROR and Exception]
+    G --> P[curl -sk vIDM-URL/SAAS/API/1.0/auth/token\nTest vIDM API]
+    J --> Q[Collect support bundle\nLCM logscraper or VAMI bundle]
+    K --> Q
+    L --> Q
+    M --> Q
+    N --> Q
+    O --> Q
+    P --> Q
+    Q --> R[Open VMware SR\nmysupport.vmware.com]
 
-# Get deployment events (full audit trail)
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/deployment/api/deployments/<deployment-id>/events" \
-  | python3 -m json.tool
-
-# Filter events by type
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/deployment/api/deployments/<deployment-id>/events?eventTypes=FAILED" \
-  | python3 -m json.tool
-```
-```bash
-# List available day-2 actions for a deployment
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/deployment/api/deployments/<deployment-id>/actions" \
-  | python3 -m json.tool
-
-# Execute a day-2 action (e.g., PowerOff)
-curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/deployment/api/deployments/<deployment-id>/requests" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "actionId": "Cloud.vSphere.Machine.PowerOff",
-    "reason": "Maintenance window",
-    "inputs": {}
-  }'
-```
-```bash
-# List all requests
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/catalog/api/requests?page=0&size=20" \
-  | python3 -m json.tool
-
-# Get a specific request
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/catalog/api/requests/<request-id>" \
-  | python3 -m json.tool
-
-# Get request events/log
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/catalog/api/requests/<request-id>/events" \
-  | python3 -m json.tool
-
-# Filter requests by status
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/catalog/api/requests?requestState=FAILED" \
-  | python3 -m json.tool
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P action
+    class Q,R escalate
 ```
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** vRA admin role; SSH to the vRA appliance(s); kubectl access (kubeconfig on the appliance at `/root/.kube/config`)
+- **Gather first:** the deployment ID or catalog request ID, the error message shown in the vRA UI, the cloud account or endpoint involved, and whether the issue started after a version upgrade or configuration change
+- **Scope:** confirm whether the issue affects one deployment, one blueprint, one cloud account, or all vRA requests
+- **API auth:** get a Bearer token first — most diagnostic steps below require an authenticated API call
 
 ---
+
+## Step 1 — Get an API token
+
+```bash
+# Authenticate to vRA via vIDM (standard method)
+TOKEN=$(curl -sk -X POST "https://<vra-fqdn>/csp/gateway/am/api/login" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"<admin-user>","password":"<password>","domain":"vsphere.local"}' \
+  | python3 -c "import json,sys; print(json.load(sys.stdin)['cspAuthToken'])")
+
+echo $TOKEN
+# Expected: long JWT string; empty = auth failed
+
+# Verify the token works
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/iaas/api/about" | python3 -m json.tool
+# Expected: version info JSON with buildNumber and controllerVersion
+```
+
+---
+
+## Step 2 — Check failed deployments
+
+```bash
+# List all failed deployments
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/deployment/api/deployments?status=FAILED" \
+  | python3 -c "
+import json,sys
+data = json.load(sys.stdin)
+for d in data.get('content', []):
+    print(d['name'], '|', d['status'], '|', d.get('lastRequest', {}).get('completionDetails',''))
+"
+
+# Get full detail for a specific deployment
+DEPLOY_ID="<deployment-id>"
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/deployment/api/deployments/$DEPLOY_ID" \
+  | python3 -m json.tool
+
+# Get deployment event log (full audit trail for what happened step by step)
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/deployment/api/deployments/$DEPLOY_ID/events" \
+  | python3 -c "
+import json,sys
+for e in json.load(sys.stdin).get('content', []):
+    print(e.get('timestamp',''), e.get('eventType',''), e.get('message','')[:120])
+"
+
+# Filter events to only FAILED type
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/deployment/api/deployments/$DEPLOY_ID/events?eventTypes=FAILED" \
+  | python3 -m json.tool
+```
+
+---
+
+## Step 3 — Check catalog request status
+
+```bash
+# List failed catalog requests
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/catalog/api/requests?requestState=FAILED&size=20" \
+  | python3 -c "
+import json,sys
+for r in json.load(sys.stdin).get('content', []):
+    print(r.get('id','')[:8], '|', r.get('requestedByDisplay',''), '|', r.get('reason',''))
+"
+
+# Get full detail for a specific request
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/catalog/api/requests/<request-id>" \
+  | python3 -m json.tool
+
+# Get request event log
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/catalog/api/requests/<request-id>/events" \
+  | python3 -m json.tool
+```
+
+---
+
+## Step 4 — Inspect Kubernetes pod logs
+
+```bash
+# SSH to the vRA appliance
+ssh root@<vra-appliance-ip>
+
+# List all pods in the vRA namespace (all should be Running)
+kubectl get pods -n prelude
+# Problem: any pod in CrashLoopBackOff, Error, or Pending state
+
+# Get logs for a specific failing pod
+kubectl logs -n prelude <pod-name> --tail=200
+
+# Follow logs in real time for a pod (Ctrl-C to stop)
+kubectl logs -n prelude <pod-name> -f
+
+# Get logs from all containers in a pod (for multi-container pods)
+kubectl logs -n prelude <pod-name> --all-containers
+
+# Filter for errors across all pods (runs kubectl exec or log aggregation)
+kubectl logs -n prelude --selector app=catalog --tail=100 2>&1 | grep -i "error\|exception\|fail"
+
+# Describe a pod in CrashLoopBackOff to get exit reason
+kubectl describe pod -n prelude <pod-name>
+# Look for: "Last State", "Reason", "Exit Code" in the output
+
+# Check all pod resource consumption
+kubectl top pods -n prelude 2>/dev/null || echo "metrics-server not available"
+```
+
+---
+
+## Step 5 — Check PostgreSQL database health
+
+```bash
+# On the vRA appliance — connect to the Postgres database
+psql -U postgres
+
+# Check replication lag (if clustered vRA)
+\c vcac
+SELECT client_addr, state, sent_lsn, replay_lsn,
+       (sent_lsn - replay_lsn) AS lag_bytes
+FROM pg_stat_replication;
+
+# Check for table bloat (dead tuples)
+SELECT relname, n_dead_tup, last_autovacuum
+FROM pg_stat_user_tables
+WHERE n_dead_tup > 10000
+ORDER BY n_dead_tup DESC LIMIT 20;
+
+# Manually vacuum if autovacuum hasn't run
+VACUUM ANALYZE public.*;
+
+# Exit psql
+\q
+```
+
+---
+
+## Step 6 — Check ABX action failures
+
+```bash
+# Via vRA UI (most informative for ABX):
+# Navigate to: Extensibility → Action Runs
+# Filter by: Status = Failed; sort by Most Recent
+# Click on a failed run → View Logs
+# Look at: stdout, stderr, exit code, and inputs passed to the action
+
+# Via API — list recent ABX action runs
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/abx/api/resources/action-runs?page=0&size=20&status=FAILED" \
+  | python3 -c "
+import json,sys
+for r in json.load(sys.stdin).get('content', []):
+    print(r.get('name',''), '|', r.get('status',''), '|', r.get('error','')[:100])
+"
+
+# Get detail for a specific action run
+curl -sk -H "Authorization: Bearer $TOKEN" \
+  "https://<vra-fqdn>/abx/api/resources/action-runs/<run-id>" \
+  | python3 -m json.tool
+```
+
+---
+
+## Step 7 — Collect support bundle
+
+```bash
+# Via LCM logscraper (recommended for full Aria Suite diagnostics)
+# Navigate to: vRSLCM UI → Support → Logscraper
+# Select: Aria Automation; time range; Generate Bundle
+# Download the .zip file and attach to VMware SR
+
+# Via VAMI (vRA appliance-level bundle)
+# Browse to: https://<vra-appliance-ip>:5480
+# Navigate to: Support → Generate Support Bundle
+# Wait 5–15 minutes; download .gz file
+
+# Via appliance CLI
+ssh root@<vra-appliance-ip>
+# Support bundle for vRA:
+/var/log/vmware/vra/support-bundle.sh
+# Output: /tmp/vra-support-<timestamp>.tar.gz
+
+# Include in the VMware SR:
+# - LCM logscraper bundle or VAMI bundle
+# - Deployment ID or request ID that failed
+# - vRA version: vRA UI → Administration → About
+# - Timeline of the issue and any recent changes
+```
+
+---
+
+## Log locations
+
+| Component | Path / Command | What to look for |
+|---|---|---|
+| vRA micro-services | `kubectl logs -n prelude <pod-name>` | Java exceptions, API 500 errors |
+| Appliance system | `/var/log/vmware/vra/` | Service startup failures |
+| vRA cluster service | `journalctl -u vra-cluster -n 500` | Cluster join and startup events |
+| ABX runs | vRA UI → Extensibility → Action Runs | ABX stderr, exit code, inputs |
+| PostgreSQL | psql → `pg_stat_replication`, `pg_stat_user_tables` | Replication lag, dead tuples |
 
 ---
 
@@ -166,7 +302,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- `kubectl get pods -n prelude` shows all pods in `Running` state with no restarts in the last hour
+- Trigger a test deployment of a simple blueprint — confirm it reaches `DEPLOYMENT_SUCCESSFUL` state
+- `GET /deployment/api/deployments?status=FAILED` shows no new failures after the fix
+- ABX test run completes with exit code 0 and expected output in Action Runs

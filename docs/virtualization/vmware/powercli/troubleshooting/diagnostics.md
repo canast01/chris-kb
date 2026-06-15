@@ -9,7 +9,7 @@ search:
 # PowerCLI — Diagnostics
 
 <div class="kb-summary">
-PowerCLI diagnostic techniques: verbose/debug output, API call tracing via ExtensionData, performance profiling for large inventories, and log collection for VMware support escalations.
+PowerCLI diagnostic techniques: enable verbose and debug output, trace API calls via ExtensionData, profile large-inventory queries with Get-View, inspect exception detail, test vCenter API connectivity, and collect module versions and event logs for VMware escalations.
 
 *Applies to: PowerCLI 13.x*
 </div>
@@ -17,156 +17,278 @@ PowerCLI diagnostic techniques: verbose/debug output, API call tracing via Exten
 ```text
 ┌───────────────────────────────── PowerCLI — Diagnostics and Tracing ──────────────────────────────────┐
 │                                                                                                       │
-│   Start with verbose output; escalate to API tracing if the error is not obvious from the message     │
-│   ExtensionData exposes the raw vSphere API object — use it when PowerCLI cmdlets abstract too much   │
-│   Collect module versions and vCenter version as first step before any advanced diagnostics           │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Start here: enable -Verbose → read full exception → ExtensionData for raw API data         │    │
+│   │   Slow script: switch to Get-View instead of Get-VM; filter at source not after pipe         │    │
+│   │   Auth errors: confirm Connect-VIServer target; check certificate and credential             │    │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   Verbose and debug output                                                                            │
-│   $VerbosePreference = 'Continue': shows -Verbose messages from all cmdlets in the session            │
-│   $DebugPreference = 'Continue': shows -Debug messages; very verbose; useful for API call tracing     │
-│   Per-cmdlet: add -Verbose to a specific cmdlet without changing global preference                    │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Verbose and Debug Output             │  │           API Tracing via ExtensionData     │   │
+│   │   $VerbosePreference = 'Continue'            │  │   $vm.ExtensionData: raw Managed Object     │   │
+│   │   $DebugPreference = 'Continue'              │  │   $vm.ExtensionData.Config: VM config       │   │
+│   │   Per-cmdlet: add -Verbose                   │  │   $vm.ExtensionData.Runtime: power/migr     │   │
+│   │   Capture output: 2>&1 | Out-File debug.txt  │  │   Get-View for efficient bulk API queries   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│   API call tracing via ExtensionData                                                                  │
-│   $vm.ExtensionData: returns the raw Managed Object Reference; all properties visible                 │
-│   $vm.ExtensionData.Config: VM config as seen by vSphere API; bypasses PowerCLI property mapping      │
-│   $vm.ExtensionData.Runtime: current runtime state including power state and migration state          │
-│   Use Get-View for bulk API queries: much faster than Get-VM | ForEach .ExtensionData                 │
+│  Physical Infrastructure:                                                                             │
+│  PowerShell session · vCenter HTTPS API (SDK endpoint) · vSphere API (SOAP/REST) · ESXi host API      │
 │                                                                                                       │
-│   Performance profiling                                                                               │
-│   Measure-Command { Get-VM }: shows execution time in milliseconds for any cmdlet or block            │
-│   Large inventories (>500 VMs): switch to Get-View -ViewType VirtualMachine for speed                 │
-│   Filter early: pass -Filter to Get-View instead of piping to Where-Object                            │
+│  Key terms:                                                                                           │
+│  ExtensionData  = property on any PowerCLI VI object; returns the raw vSphere API managed object      │
+│  Get-View       = low-level vSphere API query; specify -ViewType and -Filter for efficient queries    │
+│  Measure-Command= PowerShell cmdlet for timing code execution; use to profile script performance      │
+│  VerbosePreference= PowerShell preference variable; 'Continue' shows all -Verbose messages            │
+│  DebugPreference  = PowerShell preference variable; 'Continue' shows all -Debug messages (very verbose│
 │                                                                                                       │
-│   Key terms:                                                                                          │
-│   ExtensionData   = property on any PowerCLI VI object; returns the raw vSphere API managed object    │
-│   Get-View        = low-level API query; specify -ViewType and -Filter for efficient large queries    │
-│   Measure-Command = PowerShell cmdlet for timing code execution; used to profile script performance   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+```mermaid
+graph TD
+    A([PowerCLI Issue]) --> B{What type of problem?}
+    B -->|Script throws an error| C[Enable -Verbose\nRead full exception message]
+    B -->|Script produces wrong output| D[Add breakpoints\npdb-equivalent: Set-PSBreakpoint]
+    B -->|Slow execution on large inventory| E[Measure-Command timing\nSwitch to Get-View]
+    B -->|Connection or auth error| F[Test-Connection vcenter\ncurl /sdk to verify HTTPS]
+    B -->|Cmdlet missing expected property| G[ExtensionData for raw API object\nGet-Member to list all properties]
+    C --> H[Read $_.Exception.Message\nand $_.Exception.InnerException]
+    H --> I{Error type?}
+    I -->|InvalidLogin or 401| J[Verify credential and domain\nConnect-VIServer -Credential Get-Credential]
+    I -->|NotFound or 404| K[Confirm object exists\nGet-VM -Name name; check typo]
+    I -->|PermissionDenied| L[Check vCenter RBAC role\nfor the connecting account]
+    I -->|Timeout| M[Test TCP 443 to vCenter\ncheck network and certificate]
+    D --> N[Add Write-Debug statements\nor use Get-View for inspection]
+    E --> O[Get-View -ViewType VirtualMachine\n-Filter RuntimePowerState]
+    F --> P[Invoke-WebRequest -Uri vcenter/sdk\nCheck StatusCode = 200]
+    G --> Q[vm.ExtensionData | Get-Member\nAccess Config.Hardware directly]
+    J --> R[Collect module versions\nGet-Module VMware.* -ListAvailable]
+    K --> R
+    L --> R
+    M --> R
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+    R --> S[Capture debug output\nVerbose + DebugPreference + Out-File]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,B,I dark
+    class C,D,E,F,G,H,J,K,L,M,N,O,P,Q action
+    class R,S escalate
 ```
 
 ## Before you begin
 
-- **Access:** SSH to vCenter Shell and ESXi hosts; vSphere Client read access
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** PowerShell 7+ with VMware.PowerCLI module installed; vCenter credentials with sufficient permissions for the operations being tested
+- **Gather first:** the exact error message (full exception text, not just the summary line), the PowerCLI and PowerShell versions, and the vCenter version
+- **Scope:** confirm whether the error occurs with a specific cmdlet, a specific object, or all vCenter operations
 
 ---
 
-## Enable Verbose and Debug Output
+## Step 1 — Check versions and connection state
 
 ```powershell
-# Enable verbose logging for a session
+# Confirm PowerShell version
+$PSVersionTable.PSVersion
+# Expected: 7.x; PowerCLI 13+ requires PowerShell 7
+
+# Confirm PowerCLI module versions
+Get-Module -Name "VMware.*" -ListAvailable |
+  Select-Object Name, Version | Sort-Object Name | Format-Table
+
+# Confirm the current vCenter connection
+$global:DefaultVIServer
+# Expected: Name = vcenter FQDN, IsConnected = True, User = <your account>
+
+# Connect if not connected
+Connect-VIServer -Server "vcenter.corp.example.com" -Credential (Get-Credential)
+
+# Check vCenter API version
+$si = Get-View ServiceInstance
+$si.Content.About | Select-Object ApiVersion, Version, Build, OsType
+```
+
+---
+
+## Step 2 — Enable verbose and debug output
+
+```powershell
+# Enable verbose output for all cmdlets in the session
 $VerbosePreference = "Continue"
 $DebugPreference   = "Continue"
 
-# Or per-command
-Connect-VIServer -Server vcenter.example.com -Verbose -Debug
+# Run the failing cmdlet
+Get-VM -Name "web01" -Verbose -Debug
 
-# Reset
+# Capture all output (stdout + stderr + verbose + debug) to a file
+& {
+  $VerbosePreference = "Continue"
+  $DebugPreference   = "Continue"
+  Get-VM -Name "web01"
+} 2>&1 | Out-File -Path ".\debug-output.txt"
+
+# Revert to default (silence verbose/debug after troubleshooting)
 $VerbosePreference = "SilentlyContinue"
 $DebugPreference   = "SilentlyContinue"
 ```
 
-## Trace API Calls via ExtensionData
+---
 
-When a high-level cmdlet doesn't expose what you need, drop to the vSphere API via `.ExtensionData`:
+## Step 3 — Read the full exception
 
 ```powershell
-# Access raw vSphere API for a VM
+# Capture full exception detail in a try/catch
+try {
+  Connect-VIServer -Server "vcenter.corp.example.com" -Credential (Get-Credential)
+} catch {
+  Write-Host "Error class: $($_.Exception.GetType().FullName)" -ForegroundColor Red
+  Write-Host "Message:     $($_.Exception.Message)"           -ForegroundColor Red
+  Write-Host "Inner:       $($_.Exception.InnerException?.Message)" -ForegroundColor Yellow
+  Write-Host "Stack trace: $($_.ScriptStackTrace)"            -ForegroundColor Gray
+}
+
+# Inspect the last error without try/catch
+$Error[0] | Select-Object * | Format-List
+$Error[0].Exception | Format-List *
+$Error[0].Exception.InnerException | Format-List *
+
+# Common exception patterns:
+# ViServerConnectionException     = cannot reach vCenter; check DNS and TCP 443
+# InvalidLogin                    = wrong username / domain suffix
+# NotEnoughLicenses               = license limit for operation
+# InvalidArgument                 = property value type mismatch in cmdlet call
+# PermissionDenied                = RBAC role missing for the connecting account
+```
+
+---
+
+## Step 4 — Use ExtensionData for raw API access
+
+When a PowerCLI cmdlet abstracts too much or a property is missing:
+
+```powershell
+# Get raw vSphere API managed object for a VM
 $vm = Get-VM -Name "web01"
 $vmView = $vm | Get-View
 
-# Show all raw properties
-$vmView | Get-Member -MemberType Properties
+# List all available properties on the raw object
+$vmView | Get-Member -MemberType Properties | Select-Object Name, Definition
 
-# Access config directly
-$vmView.Config.Hardware
-$vmView.Config.ExtraConfig
+# Access specific raw properties not exposed by Get-VM
+$vmView.Config.Hardware           # CPU, memory, disk config
+$vmView.Config.ExtraConfig        # guestinfo.* and advanced settings
+$vmView.Config.GuestId            # guest OS type string
+$vmView.Runtime.PowerState        # actual power state from vSphere
+$vmView.Runtime.ConnectionState   # host connection state (notConnected, inaccessible)
+$vmView.Guest.ToolsStatus         # VMware Tools version status
 
-# Call API methods directly
+# Call vSphere API methods directly on the object
 $vmView.RefreshStorageInfo()
+$vmView.ReloadVirtualMachineFromPath($null)
+
+# For a host
+$hostView = Get-VMHost -Name "esxi01" | Get-View
+$hostView.Config.StorageDevice    # HBAs and LUNs visible to this host
+$hostView.Hardware.BiosInfo       # BIOS version
 ```
 
-## Check Error Detail
+---
+
+## Step 5 — Profile and optimize large inventory queries
 
 ```powershell
-# Full exception detail
-try {
-    Connect-VIServer -Server vcenter.example.com -Credential $cred
-} catch {
-    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
-    Write-Host "Inner: $($_.Exception.InnerException?.Message)" -ForegroundColor Yellow
-    Write-Host "Stack: $($_.ScriptStackTrace)" -ForegroundColor Gray
+# Measure execution time for any cmdlet or block
+Measure-Command { Get-VM } | Select-Object TotalSeconds
+
+# SLOW pattern — retrieves all VMs then filters in PowerShell
+$slow = Measure-Command {
+  Get-VM | Where-Object { $_.PowerState -eq 'PoweredOff' }
 }
-```
+Write-Host "Slow method: $($slow.TotalSeconds) seconds"
 
-## Performance Profiling for Large Inventories
-
-```powershell
-# Measure cmdlet execution time
-Measure-Command { Get-VM | Get-Snapshot } | Select-Object TotalSeconds
-
-# Speed up with targeted queries instead of piped filtering
-# SLOW: get all VMs then filter
-Get-VM | Where-Object { $_.PowerState -eq 'PoweredOff' }
-
-# FAST: filter at source via Get-View (direct API, no wrappers)
-Get-View -ViewType VirtualMachine -Filter @{ "Runtime.PowerState" = "poweredOff" } |
+# FAST pattern — filters at the vSphere API layer (no per-VM round trips)
+$fast = Measure-Command {
+  Get-View -ViewType VirtualMachine `
+    -Filter @{ "Runtime.PowerState" = "poweredOff" } |
     Select-Object Name, @{N="State";E={$_.Runtime.PowerState}}
+}
+Write-Host "Fast method: $($fast.TotalSeconds) seconds"
 
-# Use -Location to scope expensive queries
+# Scope expensive queries to a specific container (cluster, folder, datacenter)
 Get-VM -Location (Get-Cluster -Name "Production")
+
+# For bulk property retrieval (e.g., get Name + Memory for 1000 VMs at once)
+Get-View -ViewType VirtualMachine `
+  -Property Name, Config.Hardware.MemoryMB |
+  Select-Object Name, @{N="MemGB";E={$_.Config.Hardware.MemoryMB/1024}}
 ```
 
-## Check vCenter API Version
+---
+
+## Step 6 — Test vCenter API connectivity
 
 ```powershell
-$si = Get-View ServiceInstance
-$si.Content.About | Select-Object ApiVersion, Version, Build, OsType
+# Test TCP 443 to vCenter
+Test-NetConnection -ComputerName "vcenter.corp.example.com" -Port 443
+# Expected: TcpTestSucceeded: True
 
-# Check if a specific API feature is available
-$si.Capability | Select-Object ProvisioningSupported, MultiHostSupported, UserShellAccessSupported
-```
-
-## Collect Logs for Escalation
-
-```powershell
-# Collect PowerCLI version info
-Get-Module -Name VMware.* -ListAvailable | Select-Object Name, Version | Export-Csv -Path .\powercli-modules.csv
-
-# Collect vCenter and API version
-$si = Get-View ServiceInstance
-$si.Content.About | Export-Csv -Path .\vcenter-version.csv
-
-# Export event log (last 24h) for support
-Get-VIEvent -Start (Get-Date).AddHours(-24) | Export-Csv -Path .\vcenter-events.csv
-
-# Capture a command with full output and error stream
-& {
-    $VerbosePreference = "Continue"
-    $DebugPreference = "Continue"
-    Get-VM -Name "problem-vm"
-} 2>&1 | Out-File -Path .\debug-output.txt
-```
-
-## Test Connection Health
-
-```powershell
-# Verify vCenter API is responding
-$uri = "https://vcenter.example.com/sdk"
+# Test the vCenter HTTPS SDK endpoint
 try {
-    $resp = Invoke-WebRequest -Uri $uri -Method Get -SkipCertificateCheck -TimeoutSec 10
-    Write-Host "vCenter API reachable. Status: $($resp.StatusCode)"
+  $resp = Invoke-WebRequest -Uri "https://vcenter.corp.example.com/sdk" `
+    -Method Get -SkipCertificateCheck -TimeoutSec 10
+  Write-Host "vCenter SDK reachable. Status: $($resp.StatusCode)"
 } catch {
-    Write-Host "vCenter API unreachable: $($_.Exception.Message)" -ForegroundColor Red
+  Write-Host "vCenter SDK unreachable: $($_.Exception.Message)" -ForegroundColor Red
 }
 
-# Check active sessions
-Get-View SessionManager | ForEach-Object {
-    $_.SessionList | Select-Object UserName, LoginTime, IpAddress, UserAgent
-}
+# Check active vCenter sessions (requires existing connection)
+$sessionMgr = Get-View SessionManager
+$sessionMgr.SessionList | Select-Object UserName, LoginTime, IpAddress, UserAgent
+
+# Confirm certificate validity (common cause of SkipCertificateCheck workarounds)
+$cert = [System.Net.ServicePointManager]::SecurityProtocol
+$null = [System.Net.ServicePointManager]::CertificatePolicy
+echo | openssl s_client -connect vcenter.corp.example.com:443 2>/dev/null |
+  openssl x509 -noout -dates -subject -issuer
+```
+
+---
+
+## Step 7 — Collect diagnostics for escalation
+
+```powershell
+# All-in-one diagnostic collection
+$diagDir = ".\PowerCLI-Diag-$(Get-Date -Format yyyyMMdd-HHmm)"
+New-Item -ItemType Directory $diagDir
+
+# PowerCLI module versions
+Get-Module -Name "VMware.*" -ListAvailable |
+  Select-Object Name, Version | Export-Csv "$diagDir\powercli-modules.csv"
+
+# PowerShell and OS version
+$PSVersionTable | Export-Csv "$diagDir\psversion.csv"
+
+# vCenter version and API level
+$si = Get-View ServiceInstance
+$si.Content.About | Export-Csv "$diagDir\vcenter-version.csv"
+
+# Last 24h vCenter events (all severity)
+Get-VIEvent -Start (Get-Date).AddHours(-24) |
+  Select-Object CreatedTime, UserName, FullFormattedMessage |
+  Export-Csv "$diagDir\vcenter-events.csv"
+
+# Capture the failing script with full verbose output
+& {
+  $VerbosePreference = "Continue"
+  $DebugPreference   = "Continue"
+  # --- paste the failing script block here ---
+} 2>&1 | Out-File "$diagDir\debug-output.txt"
+
+Compress-Archive -Path $diagDir -DestinationPath "$diagDir.zip"
+Write-Host "Diagnostic bundle: $diagDir.zip"
 ```
 
 ---
@@ -178,7 +300,7 @@ Get-View SessionManager | ForEach-Object {
 
 ## Verify resolution
 
-- **Alarms cleared:** Home → Alarms — the triggering alarm is no longer active
-- **Event log:** confirm no new related error events in the last 5 minutes
-- **Functional test:** perform the action that was failing (connect, vMotion, storage I/O) — confirm it succeeds
-- **Monitor:** leave the vSphere Client open for 10 minutes and confirm the issue does not recur
+- The failing cmdlet or script runs without exception; verify with `$Error.Count -eq 0` at the start of the session
+- `Measure-Command` shows execution time within acceptable bounds after switching to `Get-View`
+- `$global:DefaultVIServer.IsConnected` returns `True` without re-authentication
+- The operation that was failing (VM query, snapshot, migration) completes successfully for the affected object
