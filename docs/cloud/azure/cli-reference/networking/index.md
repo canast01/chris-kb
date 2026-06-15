@@ -92,3 +92,8 @@ az network public-ip create --resource-group <rg> --name <pip> --allocation-meth
 # Load balancer
 az network lb list --output table
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Networking](../../networking/index.md)

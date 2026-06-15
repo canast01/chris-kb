@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-The clean room is a verified, malware-free subset of the IRE used to analyse and validate recovered data before reintroducing it to production. Nothing leaves the clean room until it has been scanned and validated.
+The clean room is a verified, malware-free subset of the IRE used to analyse and validate recovered data before reintroducing it to production. Verify that backups fall within the defined retention window (30–90 days) before restoration. Nothing leaves the clean room until it has been scanned and validated.
 </div>
 
 ## Purpose

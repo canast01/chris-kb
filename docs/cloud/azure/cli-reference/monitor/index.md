@@ -86,3 +86,9 @@ az monitor diagnostic-settings list --resource <resource_id>
 az monitor diagnostic-settings create --name <name> --resource <resource_id> \
   --workspace <workspace_id> --metrics '[{"category":"AllMetrics","enabled":true}]'
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Operations](../../operations/index.md)
+- [Azure Monitoring](../../monitoring/index.md)

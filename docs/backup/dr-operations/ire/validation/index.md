@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Validation is the final gate before restored systems return to production. It covers technical verification (application health, data integrity) and business verification (data completeness, process functionality).
+Validation is the final gate before restored systems return to production. It covers technical verification (application health, data integrity) and business verification (data completeness, schedule compliance, and retention window confirmation — verify the restored data point is within the approved retention period and predates the compromise eventunctionality).
 </div>
 
 ## Validation Gates

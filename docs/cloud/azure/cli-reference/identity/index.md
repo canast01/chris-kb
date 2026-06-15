@@ -100,3 +100,9 @@ az role assignment delete --assignee <user_or_sp> --role "Contributor" --scope <
 az role definition list --output table
 az role definition show --name "Contributor"
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Security](../../security/index.md)
+- [Azure Identity](../../identity/index.md)

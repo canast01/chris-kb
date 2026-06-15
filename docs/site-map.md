@@ -8,7 +8,7 @@ Full index of all KB sections and sub-sections.
 
 | Section | Sub-sections |
 |---|---|
-| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vxrail/index.md) · [Operations](virtualization/operations/index.md) · [Reference](virtualization/reference/index.md) |
+| [Virtualization](virtualization/index.md) | [VMware](virtualization/vmware/index.md) · [OpenShift](virtualization/openshift/index.md) · [VxRail](virtualization/vmware/vxrail/index.md) · [Operations](virtualization/vmware/operations/index.md) · [Reference](virtualization/vmware/reference/index.md) |
 | [Storage](storage/index.md) | [Dell](storage/dell/index.md) · [Pure Storage](storage/pure/index.md) · [NetApp](storage/netapp/index.md) · [Ceph](storage/ceph/index.md) · [Storage Design](storage/storage-design/index.md) · [Runbooks](storage/runbooks/index.md) |
 | [SAN](san/index.md) | [Cisco MDS](san/cisco/index.md) · [Brocade](san/brocade/index.md) |
 | [Compute](compute/index.md) | [Windows Server](compute/windows-server/index.md) · [Linux](compute/linux/index.md) · [Local AI & GPU](compute/local-ai/index.md) · [High CPU](compute/linux/troubleshooting/high-cpu/index.md) |

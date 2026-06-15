@@ -192,3 +192,8 @@ aws logs filter-log-events \
   --log-group-name /aws/lambda/<function_name> \
   --filter-pattern "<request_id>"
 ```
+
+## See also
+
+- [AWS CLI Reference](../index.md)
+- [AWS Compute](../../compute/index.md)

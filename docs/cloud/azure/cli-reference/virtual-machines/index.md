@@ -98,3 +98,9 @@ az vm run-command invoke --resource-group <rg> --name <vm> --command-id RunShell
 # Open port
 az vm open-port --resource-group <rg> --name <vm> --port 22
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Compute](../../compute/index.md)
+- [Azure Operations](../../operations/index.md)

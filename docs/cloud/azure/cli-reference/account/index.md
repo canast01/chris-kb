@@ -91,3 +91,9 @@ az group create --name <rg> --location eastus
 az group delete --name <rg> --yes
 az group list --query "[].{Name:name,Location:location,State:properties.provisioningState}" --output table
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Identity](../../identity/index.md)
+- [Azure Governance](../../governance/index.md)

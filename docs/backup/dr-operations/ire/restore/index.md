@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Restoration in the IRE follows a staged process: retrieve the backup, restore to isolated staging, validate in the clean room, then reintroduce to production only after sign-off.
+Restoration in the IRE follows a staged process: identify the latest clean backup within the retention window that predates the compromise event, retrieve and mount it in isolation, restore to isolated staging, validate in the clean room, then reintroduce to production only after sign-off. Retention windows of 30–90 days are typical for ransomware scenarios.
 </div>
 
 ## Restore Workflow

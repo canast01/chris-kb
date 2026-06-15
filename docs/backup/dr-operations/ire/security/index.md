@@ -5,6 +5,12 @@ tags:
 ---
 # IRE Security
 
+<div class="kb-summary">
+IRE security controls: enforce two-person integrity for all vault access, use IRE-exclusive credentials that expire after each recovery event, enable full audit logging of all sessions in the IRE, and verify that backup retention copies in the vault are immutable and cannot be modified by compromised accounts.
+
+*Applies to: IRE (Isolated Recovery Environment)*
+</div>
+
 ```powershell
 # Verify IRE local admin accounts are not shared with production
 $prodAdmins = (Invoke-Command -ComputerName prod-dc01 { Get-ADGroupMember Administrators }).Name

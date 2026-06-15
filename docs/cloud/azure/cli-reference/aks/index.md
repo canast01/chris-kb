@@ -87,3 +87,8 @@ az aks upgrade --resource-group <rg> --name <cluster> --kubernetes-version <vers
 # Node pools
 az aks nodepool list --resource-group <rg> --cluster-name <cluster>
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Compute](../../compute/index.md)

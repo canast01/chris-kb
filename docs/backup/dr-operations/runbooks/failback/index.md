@@ -4,6 +4,12 @@ tags:
 ---
 # DR Failback Procedure
 
+<div class="kb-summary">
+DR failback procedure: confirm production site healthy, reverse-resync storage replication, redirect hosts back to production, restore daily and weekly backup schedules on production, and validate that retention-compliant backups exist before decommissioning DR workloads.
+
+*Applies to: all products with DR replication*
+</div>
+
 ```bash
 # Confirm primary storage arrays healthy
 # ONTAP
@@ -91,3 +97,11 @@ snapmirror resync -source-path <primary-svm>:<primary-vol> -destination-path <dr
 # Confirm
 snapmirror show -destination-path <dr-svm>:<dr-vol>
 ```
+
+## See also
+
+- [DR Runbooks](../index.md)
+- [Failover](../failover/index.md)
+- [Full DR Runbook](../dr-runbook/index.md)
+- [DR Design](../../dr-design/index.md)
+- [Recovery Testing](../../recovery-testing/index.md)

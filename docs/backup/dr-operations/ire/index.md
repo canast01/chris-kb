@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Isolated Recovery Environment Ire operational notes and deep-dive references.
+Isolated Recovery Environment (IRE) — air-gapped clean-room for ransomware and destructive-attack recovery. Select a backup from within the verified retention window (typically 30–90 days) that predates the compromise event; mount in isolation, scan, validate, and reintroduce to production only after sign-off.
 </div>
 
 ```text

@@ -87,3 +87,8 @@ az keyvault key show --vault-name <vault> --name <key>
 az keyvault certificate list --vault-name <vault>
 az keyvault certificate show --vault-name <vault> --name <cert>
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Security](../../security/index.md)

@@ -4,6 +4,12 @@ tags:
 ---
 # DR Failover Procedure
 
+<div class="kb-summary">
+DR failover procedure: verify backup schedule currency and RPO compliance before cutover, confirm replication sync state with <code>symrdf query</code> or <code>snapmirror show</code>, activate DR site storage, redirect compute hosts, and validate application health. Trigger weekly backup schedule on DR site immediately after failover to maintain retention continuity.
+
+*Applies to: all products with DR replication*
+</div>
+
 ```bash
 symrdf -g <rdfgroup> query
 # Confirm R2 volumes are Synchronized or Consistent before failing over
@@ -72,3 +78,11 @@ Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Auto
 # Test connectivity
 Test-NetConnection -ComputerName <dr-app-server> -Port 443
 ```
+
+## See also
+
+- [DR Runbooks](../index.md)
+- [Failback](../failback/index.md)
+- [Full DR Runbook](../dr-runbook/index.md)
+- [DR Design](../../dr-design/index.md)
+- [Health Checks](../../health-checks/index.md)

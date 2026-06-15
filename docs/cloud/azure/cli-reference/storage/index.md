@@ -89,3 +89,8 @@ az storage blob delete --account-name <account> --container-name <container> --n
 az storage container generate-sas --account-name <account> --name <container> \
   --permissions rwdl --expiry 2025-12-31
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Storage](../../storage/index.md)

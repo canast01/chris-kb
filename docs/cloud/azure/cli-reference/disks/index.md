@@ -84,3 +84,9 @@ az snapshot list --resource-group <rg> --output table
 az snapshot create --resource-group <rg> --name <snap> --source <disk_id>
 az snapshot delete --resource-group <rg> --name <snap>
 ```
+
+## See also
+
+- [Azure CLI Reference](../index.md)
+- [Azure Storage](../../storage/index.md)
+- [Azure Compute](../../compute/index.md)
