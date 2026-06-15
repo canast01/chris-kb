@@ -7,103 +7,100 @@ search:
 ---
 # PowerPath — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering Diagnostic Overview, Initial Diagnostic Commands, Linux-Specific Diagnostics, Windows-Specific Diagnostics, SAN Fabric Diagnostics and 3 more sections.
+PowerPath diagnostic commands: check path state and count with <code>powermt display dev=all</code> to identify dead or alive paths, verify license with <code>powermt check_registration</code>, inspect the PowerPath kernel module and HBA port state on Linux, correlate with FC switch fabric events (Brocade <code>errshow</code>, Cisco <code>show fcns database</code>), confirm array front-end port state at the array console, and collect a support bundle for Dell escalation.
 
 *Applies to: PowerPath*
 </div>
+
 ```text
 ┌──────────────────────────────────── Dell PowerPath — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         PowerPath diagnostics: log collection, health checks, and performance analysis        │   │
-│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
-│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
-│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
+│   │  Start here: powermt display dev=all → count dead paths                                   │       │
+│   │  Dead paths: check HBA state → lsmod | grep emcp → dmesg | grep emcpower                 │        │
+│   │  HBA online but paths dead: check fabric (portshow, nsshow) → check array FA ports        │       │
+│   │  License issue: powermt check_registration → confirm license is valid                     │       │
+│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
 │                                                                                                       │
-│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │          PowerPath Layer                │  │             Host OS / HBA Layer              │       │
+│   │   powermt display dev=all: path states  │  │   lsmod | grep emcp: module loaded?          │       │
+│   │   powermt display ports class=all: HBAs │  │   systemctl status PowerPath: service state  │       │
+│   │   powermt display options: policy info  │  │   dmesg | grep emcpower: kernel events       │       │
+│   │   powermt check_registration: license   │  │   /sys/class/fc_host: HBA port states        │       │
+│   │   powermt version: installed version    │  │   lsblk -S: raw SCSI devices (raw paths)     │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
 │                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │          Fabric Layer (SAN Switch)      │  │         Array Layer (Storage Side)           │       │
+│   │   Brocade: portshow, nsshow, errshow    │  │   Unity: Unisphere → FC Ports + Host Access  │       │
+│   │   Brocade: porterrshow, cfgshow         │  │   PowerMax: Director and Port health view    │       │
+│   │   Cisco: show interface fc, fcns db     │  │   Confirm FA port is Online + zone is active │       │
+│   │   Cisco: show zone active vsan <id>     │  │   Confirm host is registered with WWN        │       │
+│   │   Check: zone contains one init + tgt   │  │   Confirm LUN is in masking view / host grp  │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
 │                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │            Driver           │  │        powermt daemon       │  │           OS-level          │   │
-│   │            Paths            │  │        Active-active        │  │         ≥4 paths/LUN        │   │
-│   │            Policy           │  │        Adaptive/ALUA        │  │        Array-specific       │   │
-│   │           Failover          │  │         Auto reroute        │  │          <5 sec RTO         │   │
-│   │          Management         │  │           pp_mgmt           │  │         Centralised         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│  Physical Infrastructure:                                                                             │
+│  Host OS (Windows/Linux/AIX/HP-UX) · FC HBA ports or iSCSI NICs                                       │
+│  FC or Ethernet switches · Dell storage array (Unity, PowerMax, VNX) front-end ports                  │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Command      │      Notes       │    Frequency     │   │
-│   │ powermt display  │ Show path state  │  powermt display  │   Active/dead    │   Daily check    │   │
-│   │  powermt check   │  Refresh paths   │   powermt check   │  After changes   │   Post-zoning    │   │
-│   │  powermt config  │  Apply license   │  powermt config l │     Per host     │   Install time   │   │
-│   │     pp_mgmt      │ Central monitor  │       Web UI      │     Optional     │    Multi-host    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Host OS (Windows/Linux) · HBA or iSCSI NIC ports · FC/IP switches · Dell arrays          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perform...│
-│    powermt            = CLI utility; powermt display, powermt check, powermt save are core commands   │
-│    Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths      │
-│    Path health        = alive or dead status per path; dead paths trigger automatic I/O failover      │
-│    Adaptive policy    = load-balancing that distributes I/O across all active paths evenly            │
-│    CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)         │
-│    ALUA               = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred p...│
-│    Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays           │
-│    Ghost path         = stale path entry in PowerPath no longer backed by a physical device           │
-│    powermt check      = validates all paths and refreshes device table; run after fabric changes      │
-│    pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts    │
-│    License key        = host-based license required per server; applied via powermt config license    │
+│  Key terms:                                                                                           │
+│  PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perf        │
+│  powermt            = CLI utility; powermt display, powermt check, powermt save are core commands     │
+│  Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths        │
+│  Path health        = alive or dead status per path; dead paths trigger automatic I/O failover        │
+│  Adaptive policy    = load-balancing that distributes I/O across all active paths evenly              │
+│  CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)           │
+│  ALUA               = Asymmetric Logical Unit Access; array signals preferred vs non-preferred        │
+│  Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays             │
+│  Ghost path         = stale path entry in PowerPath no longer backed by a physical device             │
+│  powermt check      = validates all paths and refreshes device table; run after fabric changes        │
+│  pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts      │
+│  License key        = host-based license required per server; applied via powermt config license      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([PowerPath issue or path loss]) --> B[powermt display dev=all\nCount dead vs alive paths]
+    B --> C{Dead paths?}
+    C -->|No dead paths| D[powermt check_registration\nConfirm license is valid and not expired]
+    C -->|Dead paths found| E[powermt display ports class=all\nIdentify which HBA ports show dead paths]
+    E --> F{HBA port state?}
+    F -->|Port offline or missing| G[lsmod | grep emcp: module loaded?\ndmesg | grep emcpower: kernel events\nSystemctl status PowerPath: service]
+    F -->|Port online| H[Check fabric layer\nBrocade: nsshow → is initiator logged in?\nCisco: show fcns database]
+    G --> I{Module loaded?}
+    I -->|No| J[Reinstall or reload emcp module\nCheck kernel version compatibility\nmodinfo emcp | grep version]
+    I -->|Yes| K[Check HBA port state in /sys/class/fc_host\nCheck for link_failure_count or loss_of_signal]
+    H --> L{Initiator in name server?}
+    L -->|No| M[Check FC zone configuration\nConfirm zone contains this initiator WWN\nCheck portlogshow for FLOGI events]
+    L -->|Yes| N[Check array side\nConfirm FA port is Online\nConfirm host WWN is registered]
+    J --> O[powermt restore\nVerify paths recover with powermt display dev=all]
+    K --> O
+    M --> O
+    N --> O
+    D --> O
+    O --> P[Collect support bundle\nSee Step 6 for collection script\nOpen Dell support case]
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,C,F,I,L dark
+    class B,D,E,G,H,J,K,M,N,O action
+    class P escalate
+```
 
 ## Before you begin
 
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
+- **Access:** Root on the affected Linux host, or Administrator on Windows; SSH or console access to FC switches for fabric-level diagnostics; storage array admin account (Unisphere, Unisphere for PowerMax) for array-side checks
+- **Gather first:** the exact PowerPath output (`powermt display dev=all`), the affected LUN pseudo device names, the number of dead vs alive paths, and whether the issue is on one host or multiple hosts
+- **Scope:** determine which layer has failed — PowerPath layer (module issue, license expired), HBA/OS layer (port offline, driver crash), fabric layer (FC zone, switch port), or array layer (FA port offline, LUN masking) — `powermt display dev=all` tells you what PowerPath sees, not what caused it
 
 ---
 
-## Diagnostic Overview
-
-```mermaid
-graph TD
-    subgraph "Layer 1 — PowerPath"
-        ppCmd["powermt display dev=all\npowermt display ports class=all\npowermt display options\npowermt check_registration"]
-    end
-
-    subgraph "Layer 2 — Host OS / HBA"
-        osCmd["lsmod | grep emcp\nsysctl -c fc_host -v\ndmesg | grep scsi\ngrep emcp /var/log/messages"]
-    end
-
-    subgraph "Layer 3 — Fabric / Array"
-        fabCmd["Brocade: portshow, nsshow, errdump\nCisco: show interface fc, show fcns db\nArray: confirm FA port + LUN masking"]
-    end
-
-    ppCmd -->|"dead paths seen → investigate"| osCmd
-    osCmd -->|"HBA online → investigate fabric"| fabCmd
-```
-
-PowerPath diagnostics involve three layers: the PowerPath layer itself (pseudo devices, policies, path state), the host OS / HBA layer (kernel modules, HBA port state, SCSI transport), and the fabric/array layer (SAN switch, array front-end ports). Effective diagnosis requires correlating evidence from all three layers.
-
-Always start with PowerPath-layer commands. They tell you what PowerPath sees. If PowerPath sees dead paths, the problem is at the HBA, fabric, or array layer — work outward from there.
-
----
-
-## Initial Diagnostic Commands
+## Step 1 — Initial diagnostic commands
 
 Run these first on any host reporting I/O issues or path loss:
 
@@ -128,7 +125,7 @@ powermt display dev=all | grep -c dead
 powermt display dev=all | grep -c alive
 ```
 
-Save the output of all five commands to a file before making any changes:
+Save the output of all commands before making any changes:
 
 ```bash
 HOSTNAME=$(hostname -s)
@@ -137,23 +134,14 @@ DIAG="${HOSTNAME}_powerpath_diag_${TS}.txt"
 
 {
   echo "=== PowerPath Diagnostic: ${HOSTNAME} — $(date) ==="
-  echo ""
   echo "--- powermt version ---"
   powermt version
-
-  echo ""
   echo "--- powermt check_registration ---"
   powermt check_registration
-
-  echo ""
   echo "--- powermt display options ---"
   powermt display options
-
-  echo ""
   echo "--- powermt display dev=all ---"
   powermt display dev=all
-
-  echo ""
   echo "--- powermt display ports class=all ---"
   powermt display ports class=all
 } > "$DIAG"
@@ -163,9 +151,9 @@ echo "Diagnostic saved to: $DIAG"
 
 ---
 
-## Linux-Specific Diagnostics
+## Step 2 — Linux-specific diagnostics
 
-### Kernel Module
+### Kernel module
 
 ```bash
 # Confirm the PowerPath kernel module is loaded
@@ -184,7 +172,7 @@ dmesg | grep -i "emcp\|emcpower\|PowerPath" | head -50
 find /lib/modules/$(uname -r) -name "emcp*" 2>/dev/null
 ```
 
-### PowerPath Service
+### PowerPath service
 
 ```bash
 # Check the PowerPath daemon status
@@ -197,7 +185,7 @@ journalctl -u PowerPath --since "2 hours ago" --no-pager
 systemctl show PowerPath --property=ActiveEnterTimestamp
 ```
 
-### HBA Port State
+### HBA port state
 
 ```bash
 # List all FC HBA ports and their state
@@ -213,7 +201,7 @@ done
 # Detailed HBA info via systool (if sysfsutils is installed)
 systool -c fc_host -v
 
-# HBA error statistics (check for link_failure_count, loss_of_signal_count)
+# HBA error statistics
 for host in /sys/class/fc_host/host*; do
     port=$(basename $host)
     echo "=== ${port} statistics ==="
@@ -224,10 +212,10 @@ for host in /sys/class/fc_host/host*; do
 done
 ```
 
-### Kernel Messages
+### Kernel messages
 
 ```bash
-# SCSI and multipath-related kernel messages (most recent 100 lines)
+# SCSI and multipath-related kernel messages
 dmesg | grep -iE "scsi|multipath|emcpower|powerpath|hba|fibre|fc_host" | tail -100
 
 # Real-time kernel messages (watch during path restore)
@@ -240,32 +228,28 @@ grep -iE "emcp|PowerPath|dead path|path restored|SCSI error" /var/log/messages |
 journalctl -k --since "2 hours ago" --no-pager | grep -iE "emcp|powerpath|scsi"
 ```
 
-### SCSI Device Layer
+### SCSI device layer
 
 ```bash
 # List all SCSI block devices (raw paths before PowerPath abstraction)
 lsblk -S
 
-# Show which underlying SCSI devices PowerPath is aggregating
-ls /dev/sd* | head -30
-# These should NOT have active mounts — they are raw paths under PowerPath pseudo devices
-
 # Confirm pseudo devices exist and are accessible
 ls -la /dev/emcpower* 2>/dev/null
-# Each emcpower* device corresponds to one LUN (one pseudo device per LUN)
+# Each emcpower* device corresponds to one LUN
 
 # Check block device I/O queue state
 cat /sys/block/sda/device/state 2>/dev/null
 # 'running' is normal; 'offline' indicates a SCSI transport failure
 ```
 
-### iSCSI-Specific (if using iSCSI)
+### iSCSI-specific (if using iSCSI)
 
 ```bash
 # Show iSCSI sessions
 iscsiadm -m session
 
-# Show detailed iSCSI session info (confirms which portal is connected)
+# Show detailed iSCSI session info
 iscsiadm -m session -P 3
 
 # Check iSCSI initiator IQN
@@ -274,7 +258,7 @@ cat /etc/iscsi/initiatorname.iscsi
 
 ---
 
-## Windows-Specific Diagnostics
+## Step 3 — Windows-specific diagnostics
 
 ```powershell
 # PowerPath device status
@@ -290,10 +274,10 @@ Get-WmiObject Win32_SystemDriver | Where-Object { $_.Name -match "emcpower" } |
 
 # View recent PowerPath events in Windows Event Log
 Get-WinEvent -LogName "System" -MaxEvents 100 |
-    Where-Object { $_.ProviderName -match "emcpower\|PowerPath" }
+    Where-Object { $_.ProviderName -match "emcpower|PowerPath" }
 
 Get-WinEvent -LogName "Application" -MaxEvents 100 |
-    Where-Object { $_.ProviderName -match "emcpower\|PowerPath" }
+    Where-Object { $_.ProviderName -match "emcpower|PowerPath" }
 
 # Disk status (confirm PowerPath disks are online)
 Get-Disk | Select-Object Number, FriendlyName, OperationalStatus, HealthStatus
@@ -305,9 +289,9 @@ Get-WmiObject -Namespace "root\WMI" -Class "MSFC_FCAdapterHBAAttributes" |
 
 ---
 
-## SAN Fabric Diagnostics
+## Step 4 — SAN fabric diagnostics
 
-When PowerPath dead paths do not recover after `powermt restore`, the issue is in the fabric or at the array. These are reference commands — run on the switch, not on the host.
+When PowerPath dead paths do not recover after `powermt restore`, the issue is in the fabric or at the array. Run these on the switch, not on the host.
 
 ### Brocade (FOS)
 
@@ -317,7 +301,6 @@ portshow <port_number>
 
 # Fabric name server — confirm host initiator is logged in
 nsshow
-# or
 nsallshow
 
 # Check port error counters
@@ -350,7 +333,7 @@ show zone name <zone_name> vsan <vsan_id>
 
 ---
 
-## Array-Side Diagnostics
+## Step 5 — Array-side diagnostics
 
 Check at the storage array console when fabric-layer diagnostics show the fabric is healthy but paths remain dead.
 
@@ -369,24 +352,7 @@ Check at the storage array console when fabric-layer diagnostics show the fabric
 
 ---
 
-## Log Locations Reference
-
-| Platform | Log Location | What to Look For |
-|---|---|---|
-| Linux | `/var/log/messages` | `emcp`, `PowerPath`, `dead path`, `path restored`, `SCSI error` |
-| Linux (systemd) | `journalctl -k` | Kernel messages with `emcp` or `scsi` keywords |
-| Linux kernel ring | `dmesg` | Real-time SCSI transport and HBA events |
-| Windows | Event Log — System + Application | Source: `emcpower`, `PowerPath` |
-| AIX | `/var/adm/ras/errlog` (`errpt`) | PowerPath and SCSI-related error entries |
-| HP-UX | `/var/adm/syslog/syslog.log` | PowerPath path state events |
-| Brocade switch | `errshow` on the switch | Fabric events, port login/logout, CRC errors |
-| Cisco MDS | `show logging` on the switch | Port state changes, FLOGI events |
-
----
-
-## Diagnostic Collection for Dell Support
-
-Before escalating a case to Dell Support, collect all of the following. Attach as a single archive to the support case.
+## Step 6 — Support bundle collection
 
 ```bash
 #!/bin/bash
@@ -436,16 +402,31 @@ echo "Attach this file to your Dell support case."
 
 ---
 
-## Verify resolution
+## Log locations
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Platform | Log Location | What to Look For |
+|---|---|---|
+| Linux | `/var/log/messages` | `emcp`, `PowerPath`, `dead path`, `path restored`, `SCSI error` |
+| Linux (systemd) | `journalctl -k` | Kernel messages with `emcp` or `scsi` keywords |
+| Linux kernel ring | `dmesg` | Real-time SCSI transport and HBA events |
+| Windows | Event Log — System + Application | Source: `emcpower`, `PowerPath` |
+| AIX | `/var/adm/ras/errlog` (`errpt`) | PowerPath and SCSI-related error entries |
+| HP-UX | `/var/adm/syslog/syslog.log` | PowerPath path state events |
+| Brocade switch | `errshow` on the switch | Fabric events, port login/logout, CRC errors |
+| Cisco MDS | `show logging` on the switch | Port state changes, FLOGI events |
 
 ---
 
 ## See also
 
-- [Powerpath — Common Issues](common-issues/)
-- [Powerpath — Escalation](escalation/)
-- [Powerpath — Health Checks](../operations/health-checks/)
+- [PowerPath — Common Issues](common-issues/)
+- [PowerPath — Escalation](escalation/)
+- [PowerPath — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `powermt display dev=all` shows no dead paths — all paths show `alive` for the affected LUNs
+- `powermt display dev=all | grep -c dead` returns 0
+- `powermt check_registration` shows the license is valid and not expired
+- The host application can successfully read from and write to the affected LUN without I/O errors
+- `dmesg | grep -i "emcpower\|SCSI error" | tail -10` shows no new error events after the fix was applied

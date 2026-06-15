@@ -7,85 +7,100 @@ search:
 ---
 # Data Domain — Diagnostics
 
-
 <div class="kb-summary">
-Diagnostics reference covering Overview, Filesystem Diagnostics, Replication Diagnostics, DD Boost Diagnostics, Disk and Hardware Diagnostics and 5 more sections.
+Data Domain diagnostic commands: check filesystem state with <code>filesys status</code> and space usage with <code>filesys show space</code>, inspect active alerts with <code>alerts show current</code>, check disk states with <code>disk show state</code> and RAID rebuild with <code>raid show detail</code>, diagnose replication lag with <code>replication status</code> and <code>net ping</code>, investigate DD Boost auth failures with <code>ddboost user list</code>, and collect a support bundle with <code>support bundle generate</code> for Dell escalation.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 
-## Before you begin
-
-- **Access:** Storage admin credentials (cluster admin or equivalent)
-- **Gather first:** recent error message text, event timestamps, and affected object names
-- **Scope:** confirm whether the issue affects a single object, host, cluster, or site
-- **Escalation:** open a vendor support ticket before running any destructive step
-- **Logging:** document each command and output — required if escalation is needed
-
----
-
-## Overview
-
-```mermaid
-flowchart TD
-    A([Incident Start]) --> B["alerts show current\nfilesys status\nfilesys show space"]
-    B --> C{"Hardware alert\nactive?"}
-    C -->|Yes| D["disk show state\nenclosure show hardware\nOpen Dell support case"]
-    C -->|No| E{"Filesystem\nnot Running?"}
-    E -->|Yes| F["filesys enable\nMonitor: filesys status"]
-    E -->|No| G{"Replication\nin Error?"}
-    G -->|Yes| H["replication show errors\nnet ping dst\nreplication disable + enable"]
-    G -->|No| I{"DDBoost auth\nfailure?"}
-    I -->|Yes| J["ddboost user list\nReset password\nUpdate backup app"]
-    I -->|No| K{"Capacity\n> 80%?"}
-    K -->|Yes| L["filesys clean start\nExpire old backups"]
-    K -->|No| M["support bundle generate\nEscalate to Dell"]
-    D & F & H & J & L & M --> Z([Resolution])
-```
 ```text
-┌──────────────────────────────────── Dell Data Domain Diagnostics ─────────────────────────────────────┐
+┌──────────────────────────────────── Dell Data Domain — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Diagnose DD issues with DDOS CLI commands and support bundle collection            │   │
-│   │          support bundle save: bundles logs, config, and diagnostics for Dell support          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌────────────────────────────────────────────────────────────────────────────────────────────┐      │
+│   │  Start here: alerts show current → filesys status → filesys show space                    │       │
+│   │  Disk alert: disk show state → identify failed/reconstructing drives → raid show detail    │      │
+│   │  Replication lag: replication status → net ping <dst> → check WAN bandwidth               │       │
+│   │  DDBoost failure: ddboost user list → ddboost show clients → log view audit               │       │
+│   └────────────────────────────────────────────────────────────────────────────────────────────┘      │
 │                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   # Step 1 — System overview                                  │   │
-│   │                       system show version      — DDOS version and serial                      │   │
-│   │                      system show hardware     — hardware components state                     │   │
-│   │                                                                                               │   │
-│   │                                # Step 2 — Filesystem and space                                │   │
-│   │                 filesys show space       — total/used/available + dedup ratio                 │   │
-│   │                      filesys show status      — filesystem health status                      │   │
-│   │                                                                                               │   │
-│   │                                     # Step 3 — Disk health                                    │   │
-│   │              disk show state          — show all disk states (OK/Unknown/Absent)              │   │
-│   │              disk show detailed-info  — S.M.A.R.T. data and error counts per disk             │   │
-│   │                                                                                               │   │
-│   │                                  # Step 4 — Alerts and events                                 │   │
-│   │                     alerts show current      — active alerts with severity                    │   │
-│   │                        alerts show history      — recent alert history                        │   │
-│   │                                                                                               │   │
-│   │                               # Step 5 — Collect support bundle                               │   │
-│   │                 support bundle save /data/col1/support/bundle-$(date +%F).tar                 │   │
-│   │                 # SCP bundle off DD to workstation for upload to Dell support                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │       Filesystem and Capacity           │  │          Disk and Hardware Health            │       │
+│   │   filesys status: enabled / running?    │  │   disk show state: OK / failed / recon.      │       │
+│   │   filesys show space: usage + dedup     │  │   disk show hardware: S/N, firmware, model   │       │
+│   │   filesys show compression: dedup ratio │  │   raid show all: RAID group overview         │       │
+│   │   filesys clean status: cleaning state  │  │   raid show detail: rebuild % + member disks │       │
+│   │   filesys show log: FS-layer events     │  │   enclosure show hardware: fans, PSU, temp   │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│   ┌─────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐       │
+│   │      Replication and DD Boost           │  │       Network and Log Access                 │       │
+│   │   replication status: context state     │  │   net show all: interfaces + link state      │       │
+│   │   replication show errors: error detail │  │   net show stats: rx/tx, errors, drops       │       │
+│   │   replication show stats: throughput    │  │   net ping <dst>: connectivity test          │       │
+│   │   ddboost status: service running?      │  │   log view: recent system log events         │       │
+│   │   ddboost show clients: connected apps  │  │   log view audit: admin + CLI actions        │       │
+│   └─────────────────────────────────────────┘  └──────────────────────────────────────────────┘       │
 │                                                                                                       │
-│    support bundle = Comprehensive DDOS diagnostic archive; always collect before calling Dell         │
-│    disk show state= Verify no drives in Unknown or Reconstructing state                               │
-│    alerts show    = Check for active hardware or software alerts; review before escalating            │
+│  Physical Infrastructure:                                                                             │
+│  Data Domain appliance or virtual edition · SATA/SAS/NVMe drives in a RAID group                      │
+│  10/25 GbE management and replication interfaces · serial console for inaccessible systems            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│  filesys status     = confirms the filesystem is Enabled and Running; check this first                │
+│  filesys show space = shows pre-comp, post-comp, physical capacity, and compression factor            │
+│  alerts show        = active hardware or software alerts; highest-priority triage input               │
+│  disk show state    = per-disk state: normal, spare, reconstructing, failed, unknown, absent          │
+│  raid show detail   = RAID group rebuild status with percent complete and member disk list            │
+│  replication status = per-context state: Replicating, Idle, Error, Disabled; includes lag             │
+│  DD Boost           = Dell Dell Boost integration for backup apps; uses storage units + user auth     │
+│  ddboost status     = confirms DD Boost service is enabled and running                                │
+│  support bundle     = comprehensive diagnostic archive; always collect before calling Dell            │
+│  autosupport        = phone-home mechanism; can send bundle directly to Dell for an open case         │
+│  ddsh               = Data Domain diagnostic shell; provides iostat, vmstat, df, top, diagnose        │
+│  cleaning           = DD reclaim process; re-deduplication pass that recovers post-comp space         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+graph TD
+    A([Data Domain Issue]) --> B[alerts show current\nfilesys status\nfilesys show space]
+    B --> C{Hardware alert active?}
+    C -->|Yes| D[disk show state: identify failed or unknown\nenclosure show hardware: fan PSU temp\nOpen Dell support case]
+    C -->|No| E{Filesystem not Running?}
+    E -->|Yes| F[filesys enable\nMonitor: filesys status until Running\nCheck space: filesys show space]
+    E -->|No| G{Replication in Error?}
+    G -->|Yes| H[replication show errors: error detail\nnet ping <destination-dd>: connectivity\nreplication disable then enable to reset]
+    G -->|No| I{DDBoost auth failure?}
+    I -->|Yes| J[ddboost user list: confirm user exists\nddboost show clients: client connected?\nlog view audit | grep ddboost]
+    I -->|No| K{Capacity > 80%?}
+    K -->|Yes| L[filesys clean start\nIdentify top consumers: replication show stats\nExpire old backups via backup application]
+    K -->|No| M[support bundle generate\nOpen Dell support case]
+    D --> M
+    F --> M
+    H --> M
+    J --> M
+    L --> M
+
+    classDef dark fill:#1e3a5f,color:#fff
+    classDef action fill:#78350f,color:#fff
+    classDef escalate fill:#991b1b,color:#fff
+    class A,C,E,G,I,K dark
+    class B,D,F,H,J,L action
+    class M escalate
+```
+
+## Before you begin
+
+- **Access:** SSH to the Data Domain management IP as `sysadmin` or `admin`; serial console access for unresponsive systems; SCP server or USB for bundle transfer
+- **Gather first:** the DDOS version (`system show version`), active alerts (`alerts show current`), filesystem state (`filesys status`), and the specific symptom — backup failure error code, replication context name and lag, or DDBoost error message from the backup application
+- **Scope:** confirm whether the issue is a filesystem problem (not Running, full), a hardware problem (disk or enclosure alert), a replication problem (specific context in Error state), or a backup integration problem (DDBoost auth failure from a specific backup server)
+
 ---
 
-## Filesystem Diagnostics
+## Step 1 — Filesystem diagnostics
 
-### Check Filesystem State
+### Check filesystem state
 
 ```bash
 # State: should show Enabled / Running
@@ -108,7 +123,7 @@ filesys clean show history
 filesys show log
 ```
 
-### Interpret `filesys show space` Output
+### Interpret `filesys show space` output
 
 | Field | Meaning |
 |---|---|
@@ -120,7 +135,7 @@ filesys show log
 
 A healthy system shows post-comp used below 80% of physical capacity and a compression factor above 10x.
 
-### Check Filesystem Integrity
+### Check filesystem integrity
 
 ```bash
 # Run an online filesystem check
@@ -130,13 +145,13 @@ filesys check
 filesys show log | grep -i check
 ```
 
-Note: `filesys check` is a non-destructive read-only integrity scan. It may take hours on large arrays. Run it only when integrity is suspected, not as a routine check.
+`filesys check` is a non-destructive read-only integrity scan. It may take hours on large arrays. Run it only when integrity is suspected, not as a routine check.
 
 ---
 
-## Replication Diagnostics
+## Step 2 — Replication diagnostics
 
-### State Triage
+### State triage
 
 ```bash
 # All contexts and their state
@@ -155,7 +170,7 @@ replication show stats
 replication show errors
 ```
 
-### Interpreting Replication State
+### Interpreting replication state
 
 | State | Meaning | Urgency |
 |---|---|---|
@@ -166,7 +181,7 @@ replication show errors
 | `Error` | Replication failed — immediate investigation required | High |
 | `Idle-Error` | Last sync encountered an error but context is idle now | Investigate |
 
-### Lag Measurement and Analysis
+### Lag measurement and analysis
 
 ```bash
 # Lag in bytes remaining to replicate
@@ -179,9 +194,9 @@ replication status | grep -i throughput
 replication status | grep -i "estimated completion"
 ```
 
-Convert bytes to time: if pre-comp remaining is 500 GB and throughput is 100 MB/s, estimated catchup is approximately 84 minutes (500 * 1024 / 100 / 60). A growing lag when throughput is non-zero means the source ingest rate exceeds replication drain rate.
+Convert bytes to time: if pre-comp remaining is 500 GB and throughput is 100 MB/s, estimated catchup is approximately 84 minutes (500 × 1024 / 100 / 60). A growing lag when throughput is non-zero means the source ingest rate exceeds replication drain rate.
 
-### Network Path Verification
+### Network path verification
 
 ```bash
 # Test connectivity to the destination DD
@@ -194,15 +209,15 @@ net traceroute <destination-dd-hostname>
 net show stats | grep -iE "error|drop|collision"
 
 # Check that the correct interface is used for replication
-net show all  # identify which interface carries the replication route
+net show all
 net route show
 ```
 
 ---
 
-## DD Boost Diagnostics
+## Step 3 — DD Boost diagnostics
 
-### Service and Client Status
+### Service and client status
 
 ```bash
 # Is the DD Boost service running?
@@ -225,7 +240,7 @@ ddboost show stats
 ddboost option show | grep -i dist-seg
 ```
 
-### Diagnosing a DDBoost Authentication Failure
+### Diagnosing a DDBoost authentication failure
 
 ```bash
 # 1. Confirm the expected user exists
@@ -243,9 +258,9 @@ log view audit | grep -i "ddboost\|boost\|auth"
 
 ---
 
-## Disk and Hardware Diagnostics
+## Step 4 — Disk and hardware diagnostics
 
-### Disk Health
+### Disk health
 
 ```bash
 # All disks with state
@@ -261,7 +276,7 @@ disk show detail | grep -iE "slot|error|sector|reallocated"
 disk show state | grep -ivE "normal|spare"
 ```
 
-### Disk States Reference
+### Disk states reference
 
 | State | Meaning | Action |
 |---|---|---|
@@ -272,7 +287,7 @@ disk show state | grep -ivE "normal|spare"
 | `unknown` | Not recognised — new disk or seating issue | Check physical seating; do not pull other disks |
 | `absent` | Empty bay | Expected if slot is intentionally unused |
 
-### RAID Group Status
+### RAID group status
 
 ```bash
 # RAID group overview
@@ -285,7 +300,7 @@ raid show detail
 raid show detail | grep -iE "rebuild|reconstruct|percent complete"
 ```
 
-### Enclosure Health
+### Enclosure health
 
 ```bash
 # Full hardware inventory: power, fans, temperature
@@ -300,9 +315,9 @@ enclosure show hardware | grep -iE "fault|fail|warn|critical"
 
 ---
 
-## Network Diagnostics
+## Step 5 — Network diagnostics
 
-### Interface State
+### Interface state
 
 ```bash
 # All interfaces — IP, speed, state, MTU
@@ -318,7 +333,7 @@ net show stats
 net show settings
 ```
 
-### Connectivity Testing
+### Connectivity testing
 
 ```bash
 # Ping from the Data Domain to a target
@@ -346,43 +361,31 @@ If a bonded interface is degraded (one link down), throughput is reduced by 50% 
 
 ---
 
-## Log Analysis
+## Step 6 — Log analysis and advanced diagnostics
 
-### Log Locations
+### Log locations
 
 | Log | Command | Contains |
 |---|---|---|
 | System log | `log view` | DDOS events, service restarts, hardware events |
 | Audit log | `log view audit` | User logins, config changes, all CLI commands |
 | Replication log | `log view replication` | Replication events, errors, throughput history |
-| Debug log (full bundle) | `support bundle generate` | All logs; for Dell support cases |
-
-### Viewing Logs
 
 ```bash
 # Most recent system log entries (scrollable)
 log view
 
-# List available log files
-log list
-
-# Dump full system log to stdout
-log dump system
-
 # Follow system log in real time
 log watch
-
-# View a specific named log
-log view <log-filename>
 
 # Filter for specific keywords
 log view | grep -i "error\|critical\|fail"
 
-# Time-bounded search (last 2 hours)
-log view | grep "$(date -d '2 hours ago' '+%Y-%m-%d %H')\|$(date '+%Y-%m-%d %H')"
+# View a specific named log
+log view <log-filename>
 ```
 
-### Common Log Patterns
+### Common log patterns
 
 | Log Pattern | Meaning |
 |---|---|
@@ -394,11 +397,9 @@ log view | grep "$(date -d '2 hours ago' '+%Y-%m-%d %H')\|$(date '+%Y-%m-%d %H')
 | `EVT-CLEAN-COMPLETE` | Cleaning cycle completed; check `filesys show space` |
 | `EVT-CERT-EXPIRE` | TLS certificate approaching expiry; renew |
 
----
+### Advanced diagnostics with `ddsh`
 
-## Advanced Diagnostics with `ddsh`
-
-`ddsh` is the Data Domain diagnostic shell. It provides access to Unix-like diagnostic tools not available in the standard DDOS CLI.
+`ddsh` provides access to Unix-like diagnostic tools not available in the standard DDOS CLI.
 
 ```bash
 # Enter the diagnostic shell
@@ -417,18 +418,11 @@ top                    # Real-time process list
 exit
 ```
 
-### Interpreting `iostat` in `ddsh`
-
-High `%util` on a disk device during backup operations is expected. A concern arises when:
-- `await` (average I/O wait time) exceeds 50–100 ms during writes
-- `%util` is at 100% on multiple devices simultaneously without explanation
-- `r_await` is high during restore operations (indicates disk read saturation)
+High `%util` on a disk device during backup operations is expected. A concern arises when `await` (average I/O wait time) exceeds 50–100 ms during writes or `%util` is at 100% on multiple devices simultaneously without explanation.
 
 ---
 
-## Support Bundle
-
-For Dell support cases, generate a support bundle that includes all logs, system state, and diagnostics automatically.
+## Step 7 — Support bundle collection
 
 ```bash
 # Generate a support bundle
@@ -446,9 +440,7 @@ autosupport send <case-number>
 
 The support bundle is saved to `/ddr/var/support/` on the DD. For large arrays, the bundle can be several gigabytes. Transfer via SCP from a host with network access to the DD management interface.
 
----
-
-## Diagnostics Checklist — Per Incident Type
+### Incident type quick reference
 
 | Incident | Key Commands |
 |---|---|
@@ -463,11 +455,14 @@ The support bundle is saved to `/ddr/var/support/` on the DD. For large arrays, 
 
 ---
 
-## Verify resolution
+## Log locations
 
-- Confirm the original symptom no longer occurs
-- Check logs for any residual errors related to the issue
-- Monitor for 10–15 minutes to confirm the fix is stable
+| Log | Command | Contents |
+|---|---|---|
+| System log | `log view` | DDOS events, service restarts, hardware events |
+| Audit log | `log view audit` | User logins, config changes, all CLI commands |
+| Replication log | `log view replication` | Replication events, errors, throughput history |
+| Debug / support bundle | `support bundle generate` | All logs; required for Dell support cases |
 
 ---
 
@@ -476,3 +471,12 @@ The support bundle is saved to `/ddr/var/support/` on the DD. For large arrays, 
 - [Data Domain — Common Issues](common-issues/)
 - [Data Domain — Escalation](escalation/)
 - [Data Domain — Health Checks](../operations/health-checks/)
+
+## Verify resolution
+
+- `filesys status` returns `Enabled / Running` with no warnings
+- `alerts show current` returns no active alerts related to the incident
+- `disk show state | grep -ivE "normal|spare|absent"` returns no output (all disks normal or spare)
+- For replication issues: `replication status` shows all contexts as `Replicating` or `Idle` with lag at zero or decreasing
+- For DD Boost: `ddboost show clients` shows the backup server as `connected` with no authentication errors
+- `filesys show space` shows post-comp usage below 80% of physical capacity
