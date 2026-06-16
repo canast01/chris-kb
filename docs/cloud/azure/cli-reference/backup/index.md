@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Backup & Recovery reference.
+Azure backup CLI: `az backup vault create`, `az backup policy set`, `az backup job list`, `az backup restore restore-disks`, and Recovery Services vault management.
 
 *Applies to: Azure*
 </div>

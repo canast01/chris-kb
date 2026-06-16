@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Operations](index.md) reference.
+FabricOS procedures: `switchshow`, `fabricshow`, zone configuration with `cfgadd`/`cfgsave`/`cfgenable`, ISL management, and port enable/disable.
 
 *Applies to: Brocade FOS 9.x*
 </div>

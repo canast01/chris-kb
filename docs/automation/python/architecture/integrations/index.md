@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Integrations reference covering API Call and Retry Flow.
+Python automation integrations: REST API call patterns, retry-with-backoff wrappers, `requests` session management, Ansible Python API, and Terraform subprocess automation.
 
 *Applies to: Python 3.x*
 </div>

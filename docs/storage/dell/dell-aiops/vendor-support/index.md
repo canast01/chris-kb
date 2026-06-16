@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Dell AIOps Vendor Support reference.
+Dell AIOps vendor support: support case opening via SupportAssist, log bundle collection, escalation to Dell Engineering, and firmware advisory tracking.
 
 *Applies to: Dell AIOps*
 </div>

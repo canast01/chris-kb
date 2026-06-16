@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SRDF/A](../index.md) reference.
+SRDF/A CLI reference: `symrdf list`, `symrdf query`, `symrdf establish`, `symrdf resume`, `symrdf suspend`, and cycle time monitoring commands.
 
 *Applies to: SRDF/A*
 </div>

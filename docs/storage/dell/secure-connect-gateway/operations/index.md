@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Secure Connect Gateway](../index.md) reference.
+SCG operations: device registration, connectivity health checks, firmware advisory review, SupportAssist case creation, and daily telemetry verification.
 
 *Applies to: Secure Connect Gateway*
 </div>

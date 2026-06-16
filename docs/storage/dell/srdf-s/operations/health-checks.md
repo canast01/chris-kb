@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SRDF/S Operations](index.md) reference. Regular health checks on SRDF/S replication confirm that all device pairs are synchronized, RDF directors and links are operational, and no track backlogs exist.
+SRDF/S health checks: `symrdf query -synchronous` link status, invalid track count review, SRDF pair consistency validation, and RDF group hop count check.
 
 *Applies to: SRDF/S*
 </div>

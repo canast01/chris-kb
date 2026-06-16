@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Disks & Snapshots reference.
+Azure disks CLI: `az disk create/resize`, `az snapshot create`, `az disk grant-access`, `az disk revoke-access`, and managed disk SKU conversion commands.
 
 *Applies to: Azure*
 </div>

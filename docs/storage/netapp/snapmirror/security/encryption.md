@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Security](index.md) reference.
+SnapMirror encryption: SnapMirror Traffic Encryption (SMT) using TLS, `snapmirror modify -encryption-algorithm`, and ONTAP NAE/NVE for at-rest encryption of replicated volumes.
 
 *Applies to: SnapMirror*
 </div>

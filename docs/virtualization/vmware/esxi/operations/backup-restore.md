@@ -9,7 +9,7 @@ tags:
 
 
 <div class="kb-summary">
-ESXi Backup & Restore reference covering VM-Level Backup.
+ESXi backup and restore: VM-level backup via vStorage APIs for Data Protection, ESXi host config backup with `vim-cmd hostsvc/firmware/backup_config`, and restore procedure.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

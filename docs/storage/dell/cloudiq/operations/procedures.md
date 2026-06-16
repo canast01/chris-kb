@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Procedures reference covering Maintenance Window.
+CloudIQ operational procedures: scheduling maintenance windows to suppress alerts, tag management for filtering, custom threshold configuration, and report export.
 
 *Applies to: CloudIQ*
 </div>

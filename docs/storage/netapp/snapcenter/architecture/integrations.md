@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Architecture](index.md) reference.
+SnapCenter integrations: vSphere plugin for VM-consistent snapshots, ONTAP SnapMirror chain for DR copies, SnapVault for long-term retention, and Active IQ integration.
 
 *Applies to: SnapCenter 5.x*
 </div>

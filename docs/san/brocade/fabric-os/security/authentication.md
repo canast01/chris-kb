@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Security](index.md) reference.
+FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, local account fallback policy, and SSH key-based admin access.
 
 *Applies to: Brocade FOS 9.x*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Architecture](index.md) reference.
+SnapCenter design standards: plugin server placement, SQL/Oracle/VMware plugin sizing, repository database requirements, and SnapCenter to ONTAP version matrix.
 
 *Applies to: SnapCenter 5.x*
 </div>

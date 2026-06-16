@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Pure1 Operations reference.
+Pure1 operations: fleet health dashboard review, predictive analytics alert configuration, capacity and performance trending, and support case creation from Pure1.
 
 *Applies to: Pure1*
 </div>

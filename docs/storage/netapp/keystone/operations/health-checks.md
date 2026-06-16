@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Keystone Operations](index.md) reference.
+NetApp Keystone health checks: subscription capacity consumption review via Keystone portal, latency SLA compliance, and Active IQ Unified Manager alerts.
 
 *Applies to: Keystone STaaS*
 </div>

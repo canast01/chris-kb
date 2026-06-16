@@ -8,7 +8,7 @@ search:
 # PostgreSQL — Common Issues
 
 <div class="kb-summary">
-PostgreSQL common issues reference.
+PostgreSQL troubleshooting: replication lag, `deadlock detected`, autovacuum bloat, connection pool exhaustion, checkpoint overload, and corrupt index recovery.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

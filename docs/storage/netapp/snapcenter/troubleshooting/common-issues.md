@@ -9,7 +9,7 @@ search:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Troubleshooting](index.md) reference.
+SnapCenter troubleshooting: `Invoke-SmDiagnostics`, plugin connectivity failures, repository corruption, backup job timeout analysis, and NetApp support escalation.
 
 *Applies to: SnapCenter 5.x*
 </div>

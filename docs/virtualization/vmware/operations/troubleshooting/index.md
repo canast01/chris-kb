@@ -9,7 +9,7 @@ search:
 
 
 <div class="kb-summary">
-Common virtualization troubleshooting workflows.
+Virtualization troubleshooting: VM power-on failures, network port-group misconfiguration, storage access loss, HA admission control issues, and escalation workflows.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

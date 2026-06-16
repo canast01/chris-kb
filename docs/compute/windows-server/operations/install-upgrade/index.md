@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Installation, upgrade, patching, and decommission.
+Windows Server install and upgrade: WDS/MDT deployment, Windows Update via WSUS or SCCM, in-place upgrade procedure, and decommission checklist.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

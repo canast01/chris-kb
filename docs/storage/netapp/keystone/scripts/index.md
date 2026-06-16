@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [NetApp Keystone](../index.md) reference.
+NetApp Keystone automation scripts: REST API queries for subscription consumption data, capacity trend reporting, and SLA threshold alert integration.
 
 *Applies to: Keystone STaaS*
 </div>

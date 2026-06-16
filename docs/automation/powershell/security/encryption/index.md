@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [PowerShell Security](../index.md) reference.
+PowerShell encryption: `ConvertTo-SecureString`, `New-SelfSignedCertificate`, encrypting credential exports, and SecretManagement module for vault integration.
 
 *Applies to: PowerShell 7.x*
 </div>

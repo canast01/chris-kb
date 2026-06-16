@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Health Checks operational notes and deep-dive references.
+DR health-check hub: daily, pre-change, post-change, and evidence-collection routines covering RPO compliance, backup job status, and replication lag thresholds.
 </div>
 ```text
 ┌────────────────────────── Project Management Health Checks — Health Checks ───────────────────────────┐

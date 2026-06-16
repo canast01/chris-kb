@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [FlashBlade Security](index.md) reference.
+FlashBlade access control: `pureadmin`, role-based management (`array_admin`, `ops_admin`, `readonly`), AD/LDAP group mapping, and API token scoping.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>

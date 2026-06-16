@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Dell Unity](../index.md) reference.
+Dell Unity automation scripts: PowerShell Toolkit cmdlets for snapshot management, host registration, LUN provisioning, and health status polling.
 
 *Applies to: Unity XT*
 </div>

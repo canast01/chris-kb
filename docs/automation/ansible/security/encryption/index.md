@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Ansible Security](../index.md) reference.
+Ansible encryption: `ansible-vault encrypt`, `encrypt_string`, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings.
 
 *Applies to: Ansible 2.14+*
 </div>

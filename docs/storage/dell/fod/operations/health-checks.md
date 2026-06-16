@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Flex on Demand](../index.md) reference.
+Dell FoD health checks: SCG connectivity status, entitlement consumption review in CloudIQ, capacity threshold alerts, and monthly usage validation.
 
 *Applies to: Dell FOD*
 </div>

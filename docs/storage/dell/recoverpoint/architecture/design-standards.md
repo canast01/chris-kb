@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [RecoverPoint](../index.md) > [Architecture](index.md) reference.
+RecoverPoint design standards: RPA cluster sizing, consistency group limits, journal volume sizing, supported FC/iSCSI connectivity, and RPO target configuration.
 
 *Applies to: RecoverPoint 5.x*
 </div>

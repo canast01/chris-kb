@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Security](index.md) reference.
+SnapCenter authentication: AD/LDAP integration via Windows Authentication, service account configuration, MFA enforcement, and API token management.
 
 *Applies to: SnapCenter 5.x*
 </div>

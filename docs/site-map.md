@@ -1,7 +1,7 @@
 # Site Map
 
 <div class="kb-summary">
-Full index of all KB sections and sub-sections.
+Full KB site index: links to all infrastructure, resilience, security, automation, and cloud sections. Use Ctrl+F to locate any product or topic quickly.
 </div>
 
 ## Infrastructure

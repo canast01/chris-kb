@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Ansible Operations](../index.md) reference. Ansible is an agentless automation tool — it connects to remote hosts over SSH and runs tasks defined in YAML playbooks. There's nothing to install on the managed hosts.
+Ansible CLI reference: `ansible`, `ansible-playbook`, `ansible-vault`, `ansible-galaxy`, `ansible-inventory`, and `ansible-doc` command syntax with common flags.
 
 *Applies to: Ansible 2.14+*
 </div>

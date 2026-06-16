@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-InsightIQ Vendor Support reference.
+InsightIQ vendor support: opening NetApp support cases, collecting `isi_gather_info` and InsightIQ diagnostic bundles, and escalation contact procedure.
 
 *Applies to: InsightIQ*
 </div>

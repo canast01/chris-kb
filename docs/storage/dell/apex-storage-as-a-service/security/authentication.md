@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Authentication reference covering Related Reference.
+APEX STaaS authentication: CloudIQ portal SSO with SAML 2.0, API OAuth2 token generation, MFA enforcement policy, and service account credential rotation.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>

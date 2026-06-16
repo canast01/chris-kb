@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Authentication reference covering Solutions Enabler RBAC.
+SRDF/S authentication: Solutions Enabler RBAC role assignment, `symauth` command, Unisphere for VMAX admin account management, and session audit logging.
 
 *Applies to: SRDF/S*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Quick reference for common problems and resolutions.
+Cisco DCNM known issues: inventory sync failures, zone push errors, fabric discovery timeouts, database corruption recovery, and version upgrade caveats.
 
 *Applies to: Cisco MDS · Nexus*
 </div>

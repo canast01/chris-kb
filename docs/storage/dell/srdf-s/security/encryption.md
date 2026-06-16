@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Encryption reference covering FCIP Encryption.
+SRDF/S encryption: in-flight encryption over FCIP using GEM or Brocade encryption, IPsec tunnel configuration, and encryption key lifecycle management.
 
 *Applies to: SRDF/S*
 </div>

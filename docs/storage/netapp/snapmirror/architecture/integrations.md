@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Architecture](index.md) reference.
+SnapMirror integrations: SnapCenter backup chain extension, SnapVault for long-term retention, SVM-DR for disaster recovery, and S3 SnapMirror for object replication.
 
 *Applies to: SnapMirror*
 </div>

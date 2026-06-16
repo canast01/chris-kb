@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Operations](index.md) reference.
+SnapMirror health checks: `snapmirror show -fields lag-time,health`, relationship state review, last-transfer-size trend, and broken-off relationship count.
 
 *Applies to: SnapMirror*
 </div>

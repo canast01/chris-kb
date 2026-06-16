@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Authentication reference covering API Token Management.
+RecoverPoint authentication: local account management via Unisphere, API token generation and rotation, LDAP integration via `set_ldap_config`, and session timeout.
 
 *Applies to: RecoverPoint 5.x*
 </div>

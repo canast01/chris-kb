@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [APEX Storage as a Service](../index.md) reference.
+APEX STaaS health checks: CloudIQ health score review, capacity threshold alerts, latency trending, and `dcicli` command verification from SCG.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Operations](index.md) reference.
+SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror modify`, `snapmirror quiesce`, `snapmirror break`, `snapmirror resync`, and `snapmirror delete`.
 
 *Applies to: SnapMirror*
 </div>

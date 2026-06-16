@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [RecoverPoint](../index.md) > [Operations](index.md) reference.
+RecoverPoint procedures: adding consistency groups, bookmarking for CDP recovery, image access (enable test copy), failover, and image disable procedure.
 
 *Applies to: RecoverPoint 5.x*
 </div>

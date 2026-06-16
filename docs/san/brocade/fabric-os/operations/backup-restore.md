@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Operations](index.md) reference.
+FabricOS backup and restore: `configupload` to FTP/SCP, `firmwaredownload` staging, disaster recovery from a saved config, and switch replacement procedure.
 
 *Applies to: Brocade FOS 9.x*
 </div>

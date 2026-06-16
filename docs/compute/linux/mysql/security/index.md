@@ -6,7 +6,7 @@ tags:
 # MySQL / MariaDB — Security
 
 <div class="kb-summary">
-Access control, authentication, encryption, and hardening.
+MySQL/MariaDB security: `CREATE USER`, `GRANT`, `FLUSH PRIVILEGES`, TLS connection enforcement, password policies, and audit log plugin configuration.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Dell Flex on Demand](index.md) reference.
+Dell FoD automation scripts: PowerShell and Python examples for capacity consumption reporting, entitlement threshold alerting, and SCG health polling.
 
 *Applies to: Dell FOD*
 </div>

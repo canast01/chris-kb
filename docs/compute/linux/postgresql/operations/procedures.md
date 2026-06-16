@@ -6,7 +6,7 @@ tags:
 # PostgreSQL — Procedures
 
 <div class="kb-summary">
-PostgreSQL procedures reference.
+PostgreSQL procedures: VACUUM and ANALYZE scheduling, extension management with `CREATE EXTENSION`, role and schema management, and failover with `pg_ctl promote`.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

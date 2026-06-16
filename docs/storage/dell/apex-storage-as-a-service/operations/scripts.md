@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [APEX Storage as a Service](index.md) reference.
+APEX STaaS automation scripts: Python REST client for capacity reporting, CloudIQ API polling, and automated alert-to-ticket integration examples.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Operations](index.md) reference.
+SnapCenter procedures: adding storage systems, configuring policies and resource groups, scheduling backups, cloning for test/dev, and decommissioning plug-in hosts.
 
 *Applies to: SnapCenter 5.x*
 </div>

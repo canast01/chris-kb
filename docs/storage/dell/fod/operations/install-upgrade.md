@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Flex on Demand](../index.md) reference.
+Dell FoD install and upgrade: SCG registration for automatic telemetry, FoD licence activation procedure, and upgrade path for capacity tier changes.
 
 *Applies to: Dell FOD*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [GitHub Actions Security](../index.md) reference.
+GitHub Actions encryption: encrypted secrets storage, environment-level secret scoping, OIDC token federation for AWS and Azure, and artifact encryption policies.
 
 *Applies to: GitHub Actions*
 </div>

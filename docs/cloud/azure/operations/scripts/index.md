@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Azure](../../index.md) reference.
+Azure operational scripts: PowerShell and `az cli` automation for resource provisioning, VM scale operations, Key Vault secret rotation, and policy compliance reporting.
 
 *Applies to: Azure*
 </div>

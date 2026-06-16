@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [PowerShell Security](../index.md) reference.
+PowerShell access control: execution policy enforcement, JEA (Just Enough Administration) configuration, module signing requirements, and constrained language mode.
 
 *Applies to: PowerShell 7.x*
 </div>

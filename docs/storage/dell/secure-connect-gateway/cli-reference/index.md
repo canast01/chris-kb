@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Secure Connect Gateway](../index.md) reference.
+SCG CLI reference: `dcicli` command usage for connectivity verification, `supportassist` log collection, device inventory queries, and remote support tunnel management.
 
 *Applies to: Secure Connect Gateway*
 </div>

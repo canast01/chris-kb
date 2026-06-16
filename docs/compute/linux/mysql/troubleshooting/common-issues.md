@@ -8,7 +8,7 @@ search:
 # MySQL / MariaDB — Common Issues
 
 <div class="kb-summary">
-MySQL / MariaDB common issues reference.
+MySQL/MariaDB troubleshooting: replication broken, lock waits, `Too many connections`, table corruption, InnoDB crash recovery, and slow query log analysis.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

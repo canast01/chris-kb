@@ -8,7 +8,7 @@ tags:
 
 
 <div class="kb-summary">
-Health Checks reference covering Common Operational Issues.
+VCF health checks: SDDC Manager health API, `lcm health check`, workload domain cluster status, NSX edge health, and vSAN stretched cluster rebalance status.
 
 *Applies to: VCF 4.x / 5.x*
 </div>

@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Pure1 Vendor Support reference.
+Pure1 vendor support: opening cases via the Pure1 portal, diagnostic bundle collection with `purediag`, phone escalation numbers, and remote session authorisation.
 
 *Applies to: Pure1*
 </div>

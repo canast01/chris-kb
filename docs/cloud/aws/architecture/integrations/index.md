@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Architecture](../index.md) section.
+AWS integration patterns: Active Directory Connector, VPC peering and PrivateLink, API Gateway service mesh, EventBridge routing, and on-premises Direct Connect.
 
 *Applies to: AWS*
 </div>

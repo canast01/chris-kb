@@ -6,7 +6,7 @@ tags:
 # MySQL / MariaDB — Backup Restore
 
 <div class="kb-summary">
-MySQL / MariaDB backup restore reference.
+MySQL/MariaDB backup: `mysqldump --single-transaction`, `mysqlpump`, xtrabackup full and incremental, binary log point-in-time restore, and retention management.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

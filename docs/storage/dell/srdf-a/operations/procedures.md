@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SRDF/A](../index.md) reference.
+SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set Extension) management, failover and failback, and link fault recovery.
 
 *Applies to: SRDF/A*
 </div>

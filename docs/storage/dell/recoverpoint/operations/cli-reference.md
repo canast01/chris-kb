@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [RecoverPoint](../index.md) > [Operations](index.md) reference.
+RecoverPoint CLI reference: `get_all_rpas`, `get_rp_system_settings`, `fail_over_group`, `test_links`, `get_journal_full_percentage`, and `set_rp_volume` commands.
 
 *Applies to: RecoverPoint 5.x*
 </div>

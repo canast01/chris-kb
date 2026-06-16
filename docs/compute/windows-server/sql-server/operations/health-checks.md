@@ -6,7 +6,7 @@ tags:
 # SQL Server — Health Checks
 
 <div class="kb-summary">
-SQL Server health checks reference.
+SQL Server health checks: `sys.dm_exec_query_stats`, AG replica sync state, job history review, tempdb contention, and disk latency monitoring with DMVs.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

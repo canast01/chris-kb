@@ -6,7 +6,7 @@ tags:
 # PostgreSQL — Architecture
 
 <div class="kb-summary">
-Architecture overview, design standards, and integrations.
+PostgreSQL architecture: primary-standby streaming replication, logical replication for migrations, shared_buffers and wal_level sizing, and storage layout.
 
 *Applies to: PostgreSQL 15.x / 16.x*
 </div>

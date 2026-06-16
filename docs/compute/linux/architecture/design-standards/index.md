@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Sizing guidelines, design standards, and best practices.
+Linux architecture standards: kernel version and patch cadence requirements, NTP configuration, disk layout (LVM), network bonding, and SELinux/AppArmor baseline.
 
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>

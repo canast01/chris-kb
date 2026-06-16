@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Operations](index.md) reference.
+FabricOS install and upgrade: `firmwaredownload` from SCP/FTP, firmware commit procedure, HA failover test, and downgrade rollback steps.
 
 *Applies to: Brocade FOS 9.x*
 </div>

@@ -6,7 +6,7 @@ tags:
 # SQL Server — Architecture
 
 <div class="kb-summary">
-Architecture overview, design standards, and integrations.
+SQL Server architecture: Always On AG topology, FCI failover clustering, TempDB placement, memory configuration, and storage I/O path design.
 
 *Applies to: SQL Server 2019 / 2022*
 </div>

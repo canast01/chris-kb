@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Operations](index.md) reference.
+SnapCenter health checks: `Get-SmJob -State Failed`, plugin service status, repository database connectivity, SnapMirror lag, and storage capacity via `Get-SmStorageResources`.
 
 *Applies to: SnapCenter 5.x*
 </div>

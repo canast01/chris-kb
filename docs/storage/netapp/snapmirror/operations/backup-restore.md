@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Operations](index.md) reference.
+SnapMirror backup and restore: `snapmirror initialize`, `snapmirror update`, `snapmirror break`, `snapmirror restore`, and failover resync procedure.
 
 *Applies to: SnapMirror*
 </div>

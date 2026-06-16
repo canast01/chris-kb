@@ -9,7 +9,7 @@ search:
 
 
 <div class="kb-summary">
-Part of the [SRDF/S Troubleshooting](index.md) reference. SRDF/S issues typically manifest as pair state transitions away from `Synchronized`, elevated host write latency, or unexpected failover splits.
+SRDF/S troubleshooting: synchronous link failures, invalid track accumulation, host I/O impact during link faults, `symrdf failover` under failure, and escalation.
 
 *Applies to: SRDF/S*
 </div>

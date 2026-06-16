@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-COD — Backup & Restore reference.
+Dell CoD (Capacity on Demand) backup and restore: licence file backup, configuration export via SYMCLI, and procedure to restore capacity entitlements after hardware replacement.
 
 *Applies to: Cloud for Desktop (COD)*
 </div>

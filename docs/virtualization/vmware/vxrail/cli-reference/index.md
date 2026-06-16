@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [VxRail](../index.md) reference.
+VxRail CLI reference: `vxrail-upgrade`, `vxrail-health-check`, `vxrail-lcm-status`, `mystic` health API queries, and `vc-maint-mode` commands.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>

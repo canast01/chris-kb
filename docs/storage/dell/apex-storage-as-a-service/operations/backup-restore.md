@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-APEX Storage as a Service — Backup & Restore reference.
+APEX STaaS backup and restore: snapshot schedule configuration via CloudIQ portal, cross-region copy policies, and restore-from-snapshot procedure.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>

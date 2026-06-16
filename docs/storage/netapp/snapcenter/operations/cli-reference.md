@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Operations](index.md) reference.
+SnapCenter CLI reference: `Open-SmConnection`, `Add-SmResources`, `New-SmBackup`, `Get-SmBackupReport`, `Restore-SmBackup`, and `Get-SmJob` cmdlets.
 
 *Applies to: SnapCenter 5.x*
 </div>

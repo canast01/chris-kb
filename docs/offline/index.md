@@ -6,7 +6,7 @@ title: You're Offline
 
 
 <div class="kb-summary">
-You're offline reference.
+Offline fallback page: displayed automatically when the KB site is accessed without a network connection via the service worker cache.
 </div>
 
 ```text

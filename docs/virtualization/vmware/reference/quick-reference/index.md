@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Fast operational tools for troubleshooting and validation.
+Virtualization quick-reference hub: emergency checks, vCenter commands, VM performance checks, and a slow-VM decision tree — one-stop for rapid incident response.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

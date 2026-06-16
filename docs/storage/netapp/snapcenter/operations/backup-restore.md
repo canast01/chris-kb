@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Operations](index.md) reference.
+SnapCenter backup and restore: creating resource groups, on-demand Protect Now, restore to original location, clone from backup, and SnapVault restore procedure.
 
 *Applies to: SnapCenter 5.x*
 </div>

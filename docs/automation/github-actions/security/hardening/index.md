@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [GitHub Actions Security](../index.md) reference.
+GitHub Actions hardening: pinning actions to commit SHAs, restricting workflow triggers, disabling token permissions, branch protection rules, and audit log review.
 
 *Applies to: GitHub Actions*
 </div>

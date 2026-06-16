@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Encryption reference covering Encryption In-Flight, Notes.
+SRDF/A encryption: in-flight data encryption over FCIP using GigE Encryption Module (GEM), certificate management, and encryption status verification commands.
 
 *Applies to: SRDF/A*
 </div>

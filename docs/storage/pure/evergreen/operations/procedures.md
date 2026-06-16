@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Evergreen Operations](index.md) reference.
+Pure Evergreen procedures: requesting capacity upgrades, scheduling controller refreshes, coordinating with Pure account team, and validating entitlements post-change.
 
 *Applies to: Evergreen*
 </div>

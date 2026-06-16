@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Security](index.md) reference.
+FabricOS hardening: disabling unused services (Telnet, HTTP), enforcing HTTPS management, SAN zoning strict mode, and security audit policy baseline.
 
 *Applies to: Brocade FOS 9.x*
 </div>

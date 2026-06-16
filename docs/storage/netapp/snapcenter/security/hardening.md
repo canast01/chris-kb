@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Security](index.md) reference.
+SnapCenter hardening: TLS 1.2 enforcement, disabling unused plug-in ports, Windows Firewall rules, CIS benchmark alignment, and audit log retention.
 
 *Applies to: SnapCenter 5.x*
 </div>

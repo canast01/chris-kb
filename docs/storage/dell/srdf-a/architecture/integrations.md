@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SRDF/A](../index.md) reference.
+SRDF/A integrations: coexistence with TimeFinder snapshots, RecoverPoint on VMAX, EMC SRDF/EDP (extended distance), and Symmetrix DMX compatibility.
 
 *Applies to: SRDF/A*
 </div>

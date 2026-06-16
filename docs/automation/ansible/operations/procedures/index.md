@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Ansible Operations](../index.md) reference.
+Ansible operational procedures: deploying playbooks, managing inventory sources, rotating vault passwords, and promoting changes from dev to production environments.
 
 *Applies to: Ansible 2.14+*
 </div>

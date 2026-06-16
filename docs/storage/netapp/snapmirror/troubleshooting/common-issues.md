@@ -9,7 +9,7 @@ search:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Troubleshooting](index.md) reference.
+SnapMirror troubleshooting: `snapmirror show -fields status,health` for broken relationships, transfer failures, missing common snapshots, and NetApp support escalation.
 
 *Applies to: SnapMirror*
 </div>

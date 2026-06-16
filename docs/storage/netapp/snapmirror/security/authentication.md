@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Security](index.md) reference.
+SnapMirror authentication: intercluster cluster peer passphrase management, `cluster peer modify -auth-status ok`, and certificate-based peer authentication.
 
 *Applies to: SnapMirror*
 </div>

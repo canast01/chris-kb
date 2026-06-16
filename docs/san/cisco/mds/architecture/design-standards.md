@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Cisco MDS](../index.md) reference.
+Cisco MDS design standards: VSANs for fabric segmentation, port-channel ISL configuration, N-port virtualisation (NPV) mode, and buffer credit sizing.
 
 *Applies to: Cisco MDS · Nexus*
 </div>

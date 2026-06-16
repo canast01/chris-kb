@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Operations](index.md) reference.
+SnapCenter install and upgrade: Windows Server prerequisites, plug-in deployment to hosts, server version upgrade, and post-upgrade plugin re-validation.
 
 *Applies to: SnapCenter 5.x*
 </div>

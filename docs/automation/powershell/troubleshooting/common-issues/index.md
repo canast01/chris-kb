@@ -9,7 +9,7 @@ search:
 
 
 <div class="kb-summary">
-Part of the [PowerShell Troubleshooting](../index.md) reference.
+PowerShell troubleshooting: execution policy blocks, module import failures, remoting authentication errors, pipeline object type mismatches, and cmdlet version conflicts.
 
 *Applies to: PowerShell 7.x*
 </div>

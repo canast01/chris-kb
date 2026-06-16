@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Cisco MDS](../index.md) reference.
+Cisco MDS authentication: TACACS+ and RADIUS integration via `aaa group server tacacs+`, SSH key enforcement, and local account fallback policy.
 
 *Applies to: Cisco MDS · Nexus*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Encryption reference covering Backup Encryption.
+Veeam encryption: backup job-level encryption, encryption key management in the Veeam console, tape encryption, and password rotation procedures.
 
 *Applies to: Veeam 12.x*
 </div>

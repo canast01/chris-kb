@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Ansible Security](../index.md) reference.
+Ansible access control: SSH key management, service account scoping, sudo privilege restriction, and RBAC controls for AWX/Automation Controller job templates.
 
 *Applies to: Ansible 2.14+*
 </div>

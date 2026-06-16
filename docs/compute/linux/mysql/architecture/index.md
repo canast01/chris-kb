@@ -6,7 +6,7 @@ tags:
 # MySQL / MariaDB — Architecture
 
 <div class="kb-summary">
-Architecture overview, design standards, and integrations.
+MySQL/MariaDB architecture: primary-replica replication topology, Galera cluster design, InnoDB buffer pool sizing, binary log retention, and storage layout.
 
 *Applies to: MySQL 8.x · MariaDB 10.x*
 </div>

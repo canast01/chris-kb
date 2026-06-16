@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Operations](index.md) reference.
+SnapCenter automation scripts: PowerShell `Open-SmConnection` wrappers, pre-/post-backup hook scripts, and REST API integration for job status reporting.
 
 *Applies to: SnapCenter 5.x*
 </div>

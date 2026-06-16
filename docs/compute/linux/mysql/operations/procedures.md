@@ -6,7 +6,7 @@ tags:
 # MySQL / MariaDB — Procedures
 
 <div class="kb-summary">
-MySQL / MariaDB procedures reference.
+MySQL/MariaDB procedures: schema changes with `pt-online-schema-change`, user and privilege management, failover promotion, and maintenance window tasks.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

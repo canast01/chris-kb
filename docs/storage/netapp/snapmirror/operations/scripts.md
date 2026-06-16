@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Operations](index.md) reference.
+SnapMirror automation scripts: ONTAP REST API and `ontap-python` library examples for relationship health reporting and auto-resync on lag threshold breach.
 
 *Applies to: SnapMirror*
 </div>

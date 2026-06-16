@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Security](index.md) reference.
+SnapMirror access control: ONTAP RBAC role with `snapmirror-*` privileges, SVM admin scoping, intercluster peer authentication, and audit trail review.
 
 *Applies to: SnapMirror*
 </div>

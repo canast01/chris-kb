@@ -6,7 +6,7 @@ tags:
 # PostgreSQL — Backup Restore
 
 <div class="kb-summary">
-PostgreSQL backup restore reference.
+PostgreSQL backup: `pg_dump`, `pg_basebackup`, WAL archiving with `archive_command`, point-in-time recovery using `recovery.conf`, and pgBackRest integration.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

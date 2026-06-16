@@ -6,7 +6,7 @@ tags:
 # SQL Server — Security
 
 <div class="kb-summary">
-Access control, authentication, encryption, and hardening.
+SQL Server security: Windows Authentication vs. mixed-mode policy, `sp_addlogin`, TDE encryption, Always Encrypted, and CIS Benchmark hardening.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

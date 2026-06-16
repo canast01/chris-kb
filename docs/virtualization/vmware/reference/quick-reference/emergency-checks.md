@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Use these when there is a major incident.
+Emergency checks: vCenter service status, ESXi PSOD scan, vSAN health degradation, storage path loss, and cluster event log review — run first in any major incident.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

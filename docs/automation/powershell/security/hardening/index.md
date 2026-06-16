@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [PowerShell Security](../index.md) reference.
+PowerShell hardening: `Set-ExecutionPolicy AllSigned`, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode enforcement.
 
 *Applies to: PowerShell 7.x*
 </div>

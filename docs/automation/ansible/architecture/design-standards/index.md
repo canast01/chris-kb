@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Ansible Architecture](../index.md) reference.
+Ansible design standards: directory layout, role naming, variable precedence rules, vault encryption policy, and idempotency requirements for production playbooks.
 
 *Applies to: Ansible 2.x*
 </div>

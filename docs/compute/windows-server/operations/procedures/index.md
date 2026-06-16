@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Day-to-day operational tasks and how-to guides.
+Windows Server operational procedures: disk management, role and feature install, IIS/MSMQ configuration, performance counter review, and patching runbook.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

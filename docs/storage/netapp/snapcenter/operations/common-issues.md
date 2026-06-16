@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Operations](index.md) reference.
+SnapCenter known issues: backup job timeout on large databases, plugin service failures, VSS quiesce errors, clone mount failures, and repository sync issues.
 
 *Applies to: SnapCenter 5.x*
 </div>

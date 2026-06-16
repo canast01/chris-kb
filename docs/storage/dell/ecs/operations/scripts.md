@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Dell ECS](../index.md) reference.
+Dell ECS automation scripts: `curl` REST API examples for bucket management, namespace health polling, replication status checks, and alert-to-ticket scripts.
 
 *Applies to: ECS 3.x*
 </div>

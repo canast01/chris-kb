@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-When a VM is reported as slow, check these in order:
+VM performance quick checks: CPU ready %, memory balloon/swap, storage latency via `esxtop`, network packet drops, and vSAN resync — run in this order for slow VM triage.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

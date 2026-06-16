@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Build and operating standards for virtualization platforms.
+VMware standards hub: host build standard, VM naming conventions, network port-group naming, cluster design rules, and change control requirements.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SRDF/S Architecture](index.md) reference.
+SRDF/S design standards: maximum distance and latency requirements for synchronous SRDF, RDF group sizing, and SRDF/S coexistence with Concurrent SRDF/A.
 
 *Applies to: SRDF/S*
 </div>

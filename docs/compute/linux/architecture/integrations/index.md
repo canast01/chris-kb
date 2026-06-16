@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Integration with other platforms and external systems.
+Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, NFS/CIFS mount management, Ansible automation hooks, and syslog forwarding to SIEM.
 
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>

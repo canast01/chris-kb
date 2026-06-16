@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Security](index.md) reference.
+SnapCenter encryption: backup data encrypted at-rest on ONTAP volumes, in-transit SSL/TLS configuration, certificate management, and SMB3 encryption enforcement.
 
 *Applies to: SnapCenter 5.x*
 </div>

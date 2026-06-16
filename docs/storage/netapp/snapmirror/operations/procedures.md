@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Operations](index.md) reference.
+SnapMirror procedures: creating protection relationships, scheduling updates, quiescing for maintenance, breaking for failover, resyncing after outage, and deleting stale relationships.
 
 *Applies to: SnapMirror*
 </div>

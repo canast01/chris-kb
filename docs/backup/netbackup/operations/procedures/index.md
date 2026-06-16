@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Procedures reference covering Backup Policies.
+NetBackup operational procedures: creating and tuning backup policies, storage unit configuration, schedule management, and deduplication pool maintenance.
 
 *Applies to: NetBackup 10.x*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Authentication reference covering Related Reference.
+Dell FoD authentication: SCG service account management, CloudIQ SSO configuration, API token rotation, and audit trail review for capacity entitlement changes.
 
 *Applies to: Dell FOD*
 </div>

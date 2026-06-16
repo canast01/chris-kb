@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Operations](index.md) reference.
+SnapMirror install and upgrade: ONTAP cluster peering prerequisites, intercluster LIF creation, and SnapMirror policy migration between ONTAP major versions.
 
 *Applies to: SnapMirror*
 </div>

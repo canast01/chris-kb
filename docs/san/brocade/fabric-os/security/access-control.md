@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Security](index.md) reference.
+FabricOS access control: RBAC role assignment, `userconfig` CLI, default account password policy, and chassis-level admin vs. operator permissions.
 
 *Applies to: Brocade FOS 9.x*
 </div>

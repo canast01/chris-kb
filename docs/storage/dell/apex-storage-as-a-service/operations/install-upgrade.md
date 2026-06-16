@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-APEX Storage as a Service — Install & Upgrade reference.
+APEX STaaS install and upgrade: SCG registration for telemetry, software stack upgrade workflow via CloudIQ portal, and post-upgrade health validation.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>

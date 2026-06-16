@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Cisco MDS](../index.md) reference.
+Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS service profile SAN boot, and SNMP/syslog target configuration.
 
 *Applies to: Cisco MDS · Nexus*
 </div>

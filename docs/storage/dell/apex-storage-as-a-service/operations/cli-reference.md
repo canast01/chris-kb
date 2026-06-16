@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [APEX Storage as a Service](index.md) reference.
+APEX STaaS API reference: CloudIQ REST API for capacity reporting, `GET /v1/storage-objects`, snapshot management endpoints, and OAuth2 authentication.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Architecture](index.md) reference.
+FabricOS design standards: ISL oversubscription limits, trunking requirements, fabric-wide consistency settings, and zoning naming conventions.
 
 *Applies to: Brocade FOS 9.x*
 </div>

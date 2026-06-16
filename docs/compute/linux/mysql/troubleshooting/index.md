@@ -8,7 +8,7 @@ search:
 # MySQL / MariaDB — Troubleshooting
 
 <div class="kb-summary">
-Common issues, diagnostics, and escalation.
+MySQL/MariaDB troubleshooting hub: replication failures, performance degradation, crash recovery, and escalation path to MySQL Enterprise Support.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

@@ -6,7 +6,7 @@ tags:
 # PostgreSQL — Health Checks
 
 <div class="kb-summary">
-PostgreSQL health checks reference.
+PostgreSQL health checks: `pg_stat_replication`, `pg_stat_activity`, `pg_stat_bgwriter`, replication lag queries, and bloat monitoring with `pg_bloat_check`.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapCenter Security](index.md) reference.
+SnapCenter access control: RBAC role assignment for App Backup Admin and Backup Viewer, `Get-SmRole`, resource group ownership scoping, and audit trail review.
 
 *Applies to: SnapCenter 5.x*
 </div>

@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-EC2 — Images, Volumes & Snapshots reference.
+EC2 images, volumes & snapshots CLI: `aws ec2 describe-images`, `create-snapshot`, `create-volume`, `register-image`, `modify-volume`, and copy/deregister operations.
 
 *Applies to: AWS*
 </div>

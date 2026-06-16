@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Architecture](index.md) reference.
+FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav management platform pairing, vCenter plugin registration, and syslog targets.
 
 *Applies to: Brocade FOS 9.x*
 </div>

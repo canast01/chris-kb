@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [VxRail](../index.md) reference.
+VxRail integrations: vCenter plug-in installation, VxRail Manager API registration, Dell EMC CloudIQ telemetry, and SupportAssist automatic log collection.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>

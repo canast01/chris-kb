@@ -6,7 +6,7 @@ tags:
 # MySQL / MariaDB — Health Checks
 
 <div class="kb-summary">
-MySQL / MariaDB health checks reference.
+MySQL/MariaDB health checks: `SHOW SLAVE STATUS`, `SHOW PROCESSLIST`, `SHOW ENGINE INNODB STATUS`, `mysqlcheck`, and replication lag monitoring queries.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

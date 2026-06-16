@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Account, Subscriptions & Resource Groups reference.
+Azure account CLI: `az account set`, `az group create/list/delete`, `az subscription list`, `az policy assignment create`, and resource lock management.
 
 *Applies to: Azure*
 </div>

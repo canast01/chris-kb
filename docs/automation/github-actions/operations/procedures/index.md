@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [GitHub Actions Operations](../index.md) reference.
+GitHub Actions procedures: creating workflows, configuring environments, managing self-hosted runners, rotating secrets, and monitoring job execution in the Actions console.
 
 *Applies to: GitHub Actions*
 </div>

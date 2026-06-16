@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Architecture](index.md) reference.
+SnapMirror design standards: async vs. sync policy selection, RPO and retention policy per relationship type, inter-cluster LIF requirements, and fan-out topology limits.
 
 *Applies to: SnapMirror*
 </div>

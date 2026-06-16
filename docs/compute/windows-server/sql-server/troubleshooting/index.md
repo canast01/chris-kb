@@ -8,7 +8,7 @@ search:
 # SQL Server — Troubleshooting
 
 <div class="kb-summary">
-Common issues, diagnostics, and escalation.
+SQL Server troubleshooting hub: AG health, job failures, deadlocks, tempdb contention, and escalation path to Microsoft Premier Support.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

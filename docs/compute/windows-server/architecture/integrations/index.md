@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Integration with other platforms and external systems.
+Windows Server integration: Active Directory domain join, SCOM agent, SCCM/ConfigMgr management, NFS client configuration, and SNMP/WMI monitoring hooks.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

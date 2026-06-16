@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Pure Storage Evergreen//One](../index.md) reference.
+Evergreen//One automation scripts: Python examples for subscription consumption reporting, Pure REST API capacity queries, and auto-alert for tier threshold breach.
 
 *Applies to: Evergreen//One*
 </div>

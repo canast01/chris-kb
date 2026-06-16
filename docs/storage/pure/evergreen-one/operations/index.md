@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Pure Storage Evergreen//One](../index.md) reference.
+Evergreen//One operations: subscription usage monitoring, controller upgrade scheduling, capacity tier activation, and health status via Pure1 portal.
 
 *Applies to: Evergreen//One*
 </div>

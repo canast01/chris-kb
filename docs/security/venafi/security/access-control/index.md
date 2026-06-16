@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Venafi](../../index.md) reference. Least-privilege role assignment must be enforced, with service account permissions scoped to specific policy folders only. Separation of duties separates CA trust anchor management from day-to-day certificate operations.
+Venafi access control: least-privilege role assignment in Trust Protection Platform, API token scoping, certificate team RBAC configuration, and audit log review.
 
 *Applies to: Venafi TLS Protect*
 </div>

@@ -8,7 +8,7 @@ tags:
 
 
 <div class="kb-summary">
-AI operational notes and deep-dive references.
+Cloud AI certifications tracker: AWS ML Specialty, Azure AI Engineer, and OpenAI certifications with exam objectives, study resources, and progress notes.
 </div>
 ```text
 ┌────────────────────────────────────────── Certifications Ai ──────────────────────────────────────────┐

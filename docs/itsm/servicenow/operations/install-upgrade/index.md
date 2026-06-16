@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-ServiceNow cloud instances are upgraded by ServiceNow as part of the managed service. This page covers the upgrade lifecycle from planning through post-upgrade validation, including plugin management, skipped version handling, and rollback considerations.
+ServiceNow upgrade management: upgrade scheduling via Now Support, pre-upgrade instance clone and testing, plugin compatibility checks, and post-upgrade validation.
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>

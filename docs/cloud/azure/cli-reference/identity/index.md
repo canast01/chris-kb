@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Identity & RBAC reference.
+Azure identity CLI: `az ad user/group/sp`, `az role assignment create`, `az policy definition create`, `az keyvault set-policy`, and managed identity assignment.
 
 *Applies to: Azure*
 </div>

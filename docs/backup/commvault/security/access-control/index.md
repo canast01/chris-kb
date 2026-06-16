@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Access Control reference covering RBAC Roles, Audit Trail.
+Commvault access control: RBAC role assignment, user group scoping, audit trail configuration, and MFA enforcement for CommCell Console and Web Console.
 
 *Applies to: Commvault 2024.x*
 </div>

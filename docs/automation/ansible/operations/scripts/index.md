@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Ansible Operations](../index.md) reference.
+Ansible automation scripts: wrapper scripts for playbook execution, dynamic inventory queries, vault-encrypted credential injection, and CI/CD pipeline integration patterns.
 
 *Applies to: Ansible 2.14+*
 </div>

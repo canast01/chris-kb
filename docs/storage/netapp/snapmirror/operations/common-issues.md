@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [SnapMirror Operations](index.md) reference.
+SnapMirror known issues: lagging relationships, abort after transfer, source volume offline, missing common snapshot causing initialize failure, and ONTAP version mismatch.
 
 *Applies to: SnapMirror*
 </div>

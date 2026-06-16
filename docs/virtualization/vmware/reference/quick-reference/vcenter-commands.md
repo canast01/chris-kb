@@ -8,7 +8,7 @@ tags:
 
 
 <div class="kb-summary">
-SSH to the vCenter appliance before running these commands.
+vCenter SSH command reference: `service-control --status/--start/--stop`, `vmon-cli`, appliance health checks, DB vacuum, and certificate status — run from the VCSA shell.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

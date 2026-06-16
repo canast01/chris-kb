@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Sizing guidelines, design standards, and best practices.
+Windows Server design standards: domain join requirements, WSUS patch cadence, storage layout (C:/D: split), NTP chain config, and Group Policy baseline.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

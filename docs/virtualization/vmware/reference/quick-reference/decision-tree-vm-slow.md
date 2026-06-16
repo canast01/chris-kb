@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-VM Slow Decision Tree reference covering First Decision.
+VM slow decision tree: branching logic covering CPU ready, memory balloon, storage latency, and network saturation — walk through in order for systematic diagnosis.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

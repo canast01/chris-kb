@@ -9,7 +9,7 @@ search:
 
 
 <div class="kb-summary">
-Part of the [Ansible Troubleshooting](../index.md) reference.
+Ansible troubleshooting: unreachable hosts, privilege escalation failures, variable precedence conflicts, vault decryption errors, and module compatibility issues.
 
 *Applies to: Ansible 2.14+*
 </div>

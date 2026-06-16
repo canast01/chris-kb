@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Installation, upgrade, patching, and decommission.
+Linux install and upgrade: kickstart/preseed PXE setup, OS patching with `yum update` or `apt upgrade`, kernel module management, and decommission steps.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

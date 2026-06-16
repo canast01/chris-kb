@@ -9,7 +9,7 @@ tags:
 
 
 <div class="kb-summary">
-SAN operational notes and deep-dive references.
+SAN certifications tracker: Brocade BCSM, Cisco CCNP Storage, and related SAN-track certifications with exam objectives, study resources, and progress notes.
 </div>
 ```text
 ┌───────────────────────────────────────── Certifications San ──────────────────────────────────────────┐

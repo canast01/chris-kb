@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Storage Accounts & Blobs reference.
+Azure storage CLI: `az storage account create`, `az storage blob upload/download`, `az storage container create`, `az storage copy`, and lifecycle management.
 
 *Applies to: Azure*
 </div>

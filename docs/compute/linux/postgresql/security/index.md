@@ -6,7 +6,7 @@ tags:
 # PostgreSQL — Security
 
 <div class="kb-summary">
-Access control, authentication, encryption, and hardening.
+PostgreSQL security: `pg_hba.conf` authentication rules, role-based access, SSL certificate enforcement, `row_security` policies, and `pgaudit` configuration.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

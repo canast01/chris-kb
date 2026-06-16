@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [FOD](index.md) reference.
+Dell FoD CLI reference: `emccollect` usage, SCG telemetry commands, capacity entitlement queries, and `symcli` for Flex on Demand pool management.
 
 *Applies to: Dell FOD*
 </div>

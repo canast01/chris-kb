@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Standards](index.md) reference.
+ESXi host build standard: NTP server list, syslog destination, vSwitch MTU, BIOS power profile, scratch datastore, and lockdown mode requirements.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

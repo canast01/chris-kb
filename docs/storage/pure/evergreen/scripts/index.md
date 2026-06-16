@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Pure Storage Evergreen](../index.md) reference.
+Pure Evergreen automation scripts: REST API calls for entitlement status, Python client for capacity trending, and automated alert integration.
 
 *Applies to: Evergreen*
 </div>

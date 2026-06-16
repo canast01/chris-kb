@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [VxRail](../index.md) reference.
+VxRail design standards: node count and cluster size limits, vSAN-backed storage requirements, witness node placement, dual-switch topology rules, and L2 network requirements.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>

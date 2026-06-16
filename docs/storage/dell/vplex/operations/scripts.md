@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Dell VPLEX](../index.md) reference.
+Dell VPLEX automation scripts: `vplexcli` and Python REST API examples for distributed device status, cluster health polling, and migration task management.
 
 *Applies to: VPLEX*
 </div>

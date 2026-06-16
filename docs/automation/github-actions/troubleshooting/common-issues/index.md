@@ -9,7 +9,7 @@ search:
 
 
 <div class="kb-summary">
-Part of the [GitHub Actions Troubleshooting](../index.md) reference.
+GitHub Actions troubleshooting: failed steps, permission errors, runner connectivity issues, secret resolution failures, and cache invalidation problems.
 
 *Applies to: GitHub Actions*
 </div>

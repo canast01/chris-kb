@@ -8,7 +8,7 @@ search:
 # PostgreSQL — Troubleshooting
 
 <div class="kb-summary">
-Common issues, diagnostics, and escalation.
+PostgreSQL troubleshooting hub: replication failures, bloat, lock contention, crash recovery, and escalation path to EnterpriseDB or community support.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>

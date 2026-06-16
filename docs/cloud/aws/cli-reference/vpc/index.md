@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-VPC & Networking reference.
+VPC & networking CLI: `aws ec2 describe-vpcs`, `create-subnet`, `describe-route-tables`, `authorize-security-group-ingress`, and peering/NAT gateway management.
 
 *Applies to: AWS*
 </div>

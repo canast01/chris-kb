@@ -8,7 +8,7 @@ search:
 # SQL Server — Common Issues
 
 <div class="kb-summary">
-SQL Server common issues reference.
+SQL Server troubleshooting: AG synchronization failures, blocking queries, `msdb` database corruption, failed jobs, and disk I/O pressure diagnosis.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [VxRail](../index.md) reference.
+VxRail security: vCenter SSO integration, VxRail Manager account lockout policy, TLS 1.2 enforcement, SCG certificate management, and role separation for VxRail Admin.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>

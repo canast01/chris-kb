@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Hardening reference covering Audit Log, Security Baseline.
+CloudIQ hardening: audit log retention policy, MFA enforcement for admin accounts, IP allowlist configuration, and SIEM integration via syslog or REST API.
 
 *Applies to: CloudIQ*
 </div>

@@ -6,7 +6,7 @@ tags:
 # SQL Server — Procedures
 
 <div class="kb-summary">
-SQL Server procedures reference.
+SQL Server procedures: index rebuild and statistics update, user and role management, linked server configuration, and maintenance plan creation.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>

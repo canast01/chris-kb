@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-FOD — Backup & Restore reference.
+Dell FoD (Flex on Demand) backup and restore: entitlement file backup, SCG configuration export, and procedure to restore capacity licences after replacement.
 
 *Applies to: Dell FOD*
 </div>

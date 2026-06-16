@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Keystone Operations](index.md) reference.
+NetApp Keystone procedures: burst capacity activation, storage tier changes, scheduled report export, and capacity rebalancing requests via NetApp support.
 
 *Applies to: Keystone STaaS*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Cisco MDS](../index.md) reference.
+Cisco MDS procedures: `show flogi database`, zone member management with `zone name`, port activation, `copy running-config startup-config`, and SUP switchover.
 
 *Applies to: Cisco MDS · Nexus*
 </div>

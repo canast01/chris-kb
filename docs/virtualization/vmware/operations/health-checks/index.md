@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Reusable health checks for virtualization operations.
+Virtualization health checks: ESXi host connectivity, cluster HA/DRS status, datastore space, vSAN health, and vCenter service status — reusable across VMware products.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>

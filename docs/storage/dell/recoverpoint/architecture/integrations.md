@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [RecoverPoint](../index.md) > [Architecture](index.md) reference.
+RecoverPoint integrations: vSphere plugin registration, VMAX and XtremIO production array pairing, SRDF coexistence, and management via Unisphere for RecoverPoint.
 
 *Applies to: RecoverPoint 5.x*
 </div>

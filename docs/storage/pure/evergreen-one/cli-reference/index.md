@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Evergreen//One](../index.md) reference.
+Pure Evergreen//One CLI reference: `purearray list`, `purevolume list`, `purejob list`, subscription capacity reporting via `puresubscription`, and evergreen upgrade commands.
 
 *Applies to: Evergreen//One*
 </div>

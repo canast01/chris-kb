@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Encryption reference covering Backup Data Encryption.
+NetBackup encryption: KMS server configuration, backup data encryption policy settings, client-side encryption, and encryption key lifecycle management.
 
 *Applies to: NetBackup 10.x*
 </div>

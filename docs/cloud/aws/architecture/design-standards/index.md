@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [Architecture](../index.md) section.
+AWS architecture design standards: multi-account landing zone layout, VPC CIDR allocation, transit gateway design, IAM boundary policies, and tagging strategy.
 
 *Applies to: AWS*
 </div>

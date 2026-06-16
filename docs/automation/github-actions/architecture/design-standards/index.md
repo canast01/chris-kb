@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [GitHub Actions Architecture](../index.md) reference.
+GitHub Actions design standards: workflow file structure, reusable workflow patterns, environment gates, secret scoping, and self-hosted runner sizing guidelines.
 
 *Applies to: GitHub Actions*
 </div>

@@ -7,7 +7,7 @@ tags:
 
 
 <div class="kb-summary">
-Part of the [PowerShell Security](../index.md) reference.
+PowerShell authentication: credential objects, `Get-Credential`, service account management, certificate-based auth, and `-UseDefaultCredentials` with Kerberos.
 
 *Applies to: PowerShell 7.x*
 </div>

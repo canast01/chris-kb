@@ -6,7 +6,7 @@ tags:
 
 
 <div class="kb-summary">
-Storage operational notes and deep-dive references.
+Storage certifications tracker: NetApp NCSA, Pure Storage PSE, Dell SC, and related exam objectives with study plans and progress notes.
 </div>
 ```text
 ┌─────────────────────────────────────── Certifications Storage ────────────────────────────────────────┐
