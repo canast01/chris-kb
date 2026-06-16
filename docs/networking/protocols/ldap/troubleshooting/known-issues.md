@@ -14,54 +14,52 @@ Catalog of known LDAP and LDAPS issues covering bind failures, certificate error
 </div>
 
 ```text
-┌────────────────────────────────────── Networking Protocols Ldap ──────────────────────────────────────┐
+┌──────────────────────────────────────────── LDAP / LDAPS ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Protocols: Networking Protocols Ldap platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Networking Protocols Ldap management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                    Directory protocol — bind, search, AD/OpenLDAP backends                    │   │
+│   │                Protocols: LDAP (389) · LDAPS (636) · Global Catalog (3268/3269)               │   │
+│   │                Management: ldapsearch CLI / Apache Directory Studio / ADSI Edit               │   │
+│   │              Client bind -> Search request -> Directory lookup -> Result/referral             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │             Bind            │  │       Simple/SASL bind      │  │   Credential format varies  │   │
+│   │            Search           │  │       BaseDN + filter       │  │    base/onelevel/subtree    │   │
+│   │            Schema           │  │     Object classes/attrs    │  │    Defines storable data    │   │
+│   │           Security          │  │        LDAPS/StartTLS       │  │     Encrypts bind+search    │   │
+│   │           Backend           │  │        AD / OpenLDAP        │  │     Diff. DN conventions    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    ldapsearch    │ CLI search tool  │     LDAP/LDAPS    │    Bind DN+pw    │   Quick tests    │   │
+│   │     StartTLS     │  Upgrade to TLS  │     LDAP (389)    │       N/A        │Alt. to LDAPS port│   │
+│   │  Global Catalog  │Forest-wide search│     TCP 3268/9    │   Same as LDAP   │ AD multi-domain  │   │
+│   │     Referral     │Points to other DC│        N/A        │       N/A        │Client must follow│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Protocols Ldap infrastructure · management network · monitoring               │
+│  Physical: LDAP server(s) (AD DC or OpenLDAP) - clients over network                                  │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Protocols          = Networking Protocols Ldap platform overview and core concepts                 │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Bind DN        = the DN used to authenticate to the directory                                        │
+│  BaseDN         = starting point in the tree for a search                                             │
+│  Distinguished Name = full object path (cn=...,ou=...,dc=...)                                         │
+│  Simple bind    = plaintext user/pass bind, should use TLS                                            │
+│  SASL bind      = bind via pluggable mechanism (e.g. GSSAPI/Kerberos)                                 │
+│  LDAPS          = LDAP over TLS on port 636, encrypted from connect                                   │
+│  StartTLS       = upgrades a plaintext 389 connection to encrypted                                    │
+│  Global Catalog = AD service indexing objects across forest domains                                   │
+│  Referral       = points client to another server for a partial result                                │
+│  Paged results  = retrieves large result sets in pages                                                │
+│  objectClass    = schema attribute defining allowed attrs for an object                               │
+│  VLV            = Virtual List View; paging for sorted result sets                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

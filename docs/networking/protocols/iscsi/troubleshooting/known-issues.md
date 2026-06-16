@@ -14,54 +14,52 @@ Catalog of known iSCSI issues covering initiator discovery, session stability, m
 </div>
 
 ```text
-┌───────────────────────────────────── Networking Protocols Iscsi ──────────────────────────────────────┐
+┌──────────────────────────────────────────────── iSCSI ────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Protocols: Networking Protocols Iscsi platform                        │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                   Management: Networking Protocols Iscsi management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                Block storage over TCP/IP — discovery, sessions, CHAP, multipath               │   │
+│   │                                  Protocols: iSCSI (TCP 3260)                                  │   │
+│   │              Management: iscsiadm (Linux) / iSCSI Initiator (Windows) / array UI              │   │
+│   │              Discovery -> Login (CHAP) -> Session established -> LUN -> Multipath             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Initiator          │  │      SW/HW iSCSI client     │  │         IQN identity        │   │
+│   │            Target           │  │      Array iSCSI portal     │  │        1+ portal IPs        │   │
+│   │             Auth            │  │             CHAP            │  │    Optional, recommended    │   │
+│   │           Session           │  │        iSCSI session        │  │     1+ TCP conn per path    │   │
+│   │          Multipath          │  │      DM-multipath/MPIO      │  │    Required for HA paths    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    Initiator     │Host iSCSI client │      TCP 3260     │   CHAP (opt.)    │    iqn naming    │   │
+│   │  Target portal   │  Array endpoint  │      TCP 3260     │   CHAP (opt.)    │ Multi-IP for HA  │   │
+│   │    Discovery     │   Find targets   │      TCP 3260     │       N/A        │iscsiadm discovery│   │
+│   │    Multipath     │ Path aggregation │        N/A        │       N/A        │multipathd service│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Protocols Iscsi infrastructure · management network · monitoring              │
+│  Physical: host NICs/iSCSI HBAs - IP network - array iSCSI portal ports                               │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Protocols          = Networking Protocols Iscsi platform overview and core concepts                │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  IQN            = iSCSI Qualified Name; unique initiator/target ID                                    │
+│  Portal         = an IP:port pair where a target listens                                              │
+│  CHAP           = Challenge Handshake Auth Protocol for iSCSI sessions                                │
+│  Session        = logical connection, 1+ TCP conns, between init/target                               │
+│  Multipath      = aggregating paths to a LUN for redundancy/perf                                      │
+│  node.startup   = iscsiadm setting controlling auto-login at boot                                     │
+│  Jumbo frames   = MTU 9000; reduces overhead for iSCSI throughput                                     │
+│  Discovery session = temp session used to enumerate available targets                                 │
+│  Keepalive timeout = how long before a stalled session is dead                                        │
+│  multipathd     = Linux daemon managing device-mapper multipath                                       │
+│  Failback       = returning I/O to the preferred path after recovery                                  │
+│  iface binding  = associating a specific NIC with an iSCSI session                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

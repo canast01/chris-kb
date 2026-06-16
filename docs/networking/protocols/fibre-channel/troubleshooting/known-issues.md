@@ -15,54 +15,52 @@ Catalog of known Fibre Channel issues covering HBA, fabric login, zoning, and li
 </div>
 
 ```text
-┌───────────────────────────────── Networking Protocols Fibre Channel ──────────────────────────────────┐
+┌──────────────────────────────────────────── Fibre Channel ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                     Protocols: Networking Protocols Fibre Channel platform                    │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │               Management: Networking Protocols Fibre Channel management console               │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                  Dedicated SAN fabric — HBA, zoning, fabric login, 16G/32G FC                 │   │
+│   │                       Protocols: FC-SW (native FC) · FCP (SCSI over FC)                       │   │
+│   │               Management: Switch CLI (Brocade FOS / Cisco NX-OS) / HBA software               │   │
+│   │               HBA FLOGI -> Fabric login -> Zoning lookup -> Target PLOGI -> I/O               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │             HBA             │  │       Host Bus Adapter      │  │       Physical FC port      │   │
+│   │            Fabric           │  │        FC switch(es)        │  │     Name server, zoning     │   │
+│   │            Zoning           │  │       Soft/hard zoning      │  │      WWN or port-based      │   │
+│   │            Target           │  │    Storage array FC port    │  │        Presents LUNs        │   │
+│   │            Fault            │  │       CRC/link errors       │  │      SFP/cable quality      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       HBA        │ Host FC connect  │       FC-SW       │   WWN identity   │Driver ver matters│   │
+│   │    FC switch     │ Fabric services  │       FC-SW       │    Zoning ACL    │   Name server    │   │
+│   │     Zoneset      │  Access control  │        N/A        │       N/A        │Must be activated │   │
+│   │       ISL        │Inter-switch link │       FC-SW       │       N/A        │ BB credit limits │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Protocols Fibre Channel infrastructure · management network · monitoring      │
+│  Physical: HBAs in hosts - FC switches/directors - array FC ports - fiber                             │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Protocols          = Networking Protocols Fibre Channel platform overview and core concepts        │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  HBA            = Host Bus Adapter; the FC interface card in a server                                 │
+│  WWN            = World Wide Name; unique 64-bit FC device identifier                                 │
+│  FLOGI          = Fabric Login; HBA registers with the fabric on link-up                              │
+│  PLOGI          = Port Login; device-to-device login before I/O starts                                │
+│  Zoning         = SAN access control; restricts initiator/target pairs                                │
+│  Zoneset        = the active collection of zones enforced on a fabric                                 │
+│  Name server    = fabric service mapping WWNs to addresses                                            │
+│  ISL            = Inter-Switch Link; connects two FC switches                                         │
+│  BB credit      = Buffer-to-Buffer credit; FC flow control mechanism                                  │
+│  F_Port         = switch port connected to a host or storage HBA                                      │
+│  E_Port         = switch port connected to another switch (forms ISL)                                 │
+│  LOGO           = Logout; HBA explicitly leaving the fabric                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

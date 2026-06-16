@@ -14,54 +14,52 @@ Catalog of known DNS bugs, error codes, and workarounds covering resolution fail
 </div>
 
 ```text
-┌────────────────────────────────────── Networking Protocols Dns ───────────────────────────────────────┐
+┌───────────────────────────────────────────────── DNS ─────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Protocols: Networking Protocols Dns platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Networking Protocols Dns management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                  Name resolution — AD-integrated zones, split-horizon, DNSSEC                 │   │
+│   │                     Protocols: DNS (UDP/TCP 53) · DNSSEC (signed records)                     │   │
+│   │                Management: Windows DNS Manager / BIND named.conf / PowerDNS API               │   │
+│   │             Client query -> Resolver -> Authoritative/forwarder -> Cached response            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Resolution         │  │      Recursive resolver     │  │        Caches per TTL       │   │
+│   │          Authority          │  │      Authoritative zone     │  │       Source of truth       │   │
+│   │         Integration         │  │      AD-integrated DNS      │  │      Replicates via AD      │   │
+│   │           Security          │  │            DNSSEC           │  │    Signed, chain of trust   │   │
+│   │            Split            │  │        Split-horizon        │  │    Diff. internal/extern    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    DNS server    │ Resolves queries │     UDP/TCP 53    │       N/A        │BIND/Win/PowerDNS │   │
+│   │    Forwarder     │Relay to upstream │     UDP/TCP 53    │       N/A        │  Internet zones  │   │
+│   │  AD-integ. zone  │DC-replicated zone│   LDAP (AD repl)  │     AD auth      │  No manual xfer  │   │
+│   │      DNSSEC      │ Signed responses │     UDP/TCP 53    │    Key-based     │ Validates origin │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Protocols Dns infrastructure · management network · monitoring                │
+│  Physical: DNS server(s) - resolver caches on clients - upstream forwarders                           │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Protocols          = Networking Protocols Dns platform overview and core concepts                  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Recursive resolver = walks the DNS hierarchy on behalf of a client                                   │
+│  Authoritative server = holds the actual zone data for a domain                                       │
+│  TTL            = Time To Live; how long a DNS answer may be cached                                   │
+│  SOA record     = Start of Authority; zone primary metadata record                                    │
+│  NXDOMAIN       = response meaning the queried name does not exist                                    │
+│  SERVFAIL       = response meaning the server failed to process query                                 │
+│  Split-horizon  = different answers for internal vs external clients                                  │
+│  AD-integrated zone = DNS zone stored in and replicated via AD                                        │
+│  DNSSEC         = cryptographically signs responses to prevent spoofing                               │
+│  Zone transfer  = AXFR/IXFR; copies zone data between non-AD servers                                  │
+│  Stub zone      = partial zone referencing another server for records                                 │
+│  Cond. forwarder= forwards queries for a domain to a specific server                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

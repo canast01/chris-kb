@@ -15,54 +15,52 @@ Catalog of known TLS issues covering handshake failures, certificate validation 
 </div>
 
 ```text
-┌────────────────────────────────────── Networking Protocols Tls ───────────────────────────────────────┐
+┌────────────────────────────────────────────── TLS / SSL ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Protocols: Networking Protocols Tls platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Networking Protocols Tls management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          Transport encryption — handshake, certificate validation, cipher negotiation         │   │
+│   │                   Protocols: TLS 1.2 / 1.3 (layered under HTTPS/LDAPS/etc.)                   │   │
+│   │                        Management: openssl CLI for testing/diagnostics                        │   │
+│   │              ClientHello -> ServerHello+cert -> Key exchange -> Encrypted session             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Handshake          │  │        TLS handshake        │  │    Negotiates ver+cipher    │   │
+│   │            Trust            │  │      Certificate chain      │  │     Must chain to a root    │   │
+│   │          Validation         │  │        Hostname check       │  │     SAN must match host     │   │
+│   │            Cipher           │  │         Cipher suite        │  │    Both sides must agree    │   │
+│   │            Legacy           │  │         TLS 1.0/1.1         │  │     Disabled by default     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   ClientHello    │ Starts handshake │        TLS        │       N/A        │Lists ver/ciphers │   │
+│   │   ServerHello    │ Sends cert+picks │        TLS        │   Server cert    │ Picks ver/cipher │   │
+│   │ Chain validation │Trust verification│        TLS        │    CA-signed     │Client-side check │   │
+│   │       mTLS       │   Mutual auth    │        TLS        │Client+server cert│Stronger, complex │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Protocols Tls infrastructure · management network · monitoring                │
+│  Physical: N/A — TLS is a protocol layer, not a physical component                                    │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Protocols          = Networking Protocols Tls platform overview and core concepts                  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Handshake      = negotiation establishing a session before data flows                                │
+│  Cipher suite   = combination of algorithms used for a TLS session                                    │
+│  SAN            = Subject Alternative Name; modern hostname match field                               │
+│  CN             = Common Name; legacy field, ignored by modern browsers                               │
+│  Root CA        = top-level trusted CA anchoring a chain                                              │
+│  Intermediate CA= bridges a root CA to issued leaf certs                                              │
+│  mTLS           = mutual TLS; both sides present certificates                                         │
+│  ALPN           = Application-Layer Protocol Negotiation (HTTP/2)                                     │
+│  SNI            = Server Name Indication; hostname sent before cert                                   │
+│  Forward secrecy= session keys safe even if long-term key leaks                                       │
+│  TLS termination= decrypting at a proxy/LB before forwarding plaintext                                │
+│  OCSP stapling  = server includes revocation status in the handshake                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

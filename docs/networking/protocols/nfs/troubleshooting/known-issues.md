@@ -14,54 +14,52 @@ Catalog of known NFS issues covering mount failures, permission errors, NFSv4 be
 </div>
 
 ```text
-┌────────────────────────────────────── Networking Protocols Nfs ───────────────────────────────────────┐
+┌───────────────────────────────────────────────── NFS ─────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Protocols: Networking Protocols Nfs platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Networking Protocols Nfs management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                     Network file sharing — NFSv3/v4.1, exports, ID mapping                    │   │
+│   │             Protocols: NFS (TCP/UDP 2049) · NFSv3 also uses portmapper(111)/mountd            │   │
+│   │                  Management: /etc/exports (server) · mount/showmount (client)                 │   │
+│   │          Client mount -> portmapper/mountd (v3) or direct (v4) -> Export check -> I/O         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Server           │  │      NFS server daemon      │  │     Exports filesystems     │   │
+│   │            Export           │  │      /etc/exports entry     │  │     Client IP/subnet ACL    │   │
+│   │           Mapping           │  │      UID/GID or idmapd      │  │     NFSv4 domain mapping    │   │
+│   │           Locking           │  │     NLM (v3) / built-in     │  │     Diff. lock managers     │   │
+│   │           Caching           │  │      Client attr cache      │  │     actimeo controls it     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       nfsd       │  Serves exports  │    TCP/UDP 2049   │    Export ACL    │   Kernel-based   │   │
+│   │      mountd      │  Mount handler   │    TCP/UDP (v3)   │    Export ACL    │Unused if v4-only │   │
+│   │    rpc.idmapd    │ UID/GID mapping  │      Internal     │       N/A        │Domain must match │   │
+│   │    showmount     │  Lists exports   │    TCP/UDP 2049   │       N/A        │   showmount -e   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Protocols Nfs infrastructure · management network · monitoring                │
+│  Physical: NFS server (array or Linux host) - client hosts - IP network                               │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Protocols          = Networking Protocols Nfs platform overview and core concepts                  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Export         = a server-side directory made available to clients                                   │
+│  NFSv3          = stateless; needs portmapper + mountd alongside nfsd                                 │
+│  NFSv4.1        = stateful; only port 2049, built-in locking                                          │
+│  root_squash    = maps remote root to a non-privileged server user                                    │
+│  no_root_squash = disables root squashing; security risk if misused                                   │
+│  Stale handle   = client cached handle no longer matches server state                                 │
+│  idmapd         = maps NFSv4 numeric IDs to/from names via a domain                                   │
+│  NFS domain     = string client and server idmapd must agree on                                       │
+│  async export   = server acks writes before disk; faster, riskier                                     │
+│  NLM            = Network Lock Manager; file locking for NFSv3                                        │
+│  Hard vs soft   = hard retries forever, soft can return I/O errors                                    │
+│  showmount      = client tool listing the exported paths on a server                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

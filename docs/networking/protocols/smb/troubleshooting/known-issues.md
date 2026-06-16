@@ -14,54 +14,52 @@ Catalog of known SMB issues covering access denied, share enumeration, signing, 
 </div>
 
 ```text
-┌────────────────────────────────────── Networking Protocols Smb ───────────────────────────────────────┐
+┌───────────────────────────────────────────── SMB / CIFS ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Protocols: Networking Protocols Smb platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Networking Protocols Smb management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                Windows-native file sharing — SMB2/3, signing, share permissions               │   │
+│   │                      Protocols: SMB (TCP 445) · NetBIOS (legacy, 137-139)                     │   │
+│   │              Management: net share / Server Manager (Windows) · smb.conf (Samba)              │   │
+│   │               Client connect -> Negotiate version -> Auth -> Tree connect -> I/O              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │         Negotiation         │  │         SMB version         │  │     Picks highest common    │   │
+│   │             Auth            │  │        Kerberos/NTLM        │  │     SPN affects Kerberos    │   │
+│   │           Signing           │  │       Message signing       │  │        Can hurt perf        │   │
+│   │            Share            │  │      Share + NTFS perms     │  │      Both must allow it     │   │
+│   │           Backend           │  │       Windows / Samba       │  │     Diff. admin tooling     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    SMB server    │  Serves shares   │      TCP 445      │  Kerberos/NTLM   │smbd or LanmanServ│   │
+│   │   Share perm.    │   Network ACL    │        N/A        │    AD groups     │Combines with NTFS│   │
+│   │    NTFS perm.    │  Filesystem ACL  │        N/A        │    AD groups     │ Most restrictive │   │
+│   │       SPN        │Service Princ Name│        N/A        │     Kerberos     │Required for Kerb.│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Protocols Smb infrastructure · management network · monitoring                │
+│  Physical: file server (Windows/NAS/Samba) - clients - IP network                                     │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Protocols          = Networking Protocols Smb platform overview and core concepts                  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  SMB            = Server Message Block; Windows-native file sharing                                   │
+│  SMB signing    = crypto integrity check on SMB messages, costs perf                                  │
+│  SMB1           = legacy, insecure version; should remain disabled                                    │
+│  Share perm.    = network-share ACL, combined with NTFS permission                                    │
+│  NTFS perm.     = filesystem-level ACL on the actual files/folders                                    │
+│  SPN            = Service Principal Name; required for Kerberos auth                                  │
+│  NTLM           = legacy challenge-response auth fallback                                             │
+│  Samba          = open-source SMB server/client for Linux/Unix                                        │
+│  smbclient      = Samba CLI tool for listing/connecting to shares                                     │
+│  Oplock         = client-side caching lock for performance                                            │
+│  DFS namespace  = unified share namespace pointing to many targets                                    │
+│  Multichannel   = SMB3 using multiple NICs/paths for one session                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
