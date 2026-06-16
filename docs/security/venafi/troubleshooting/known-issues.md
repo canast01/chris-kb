@@ -14,54 +14,52 @@ Catalog of known Venafi TPP bugs, error codes, and workarounds covering certific
 </div>
 
 ```text
-┌─────────────────────────────────── Security Venafi Troubleshooting ───────────────────────────────────┐
+┌───────────────────────────────────────── Venafi TLS Protect ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                        Venafi: Security Venafi Troubleshooting platform                       │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                 Management: Security Venafi Troubleshooting management console                │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          Machine identity management — certificate discovery, policy, and automation          │   │
+│   │              Protocols: HTTPS (UI/API) · ACME · EST · REST · SSH cert management              │   │
+│   │          Management: Venafi web UI · VCert CLI · REST API · ACME · Terraform provider         │   │
+│   │          Scan -> discover cert -> policy check -> request from CA -> deploy + monitor         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Discovery          │  │       Network scanner       │  │        TLS port sweep       │   │
+│   │            Policy           │  │        Policy folder        │  │      CA, key, SAN rules     │   │
+│   │           Issuance          │  │         CA connector        │  │    DigiCert/MSCA/Entrust    │   │
+│   │           Delivery          │  │      VCert / adaptable      │  │      Deploy to endpoint     │   │
+│   │          Monitoring         │  │       Expiry dashboard      │  │     Alert before expiry     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │TPP / TLS Protect │ Central manager  │     HTTPS 443     │   LDAP / SAML    │ On-prem or cloud │   │
+│   │   CA connector   │Cert issuance link│    CA-specific    │  CA admin creds  │  Per-CA plugin   │   │
+│   │    VCert CLI     │ Cert automation  │    HTTPS (API)    │     API key      │  enroll + renew  │   │
+│   │  Policy folder   │ Policy container │      Internal     │    Role-based    │Inheritable rules │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Security Venafi Troubleshooting infrastructure · management network · monitoring         │
+│  Physical: Venafi server -> CA connectors -> managed endpoints (web, LB, app servers)                 │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Venafi             = Security Venafi Troubleshooting platform overview and core concepts           │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  TPP          = Trust Protection Platform; original on-prem Venafi product name                       │
+│  TLS Protect  = current Venafi platform name; cloud or on-prem deployment                             │
+│  Policy folder = Venafi object defining CA, key length, SAN, and renewal rules                        │
+│  CA connector = plugin linking Venafi to a specific certificate authority                             │
+│  VCert        = Venafi CLI tool for enroll/renew from pipelines and automation                        │
+│  Discovery    = Venafi network scanner finding TLS certs on reachable hosts/ports                     │
+│  Adaptable CA = custom Venafi driver for CAs without a built-in connector                             │
+│  ACME         = RFC 8555 protocol supported by Venafi for automated cert issuance                     │
+│  EST          = Enrollment over Secure Transport; RFC 7030 device enrolment                           │
+│  Machine ID   = Venafi term for any TLS/SSH key managed by the platform                               │
+│  Expiry alert = Venafi notification sent before a certificate expires (configurable)                  │
+│  Terraform    = Venafi Terraform provider for IaC-driven cert lifecycle                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

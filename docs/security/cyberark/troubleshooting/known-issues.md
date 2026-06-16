@@ -14,54 +14,52 @@ Catalog of known CyberArk PAM bugs, error codes, and workarounds covering Vault,
 </div>
 
 ```text
-┌────────────────────────────────── Security Cyberark Troubleshooting ──────────────────────────────────┐
+┌──────────────────────────────────────────── CyberArk PAM ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Cyberark: Security Cyberark Troubleshooting platform                     │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                Management: Security Cyberark Troubleshooting management console               │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Privileged Access Management — vault, password rotation, session recording          │   │
+│   │              Protocols: HTTPS (PVWA) · CyberArk vault protocol (1858) · RDP · SSH             │   │
+│   │               Management: PVWA web UI · REST API · PACLI CLI · PrivateArk client              │   │
+│   │          User auth -> PVWA -> vault credential lookup -> CPM rotation -> PSM session          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Storage           │  │        Digital Vault        │  │  Encrypted credential store │   │
+│   │            Access           │  │             PVWA            │  │      Web UI + REST API      │   │
+│   │           Rotation          │  │             CPM             │  │     Auto password change    │   │
+│   │           Session           │  │             PSM             │  │      Proxy + recording      │   │
+│   │             Sync            │  │      Distributed Vault      │  │     DR / HA replication     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  Digital Vault   │ Credential store │      TCP 1858     │ Vault user cert  │AES-256 encrypted │   │
+│   │       PVWA       │ User web access  │     HTTPS 443     │   LDAP / SAML    │Session recording │   │
+│   │       CPM        │Password rotation │  Target protocol  │  Vault svc acct  │Dual control aware│   │
+│   │       PSM        │  Session proxy   │     RDP / SSH     │  Vault account   │Records + isolates│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Security Cyberark Troubleshooting infrastructure · management network · monitoring       │
+│  Physical: PVWA/CPM/PSM servers -> Digital Vault -> managed target systems (AD, Linux, DB)            │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Cyberark           = Security Cyberark Troubleshooting platform overview and core concepts         │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Digital Vault = CyberArk encrypted credential repository; core PAM component                         │
+│  PVWA         = Password Vault Web Access; web UI and REST API gateway                                │
+│  CPM          = Central Policy Manager; automates password rotation on targets                        │
+│  PSM          = Privileged Session Manager; proxy for RDP/SSH with recording                          │
+│  Safe         = CyberArk logical container grouping accounts with access policy                       │
+│  Platform     = policy template defining rotation frequency and auth method                           │
+│  Dual control = requires two approvers before releasing a credential                                  │
+│  OPM          = On-Demand Privileges Manager; sudo elevation management                               │
+│  EPM          = Endpoint Privilege Manager; workstation least-privilege agent                         │
+│  Conjur       = CyberArk secrets management for DevOps/CI pipelines                                   │
+│  DR Vault     = hot-standby vault replica; failover target on production vault loss                   │
+│  PACLI        = Privileged Access CLI; scriptable interface to vault API                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

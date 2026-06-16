@@ -15,54 +15,52 @@ Catalog of known PKI and certificate bugs, error codes, and workarounds covering
 </div>
 
 ```text
-┌──────────────────────────────── Security Certificates Troubleshooting ────────────────────────────────┐
+┌─────────────────────────────────────── TLS / PKI Certificates ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                  Certificates: Security Certificates Troubleshooting platform                 │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │              Management: Security Certificates Troubleshooting management console             │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            X.509 certificate lifecycle — issuance, renewal, revocation, trust chain           │   │
+│   │                Protocols: TLS 1.2/1.3 · HTTPS · LDAPS · OCSP · CRL · SCEP · EST               │   │
+│   │             Management: CA web UI / CLI · Venafi · CyberArk · ACME / Let's Encrypt            │   │
+│   │              CSR -> CA signs -> cert deployed -> TLS handshake -> chain validated             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Root CA           │  │       Offline root CA       │  │    Trust anchor; offline    │   │
+│   │         Intermediate        │  │          Issuing CA         │  │    Signs end-entity certs   │   │
+│   │          End-entity         │  │     Server / client cert    │  │     SAN must match FQDN     │   │
+│   │          Revocation         │  │          OCSP / CRL         │  │      Must be reachable      │   │
+│   │          Automation         │  │        ACME / Venafi        │  │     Auto-renew pipeline     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     Root CA      │   Trust anchor   │    Out-of-band    │  HSM-protected   │No direct issuance│   │
+│   │    Issuing CA    │    Sign CSRs     │    HTTPS / LDAP   │  CA admin cert   │  Sub to root CA  │   │
+│   │  OCSP responder  │ Live revocation  │      HTTP 80      │ Signed response  │Must be reachable │   │
+│   │   ACME client    │ Auto-renew certs │    HTTPS (ACME)   │   Domain token   │certbot / acme.sh │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Security Certificates Troubleshooting infrastructure · management network · monitoring   │
+│  Physical: HSM (root CA key) -> issuing CA server -> OCSP responder -> TLS endpoints                  │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Certificates       = Security Certificates Troubleshooting platform overview and core concepts     │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  X.509        = ITU standard defining certificate format (version, SAN, key usage)                    │
+│  CSR          = Certificate Signing Request; sent to CA to obtain a signed cert                       │
+│  SAN          = Subject Alternative Name; extension listing valid hostnames/IPs                       │
+│  Chain of trust = Root CA -> Intermediate CA -> end-entity cert; all must be trusted                  │
+│  OCSP         = Online Certificate Status Protocol; real-time revocation check                        │
+│  CRL          = Certificate Revocation List; periodic bulk revocation list from CA                    │
+│  ACME         = Automated Certificate Management Environment; RFC 8555 protocol                       │
+│  HSM          = Hardware Security Module; stores CA private key securely                              │
+│  PKCS#12      = .p12/.pfx; bundle of cert + private key for import/export                             │
+│  PEM          = Base64-encoded cert/key format; most common on Linux                                  │
+│  DER          = Binary cert format; common on Windows/Java                                            │
+│  SCEP         = Simple Certificate Enrolment Protocol; used by network devices                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
