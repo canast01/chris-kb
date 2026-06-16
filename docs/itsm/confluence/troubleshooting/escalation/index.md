@@ -103,6 +103,37 @@ Collect all of the following **before** contacting L3 or Atlassian. Providing th
 ```
 ---
 
+## How to Open the Case on Atlassian Support
+
+1. Go to **support.atlassian.com** and sign in with your Atlassian account linked to your license.
+2. Click **Get help** > **Create a support request**.
+3. Select **Product**: Confluence Data Center or Confluence Cloud (match your deployment).
+4. Select **Request type**: Technical issue for operational problems; use Licensing only for activation/billing problems.
+5. Under **Priority**, select:
+   - **P1 — Critical** — Confluence completely down, data loss suspected, or security incident
+   - **P2 — High** — major feature broken, no workaround
+   - **P3 — Medium** — degraded performance, workaround exists
+   - **P4 — Low** — cosmetic issue, how-to question
+6. In **Summary**, write product + symptom + scope in one line.
+7. In **Description**, paste the Confluence version/build, when the issue started, and what you have already tried.
+8. Under **Attachments**, upload the support zip (Admin > Troubleshooting > Create Support Zip) and any thread/heap dumps collected for OOM or hang issues.
+9. Click **Submit** — you receive a case number by email immediately.
+10. **P1 only:** use the "Escalate to Critical" option in the portal, or call your Premier Support hotline if contracted.
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Restart Confluence repeatedly hoping it self-resolves | Repeated restarts can mask the real error and leave the search index in an inconsistent state | Restart once, capture logs and a thread dump if it hangs, then stop and escalate |
+| Delete and rebuild the search index without a backup | If indexing was not the actual problem, you lose the ability to compare before/after | Back up the index directory before rebuilding |
+| Apply a plugin update mid-incident | Adds a new variable to an already-broken system | Freeze all changes until the current incident is resolved |
+| Edit the database directly to "fix" page content | Can violate referential integrity Confluence expects; unsupported by Atlassian | Use Confluence's own admin tools or trash/restore; get guidance from Atlassian Support first |
+| Run a full space export/import as a troubleshooting step on a large instance | Can take hours and load the database heavily during an active incident | Schedule exports for a maintenance window unless explicitly needed for recovery |
+
+---
+
 ## SLA Expectations
 
 ### Atlassian Support SLAs (Data Center — Platinum / Premier)

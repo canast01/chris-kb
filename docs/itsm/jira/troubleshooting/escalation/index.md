@@ -101,6 +101,98 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Pre-Escalation Self-Check
+
+Run this before opening a vendor ticket. Many Jira issues are resolvable without Atlassian.
+
+| Check | What to do | Expected result |
+|---|---|---|
+| Jira application reachable | Browse to the Jira base URL | Login page loads |
+| Jira services running | SSH → `systemctl status jira` (or check service in Windows) | `active (running)` |
+| Database reachable | Check `atlassian-jira.log` for DB connection errors | No recent connection errors |
+| Disk space | `df -h` on the Jira home and install directories | Both below 90% used |
+| Recent plugin install/upgrade | Admin > Manage Apps — check install/update timestamps | None correlate with the incident start time |
+| Known Error DB | Search support.atlassian.com for the exact error string | No matching known issue, or apply documented workaround |
+
+---
+
+## Step-by-Step Data Collection
+
+Run all of these before opening the case.
+
+### 1. Get the Jira version and build number
+
+Admin > **Applications** > **Versions & Licenses**, or:
+
+```bash
+# From the Jira install directory
+cat atlassian-jira-software-version.txt 2>/dev/null
+grep -i "Build Number" atlassian-jira.log | tail -1
+```
+
+### 2. Create the support zip (takes 2–10 minutes)
+
+Admin > **System** > **Troubleshooting and support tools** > **Create support zip**. Select the time window covering the incident.
+
+### 3. Capture thread dumps (for hangs or slow performance)
+
+```bash
+# Take 3 dumps, 10 seconds apart, during the slow/hung period
+jstack <jira_pid> > /tmp/jira-thread-1.txt; sleep 10
+jstack <jira_pid> > /tmp/jira-thread-2.txt; sleep 10
+jstack <jira_pid> > /tmp/jira-thread-3.txt
+```
+
+### 4. Capture a heap dump (for OutOfMemoryError)
+
+```bash
+jmap -dump:format=b,file=/tmp/jira-heap.hprof <jira_pid>
+```
+
+### 5. Write the timeline
+
+```text
+Jira version: 9.x.x build NNNNN
+Issue first observed: YYYY-MM-DD HH:MM UTC
+Last known good state: YYYY-MM-DD HH:MM UTC
+Changes made in the 24h before the issue: [plugin install, upgrade, config change]
+Steps already taken: [restarted service, checked logs, ran Known Error DB search]
+Blast radius: [single project / all users / specific feature]
+```
+
+---
+
+## How to Open the Case on Atlassian Support
+
+1. Go to **support.atlassian.com** and sign in with your Atlassian account linked to your license.
+2. Click **Get help** > **Create a support request**.
+3. Select **Product**: Jira Software / Jira Service Management / Jira Core Data Center (match your deployment).
+4. Select **Request type**: Technical issue for operational problems; use Licensing only for activation/billing problems.
+5. Under **Priority**, select:
+   - **Highest (P1)** — production down, no workaround, affects all or most users
+   - **High (P2)** — major feature broken, workaround exists
+   - **Medium (P3)** — degraded function, single project or limited user group affected
+   - **Low (P4)** — cosmetic issue, how-to question, documentation request
+6. In **Summary**, write product + symptom + scope in one line.
+7. In **Description**, paste: Jira version/build, the timeline from Step 5 above, and what you have already tried.
+8. Under **Attachments**, upload the support zip and any thread/heap dumps collected above.
+9. Click **Submit** — you receive a case number by email immediately.
+10. **P1 only:** request emergency escalation via the "Escalate to Critical" option in the portal, or your Premier Support hotline if contracted.
+
+---
+
+## What NOT to Do
+
+| Do NOT do this | Why | What to do instead |
+|---|---|---|
+| Restart Jira repeatedly hoping it self-resolves | Repeated restarts can mask the real error and corrupt in-flight index state | Restart once, capture logs, then stop and collect diagnostics |
+| Delete and recreate the Lucene index without a backup | If reindexing was not the actual problem, you lose the ability to compare before/after | Back up the index directory before reindexing |
+| Apply a plugin update mid-incident | Adds a new variable to an already-broken system | Freeze all changes until the current incident is resolved |
+| Run a full reindex during business hours on a large instance | Reindexing locks the instance and can take hours on large datasets | Schedule reindex for a maintenance window |
+| Edit the database directly to "fix" data | Can violate referential integrity Jira expects; unsupported by Atlassian | Use Jira's own admin tools, or get guidance from Atlassian Support first |
+
+---
+
 ### Resolution Notification
 
 ```text
