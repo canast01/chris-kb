@@ -14,54 +14,52 @@ Catalog of known Cisco MDS SAN switch bugs, error codes, and workarounds coverin
 </div>
 
 ```text
-┌──────────────────────────────────────────── San Cisco Mds ────────────────────────────────────────────┐
+┌────────────────────────────────────────────── Cisco MDS ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 Cisco: San Cisco Mds platform                                 │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                          Management: San Cisco Mds management console                         │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │               Multilayer Director Switch — enterprise FC SAN switching on NX-OS               │   │
+│   │           Protocols: Fibre Channel · FCIP (FC over IP) · iSCSI · FCoE (select SKUs)           │   │
+│   │               Management: NX-OS CLI (SSH) · Cisco DCNM / NDFC · SNMP v3 · syslog              │   │
+│   │            Host FLOGI -> VSAN assigned -> zone lookup -> storage target accessible            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Fabric           │  │             VSAN            │  │      Isolated FC fabric     │   │
+│   │            Zoning           │  │     Zone set (per VSAN)     │  │      WWN or fcid scoped     │   │
+│   │           Trunking          │  │         Port-channel        │  │     LACP-like ISL bundle    │   │
+│   │          Extension          │  │         FCIP tunnel         │  │       FC over WAN / IP      │   │
+│   │             IVR             │  │      Inter-VSAN routing     │  │      Cross-VSAN access      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       VSAN       │ Fabric partition │    FC per VSAN    │  Domain-scoped   │Isolated fwd plane│   │
+│   │     Zone set     │  Access control  │     FC fabric     │    WWN / FCID    │1 active per VSAN │   │
+│   │       FCIP       │  WAN extension   │     TCP (3225)    │       N/A        │ISL over IP tunnel│   │
+│   │       IVR        │Cross-VSAN routing│         FC        │     CFS sync     │IVR zone required │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: San Cisco Mds infrastructure · management network · monitoring                           │
+│  Physical: host HBA -> MDS port (FC) -> VSAN fabric -> target storage array port                      │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Cisco              = San Cisco Mds platform overview and core concepts                             │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  VSAN         = Virtual SAN; logical isolation of ports within one physical switch                    │
+│  Zone set     = named group of zones activated together within a VSAN                                 │
+│  FCID         = Fibre Channel ID; 24-bit address assigned on FLOGI                                    │
+│  Port-channel = bonded ISL group for bandwidth and redundancy between MDS switches                    │
+│  FCIP         = Fibre Channel over IP; extends FC over routed IP WAN links                            │
+│  IVR          = Inter-VSAN Routing; controlled cross-VSAN resource sharing                            │
+│  CFS          = Cisco Fabric Services; distribution layer for IVR and zoning                          │
+│  FSPF         = Fabric Shortest Path First; FC routing protocol on MDS                                │
+│  NX-OS        = Cisco network OS powering MDS; CLI and config syntax                                  │
+│  SPAN         = Switched Port ANalyzer; port mirroring for traffic capture                            │
+│  NPIV         = N-Port ID Virtualization; multiple WWNs per physical HBA port                         │
+│  show flogi database = NX-OS command listing all logged-in initiators and targets                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

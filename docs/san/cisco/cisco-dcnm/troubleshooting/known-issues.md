@@ -14,54 +14,52 @@ Catalog of known Cisco DCNM (Data Center Network Manager) bugs, error codes, and
 </div>
 
 ```text
-┌──────────────────────────────────────── San Cisco Cisco Dcnm ─────────────────────────────────────────┐
+┌───────────────────────────────────────────── Cisco DCNM ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              Cisco: San Cisco Cisco Dcnm platform                             │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                      Management: San Cisco Cisco Dcnm management console                      │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              Data Center Network Manager — LAN and SAN fabric management platform             │   │
+│   │               Protocols: SNMP v3 · SSH · REST API · HTTPS (UI) · NX-API · syslog              │   │
+│   │            Management: DCNM web UI · REST API · CLI; migrated to NDFC in NX-OS 10.x           │   │
+│   │           Switch discovery -> fabric inventory -> zone set push -> traffic analytics          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Control           │  │         DCNM server         │  │    Linux OVA / bare-metal   │   │
+│   │          LAN fabric         │  │         NX-OS fabric        │  │     VXLAN/EVPN templates    │   │
+│   │          SAN fabric         │  │        MDS zone sets        │  │       VSAN + zone push      │   │
+│   │          Discovery          │  │        CDP/SNMP scan        │  │       Seed IP required      │   │
+│   │          Analytics          │  │         SAN Insights        │  │    Latency + I/O metrics    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   DCNM server    │Fabric management │     HTTPS 443     │   LDAP / local   │OVA or ISO install│   │
+│   │       POAP       │ Zero-touch boot  │    DHCP + TFTP    │       N/A        │ NX-OS auto-boot  │   │
+│   │   SAN Insights   │  I/O analytics   │      Internal     │    Role-based    │NX-OS lic. needed │   │
+│   │     Zone set     │SAN access control│     FC / FCIP     │   VSAN scoped    │1 active set/VSAN │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: San Cisco Cisco Dcnm infrastructure · management network · monitoring                    │
+│  Physical: DCNM server -> managed Cisco MDS/Nexus switches -> hosts + storage arrays                  │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Cisco              = San Cisco Cisco Dcnm platform overview and core concepts                      │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  DCNM         = Data Center Network Manager; Cisco fabric management platform                         │
+│  NDFC         = Nexus Dashboard Fabric Controller; successor to DCNM                                  │
+│  POAP         = Power-On Auto Provisioning; zero-touch NX-OS bootstrap                                │
+│  SAN Insights = DCNM analytics: per-flow latency and I/O throughput from MDS                          │
+│  Zone set     = named collection of zones activated together in a VSAN                                │
+│  VSAN         = Virtual SAN; logical partitioning of a Cisco FC fabric                                │
+│  Fabric template = DCNM/NDFC config skeleton defining VXLAN/BGP overlay params                        │
+│  NX-API       = Cisco REST API on NX-OS switches for programmatic config                              │
+│  CDP          = Cisco Discovery Protocol; used by DCNM to map switch topology                         │
+│  Federation   = linking multiple DCNM servers to manage a larger fabric                               │
+│  SNMP trap    = alert pushed from switch to DCNM on threshold or port event                           │
+│  Performance  = DCNM built-in port utilisation and error-rate trending                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -15,54 +15,52 @@ Catalog of known SANnav bugs, error codes, and workarounds covering switch disco
 </div>
 
 ```text
-┌───────────────────────────────────────── San Brocade Sannav ──────────────────────────────────────────┐
+┌─────────────────────────────────────────── Brocade SANnav ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              Brocade: San Brocade Sannav platform                             │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                       Management: San Brocade Sannav management console                       │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              SAN management platform — discovery, health, topology, and analytics             │   │
+│   │           Protocols: REST API · SNMP v3 · syslog · HTTPS (UI) · SSH (switch access)           │   │
+│   │                Management: SANnav web UI · REST API · email/SNMP alert delivery               │   │
+│   │             Switch discovery -> topology map -> MAPS event -> alert -> remediation            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Management         │  │       SANnav server VM      │  │     Postgres + InfluxDB     │   │
+│   │          Discovery          │  │      Switch seed + scan     │  │    SSH credentials needed   │   │
+│   │          Monitoring         │  │      MAPS + port stats      │  │     Time-series metrics     │   │
+│   │           Topology          │  │      Fabric map + ISLs      │  │    Rebuilt on rediscover    │   │
+│   │          Analytics          │  │      Traffic + latency      │  │      Stored in InfluxDB     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  SANnav server   │Central management│     HTTPS 443     │   LDAP / local   │OVA or bare-metal │   │
+│   │   Switch agent   │ Telemetry source │     SSH / SNMP    │   Switch creds   │FOS 9.x+ required │   │
+│   │   Alert engine   │ MAPS event relay │    SNMP / email   │       N/A        │Customizable rules│   │
+│   │     REST API     │Automation access │     HTTPS 443     │    API token     │  JSON responses  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: San Brocade Sannav infrastructure · management network · monitoring                      │
+│  Physical: SANnav server VM -> managed Brocade FC switches -> fabric topology data                    │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Brocade            = San Brocade Sannav platform overview and core concepts                        │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Discovery    = SANnav process that connects to seed switches and maps the fabric                     │
+│  Seed switch  = first switch SANnav contacts; used to traverse the rest of fabric                     │
+│  MAPS         = Monitoring and Alerting Policy Suite; threshold-based port alerts                     │
+│  Topology map = visual representation of switches, ISLs, and connected hosts                          │
+│  InfluxDB     = time-series database storing SANnav performance metrics                               │
+│  Port mirroring = SAN traffic copy for analysis (requires FOS license)                                │
+│  Audit log    = records all configuration changes made via SANnav or switch CLI                       │
+│  Collector    = SANnav component gathering telemetry from each managed switch                         │
+│  Alert group  = logical set of thresholds applied uniformly to a set of ports                         │
+│  Dashboard    = SANnav home view showing fabric health, alerts, and top talkers                       │
+│  REST token   = API Bearer token scoped to a SANnav user role                                         │
+│  OVA          = Open Virtual Appliance; SANnav deployment package for vSphere                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

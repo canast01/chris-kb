@@ -14,54 +14,52 @@ Catalog of known Nexus Dashboard bugs, error codes, and workarounds covering clu
 </div>
 
 ```text
-┌────────────────────────────────────── San Cisco Nexus Dashboard ──────────────────────────────────────┐
+┌──────────────────────────────────────── Cisco Nexus Dashboard ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Cisco: San Cisco Nexus Dashboard platform                           │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: San Cisco Nexus Dashboard management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Unified management platform — hosts NDFC, NAE, and fabric assurance apps           │   │
+│   │                  Protocols: HTTPS · REST API · gRPC telemetry · SSH · SNMP v3                 │   │
+│   │                Management: ND web UI · REST API · NDFC fabric controller · NAE                │   │
+│   │               ND cluster -> site onboarding -> NDFC/NAE app -> fabric management              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Platform          │  │    ND cluster (3+ nodes)    │  │      OVA or bare-metal      │   │
+│   │         Fabric ctrl         │  │       NDFC (SAN / LAN)      │  │        Replaces DCNM        │   │
+│   │          Assurance          │  │           NAE app           │  │      Policy + telemetry     │   │
+│   │            Sites            │  │       Multi-site mgmt       │  │      MSO / NDO overlay      │   │
+│   │          Telemetry          │  │       gRPC / streaming      │  │      Real-time metrics      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    ND cluster    │App host platform │     HTTPS 443     │   LDAP / local   │3-node HA required│   │
+│   │       NDFC       │Fabric controller │    HTTPS / SSH    │    Role-based    │LAN and SAN modes │   │
+│   │       NAE        │Network assurance │    gRPC / REST    │     API key      │ Pre/post-change  │   │
+│   │       NDO        │Multi-site overlay│       HTTPS       │    LDAP / SSO    │  MSO successor   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: San Cisco Nexus Dashboard infrastructure · management network · monitoring               │
+│  Physical: ND cluster nodes -> managed Cisco NX-OS/MDS switches -> physical DC fabric                 │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Cisco              = San Cisco Nexus Dashboard platform overview and core concepts                 │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  ND           = Nexus Dashboard; Cisco unified operations platform (3-node cluster)                   │
+│  NDFC         = Nexus Dashboard Fabric Controller; successor to DCNM                                  │
+│  NDFC-LAN     = NDFC in LAN mode; manages VXLAN/BGP EVPN underlay + overlay                           │
+│  NDFC-SAN     = NDFC in SAN mode; manages Cisco MDS FC zoning and VSANs                               │
+│  NAE          = Network Assurance Engine; validates fabric policy and telemetry                       │
+│  NDO          = Nexus Dashboard Orchestrator; multi-site VXLAN policy management                      │
+│  Site         = a fabric registered with ND; can span multiple DCs                                    │
+│  gRPC         = Google RPC; used for streaming telemetry from NX-OS to ND/NAE                         │
+│  Micro-seg.   = endpoint policy enforcement at VM/port level via NAE                                  │
+│  Assurance    = continuous validation of network state against intended policy                        │
+│  MSO          = Multi-Site Orchestrator; predecessor to NDO                                           │
+│  Fabric template = NDFC config skeleton for VXLAN/BGP overlay deployment                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
