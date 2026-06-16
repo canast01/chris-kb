@@ -14,54 +14,52 @@ Evergreen is a commercial subscription program — it has no dedicated software 
 </div>
 
 ```text
-┌─────────────────────────────────────── Storage Pure Evergreen ────────────────────────────────────────┐
+┌─────────────────────────────────────────── Pure Evergreen ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Pure: Storage Pure Evergreen platform                             │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                     Management: Storage Pure Evergreen management console                     │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          Non-disruptive upgrade program — hardware/software refresh with no downtime          │   │
+│   │            Protocols: Purity REST API · Pure1 cloud portal · support case workflow            │   │
+│   │              Management: Purity UI · Pure1 · Pure support; hardware swap process              │   │
+│   │           Upgrade plan -> parts staged -> controller swap -> data migrated -> verify          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Contract          │  │      Evergreen license      │  │     Per-TiB subscription    │   │
+│   │           Hardware          │  │       Controller swap       │  │      Non-disruptive HA      │   │
+│   │           Software          │  │       Purity upgrades       │  │     Included in program     │   │
+│   │           Capacity          │  │       Entitlement pool      │  │      Flex TiB transfers     │   │
+│   │          Monitoring         │  │         Pure1 health        │  │      Capacity + perf AI     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    FlashArray    │  Block storage   │     FC / iSCSI    │   Host zoning    │Evergreen-eligible│   │
+│   │    FlashBlade    │File/object array │      NFS / S3     │  Kerberos / S3   │Evergreen-eligible│   │
+│   │      Pure1       │   Cloud portal   │     HTTPS 443     │     Pure SSO     │AI/health/license │   │
+│   │   Support case   │ Upgrade request  │   Portal / phone  │  Support login   │Parts + SE onsite │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Pure Evergreen infrastructure · management network · monitoring                  │
+│  Physical: existing FlashArray/Blade -> Pure SE arrives -> controller swap -> verify                  │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Pure               = Storage Pure Evergreen platform overview and core concepts                    │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Evergreen    = Pure non-disruptive hardware+software upgrade program                                 │
+│  Evergreen//One = as-a-service tier; Pure owns hardware, customer pays per TiB                        │
+│  Controller swap = replacing array controllers while data stays online (HA pair)                      │
+│  Purity       = Pure Storage array OS; upgrades included in Evergreen                                 │
+│  Entitlement  = licensed TiB capacity; can move between arrays under a contract                       │
+│  Flex model   = pay only for used capacity; scale up/down monthly                                     │
+│  Pure1        = cloud management portal; includes upgrade scheduling + AI analytics                   │
+│  DirectFlash  = Pure proprietary flash module replacing commodity SSDs                                │
+│  DFM          = DirectFlash Module; managed by Purity, not host OS                                    │
+│  //S          = Pure Evergreen//S; subscription tier for newer hardware refresh                       │
+│  SE           = Solution Engineer; Pure staff member executing upgrade on-site                        │
+│  NDU          = Non-Disruptive Upgrade; hardware/software upgrade with 0 host I/O impact              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

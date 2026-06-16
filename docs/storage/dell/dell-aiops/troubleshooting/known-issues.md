@@ -14,54 +14,52 @@ Dell AIOps is a SaaS analytics layer on CloudIQ. All operational issues relate t
 </div>
 
 ```text
-┌─────────────────────────────────────── Storage Dell Dell Aiops ───────────────────────────────────────┐
+┌──────────────────────────────────────── Dell AIOps / CloudIQ ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Dell: Storage Dell Dell Aiops platform                            │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                     Management: Storage Dell Dell Aiops management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │        AI-driven storage observability — telemetry, anomaly detection, recommendations        │   │
+│   │                 Protocols: HTTPS (collector) · REST API · syslog · SMTP alerts                │   │
+│   │          Management: CloudIQ web portal · REST API · email digest · Slack integration         │   │
+│   │            Array telemetry -> CloudIQ ingest -> ML model -> anomaly alert -> action           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Collection         │  │       Array telemetry       │  │       Pushed via HTTPS      │   │
+│   │          Analytics          │  │      ML anomaly engine      │  │     Cloud-side AI model     │   │
+│   │           Alerting          │  │      Notification rules     │  │     Email / Slack / API     │   │
+│   │         Integration         │  │      ServiceNow / ITSM      │  │     Auto-incident create    │   │
+│   │          Inventory          │  │        Asset catalog        │  │     Contracts + versions    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  CloudIQ cloud   │ Analytics portal │     HTTPS 443     │     Dell SSO     │ SaaS; no on-prem │   │
+│   │   Array agent    │  Telemetry push  │   HTTPS 443 out   │     API key      │  Outbound only   │   │
+│   │     ML model     │Anomaly detection │      Internal     │       N/A        │ Fleet-trained ML │   │
+│   │  ITSM connector  │Incident creation │     HTTPS REST    │  OAuth / token   │ServiceNow / Jira │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Dell Dell Aiops infrastructure · management network · monitoring                 │
+│  Physical: Dell arrays (PowerStore/Unity/PowerMax) -> CloudIQ SaaS portal -> IT ops team              │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Dell               = Storage Dell Dell Aiops platform overview and core concepts                   │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  CloudIQ      = Dell SaaS analytics platform for storage and compute observability                    │
+│  AIOps        = AI for IT Operations; ML-driven anomaly detection and root-cause                      │
+│  Telemetry    = array performance and capacity metrics pushed to CloudIQ hourly                       │
+│  Anomaly      = ML-detected deviation from baseline; scored by impact level                           │
+│  Health score = composite 0-100 metric per array; lower means more issues                             │
+│  Recommendation = CloudIQ suggested action to improve efficiency or fix anomaly                       │
+│  Proactive alert = early warning before threshold breach causes outage                                │
+│  Connectivity = CloudIQ requires outbound HTTPS from array/proxy to Dell cloud                        │
+│  Asset tag    = Dell serial used to associate array with a CloudIQ tenant                             │
+│  Digest       = scheduled email summary of health scores and top anomalies                            │
+│  Bandwidth throttle = CloudIQ limits telemetry rate to avoid impacting array perf                     │
+│  SaaS         = CloudIQ is fully cloud-hosted; no on-premises deployment option                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

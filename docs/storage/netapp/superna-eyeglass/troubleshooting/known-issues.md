@@ -14,54 +14,52 @@ Catalog of known Superna Eyeglass bugs, error codes, and workarounds covering Sy
 </div>
 
 ```text
-┌─────────────────────────────────── Storage Netapp Superna Eyeglass ───────────────────────────────────┐
+┌────────────────────────────────────────── Superna Eyeglass ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                        Netapp: Storage Netapp Superna Eyeglass platform                       │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                 Management: Storage Netapp Superna Eyeglass management console                │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          OneFS DR automation — config sync, SyncIQ policy, and failover orchestration         │   │
+│   │                    Protocols: HTTPS (UI/API) · PAPI (OneFS) · SNMP · syslog                   │   │
+│   │             Management: Eyeglass web UI · REST API · Alarm Manager · job scheduler            │   │
+│   │           Monitor SyncIQ -> detect lag -> trigger failover -> update DNS -> validate          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Monitor           │  │        SyncIQ watcher       │  │     Policy + job health     │   │
+│   │         Config sync         │  │       Shares / exports      │  │       Replicated to DR      │   │
+│   │           Failover          │  │       DR runbook exec       │  │     Automated or manual     │   │
+│   │             DNS             │  │       DNS zone update       │  │   Redirects clients to DR   │   │
+│   │            Alarms           │  │        Alarm Manager        │  │     Email / SNMP alerts     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   Eyeglass VM    │ DR orchestrator  │     HTTPS 443     │   LDAP / local   │  OVA on vSphere  │   │
+│   │   PAPI client    │ OneFS API access │    HTTPS (PAPI)   │   OneFS admin    │Per-cluster creds │   │
+│   │   Config repl    │Share/export sync │     PAPI push     │   OneFS admin    │  Near-real-time  │   │
+│   │  Failover plan   │    DR runbook    │      Internal     │    Admin user    │ Pre-tested steps │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Netapp Superna Eyeglass infrastructure · management network · monitoring         │
+│  Physical: Eyeglass VM -> source OneFS cluster -> DR OneFS cluster -> DNS servers                     │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Netapp             = Storage Netapp Superna Eyeglass platform overview and core concepts           │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Superna Eyeglass = DR automation platform for NetApp PowerScale (Isilon)                             │
+│  SyncIQ       = OneFS native replication engine; Eyeglass monitors its policies                       │
+│  Config replication = Eyeglass copies SMB shares, NFS exports, quotas to DR                           │
+│  Failover     = Eyeglass orchestrates cutover: unmounts source, mounts DR, updates DNS                │
+│  Alarm Manager = Eyeglass alerting subsystem; routes issues to email/SNMP/ITSM                        │
+│  PAPI         = Platform API; OneFS REST interface Eyeglass uses for all queries                      │
+│  Runbook      = Eyeglass-defined sequence of DR steps executed on failover                            │
+│  Lag          = SyncIQ replication lag; Eyeglass alerts when this exceeds threshold                   │
+│  Policy       = SyncIQ replication job definition; includes schedule and target path                  │
+│  Config drift = source/DR config divergence; Eyeglass auto-corrects periodically                      │
+│  DFS          = Distributed File System; optional Eyeglass DFS namespace failover                     │
+│  Test failover = Eyeglass DR test without cutting over production traffic                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

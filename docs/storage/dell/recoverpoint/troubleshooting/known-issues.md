@@ -14,54 +14,52 @@ Catalog of known RecoverPoint bugs, error codes, and workarounds covering RPA cl
 </div>
 
 ```text
-┌────────────────────────────────────── Storage Dell Recoverpoint ──────────────────────────────────────┐
+┌────────────────────────────────────────── Dell RecoverPoint ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Dell: Storage Dell Recoverpoint platform                           │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Storage Dell Recoverpoint management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Continuous data protection — any-point-in-time recovery for block storage           │   │
+│   │                Protocols: FC · iSCSI (splitter) · IP WAN (journal replication)                │   │
+│   │               Management: RecoverPoint Management Application (RPMA) · REST API               │   │
+│   │             Write splitter -> journal capture -> replication -> any-point recovery            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Cluster           │  │        RPA appliances       │  │        Min 2 per site       │   │
+│   │           Capture           │  │        Write splitter       │  │      FC or iSCSI layer      │   │
+│   │           Journal           │  │          Change log         │  │     Stores writes per CG    │   │
+│   │         Replication         │  │           WAN link          │  │     Async/sync to remote    │   │
+│   │           Recovery          │  │       Bookmark / APIT       │  │    Rollback to any point    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       RPA        │Replication engine│     FC / iSCSI    │     Internal     │Physical appliance│   │
+│   │     Splitter     │ Write intercept  │     FC / iSCSI    │       N/A        │On array or fabric│   │
+│   │     Journal      │    Write log     │      Internal     │       N/A        │  Sized for RPO   │   │
+│   │       RPMA       │  Management UI   │     HTTPS 443     │  Admin account   │   Java web app   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Dell Recoverpoint infrastructure · management network · monitoring               │
+│  Physical: host -> splitter (FC/iSCSI) -> RPA -> journal volumes -> remote RPA -> copy                │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Dell               = Storage Dell Recoverpoint platform overview and core concepts                 │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  RPA          = RecoverPoint Appliance; physical or virtual appliance per site                        │
+│  CG           = Consistency Group; set of volumes protected and recovered together                    │
+│  Journal      = RecoverPoint write log; stores all changes to enable any-point recovery               │
+│  Splitter     = intercepts host writes; sends copy to RPA journal simultaneously                      │
+│  RPO          = Recovery Point Objective; max data loss; linked to replication lag                    │
+│  APIT         = Any Point In Time; RecoverPoint capability to restore to any second                   │
+│  Bookmark     = user-labeled APIT recovery point; e.g. before a patch                                 │
+│  Image access = mount a past journal image to a host without failing over                             │
+│  Failover     = activate the replica copy at DR site; reverse replication to recover                  │
+│  WAN          = IP link between RPA clusters; RecoverPoint replicates journal over WAN                │
+│  RPMA         = RecoverPoint Management Application; Java-based management UI                         │
+│  Lag          = difference in write log between production and replica; drives RPO                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

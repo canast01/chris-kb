@@ -14,54 +14,52 @@ Catalog of known InsightIQ bugs, error codes, and workarounds covering data coll
 </div>
 
 ```text
-┌────────────────────────────────────── Storage Netapp Insightiq ───────────────────────────────────────┐
+┌────────────────────────────────────────── NetApp InsightIQ ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Netapp: Storage Netapp Insightiq platform                           │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Storage Netapp Insightiq management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │             OneFS performance analytics — data collection, trending, and reporting            │   │
+│   │                  Protocols: HTTPS (UI) · REST API · PAPI (OneFS cluster API)                  │   │
+│   │                Management: InsightIQ web UI · CLI (iiq) · PostgreSQL DB backend               │   │
+│   │            Cluster PAPI poll -> InsightIQ ingest -> PostgreSQL -> report dashboard            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Collection         │  │         PAPI poller         │  │     Queries cluster API     │   │
+│   │           Storage           │  │        PostgreSQL DB        │  │     Metrics time series     │   │
+│   │          Analytics          │  │        Report engine        │  │      Aggregates DB data     │   │
+│   │              UI             │  │        Web dashboard        │  │      Charts and exports     │   │
+│   │            Export           │  │       PDF / CSV report      │  │      Scheduled delivery     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   InsightIQ VM   │  Analytics host  │     HTTPS 443     │   Local / LDAP   │VMware OVA deploy │   │
+│   │   PAPI poller    │Metric collection │    HTTPS (PAPI)   │   OneFS creds    │Per-cluster config│   │
+│   │    PostgreSQL    │   Metric store   │     Local TCP     │     DB user      │Grows by retention│   │
+│   │  Report engine   │Charting / export │      Internal     │    User role     │ PDF / CSV output │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Netapp Insightiq infrastructure · management network · monitoring                │
+│  Physical: InsightIQ VM -> OneFS cluster PAPI (HTTPS) -> PostgreSQL DB -> web UI                      │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Netapp             = Storage Netapp Insightiq platform overview and core concepts                  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  InsightIQ    = NetApp analytics appliance for PowerScale/Isilon performance                          │
+│  PAPI         = Platform API; OneFS REST interface used by InsightIQ for data                         │
+│  OneFS        = PowerScale (Isilon) operating system; PAPI is its management API                      │
+│  Datastore    = InsightIQ monitored cluster + data retention config                                   │
+│  Collection interval = how often InsightIQ polls the cluster (default 30 s)                           │
+│  Report       = scheduled or on-demand summary of node/disk/protocol metrics                          │
+│  Retention    = how long metric data is kept; affects PostgreSQL DB disk usage                        │
+│  iiq CLI      = InsightIQ command-line tool for status and config tasks                               │
+│  Quota report = InsightIQ report showing directory quota utilization                                  │
+│  Protocol report = breakdown of NFS/SMB/HDFS throughput per cluster node                              │
+│  DB vacuum    = PostgreSQL maintenance task reclaiming space from old metrics                         │
+│  VM snapshot  = InsightIQ backup method; also DB dump for portability                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -13,54 +13,52 @@ Index of storage product known issues and error codes. This top-level page links
 </div>
 
 ```text
-┌─────────────────────────────── Storage Troubleshooting Known Issues.Md ───────────────────────────────┐
+┌────────────────────────────────────── Storage Products Overview ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Troubleshooting: Storage Troubleshooting Known Issues.Md platform               │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │             Management: Storage Troubleshooting Known Issues.Md management console            │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Enterprise storage platforms — block, file, object, and unified storage            │   │
+│   │                    Protocols: FC · iSCSI · NFS · SMB · S3 · NVMe-oF · iSER                    │   │
+│   │            Management: vendor web UI · REST API · CLI · ONTAP / PURITY / Unisphere            │   │
+│   │             Host -> fabric/network -> storage array -> volume/share -> application            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │             Dell            │  │      PowerStore / Unity     │  │     Block + file unified    │   │
+│   │            NetApp           │  │        ONTAP clusters       │  │        NAS + SAN + S3       │   │
+│   │             Pure            │  │      FlashArray / Blade     │  │    All-flash + Evergreen    │   │
+│   │             Ceph            │  │        RADOS cluster        │  │    Block/file/object OSS    │   │
+│   │          Analytics          │  │       CloudIQ / Pure1       │  │      AI-driven insights     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  Block storage   │   LUN / volume   │     FC / iSCSI    │   CHAP / zones   │ SCSI command set │   │
+│   │   File storage   │    NAS share     │     NFS / SMB     │  Kerberos / AD   │POSIX permissions │   │
+│   │  Object storage  │   Bucket / key   │     S3 / Swift    │    HMAC / IAM    │Eventual consist. │   │
+│   │   Replication    │     DR copy      │   Array-specific  │   Array trust    │  Sync or async   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Troubleshooting Known Issues.Md infrastructure · management network · monitorin  │
+│  Physical: host initiators -> SAN/LAN fabric -> storage controllers -> drive shelves                  │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Troubleshooting    = Storage Troubleshooting Known Issues.Md platform overview and core concepts   │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  LUN          = Logical Unit Number; block storage volume presented to hosts                          │
+│  RAID         = Redundant Array of Independent Disks; data protection across drives                   │
+│  NVMe-oF      = NVMe over Fabrics; low-latency block storage over FC or RDMA                          │
+│  ONTAP        = NetApp unified storage OS for NAS, SAN, and object                                    │
+│  Purity       = Pure Storage OS running FlashArray and FlashBlade                                     │
+│  Unisphere    = Dell EMC management UI for Unity and PowerStore arrays                                │
+│  CloudIQ      = Dell AI-driven storage analytics and anomaly detection                                │
+│  RADOS        = Reliable Autonomic Distributed Object Store; Ceph core layer                          │
+│  RDO / ROOK   = Ceph deployment methods; bare-metal and Kubernetes respectively                       │
+│  Thin provisioning = allocate capacity on demand, not upfront                                         │
+│  Snapshot     = point-in-time copy of a volume; space-efficient via CoW                               │
+│  Clone        = writable copy of a snapshot; independent of the source                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

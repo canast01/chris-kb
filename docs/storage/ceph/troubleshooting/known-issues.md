@@ -13,54 +13,52 @@ Catalog of known Ceph bugs, error codes, and workarounds covering OSD failures, 
 </div>
 
 ```text
-┌──────────────────────────────────── Storage Ceph Troubleshooting ─────────────────────────────────────┐
+┌──────────────────────────────────────────────── Ceph ─────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Ceph: Storage Ceph Troubleshooting platform                          │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                  Management: Storage Ceph Troubleshooting management console                  │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │             Distributed storage cluster — block (RBD), file (CephFS), object (RGW)            │   │
+│   │            Protocols: RBD (librbd) · CephFS (kernel/FUSE) · S3/Swift (RGW) · iSCSI            │   │
+│   │             Management: ceph CLI · cephadm · Rook (k8s) · Ceph Dashboard (web UI)             │   │
+│   │           Client -> librados -> CRUSH map -> OSD set -> replicated/EC object stored           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Control           │  │         MON cluster         │  │    Quorum (3 or 5 nodes)    │   │
+│   │             Data            │  │         OSD daemons         │  │   1 per disk, handles I/O   │   │
+│   │          Object/S3          │  │             RGW             │  │     S3/Swift API gateway    │   │
+│   │             File            │  │             MDS             │  │     CephFS metadata srvr    │   │
+│   │           Routing           │  │          CRUSH map          │  │     Placement algorithm     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       MON        │   Cluster map    │    msgr2 / TCP    │      CephX       │Odd count (quorum)│   │
+│   │       OSD        │  Object storage  │    msgr2 / TCP    │      CephX       │ HEALTH_WARN/loss │   │
+│   │       RGW        │  S3 / Swift API  │     HTTPS 443     │  S3 access keys  │ Multi-site repl  │   │
+│   │       MDS        │ CephFS metadata  │       msgr2       │      CephX       │ Active + standby │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Ceph Troubleshooting infrastructure · management network · monitoring            │
+│  Physical: client -> MON (map) -> librados -> OSD nodes (raw disks) -> data replicated                │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Ceph               = Storage Ceph Troubleshooting platform overview and core concepts              │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  RADOS        = Reliable Autonomic Distributed Object Store; Ceph object layer                        │
+│  OSD          = Object Storage Daemon; one per disk, handles data I/O + replication                   │
+│  MON          = Monitor; maintains cluster maps, quorum (PAXOS-based)                                 │
+│  PG           = Placement Group; shard of the object namespace mapped to OSDs                         │
+│  PG stuck     = PG not reaching active+clean; blocks writes to affected objects                       │
+│  CRUSH        = Controlled Replication Under Scalable Hashing; placement algorithm                    │
+│  RBD          = RADOS Block Device; thin-provisioned block volumes over Ceph                          │
+│  RGW          = RADOS Gateway; S3/Swift object storage API layer                                      │
+│  MDS          = Metadata Server; manages CephFS directory hierarchy                                   │
+│  CephX        = Ceph authentication system; shared-key per daemon/client                              │
+│  cephadm      = Ceph cluster deployment and management tool (container-based)                         │
+│  Slow ops     = operations exceeding threshold; logged as "slow request" in OSD log                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

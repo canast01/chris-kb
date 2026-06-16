@@ -14,54 +14,52 @@ Catalog of known SRDF/A (Asynchronous) bugs, error codes, and workarounds coveri
 </div>
 
 ```text
-┌───────────────────────────────────────── Storage Dell Srdf A ─────────────────────────────────────────┐
+┌───────────────────────────────────────── Dell SRDF/A (Async) ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               Dell: Storage Dell Srdf A platform                              │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                       Management: Storage Dell Srdf A management console                      │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Asynchronous SRDF — periodic delta-set replication between PowerMax arrays          │   │
+│   │                 Protocols: SRDF over FC (GigE option) · SRDF/IP (TCP over WAN)                │   │
+│   │                  Management: Unisphere for PowerMax · Solutions Enabler · SMC                 │   │
+│   │            R1 write -> delta set capture -> cycle commit -> transmit to R2 -> apply           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Source           │  │      R1 (primary) array     │  │      Host writes to R1      │   │
+│   │          Delta set          │  │         Async buffer        │  │    Accumulates per cycle    │   │
+│   │             Link            │  │        SRDF/IP or FC        │  │     Transfers delta set     │   │
+│   │            Target           │  │      R2 (replica) array     │  │      Applies delta set      │   │
+│   │          Management         │  │       Unisphere / SMC       │  │      SRDF group config      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    R1 volume     │ Production copy  │     FC / iSCSI    │   Host zoning    │ Writable by host │   │
+│   │    R2 volume     │   Replica copy   │     SRDF link     │       N/A        │ Read-only (repl) │   │
+│   │    SRDF group    │   Link config    │      FC / IP      │   Array trust    │  RA port pairs   │   │
+│   │Solutions Enabler │  CLI management  │     Local/REST    │   Admin creds    │ symmcli commands │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Dell Srdf A infrastructure · management network · monitoring                     │
+│  Physical: R1 PowerMax -> SRDF RA ports -> WAN/FC link -> R2 PowerMax RA ports                        │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Dell               = Storage Dell Srdf A platform overview and core concepts                       │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  SRDF         = Symmetrix Remote Data Facility; Dell PowerMax replication tech                        │
+│  SRDF/A       = SRDF Asynchronous; batched delta-set replication (RPO > 0)                            │
+│  R1           = Source (production) volume; host writes here                                          │
+│  R2           = Replica volume; updated when delta set transmitted and applied                        │
+│  Delta set    = set of changed tracks accumulated during one async cycle                              │
+│  Cycle time   = interval at which delta sets are committed and transferred                            │
+│  RA port      = SRDF port on PowerMax; dedicated to replication link traffic                          │
+│  RDFA         = Remote Data Facility Async; older term for SRDF/A                                     │
+│  SRDF group   = logical link between R1 and R2; defines RA ports used                                 │
+│  Consistency  = all R2 volumes in a group updated together per cycle                                  │
+│  Suspend      = pauses replication; delta set accumulates until resumed                               │
+│  SMC          = Solutions Management Console; Java SRDF management GUI                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

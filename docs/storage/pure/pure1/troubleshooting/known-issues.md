@@ -14,54 +14,52 @@ Catalog of known Pure1 issues covering array connectivity, portal access, and da
 </div>
 
 ```text
-┌───────────────────────────────────────── Storage Pure Pure1 ──────────────────────────────────────────┐
+┌──────────────────────────────────────────────── Pure1 ────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               Pure: Storage Pure Pure1 platform                               │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                       Management: Storage Pure Pure1 management console                       │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          Cloud management portal — health, analytics, AI workload planning, licensing         │   │
+│   │               Protocols: HTTPS (UI) · REST API · phonehome (HTTPS 443 outbound)               │   │
+│   │             Management: Pure1 web portal · REST API · mobile app · alert webhooks             │   │
+│   │            Array phonehome -> Pure1 ingest -> AI model -> health/capacity dashboard           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Collection         │  │       Phonehome agent       │  │     HTTPS out, per array    │   │
+│   │          Analytics          │  │         AI/ML engine        │  │       Cloud-side model      │   │
+│   │            Portal           │  │         Pure1 web UI        │  │       Fleet-wide view       │   │
+│   │          Licensing          │  │        Evergreen mgmt       │  │     Capacity entitlement    │   │
+│   │            Alerts           │  │       Webhook / email       │  │       Threshold based       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   Pure1 portal   │ Fleet management │     HTTPS 443     │     Pure SSO     │ SaaS; no on-prem │   │
+│   │    Phonehome     │ Telemetry upload │   HTTPS 443 out   │    Array cert    │No inbound needed │   │
+│   │    AI engine     │ Capacity predict │      Internal     │       N/A        │ Fleet-trained ML │   │
+│   │     REST API     │Portal automation │     HTTPS 443     │    API token     │  Pipeline mgmt   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Storage Pure Pure1 infrastructure · management network · monitoring                      │
+│  Physical: FlashArray/FlashBlade -> phonehome HTTPS -> Pure cloud -> Pure1 portal                     │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Pure               = Storage Pure Pure1 platform overview and core concepts                        │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Pure1        = Pure Storage SaaS management and analytics portal                                     │
+│  Phonehome    = Purity outbound telemetry to Pure1 cloud (HTTPS 443)                                  │
+│  Array registration = linking a FlashArray/Blade serial to a Pure1 org account                        │
+│  Fleet        = all arrays registered to a Pure1 organization                                         │
+│  AI prediction = Pure1 ML-based capacity runout and performance headroom forecast                     │
+│  Health score = per-array composite score; drives SLA and proactive support                           │
+│  Workload     = Pure1 per-volume performance and latency tracking entity                              │
+│  Evergreen mgmt = Pure1 shows current entitlement, capacity usage, upgrade eligibility                │
+│  Alert        = Pure1 threshold breach or anomaly notification (email/webhook)                        │
+│  REST API     = Pure1 programmatic interface for fleet data and alert management                      │
+│  Tagging      = user-defined labels on arrays in Pure1 for filtering/grouping                         │
+│  Proxy        = optional on-prem proxy for phonehome if direct internet blocked                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
