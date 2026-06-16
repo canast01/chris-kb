@@ -14,54 +14,52 @@ Catalog of known Ollama bugs, error codes, and workarounds covering model loadin
 </div>
 
 ```text
-┌─────────────────────────────────────── Compute Local Ai Ollama ───────────────────────────────────────┐
+┌─────────────────────────────────────────────── Ollama ────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Local Ai: Compute Local Ai Ollama platform                          │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                     Management: Compute Local Ai Ollama management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Local LLM runner — model pull/serve, GPU offload, OpenAI-compatible API            │   │
+│   │                             Protocols: HTTP (TCP 11434, local API)                            │   │
+│   │                           Management: ollama CLI (pull/run/serve/ps)                          │   │
+│   │            ollama pull -> Model stored locally -> ollama serve -> API -> Inference            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │         Model store         │  │       ~/.ollama/models      │  │       GGUF, quantized       │   │
+│   │            Server           │  │         ollama serve        │  │       Listens on 11434      │   │
+│   │             API             │  │     REST + OpenAI-compat    │  │   /api/generate, /v1/chat   │   │
+│   │         GPU offload         │  │         CUDA layers         │  │    Partial if VRAM short    │   │
+│   │          Modelfile          │  │     Custom model config     │  │     num_ctx, sys prompt     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   ollama serve   │ API server proc. │     HTTP 11434    │   None default   │Bind 0.0.0.0 4 rmt│   │
+│   │   ollama pull    │  Download model  │       HTTPS       │       N/A        │ From ollama.com  │   │
+│   │    ollama ps     │Show loaded models│        N/A        │       N/A        │GPU/CPU mem split │   │
+│   │    Modelfile     │Define model parms│        N/A        │       N/A        │num_ctx, template │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Compute Local Ai Ollama infrastructure · management network · monitoring                 │
+│  Physical: host with optional NVIDIA GPU - local disk for model storage                               │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Local Ai           = Compute Local Ai Ollama platform overview and core concepts                   │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  GGUF           = quantized model file format used by Ollama/llama.cpp                                │
+│  Quant. level   = e.g. Q4_K_M; trades model quality for size/speed                                    │
+│  num_ctx        = context window size set via Modelfile or API                                        │
+│  OLLAMA_HOST    = env var controlling bind address (default 127.0.0.1)                                │
+│  Modelfile      = config defining a custom model (base+params+prompt)                                 │
+│  ollama ps      = lists loaded models and their GPU/CPU memory split                                  │
+│  Context exceeded = prompt exceeds the model configured num_ctx                                       │
+│  GPU layers     = number of model layers offloaded to GPU vs CPU                                      │
+│  ollama pull    = downloads a model from the Ollama model registry                                    │
+│  API compat.    = Ollama exposes an OpenAI-compatible /v1/chat endpoint                               │
+│  Embedding model= specialized model type for vectors, not chat                                        │
+│  Model registry = ollama.com hosted catalog of pullable models                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

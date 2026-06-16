@@ -14,54 +14,52 @@ Catalog of known SQL Server bugs, error codes, and workarounds covering connecti
 </div>
 
 ```text
-┌────────────────────────────────── Compute Windows Server Sql Server ──────────────────────────────────┐
+┌──────────────────────────────────────── Microsoft SQL Server ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                   Windows Server: Compute Windows Server Sql Server platform                  │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                Management: Compute Windows Server Sql Server management console               │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Relational DB — Always On Availability Groups, TempDB, blocking analysis           │   │
+│   │                     Protocols: TDS (TCP 1433) · Kerberos (SPN-based auth)                     │   │
+│   │                         Management: SSMS / sqlcmd / Azure Data Studio                         │   │
+│   │            Client connect -> SPN/auth -> Query -> Buffer pool -> Storage/AG replica           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Engine           │  │       Database Engine       │  │     sqlservr.exe process    │   │
+│   │              HA             │  │         Always On AG        │  │     Sync/async replicas     │   │
+│   │             Auth            │  │       Windows/SQL auth      │  │     SPN needed for Kerb.    │   │
+│   │            TempDB           │  │       Shared system DB      │  │    1 file/core recommend    │   │
+│   │           Locking           │  │         Lock manager        │  │    Blocking chains, DMVs    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    SQL Server    │    DB engine     │      TCP 1433     │   Windows/SQL    │   sqlservr.exe   │   │
+│   │   AG listener    │ HA virtual endpt │      TCP 1433     │       N/A        │Moves w/ failover │   │
+│   │      TempDB      │Temp object store │      Internal     │       N/A        │ PAGELATCH issues │   │
+│   │       DMVs       │ Diagnostic views │        N/A        │     sysadmin     │ dm_exec_requests │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Compute Windows Server Sql Server infrastructure · management network · monitoring       │
+│  Physical: SQL Server host(s) - Windows Failover Cluster - shared/local storage                       │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Windows Server     = Compute Windows Server Sql Server platform overview and core concepts         │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  TDS            = Tabular Data Stream; SQL Server network wire protocol                               │
+│  Always On AG   = Availability Group; databases replicated for HA                                     │
+│  AG listener    = virtual name/IP that follows the current primary                                    │
+│  SPN            = Service Principal Name; required for Kerberos auth                                  │
+│  TempDB         = shared system DB for temp objects, sorts, versioning                                │
+│  PAGELATCH      = contention on an in-memory page, often TempDB-related                               │
+│  Blocking sess. = a session holding a lock another session waits on                                   │
+│  WFC            = Windows Failover Cluster; underlies AG auto-failover                                │
+│  Failover mode  = AG setting: automatic vs manual failover                                            │
+│  dm_exec_requests= DMV showing currently executing requests/blocking                                  │
+│  Double-hop     = Kerberos delegation issue acting on a remote resource                               │
+│  Mirroring endpt= AG comms endpoint, default port 5022                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

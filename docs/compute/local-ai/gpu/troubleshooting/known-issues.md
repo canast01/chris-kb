@@ -14,54 +14,52 @@ Catalog of known GPU and local AI inference bugs, error codes, and workarounds c
 </div>
 
 ```text
-┌──────────────────────────────────────── Compute Local Ai Gpu ─────────────────────────────────────────┐
+┌────────────────────────────────────── GPU / Local AI Inference ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Local Ai: Compute Local Ai Gpu platform                            │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                      Management: Compute Local Ai Gpu management console                      │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              NVIDIA GPU inference stack — CUDA, drivers, PyTorch, VRAM management             │   │
+│   │                   Protocols: N/A — local compute, not network protocol-bound                  │   │
+│   │                Management: nvidia-smi / nvidia-ml-py / vendor driver installer                │   │
+│   │            Driver load -> CUDA runtime -> Framework (PyTorch) -> Model -> Inference           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Driver           │  │     NVIDIA kernel module    │  │     Must match CUDA ver.    │   │
+│   │           Runtime           │  │         CUDA toolkit        │  │     Pinned to framework     │   │
+│   │          Framework          │  │      PyTorch/TensorFlow     │  │       Links CUDA libs       │   │
+│   │            Memory           │  │             VRAM            │  │      Hard limit per GPU     │   │
+│   │         Quantization        │  │      4-bit/8-bit models     │  │       Reduces VRAM use      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    nvidia-smi    │  GPU/VRAM view   │        N/A        │    root/sudo     │ First diag. step │   │
+│   │   CUDA toolkit   │ GPU compute API  │        N/A        │       N/A        │Must match driver │   │
+│   │     PyTorch      │   ML framework   │        N/A        │       N/A        │ torch.cuda check │   │
+│   │       NVML       │GPU monitoring lib│        N/A        │       N/A        │ Backs nvidia-smi │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Compute Local Ai Gpu infrastructure · management network · monitoring                    │
+│  Physical: server/workstation with discrete NVIDIA GPU(s) - PCIe - cooling                            │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Local Ai           = Compute Local Ai Gpu platform overview and core concepts                      │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  CUDA           = NVIDIA parallel compute platform/API for GPU acceleration                           │
+│  VRAM           = GPU dedicated memory; model size must fit within it                                 │
+│  NVML           = NVIDIA Management Library; underlies nvidia-smi                                     │
+│  Quantization   = reducing weight precision (4/8-bit) to save VRAM                                    │
+│  CUDA OOM       = out-of-memory error when model/batch exceeds VRAM                                   │
+│  Caching alloc. = PyTorch VRAM reuse layer; can retain freed memory                                   │
+│  Driver mismatch= NVIDIA driver version incompatible with CUDA libs                                   │
+│  Kernel module  = nvidia.ko; in-kernel driver loaded via modprobe                                     │
+│  CPU offload    = running part of a model on CPU when VRAM is short                                   │
+│  Batch size     = inputs processed together; larger uses more VRAM                                    │
+│  empty_cache()  = releases cached but unused VRAM back to the OS                                      │
+│  Mixed precision= fp16/bf16 to reduce memory and raise throughput                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -13,54 +13,52 @@ Catalog of known Windows Server bugs, error codes, and workarounds covering WinR
 </div>
 
 ```text
-┌─────────────────────────────── Compute Windows Server Troubleshooting ────────────────────────────────┐
+┌─────────────────────────────────────────── Windows Server ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                Windows Server: Compute Windows Server Troubleshooting platform                │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │             Management: Compute Windows Server Troubleshooting management console             │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │             General-purpose server OS — WinRM, RDP, Windows Update, Storage Spaces            │   │
+│   │                     Protocols: WinRM (5985/5986) · RDP (3389) · SMB (445)                     │   │
+│   │                     Management: Server Manager / PowerShell / Event Viewer                    │   │
+│   │             Boot -> Services start -> Network up -> Domain join (if any) -> Login             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │         Remote mgmt         │  │            WinRM            │  │     HTTP/HTTPS listener     │   │
+│   │        Remote desktop       │  │             RDP             │  │      TCP 3389, CredSSP      │   │
+│   │           Patching          │  │     Windows Update/WSUS     │  │       GPO-driven scan       │   │
+│   │           Storage           │  │        Storage Spaces       │  │    Software-defined pool    │   │
+│   │           Logging           │  │         Event Viewer        │  │    Sys/App/Security logs    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │      WinRM       │   Remote mgmt    │     HTTP/HTTPS    │  Kerberos/NTLM   │winrm quickconfig │   │
+│   │       RDP        │  Remote desktop  │      TCP 3389     │   NLA/CredSSP    │FW must allow 3389│   │
+│   │       WSUS       │    Patch mgmt    │     HTTP/HTTPS    │    GPO-scoped    │ Central approval │   │
+│   │  Storage Spaces  │  SDS pool/vdisk  │        N/A        │       N/A        │ Add-PhysicalDisk │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Compute Windows Server Troubleshooting infrastructure · management network · monitoring  │
+│  Physical: physical/virtual Windows Server host - local/SAN/iSCSI storage                             │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Windows Server     = Compute Windows Server Troubleshooting platform overview and core concepts    │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  WinRM          = Windows Remote Management; remoting over HTTP/HTTPS                                 │
+│  CredSSP        = credential delegation provider; vuln if outdated                                    │
+│  NLA            = Network Level Authentication; RDP pre-auth                                          │
+│  WSUS           = Windows Server Update Services; on-prem patch point                                 │
+│  Storage Spaces = software-defined storage virtualizing disks                                         │
+│  Storage Pool   = disk collection backing one or more virtual disks                                   │
+│  Event Viewer   = GUI for System/Application/Security event logs                                      │
+│  sfc /scannow   = System File Checker; repairs corrupted system files                                 │
+│  DISM           = repairs the Windows servicing image                                                 │
+│  gpresult       = shows which GPOs applied to a computer/user                                         │
+│  BITS           = Background Intelligent Transfer Service, used by WU                                 │
+│  Encr. Oracle   = CredSSP patch-mismatch RDP remediation error                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

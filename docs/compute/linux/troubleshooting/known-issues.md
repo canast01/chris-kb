@@ -13,54 +13,52 @@ Catalog of known Linux OS bugs, error codes, and workarounds covering boot issue
 </div>
 
 ```text
-┌──────────────────────────────────── Compute Linux Troubleshooting ────────────────────────────────────┐
+┌───────────────────────────────────────── Linux (RHEL/Ubuntu) ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Linux: Compute Linux Troubleshooting platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                  Management: Compute Linux Troubleshooting management console                 │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │             General-purpose OS — systemd, LVM, NetworkManager, package management             │   │
+│   │                       Protocols: SSH (22) · various per running service                       │   │
+│   │                 Management: systemctl / journalctl / dnf (RHEL) / apt (Ubuntu)                │   │
+│   │               Boot -> systemd init -> Service units start -> Network up -> Login              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │             Init            │  │           systemd           │  │     PID 1, manages units    │   │
+│   │           Storage           │  │             LVM             │  │     PV/VG/LV abstraction    │   │
+│   │           Network           │  │        NetworkManager       │  │      nmcli/nmtui config     │   │
+│   │           Logging           │  │           journald          │  │    Binary log, journalctl   │   │
+│   │           Packages          │  │          dnf / apt          │  │      Repo-based install     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     systemd      │Service/boot mgmt │        N/A        │       root       │ systemctl status │   │
+│   │     journald     │ Central logging  │        N/A        │  root (varies)   │  journalctl -u   │   │
+│   │  NetworkManager  │ Interface config │        N/A        │       root       │  nmcli not ifup  │   │
+│   │       LVM        │ Storage virtual. │        N/A        │       root       │ pvs/vgs/lvs cmds │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Compute Linux Troubleshooting infrastructure · management network · monitoring           │
+│  Physical: physical/virtual server - local/SAN/NFS storage - network uplink                           │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Linux              = Compute Linux Troubleshooting platform overview and core concepts             │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  systemd        = init system and service manager; PID 1 on modern Linux                              │
+│  Unit           = systemd object: service, socket, mount, timer, etc.                                 │
+│  journald       = systemd logging daemon; binary structured log storage                               │
+│  LVM            = Logical Volume Manager; PV -> VG -> LV abstraction                                  │
+│  dracut         = builds the initramfs used early in Linux boot                                       │
+│  initramfs      = temporary root filesystem loaded before real root mounts                            │
+│  NetworkManager = default network config service on RHEL/Ubuntu                                       │
+│  fstab          = static filesystem mount table read at boot                                          │
+│  nofail         = fstab option preventing boot hang if a mount fails                                  │
+│  SELinux        = mandatory access control framework on RHEL-family                                   │
+│  OOM killer     = kernel mechanism killing processes under memory pressure                            │
+│  tmpfs          = RAM-backed temporary filesystem, often used for /tmp                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

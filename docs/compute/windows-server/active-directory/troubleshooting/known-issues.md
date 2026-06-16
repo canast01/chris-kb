@@ -14,54 +14,52 @@ Catalog of known Active Directory bugs, error codes, and workarounds covering re
 </div>
 
 ```text
-┌─────────────────────────────── Compute Windows Server Active Directory ───────────────────────────────┐
+┌────────────────────────────────────────── Active Directory ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                Windows Server: Compute Windows Server Active Directory platform               │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │             Management: Compute Windows Server Active Directory management console            │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Windows directory service — domain controllers, replication, Kerberos auth          │   │
+│   │                Protocols: Kerberos (88) · LDAP (389/636) · SMB (445) · DNS (53)               │   │
+│   │                       Management: ADUC / PowerShell (Get-AD*) / dsa.msc                       │   │
+│   │                Client auth -> DC (Kerberos) -> Ticket issued -> Resource access               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Identity          │  │      Domain Controller      │  │      Holds NTDS.dit DB      │   │
+│   │         Replication         │  │         Multi-master        │  │     USN-based, KCC topo     │   │
+│   │             Auth            │  │           Kerberos          │  │    5-min clock skew tol.    │   │
+│   │             DNS             │  │     AD-integrated zones     │  │    SRV recs for DC disc.    │   │
+│   │             FSMO            │  │       5 special roles       │  │      Single-master ops      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │        DC        │ Directory + auth │   Kerb/LDAP/SMB   │       N/A        │NTDS.dit database │   │
+│   │     repadmin     │ Replication tool │        N/A        │   Domain admin   │showrepl, syncall │   │
+│   │      dcdiag      │ DC health check  │        N/A        │   Domain admin   │ test:all common  │   │
+│   │    FSMO roles    │Single-master ops │        N/A        │ Enterprise admin │  PDC, RID, etc.  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Compute Windows Server Active Directory infrastructure · management network · monitorin  │
+│  Physical: domain controller server(s) - replicated across sites via WAN                              │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Windows Server     = Compute Windows Server Active Directory platform overview and core concepts   │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  NTDS.dit       = the Active Directory database file on each DC                                       │
+│  FSMO           = Flexible Single Master Operations; 5 roles, one DC each                             │
+│  PDC Emulator   = FSMO role handling password changes and time sync                                   │
+│  KCC            = Knowledge Consistency Checker; auto-builds repl. topology                           │
+│  USN            = Update Sequence Number; tracks object changes for repl.                             │
+│  Lingering obj. = stale object from a DC offline beyond tombstone life                                │
+│  Kerberos skew  = >5 min client/DC time diff breaks authentication                                    │
+│  SRV record     = DNS record type letting clients locate DCs/services                                 │
+│  RODC           = Read-Only Domain Controller; no writable DB copy                                    │
+│  Tombstone life = how long deleted objects are retained (default 180d)                                │
+│  ntdsutil       = low-level AD database maintenance and FSMO seize tool                               │
+│  nltest         = CLI tool for trust and DC connectivity diagnostics                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

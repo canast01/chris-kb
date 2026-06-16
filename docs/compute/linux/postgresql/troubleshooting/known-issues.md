@@ -14,54 +14,52 @@ Catalog of known PostgreSQL bugs, error codes, and workarounds covering connecti
 </div>
 
 ```text
-┌────────────────────────────────────── Compute Linux Postgresql ───────────────────────────────────────┐
+┌───────────────────────────────────────────── PostgreSQL ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Linux: Compute Linux Postgresql platform                           │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Compute Linux Postgresql management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              Relational DB — MVCC, streaming replication, extensible, Patroni HA              │   │
+│   │                         Protocols: PostgreSQL wire protocol (TCP 5432)                        │   │
+│   │                     Management: psql CLI / pgAdmin / Patroni REST API (HA)                    │   │
+│   │             Client connect -> pg_hba.conf check -> Query planner -> Storage -> WAL            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │         Concurrency         │  │             MVCC            │  │  Readers never block writes │   │
+│   │         Replication         │  │       Streaming (WAL)       │  │        Async or sync        │   │
+│   │              HA             │  │        Patroni + etcd       │  │      Automated failover     │   │
+│   │         Maintenance         │  │          Autovacuum         │  │     Reclaims dead tuples    │   │
+│   │          Extensions         │  │      pg_stat_statements     │  │      Query perf insight     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     postgres     │ DB server proc.  │      TCP 5432     │   pg_hba rules   │ One per cluster  │   │
+│   │       WAL        │ Write-Ahead Log  │      Internal     │       N/A        │ Basis for repl.  │   │
+│   │     Patroni      │ HA orchestration │     REST 8008     │       N/A        │Needs etcd quorum │   │
+│   │     pg_dump      │  Logical backup  │        N/A        │     DB user      │  Per-DB export   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Compute Linux Postgresql infrastructure · management network · monitoring                │
+│  Physical: DB server host(s) - WAL storage - standby replicas - etcd cluster                          │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Linux              = Compute Linux Postgresql platform overview and core concepts                  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  MVCC           = Multi-Version Concurrency Control; readers never block writers                      │
+│  WAL            = Write-Ahead Log; basis for replication and crash recovery                           │
+│  Autovacuum     = background process reclaiming space from dead rows                                  │
+│  TXID wraparound= critical failure if vacuum falls badly behind                                       │
+│  Patroni        = open-source HA template managing automatic failover                                 │
+│  pg_stat_activity = view of current connections and running queries                                   │
+│  Replication slot = reserves WAL on primary so replica retains segments                               │
+│  pg_hba.conf    = host-based auth rules controlling who can connect                                   │
+│  Logical repl.  = row-level replication, can target a subset of tables                                │
+│  Checkpoint     = periodic dirty-buffer flush, reduces crash recovery time                            │
+│  VACUUM FREEZE  = aggressive vacuum preventing transaction ID wraparound                              │
+│  HAProxy check  = routes traffic only to the current Patroni primary                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
