@@ -14,54 +14,52 @@ Catalog of known Ansible Automation Platform bugs, error codes, and workarounds 
 </div>
 
 ```text
-┌───────────────────────────────── Automation Ansible Troubleshooting ──────────────────────────────────┐
+┌───────────────────────────────────── Ansible Automation Platform ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Ansible: Automation Ansible Troubleshooting platform                     │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │               Management: Automation Ansible Troubleshooting management console               │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │         AAP — Controller, Execution Environments, Receptor mesh, Event-Driven Ansible         │   │
+│   │                    Protocols: SSH · WinRM · Receptor (TCP 27199) · REST API                   │   │
+│   │                     Management: Automation Controller UI / awx-manage CLI                     │   │
+│   │       Inventory -> Playbook execution -> Receptor mesh -> Execution node -> Target host       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │        Control plane        │  │    Automation Controller    │  │      Job sched. + RBAC      │   │
+│   │          Execution          │  │    Execution Environment    │  │  Container, ansible-runner  │   │
+│   │             Mesh            │  │           Receptor          │  │   Node routing, TCP 27199   │   │
+│   │          Inventory          │  │       Dynamic / static      │  │    AWX inventory plugins    │   │
+│   │         Credentials         │  │       Credential store      │  │   Vault-backed, encrypted   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    Controller    │Job orchestration │       HTTPS       │   OAuth2/LDAP    │  Cluster-aware   │   │
+│   │  Execution node  │  Runs playbooks  │    Receptor/SSH   │   Cert (mesh)    │   Isolated EE    │   │
+│   │  Receptor mesh   │Node-to-node route│     TCP 27199     │       mTLS       │  Mesh topology   │   │
+│   │  Automation Hub  │Content/collection│       HTTPS       │      Token       │ Private + Galaxy │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Automation Ansible Troubleshooting infrastructure · management network · monitoring      │
+│  Physical: Controller HA cluster - execution nodes - PostgreSQL DB - target hosts (SSH/WinRM)         │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Ansible            = Automation Ansible Troubleshooting platform overview and core concepts        │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  AAP            = Ansible Automation Platform; Red Hat enterprise suite (Controller+Hub+EDA)          │
+│  Controller     = formerly AWX/Tower; orchestrates job templates, schedules, and RBAC                 │
+│  Exec. Env.     = container bundling Ansible + collections + Python deps for a job run                │
+│  Receptor       = mesh networking layer routing work to execution/hop nodes; TCP 27199                │
+│  Playbook       = YAML automation script defining tasks and target hosts                              │
+│  Become         = privilege escalation (sudo/su) used to run tasks as another user                    │
+│  Inventory      = list of managed hosts; static file or dynamic plugin (cloud, CMDB)                  │
+│  Credential     = encrypted secret (SSH key, vault pw, API key) stored in Controller                  │
+│  Job template   = reusable definition: playbook + inventory + credentials + survey                    │
+│  Automation Hub = private content repository for certified/validated collections                      │
+│  EDA            = Event-Driven Ansible; reacts to webhooks/alerts, triggers rulebooks                 │
+│  ansible-vault  = encrypts sensitive variables/files at rest inside playbooks                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

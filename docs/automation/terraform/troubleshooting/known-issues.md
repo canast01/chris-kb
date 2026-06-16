@@ -14,54 +14,52 @@ Catalog of known Terraform and Terraform Enterprise bugs, error codes, and worka
 </div>
 
 ```text
-┌──────────────────────────────── Automation Terraform Troubleshooting ─────────────────────────────────┐
+┌──────────────────────────────────────── Terraform / OpenTofu ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                    Terraform: Automation Terraform Troubleshooting platform                   │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │              Management: Automation Terraform Troubleshooting management console              │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          Infrastructure-as-code: declarative state-driven provisioning via providers          │   │
+│   │           Protocols: HTTPS to provider APIs · HTTPS to remote state backend (S3/TFE)          │   │
+│   │                   Management: terraform CLI / Terraform Enterprise (TFE) UI                   │   │
+│   │           plan -> diff against state -> apply -> provider API calls -> state updated          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            State            │  │      State file + lock      │  │    S3/TFE/Consul backend    │   │
+│   │          Providers          │  │    AWS/Azure/vSphere etc.   │  │       Plugin binaries       │   │
+│   │          Execution          │  │       CLI / TFE agent       │  │     Local or remote runs    │   │
+│   │           Modules           │  │    Registry / Git source    │  │      Reusable IaC units     │   │
+│   │          Workspace          │  │        TFE workspace        │  │    Per-environment state    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  State backend   │  Stores tfstate  │       HTTPS       │    IAM/Token     │  Lock vs. races  │   │
+│   │ Provider plugin  │ API translation  │ Provider-specific │   Cloud creds    │Versioned, cached │   │
+│   │    TFE agent     │ Remote execution │    HTTPS to TFE   │   Agent token    │  On-prem access  │   │
+│   │ Module registry  │Shared IaC modules│     HTTPS/Git     │ Token (priv reg) │ Public + private │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Automation Terraform Troubleshooting infrastructure · management network · monitoring    │
+│  Physical: CLI/agent host running terraform - state backend - target cloud/on-prem APIs               │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Terraform          = Automation Terraform Troubleshooting platform overview and core concepts      │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  State file     = JSON record mapping resources to real infrastructure IDs                            │
+│  State lock     = prevents two concurrent applies from corrupting the same state                      │
+│  Provider       = plugin translating HCL resources into API calls for a platform                      │
+│  Plan           = dry-run diff between desired config and current state                               │
+│  Apply          = executes the plan, calling provider APIs to reach desired state                     │
+│  Drift          = real infrastructure diverges from what state file records                           │
+│  Module         = reusable bundle of resources with input variables and outputs                       │
+│  TFE            = Terraform Enterprise; self-hosted remote run/state platform                         │
+│  Workspace      = isolated state + variable set, typically one per environment                        │
+│  Agent pool     = group of self-hosted runners executing TFE runs in private networks                 │
+│  Parallelism    = max concurrent resource operations per apply (default 10)                           │
+│  force-unlock   = manually clears a stuck state lock after confirming no other run                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

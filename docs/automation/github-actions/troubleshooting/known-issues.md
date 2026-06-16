@@ -14,54 +14,52 @@ Catalog of known GitHub Actions bugs, error codes, and workarounds covering self
 </div>
 
 ```text
-┌────────────────────────────── Automation Github Actions Troubleshooting ──────────────────────────────┐
+┌─────────────────────────────────────────── GitHub Actions ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Github Actions: Automation Github Actions Troubleshooting platform              │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │            Management: Automation Github Actions Troubleshooting management console           │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          CI/CD platform — cloud-hosted or self-hosted runners executing workflow YAML         │   │
+│   │                  Protocols: HTTPS (TCP 443) to github.com · webhook callbacks                 │   │
+│   │                  Management: Settings -> Actions (repo/org/enterprise level)                  │   │
+│   │            Trigger -> Runner pickup -> Job steps -> Artifacts/Logs -> Status check            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Trigger           │  │        Workflow YAML        │  │     on: push/PR/schedule    │   │
+│   │           Compute           │  │ Hosted / self-hosted runner │  │     Labels match runs-on    │   │
+│   │           Identity          │  │     GITHUB_TOKEN / OIDC     │  │        Scoped per job       │   │
+│   │           Secrets           │  │     Repo/org/env secrets    │  │        Masked in logs       │   │
+│   │          Artifacts          │  │   actions/upload-artifact   │  │   90-day default retention  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  Hosted runner   │ Ephemeral VM/job │       HTTPS       │   GITHUB_TOKEN   │  GitHub-managed  │   │
+│   │Self-hosted runner│ Customer compute │  HTTPS out (443)  │   Runner token   │Long-lived process│   │
+│   │       OIDC       │ Cloud federation │       HTTPS       │    JWT claims    │  No static keys  │   │
+│   │   Environments   │  Deploy gating   │        N/A        │    Reviewers     │ Protection rules │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Automation Github Actions Troubleshooting infrastructure · management network · monitor  │
+│  Physical: GitHub-hosted VM fleet (cloud) or customer-owned self-hosted runner hosts                  │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Github Actions     = Automation Github Actions Troubleshooting platform overview and core concept  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Workflow       = YAML file in .github/workflows defining triggers, jobs, and steps                   │
+│  Runner         = the machine (hosted or self-hosted) that executes a job                             │
+│  runs-on        = label selecting which runner picks up a job (e.g. ubuntu-latest)                    │
+│  GITHUB_TOKEN   = auto-generated per-job token scoped to the triggering repository                    │
+│  OIDC           = OpenID Connect; lets workflows get short-lived cloud creds, no secrets              │
+│  Secret         = encrypted value set at repo/org/environment scope, masked in logs                   │
+│  Environment    = named deployment target with optional required reviewers/wait timer                 │
+│  Artifact       = file(s) uploaded by a job for later jobs or download, time-limited                  │
+│  Matrix build   = one job definition fanned out across a grid of input variables                      │
+│  Self-hosted    = customer-managed runner; needs outbound 443 to github.com, no inbound               │
+│  Concurrency    = group key limiting/cancelling overlapping workflow runs                             │
+│  Reusable wflow = workflow called by another workflow via workflow_call                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

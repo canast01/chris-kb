@@ -14,54 +14,52 @@ Catalog of known Python scripting bugs, error codes, and workarounds covering vi
 </div>
 
 ```text
-┌────────────────────────────────── Automation Python Troubleshooting ──────────────────────────────────┐
+┌────────────────────────────────────── Python Automation Scripts ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                       Python: Automation Python Troubleshooting platform                      │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                Management: Automation Python Troubleshooting management console               │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │        Python 3.10/3.12 scripts for infrastructure automation and REST API integration        │   │
+│   │          Protocols: HTTPS (requests/urllib3) · SSH (paramiko/fabric) · SNMP (pysnmp)          │   │
+│   │            Management: venv per project / pip / requirements.txt or pyproject.toml            │   │
+│   │          venv activate -> pip install -> script run -> API/SSH call -> target system          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Isolation          │  │      venv / virtualenv      │  │       Per-project deps      │   │
+│   │           Packages          │  │          pip / PyPI         │  │     requirements.txt pin    │   │
+│   │            Trust            │  │     CA bundle / certifi     │  │  Internal CA often missing  │   │
+│   │         HTTP client         │  │       requests / httpx      │  │       Timeout, retries      │   │
+│   │         Remote exec         │  │      paramiko / fabric      │  │     SSH key or password     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     requests     │  REST API calls  │       HTTPS       │Bearer/Basic/cert │  Uses OS trust   │   │
+│   │     paramiko     │  SSH automation  │        SSH        │   Key/password   │ Pure-Python SSH2 │   │
+│   │       venv       │  Dep. isolation  │        N/A        │       N/A        │ One per project  │   │
+│   │       pip        │ Package install  │   HTTPS to PyPI   │ Token (priv idx) │   Pin versions   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Automation Python Troubleshooting infrastructure · management network · monitoring       │
+│  Physical: automation/jump host running scripts - target APIs/SSH endpoints over network              │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Python             = Automation Python Troubleshooting platform overview and core concepts         │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  venv           = isolated Python environment with its own interpreter + package set                  │
+│  pip            = Python package installer; reads requirements.txt or pyproject.toml                  │
+│  certifi        = Python package bundling Mozilla CA certs used as a trust fallback                   │
+│  SSLCertVerif.  = error raised when a server cert chain is not in the trust store                     │
+│  requests       = most common Python HTTP client library for REST automation                          │
+│  paramiko       = pure-Python SSHv2 library used for remote command execution                         │
+│  Timeout        = max wait for a connect/read; unset defaults can hang indefinitely                   │
+│  update-ca-trust= RHEL command to add a CA cert to the OS-wide trust store                            │
+│  site-packages  = directory where pip installs packages for an interpreter/venv                       │
+│  JSONDecodeError= raised when a response body is not valid JSON (often an HTML error page)            │
+│  Distributed Seg. Proc. = backup-specific DSP; unrelated term seen in some integration logs           │
+│  Idempotency    = property where re-running a script produces the same end state safely               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -23,5 +23,6 @@ from . import evs
 from . import ceph
 from . import powercli
 from . import learning_paths
+from . import known_issues
 
 from ._core import DIAGRAMS
