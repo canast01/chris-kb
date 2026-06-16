@@ -14,54 +14,52 @@ Catalog of known Aria Suite Lifecycle (LCM) bugs, error codes, and workarounds c
 </div>
 
 ```text
-┌───────────────────────────── Virtualization Vmware Aria Suite Lifecycle ──────────────────────────────┐
+┌────────────────────────────────── VMware Aria Suite Lifecycle (LCM) ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                  Vmware: Virtualization Vmware Aria Suite Lifecycle platform                  │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │           Management: Virtualization Vmware Aria Suite Lifecycle management console           │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Lifecycle management for the Aria suite — deploy, upgrade, patch, scale            │   │
+│   │               Protocols: HTTPS (UI/API) · vCenter API · SSH (node access) · NFS               │   │
+│   │             Management: LCM web UI · REST API · binary downloads from VMware depot            │   │
+│   │           LCM deploys OVA -> configures product -> installs cert -> validates health          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Platform          │  │        LCM appliance        │  │        OVA on vCenter       │   │
+│   │           Products          │  │        Aria stack VMs       │  │      Auto/Logs/Ops/Nets     │   │
+│   │           Packages          │  │        Depot binaries       │  │      Online or NFS repo     │   │
+│   │            Certs            │  │      VMware CA / custom     │  │     LCM handles cert ops    │   │
+│   │           Identity          │  │         vIDM (VIDM)         │  │      SSO for Aria stack     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  LCM appliance   │Lifecycle manager │     HTTPS 443     │   admin@local    │Manages full stack│   │
+│   │     vCenter      │  Deploy target   │    vCenter API    │ Service account  │OVA deploy target │   │
+│   │      Depot       │  Binary source   │    HTTPS / NFS    │   depot creds    │Online or air-gap │   │
+│   │       vIDM       │   SSO provider   │     HTTPS 443     │   admin@local    │Integrated by LCM │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Aria Suite Lifecycle infrastructure · management network · monito  │
+│  Physical: LCM VM (vCenter) -> deploys Aria product VMs -> manages cert/upgrade lifecycle             │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Aria Suite Lifecycle platform overview and core concep  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  LCM          = Lifecycle Manager; VMware tool managing Aria product installs + upgrades              │
+│  Environment  = LCM grouping of Aria products sharing vIDM and certificate config                     │
+│  Product node = LCM-managed VM (e.g. Aria Operations master node)                                     │
+│  Depot        = VMware product binary repository; online (vmware.com) or offline NFS                  │
+│  Patch        = incremental version update applied via LCM without full redeploy                      │
+│  Upgrade      = major or minor version update orchestrated by LCM                                     │
+│  vIDM         = VMware Identity Manager; manages SSO and SAML for Aria products                       │
+│  Certificate  = LCM replaces certs on all products in an environment at once                          │
+│  Locker       = LCM credential and certificate vault for managed products                             │
+│  Precheck     = LCM health validation run before an upgrade begins                                    │
+│  Snapshot     = LCM takes VM snapshots before upgrade for rollback                                    │
+│  Air-gap      = LCM configured with local NFS depot when internet is unavailable                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

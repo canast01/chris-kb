@@ -14,54 +14,52 @@ Catalog of known Aria Automation (vRA) bugs, error codes, and workarounds coveri
 </div>
 
 ```text
-┌──────────────────────────────── Virtualization Vmware Aria Automation ────────────────────────────────┐
+┌─────────────────────────────────────── VMware Aria Automation ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                     Vmware: Virtualization Vmware Aria Automation platform                    │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │              Management: Virtualization Vmware Aria Automation management console             │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Cloud automation platform — self-service catalog, IaC, multi-cloud deploy           │   │
+│   │               Protocols: HTTPS (UI/API) · REST · vRO workflow API · LDAP · SAML               │   │
+│   │           Management: Aria Automation UI · REST API · Blueprint YAML · vRO workflows          │   │
+│   │           User -> catalog request -> blueprint -> cloud zone deploy -> IP/DNS assign          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Catalog           │  │       Service catalog       │  │      Self-service items     │   │
+│   │             IaC             │  │       Blueprint (YAML)      │  │      Declarative deploy     │   │
+│   │          Cloud zone         │  │       vCenter / cloud       │  │     Target compute pool     │   │
+│   │          Networking         │  │          IPAM / NSX         │  │     IP assignment + SDN     │   │
+│   │        Extensibility        │  │          ABX / vRO          │  │     Subscription actions    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    Aria Auto     │Automation engine │     HTTPS 443     │   SAML / vIDM    │Lifecycle-managed │   │
+│   │    Blueprint     │ Deploy template  │    YAML / REST    │  Project scope   │ Versioned in Git │   │
+│   │    Cloud zone    │  Compute target  │    vCenter API    │ Service account  │Has placement pol.│   │
+│   │       vRO        │ Workflow engine  │    HTTPS (API)    │    vIDM / SSO    │Extensibility ext.│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Aria Automation infrastructure · management network · monitoring   │
+│  Physical: Aria Automation cluster -> vCenter / cloud endpoint -> deployed VMs / infra                │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Aria Automation platform overview and core concepts     │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Blueprint    = YAML infrastructure-as-code template defining resources to deploy                     │
+│  Cloud zone   = compute endpoint (vCenter cluster, AWS, Azure) for deployments                        │
+│  Flavor mapping = maps blueprint resource sizes to cloud-specific compute SKUs                        │
+│  Image mapping = maps blueprint OS references to cloud-specific image IDs                             │
+│  IPAM         = IP Address Management; Aria assigns IPs from configured ranges                        │
+│  ABX          = Action-Based Extensibility; FaaS-style subscription actions                           │
+│  vRO          = vRealize Orchestrator; Aria Automation workflow engine                                │
+│  Subscription = event-driven hook (e.g. post-provision DNS update via ABX/vRO)                        │
+│  Project      = Aria tenancy boundary; scopes blueprints, zones, and users                            │
+│  Deployment   = running instance of a blueprint; tracked in Aria as a lifecycle                       │
+│  Catalog item = published blueprint or vRO workflow visible in service catalog                        │
+│  vIDM         = VMware Identity Manager; SSO and SAML provider for Aria stack                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

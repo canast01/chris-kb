@@ -14,54 +14,52 @@ Catalog of known OpenShift bugs, error codes, and workarounds covering cluster o
 </div>
 
 ```text
-┌────────────────────────────── Virtualization Openshift Troubleshooting ───────────────────────────────┐
+┌────────────────────────────────────────── Red Hat OpenShift ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                  Openshift: Virtualization Openshift Troubleshooting platform                 │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │            Management: Virtualization Openshift Troubleshooting management console            │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Enterprise Kubernetes platform — control plane, operators, and workloads           │   │
+│   │              Protocols: HTTPS (API/UI) · etcd gRPC · CRI-O · CNI (OVN-Kubernetes)             │   │
+│   │             Management: oc CLI · web console · GitOps (ArgoCD) · OLM operator mgmt            │   │
+│   │               User -> API server -> etcd -> scheduler -> kubelet -> pod running               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │        Control plane        │  │          API + etcd         │  │       3 masters for HA      │   │
+│   │           Compute           │  │         Worker nodes        │  │      CRI-O container rt     │   │
+│   │          Networking         │  │        OVN-Kubernetes       │  │     SDN + network policy    │   │
+│   │           Storage           │  │         CSI drivers         │  │     PVC -> StorageClass     │   │
+│   │          Operators          │  │         OLM managed         │  │     Day-2 config via CRD    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    API server    │ Cluster endpoint │     HTTPS 6443    │   OIDC / cert    │All ops route here│   │
+│   │       etcd       │   State store    │    gRPC 2379/80   │       mTLS       │3 members (quorum)│   │
+│   │       OLM        │Operator lifecycle│      Internal     │       RBAC       │  Manages op CSV  │   │
+│   │      oc CLI      │Cluster management│    HTTPS (API)    │    kubeconfig    │ Extends kubectl  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Openshift Troubleshooting infrastructure · management network · monitori  │
+│  Physical: bare-metal/VM masters (3) + worker nodes -> OVN overlay -> storage CSI                     │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Openshift          = Virtualization Openshift Troubleshooting platform overview and core concepts  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  etcd         = distributed key-value store; single source of truth for cluster state                 │
+│  OLM          = Operator Lifecycle Manager; installs and updates operators from catalog               │
+│  CRI-O        = OpenShift container runtime; OCI-compliant, replaces Docker                           │
+│  OVN-Kubernetes = default SDN (replaces OpenShift SDN); uses OVS + OVN                                │
+│  MachineConfig = operator managing node-level OS and kubelet configuration                            │
+│  CSV          = ClusterServiceVersion; operator metadata including permissions                        │
+│  CRD          = Custom Resource Definition; extends Kubernetes API for operators                      │
+│  PVC          = Persistent Volume Claim; requests storage from a StorageClass                         │
+│  StorageClass = CSI driver config defining backend and provisioner                                    │
+│  ImageStream  = OpenShift abstraction for tracking container image versions                           │
+│  Route        = OpenShift ingress object exposing services externally                                 │
+│  Node NotReady = kubelet lost contact with API server or CRI-O is unhealthy                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

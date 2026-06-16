@@ -15,54 +15,52 @@ Catalog of known NSX-T / NSX 4.x bugs, error codes, and workarounds covering man
 </div>
 
 ```text
-┌────────────────────────────────────── Virtualization Vmware Nsx ──────────────────────────────────────┐
+┌───────────────────────────────────────────── VMware NSX ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Vmware: Virtualization Vmware Nsx platform                          │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Virtualization Vmware Nsx management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Software-defined networking — overlay, micro-segmentation, Edge routing            │   │
+│   │             Protocols: HTTPS (manager) · BGP/BFD · VXLAN/GENEVE overlay · REST API            │   │
+│   │                 Management: NSX Manager UI · REST API · Policy API (preferred)                │   │
+│   │               Policy -> transport node -> TEP (GENEVE) -> overlay segment -> DFW              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Control           │  │         NSX Manager         │  │        3-node cluster       │   │
+│   │          Data plane         │  │       Transport nodes       │  │       ESXi + Edge VMs       │   │
+│   │           Routing           │  │         Edge cluster        │  │       BGP N/S routing       │   │
+│   │           Security          │  │             DFW             │  │      Per-vNIC firewall      │   │
+│   │           Overlay           │  │       GENEVE segments       │  │           UDP 6081          │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   NSX Manager    │  Control plane   │     HTTPS 443     │   vIDM / local   │3-node HA cluster │   │
+│   │    Edge node     │   N/S gateway    │    BGP / HTTPS    │    NSX trust     │ VM or bare-metal │   │
+│   │       DFW        │Micro-seg firewall│      Internal     │    Policy API    │ESXi kernel module│   │
+│   │       TEP        │  Overlay encap   │  GENEVE UDP 6081  │       N/A        │ Needs MTU 1600+  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Nsx infrastructure · management network · monitoring               │
+│  Physical: ESXi hosts (transport nodes) -> GENEVE overlay -> Edge cluster -> physical TOR             │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Nsx platform overview and core concepts                 │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  DFW          = Distributed Firewall; stateful per-vNIC firewall in ESXi kernel                       │
+│  Transport node = ESXi host or Edge VM with NSX data plane kernel modules                             │
+│  TEP          = Tunnel End Point; IP on transport node for GENEVE encapsulation                       │
+│  GENEVE       = Generic Network Virtualization Encapsulation; NSX overlay protocol                    │
+│  Segment      = NSX logical switch (L2 domain) running over GENEVE overlay                            │
+│  Tier-0 GW    = NSX North/South gateway; runs BGP to physical upstream                                │
+│  Tier-1 GW    = NSX East/West gateway; tenant-level routing                                           │
+│  Edge cluster = group of Edge nodes providing N/S routing and gateway services                        │
+│  BFD          = Bidirectional Forwarding Detection; sub-second link failure detection                 │
+│  BGP          = Border Gateway Protocol; Tier-0 routing to physical network                           │
+│  Policy API   = preferred NSX REST API; declarative intent-based config                               │
+│  Manager API  = legacy NSX API; still works but Policy API preferred for new config                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

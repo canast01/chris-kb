@@ -14,54 +14,52 @@ Catalog of known Aria Operations for Networks (vRNI) bugs, error codes, and work
 </div>
 
 ```text
-┌───────────────────────── Virtualization Vmware Aria Operations For Networks ──────────────────────────┐
+┌───────────────────────────────── VMware Aria Operations for Networks ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Vmware: Virtualization Vmware Aria Operations For Networks platform              │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │       Management: Virtualization Vmware Aria Operations For Networks management console       │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Network visibility platform — topology, flow analytics, micro-seg audit            │   │
+│   │                Protocols: HTTPS (UI/API) · IPFIX / NetFlow · REST API · SNMP v3               │   │
+│   │               Management: Aria Networks web UI · REST API · Slack / email alerts              │   │
+│   │              Collector polls NSX/vCenter -> flow data -> topology map -> analysis             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Platform          │  │       Aria Networks VM      │  │        OVA appliance        │   │
+│   │          Collection         │  │        Data collector       │  │          Per-DC VM          │   │
+│   │             Flow            │  │       IPFIX / NetFlow       │  │        VM-to-VM flows       │   │
+│   │           Topology          │  │        NSX + vCenter        │  │      Logical + physical     │   │
+│   │          Analytics          │  │       Micro-seg audit       │  │      Policy recommends      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  Aria Networks   │ Central platform │     HTTPS 443     │   vIDM / local   │ OVA + collectors │   │
+│   │    Collector     │ Data collection  │    IPFIX / API    │  Service creds   │Relays to platform│   │
+│   │    NSX source    │ Flow + topology  │      REST API     │    NSX admin     │ Main data source │   │
+│   │    Micro-seg     │  Security audit  │      Internal     │      Admin       │ DFW suggestions  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Aria Operations For Networks infrastructure · management network   │
+│  Physical: collector VMs (per-DC) -> NSX/vCenter APIs -> Aria Networks platform                       │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Aria Operations For Networks platform overview and cor  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Aria Networks = VMware network visibility platform (formerly vRealize Network Insight)               │
+│  Collector    = Aria Networks VM per DC that polls NSX/vCenter and forwards data                      │
+│  IPFIX        = IP Flow Information Export; standard for VM-to-VM flow telemetry                      │
+│  Micro-seg audit = analysis of actual traffic vs NSX DFW policy; finds gaps                           │
+│  Topology     = visual map of VMs, logical switches, routers, and physical paths                      │
+│  NSX DFW      = Distributed Firewall; security policy analyzed by Aria Networks                       │
+│  Security group = NSX object grouping VMs by tag or criteria for policy                               │
+│  Flow table   = time-series of src/dst/port/bytes per VM pair                                         │
+│  Path query   = Aria Networks trace of how traffic flows from A to B                                  │
+│  Data source  = registered vCenter, NSX, or physical switch in Aria Networks                          │
+│  Recommendation = Aria-suggested DFW rule based on observed flow patterns                             │
+│  Pinned entity = saved object in Aria Networks for quick-access analysis                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

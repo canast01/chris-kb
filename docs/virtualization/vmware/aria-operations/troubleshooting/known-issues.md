@@ -14,54 +14,52 @@ Catalog of known Aria Operations (vROps) bugs, error codes, and workarounds cove
 </div>
 
 ```text
-┌──────────────────────────────── Virtualization Vmware Aria Operations ────────────────────────────────┐
+┌─────────────────────────────────────── VMware Aria Operations ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                     Vmware: Virtualization Vmware Aria Operations platform                    │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │              Management: Virtualization Vmware Aria Operations management console             │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │             Unified operations management — monitoring, capacity, and remediation             │   │
+│   │                Protocols: HTTPS (UI/API) · REST · SNMP (adapter) · vCenter API                │   │
+│   │                  Management: Aria Ops web UI · REST API · vROps SDK adapters                  │   │
+│   │               Adapter collect -> metric store -> policy eval -> alert -> action               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Collection         │  │           Adapters          │  │      Per-source plugins     │   │
+│   │          Analytics          │  │         Metric store        │  │        In-platform DB       │   │
+│   │            Policy           │  │        Alert policies       │  │     Threshold + symptoms    │   │
+│   │           Capacity          │  │        What-if / plan       │  │      Demand forecasting     │   │
+│   │           Actions           │  │         Remediation         │  │        Auto or manual       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     Aria Ops     │   Ops platform   │     HTTPS 443     │   vIDM / SAML    │ Cluster or SaaS  │   │
+│   │     Adapter      │ Data collection  │  Source-specific  │  Service creds   │  MP (mgmt pack)  │   │
+│   │      Policy      │  Alert rule set  │      Internal     │      Admin       │ Applied to group │   │
+│   │   Cloud proxy    │ Remote collector │   HTTPS 443 out   │      Token       │ SaaS deployments │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Aria Operations infrastructure · management network · monitoring   │
+│  Physical: Aria Ops nodes -> adapter endpoints (vCenter, cloud, custom) -> metric DB                  │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Aria Operations platform overview and core concepts     │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Aria Operations = VMware unified monitoring platform (formerly vROps)                                │
+│  Adapter      = plugin connecting Aria Ops to a data source; one per product                          │
+│  MP           = Management Pack; adapter + dashboards + policies bundle                               │
+│  Policy       = set of alert definitions, thresholds, and actions applied to objects                  │
+│  Symptom      = a metric condition (e.g. CPU > 90%) used to trigger alerts                            │
+│  Alert        = triggered when symptoms meet defined condition in a policy                            │
+│  Workload policy = capacity and placement rules for VM rightsizing                                    │
+│  Super metric = user-defined formula combining multiple metrics                                       │
+│  Cloud proxy  = lightweight VM for SaaS; replaces on-prem collector node                              │
+│  Capacity remaining = days until cluster runs out of compute or storage                               │
+│  Object       = monitored entity in Aria Ops (VM, host, cluster, datastore)                           │
+│  Relationship = parent/child links between objects enabling root-cause analysis                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

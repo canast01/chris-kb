@@ -13,54 +13,52 @@ Catalog of known Nutanix AOS / AHV bugs, error codes, and workarounds covering C
 </div>
 
 ```text
-┌─────────────────────────────── Virtualization Nutanix Troubleshooting ────────────────────────────────┐
+┌───────────────────────────────────────────── Nutanix HCI ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                    Nutanix: Virtualization Nutanix Troubleshooting platform                   │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │             Management: Virtualization Nutanix Troubleshooting management console             │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Hyper-converged infrastructure — compute, storage, and networking on AOS           │   │
+│   │             Protocols: iSCSI (internal) · NFS · SMB · REST API · iDRAC/IPMI (IPMI)            │   │
+│   │            Management: Prism Element (per-cluster) · Prism Central (multi-cluster)            │   │
+│   │                VM I/O -> AHV hypervisor -> CVM DSF -> distributed storage ring                │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Storage           │  │          CVM + DSF          │  │        1 CVM per node       │   │
+│   │           Compute           │  │        AHV hypervisor       │  │     KVM-based (default)     │   │
+│   │           Network           │  │           AHV OVS           │  │     Open vSwitch fabric     │   │
+│   │          Management         │  │        Prism Central        │  │      Multi-cluster mgmt     │   │
+│   │            Health           │  │          NCC checks         │  │     Cluster health tests    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       CVM        │Storage controller│    iSCSI / NFS    │     Internal     │Must stay running │   │
+│   │       AHV        │    Hypervisor    │      Internal     │       N/A        │ ESXi also works  │   │
+│   │  Prism Element   │    Cluster UI    │     HTTPS 9440    │    Local / AD    │ Per-cluster view │   │
+│   │       NCC        │  Health checks   │      Internal     │      Admin       │Run after changes │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Nutanix Troubleshooting infrastructure · management network · monitoring  │
+│  Physical: Nutanix nodes (NX/OEM) -> CVM ring -> Prism -> management network                          │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Nutanix            = Virtualization Nutanix Troubleshooting platform overview and core concepts    │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  CVM          = Controller VM; Nutanix storage services running on each node                          │
+│  DSF          = Distributed Storage Fabric; Nutanix virtual SAN across all CVMs                       │
+│  AOS          = Acropolis OS; Nutanix core software stack                                             │
+│  AHV          = Acropolis Hypervisor; Nutanix default KVM-based hypervisor                            │
+│  NCC          = Nutanix Cluster Check; suite of health tests run via CLI or Prism                     │
+│  Prism Element = per-cluster web UI on port 9440; direct cluster management                           │
+│  Prism Central = multi-cluster management appliance; policies, compliance, VM mgmt                    │
+│  Stargate     = CVM I/O service; handles all VM disk read/write operations                            │
+│  Cassandra    = CVM metadata service; distributed ring storing extent map                             │
+│  Curator      = background maintenance service; reclaim, rebalance, disk repair                       │
+│  RF           = Replication Factor; number of data copies (RF2 or RF3)                                │
+│  Expand cluster = adding nodes; must pass NCC before and after expansion                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

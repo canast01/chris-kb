@@ -14,54 +14,52 @@ Catalog of known Horizon bugs, error codes, and workarounds covering Blast Extre
 </div>
 
 ```text
-┌──────────────────────────────────── Virtualization Vmware Horizon ────────────────────────────────────┐
+┌───────────────────────────────────────── VMware Horizon VDI ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Vmware: Virtualization Vmware Horizon platform                        │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                  Management: Virtualization Vmware Horizon management console                 │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              Virtual desktop/app delivery — pooled/dedicated VMs, session brokers             │   │
+│   │              Protocols: Blast Extreme (TCP/UDP 8443) · PCoIP · RDP · HTTPS (443)              │   │
+│   │                  Management: Horizon Console · PowerCLI · REST API · Event DB                 │   │
+│   │           User auth -> CS -> UAG -> agent in desktop VM -> display protocol session           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Access           │  │        UAG appliance        │  │         DMZ gateway         │   │
+│   │            Broker           │  │      Connection Server      │  │      Session assignment     │   │
+│   │           Desktop           │  │       Horizon Agent VM      │  │    Display protocol host    │   │
+│   │           Protocol          │  │        Blast / PCoIP        │  │    Display + USB + audio    │   │
+│   │           Identity          │  │          AD + vIDM          │  │      Entitlement source     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       UAG        │  Secure gateway  │   HTTPS / Blast   │ Smart card/SAML  │ Replaces SecSrvr │   │
+│   │Connection Server │  Session broker  │     HTTPS 443     │   AD Kerberos    │LDAP-backed config│   │
+│   │  Horizon Agent   │ Desktop endpoint │    Blast/PCoIP    │       N/A        │In each desktop VM│   │
+│   │     App Vol      │   App delivery   │       HTTPS       │     AD group     │VMDK app packages │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Horizon infrastructure · management network · monitoring           │
+│  Physical: client -> UAG (DMZ) -> Connection Server -> Horizon Agent in desktop VM                    │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Horizon platform overview and core concepts             │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  UAG          = Unified Access Gateway; DMZ reverse proxy replacing Security Server                   │
+│  Connection Server = Horizon broker; assigns user to desktop pool/farm                                │
+│  Blast Extreme = VMware HTML5/UDP display protocol; preferred over PCoIP                              │
+│  PCoIP        = PC-over-IP; Teradici display protocol; still used for thin clients                    │
+│  Desktop pool = logical grouping of VMs for user assignment                                           │
+│  Entitlement  = mapping of AD group/user to a desktop pool or app                                     │
+│  Instant clone = fast VM provisioning; linked to parent snapshot, no customization                    │
+│  Full clone   = independent VM copy; slower provision but fully isolated                              │
+│  App Volumes  = application delivery via VMDK attached at login                                       │
+│  DEM          = Dynamic Environment Manager; user profile and policy config                           │
+│  replica      = Horizon CS replica; shared LDAP state, load balances connections                      │
+│  vGPU         = GPU passthrough or SR-IOV for graphics-intensive desktops                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

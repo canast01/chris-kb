@@ -14,54 +14,52 @@ Catalog of known Aria Operations for Logs (vRLI) bugs, error codes, and workarou
 </div>
 
 ```text
-┌─────────────────────────── Virtualization Vmware Aria Operations For Logs ────────────────────────────┐
+┌─────────────────────────────────── VMware Aria Operations for Logs ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                Vmware: Virtualization Vmware Aria Operations For Logs platform                │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │         Management: Virtualization Vmware Aria Operations For Logs management console         │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Log analytics and monitoring — real-time syslog/event ingestion and search          │   │
+│   │             Protocols: syslog UDP/TCP 514 · CFAPI (8543) · HTTPS (9543) · REST API            │   │
+│   │             Management: Aria Logs web UI · REST API · content packs · alert rules             │   │
+│   │             Device syslog -> Aria Logs ingestion -> index -> query/alert -> notify            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Ingestion          │  │        syslog / CFAPI       │  │        UDP 514 or TCP       │   │
+│   │            Index            │  │       Integrated store      │  │      Local disk bucket      │   │
+│   │          Analytics          │  │        Content packs        │  │     Pre-built dashboards    │   │
+│   │           Alerting          │  │         Alert rules         │  │       Email / webhook       │   │
+│   │           Cluster           │  │         Worker nodes        │  │     Scale out ingestion     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   Master node    │   Log platform   │     HTTPS 9543    │   vIDM / local   │Primary + workers │   │
+│   │  syslog intake   │  Log ingestion   │    UDP/TCP 514    │       N/A        │  or CFAPI 8543   │   │
+│   │   Content pack   │Dashboards+alerts │      Internal     │      Admin       │vCenter, NSX packs│   │
+│   │     REST API     │  Query / export  │     HTTPS 9543    │   Bearer token   │  Ad-hoc queries  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Aria Operations For Logs infrastructure · management network · mo  │
+│  Physical: log sources (ESXi, NSX, apps) -> syslog/CFAPI -> Aria Logs cluster                         │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Aria Operations For Logs platform overview and core co  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Aria Logs    = VMware log analytics platform (formerly vRealize Log Insight)                         │
+│  CFAPI        = Cloud Foundry API; Aria Logs native structured log intake port 8543                   │
+│  Content pack = pre-built dashboards and alerts for a specific product (e.g. NSX)                     │
+│  Syslog       = standard UDP/TCP 514 log ingestion; most network devices use this                     │
+│  Alert        = rule that fires when log query returns > threshold results                            │
+│  Ingestion rate = logs/second; platform throttles if workers are overwhelmed                          │
+│  Retention    = disk-based; older logs rolled off when bucket hits capacity                           │
+│  Interactive analytics = ad-hoc Aria Logs query with charts and field extraction                      │
+│  Worker node  = scale-out log processing node; master distributes queries to workers                  │
+│  Forwarder    = Aria Logs agent on a source that sends logs to the cluster                            │
+│  SMTP alert   = email delivery of alert notification; requires SMTP relay config                      │
+│  Export       = Aria Logs query result sent to external syslog or S3/NFS archive                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
