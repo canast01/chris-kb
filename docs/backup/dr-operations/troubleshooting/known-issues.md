@@ -14,54 +14,52 @@ Catalog of known issues in DR runbook operations covering failover testing, netw
 </div>
 
 ```text
-┌──────────────────────────────── Backup Dr Operations Troubleshooting ─────────────────────────────────┐
+┌──────────────────────────────────────────── DR Operations ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                  Dr Operations: Backup Dr Operations Troubleshooting platform                 │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │              Management: Backup Dr Operations Troubleshooting management console              │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │       Cross-platform DR runbooks — failover testing, re-IP, DNS cutover, app sequencing       │   │
+│   │            Protocols: DNS · replication-specific (SRDF/SnapMirror/Veeam) · AD/LDAP            │   │
+│   │               Management: DR runbook documents / SRM or equivalent orchestration              │   │
+│   │          Declare DR -> Storage failover -> Network cutover -> App startup -> Validate         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Storage           │  │     Array/VM replication    │  │   SRDF, SnapMirror, Veeam   │   │
+│   │           Network           │  │      Re-IP / L2 stretch     │  │   DNS delegation per site   │   │
+│   │           Identity          │  │      AD/DNS at DR site      │  │     Writable DC required    │   │
+│   │          Sequencing         │  │        Runbook order        │  │      DB-mid.ware-app-LB     │   │
+│   │          Validation         │  │         Smoke tests         │  │     App-specific checks     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    DR runbook    │ Documented steps │        N/A        │   Change appr.   │  Test quarterly  │   │
+│   │   DNS cutover    │  Redirect to DR  │      DNS (53)     │      Admin       │Pre-stage records │   │
+│   │     AD at DR     │ Auth continuity  │   LDAP/Kerberos   │   Domain admin   │ Need writable DC │   │
+│   │   App sequence   │ Ordered startup  │    App-specific   │  Service accts   │ Doc dependencies │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Backup Dr Operations Troubleshooting infrastructure · management network · monitoring    │
+│  Physical: production site - DR site - WAN/replication link - DR test network                         │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Dr Operations      = Backup Dr Operations Troubleshooting platform overview and core concepts      │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  RPO            = Recovery Point Objective; max acceptable data loss in time                          │
+│  RTO            = Recovery Time Objective; max acceptable time to restore service                     │
+│  Runbook        = step-by-step documented procedure for executing DR failover                         │
+│  Failover test  = isolated-network DR exercise that does not impact production                        │
+│  Re-IP          = changing a host IP to match the DR site network                                     │
+│  L2 extension   = stretching a VLAN across sites so DR keeps the same IP space                        │
+│  Writable DC    = AD domain controller that can process auth, not just RODC                           │
+│  DNS delegation = authority for a DNS zone handed to the DR site name servers                         │
+│  CDP            = Continuous Data Protection; near-zero RPO replication                               │
+│  Reprotect      = re-establishing replication reverse direction after failover                        │
+│  Dependency map = documented start order required for an app to come up                               │
+│  Tabletop test  = DR test run as discussion only, without an actual failover                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

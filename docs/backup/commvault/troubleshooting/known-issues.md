@@ -14,54 +14,52 @@ Catalog of known Commvault bugs, error codes, and workarounds covering backup jo
 </div>
 
 ```text
-┌────────────────────────────────── Backup Commvault Troubleshooting ───────────────────────────────────┐
+┌────────────────────────────────────────────── Commvault ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Commvault: Backup Commvault Troubleshooting platform                     │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                Management: Backup Commvault Troubleshooting management console                │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │        Enterprise backup platform — CommServe orchestration, MediaAgents, client agents       │   │
+│   │            Protocols: NFS/CIFS · DD Boost · iSCSI/FC (block) · HTTPS (web console)            │   │
+│   │                      Management: CommCell Console / Command Center web UI                     │   │
+│   │        CommServe schedule -> MediaAgent -> Storage target -> Catalog -> Client restore        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Control           │  │          CommServe          │  │  SQL Server-backed catalog  │   │
+│   │          Data mover         │  │          MediaAgent         │  │      Dedup, encryption      │   │
+│   │            Client           │  │          iDataAgent         │  │  App-aware (SQL/Oracle/VSA) │   │
+│   │           Storage           │  │    Disk lib / Data Domain   │  │     DD Boost integration    │   │
+│   │           Catalog           │  │         CommServe DB        │  │  SQL Server, sized per env  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    CommServe     │Orchestrate+catlg │     HTTPS/SQL     │     AD/local     │  Needs HA plan   │   │
+│   │    MediaAgent    │Moves data to disk│      TCP 8400     │       Cert       │  Dedup DB local  │   │
+│   │       VSA        │VMware/Hyper-V bkp│   HTTPS vCenter   │   Service acct   │    Agentless     │   │
+│   │   Web Console    │ Self-svc restore │       HTTPS       │    SAML/local    │ End-user portal  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Backup Commvault Troubleshooting infrastructure · management network · monitoring        │
+│  Physical: CommServe server(s) - MediaAgent hosts - disk lib/Data Domain - clients                    │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Commvault          = Backup Commvault Troubleshooting platform overview and core concepts          │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  CommCell       = entire Commvault env: CommServe + MediaAgents + clients as one unit                 │
+│  CommServe      = central SQL-backed control plane; scheduling, catalog, licensing                    │
+│  MediaAgent     = data mover; performs dedup, compression, encryption to storage                      │
+│  iDataAgent     = per-app agent (SQL, Oracle, file system) for app-aware backup                       │
+│  VSA            = Virtual Server Agent; agentless VM backup via vCenter API                           │
+│  DDB            = Deduplication Database; local per MediaAgent, tracks block sigs                     │
+│  Storage policy = defines retention, copy precedence, and target library                              │
+│  Subclient      = logical grouping within a client defining what gets backed up                       │
+│  DD Boost       = client-side dedup protocol integrating MediaAgents with Data Domain                 │
+│  Aux. copy      = secondary copy job replicating backup data to another target                        │
+│  Job Controller = console view showing all running/queued/failed jobs                                 │
+│  Synthetic full = full backup built from existing incrementals, no source re-read                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

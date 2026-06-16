@@ -14,54 +14,52 @@ Catalog of known Veeam bugs, error codes, and workarounds covering backup jobs, 
 </div>
 
 ```text
-┌──────────────────────────────────── Backup Veeam Troubleshooting ─────────────────────────────────────┐
+┌───────────────────────────────────── Veeam Backup & Replication ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Veeam: Backup Veeam Troubleshooting platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                  Management: Backup Veeam Troubleshooting management console                  │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │          VM-centric backup — VBR server, proxies, repositories, scale-out repository          │   │
+│   │           Protocols: HTTPS (vCenter API) · NBD/SAN/HotAdd transport · TCP 2500-5000           │   │
+│   │                         Management: Veeam Backup & Replication Console                        │   │
+│   │          Job schedule -> Proxy snapshot -> Data mover -> Repository -> Restore point          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Control           │  │          VBR server         │  │     SQL Server config DB    │   │
+│   │          Transport          │  │         Backup proxy        │  │     NBD/SAN/HotAdd modes    │   │
+│   │           Storage           │  │      Backup repository      │  │   Local, SOBR, dedup appl.  │   │
+│   │            Source           │  │         vCenter/ESXi        │  │      VADP snapshot API      │   │
+│   │          Cloud tier         │  │      SOBR capacity tier     │  │       S3/Blob offload       │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    VBR server    │Job orchestration │       HTTPS       │     AD/local     │  SQL config DB   │   │
+│   │   Backup proxy   │  Data transport  │   NBD/SAN/HotAdd  │       Cert       │CPU/RAM for dedup │   │
+│   │    Repository    │Stores backup file│   SMB/NFS/local   │  Win/Linux auth  │  Per-VM chains   │   │
+│   │       SOBR       │  Scale-out repo  │      Internal     │       N/A        │  Tiers to cloud  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Backup Veeam Troubleshooting infrastructure · management network · monitoring            │
+│  Physical: VBR server - proxy VMs/hosts - repository storage - capacity tier                          │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Veeam              = Backup Veeam Troubleshooting platform overview and core concepts              │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  VBR            = Veeam Backup & Replication; core product + management server                        │
+│  Proxy          = component performing data transport from source to repository                       │
+│  Transport mode = how a proxy reads VM data: Direct SAN, HotAdd, NBD (network)                        │
+│  Repository     = storage target holding backup files (VBK/VIB) and metadata                          │
+│  SOBR           = Scale-Out Backup Repository; pools extents + cloud capacity tier                    │
+│  VADP           = vSphere APIs for Data Protection; snapshot-based VM backup                          │
+│  Helper appl.   = temp VM used for SAN/HotAdd transport disk attach                                   │
+│  Instant Recov. = boots a VM directly from backup storage via iSCSI presentation                      │
+│  CBT            = Changed Block Tracking; lets incrementals skip unchanged blocks                     │
+│  Backup chain   = full + incremental restore points forming one recoverable set                       │
+│  Capacity tier  = SOBR object-storage extension for offloading older backups                          │
+│  SureBackup     = automated test-restore job verifying backup recoverability                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

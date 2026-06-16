@@ -14,54 +14,52 @@ Catalog of known NetBackup bugs, error codes, and workarounds covering backup po
 </div>
 
 ```text
-┌────────────────────────────────── Backup Netbackup Troubleshooting ───────────────────────────────────┐
+┌────────────────────────────────────────── Veritas NetBackup ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Netbackup: Backup Netbackup Troubleshooting platform                     │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                Management: Backup Netbackup Troubleshooting management console                │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │             Enterprise backup — Master/Media servers, policies, NetBackup catalog             │   │
+│   │               Protocols: NDMP · VTL emulation · DD Boost · TCP 1556 (PBX/vnetd)               │   │
+│   │                Management: NetBackup Admin Console / OpsCenter / Web UI (10.x)                │   │
+│   │           Policy schedule -> Master server -> Media server -> Storage unit -> Client          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Control           │  │        Master server        │  │   Catalog (NBDB), policies  │   │
+│   │          Data mover         │  │         Media server        │  │   Writes to storage units   │   │
+│   │            Client           │  │          bpcd agent         │  │    Per-host backup agent    │   │
+│   │           Storage           │  │      Storage unit / DD      │  │     Disk, tape, DD Boost    │   │
+│   │            Certs            │  │     Host ID certificates    │  │      NBU 8.x+ mandatory     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  Master server   │ Catalog+schedule │      TCP 1556     │  Cert (NBU 8+)   │NBDB Sybase-based │   │
+│   │   Media server   │  Data movement   │      TCP 1556     │       Cert       │ Many per master  │   │
+│   │       bpcd       │   Client agent   │      TCP 1556     │       Cert       │ Each client runs │   │
+│   │       AIR        │ Auto Img Replic. │      TCP 1556     │       Cert       │Cross-domain copy │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Backup Netbackup Troubleshooting infrastructure · management network · monitoring        │
+│  Physical: master server - media servers - Data Domain/tape library - clients                         │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Netbackup          = Backup Netbackup Troubleshooting platform overview and core concepts          │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Master server  = central control plane; owns the catalog and policies                                │
+│  Media server   = writes backup data to storage units; can combine with master                        │
+│  NBDB           = NetBackup relational database (Sybase) storing the catalog                          │
+│  Policy         = defines schedule, client list, and backup type for clients                          │
+│  Storage unit   = logical target (disk pool, tape, cloud) media servers write to                      │
+│  bpcd           = NetBackup client daemon listening for backup/restore requests                       │
+│  vnetd          = NetBackup network daemon; multiplexes traffic over fewer ports                      │
+│  AIR            = Auto Image Replication; replicates images between NBU domains                       │
+│  Host ID cert   = NBU 8.x+ mandatory cert authenticating client to master                             │
+│  DD Boost       = NetBackup-to-Data-Domain dedup offload integration                                  │
+│  Catalog backup = backup of the NBDB itself; critical for full env recovery                           │
+│  bpps           = command listing active NetBackup processes for triage                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

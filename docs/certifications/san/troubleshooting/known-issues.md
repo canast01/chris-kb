@@ -14,54 +14,52 @@ Catalog of known issues related to SAN certification exam preparation — coveri
 </div>
 
 ```text
-┌───────────────────────────────── Certifications San Troubleshooting ──────────────────────────────────┐
+┌───────────────────────────────────────── SAN Certifications ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                        San: Certifications San Troubleshooting platform                       │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │               Management: Certifications San Troubleshooting management console               │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Exam prep reference — Brocade BCFP, Cisco CCNP DC (SAN), CompTIA Storage+           │   │
+│   │                         Protocols (exam topics): FC-SW · FCoE · iSCSI                         │   │
+│   │               Resources: Brocade vFOS lab / Cisco dCloud / official study guides              │   │
+│   │            Study guide -> Lab practice -> Practice exam -> Official exam -> Renewal           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Topic            │  │           Resource          │  │            Notes            │   │
+│   │         Brocade BCFP        │  │     vFOS virtual switch     │  │     Zoning, fabric admin    │   │
+│   │        Cisco CCNP DC        │  │       dCloud MDS/DCNM       │  │      VSAN, IVR, zoning      │   │
+│   │           Storage+          │  │      CompTIA self-study     │  │    Vendor-neutral basics    │   │
+│   │          Lab access         │  │     vFOS / GNS3 / dCloud    │  │       No FC HW needed       │   │
+│   │          Validation         │  │        Practice exams       │  │  Cross-check official docs  │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   Brocade vFOS   │Practice fabric OS│        N/A        │    Free trial    │   30-day reset   │   │
+│   │   Cisco dCloud   │ Hosted MDS/DCNM  │       HTTPS       │  Cisco account   │Scheduled sessions│   │
+│   │  Official guide  │  Exam blueprint  │        N/A        │     Purchase     │Trust official src│   │
+│   │  Practice exam   │ Self-assessment  │        N/A        │  Purchase/free   │Verify vs official│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Certifications San Troubleshooting infrastructure · management network · monitoring      │
+│  Physical: N/A — virtual labs and hosted vendor lab environments only                                 │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    San                = Certifications San Troubleshooting platform overview and core concepts        │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  BCFP           = Brocade Certified Fabric Professional; core Brocade SAN cert                        │
+│  CCNP DC        = Cisco Certified Network Professional, Data Center track                             │
+│  Storage+       = CompTIA vendor-neutral storage fundamentals certification                           │
+│  FC-SW          = native Fibre Channel switching protocol (distinct from FCoE)                        │
+│  FCoE           = Fibre Channel over Ethernet; encapsulates FC frames in Ethernet                     │
+│  vFOS           = virtual Fabric OS; Brocade OVA for lab practice without hardware                    │
+│  dCloud         = Cisco free hosted lab environment for DCNM/MDS/ACI practice                         │
+│  Zoning         = SAN access control restricting which initiators see which targets                   │
+│  IVR            = Inter-VSAN Routing; Cisco feature for controlled cross-VSAN traffic                 │
+│  VSAN (Cisco)   = logical fabric partition on one switch (not VMware vSAN)                            │
+│  Zoneset        = the active collection of zones enforced on a fabric                                 │
+│  cfgsave        = Brocade command persisting config changes across reboots                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
