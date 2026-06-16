@@ -15,54 +15,52 @@ Catalog of known AWS EVS bugs and workarounds. EVS runs VMware vSphere, vSAN, an
 </div>
 
 ```text
-┌──────────────────────────────────────────── Cloud Aws Evs ────────────────────────────────────────────┐
+┌───────────────────────────────────── AWS Elastic VMware Service ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  Aws: Cloud Aws Evs platform                                  │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                          Management: Cloud Aws Evs management console                         │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                   VCF running on AWS bare-metal hosts inside a customer VPC                   │   │
+│   │              Protocols: HTTPS (AWS API) · vSphere/NSX mgmt protocols on EVS hosts             │   │
+│   │             Management: AWS Console/CLI (EVS) + vCenter/NSX Manager (VMware layer)            │   │
+│   │              AWS API provision -> Bare-metal hosts -> VCF bring-up -> vCenter/NSX             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │        Control (AWS)        │  │       EVS service API       │  │   Bare-metal+VPC provision  │   │
+│   │        Control (VMw)        │  │      vCenter / NSX Mgr      │  │     Runs inside EVS env     │   │
+│   │           Compute           │  │     i4i bare-metal hosts    │  │    Dedicated, not shared    │   │
+│   │           Network           │  │         VPC + DX/VPN        │  │     Connects to on-prem     │   │
+│   │           Storage           │  │      vSAN on EVS hosts      │  │     Same vSAN as on-prem    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     EVS API      │Cluster lifecycle │       HTTPS       │       IAM        │AWS-native control│   │
+│   │  vCenter (EVS)   │   VMware mgmt    │       HTTPS       │       SSO        │ Same as on-prem  │   │
+│   │  NSX Mgr (EVS)   │Net. virtualizatn │       HTTPS       │    Local/LDAP    │ Same as on-prem  │   │
+│   │      DX/VPN      │  Connect to EVS  │   IPsec/private   │       N/A        │Needed for hybrid │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Cloud Aws Evs infrastructure · management network · monitoring                           │
+│  Physical: AWS i4i.metal hosts in an AWS AZ - customer VPC - Direct Connect/VPN                       │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Aws                = Cloud Aws Evs platform overview and core concepts                             │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  EVS            = Elastic VMware Service; AWS-managed bare-metal hosts running VCF                    │
+│  i4i.metal      = AWS bare-metal instance type used as EVS host hardware                              │
+│  VCF            = VMware Cloud Foundation; the SDDC stack EVS deploys on AWS                          │
+│  VPC            = Virtual Private Cloud; the AWS network EVS hosts live in                            │
+│  Direct Connect = dedicated private network link from on-prem to AWS                                  │
+│  AWS Health Dash.= service status page; check before assuming a bug                                   │
+│  Bring-up       = initial VCF deployment process onto EVS bare-metal hosts                            │
+│  Workload domain= VCF logical grouping of clusters for a given purpose                                │
+│  SDDC Manager   = VCF lifecycle/orchestration component, present on EVS too                           │
+│  Security group = AWS-level firewall controlling traffic to/from EVS hosts                            │
+│  vSAN ports     = UDP 12345/12346 used for vSAN traffic between ESXi hosts                            │
+│  GA (2025)      = EVS reached General Availability in 2025                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

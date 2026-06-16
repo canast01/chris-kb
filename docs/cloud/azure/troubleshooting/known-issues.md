@@ -14,54 +14,52 @@ Catalog of known Azure bugs, error codes, and workarounds covering ARM, VM provi
 </div>
 
 ```text
-┌───────────────────────────────────── Cloud Azure Troubleshooting ─────────────────────────────────────┐
+┌─────────────────────────────────────────── Microsoft Azure ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Azure: Cloud Azure Troubleshooting platform                          │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                   Management: Cloud Azure Troubleshooting management console                  │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                        Azure IaaS/PaaS — ARM, VMs, VNet, AKS, Entra ID                        │   │
+│   │                         Protocols: HTTPS (Azure Resource Manager API)                         │   │
+│   │                   Management: Azure Portal / az CLI / ARM templates / Bicep                   │   │
+│   │            ARM template -> Resource Group -> Resource provider -> Deployed resource           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Identity          │  │     Entra ID (Azure AD)     │  │    Tenant-wide directory    │   │
+│   │           Compute           │  │           Azure VM          │  │      Scale Sets for HA      │   │
+│   │           Network           │  │           VNet/NSG          │  │  Subnet-level segmentation  │   │
+│   │             PaaS            │  │      AKS / App Service      │  │   Managed K8s/web hosting   │   │
+│   │          Governance         │  │       Subscription/RG       │  │    Quota+policy boundary    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       ARM        │Deployment engine │       HTTPS       │     Entra ID     │Declarative tmpls │   │
+│   │     Entra ID     │Identity provider │     HTTPS/SAML    │   Cond. Access   │   Was Azure AD   │   │
+│   │       VNet       │Network isolation │        N/A        │    NSG rules     │Peering supported │   │
+│   │       AKS        │   Managed K8s    │       HTTPS       │  Entra ID/RBAC   │Node pools/wkload │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Cloud Azure Troubleshooting infrastructure · management network · monitoring             │
+│  Physical: N/A — Microsoft-managed regions; customer controls logical resources                       │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Azure              = Cloud Azure Troubleshooting platform overview and core concepts               │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  ARM            = Azure Resource Manager; deployment/management layer                                 │
+│  Resource Group = logical container grouping resources by lifecycle                                   │
+│  Entra ID       = Microsoft identity platform, formerly Azure AD                                      │
+│  Subscription   = billing+access boundary; quotas apply per subscription                              │
+│  NSG            = Network Security Group; stateful firewall on subnets/NICs                           │
+│  VNet peering   = private connectivity between two virtual networks                                   │
+│  Managed Identity= Entra ID identity auto-assigned to an Azure resource                               │
+│  AKS            = Azure Kubernetes Service; managed control plane                                     │
+│  Availability Zone= physically separate datacenter within a region                                    │
+│  Cond. Access   = Entra ID policy enforcing MFA/device compliance                                     │
+│  Service principal= non-human Entra ID identity used by apps/automation                               │
+│  ACR            = Azure Container Registry; often paired with AKS                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

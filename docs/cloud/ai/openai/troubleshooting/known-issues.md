@@ -15,54 +15,52 @@ Catalog of known OpenAI API bugs, error codes, and workarounds covering rate lim
 </div>
 
 ```text
-┌─────────────────────────────────────────── Cloud Ai Openai ───────────────────────────────────────────┐
+┌───────────────────────────────────────────── OpenAI API ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  Ai: Cloud Ai Openai platform                                 │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                         Management: Cloud Ai Openai management console                        │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Cloud LLM API — chat completions, embeddings, rate-limited per usage tier           │   │
+│   │                          Protocols: HTTPS (TCP 443) to api.openai.com                         │   │
+│   │                      Management: platform.openai.com dashboard / API keys                     │   │
+│   │           API request -> Rate limit check -> Model inference -> Response -> Billing           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Access           │  │       API key / org ID      │  │     Per-project scoping     │   │
+│   │             Tier            │  │          Usage tier         │  │    RPM/TPM scale w/ spend   │   │
+│   │            Models           │  │     GPT-4o, GPT-4, etc.     │  │     Deprecation schedule    │   │
+│   │           Billing           │  │         Token-based         │  │    Prompt+completion tok.   │   │
+│   │            Status           │  │      status.openai.com      │  │   Check before deep debug   │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │ Chat Completions │ Text generation  │       HTTPS       │     API key      │   Most common    │   │
+│   │    Embeddings    │Vector generation │       HTTPS       │     API key      │   Used for RAG   │   │
+│   │   Rate headers   │ Quota visibility │    HTTPS resp.    │       N/A        │  x-ratelimit-*   │   │
+│   │    Batch API     │ Async bulk req.  │       HTTPS       │     API key      │   24h, cheaper   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Cloud Ai Openai infrastructure · management network · monitoring                         │
+│  Physical: N/A — fully managed SaaS API, no customer-operated infrastructure                          │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Ai                 = Cloud Ai Openai platform overview and core concepts                           │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  API key        = secret credential authenticating requests to the OpenAI API                         │
+│  RPM/TPM        = Requests/Tokens Per Minute; the two rate limit dimensions                           │
+│  Context window = max tokens (prompt+completion) a model can process at once                          │
+│  Token          = sub-word text unit; billing and limits are measured in tokens                       │
+│  Tier           = usage tier unlocked by cumulative spend, raises RPM/TPM                             │
+│  Backoff        = retry strategy doubling wait time after each 429/500                                │
+│  Deprecation    = OpenAI retires older models on a published schedule                                 │
+│  Embedding      = vector representation of text for semantic search/RAG                               │
+│  Batch API      = async bulk endpoint, discounted pricing, ~24h SLA                                   │
+│  Function call  = model output structured to invoke a defined tool                                    │
+│  Streaming      = token-by-token response via server-sent events                                      │
+│  Org ID         = organization identifier scoping billing across API keys                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
