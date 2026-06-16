@@ -13,54 +13,52 @@ Index of security product known issues and error codes. This top-level page link
 </div>
 
 ```text
-┌────────────────────────────── Security Troubleshooting Known Issues.Md ───────────────────────────────┐
+┌────────────────────────────────── Security Products — Known Issues ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Troubleshooting: Security Troubleshooting Known Issues.Md platform              │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │            Management: Security Troubleshooting Known Issues.Md management console            │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            Index linking CyberArk, Venafi, and Certificates/PKI known-issues pages            │   │
+│   │                 Scope: PAM, certificate lifecycle, PKI — not a deployed system                │   │
+│   │                           Management: N/A — documentation index only                          │   │
+│   │              Identify product -> Open known-issues page -> Check dependency chain             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Topic            │  │           Resource          │  │            Notes            │   │
+│   │         CyberArk PAM        │  │      Vault/PVWA/CPM/PSM     │  │      See cyberark page      │   │
+│   │          Venafi TPP         │  │        Cert lifecycle       │  │       See venafi page       │   │
+│   │          Certs/PKI          │  │        ADCS, OCSP/CRL       │  │    See certificates page    │   │
+│   │          Dependency         │  │         AD/Kerberos         │  │    Often true root cause    │   │
+│   │          Dependency         │  │           DNS/TLS           │  │    Cascading failure src    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  CyberArk page   │ PAM troubleshoot │        N/A        │       N/A        │  cyberark page   │   │
+│   │   Venafi page    │ Cert mgmt issues │        N/A        │       N/A        │   venafi page    │   │
+│   │Certificates page │    PKI issues    │        N/A        │       N/A        │certs/known-issues│   │
+│   │ Dependency chain │Root-cause method │        N/A        │       N/A        │Check AD/DNS/certs│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Security Troubleshooting Known Issues.Md infrastructure · management network · monitori  │
+│  Physical: N/A — documentation index page, not a deployed system                                      │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Troubleshooting    = Security Troubleshooting Known Issues.Md platform overview and core concepts  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  PAM            = Privileged Access Management; CyberArk product category                             │
+│  TPP            = Trust Protection Platform; Venafi cert lifecycle product                            │
+│  PKI            = Public Key Infrastructure; certs, CAs, trust chains                                 │
+│  ADCS           = Active Directory Certificate Services; MS CA role                                   │
+│  OCSP           = Online Certificate Status Protocol; live revocation                                 │
+│  CRL            = Certificate Revocation List; periodic publication                                   │
+│  Dependency chain= security failures often cascade from AD/DNS/certs                                  │
+│  DCOM           = legacy RPC mechanism used by some ADCS integrations                                 │
+│  Cert discovery = scanning hosts/network for unmanaged certificates                                   │
+│  Reconcile acct = CyberArk mechanism fixing out-of-sync passwords                                     │
+│  Key length pol.= minimum RSA/ECC key size enforced by templates                                      │
+│  Renewal autom. = ACME or vendor-API driven cert renewal                                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

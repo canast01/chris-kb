@@ -16,54 +16,52 @@ Catalog of known Git server bugs, error codes, and workarounds covering GitLab s
 </div>
 
 ```text
-┌────────────────────────────────────── Itsm Git Troubleshooting ───────────────────────────────────────┐
+┌────────────────────────────────────── Git / GitLab Self-Managed ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Git: Itsm Git Troubleshooting platform                            │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Itsm Git Troubleshooting management console                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                 Source control platform — Gitaly storage, CI runners, web/API                 │   │
+│   │                       Protocols: SSH (22) · HTTPS · Gitaly internal gRPC                      │   │
+│   │                   Management: GitLab Admin Area / gitlab-ctl / Rails console                  │   │
+│   │                 git push -> Workhorse -> Gitaly storage -> Webhook/CI trigger                 │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Web/API           │  │       GitLab Rails app      │  │       Puma app server       │   │
+│   │         Git storage         │  │            Gitaly           │  │      gRPC repo backend      │   │
+│   │            Proxy            │  │       GitLab Workhorse      │  │      Large file uploads     │   │
+│   │              CI             │  │        GitLab Runner        │  │    Separate job executor    │   │
+│   │            Cache            │  │            Redis            │  │      Sessions, sidekiq      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │      Gitaly      │   Repo storage   │     gRPC 8075     │     Internal     │Can run standalone│   │
+│   │    Workhorse     │  Reverse proxy   │        HTTP       │     Internal     │Offloads big reqs │   │
+│   │  GitLab Runner   │ CI job executor  │       HTTPS       │   Runner token   │ Shared or scoped │   │
+│   │     Sidekiq      │ Background jobs  │       Redis       │     Internal     │Backlog = perf hit│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Itsm Git Troubleshooting infrastructure · management network · monitoring                │
+│  Physical: GitLab app server(s) - Gitaly storage - Redis - PostgreSQL - runners                       │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Git                = Itsm Git Troubleshooting platform overview and core concepts                  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Gitaly         = GitLab Git storage service; abstracts repo access via gRPC                          │
+│  Workhorse      = Go reverse proxy handling large requests before Rails                               │
+│  Sidekiq        = Redis-backed background job processor                                               │
+│  Runner         = separate process executing CI/CD pipeline jobs                                      │
+│  Pipeline       = CI/CD run made of stages/jobs from .gitlab-ci.yml                                   │
+│  Praefect       = Gitaly Cluster routing/replication layer (HA Gitaly)                                │
+│  Omnibus        = GitLab all-in-one packaged install (gitlab-ctl)                                     │
+│  CI/CD variable = key-value pair injected into job environments                                       │
+│  Mirroring      = one-way repo sync with an external Git remote                                       │
+│  Protected branch= branch with push/merge restrictions enforced                                       │
+│  Webhook        = HTTP callback fired on repo events (push, MR, etc.)                                 │
+│  gitlab-rake    = Rake task runner for maintenance/backups                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -14,54 +14,52 @@ Catalog of known Confluence Data Center bugs, error codes, and workarounds cover
 </div>
 
 ```text
-┌─────────────────────────────────── Itsm Confluence Troubleshooting ───────────────────────────────────┐
+┌─────────────────────────────────────── Confluence Data Center ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Confluence: Itsm Confluence Troubleshooting platform                     │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                 Management: Itsm Confluence Troubleshooting management console                │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │               Team wiki/collaboration — Synchrony, clustering, shared DB backend              │   │
+│   │              Protocols: HTTP/HTTPS · Synchrony (TCP 8091) · Hazelcast (TCP 5701)              │   │
+│   │                              Management: Confluence Admin Console                             │   │
+│   │            Page edit -> Synchrony collab -> DB write -> Cluster cache sync -> Index           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │             App             │  │       Confluence node       │  │     Stateless, behind LB    │   │
+│   │            Collab           │  │          Synchrony          │  │     Real-time co-editing    │   │
+│   │           Cluster           │  │          Hazelcast          │  │     Cache+cluster member    │   │
+│   │              DB             │  │    Postgres/Oracle/MSSQL    │  │       Single shared DB      │   │
+│   │            Search           │  │         Lucene index        │  │    Per-node, rebuildable    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │ Confluence node  │     Web app      │     HTTP/HTTPS    │    SSO/local     │Many in DC cluster│   │
+│   │    Synchrony     │ Collab. editing  │      TCP 8091     │     Internal     │Separate JVM proc.│   │
+│   │    Hazelcast     │  Cluster cache   │      TCP 5701     │     Internal     │ Split-brain risk │   │
+│   │   Lucene index   │      Search      │      Internal     │       N/A        │Rebuild via admin │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Itsm Confluence Troubleshooting infrastructure · management network · monitoring         │
+│  Physical: Confluence DC nodes - load balancer - shared DB - shared storage                           │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Confluence         = Itsm Confluence Troubleshooting platform overview and core concepts           │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Synchrony      = separate process providing real-time collaborative editing                          │
+│  Hazelcast      = in-memory clustering library backing the DC cache layer                             │
+│  Confluence home= filesystem dir with config, logs, indexes, plugins                                  │
+│  Shared home    = NFS/shared storage required for DC clustering                                       │
+│  Split-brain    = cluster nodes diverge after losing contact                                          │
+│  Lucene         = full-text search indexing library                                                   │
+│  Support zip    = bundled diagnostic export (logs, config, dumps)                                     │
+│  Thread dump    = JVM snapshot for hangs; take 3 spaced 10s apart                                     │
+│  Heap dump      = full JVM memory capture for OOM diagnosis                                           │
+│  Safe mode      = starts Confluence without user-installed plugins                                    │
+│  CQL            = Confluence Query Language; macros and REST search                                   │
+│  Data Center    = clustered HA edition (vs Server/Cloud)                                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -13,54 +13,52 @@ Index of protocol-specific known issues and error codes for networking component
 </div>
 
 ```text
-┌───────────────────────────── Networking Troubleshooting Known Issues.Md ──────────────────────────────┐
+┌───────────────────────────────── Networking Protocols — Known Issues ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              Troubleshooting: Networking Troubleshooting Known Issues.Md platform             │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │           Management: Networking Troubleshooting Known Issues.Md management console           │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              Index linking DNS, NFS, SMB, iSCSI, FC, TLS, LDAP known-issues pages             │   │
+│   │            Scope: Layer 3 (IP/routing), Layer 4 (TCP/UDP), Layer 7 (app protocols)            │   │
+│   │                           Management: N/A — documentation index only                          │   │
+│   │                 Identify protocol layer -> Open known-issues page -> Diagnose                 │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Topic            │  │           Resource          │  │            Notes            │   │
+│   │           Layer 3           │  │         Routing, VPN        │  │     Routing tables, MTU     │   │
+│   │           Layer 4           │  │        TCP/UDP ports        │  │     Check firewall rules    │   │
+│   │           Layer 7           │  │        App protocols        │  │     DNS/NFS/SMB/iSCSI/FC    │   │
+│   │          Cross-cut          │  │             DNS             │  │    Root cause, many apps    │   │
+│   │          Cross-cut          │  │           TLS/PKI           │  │      See security pages     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     DNS page     │ Name resolution  │        N/A        │       N/A        │  protocols/dns   │   │
+│   │  NFS/SMB pages   │  File protocols  │        N/A        │       N/A        │protocols/nfs,smb │   │
+│   │  iSCSI/FC pages  │ Block protocols  │        N/A        │       N/A        │protocols/iscsi,fc│   │
+│   │  TLS/LDAP pages  │Security protocols│        N/A        │       N/A        │protocols/tls,ldap│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Networking Troubleshooting Known Issues.Md infrastructure · management network · monito  │
+│  Physical: N/A — documentation index page, not a deployed system                                      │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Troubleshooting    = Networking Troubleshooting Known Issues.Md platform overview and core concep  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Layer 3        = IP routing layer; addressing and path selection                                     │
+│  Layer 4        = TCP/UDP transport layer; ports and connection state                                 │
+│  Layer 7        = application layer; protocol-specific behavior                                       │
+│  MTU            = Maximum Transmission Unit; affects fragmentation                                    │
+│  DNS            = translates names to IPs; root cause of many failures                                │
+│  TLS            = encrypts and authenticates network connections                                      │
+│  iSCSI          = block storage protocol over TCP/IP                                                  │
+│  Fibre Channel  = dedicated block storage network protocol/fabric                                     │
+│  NFS            = POSIX-style network file sharing protocol                                           │
+│  SMB            = Windows-native network file sharing protocol                                        │
+│  LDAP           = directory query and authentication protocol                                         │
+│  Split-horizon  = different internal vs external DNS resolution                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

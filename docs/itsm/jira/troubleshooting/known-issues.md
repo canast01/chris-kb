@@ -14,54 +14,52 @@ Catalog of known Jira Data Center bugs, error codes, and workarounds covering cl
 </div>
 
 ```text
-┌────────────────────────────────────── Itsm Jira Troubleshooting ──────────────────────────────────────┐
+┌────────────────────────────────────────── Jira Data Center ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Jira: Itsm Jira Troubleshooting platform                           │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Itsm Jira Troubleshooting management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                Issue tracking — clustering, Lucene index, DB connection pooling               │   │
+│   │                          Protocols: HTTP/HTTPS · Hazelcast (TCP 5701)                         │   │
+│   │                            Management: Jira Administration Console                            │   │
+│   │            Issue create/update -> DB write -> Lucene reindex -> Cluster cache sync            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │             App             │  │          Jira node          │  │     Stateless, behind LB    │   │
+│   │           Cluster           │  │          Hazelcast          │  │     Cache+cluster member    │   │
+│   │              DB             │  │    Postgres/Oracle/MSSQL    │  │     Pool sized per node     │   │
+│   │            Index            │  │            Lucene           │  │    Per-node, rebuildable    │   │
+│   │           Storage           │  │      Shared home (NFS)      │  │    Attach/plugins/config    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    Jira node     │     Web app      │     HTTP/HTTPS    │    SSO/local     │Many in DC cluster│   │
+│   │    Hazelcast     │  Cluster cache   │      TCP 5701     │     Internal     │ Split-brain risk │   │
+│   │   Lucene index   │   Issue search   │      Internal     │       N/A        │ Reindex off-peak │   │
+│   │     DB pool      │ Connection pool  │    DB-specific    │     DB creds     │ c3p0 in dbconfig │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Itsm Jira Troubleshooting infrastructure · management network · monitoring               │
+│  Physical: Jira DC nodes - load balancer - shared DB - shared home (NFS)                              │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Jira               = Itsm Jira Troubleshooting platform overview and core concepts                 │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Hazelcast      = in-memory clustering library backing the DC cache layer                             │
+│  Lucene index   = full-text search engine backing Jira issue search                                   │
+│  c3p0           = connection pooling library configured in dbconfig.xml                               │
+│  Shared home    = NFS/shared storage required for DC clustering                                       │
+│  Split-brain    = cluster nodes diverge after losing contact                                          │
+│  Reindex        = rebuilds the Lucene index after bulk data changes                                   │
+│  Cluster node   = one Jira instance in a Data Center cluster                                          │
+│  Jira home      = filesystem dir with config, logs, caches, plugins                                   │
+│  Pool exhaustion= too many concurrent DB requests for pool size                                       │
+│  Support zip    = bundled diagnostic export for Atlassian Support                                     │
+│  Thread dump    = JVM snapshot for hangs; take 3 spaced 10s apart                                     │
+│  Safe mode      = starts Jira without user-installed plugins                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

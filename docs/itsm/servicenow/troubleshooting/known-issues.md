@@ -14,54 +14,52 @@ Catalog of known ServiceNow bugs, error codes, and workarounds covering MID Serv
 </div>
 
 ```text
-┌─────────────────────────────────── Itsm Servicenow Troubleshooting ───────────────────────────────────┐
+┌───────────────────────────────────────────── ServiceNow ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                      Servicenow: Itsm Servicenow Troubleshooting platform                     │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                 Management: Itsm Servicenow Troubleshooting management console                │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │               ITSM/ITOM platform — MID Server, instance, REST/SOAP integrations               │   │
+│   │                    Protocols: HTTPS · MID Server outbound to instance (443)                   │   │
+│   │                   Management: instance UI (System Diagnostics, System Logs)                   │   │
+│   │               MID Server discovery -> Instance DB -> Business rules -> Workflow               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Instance          │  │       ServiceNow cloud      │  │      Multi-tenant SaaS      │   │
+│   │         Integration         │  │          MID Server         │  │    On-prem, outbound only   │   │
+│   │             Data            │  │             CMDB            │  │     Config item database    │   │
+│   │           Workflow          │  │        Flow Designer        │  │    Business logic engine    │   │
+│   │             Auth            │  │      SSO/LDAP/MID creds     │  │    Per-integration scope    │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     Instance     │ SaaS application │       HTTPS       │    SSO/local     │   Multi-tenant   │   │
+│   │    MID Server    │  On-prem agent   │     HTTPS out     │   Service acct   │No inbound needed │   │
+│   │       CMDB       │   Config data    │      Internal     │    ACL-scoped    │Discovery fills it│   │
+│   │     REST API     │Integration endpt │       HTTPS       │   OAuth/Basic    │web_service_admin │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Itsm Servicenow Troubleshooting infrastructure · management network · monitoring         │
+│  Physical: ServiceNow SaaS instance (cloud) - on-prem MID Server host(s)                              │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Servicenow         = Itsm Servicenow Troubleshooting platform overview and core concepts           │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  MID Server     = on-prem agent for outbound-only ServiceNow integration                              │
+│  CMDB           = Configuration Mgmt Database; tracks config items                                    │
+│  Discovery      = MID Server feature scanning networks for the CMDB                                   │
+│  sys_log        = ServiceNow internal application log table                                           │
+│  Business rule  = server-side script on insert/update/delete                                          │
+│  ACL            = Access Control List; row/field-level security rule                                  │
+│  Update Set     = packaged customization moved between instances                                      │
+│  Flow Designer  = no-code workflow automation tool                                                    │
+│  Inbound Action = email-triggered automation rule                                                     │
+│  Scoped app     = isolated namespace for custom development                                           │
+│  web_service_admin = role required for most REST integrations                                         │
+│  Clone          = full copy of one instance to another                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
