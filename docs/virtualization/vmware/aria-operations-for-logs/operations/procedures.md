@@ -489,6 +489,157 @@ Time-range tips: always set a time range — start with last 1 hour for active i
 
 ---
 
+## Troubleshoot Missing Logs from a Source
+
+When a log source is configured but no events appear in Aria Operations for Logs, follow this diagnostic sequence.
+
+### Step 1 — Verify the Log Source Configuration
+
+**Administration → Log Sources** → locate the source → check:
+
+- **Status**: should show **Connected**; if **Disconnected** or **Unknown**, the source cannot reach Aria Logs
+- **Last received**: timestamp of the last event; if blank or stale (> 5 minutes for an active host), no events are arriving
+
+### Step 2 — Test Connectivity from the Source
+
+On the log-sending host, verify it can reach the Aria Logs appliance:
+
+```bash
+# Test syslog port (TCP 514 or UDP 514)
+nc -zv <aria-logs-ip> 514
+# Or for TLS syslog (TCP 6514)
+nc -zv <aria-logs-ip> 6514
+
+# Test the API ingestion port
+curl -sk "https://<aria-logs-ip>:9543/api/v2/events" -d '{"events":[]}' \
+  -H "Content-Type: application/json"
+# Should return 200 or 400 (not a connection refused)
+```
+
+If the connection is refused, check:
+- Firewall rules between the source and Aria Logs (see architecture/ports page for required ports)
+- Aria Logs worker/master health: `ssh root@<aria-logs-ip>` → `service cfapi status`
+
+### Step 3 — Check Syslog Daemon Configuration on the Source
+
+**For Linux hosts (rsyslog):**
+
+```bash
+# Confirm rsyslog is forwarding to Aria Logs
+grep -r "aria\|vrealize\|<aria-logs-ip>" /etc/rsyslog.conf /etc/rsyslog.d/
+
+# Restart rsyslog and check for errors
+systemctl restart rsyslog
+journalctl -u rsyslog -n 50 | grep -i error
+```
+
+**For ESXi hosts:**
+
+```bash
+# Verify syslog target is set
+esxcli system syslog config get
+# Confirm host is in Aria Logs: Administration → Log Sources → vSphere Integration
+```
+
+### Step 4 — Verify the Content Pack / Field Extraction
+
+If logs appear in Aria Logs (raw events visible) but the pre-built dashboard shows nothing, the content pack may not be extracting fields correctly:
+
+1. Run a search for raw events: `hostname contains <source-host>` (Interactive Analytics)
+2. If events appear, the collection is working — the dashboard's field extraction may need updating
+3. **Administration → Content Packs** → reinstall/update the content pack for the affected source type
+
+---
+
+## Configure Windows Event Log Collection
+
+Aria Operations for Logs can collect Windows Event Log entries via two methods: VMware Tools agent (for vSphere-hosted Windows VMs) or the Windows Event Collector (WEC) forwarding model.
+
+### Method A — VMware Tools Agent (vSphere VMs Only)
+
+This method requires VMware Tools installed on the Windows VM and the Aria Logs plugin for VMware Tools enabled.
+
+1. **Administration → Agents → Log Insight Agent** → download the Windows agent installer
+2. Deploy the agent on the target Windows VM (silent install): `msiexec /i VMware-Log-Insight-Agent-<version>.msi /qn`
+3. Configure the agent config file at `C:\ProgramData\VMware\Log Insight Agent\liagent.ini`:
+
+```ini
+[server]
+hostname=<aria-logs-fqdn>
+port=9543
+proto=cfapi
+
+[filelog|WindowsEventLog]
+directory=
+include=*.evtx
+event_types=Application,Security,System
+```
+
+4. Restart the agent service: `Restart-Service VMwareLogInsightAgentService`
+5. In Aria Logs: **Administration → Agents** → the Windows VM should appear after the first check-in (up to 5 minutes)
+
+### Method B — Windows Event Forwarding (WEF / WEC)
+
+For Windows hosts not on vSphere (physical servers, other hypervisors), configure Windows to forward events to a Windows Event Collector, then have the WEC forward via syslog to Aria Logs.
+
+1. On the WEC server, enable WinRM: `winrm quickconfig`
+2. Create a subscription: **Event Viewer → Subscriptions → New Subscription** → set source as the target Windows hosts
+3. On the WEC, install the Aria Logs Windows agent and configure it to read from `ForwardedEvents`:
+
+```ini
+[filelog|ForwardedEvents]
+directory=
+include=*.evtx
+event_types=ForwardedEvents
+```
+
+4. All Windows Event Log entries forwarded to WEC now flow into Aria Logs via the agent
+
+---
+
+## Remove a Log Source
+
+Use when permanently decommissioning a monitored host or service so Aria Logs stops waiting for events from it and clears stale status indicators.
+
+### Step 1 — Remove the Log Source Record
+
+**Administration → Log Sources** → locate the source → **Delete**
+
+Note: Deleting a log source record does **not** delete historical log data that was already ingested. All previously collected events remain searchable in Aria Logs. The deletion only stops collection and removes the source from the active source list.
+
+### Step 2 — Stop Log Forwarding on the Decommissioned Host
+
+Before decommissioning the host, disable syslog forwarding to Aria Logs to avoid generating "source unreachable" errors:
+
+**Linux (rsyslog):**
+
+```bash
+# Remove or comment out the Aria Logs forwarding rule
+sed -i '/aria-logs\|vrealize/s/^/#/' /etc/rsyslog.conf
+systemctl restart rsyslog
+```
+
+**ESXi:**
+
+```bash
+# Remove syslog target
+esxcli system syslog config set --loghost=""
+esxcli system syslog reload
+```
+
+**Windows (Aria Logs agent):**
+
+```powershell
+Stop-Service VMwareLogInsightAgentService
+Set-Service VMwareLogInsightAgentService -StartupType Disabled
+```
+
+### Step 3 — Verify Removal
+
+In Aria Logs: **Administration → Log Sources** — the removed source should no longer appear. Run an Interactive Analytics search for `hostname = <removed-host>` and confirm no new events arrive after the removal.
+
+---
+
 ## See also
 
 - [Aria Operations for Logs — Health Checks](health-checks/)

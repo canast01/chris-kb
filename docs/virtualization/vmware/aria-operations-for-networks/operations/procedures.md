@@ -614,6 +614,118 @@ The scheduled report appears in the **Scheduled Reports** list with next-run tim
 
 ---
 
+## Upgrade Aria Operations for Networks
+
+Aria Operations for Networks (vRNI) is upgraded via Aria Suite Lifecycle for managed deployments, or directly via the vRNI admin UI for standalone deployments.
+
+### Option A — Upgrade via Aria Suite Lifecycle (Recommended)
+
+Follow the standard LCM upgrade procedure: LCM → Lifecycle Operations → Environments → select the environment → **Upgrade** → select Aria Operations for Networks. See the [Aria Suite Lifecycle — Upgrade a Product via LCM](../../aria-suite-lifecycle/operations/procedures/#upgrade-a-product-via-lcm) procedure for full steps.
+
+### Option B — Standalone Upgrade (No LCM)
+
+1. Download the upgrade bundle from the Broadcom portal (file extension `.pak`)
+2. Log in to the vRNI admin UI at `https://<platform-ip>:8443`
+3. Navigate to **Settings → Infrastructure → Software Update**
+4. Click **Upload Bundle** → upload the `.pak` file
+5. After upload, click **Update** — the Platform and Collector VMs are upgraded in sequence
+
+!!! warning "Collector VMs must be on the same version as the Platform after upgrade"
+    vRNI enforces version parity. If the Platform upgrades successfully but a Collector fails, the Collector will appear as **Disconnected** until it is upgraded to the matching version. Upgrade Collectors immediately after the Platform.
+
+### Step — Monitor and Validate
+
+```bash
+# After upgrade, verify versions match
+curl -sk -u 'admin@local:password' \
+  "https://<platform-ip>/api/ni/info/version" | jq '.version'
+
+# Check all Collectors are connected and on the same version
+# vRNI UI: Settings → Infrastructure → Collectors → verify all show Connected and matching version
+```
+
+- [ ] Platform shows new version in admin UI
+- [ ] All Collector VMs show Connected and same version
+- [ ] Data sources show **Active** status (may take 1 collection cycle, ~10 minutes)
+- [ ] Flow data visible in vRNI UI for a known VM pair
+
+---
+
+## Deploy a Remote Collector for a Remote Data Centre
+
+Remote Collectors allow a single vRNI Platform to collect data from multiple sites without routing all traffic through the WAN. Each site gets a local Collector VM that processes data locally and sends only summarised data to the Platform.
+
+### Step 1 — Deploy the Collector OVA at the Remote Site
+
+1. Download the vRNI Collector OVA from the Broadcom portal
+2. Deploy to the remote site's vCenter: right-click cluster → **Deploy OVF Template**
+3. In the OVA wizard:
+   - Assign an IP on the remote site management network
+   - Set DNS, NTP, and default gateway for the remote site
+   - Do not power on yet — SSH access must be configured first
+
+### Step 2 — Register the Collector with the Platform
+
+1. Power on the Collector VM
+2. SSH to the Collector: `ssh consoleuser@<collector-ip>` (default password: `ark1nc0ns0l3`)
+3. Register with the Platform:
+
+```bash
+# On the Collector VM
+sudo python /home/ubuntu/registration.py --platform-ip <platform-ip> \
+  --platform-username admin@local --platform-password <password>
+```
+
+4. In the vRNI Platform UI: **Settings → Infrastructure → Collectors** — the new Collector should appear as **Pending Registration**; click **Approve**
+
+### Step 3 — Assign Data Sources to the Remote Collector
+
+After registration, assign the remote site's vCenter and NSX to the new Collector:
+
+1. **Settings → Accounts and Data Sources** → **Add vCenter**
+2. In the **Collector** dropdown, select the new remote Collector (not the default Platform)
+3. Add the remote vCenter FQDN/IP and credentials → Save
+4. Repeat for NSX-T and any physical switches at the remote site
+
+### Step 4 — Validate Collection
+
+```bash
+# Verify Collector is collecting from the remote vCenter
+# vRNI UI → Search: "Virtual Machine where Data Center = <remote-dc>"
+# Should return VMs from the remote site within one collection cycle (~10 minutes)
+```
+
+---
+
+## Remove an Application Definition
+
+Use when a monitored application has been decommissioned or is no longer relevant. Removing an application definition does not delete the underlying VMs — it removes only the logical grouping and associated micro-segmentation recommendations.
+
+### Step 1 — Remove DFW Rules Linked to the Application (If Pushed to NSX)
+
+If micro-segmentation recommendations for this application were pushed to NSX DFW, remove them first:
+
+1. In NSX Manager: **Security → Distributed Firewall** → filter rules by the application's security group
+2. Review and delete the DFW rules that were generated from vRNI recommendations for this application
+3. Verify no production traffic flows are broken before proceeding
+
+### Step 2 — Delete the Application in vRNI
+
+1. vRNI UI → **Applications** → locate the application → click to open
+2. Click **Actions → Delete Application**
+3. Confirm — vRNI removes the application definition and all tier groupings
+
+!!! note "Historical flow data is retained"
+    Deleting the application removes only the logical grouping (tiers and VM assignments). All historical flow data for the VMs that were in the application remains available in vRNI's flow search. The application name label will no longer appear in flow search results.
+
+### Step 3 — Verify Removal
+
+1. **Applications** page — the deleted application should no longer appear
+2. Run a flow search for one of the former application VMs — flows are still visible but no longer tagged with the application name
+3. If security groups in NSX were created specifically for this application: clean them up in NSX Manager → **Inventory → Groups**
+
+---
+
 ## See also
 
 - [vRNI Health Checks](health-checks/)
