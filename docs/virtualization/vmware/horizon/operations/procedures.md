@@ -588,6 +588,129 @@ Set the minimum machine count to cover expected peak concurrency plus the spare 
 
 ---
 
+## Upgrade Horizon Connection Server
+
+Connection Server upgrades must be done in a rolling fashion — one replica at a time — to maintain availability for active sessions during the upgrade window.
+
+!!! warning "Sessions are not disconnected during rolling upgrade, but reconnection requires a connection server at the new version"
+    Users with active sessions will see their desktop remain active during the upgrade. However, if their connection server replica goes offline during its upgrade, the Horizon Client reconnects to another replica automatically. Users connecting fresh must connect to a CS on the same or newer version. Upgrade replicas in sequence — never start the next until the previous is fully healthy.
+
+### Step 1 — Pre-Upgrade Checks
+
+- [ ] All Connection Servers show green in Horizon Admin Console → **Servers → Connection Servers**
+- [ ] Horizon Events database is reachable and up to date
+- [ ] Active session count is low (best to upgrade during off-peak hours)
+- [ ] vCenter and ESXi are on a compatible version (check VMware Compatibility Guide)
+- [ ] Backup the Connection Server LDAP configuration: `C:\Program Files\VMware\VMware View\Server\tools\bin\vdmexport.exe -f backup.ldif`
+
+### Step 2 — Download the Installer
+
+Download the Horizon Connection Server installer from the Broadcom portal. The file name is typically `VMware-viewconnectionserver-x86_64-<version>.exe`.
+
+### Step 3 — Upgrade the First Replica (Non-Primary)
+
+Start with a replica (not the primary Connection Server) to preserve the primary as fallback:
+
+1. RDP to the replica server
+2. Run the installer with admin rights: double-click `VMware-viewconnectionserver-x86_64-<version>.exe`
+3. Select **Upgrade** (the installer detects the existing installation)
+4. Accept the EULA and follow the wizard — the CS service restarts at the end
+5. Wait for the Connection Server to return to green in the Horizon Admin Console (2–5 minutes)
+6. Verify in Horizon Admin Console → **Servers** — the upgraded server shows the new version
+
+### Step 4 — Upgrade Remaining Replicas and Primary
+
+Repeat Step 3 for each additional replica, then for the primary Connection Server. Always verify green status after each upgrade before starting the next.
+
+### Step 5 — Upgrade Horizon Agents (Optional — Separate Window)
+
+Horizon Agent (on the golden images or RDS servers) can be upgraded independently:
+
+1. Update the golden image VM: install new Horizon Agent, shut down, take a snapshot
+2. Recompose the desktop pool from the new snapshot (see [Recompose an Instant Clone Pool](#recompose-an-instant-clone-pool) above)
+3. For RDS farms: update the RDSH server and restart the farm
+
+### Step 6 — Post-Upgrade Validation
+
+- [ ] All Connection Servers show green at the new version
+- [ ] Test a desktop launch from Horizon Client — full session must connect successfully
+- [ ] Verify app pools and RDS farms are operational
+- [ ] Check Horizon Admin Console → **Events** — no new errors after upgrade
+
+---
+
+## Configure Power Policy on a Desktop Pool
+
+Power policies control when Horizon powers VMs on and off to balance cost (fewer running VMs) against session startup latency. Misconfigured power policies cause users to wait minutes for desktops to boot.
+
+1. Horizon Admin Console → **Catalog → Desktop Pools** → select the target pool → **Edit**
+2. Navigate to **Provisioning Settings** (for full clone) or **Desktop Pool Settings** (for instant clone)
+3. Set **Power Policy**:
+
+| Policy | Behaviour | Best for |
+|---|---|---|
+| **Always on** | VMs remain powered on at all times | Low-latency requirement; cost not a concern |
+| **Take no power action** | Horizon does not manage VM power; admin controls it | Manually managed pools |
+| **Suspend** | VMs are suspended between sessions | Not recommended; slow resume for users |
+| **Power off** | VMs are powered off between sessions | Shift-based environments; lower VM count required |
+
+4. Set **Minimum number of ready (provisioned) desktops**: number of VMs to keep powered on and in a Ready state at all times (pre-warmed pool)
+5. Set **Number of spare (powered on) machines**: additional VMs powered on but not yet assigned — absorbs sudden demand
+6. Set **Peak hours** schedule if available: increase spare count during business hours, reduce overnight
+
+!!! tip "For instant clone pools: set minimum ready desktops ≥ expected peak concurrent users × 1.1"
+    Instant clones boot fast (~30 seconds) but "power off" between sessions means a brief wait. Setting minimum ready desktops to slightly above expected peak concurrent users ensures most users get an instant clone immediately without waiting for provisioning.
+
+7. Save — changes apply to new sessions; existing sessions are unaffected
+
+---
+
+## Configure Cloud Pod Architecture (Multi-Site Federation)
+
+Cloud Pod Architecture (CPA) joins multiple Horizon pods across sites into a federated Global Entitlements layer — users are assigned to a pod that has available desktops, enabling cross-site load balancing and DR failover.
+
+### Prerequisites
+
+- Two or more Horizon pods, each with at least one Connection Server
+- Connectivity between all Connection Servers in all pods (TCP 22389, TCP 8472, TCP 32111)
+- All pods must have the same version of Horizon (within one minor version)
+
+### Step 1 — Initialize CPA on the First Pod
+
+1. Horizon Admin Console on Pod 1 → **View Configuration → Cloud Pod Architecture → Initialize Cloud Pod Architecture**
+2. This creates the federated LDAP layer and elects the first pod as the CPA primary
+
+### Step 2 — Join the Second Pod to the Federation
+
+1. Horizon Admin Console on Pod 2 → **View Configuration → Cloud Pod Architecture → Join Cloud Pod Architecture**
+2. Provide the FQDN of any Connection Server in Pod 1 and an admin credential
+3. Confirm — Pod 2's Connection Servers join the federation and replicate global entitlement data
+
+### Step 3 — Create a Global Entitlement
+
+A Global Entitlement maps a user or group to desktops across all federated pods:
+
+1. In either pod's Admin Console → **Catalog → Global Desktop Entitlements → Add**
+2. Set the entitlement name (this is what users see in Horizon Client)
+3. **Add Member Pools**: add the desktop pool from Pod 1 and the desktop pool from Pod 2
+4. Set **User Assignment Policy**: Dedicated (same pod every time) or Floating (first available)
+5. **Entitle Users/Groups** → save
+
+### Step 4 — Configure Global Load Balancing DNS
+
+Users must connect to a single URL that resolves to a Connection Server in their nearest pod. Use a Global Server Load Balancer (GSLB) or manual DNS:
+
+- `horizon.example.com` → GSLB VIP that routes to Pod 1 (Site A) or Pod 2 (Site B) based on latency
+- Configure the Horizon URL to match: **Horizon Admin Console → View Configuration → Servers → Connection Server → edit → External URL**
+
+### Step 5 — Test Global Entitlement
+
+1. Connect to `horizon.example.com` from a client in Site A — confirm assignment from Pod 1 pool
+2. Disconnect and reconnect from Site B — confirm assignment from Pod 2 pool
+3. Simulate Pod 1 Connection Server unavailability — confirm Horizon Client automatically reconnects via Pod 2
+
+---
+
 ## See also
 
 - [VMware Horizon — Health Checks](health-checks/)

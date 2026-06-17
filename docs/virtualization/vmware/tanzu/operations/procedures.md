@@ -497,6 +497,194 @@ kubectl get pvc app-data -n app-namespace
 
 ---
 
+## Enable vSphere with Tanzu on a Cluster (Supervisor)
+
+This procedure activates the Tanzu Supervisor on a vSphere cluster, enabling it to host vSphere Namespaces and TKG workload clusters. This is the initial setup step — run once per cluster.
+
+### Prerequisites
+
+- vSphere 7.x+ or 8.x with Enterprise Plus license
+- vSAN or an external NFS/iSCSI datastore for persistent storage
+- NSX-T or VDS-based networking (NSX-T required for pod networking; VDS supported for basic workloads)
+- DNS record for the Supervisor Control Plane: `supervisor.example.local → <supervisor-vip>`
+- IP ranges reserved for: Supervisor Control Plane VMs (3 IPs), Ingress/Egress, Pods
+
+### Step 1 — Configure Namespace and Network Settings in vCenter
+
+1. vCenter → **Workload Management → Enable**
+2. Select the target cluster → **Enable Workload Management**
+3. In the wizard:
+   - **Networking**: choose NSX-T or VDS-based networking
+   - **Storage**: assign a storage policy (vSAN Default or custom) for Supervisor VMs and PVCs
+   - **Load Balancer**: specify NSX ALB or HA Proxy VIP range for ingress
+   - **Workload Network**: define the pod CIDR, service CIDR, and egress CIDRs (must not overlap with physical network)
+   - **Control Plane Size**: Tiny/Small/Medium/Large — match to expected workload scale
+
+4. Set the **API Server endpoint** DNS name — must resolve to the VIP from all Kubernetes clients
+5. Click **Finish** — vCenter provisions three Supervisor Control Plane VMs and configures the cluster
+
+### Step 2 — Monitor Enablement
+
+```bash
+# Monitor from vCenter → Workload Management → Supervisor
+# Status progresses: Configuring → Running (typically 10–20 min)
+
+# Or check via kubectl after the supervisor IP is reachable
+kubectl get svc -n kube-system --kubeconfig <supervisor-kubeconfig>
+```
+
+### Step 3 — Download the Supervisor kubeconfig
+
+1. vCenter → **Workload Management → Supervisors → select the supervisor → Configure → Namespace → Download kubeconfig**
+2. Save as `supervisor.kubeconfig`
+
+```bash
+kubectl --kubeconfig=supervisor.kubeconfig get nodes
+# Expect 3 Supervisor Control Plane nodes in Ready state
+```
+
+### Step 4 — Post-Enablement Validation
+
+- [ ] Supervisor shows **Running** in vCenter → Workload Management
+- [ ] Three Supervisor Control Plane VMs visible in vCenter (prefixed `SupervisorControlPlaneVM`)
+- [ ] `kubectl get nodes` returns 3 Ready nodes
+- [ ] `kubectl get ns` shows `kube-system`, `vmware-system-*` namespaces
+
+---
+
+## Configure Antrea Network Policy (Pod Security)
+
+Antrea is the default CNI plugin for Tanzu workload clusters. Antrea Network Policies restrict traffic between pods and namespaces, implementing micro-segmentation at the Kubernetes layer.
+
+### Kubernetes NetworkPolicy (Standard)
+
+Kubernetes NetworkPolicy objects are namespace-scoped and select pods by label. They define allowed ingress and egress:
+
+```yaml
+# Allow only pods with app=backend to receive traffic from app=frontend on port 8080
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-backend
+  namespace: prod
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+  policyTypes:
+  - Ingress
+```
+
+```bash
+kubectl apply -f network-policy.yaml
+kubectl get networkpolicy -n prod
+```
+
+### Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)
+
+Antrea ClusterNetworkPolicy (ACNP) applies cluster-wide and takes priority over namespace-scoped NetworkPolicy. Use for enforcing baseline security rules that namespace owners cannot override:
+
+```yaml
+# Deny all east-west traffic between namespaces unless explicitly allowed
+apiVersion: crd.antrea.io/v1alpha1
+kind: ClusterNetworkPolicy
+metadata:
+  name: deny-cross-namespace-default
+spec:
+  priority: 5
+  appliedTo:
+  - namespaceSelector: {}
+  ingress:
+  - action: Drop
+    from:
+    - namespaceSelector:
+        matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values: ["kube-system", "vmware-system-csi"]
+    # All cross-namespace traffic denied unless a lower-priority NetworkPolicy allows it
+```
+
+```bash
+kubectl apply -f cluster-network-policy.yaml
+kubectl get clusternetworkpolicy
+```
+
+### Test Policy Enforcement
+
+```bash
+# Verify policy is enforced: exec into the frontend pod and test connectivity
+kubectl exec -n prod -it <frontend-pod> -- curl http://backend-svc:8080   # should succeed
+kubectl exec -n prod -it <frontend-pod> -- curl http://database-svc:5432  # should fail if not allowed
+
+# Antrea provides a traceflow tool for debugging policy drops
+kubectl antctl traceflow -S frontend-pod -D backend-pod -n prod
+```
+
+---
+
+## Decommission a vSphere Namespace
+
+Decommissioning a namespace removes all TKG clusters, PVCs, and Kubernetes objects within it. This is the correct method to fully clean up a namespace and release its IP/storage allocations.
+
+!!! danger "Deleting a namespace is permanent and removes all workloads and data within it"
+    All TKG workload clusters, running pods, persistent volumes, and configuration in the namespace are deleted. There is no undo. Ensure all workloads have been migrated or decommissioned and all data backed up before proceeding.
+
+### Step 1 — Delete TKG Workload Clusters First
+
+Before deleting the namespace, explicitly delete all TKG clusters it contains:
+
+```bash
+# List clusters in the namespace
+kubectl get tanzukubernetescluster -n <namespace>
+
+# Delete each cluster
+kubectl delete tanzukubernetescluster <cluster-name> -n <namespace>
+
+# Wait for cluster deletion to complete (control plane VMs are deleted from vCenter)
+kubectl get tanzukubernetescluster -n <namespace>
+# When the namespace returns empty, clusters are gone
+```
+
+### Step 2 — Release Persistent Volumes
+
+```bash
+# List PVCs in the namespace
+kubectl get pvc -n <namespace>
+
+# Delete PVCs — this triggers vSAN CNS volume deletion
+kubectl delete pvc --all -n <namespace>
+```
+
+### Step 3 — Delete the Namespace via vCenter
+
+1. vCenter → **Workload Management → Namespaces** → select the namespace → **Delete**
+2. vCenter deregisters the namespace from the Supervisor, removes network and storage allocations
+3. The namespace disappears from the Supervisor's namespace list
+
+```bash
+# Or via kubectl against the Supervisor
+kubectl --kubeconfig=supervisor.kubeconfig delete namespace <namespace>
+```
+
+### Step 4 — Post-Deletion Validation
+
+- [ ] Namespace no longer appears in vCenter → Workload Management → Namespaces
+- [ ] `kubectl get ns` on the Supervisor no longer lists the namespace
+- [ ] vSAN datastore freed: confirm PVC backing volumes are deleted in vCenter → Storage
+- [ ] DNS records for TKG cluster API endpoints removed (if manually created)
+- [ ] IP addresses for the namespace's ingress and load balancer VIPs released in IPAM
+
+---
+
 ## See also
 
 - [Tanzu — Health Checks](health-checks/)
