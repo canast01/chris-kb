@@ -8,12 +8,11 @@ tags:
 
 
 <div class="kb-summary">
-Procedures reference covering Rotate a Password in Locker, Add a vCenter Server to LCM, Content Migration Between Environments, Register VIDM (Workspace ONE Access), Decommission a Product from LCM.
+Procedures reference for Aria Suite Lifecycle Manager. Covers password and certificate rotation, product and environment lifecycle (add, upgrade, decommission, restore), HA configuration, proxy setup, and recovering from failed upgrades.
 
 *Applies to: Aria LCM 8.x*
 </div>
 
-  LCM Common Procedures
 ```text
 ┌────────────────────────────────────── Aria Suite LCM Procedures ──────────────────────────────────────┐
 │                                                                                                       │
@@ -59,13 +58,6 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-Via UI: **LCM → Locker → Certificates → Import Certificate** — paste PEM content for each field.
-
-**Step 4 — Apply the certificate to the product:**
-
-LCM → Lifecycle Operations → Environments → select product → **Replace Certificate** → choose the new Locker alias → confirm.
-
-LCM applies the certificate to all product nodes. Monitor via **Requests**.
 
 ---
 
@@ -346,6 +338,106 @@ LCM does not include built-in clustering. HA is achieved using vSphere HA for au
    5. Verify LCM UI is accessible at the FQDN
    6. Run environment health checks to confirm all managed products reconnect
 6. Test failover in a maintenance window every 6 months; resync the standby clone from a fresh snapshot of the active LCM after each test
+
+---
+
+## Recover from a Failed LCM Upgrade
+
+LCM product upgrades run as multi-phase jobs (Precheck → Deploy → Configure → Validate). Failures mid-way leave the product in a partially upgraded state. Do not retry the upgrade until you understand the failure.
+
+### Step 1 — Identify the Failure Point
+
+1. LCM → Requests → locate the failed upgrade request
+2. Expand each phase to identify the first **Failed** task; click the task to view the error message and log snippet
+3. Download the full log: **Settings → Logs → Download Logs** — search for `ERROR` lines near the timestamp of the failure
+
+Common failure reasons:
+
+| Symptom | Likely Cause |
+|---|---|
+| Precheck fails: certificate expired | Product TLS cert expired; renew via LCM before upgrading |
+| Precheck fails: disk space < 25 GB | Product VM low disk; extend disk via vCenter before retrying |
+| Deploy fails: OVA not found | Binary not in Locker; import the binary and retry |
+| Configure fails: service timeout | vCenter unreachable from product VM; check network/firewall |
+| Validate fails: health check red | Product service failed to start post-upgrade; check product logs |
+
+### Step 2 — Revert to Pre-Upgrade Snapshot (Preferred Recovery)
+
+If a snapshot was taken before the upgrade (strongly recommended):
+
+1. LCM → Requests → select the failed request → **Cancel** (if still in progress)
+2. In vCenter: right-click the product VM(s) → **Snapshots → Revert to Snapshot** → select the pre-upgrade snapshot
+3. Power on the product VMs and verify the previous version is running: confirm version in the product UI
+4. Delete the snapshot after confirming the product is healthy (snapshots degrade performance over time)
+5. Identify and resolve the root cause of the upgrade failure before reattempting
+
+### Step 3 — Retry the Upgrade (After Root Cause Fixed)
+
+1. LCM → Requests → select the failed request → **Retry** (only if LCM supports retry for the failed phase)
+2. If retry is not available: create a new upgrade request from LCM → Lifecycle Operations → Environments → product card → **Upgrade**
+3. Monitor closely through the previously failing phase
+
+If no snapshot exists and the product is in an unusable state, open a Broadcom support case immediately with the LCM request logs and product VM logs.
+
+---
+
+## Configure Proxy for Depot Access
+
+Required in environments where internet access is restricted by an HTTP/HTTPS proxy (common in enterprise and air-gapped-adjacent deployments).
+
+Without proxy configuration, LCM cannot sync with the Broadcom depot to list available product versions or download upgrade bundles.
+
+### Step 1 — Configure Proxy in LCM Settings
+
+1. LCM → **Settings → My Broadcom → Proxy Settings**
+2. Enable the **Use Proxy** toggle
+3. Configure:
+   - **Proxy host** — FQDN or IP of the proxy (e.g., `proxy.example.local`)
+   - **Port** — typically 3128 (Squid) or 8080
+   - **Protocol** — HTTP or HTTPS (match your proxy server's configuration)
+   - **Username / Password** — if proxy requires authentication
+4. Click **Test Connection** — LCM tests connectivity through the proxy to the Broadcom depot
+5. Save — all subsequent depot syncs and binary downloads will use the proxy
+
+### Step 2 — Validate Depot Sync
+
+1. Navigate to **Lifecycle Operations → Settings → My Broadcom**
+2. Click **Sync Now** — LCM fetches the latest product catalog from the Broadcom depot
+3. After sync completes, navigate to **Lifecycle Operations → Environments → Add Product** and confirm available product versions are listed
+
+### Proxy Not Available — Air-Gapped Import
+
+If no proxy is available and the environment is air-gapped:
+
+1. Download product binaries from `support.broadcom.com` on a machine with internet access
+2. Transfer binaries to a host accessible from LCM (SFTP server or shared NFS)
+3. LCM → **Locker → Product Binaries → Import → Upload** — upload the binary directly
+
+---
+
+## Re-register a Product after vCenter Change
+
+Required when the vCenter that hosts Aria product VMs is migrated to a new FQDN, replaced, or has its SSL certificate replaced — LCM loses connectivity to the previously registered vCenter.
+
+### Step 1 — Update or Re-add the vCenter in LCM Settings
+
+1. LCM → **Settings → vCenter Servers**
+2. Locate the affected vCenter — it may show as **Disconnected** or have an SSL thumbprint error
+3. Click **Edit** → update the FQDN if it changed → click **Accept Certificate** to accept the new thumbprint → click **Test Connection**
+4. If the vCenter no longer exists (replaced): click **Remove**, then add the new vCenter via **Add vCenter**
+
+### Step 2 — Re-associate Environments to the New vCenter
+
+1. LCM → **Lifecycle Operations → Environments** → select each environment that used the changed vCenter
+2. Click **Edit Environment → vCenter Configuration** → change the linked vCenter to the updated/new registration
+3. Click **Validate** — LCM verifies it can reach the product VMs via the new vCenter
+4. Save
+
+### Step 3 — Verify Product Connectivity
+
+1. For each environment: **Lifecycle Operations → Environments → select environment → Health Check**
+2. All product cards should return green; if any show red investigate the specific product's connectivity log
+3. Common post-migration failure: product VMs moved datastores or port groups during vCenter migration — verify VM network adapters are connected to the correct port groups in the new vCenter
 
 ---
 

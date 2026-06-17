@@ -7,7 +7,7 @@ tags:
 # VxRail — Procedures
 
 <div class="kb-summary">
-Operational procedures for VxRail cluster administration. Covers node maintenance mode (with vSAN evacuation), node expansion, disk replacement, and the change readiness and post-change validation checklists required before any VxRail maintenance operation.
+Operational procedures for VxRail cluster administration. Covers node maintenance, node expansion, node removal, disk replacement, certificate renewal on VxRail Manager, network reconfiguration, and the change readiness and post-change validation checklists required before any VxRail maintenance operation.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
@@ -447,6 +447,195 @@ Compliance checks validate that all nodes are running the expected firmware and 
    - **Configuration drift** — host profile or VxRail configuration differs from the cluster template; investigate and re-apply profile via vCenter **Host Profiles**
 4. After remediation, re-run the compliance check to confirm all nodes return to Compliant status
 5. Schedule periodic compliance checks (monthly recommended) as part of ongoing operational governance
+
+---
+
+## Remove a Node from VxRail Cluster (Decommission)
+
+Use this procedure to permanently remove a node from the VxRail cluster — for example, to retire aging hardware or reduce cluster size. This is irreversible without a full re-expansion.
+
+!!! warning "Minimum node count"
+    A vSAN cluster requires a minimum of 3 nodes (4 for two-host fault tolerance). Removing a node from a 3-node cluster will leave vSAN with insufficient hosts to sustain FTT=1. Confirm remaining node count before proceeding; if at minimum, contact Dell for guidance on transitioning to a 2-node ROBO configuration.
+
+### Step 1 — Pre-Decommission Checks
+
+```bash
+# Confirm vSAN health is green and resync = 0
+esxcli vsan debug resync list
+# Verify no components will become non-compliant after removal
+esxcli vsan storage list | grep -E "UUID|Compliant"
+```
+
+Check that the cluster has sufficient free capacity on remaining nodes to absorb all vSAN objects from the node being removed. Used cluster capacity must be below approximately 60% before starting.
+
+### Step 2 — Migrate All VMs Off the Node
+
+Use vSphere DRS or manual vMotion to move all running VMs to other cluster nodes. This is a separate step from vSAN evacuation.
+
+```powershell
+# PowerCLI — vMotion all VMs from the target node
+$sourceHost = Get-VMHost "vxrail-node-04.example.local"
+Get-VM -Location $sourceHost | Move-VM -Destination (Get-VMHost | Where-Object {$_.Name -ne $sourceHost.Name} | Get-Random)
+```
+
+### Step 3 — Enter Maintenance Mode with Full Data Migration
+
+Put the node in maintenance mode using **Full data migration** so vSAN fully evacuates all objects to remaining nodes. See [Node Maintenance Mode](#node-maintenance-mode-procedure) for the detailed steps.
+
+Wait for resync to reach 0 bytes before proceeding:
+
+```bash
+esxcli vsan debug resync list
+# Remaining Bytes must be 0 before Step 4
+```
+
+### Step 4 — Remove the Node via VxRail Plugin
+
+In vCenter: **Menu → VxRail → Cluster → Remove Node**
+
+Select the node to remove and confirm. VxRail Manager:
+
+1. Validates that vSAN has no objects on the node (requires maintenance mode + full evacuation)
+2. Removes the host from the vSphere cluster
+3. Un-claims the node's disk groups from vSAN
+4. Removes the node record from VxRail Manager inventory
+
+### Step 5 — Post-Removal Validation
+
+```bash
+# Confirm vSAN cluster is healthy with the reduced node count
+esxcli vsan health cluster get
+
+# Confirm object compliance on remaining nodes
+esxcli vsan debug resync list
+```
+
+- [ ] Removed node no longer appears in vCenter host list
+- [ ] vSAN health all green
+- [ ] Resync = 0 bytes
+- [ ] Cluster shows correct node count in VxRail Plugin
+- [ ] VMs that were running on the removed node are running normally on remaining nodes
+
+### Step 6 — Physical Removal
+
+Once the node is fully deregistered: power off the node (`racadm serveraction graceshutdown`), disconnect cables, and remove from rack. The node retains its ESXi installation; factory-reset via RASR if redeploying elsewhere.
+
+---
+
+## Renew VxRail Manager Certificate
+
+VxRail Manager presents a TLS certificate for its UI and API endpoints. This certificate must be renewed before expiry to prevent browser warnings and API authentication failures.
+
+### Option A — LCM-Managed Certificate (Recommended)
+
+If VxRail is integrated with Aria Suite Lifecycle:
+
+1. LCM → Lifecycle Operations → Environments → VxRail card → **Replace Certificate**
+2. Select the new certificate from the LCM Locker (import it first via Locker → Certificates if not already there)
+3. Confirm — LCM pushes the cert to VxRail Manager and restarts its web service
+4. Verify: browse to `https://<vxm-fqdn>` and confirm the browser shows the new certificate expiry date
+
+### Option B — Direct API Replacement (No LCM)
+
+```bash
+# Step 1 — Generate a CSR from VxRail Manager
+curl -sk \
+  -X POST \
+  -H "Authorization: Basic $(echo -n 'mystic:<password>' | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{"common_name":"vxm.example.local","sans":["vxm.example.local","10.0.100.10"]}' \
+  "https://<vxm-ip>/rest/vxm/v1/system/certificates/csr" | python3 -m json.tool
+
+# Save the returned CSR and submit to your CA to obtain a signed certificate
+
+# Step 2 — Upload the signed cert and private key to VxRail Manager
+curl -sk \
+  -X PUT \
+  -H "Authorization: Basic $(echo -n 'mystic:<password>' | base64)" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "certificate": "<PEM cert content, single line with \\n>",
+    "private_key": "<PEM key content, single line with \\n>"
+  }' \
+  "https://<vxm-ip>/rest/vxm/v1/system/certificates"
+```
+
+After uploading, VxRail Manager restarts its web service. Allow 1–2 minutes for the restart, then verify via browser that the new certificate is in effect.
+
+---
+
+## Reconfigure Node Network Settings
+
+Use this procedure when a deployed VxRail node's management, vMotion, or vSAN IP addresses need to change — for example, when renumbering the management network.
+
+!!! warning "Network changes require a maintenance window"
+    Changing IPs on an active node causes brief vMotion interruption and vSAN connectivity loss during the change. Schedule this during a maintenance window and pre-notify application teams.
+
+### Step 1 — Pre-Check
+
+```bash
+# Confirm vSAN health and resync = 0 before making any network change
+esxcli vsan debug resync list
+```
+
+Verify all replacement IPs are reserved in IPAM and DNS is updated to the new management IP (forward and reverse).
+
+### Step 2 — Enter Maintenance Mode
+
+Put the node in maintenance mode with **Ensure accessibility** (not Full data migration — IP changes don't require full evacuation):
+
+```powershell
+Set-VMHost -VMHost (Get-VMHost "vxrail-node-02.example.local") -State Maintenance -VsanDataMigrationMode EnsureAccessibility -Confirm:$false
+```
+
+### Step 3 — Reconfigure IPs via VxRail Manager
+
+VxRail Manager → **Inventory → Nodes → select node → Edit Network Settings**
+
+Update:
+- Management IP and hostname
+- vMotion IP
+- vSAN IP
+
+Confirm — VxRail Manager updates ESXi vmkernel adapter configurations and updates its own inventory.
+
+### Step 4 — Update iDRAC and DNS
+
+```bash
+# Update iDRAC IP if it also changed
+racadm set iDRAC.IPv4.Address <new-idrac-ip>
+racadm set iDRAC.IPv4.Netmask <mask>
+racadm set iDRAC.IPv4.Gateway <gateway>
+```
+
+Update DNS: add A and PTR records for the new management IP; remove or update the old records. Verify from another host:
+
+```bash
+nslookup vxrail-node-02.example.local
+```
+
+### Step 5 — Exit Maintenance Mode
+
+```powershell
+Set-VMHost -VMHost (Get-VMHost "vxrail-node-02.example.local") -State Connected -Confirm:$false
+```
+
+### Step 6 — Validate
+
+```bash
+# Ping the new management IP from the network
+ping <new-management-ip>
+
+# Verify vSAN sees the node with the new IPs
+esxcli vsan debug resync list
+esxcli vsan health cluster get
+```
+
+- [ ] Node Online in VxRail Plugin with new IP
+- [ ] vCenter shows host at new management IP
+- [ ] vSAN health green, resync = 0
+- [ ] vMotion successful from/to the reconfigured node (test a vMotion)
+- [ ] iDRAC accessible at new IP (if changed)
 
 ---
 
