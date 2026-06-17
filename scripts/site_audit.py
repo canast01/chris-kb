@@ -462,6 +462,8 @@ for _path in all_md():
     _c = open(_path).read()
     if 'kb-card' in _c or 'kb-grid' in _c:
         continue  # nav pages don't need diagrams
+    if re.search(r'\.(svg|png|jpg)\)', _c) or '<img ' in _c:
+        continue  # pages with embedded images satisfy the diagram requirement
     if not re.search(r'[┌│└┐┘]', _c):
         _missing_diag.append(_rel)
 if _missing_diag:
