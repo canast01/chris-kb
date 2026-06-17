@@ -15,34 +15,9 @@ Step-by-step guide to deploying a new ESXi host: hardware readiness, installatio
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```text
-┌────────────────────────────────────── ESXi Host Deployment Flow ──────────────────────────────────────┐
-│                                                                                                       │
-│  Phase 1: Physical Readiness                                                                          │
-│  BIOS/firmware at vendor minimum  ·  VT-x on  ·  DNS A+PTR records created  ·  NTP reachable          │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 2: ESXi Installation                                                                           │
-│  Boot ISO or PXE  ·  Select disk  ·  Set root password  ·  DCUI: IP/hostname/DNS/NTP                  │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 3: Network Configuration                                                                       │
-│  vmk0 management  ·  vMotion VMkernel  ·  vSAN VMkernel MTU 9000  ·  Verify ping                      │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 4: Storage Configuration                                                                       │
-│  iSCSI targets / FC zoning  ·  Multipath PSP  ·  VAAI plugin  ·  Datastores visible                   │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 5: Add to vCenter                                                                              │
-│  Add Host wizard  ·  Assign licence  ·  Host profile remediate  ·  HA agent installs                  │
-│                                        │                                                              │
-│                                        ▼                                                              │
-│  Phase 6: Hardening & Baseline                                                                        │
-│  Lockdown mode normal  ·  SSH disabled  ·  NTP confirmed  ·  Syslog  ·  LCM baseline                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![ESXi Deploy Stages](../../../../assets/esxi-deploy-stages.svg)
+
+![ESXi Deploy Topology](../../../../assets/esxi-deploy-topology.svg)
 
 ## Before you begin
 

@@ -15,44 +15,9 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```text
-┌───────────────────────────────────── vCenter — Deployment Phases ─────────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from DNS record creation to a hardened, production-ready vCenter. Each phase has a        │
-│  clear exit criterion. Do not proceed until the current phase validates clean.                        │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 1: Pre-Deploy        │  │  Phase 2: VCSA Stage 1       │  │  Phase 3: VCSA Stage 2       │ │
-│   │  DNS A + PTR for VCSA FQDN  │  │  Mount ISO on jump host      │  │  Connect to :5480 wizard     │ │
-│   │  NTP sources confirmed      │  │  Run vcsa-ui-installer       │  │  Set NTP + SSH + SSO domain  │ │
-│   │  Target datastore free space│  │  Size: tiny/small/medium/    │  │  Set SSO admin password      │ │
-│   │  AD service account ready   │  │  large/x-large selected      │  │  Wait for services to start  │ │
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│                ▼                                 ▼                                 ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 4: AD Integration    │  │  Phase 5: Inventory Build    │  │  Phase 6: Post-Deploy        │ │
-│   │  Add AD identity source     │  │  Create datacenter + cluster │  │  File-based backup schedule  │ │
-│   │  LDAP service account bind  │  │  Add ESXi hosts to cluster   │  │  Certificate replace (VMCA)  │ │
-│   │  Assign AD groups to roles  │  │  Create dvSwitch + port grps │  │  Skyline Health: green       │ │
-│   │  Verify AD login            │  │  Assign licences to hosts    │  │  Syslog/SNMP forwarding      │ │
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│  Physical Infrastructure: Target ESXi host with sufficient free CPU, RAM, and datastore capacity      │
-│  for selected VCSA size tier. Management network with reachability from all target ESXi hosts.        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCSA         = vCenter Server Appliance; Photon OS VM running vpxd, SSO, and embedded PostgreSQL     │
-│  vpxd         = core vCenter daemon; crash or restart brings management plane down                    │
-│  SSO domain   = identity namespace (vsphere.local or custom); set once at Stage 2                     │
-│  VAMI         = VM Appliance Management Interface; HTTPS management at port 5480                      │
-│  VMCA         = VMware Certificate Authority; embedded CA; issues certs for all vCenter services      │
-│  ELM          = Enhanced Linked Mode; joins multiple vCenters to share a single inventory view        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![vCenter Deploy Stages](../../../../assets/vcenter-deploy-stages.svg)
+
+![vCenter Deploy Topology](../../../../assets/vcenter-deploy-topology.svg)
 
 ---
 

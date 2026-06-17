@@ -13,62 +13,9 @@ Site Recovery Manager knowledge base — architecture, operations, deploy, CLI r
 *Applies to: SRM 8.x*
 </div>
 
-```text
-┌───────────────────────────────── VMware Site Recovery Manager Stack ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                 VMware Site Recovery Manager (SRM) — DR Orchestration Platform                │   │
-│   │          Site pair: SRM Server at protected site paired with recovery site SRM Server         │   │
-│   │   Protection groups: VMs grouped by replication method (vSphere Replication or array-based)   │   │
-│   │      Recovery plans: ordered failover runbook — VM priority, IP mapping, startup scripts      │   │
-│   │    Test failover: creates isolated test network bubble; no production impact during DR test   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Site pairing enables recovery · protection groups define scope                                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Architecture        │  │          Operations         │  │           Security          │   │
-│   │     SRM Server: per site    │  │   Protection group: create  │  │       RBAC: SRM roles       │   │
-│   │   Site pair: tunnel + cert  │  │    Recovery plan: design    │  │   Network isolation: test   │   │
-│   │   vSphere Replication: RPO  │  │   Test failover: validate   │  │     TLS: site pair cert     │   │
-│   │    Array replication: SRA   │  │   Planned migration: exec   │  │   IP customisation: rules   │   │
-│   │   IP mapping: prod→DR net   │  │   Reprotect: reverse repl   │  │     Audit: plan exec log    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture pairs sites · Operations execute and test recovery plans · Security governs DR access │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Common Issues   │   Diagnostics    │   Health Checks   │    Escalation    │  CLI Quick Ref   │   │
-│   │Plan fails: step e│SRM support bundle│Site pair: connecte│   GSS + bundle   │ srm-util srmcli  │   │
-│   │ VR repl lag high │ VR appliance log │VMs protected: yes?│  TAM escalation  │ srm-util showvms │   │
-│   │Test cleanup stuck│recovery-plan.log │ Test: cleanup OK? │ Collect SRM log  │  srm-util plans  │   │
-│   │IP remap not appli│IP customisation c│IP map: configured?│   P1: DR event   │ srm-util history │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SRM VM at protected site · SRM VM at recovery site · replication network · vCenter at each site      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRM Server    = Windows service (or VA) managing protection groups and recovery plans                │
-│  Site pair     = Trusted connection between two SRM Servers; established via certificate exchange     │
-│  Protection group= Set of VMs replicated together; associated with one or more recovery plans         │
-│  Recovery plan = Ordered failover script: VM priority groups, startup delays, IP mappings, scripts    │
-│  Test failover = Validates recovery plan; VMs start in isolated network; no production impact         │
-│  Planned migration= Controlled move of workloads to recovery site; apps shut down cleanly at source   │
-│  Reprotect     = Reverses replication direction after failover; makes DR site the new protected site  │
-│  vSphere Replication= Built-in VM replication engine; RPO 5 minutes or more; host-based delta sync    │
-│  SRA           = Storage Replication Adapter; plugin allowing SRM to use array-based replication      │
-│  IP customisation= Rules mapping VM IP addresses from production subnet to recovery site subnet       │
-│  Test bubble   = Isolated network created during test failover; VMs boot but cannot reach production  │
-│  RPO           = Recovery Point Objective; maximum acceptable data loss; drives replication frequency │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![SRM Capabilities Overview](../../../assets/srm-capabilities-overview.svg)
+
+![SRM Stack Position](../../../assets/srm-stack-overview.svg)
 
 ```text
 ┌──────────────────────────── Site Recovery Manager — Installation Sequence ────────────────────────────┐

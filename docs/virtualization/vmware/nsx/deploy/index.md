@@ -15,45 +15,9 @@ End-to-end deployment guide for VMware NSX network virtualisation. Phases 1–2 
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
-```text
-┌─────────────────────────────────────── NSX — Deployment Phases ───────────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from physical underlay to validated overlay networking. Each phase has a clear exit       │
-│  criterion. Do not proceed until TEP health is confirmed at each host-prep step.                      │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
-│   │  Phase 1: Prerequisites    │  │  Phase 2: NSX Manager      │  │  Phase 3: Transport Zones    │    │
-│   │  DNS/NTP on all hosts      │  │  Cluster                   │  │  & Profiles                  │    │
-│   │  MTU 9000 on ToR switches  │  │  Deploy OVA node 1         │  │  Overlay TZ + VLAN TZ        │    │
-│   │  3 IPs + 1 VIP for Mgr     │  │  Join nodes 2 + 3          │  │  Uplink profile: active/sby  │    │
-│   │  vCenter reachable         │  │  Set cluster VIP           │  │  TEP IP pool: /24 range      │    │
-│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
-│                                                                                                       │
-│                ▼                               ▼                               ▼                      │
-│                                                                                                       │
-│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
-│   │  Phase 4: Host Transport   │  │  Phase 5: Edge Cluster     │  │  Phase 6: Logical Network    │    │
-│   │  Nodes                     │  │  & T0 Gateway              │  │  & Validation                │    │
-│   │  Transport node profile    │  │  Deploy Edge OVA (×2)      │  │  T1 gateway + segment        │    │
-│   │  Apply to vSphere cluster  │  │  Edge cluster + BFD        │  │  DFW baseline policy         │    │
-│   │  TEP IPs assigned + UP     │  │  T0 BGP uplinks to ToR     │  │  E-W + N-S traffic test      │    │
-│   │  TEP ping host-to-host     │  │  Route advertisement on    │  │  nsxcli get route verify     │    │
-│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
-│                                                                                                       │
-│  Physical Infrastructure: ESXi hosts with TEP vmknic NICs; ToR switches MTU 9000, BGP-capable;        │
-│  Edge VMs on dedicated hosts; NSX Manager VMs on management cluster.                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TEP           = Tunnel End Point; VMkernel IP per host; Geneve encap src/dst (UDP 6081)              │
-│  Overlay TZ    = transport zone for Geneve-backed segments; spans ESXi hosts + Edge nodes             │
-│  VLAN TZ       = transport zone for VLAN-backed Edge uplinks to physical routers                      │
-│  T0 gateway    = Tier-0; BGP peers with ToR; handles north-south routing                              │
-│  T1 gateway    = Tier-1; per-tenant; east-west routing between segments                               │
-│  DFW           = Distributed Firewall; stateful L4 kernel filter at every VM vNIC                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![NSX Deploy Stages](../../../../assets/nsx-deploy-stages.svg)
+
+![NSX Deploy Topology](../../../../assets/nsx-deploy-topology.svg)
 
 ---
 

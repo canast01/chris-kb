@@ -14,45 +14,9 @@ End-to-end deployment guide for VMware Cloud Foundation (VCF) bringup. Covers ha
 *Applies to: VCF 4.x / 5.x*
 </div>
 
-```text
-┌─────────────────────────────────────── VCF — Deployment Phases ───────────────────────────────────────┐
-│                                                                                                       │
-│  Six phases from bare-metal validation to an operational VCF management domain with first workload    │
-│  domain. Each phase has a clear exit criterion. Do not proceed until current phase validates clean.   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 1: Pre-Deploy        │  │  Phase 2: Cloud Builder      │  │  Phase 3: Bringup Wizard     │ │
-│   │  HCL verification (VCF)     │  │  Deploy Cloud Builder OVA    │  │  Import bringup JSON spec    │ │
-│   │  DNS for all components     │  │  Set management IP/FQDN      │  │  Run prerequisite validation │ │
-│   │  VLANs on ToR switches      │  │  Access Cloud Builder UI     │  │  Fix all WARN/ERROR items    │ │
-│   │  ESXi on ≥4 HCL hosts       │  │  Upload bringup JSON spec    │  │  Start bringup (2–4 hours)   │ │
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│                ▼                                 ▼                                 ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌──────────────────────────────┐  ┌──────────────────────────────┐ │
-│   │  Phase 4: SDDC Manager      │  │  Phase 5: Workload Domain    │  │  Phase 6: Validation         │ │
-│   │  Login and health check     │  │  Commission additional hosts │  │  SOS health tool: all green  │ │
-│   │  Rotate default passwords   │  │  Network pools configured    │  │  Licences entered            │ │
-│   │  Enter VCF licences         │  │  Create VI workload domain   │  │  Certs replaced (CA-signed)  │ │
-│   │  Configure SDDC backup      │  │  Verify domain deploys clean │  │  Backup verified             │ │
-│   └─────────────────────────────┘  └──────────────────────────────┘  └──────────────────────────────┘ │
-│                                                                                                       │
-│  Physical Infrastructure: ≥4 HCL-validated rack servers · 25 GbE ToR switches · OOB management        │
-│  (iDRAC/iLO) · management/vSAN/vMotion/NSX TEP VLANs pre-configured on switches.                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Cloud Builder  = Day-0 VCF deployment appliance; reads JSON spec; deploys management domain          │
-│  SDDC Manager   = VCF lifecycle orchestration engine; manages all components post-bringup             │
-│  Management domain= first VCF domain; runs SDDC Manager, vCenter, NSX Manager 3-node cluster, vSAN    │
-│  Workload domain= tenant vSphere+vSAN+NSX cluster; created via SDDC Manager after bringup             │
-│  BOM            = Bill of Materials; VCF version-pinned component versions (cannot mix)               │
-│  SOS            = SDDC Operations Support; VCF health-check and log bundle CLI tool                   │
-│  Network pool   = IP range pre-allocated in SDDC Manager for VMkernel port commissioning              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![VCF Deploy Stages](../../../../assets/vcf-deploy-stages.svg)
+
+![VCF Deploy Topology](../../../../assets/vcf-deploy-topology.svg)
 
 ---
 

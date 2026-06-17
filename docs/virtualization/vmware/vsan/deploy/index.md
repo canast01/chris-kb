@@ -15,56 +15,9 @@ End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 
 *Applies to: vSAN 7.x / 8.x*
 </div>
 
-```text
-┌────────────────────────────────────── vSAN — Deployment Phases ───────────────────────────────────────┐
-│                                                                                                       │
-│  Seven phases from bare metal to operational vSAN cluster. Each phase has a clear exit criterion.     │
-│  Do not proceed to the next phase until the current phase validates clean.                            │
-│                                                                                                       │
-│   ┌─────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────────┐     │
-│   │    Phase 1: Physical    │  │      Phase 2: ESXi       │  │         Phase 3: vCenter         │     │
-│   │    BIOS/UEFI settings   │  │    Boot from ISO/PXE     │  │         Deploy VCSA OVA          │     │
-│   │     Network cabling     │  │    First-boot config     │  │    Configure SSO + inventory     │     │
-│   │     iDRAC/iLO config    │  │    vmk0 management IP    │  │     Add hosts to datacenter      │     │
-│   │     HCL verification    │  │        NTP + DNS         │  │      Create cluster object       │     │
-│   └─────────────────────────┘  └──────────────────────────┘  └──────────────────────────────────┘     │
-│                                                                                                       │
-│                ▼                            ▼                                 ▼                       │
-│                                                                                                       │
-│   ┌─────────────────────────┐  ┌──────────────────────────┐  ┌──────────────────────────────────┐     │
-│   │   Phase 4: Networking   │  │   Phase 5: vSAN Enable   │  │  Phase 6: Aria Suite (optional)  │     │
-│   │    dvSwitch creation    │  │  Enable vSAN on cluster  │  │   Aria Suite Lifecycle deploy    │     │
-│   │   vSAN VMkernel + tag   │  │     Disk group claim     │  │      Aria Operations config      │     │
-│   │   MTU 9000 end-to-end   │  │     Storage policies     │  │    vSAN adapter + dashboards     │     │
-│   │   NIOC if shared NICs   │  │    Health validation     │  │         Alert thresholds         │     │
-│   └─────────────────────────┘  └──────────────────────────┘  └──────────────────────────────────┘     │
-│                                                                                                       │
-│                                                    ▼                                                  │
-│                                                                                                       │
-│                                   ┌──────────────────────────────────┐                                │
-│                                   │       Phase 7: Validation        │                                │
-│                                   │     Skyline Health all green     │                                │
-│                                   │    Storage policy compliance     │                                │
-│                                   │       Failover simulation        │                                │
-│                                   │       Performance baseline       │                                │
-│                                   └──────────────────────────────────┘                                │
-│                                                                                                       │
-│  Physical Infrastructure: All phases run on physical ESXi hosts with NVMe/SSD disks,                  │
-│  ToR switches (MTU 9000), OOB management (iDRAC/iLO), and DNS/NTP infrastructure.                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  dvSwitch       = Distributed Virtual Switch; managed from vCenter across all hosts                   │
-│  vmk            = VMkernel adapter; IP interface for vSAN, vMotion, management traffic                │
-│  VCSA           = vCenter Server Appliance; the VM running vCenter                                    │
-│  HCL            = Hardware Compatibility List; required for vSAN support                              │
-│  NIOC           = Network I/O Control; traffic shaping on shared NICs                                 │
-│  Disk group     = one cache device + 1-7 capacity devices per ESXi host (OSA)                         │
-│  SPBM           = Storage Policy-Based Management; policies applied per VM                            │
-│  Skyline Health = built-in vSAN health dashboard in vCenter                                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![vSAN Deploy Stages](../../../../assets/vsan-deploy-stages.svg)
+
+![vSAN Deploy Topology](../../../../assets/vsan-deploy-topology.svg)
 
 ---
 
