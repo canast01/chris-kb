@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 27 checks.
+KB site audit — 28 checks.
 
 Usage:
     python3 scripts/site_audit.py          # run all checks, print summary
@@ -550,6 +550,44 @@ for _section, _required in _NEW_SECTIONS.items():
             _flat = [f for f in os.listdir(_sub_path) if f.endswith('.md')]
             if not _flat:
                 warn(issues, f'{_section}/{_sub}/ has no content')
+
+
+
+# ── Check 28: Admin page staleness ────────────────────────────────────────────
+issues = check(28, 'Admin page staleness (site-quality.md, usage-metrics.md)')
+import re as _re
+import datetime as _dt
+
+_actual_count = sum(1 for _r, _ds, _fs in os.walk(DOCS) for _f in _fs if _f.endswith('.md'))
+
+for _admin_page in ['site-quality.md', 'usage-metrics.md']:
+    _page_path = os.path.join(DOCS, _admin_page)
+    if not os.path.exists(_page_path):
+        warn(issues, f'{_admin_page} missing')
+        continue
+    with open(_page_path) as _f:
+        _text = _f.read()
+
+    # Check stated page count vs actual
+    _m = _re.search(r'\|\s*Total markdown pages\s*\|\s*([\d,]+)\s*\|', _text)
+    if _m:
+        _stated = int(_m.group(1).replace(',', ''))
+        _delta = abs(_stated - _actual_count)
+        _pct = _delta / _actual_count * 100 if _actual_count else 0
+        if _pct > 5:
+            warn(issues, f'{_admin_page}: stated {_stated} pages but actual is {_actual_count} (off by {_delta}, {_pct:.1f}%)')
+    else:
+        warn(issues, f'{_admin_page}: no "Total markdown pages" row found in table')
+
+    # Check generated date — warn if more than 60 days old
+    _dm = _re.search(r'Generated:\s*(\d{4}-\d{2}-\d{2})', _text)
+    if _dm:
+        _gen_date = _dt.date.fromisoformat(_dm.group(1))
+        _age = (_dt.date.today() - _gen_date).days
+        if _age > 60:
+            warn(issues, f'{_admin_page}: Generated date {_dm.group(1)} is {_age} days old (>60 days)')
+    else:
+        warn(issues, f'{_admin_page}: no "Generated: YYYY-MM-DD" line found')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

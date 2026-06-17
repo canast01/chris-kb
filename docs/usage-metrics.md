@@ -17,21 +17,20 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
 │   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,200+  │  │  Storage:          600       │  │  ASCII diagrams:     2,050+ │  │
-│   │  Sections:             16   │  │  Virtualization:   529       │  │  Formatted tables:   1,410  │  │
-│   │  Avg pages/section:   138   │  │  Cloud:            225       │  │  Code examples:      1,132  │  │
-│   │  New 2026-06-07:      +66   │  │                              │  │  Mermaid diagrams:     455  │  │
+│   │  Total pages:       2,599   │  │  Storage:          709       │  │  ASCII diagrams:     2,593  │  │
+│   │  Sections:             11   │  │  Virtualization:   685       │  │  Pages with tables:  1,985  │  │
+│   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     676  │  │
+│   │  Updated 2026-06-17         │  │                              │  │  kb-summary divs:    2,319  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Section          │  Pages  │  Section            │  Pages  │  Section          │  Pages     │   │
-│   │   Storage          │   600   │  SAN                │   121   │  Certifications   │    39      │   │
-│   │   Virtualization   │   529   │  ITSM               │   112   │  AI               │    32      │   │
-│   │   Cloud            │   225   │  Security           │    97   │  Monitoring Std   │    20      │   │
-│   │   Compute          │   140   │  Backup             │    80   │  Networking       │     8      │   │
-│   │   Automation       │   134   │  Protocols          │    65   │                   │            │   │
+│   │   Storage          │   709   │  SAN                │   136   │  Backup           │   103      │   │
+│   │   Virtualization   │   685   │  ITSM               │   153   │  Networking       │    83      │   │
+│   │   Cloud            │   295   │  Security           │   113   │  Certifications   │    14      │   │
+│   │   Compute          │   175   │  Automation         │   126   │                   │            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Health: ./validate-site.sh · ./audit-site.sh · ./preview-site.sh                                   │
@@ -48,39 +47,34 @@ Knowledge base statistics: page counts, section distribution, and content type c
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-06-07
+Generated: 2026-06-17
 
 ## Current totals
 
 | Metric | Count |
 |---|---:|
-| Total markdown pages | ~2,200 |
-| Sections | 16 |
-| Pages with full-width ASCII diagrams | ~2,050 |
-| Pages with formatted tables | 1,410 |
-| Pages with code examples | 1,132 |
-| Pages with Mermaid diagrams | 455 |
+| Total markdown pages | 2,599 |
+| Sections | 11 |
+| Pages with full-width ASCII diagrams | 2,593 |
+| Pages with kb-summary | 2,319 |
+| Pages with Mermaid diagrams | 676 |
+| Pages with formatted tables | 1,985 |
 
-## Section growth
+## Section page counts
 
 | Section | Pages |
 |---|---:|
-| Storage | 600 |
-| Virtualization | 529 |
-| Cloud | 225 |
-| Compute | 140 |
-| Automation | 134 |
-| SAN | 121 |
-| ITSM | 112 |
-| Security | 97 |
-| Backup | 80 |
-| Protocols | 65 |
-| Certifications | 39 |
-| AI | 32 |
-| Monitoring Standards | 20 |
-| Networking | 8 |
-| Start Here | 1 |
-| Stats | 1 |
+| Storage | 709 |
+| Virtualization | 685 |
+| Cloud | 295 |
+| Compute | 175 |
+| ITSM | 153 |
+| SAN | 136 |
+| Automation | 126 |
+| Security | 113 |
+| Backup | 103 |
+| Networking | 83 |
+| Certifications | 14 |
 
 ## Health checks
 

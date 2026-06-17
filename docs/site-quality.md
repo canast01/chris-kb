@@ -27,11 +27,10 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Section          │  Pages  │  Section            │  Pages  │  Section          │  Pages     │   │
-│   │   Storage          │   600   │  SAN                │   121   │  Certifications   │    39      │   │
-│   │   Virtualization   │   529   │  ITSM               │   112   │  AI               │    32      │   │
-│   │   Cloud            │   225   │  Security           │    97   │  Monitoring Std   │    20      │   │
-│   │   Compute          │   140   │  Backup             │    80   │  Networking       │     8      │   │
-│   │   Automation       │   134   │  Protocols          │    65   │                   │            │   │
+│   │   Storage          │   709   │  SAN                │   136   │  Backup           │   103      │   │
+│   │   Virtualization   │   685   │  ITSM               │   153   │  Networking       │    83      │   │
+│   │   Cloud            │   295   │  Security           │   113   │  Certifications   │    14      │   │
+│   │   Compute          │   175   │  Automation         │   126   │                   │            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Physical: GitHub Pages / Cloudflare CDN · MkDocs Material build · Actions CI pipeline              │
@@ -48,38 +47,34 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-06-07
+Generated: 2026-06-17
 
 ## Current state
 
 | Item | Count |
 |---|---:|
-| Total markdown pages | ~2,200 |
-| Sections | 16 |
-| Pages with kb-summary | ~2,200 |
-| Pages with full-width ASCII diagram | ~2,050 |
+| Total markdown pages | 2,599 |
+| Sections | 11 |
+| Pages with kb-summary | 2,319 |
+| Pages with full-width ASCII diagram | 2,593 |
+| Pages with Mermaid diagrams | 676 |
 | MkDocs strict build warnings | 0 |
 
 ## Pages by section
 
 | Section | Pages |
 |---|---:|
-| Storage | 600 |
-| Virtualization | 529 |
-| Cloud | 225 |
-| Compute | 140 |
-| Automation | 134 |
-| SAN | 121 |
-| ITSM | 112 |
-| Security | 97 |
-| Backup | 80 |
-| Protocols | 65 |
-| Certifications | 39 |
-| AI | 32 |
-| Monitoring Standards | 20 |
-| Networking | 8 |
-| Start Here | 1 |
-| Stats | 1 |
+| Storage | 709 |
+| Virtualization | 685 |
+| Cloud | 295 |
+| Compute | 175 |
+| ITSM | 153 |
+| SAN | 136 |
+| Automation | 126 |
+| Security | 113 |
+| Backup | 103 |
+| Networking | 83 |
+| Certifications | 14 |
 
 ## Quality rules
 
