@@ -13,7 +13,6 @@ Site Recovery Manager procedures — planned migration, emergency failover, repr
 *Applies to: SRM 8.x / 9.x*
 </div>
 
-  Test Failover vs Actual Failover
 ```text
 ┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐
 │                                                                                                       │

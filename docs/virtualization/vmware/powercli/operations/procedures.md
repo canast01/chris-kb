@@ -523,6 +523,152 @@ Disconnect-VIServer -Server * -Force -Confirm:$false
 
 ---
 
+## Datastore Inventory and Capacity Report
+
+Produces a per-datastore capacity summary across all vCenters in the session — useful for capacity planning, identifying near-full datastores, and verifying vSAN vs. VMFS balance.
+
+```powershell
+# Connect (assumes already connected via Connect-VIServer)
+$report = Get-Datastore | Select-Object `
+    Name,
+    Type,
+    @{N="CapacityGB"; E={[math]::Round($_.CapacityGB, 1)}},
+    @{N="FreeGB";     E={[math]::Round($_.FreeSpaceGB, 1)}},
+    @{N="UsedGB";     E={[math]::Round($_.CapacityGB - $_.FreeSpaceGB, 1)}},
+    @{N="UsedPct";    E={[math]::Round((($_.CapacityGB - $_.FreeSpaceGB) / $_.CapacityGB) * 100, 1)}},
+    @{N="vCenter";    E={$_.Uid.Split('@')[1].Split(':')[0]}} |
+    Sort-Object UsedPct -Descending
+
+# Display
+$report | Format-Table -AutoSize
+
+# Export to CSV
+$report | Export-Csv -Path "C:\Reports\datastore-capacity-$(Get-Date -Format 'yyyyMMdd').csv" -NoTypeInformation
+Write-Host "Report saved to C:\Reports\datastore-capacity-$(Get-Date -Format 'yyyyMMdd').csv"
+
+# Flag datastores > 80% full
+$critical = $report | Where-Object { $_.UsedPct -gt 80 }
+if ($critical) {
+    Write-Warning "DATASTORES OVER 80% CAPACITY:"
+    $critical | Format-Table Name, UsedPct, FreeGB -AutoSize
+}
+```
+
+Expected output: table of all datastores sorted by usage percentage, with a warning block for any over 80%.
+
+---
+
+## Connect to vCenter Securely (Certificate Validation)
+
+Production scripts must validate the vCenter TLS certificate rather than using `-InvalidCertificate`. This prevents MITM exposure in scripts run in automated pipelines.
+
+### Option A — Import the vCenter Certificate into the Local Store
+
+```powershell
+# Step 1: Retrieve the vCenter certificate
+$vcFqdn = "vcenter.example.local"
+$cert = [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $null
+$tcpClient = New-Object System.Net.Sockets.TcpClient($vcFqdn, 443)
+$sslStream = New-Object System.Net.Security.SslStream($tcpClient.GetStream())
+$sslStream.AuthenticateAsClient($vcFqdn)
+$cert = $sslStream.RemoteCertificate
+$sslStream.Close(); $tcpClient.Close()
+
+# Step 2: Export the cert to a file
+$certBytes = $cert.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Cert)
+[System.IO.File]::WriteAllBytes("C:\certs\vcenter.cer", $certBytes)
+
+# Step 3: Import into Trusted Root CA store (run as Administrator)
+Import-Certificate -FilePath "C:\certs\vcenter.cer" -CertStoreLocation "Cert:\LocalMachine\Root"
+```
+
+After importing, connect normally — PowerCLI validates the cert against the trusted store:
+
+```powershell
+# No -InvalidCertificate flag — certificate is now trusted
+Connect-VIServer -Server vcenter.example.local -Credential (Get-Credential)
+```
+
+### Option B — Configure PowerCLI to Skip Validation (Dev/Test Only)
+
+```powershell
+# ONLY for dev/test environments — never use in production scripts
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
+
+# Revert to strict validation for production
+Set-PowerCLIConfiguration -InvalidCertificateAction Fail -Confirm:$false
+```
+
+### Store Credentials Securely (No Plaintext Passwords)
+
+```powershell
+# Save credential to encrypted file (encrypted with current user's Windows DPAPI key)
+$cred = Get-Credential -UserName "svc-powercli@vsphere.local" -Message "vCenter credential"
+$cred | Export-Clixml -Path "C:\Scripts\.vc-cred.xml"
+
+# Load in script
+$cred = Import-Clixml -Path "C:\Scripts\.vc-cred.xml"
+Connect-VIServer -Server vcenter.example.local -Credential $cred
+```
+
+Note: `Export-Clixml` encrypts with DPAPI — only the Windows user who saved it can decrypt it on the same machine.
+
+---
+
+## Query vCenter Events Log
+
+The vCenter events log records every administrative action — VM power-on/off, configuration changes, authentication events, DRS migrations. Use these queries for auditing, troubleshooting, and change record validation.
+
+```powershell
+# --- Recent events for a specific VM ---
+$vm = Get-VM "web-prod-01"
+Get-VIEvent -Entity $vm -MaxSamples 50 |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Sort-Object CreatedTime -Descending |
+    Format-Table -AutoSize -Wrap
+
+# --- Events on a host in the last 24 hours ---
+$host = Get-VMHost "esxi-host-01.example.local"
+$since = (Get-Date).AddHours(-24)
+Get-VIEvent -Entity $host -Start $since -MaxSamples 500 |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Sort-Object CreatedTime -Descending | Format-Table -AutoSize -Wrap
+
+# --- All events by a specific user (audit trail) ---
+Get-VIEvent -MaxSamples 1000 -Start (Get-Date).AddDays(-7) |
+    Where-Object { $_.UserName -like "*administrator*" } |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Sort-Object CreatedTime -Descending
+
+# --- Events of a specific type: VM clones ---
+Get-VIEvent -MaxSamples 1000 -Start (Get-Date).AddDays(-30) |
+    Where-Object { $_.GetType().Name -eq "VmClonedEvent" } |
+    Select-Object CreatedTime, UserName, @{N="VM"; E={$_.Vm.Name}}, FullFormattedMessage
+
+# --- Export all events in the last 48 hours to CSV ---
+Get-VIEvent -MaxSamples 5000 -Start (Get-Date).AddHours(-48) |
+    Select-Object CreatedTime, UserName, FullFormattedMessage |
+    Export-Csv -Path "C:\Reports\vc-events-$(Get-Date -Format 'yyyyMMdd').csv" -NoTypeInformation
+Write-Host "Exported to C:\Reports\vc-events-$(Get-Date -Format 'yyyyMMdd').csv"
+```
+
+### Filter by Event Type
+
+PowerCLI exposes typed event classes — use `Where-Object {$_.GetType().Name -eq "<type>"}` to narrow results:
+
+| Event Type | Description |
+|---|---|
+| `VmPoweredOnEvent` | VM power-on |
+| `VmPoweredOffEvent` | VM power-off |
+| `VmMigratedEvent` | vMotion completed |
+| `VmClonedEvent` | VM cloned |
+| `VmRemovedEvent` | VM deleted from inventory |
+| `UserLoginSessionEvent` | vCenter UI login |
+| `DrsVmMigratedEvent` | DRS-initiated vMotion |
+| `AlarmStatusChangedEvent` | vCenter alarm state change |
+
+---
+
 ## See also
 
 - [PowerCLI — Health Checks](health-checks/)
