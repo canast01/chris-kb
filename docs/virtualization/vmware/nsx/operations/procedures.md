@@ -107,12 +107,6 @@ curl -sk -u 'admin:password' \
 
 ---
 
-## See also
-
-- [NSX — Health Checks](health-checks/)
-- [NSX — Common Issues](../troubleshooting/common-issues/)
-- [NSX — CLI Reference](cli-reference/)
-
 ## Verify Segment Health
 
 Confirms a segment is operationally UP and that VMs have connected logical ports. Run after creating a segment or when VMs report no network connectivity.
@@ -1002,3 +996,166 @@ curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | \
   jq '.results[] | {name: .display_name, version: .node_version}'
 ```
+
+---
+
+## Upgrade NSX
+
+Execute this procedure only after the pre-upgrade validation checklist (above) returns all checks green.
+
+!!! warning "Upgrade order is mandatory: NSX Manager → Edge Nodes → Transport Nodes"
+    Upgrading components out of order results in version incompatibilities that may take the data plane offline. NSX Manager must reach the new version first; Edge Nodes second (critical traffic path); ESXi Transport Nodes last (one host at a time, rolling). Never invert this order.
+
+### Step 1 — Upload the Upgrade Bundle
+
+1. Download the NSX upgrade bundle (`.mub` file) from the Broadcom portal
+2. NSX Manager UI → **System → Lifecycle Management → Upgrade**
+3. Click **Upload Bundle** — upload the `.mub` file; NSX Manager verifies the SHA checksum
+4. Wait for the upload to complete — large bundles (>3 GB) may take 10–20 minutes
+
+```bash
+# Alternatively, trigger upload from a URL (NSX Manager downloads directly)
+curl -sk -u 'admin:password' \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://depot.example.local/nsx-upgrade.mub"}' \
+  "https://<nsx-manager>/api/v1/upgrade/bundles?action=upload_from_url"
+```
+
+### Step 2 — Upgrade NSX Manager Cluster
+
+1. **System → Lifecycle Management → Upgrade → Upgrade Coordinator**
+2. Click **Upgrade** next to the Management Plane (NSX Manager nodes)
+3. NSX upgrades each Manager node in a rolling fashion (one at a time) — the UI becomes briefly unavailable during each node's restart (1–3 minutes)
+4. Monitor via the Upgrade Coordinator status panel; all Manager nodes must show the new version before proceeding
+
+```bash
+# Verify all Manager nodes are on the new version
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/cluster/nodes" | \
+  jq '.results[] | {name: .fqdn, version: .version}'
+```
+
+### Step 3 — Upgrade Edge Nodes
+
+1. Upgrade Coordinator → **Edge Nodes**
+2. Select the Edge cluster(s) to upgrade — NSX upgrades one Edge node at a time within each cluster; during the upgrade of one node, the other handles traffic (requires N+1 sizing)
+3. Click **Upgrade** — monitor per-node progress in the Upgrade Coordinator
+
+```bash
+# Verify Edge node versions post-upgrade
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/fabric/nodes?resource_type=EdgeNode" | \
+  jq '.results[] | {name: .display_name, version: .node_version}'
+```
+
+### Step 4 — Upgrade ESXi Transport Nodes
+
+1. Upgrade Coordinator → **Host Transport Nodes**
+2. Select the upgrade group (by cluster); configure per-group parallelism (default: 1 host at a time)
+3. Click **Upgrade** — NSX places each ESXi host in maintenance mode, upgrades the NSX VIBs, reboots the host, and exits maintenance mode before starting the next host
+
+```bash
+# Monitor host upgrade status
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/upgrade/nodes?upgrade_run_id=<run-id>" | \
+  jq '.results[] | {node: .display_name, status: .status}'
+```
+
+### Step 5 — Post-Upgrade Validation
+
+```bash
+# Confirm all fabric nodes are on the target version
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/fabric/nodes" | \
+  jq '.results[] | {name: .display_name, type: .resource_type, version: .node_version}'
+
+# Re-run upgrade readiness check to confirm a clean post-upgrade state
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/upgrade/pre_upgrade_checks?action=run_all" \
+  -X POST | jq '.checks[] | select(.status != "SUCCESS")'
+```
+
+- [ ] All NSX Manager nodes on target version
+- [ ] All Edge nodes on target version
+- [ ] All ESXi transport nodes on target version
+- [ ] Zero failed upgrade readiness checks
+- [ ] North-South and East-West traffic validated (test a VM reaching an external resource and a VM-to-VM flow through DFW)
+
+---
+
+## Commission a New Transport Node (ESXi Host)
+
+Run when adding a new ESXi host to a cluster that uses NSX — the host must be prepared as an NSX Transport Node before VMs on it can use NSX-backed networking.
+
+### Step 1 — Verify Host Prerequisites
+
+```bash
+# From the host, verify mgmt connectivity to NSX Manager
+esxcli network ip connection list | grep 1234   # NSX Messaging Bus port
+ping <nsx-manager-ip>
+
+# Confirm no leftover NSX VIBs from a previous installation
+esxcli software vib list | grep nsx
+```
+
+The host must be in the target vSphere cluster and visible in vCenter before proceeding.
+
+### Step 2 — Add as a Transport Node via NSX Manager UI
+
+1. NSX Manager → **System → Fabric → Hosts**
+2. Locate the host (listed under the vCenter / cluster view) — it shows as **Not Configured**
+3. Click the host → **Configure as Transport Node**
+4. In the wizard:
+   - Select the **N-VDS** (or VDS, if using VDS-backed NSX) — must match the transport zone type
+   - Select the **Transport Zone(s)**: overlay zone for workload segments; VLAN zone for uplinks
+   - Configure uplink mapping: map the physical NICs (vmnic2, vmnic3) to the N-VDS uplinks
+5. Confirm — NSX Manager pushes the configuration to the host, installs NSX VIBs (requires host reboot or maintenance mode depending on Quick Boot support)
+
+### Step 3 — Monitor Preparation
+
+```bash
+# Poll transport node preparation status
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/transport-nodes/<node-id>/state" | \
+  jq '{state: .state, details: .details}'
+# state: "success" = preparation complete
+```
+
+Or monitor in UI: **System → Fabric → Hosts** — host status changes from "In Progress" to "Success".
+
+### Step 4 — Validate Transport Node
+
+```bash
+# Confirm the host is in the transport zone
+curl -sk -u 'admin:password' \
+  "https://<nsx-manager>/api/v1/transport-nodes/<node-id>" | \
+  jq '.transport_zone_endpoints[] | .transport_zone_id'
+
+# Verify TEP (Tunnel Endpoint) IP is assigned
+esxcli network ip interface list | grep vmk10
+# vmk10 is the default TEP vmkernel adapter created by NSX
+
+# Confirm GENEVE tunnel is up from this host to at least one Edge node
+esxcli network ip interface list
+esxcli network ip connection list | grep 6081   # GENEVE port
+```
+
+- [ ] Host shows **Success** in NSX Manager → System → Fabric → Hosts
+- [ ] TEP vmkernel (vmk10) IP assigned and pingable from another transport node
+- [ ] VMs on this host can reach VMs on other transport nodes via overlay segments
+- [ ] DFW rules from NSX are enforced on VMs on this host (test with traceflow)
+
+---
+
+## See also
+
+- [NSX — Health Checks](health-checks/)
+- [NSX — Common Issues](../troubleshooting/common-issues/)
+- [NSX — CLI Reference](cli-reference/)
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor NSX Manager → System → Fabric → Hosts for transport node status changes
+- **Health check:** run the NSX morning health-check sequence after any topology change

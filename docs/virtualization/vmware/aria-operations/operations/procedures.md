@@ -457,6 +457,115 @@ When an adapter shows "Not Collecting" in the Solutions page:
 
 ---
 
+## Suppress Alerts During a Maintenance Window
+
+Alert suppression prevents Aria Operations from firing notifications for expected conditions during planned downtime. Without suppression, maintenance activities generate hundreds of false alerts.
+
+Two suppression mechanisms are available: **Alert Suspension** (suppress alert notifications without clearing the alert) and **Maintenance Mode** (marks an object as under maintenance, pausing collection and alert generation entirely).
+
+### Option A — Place an Object in Maintenance Mode (Recommended for Full Downtime)
+
+Use when the object will be unavailable (e.g., a host being patched):
+
+1. Navigate to **Environment → Object Browser** → find the object (host, VM, cluster)
+2. Right-click the object → **Maintenance Mode → Start Maintenance Mode**
+3. Set the duration — Aria Operations resumes monitoring automatically when the window expires
+4. During maintenance mode: collection is paused, no metrics collected, no alerts fired for the object or its children
+
+```bash
+# Set maintenance mode via API (useful for scripted pre-maintenance)
+curl -sk -u 'admin:password' \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"resourceId": "<object-id>", "maintenanceSchedule": {"startTime": 0, "endTime": <epoch-ms>}}' \
+  "https://<aria-ops-fqdn>/suite-api/api/resources/<object-id>/maintained"
+```
+
+### Option B — Suspend Alert Notifications (For Rolling Maintenance)
+
+Use when the object remains monitored (metrics still collected) but notifications should be quiet:
+
+1. Navigate to the object → **Alerts** tab → filter to the alert types you expect
+2. Select alerts → **Suspend** → set duration
+3. Or: navigate to **Operations → Alerts** → filter by object → bulk suspend
+
+### Verify Suppression is Active
+
+- Object shows a wrench icon in Environment Browser during maintenance mode
+- Alert list shows suppressed alerts with a "Suspended" badge
+- After the window, confirm alerts resume and maintenance mode clears automatically
+
+!!! warning "Children inherit maintenance mode"
+    When a cluster or datacenter object enters maintenance mode, all child objects (hosts, VMs) also enter maintenance mode. Verify scope before applying at the parent level to avoid silencing alerts for more objects than intended.
+
+---
+
+## Remove an Adapter Instance (Decommission Monitoring)
+
+Use when permanently removing a monitored system — decommissioning the adapter stops collection and removes the object from Aria Operations inventory.
+
+### Step 1 — Remove the Adapter Instance
+
+1. Navigate to **Data Sources → Integrations → Repository**
+2. Find the adapter instance for the system being decommissioned (filter by product type)
+3. Select the instance → **Delete**
+
+!!! warning "Deleting the adapter instance deletes all collected metrics history for that system"
+    Historical metric data for the monitored object is permanently deleted when the adapter instance is removed. If you need to retain history for audit or capacity planning, export the relevant reports or metrics before deleting. There is no undo.
+
+### Step 2 — Remove the Object from Inventory
+
+After deleting the adapter instance, the object may still appear in the inventory for up to one collection cycle (typically 5 minutes):
+
+1. **Environment → Object Browser** → search for the decommissioned system's name
+2. If still listed: right-click → **Delete** — forces immediate removal from inventory
+3. If the object reappears after deletion, the adapter instance was not fully removed — re-check Data Sources → Integrations → Repository
+
+### Step 3 — Clean Up Associated Configuration
+
+- Remove any alert policies that were targeted at the decommissioned system (or that reference it via a custom group)
+- Remove the system from any custom groups: **Environment → Custom Groups** → edit groups and remove the object
+- Update any dashboards that displayed data from the removed system
+
+---
+
+## Configure an Outbound Plugin (ITSM / Webhook Integration)
+
+Outbound plugins push Aria Operations alerts to external systems — typically an ITSM (ServiceNow, Jira) or a webhook receiver (Slack, Teams, PagerDuty). This is separate from SMTP notifications.
+
+### Step 1 — Enable the Plugin
+
+1. Navigate to **Data Sources → Integrations → Outbound**
+2. Click **Add** → select the plugin type:
+   - **REST** — for generic webhook endpoints (Slack, PagerDuty, custom)
+   - **ServiceNow** — built-in ServiceNow ITSM plugin (requires ServiceNow plugin installation)
+   - **Email** — SMTP (covered separately in "Configure SMTP Notifications")
+3. Fill in the plugin configuration:
+   - **URL** — endpoint URL of the receiving system
+   - **Authentication** — None / Basic / Token / OAuth2 (match the receiver's requirements)
+   - **Payload template** — JSON body to send; use `$alertName`, `$resourceName`, `$severity` placeholders
+
+### Step 2 — Create a Notification Rule Using the Plugin
+
+Plugins alone don't send anything — they must be referenced in a Notification Rule:
+
+1. **Operations → Notifications → Alert Notifications → Add**
+2. Set the **Trigger**: scope (all objects or a specific group), alert type, severity threshold
+3. Set the **Action**: select the outbound plugin configured in Step 1
+4. Set **Notification Frequency**: on alert creation / on state change / periodically while active
+5. Save and enable
+
+### Step 3 — Test the Integration
+
+1. Edit the notification rule → **Test Action** — Aria Operations sends a test payload to the plugin endpoint
+2. Verify receipt on the receiving end (Slack message, PagerDuty incident, webhook log)
+3. If the test fails:
+   - Check connectivity: from the Aria Operations VM, `curl -sk <url>` should return a response
+   - Check authentication: verify the token/credential is not expired
+   - Check payload: some receivers require specific content-type headers or JSON schema — adjust the template
+
+---
+
 ## See also
 
 - [Aria Operations Health Checks](health-checks/)
