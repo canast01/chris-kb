@@ -14,54 +14,52 @@ Catalog of known Tanzu Kubernetes Grid (TKG) and Supervisor cluster bugs, error 
 </div>
 
 ```text
-┌───────────────────────────────────── Virtualization Vmware Tanzu ─────────────────────────────────────┐
+┌──────────────────────────────────────────── VMware Tanzu ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Vmware: Virtualization Vmware Tanzu platform                         │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                   Management: Virtualization Vmware Tanzu management console                  │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           Kubernetes on vSphere — Supervisor cluster, TKG workload clusters, Harbor           │   │
+│   │                Protocols: HTTPS (API/UI) · Kubernetes API · NSX-T · NFS / vSAN                │   │
+│   │             Management: vCenter (Tanzu UI) · kubectl + vsphere plugin · Tanzu CLI             │   │
+│   │            Supervisor -> namespace -> TKG cluster -> workload pods -> Harbor image            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Control           │  │      Supervisor cluster     │  │    vSphere integrated K8s   │   │
+│   │           Workload          │  │         TKG cluster         │  │      Guest K8s cluster      │   │
+│   │           Registry          │  │            Harbor           │  │      Image scan + proxy     │   │
+│   │          Networking         │  │         NSX / Antrea        │  │       Pod overlay + LB      │   │
+│   │           Storage           │  │          vSAN / CSI         │  │         PVC backing         │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    Supervisor    │K8s control plane │    HTTPS (K8s)    │   vCenter SSO    │  On ESXi hosts   │   │
+│   │   TKG cluster    │   Workload K8s   │    HTTPS (K8s)    │    kubeconfig    │ Sup. provisioned │   │
+│   │      Harbor      │  Image registry  │     HTTPS 443     │   OIDC / local   │   OVA or Helm    │   │
+│   │   vSphere CSI    │ PVC provisioner  │    vSphere API    │ Service account  │ Dynamic volumes  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Tanzu infrastructure · management network · monitoring             │
+│  Physical: ESXi hosts -> Supervisor VMs -> TKG node VMs -> workload pods                              │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Tanzu platform overview and core concepts               │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Supervisor cluster = Kubernetes control plane integrated into vSphere                                │
+│  TKG          = Tanzu Kubernetes Grid; guest K8s clusters managed by Supervisor                       │
+│  Namespace    = vSphere namespace scoping TKG clusters and resource quotas                            │
+│  Harbor       = CNCF container image registry with vulnerability scanning                             │
+│  Antrea       = CNI plugin for Tanzu; uses OVS for pod networking                                     │
+│  vSphere CSI  = Container Storage Interface driver for PVC on vSAN/datastores                         │
+│  kubectl vsphere = kubectl plugin to login to Supervisor with vCenter SSO                             │
+│  Tanzu CLI    = command-line tool for TKG cluster lifecycle management                                │
+│  ClusterClass = Tanzu declarative cluster topology spec (replaces older TKr)                          │
+│  Content library = vSphere store for OVAs and ISOs used by TKG provisioning                           │
+│  Workload management = vCenter feature enabling Supervisor on a vSphere cluster                       │
+│  NSX-T        = network provider for Tanzu; manages pod LB and ingress                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

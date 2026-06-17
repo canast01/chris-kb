@@ -15,54 +15,52 @@ Catalog of known vSAN bugs, error codes, and workarounds including degraded comp
 </div>
 
 ```text
-┌───────────────────────────────────── Virtualization Vmware Vsan ──────────────────────────────────────┐
+┌───────────────────────────────────────────── VMware vSAN ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                          Vmware: Virtualization Vmware Vsan platform                          │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                   Management: Virtualization Vmware Vsan management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │                Software-defined storage — pooled local disks across ESXi hosts                │   │
+│   │             Protocols: vSAN (internal) · iSCSI (file service/target) · NFS v3/v4.1            │   │
+│   │                Management: vCenter vSAN UI · ESXCLI · RVC · vSAN Health checks                │   │
+│   │             VM write -> object manager -> CLOM placement -> disk group -> replica             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Cache            │  │       Cache disk (SSD)      │  │        Per disk group       │   │
+│   │           Capacity          │  │        Capacity disks       │  │          HDD or SSD         │   │
+│   │           Cluster           │  │        vSAN datastore       │  │      Single per cluster     │   │
+│   │           Witness           │  │      Stretched cluster      │  │     Third site tie-break    │   │
+│   │            Health           │  │       vSAN Health Svc       │  │     70+ built-in checks     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    Disk group    │   Storage unit   │   vSAN internal   │       N/A        │1 cache+N capacity│   │
+│   │       CLOM       │ Object placement │      Internal     │       N/A        │Honors FTT policy │   │
+│   │      CLOMD       │ Placement daemon │      Internal     │       N/A        │Runs on each host │   │
+│   │  Health Service  │  Cluster health  │  HTTPS (vCenter)  │      Admin       │ Proactive alarms │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Vsan infrastructure · management network · monitoring              │
+│  Physical: ESXi hosts with local disks (cache SSD + capacity disks) -> vSAN datastore                 │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Vsan platform overview and core concepts                │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  FTT          = Failures to Tolerate; vSAN storage policy defining redundancy                         │
+│  PFTT/SFTT    = Primary/Secondary FTT; stretched cluster tolerance levels                             │
+│  Disk group   = cache SSD + capacity disks grouped on one host                                        │
+│  Object       = vSAN unit of data (e.g. VM home, vmdk, swap)                                          │
+│  CLOM         = Cluster Level Object Manager; decides component placement                             │
+│  Resync       = vSAN rebalancing or repair after disk/host event                                      │
+│  Stretched cluster = vSAN across two sites + witness for FTT=1                                        │
+│  Witness      = lightweight host in third site providing quorum votes                                 │
+│  vSAN ESA     = Express Storage Architecture; all-NVMe, no disk groups                                │
+│  OSA          = Original Storage Architecture; cache + capacity disk group model                      │
+│  Deduplication = reduces capacity by eliminating duplicate blocks per disk group                      │
+│  SPBM         = Storage Policy-Based Management; per-VM vSAN policy config                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

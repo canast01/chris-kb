@@ -14,54 +14,52 @@ Catalog of known PowerCLI bugs, error codes, and workarounds covering module loa
 </div>
 
 ```text
-┌─────────────────────────────────── Virtualization Vmware Powercli ────────────────────────────────────┐
+┌─────────────────────────────────────────── VMware PowerCLI ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                        Vmware: Virtualization Vmware Powercli platform                        │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                 Management: Virtualization Vmware Powercli management console                 │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              PowerShell automation for VMware — vCenter, NSX, vSAN, Horizon, HCX              │   │
+│   │                       Protocols: HTTPS (vCenter/NSX API) · WS-MAN · REST                      │   │
+│   │                 Management: PowerShell 5.1/7.x module; Connect-VIServer cmdlet                │   │
+│   │              Install-Module -> Connect-VIServer -> Get/Set cmdlets -> Disconnect              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Runtime           │  │       PowerShell 5.1/7      │  │     Cross-platform (7.x)    │   │
+│   │           Modules           │  │       VMware.PowerCLI       │  │      PSGallery install      │   │
+│   │          Connection         │  │       Connect-VIServer      │  │       vCenter or ESXi       │   │
+│   │           Cmdlets           │  │       Get-VM / Set-VM       │  │        3000+ cmdlets        │   │
+│   │             REST            │  │       Invoke-VMRestAPI      │  │      Direct REST calls      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │ PowerCLI module  │  cmdlet library  │    HTTPS (API)    │  VI credentials  │PSGallery install │   │
+│   │     VIServer     │  vCenter target  │     HTTPS 443     │     SSO / AD     │ Multi-vCenter ok │   │
+│   │    NSX module    │  NSX automation  │    HTTPS (REST)   │   Bearer token   │ Separate install │   │
+│   │   Cert policy    │  TLS validation  │      Internal     │       N/A        │InvalidCertAction │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Powercli infrastructure · management network · monitoring          │
+│  Physical: PowerShell host -> HTTPS -> vCenter API or ESXi API -> VMware objects                      │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Powercli platform overview and core concepts            │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  Connect-VIServer = establishes PowerCLI session to vCenter or ESXi                                   │
+│  VI credentials = username/password or credential object for vCenter login                            │
+│  InvalidCertAction = PowerCLI setting controlling TLS cert validation behavior                        │
+│  PSGallery    = PowerShell module repository; source for VMware.PowerCLI                              │
+│  Module update = Update-Module VMware.PowerCLI; may conflict with older versions                      │
+│  DefaultVIServer = current PowerCLI session target; shown in $global:DefaultVIServers                 │
+│  Get-VM       = retrieve VM objects; supports -Filter for efficient queries                           │
+│  New-VM       = create VM; requires template/content library or ISO                                   │
+│  Invoke-VMScript = run a script inside a guest VM via VMware Tools                                    │
+│  Set-PowerCLIConfiguration = global PowerCLI settings (cert, scope, proxy)                            │
+│  Disconnect-VIServer = closes session; always call at script end                                      │
+│  API version  = PowerCLI cmdlets target a minimum vCenter API version                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

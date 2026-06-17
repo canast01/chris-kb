@@ -15,54 +15,52 @@ Catalog of known VCF bugs, error codes, and workarounds covering SDDC Manager, b
 </div>
 
 ```text
-┌──────────────────────────── Virtualization Vmware Vmware Cloud Foundation ────────────────────────────┐
+┌──────────────────────────────────── VMware Cloud Foundation (VCF) ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                 Vmware: Virtualization Vmware Vmware Cloud Foundation platform                │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │          Management: Virtualization Vmware Vmware Cloud Foundation management console         │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │              Full-stack HCI platform — vSphere + vSAN + NSX + vCenter + SDDC Mgr              │   │
+│   │               Protocols: HTTPS (SDDC UI) · vSphere API · NSX API · vSAN internal              │   │
+│   │              Management: SDDC Manager UI · REST API · VCF CLI · LCM for upgrades              │   │
+│   │              BringUp -> Management Domain -> Workload Domain -> lifecycle manage              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Management         │  │         SDDC Manager        │  │      VCF lifecycle ctrl     │   │
+│   │           Compute           │  │       vSphere cluster       │  │          Per domain         │   │
+│   │           Storage           │  │             vSAN            │  │     Default HCI storage     │   │
+│   │           Network           │  │             NSX             │  │    SDN overlay per domain   │   │
+│   │           Domains           │  │       Mgmt + workload       │  │      Separate vCenters      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   SDDC Manager   │VCF control plane │     HTTPS 443     │    local / AD    │ Orchestrates all │   │
+│   │     BringUp      │  Initial deploy  │       HTTPS       │       root       │One-time bootstrap│   │
+│   │       LCM        │ Upgrade manager  │    HTTPS (API)    │      Admin       │ Bundle upgrades  │   │
+│   │       NSX        │    SDN layer     │    HTTPS (API)    │    NSX admin     │Shared or per-dom.│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Vmware Cloud Foundation infrastructure · management network · mon  │
+│  Physical: VCF hosts -> SDDC Manager -> Management Domain vCenter -> Workload Domains                 │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Vmware Cloud Foundation platform overview and core con  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  VCF          = VMware Cloud Foundation; full-stack HCI + SDN + lifecycle platform                    │
+│  SDDC Manager = VCF management plane; orchestrates all domain and lifecycle ops                       │
+│  BringUp      = VCF day-0 bootstrap process; validates hardware and deploys Mgmt Domain               │
+│  Management Domain = first VCF domain; hosts SDDC Manager, vCenter, NSX, vSAN                         │
+│  Workload Domain = additional VCF domain provisioned for tenant workloads                             │
+│  EMS          = External Management Stack; BYO vCenter/NSX instead of VCF-managed                     │
+│  LCM          = VCF Lifecycle Management; coordinates bundle upgrades across stack                    │
+│  Bundle       = versioned set of component binaries for VCF upgrade                                   │
+│  PSA          = Principal Storage Architecture; vSAN or external storage choice                       │
+│  Cloud Builder = VCF deploy VM used during BringUp before SDDC Manager is live                        │
+│  vSAN ESA     = vSAN Express Storage Architecture; new engine in VCF 5.x                              │
+│  SoS          = Save Our Systems; VCF health-check and log-collection utility                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

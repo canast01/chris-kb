@@ -14,54 +14,52 @@ Catalog of known vSphere Replication bugs, error codes, and workarounds covering
 </div>
 
 ```text
-┌────────────────────────────── Virtualization Vmware Vsphere Replication ──────────────────────────────┐
+┌───────────────────────────────────── VMware vSphere Replication ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                   Vmware: Virtualization Vmware Vsphere Replication platform                  │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │            Management: Virtualization Vmware Vsphere Replication management console           │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │           VM-level async replication — hypervisor-based disk replication to DR site           │   │
+│   │                 Protocols: HTTPS (VRMS) · hbr (TCP 31031/44046) · vCenter API                 │   │
+│   │                 Management: vSphere Client plugin · VRMS appliance · REST API                 │   │
+│   │             VR agent in VMkernel -> delta capture -> hbr -> target VRMS -> DR disk            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │            Agent            │  │     VR agent (VMkernel)     │  │     Tracks disk changes     │   │
+│   │            Server           │  │        VRMS appliance       │  │       1 per site (OVA)      │   │
+│   │           Channel           │  │        hbr connection       │  │       TCP 31031 delta       │   │
+│   │            Target           │  │         DR site VRMS        │  │       Receives replica      │   │
+│   │        Orchestration        │  │        SRM (optional)       │  │     Failover automation     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │       VRMS       │Replication server│     HTTPS 8043    │  vCenter trust   │   OVA per site   │   │
+│   │     VR agent     │ VMkernel tracker │   hbr TCP 31031   │       N/A        │ Built into ESXi  │   │
+│   │    hbr server    │  Transfer relay  │     TCP 44046     │       N/A        │ On VRMS or ESXi  │   │
+│   │       SRM        │ DR orchestration │       HTTPS       │       SSO        │Consumes VR groups│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Vsphere Replication infrastructure · management network · monitor  │
+│  Physical: source ESXi (VR agent) -> hbr TCP -> DR site VRMS -> DR datastore                          │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Vsphere Replication platform overview and core concept  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  VRMS         = vSphere Replication Management Server; central replication appliance                  │
+│  VR agent     = VMkernel module tracking dirty blocks for replication                                 │
+│  hbr          = host-based replication; proprietary protocol for delta transfer                       │
+│  RPO          = Recovery Point Objective; minimum 5 minutes for vSphere Replication                   │
+│  Delta        = set of changed disk blocks transferred each replication cycle                         │
+│  Replication group = set of VMs replicated and recovered together                                     │
+│  Recovery point = point-in-time copy at DR site; configurable retention count                         │
+│  Multiple point recovery = VR keeps N recovery points; recover to any one                             │
+│  Test recovery = recovers VM in isolated network at DR site; non-destructive                          │
+│  Failover     = activates DR copy; source replication stops                                           │
+│  Reprotect    = starts replication back from DR to original site after failover                       │
+│  Lag          = time behind RPO target; alert when lag > RPO                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

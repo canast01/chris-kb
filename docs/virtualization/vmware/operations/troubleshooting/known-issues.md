@@ -14,54 +14,52 @@ Structured troubleshooting entries for common VMware/vSAN operational issues. Ea
 *Applies to: vSphere 7.x / 8.x*
 </div>
 ```text
-┌────────────────────────────── Virtualization Operations Troubleshooting ──────────────────────────────┐
+┌────────────────────────────────────── VMware vSphere Operations ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                 Operations: Virtualization Operations Troubleshooting platform                │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │            Management: Virtualization Operations Troubleshooting management console           │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │             vSphere operational practices — cluster management, migrations, health            │   │
+│   │               Protocols: vSphere API · HTTPS (vCenter) · vMotion TCP · iSCSI/NFS              │   │
+│   │                Management: vCenter UI · PowerCLI · REST API · alarms + actions                │   │
+│   │               Cluster config -> DRS balance -> vMotion -> HA protect -> monitor               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │           Compute           │  │         ESXi cluster        │  │       DRS + HA enabled      │   │
+│   │          Balancing          │  │             DRS             │  │     vMotion load-balance    │   │
+│   │          Resilience         │  │              HA             │  │    VM restart on failure    │   │
+│   │           Storage           │  │      vSAN / shared LUN      │  │    Datastore per cluster    │   │
+│   │           Network           │  │        VDS / vSwitch        │  │      Port-group config      │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │     vCenter      │ Cluster manager  │     HTTPS 443     │     SSO / AD     │Single UI for all │   │
+│   │       DRS        │ Resource balance │      vMotion      │   vCenter auth   │  Auto or manual  │   │
+│   │        HA        │    VM restart    │   ESXi heartbeat  │   vCenter auth   │FDM agent per host│   │
+│   │     vMotion      │  Live migration  │   TCP (vMotion)   │     vCenter      │Shared storage req│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Operations Troubleshooting infrastructure · management network · monitor  │
+│  Physical: ESXi hosts in cluster -> shared storage (SAN/NAS/vSAN) -> vCenter mgmt                     │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Operations         = Virtualization Operations Troubleshooting platform overview and core concept  │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  DRS          = Distributed Resource Scheduler; auto-balances VM load via vMotion                     │
+│  HA           = High Availability; restarts VMs on surviving host after ESXi failure                  │
+│  FDM          = Fault Domain Manager; HA agent running on each ESXi host                              │
+│  vMotion      = live VM migration between hosts without downtime                                      │
+│  Storage vMotion = migrates VM disk to a different datastore while running                            │
+│  Admission control = HA policy reserving capacity for failover scenarios                              │
+│  DRS rule     = affinity/anti-affinity constraint for VM placement                                    │
+│  Cluster      = group of ESXi hosts sharing compute resources and management                          │
+│  Resource pool = logical partition of cluster compute resources                                       │
+│  Maintenance mode = drains VMs from host before patching; blocks new deploys                          │
+│  Datastore    = storage abstraction for VM files; VMFS or NFS                                         │
+│  vSAN         = VMware software-defined storage using host local disks                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

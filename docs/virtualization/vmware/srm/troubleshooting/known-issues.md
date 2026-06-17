@@ -14,54 +14,52 @@ Catalog of known SRM bugs, error codes, and workarounds covering protection grou
 </div>
 
 ```text
-┌────────────────────────────────────── Virtualization Vmware Srm ──────────────────────────────────────┐
+┌──────────────────────────────────── VMware Site Recovery Manager ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Vmware: Virtualization Vmware Srm platform                          │   │
-│   │                                  Protocols: Various protocols                                 │   │
-│   │                    Management: Virtualization Vmware Srm management console                   │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
+│   │            DR orchestration — automated failover, test failover, and recovery plans           │   │
+│   │              Protocols: HTTPS (SRM API) · vCenter API · VRMS (SRM-to-SRM) · VAIO              │   │
+│   │              Management: SRM UI (vCenter plugin) · REST API · PowerCLI SRM module             │   │
+│   │            Protection group -> recovery plan -> test/failover -> VM power-on -> DNS           │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   │          Protection         │  │       Protection group      │  │     VMs grouped per RPO     │   │
+│   │         Replication         │  │       Array / vSphere       │  │      SRA or VR adapter      │   │
+│   │        Orchestration        │  │        Recovery plan        │  │     Ordered steps + cmds    │   │
+│   │           Testing           │  │        Test failover        │  │    Isolated network test    │   │
+│   │           Pairing           │  │      Protected/DR site      │  │      VRMS link required     │   │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
-│                          ▼                                                 ▼                          │
+│                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │    Component     │      Function     │      Notes       │       Auth       │   │
-│   │       Core       │ Primary service  │   Main function   │     See docs     │       RBAC       │   │
-│   │    Management    │  Control plane   │    Admin access   │     See docs     │       RBAC       │   │
-│   │    Monitoring    │   Health/perf    │  Alerts/dashboard │     See docs     │       RBAC       │   │
-│   │     Security     │   Auth/encrypt   │   Access control  │     See docs     │       RBAC       │   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    SRM server    │ DR orchestrator  │     HTTPS 443     │     SSO / AD     │ Paired per site  │   │
+│   │       VRMS       │    Site link     │       HTTPS       │    SRM trust     │ Cross-site link  │   │
+│   │       SRA        │Array replication │   Array-specific  │   Array creds    │Per-vendor plugin │   │
+│   │  Recovery plan   │  Failover steps  │      Internal     │    SRM admin     │ Test or real run │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: Virtualization Vmware Srm infrastructure · management network · monitoring               │
+│  Physical: protected site (SRM + vCenter) -> replication -> DR site (SRM + vCenter)                   │
 │                                                                                                       │
-│    Key terms:                                                                                         │
+│  Key terms:                                                                                           │
 │                                                                                                       │
-│    Vmware             = Virtualization Vmware Srm platform overview and core concepts                 │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
+│  SRM          = Site Recovery Manager; VMware DR orchestration product                                │
+│  Protection group = set of VMs protected together; maps to a replication group                        │
+│  Recovery plan = ordered failover procedure; includes custom steps and scripts                        │
+│  SRA          = Storage Replication Adapter; array-vendor plugin for SRM                              │
+│  VRMS         = vSphere Replication Management Server; SRM site-link component                        │
+│  Test failover = runs recovery plan in isolated network; no prod impact                               │
+│  Planned migration = graceful failover; shuts down source before starting target                      │
+│  Disaster recovery = emergency failover; source may be unavailable                                    │
+│  Reprotect    = reverses replication after failover; preps for failback                               │
+│  Failback     = returns VMs to original protected site after reprotect                                │
+│  Network mapping = maps protected-site portgroup to DR-site portgroup                                 │
+│  IP customization = SRM changes VM IP on failover per mapping rules                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
