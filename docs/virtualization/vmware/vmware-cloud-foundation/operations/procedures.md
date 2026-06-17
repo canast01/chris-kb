@@ -587,6 +587,137 @@ sudo /opt/vmware/sddc-support/sos --health-check --domain-name sfo-m01
 
 ---
 
+## Recover SDDC Manager from Backup
+
+Use when SDDC Manager is unrecoverable (VM deleted, disk corruption, failed upgrade) and no VM snapshot exists.
+
+!!! warning "Restore from backup reverts SDDC Manager's database to the backup point in time"
+    Any VCF changes made after the backup (new hosts commissioned, new domains created, certificate rotations) will not be reflected in the restored SDDC Manager. After restore, audit the current infrastructure state and reconcile manually. VMs in workload domains continue running during SDDC Manager downtime — only management operations are blocked.
+
+### Step 1 — Deploy a Fresh SDDC Manager OVA
+
+1. Download the SDDC Manager OVA from the Broadcom portal — use the same version as the backup
+2. Deploy the OVA to the management domain vCenter using the same IP and FQDN as the original SDDC Manager
+3. Complete first-run setup: accept EULA, set admin credentials — **do not configure any domains or hosts at this stage**
+
+### Step 2 — Initiate Restore from Backup
+
+SDDC Manager backup restore is performed via the API (no UI restore wizard):
+
+```bash
+# 1. Retrieve the list of available backups on the backup target
+curl -sk -u 'admin:VMware1!' \
+  "https://<sddc-manager-ip>/v1/backups/tasks" | jq '.elements[] | {id: .id, createdAt: .createdAt}'
+
+# 2. Trigger restore using the backup ID from step 1
+curl -sk -u 'admin:VMware1!' \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"backupFile": "<path-to-backup-file>", "encryption": {"passphrase": "<backup-passphrase>"}}' \
+  "https://<sddc-manager-ip>/v1/restores/tasks"
+```
+
+The restore process may take 20–60 minutes. SDDC Manager restarts multiple times.
+
+### Step 3 — Validate Post-Restore State
+
+```bash
+# Confirm SDDC Manager service health after restore
+curl -sk -u 'admin:VMware1!' \
+  "https://<sddc-manager-ip>/v1/system/health-summary" | jq '.elements[] | {service: .type, status: .status}'
+```
+
+In the SDDC Manager UI:
+- **Workload Domains** → all domains should be visible and show their current state
+- **Inventory → Hosts** → all commissioned hosts should be listed
+- **Certificates** → verify certificate status for all components
+
+If any hosts or domains are missing from SDDC Manager after restore (added after the backup was taken), they must be re-commissioned or re-imported.
+
+---
+
+## Remove a Host from a Workload Domain
+
+Used when decommissioning an ESXi host that is part of an existing VCF workload domain — for hardware retirement or capacity reduction. The host is moved to the free pool, then decommissioned.
+
+!!! warning "Minimum host counts: VI domain needs ≥ 4 hosts; vSAN stretched cluster needs ≥ 6"
+    Removing a host that would drop the domain below minimums is blocked by SDDC Manager. Verify the remaining host count before starting.
+
+### Step 1 — Mark the Host for Removal in SDDC Manager
+
+1. SDDC Manager → **Inventory → Workload Domains** → select the target domain
+2. Click the **Hosts** tab → locate the host to remove
+3. Select the host → **Remove Host**
+
+SDDC Manager validates the removal (checks vSAN capacity headroom and minimum host counts) before proceeding.
+
+### Step 2 — Monitor Removal
+
+SDDC Manager orchestrates:
+1. vSAN data evacuation from the host (Full data migration)
+2. vMotion all VMs off the host
+3. Remove host from the vSphere cluster
+4. Return host to the VCF Free Pool
+
+```bash
+# Monitor via SDDC Manager API
+curl -sk -u 'admin:VMware1!' \
+  "https://<sddc-manager>/v1/tasks/<task-id>" | jq '{status: .status, subTasks: .subTasks[].status}'
+```
+
+### Step 3 — Decommission from VCF (Remove from Free Pool)
+
+Once in the Free Pool, the host can be decommissioned from VCF entirely:
+
+1. SDDC Manager → **Inventory → Hosts → Free Pool** → select the host
+2. Click **Decommission** — SDDC Manager removes the host from inventory, deletes its record from the VCF database
+3. The host still has ESXi installed — wipe it if repurposing
+
+---
+
+## Configure a vSAN Stretched Cluster in VCF
+
+A vSAN Stretched Cluster in VCF provides synchronous replication between two sites within a VCF workload domain, achieving RPO=0 and automatic failover.
+
+### Prerequisites
+
+- Two physical sites with ≤ 5 ms RTT between them (10 ms maximum for vSAN stretched cluster)
+- A third witness site (can be a small VM) with ≤ 200 ms RTT to both sites
+- Equal number of hosts per site (minimum 3 per site = 6 total)
+- VCF 4.x+ with vSAN 7.x+
+
+### Step 1 — Prepare the Witness Appliance
+
+1. Download the vSAN Witness OVA and deploy it to the witness site (a separate vCenter or standalone ESXi)
+2. Assign the witness an IP reachable from both primary sites on the vSAN witness network
+3. Configure the witness VMkernel: `esxcli vsan network ipv4 add -i vmk1 -T=witness`
+
+### Step 2 — Create the Stretched Cluster via SDDC Manager
+
+SDDC Manager → **Workload Domains → select domain → Clusters → select cluster → Stretch Cluster**
+
+In the wizard:
+- **Site A hosts**: hosts physically located at the primary site
+- **Site B hosts**: hosts physically located at the secondary site
+- **Witness host**: the witness appliance IP
+- **Fault domain mapping**: assign each host to its correct fault domain (site A or site B)
+
+SDDC Manager configures vSAN stretched cluster mode, sets up fault domains, and configures the witness VM automatically.
+
+### Step 3 — Validate Stretched Cluster Health
+
+```bash
+# From any host in the cluster — check stretched cluster status
+esxcli vsan cluster get | grep -E "Sub-Cluster Type|Witness|Preferred"
+
+# Check both sites are equally represented in vSAN
+esxcli vsan health cluster get | grep -E "Stretched|Fault Domain|Witness"
+```
+
+In SDDC Manager: **Inventory → Workload Domains → cluster** — stretched cluster topology should show two fault domains and the witness.
+
+---
+
 ## See also
 
 - [VCF — Health Checks](health-checks/)

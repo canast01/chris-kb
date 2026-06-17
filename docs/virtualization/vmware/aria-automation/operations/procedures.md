@@ -483,6 +483,130 @@ The vRA administrator account password is managed through the VAMI (Virtual Appl
 
 ---
 
+## Debug a Failed Deployment
+
+When a blueprint deployment fails, Aria Automation records the failure at the resource level with error messages. This procedure walks through the systematic approach to finding and fixing the root cause.
+
+### Step 1 — Open the Deployment Detail
+
+**Service Broker → Deployments** → locate the failed deployment (Status: **Failed**) → click to open.
+
+The deployment detail shows each resource's provisioning status. Find the first resource with **Failed** status — this is typically the root cause; later failures are cascading.
+
+### Step 2 — Read the Resource Error
+
+Click the failed resource → **History** tab → expand the last action (usually **Create** or **Provision**) → read the error message.
+
+Common error patterns:
+
+| Error Message | Root Cause |
+|---|---|
+| `Insufficient resource on cluster` | No CPU or memory headroom on target cluster |
+| `Could not find datastore matching policy` | Storage policy has no compliant datastores |
+| `No networks found matching criteria` | Network profile has no available IPs or the port group doesn't exist |
+| `Cloud account connectivity error` | vCenter credentials expired or endpoint unreachable |
+| `Blueprint property X is required` | Mandatory input not supplied; blueprint validation gap |
+| `Timeout waiting for IP assignment` | DHCP failure or IP range exhaustion in network profile |
+| `Script execution failed` | ABX action or custom form script returned non-zero |
+
+### Step 3 — Inspect Detailed Logs
+
+For ABX/extensibility failures, go to **Extensibility → Activity → select the failed action run** — full stdout/stderr from the script is recorded here.
+
+For vSphere provisioning failures, cross-reference the vCenter **Tasks** panel at the time of the failure — vSphere error messages are often more descriptive than what Aria Automation surfaces.
+
+```bash
+# For deeper Aria Automation logs (if SSH access available):
+ssh root@<aria-automation-ip>
+tail -f /var/log/vmware/vra/deployment-service.log | grep ERROR
+```
+
+### Step 4 — Fix and Retry
+
+After fixing the root cause:
+
+- **Retry the deployment**: Deployment → **Actions → Retry** — Aria Automation retries only the failed resources, keeping already-provisioned resources intact
+- **Force-delete and redeploy**: if the deployment state is inconsistent, use Force-Delete (see [Force-Delete a Stuck Deployment](#force-delete-a-stuck-deployment)) and redeploy cleanly
+
+---
+
+## Remove a Cloud Account (Decommission)
+
+Use when a vCenter, AWS account, or other cloud endpoint is being retired. Removing the cloud account stops Aria Automation from managing resources in that endpoint.
+
+!!! danger "Removing a cloud account deletes all associated cloud zones and network/storage profiles"
+    All cloud zones, image mappings, flavor mappings, and network profiles tied to this cloud account are deleted. Any blueprint that references this cloud account's resources will fail to deploy. Update or delete affected blueprints before removing the cloud account.
+
+### Step 1 — Check for Dependencies
+
+Before removing, identify all resources that reference this cloud account:
+
+1. **Infrastructure → Cloud Zones** — note all cloud zones associated with the account
+2. **Infrastructure → Network Profiles** — check if any profiles reference networks from this cloud account
+3. **Infrastructure → Storage Profiles** — same for storage
+4. **Design → Blueprints** — search for blueprints that constrain deployment to this cloud account's zones
+
+### Step 2 — Update or Delete Dependent Blueprints
+
+For each dependent blueprint:
+- If the blueprint should still work: update it to use a different cloud zone
+- If the blueprint is no longer needed: unpublish from the catalog and delete the blueprint version
+
+### Step 3 — Remove the Cloud Account
+
+1. **Infrastructure → Connections → Cloud Accounts** → select the cloud account → **Delete**
+2. Confirm — Aria Automation removes the cloud account and all its associated cloud zones, image mappings, flavor mappings, and network/storage profiles
+3. Any VMs or other resources that were provisioned via this cloud account remain in their cloud environment — Aria Automation will no longer manage them (they become "orphaned" in Aria Automation's perspective)
+
+### Step 4 — Clean Up Orphaned Deployments
+
+After removing the cloud account, deployments that used it will show in a degraded state:
+
+**Service Broker → Deployments** — filter by the removed cloud account's zone → Force-Delete deployments that reference decommissioned resources.
+
+---
+
+## Configure Notification Templates
+
+Notification templates customise the email content sent to users when catalog requests complete, fail, or are approved/rejected. The default template is generic — custom templates include request details, approval context, and direct links.
+
+### Step 1 — Access Notification Templates
+
+**Infrastructure → Administration → Notifications** (or **Configuration → Notifications** depending on Aria Automation version)
+
+### Step 2 — Create a Custom Template
+
+1. Click **Add** → select the trigger event:
+   - `Request Submitted` — confirmation to the requester
+   - `Request Approved` — sent when an approver approves
+   - `Request Rejected` — sent with rejection reason
+   - `Request Completed` — sent when deployment succeeds
+   - `Request Failed` — sent with failure details
+
+2. Configure the template:
+   - **Subject**: e.g., `[Aria Automation] Your request for ${requestedItemName} has been completed`
+   - **Body** (HTML or plain text): use template variables to insert context-specific data
+
+Available template variables:
+
+| Variable | Value |
+|---|---|
+| `${requestedItemName}` | Name of the catalog item requested |
+| `${requestedBy}` | Username of the requester |
+| `${requestStatus}` | Current status (COMPLETED, FAILED, etc.) |
+| `${deploymentName}` | Name of the resulting deployment |
+| `${approvalComment}` | Approver's comment (on approval/rejection) |
+| `${requestedItemDescription}` | Description of the catalog item |
+
+3. Set the **Recipients**: `requester` / `approvers` / `specific address` / `group`
+4. Save and enable the template
+
+### Step 3 — Test the Template
+
+Submit a test deployment request and verify the email is received with the correct content. Check the **Infrastructure → Activity → Notifications** log if emails are not arriving — errors are logged per notification attempt.
+
+---
+
 ## See also
 
 - [Aria Automation — Health Checks](health-checks/)
