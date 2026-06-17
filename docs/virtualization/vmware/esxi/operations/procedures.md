@@ -732,6 +732,184 @@ esxcli system coredump network get
 
 ---
 
+## Decommission and Remove an ESXi Host
+
+Use when permanently removing a host from the environment — for hardware retirement, site consolidation, or replacing a node with newer hardware.
+
+!!! warning "Evacuate all VMs and vSAN objects before removing the host"
+    Removing a host from vCenter without first evacuating VMs and vSAN data will leave VMs in an invalid state and may cause vSAN object loss if FTT is already at its limit.
+
+### Step 1 — Migrate All VMs Off the Host
+
+```powershell
+# PowerCLI — vMotion all powered-on VMs to other hosts in the cluster
+$host = Get-VMHost "esxi-host-04.example.local"
+Get-VM -Location $host | Where-Object {$_.PowerState -eq "PoweredOn"} |
+  ForEach-Object {
+    $dest = Get-VMHost -Location (Get-Cluster -VMHost $host) |
+            Where-Object {$_.Name -ne $host.Name -and $_.ConnectionState -eq "Connected"} |
+            Get-Random
+    Move-VM -VM $_ -Destination $dest
+  }
+```
+
+For powered-off VMs: move their home datastore registration to another host via vCenter → right-click VM → **Migrate → Change Storage Only**.
+
+### Step 2 — Evacuate vSAN Data (If vSAN Cluster)
+
+Put the host in maintenance mode with **Full data migration**:
+
+```powershell
+Set-VMHost -VMHost (Get-VMHost "esxi-host-04.example.local") `
+           -State Maintenance -VsanDataMigrationMode Full -Confirm:$false
+```
+
+Wait for resync = 0 before proceeding:
+
+```bash
+esxcli vsan debug resync list
+```
+
+### Step 3 — Enter Maintenance Mode (Non-vSAN)
+
+For non-vSAN clusters, enter standard maintenance mode:
+
+```powershell
+Set-VMHost -VMHost (Get-VMHost "esxi-host-04.example.local") -State Maintenance -Confirm:$false
+```
+
+### Step 4 — Remove the Host from vCenter
+
+In vCenter: right-click the host → **Remove from Inventory**
+
+If the host is in a cluster: right-click → **Disconnect**, then right-click the disconnected host → **Remove from Inventory**
+
+```powershell
+# PowerCLI
+$host = Get-VMHost "esxi-host-04.example.local"
+Remove-VMHost -VMHost $host -Confirm:$false
+```
+
+### Step 5 — Clean Up DNS and IPAM
+
+- Remove the host's A and PTR DNS records
+- Release the management IP, vMotion IP, and storage IPs from IPAM
+- If the host is in the SAN zone configuration (Brocade/Cisco), remove its WWN from the zone
+
+### Step 6 — Wipe the Host (Before Physical Repurposing)
+
+If the hardware is being repurposed or returned:
+
+```bash
+# Boot from ESXi installer ISO and select "Install" → manually partition
+# Or use RASR/factory reset tools if VxRail
+
+# Wipe all data with esxcli (from ESXi shell, if still running):
+esxcli storage filesystem unmount -l /vmfs/volumes/datastore-name
+esxcli storage core device setconfig -d naa.<id> --perennially-reserved false
+```
+
+---
+
+## Configure Software iSCSI Initiator
+
+Used when connecting ESXi hosts to iSCSI storage arrays (NetApp, Pure FlashArray, Dell PowerStore, EMC, etc.). The software iSCSI initiator creates a vmkernel adapter for iSCSI traffic.
+
+### Step 1 — Add a VMkernel Adapter for iSCSI
+
+iSCSI traffic should run on a dedicated VMkernel adapter (not the management vmk0):
+
+1. vCenter → host → **Configure → Networking → VMkernel Adapters → Add**
+2. Create a new port group on a storage-dedicated vSwitch or VDS port group
+3. Assign an IP in the iSCSI VLAN (e.g., 10.0.50.x), no default gateway needed if the iSCSI target is on the same L2
+4. Enable only **Storage (iSCSI)** in the Services checkbox — do not enable Management on this vmk
+
+For multipath iSCSI, create two vmkernel adapters on different uplinks (vmk2 on vmnic2, vmk3 on vmnic3).
+
+### Step 2 — Enable the Software iSCSI Adapter
+
+1. vCenter → host → **Configure → Storage → Storage Adapters → Add Software Adapter → Add iSCSI Adapter**
+2. Note the IQN of the new software adapter (format: `iqn.1998-01.com.vmware:<hostname>-<random>`)
+
+### Step 3 — Bind vmkernel Adapters to the iSCSI Adapter
+
+Network binding ensures iSCSI traffic from each adapter uses the correct physical uplink:
+
+1. Select the iSCSI software adapter → **Network Port Binding** tab → **Add**
+2. Add both iSCSI vmkernel adapters (vmk2, vmk3) to the binding
+
+### Step 4 — Add Target Discovery
+
+**Dynamic Discovery (Send Targets — recommended):**
+
+1. iSCSI adapter → **Dynamic Discovery** tab → **Add**
+2. Enter the iSCSI target IP (the array's iSCSI port IP) and port (3260)
+3. Click **OK** → **Rescan** — ESXi queries the target and discovers all LUNs the host's IQN is zoned to
+
+**Static Discovery (explicit target):**
+
+1. iSCSI adapter → **Static Discovery** tab → **Add**
+2. Enter the target IQN and IP directly
+
+### Step 5 — Register the Host IQN on the Array
+
+On the storage array, create an initiator group / host record using the ESXi host's IQN noted in Step 2, and map the target LUNs to that initiator group.
+
+### Step 6 — Rescan and Verify
+
+```bash
+# Rescan all storage adapters
+esxcli storage core adapter rescan --adapter vmhba65
+
+# List visible iSCSI targets and LUNs
+esxcli iscsi session list
+esxcli storage core path list | grep -i iscsi
+```
+
+In vCenter: **Configure → Storage → Storage Adapters → iSCSI adapter → Paths** — should show active paths for each mapped LUN. ALUA or Round Robin multipathing should activate automatically.
+
+---
+
+## Apply a Host Profile and Check Compliance
+
+Host Profiles enforce a standardised ESXi configuration baseline across all hosts in a cluster — NTP servers, syslog, lockdown mode, network settings, and more.
+
+### Step 1 — Create a Host Profile from a Reference Host
+
+1. vCenter → **Home → Policies and Profiles → Host Profiles → Create Profile**
+2. Select **Create profile from existing host** → choose the reference host (the most recently configured, known-good host in the cluster)
+3. Name the profile (e.g., `prod-esxi-baseline-2026`) and save
+
+### Step 2 — Attach the Profile to a Cluster
+
+1. Right-click the target cluster → **Host Profiles → Attach/Detach Host Profile**
+2. Select the profile → **Attach** → all hosts in the cluster are now associated with this profile
+
+### Step 3 — Check Compliance
+
+1. Select the cluster → **Configure → Host Profiles → Check Compliance**
+2. vCenter compares each host's running configuration against the profile
+3. Non-compliant settings are listed per host with a description of the drift
+
+```powershell
+# PowerCLI — check compliance for all hosts in a cluster
+$profile = Get-VMHostProfile -Name "prod-esxi-baseline-2026"
+$cluster = Get-Cluster "Production-Cluster"
+Test-VMHostProfileCompliance -VMHost (Get-VMHost -Location $cluster) -VMHostProfile $profile |
+  Select-Object VMHost, ComplianceStatus, IncomplianceDescription | Format-Table -AutoSize
+```
+
+### Step 4 — Remediate Non-Compliant Hosts
+
+1. Select non-compliant hosts in the compliance report → **Remediate**
+2. Hosts that require a reboot (e.g., NTP or network changes): schedule during a maintenance window
+3. Apply remediation one host at a time to avoid cluster instability
+
+!!! warning "Remediation may reboot hosts without additional warning"
+    Profile remediation applies changes immediately. For settings that require a reboot (network, storage adapter config), the host will enter maintenance mode and reboot as part of remediation. Confirm the cluster has sufficient capacity to absorb the host's workload before remediating.
+
+---
+
 ## See also
 
 - [ESXi — Health Checks](health-checks/)

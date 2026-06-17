@@ -554,6 +554,130 @@ vmon-cli --status | grep -v RUNNING
 
 ---
 
+## Deploy a VM from OVA/OVF Template
+
+Used to deploy pre-packaged virtual appliances (management tools, security scanners, monitoring agents) from vendor-provided OVA files.
+
+### Step 1 — Download and Validate the OVA
+
+Before deploying, verify the OVA integrity using the vendor-provided SHA-256 checksum:
+
+```bash
+shasum -a 256 vendor-appliance.ova
+# Compare output against the published checksum on the vendor download page
+```
+
+### Step 2 — Deploy via vCenter UI
+
+1. In vCenter, right-click the target cluster or resource pool → **Deploy OVF Template**
+2. **Select Source**: upload the local `.ova` file or provide a URL
+3. **Select Name and Folder**: choose a meaningful name and the target VM folder
+4. **Select Compute Resource**: choose the target cluster, resource pool, or host
+5. **Review Details**: confirm the OVA description and disk requirements
+6. **Select Storage**: choose a datastore with sufficient free space; select the storage policy (vSAN policy or datastore default)
+7. **Select Networks**: map the OVA's virtual networks to vCenter port groups
+8. **Customize Template**: fill in IP addresses, DNS, gateway, admin password, and any product-specific fields in the OVF Properties page
+9. **Ready to Complete**: review the summary → **Finish**
+
+vCenter creates the VM and imports the disks. Monitor progress in **Tasks** (bottom panel) — deployment may take 5–30 minutes depending on disk size.
+
+### Step 3 — Post-Deploy Configuration
+
+1. Power on the VM: right-click → **Power On**
+2. Open the Web Console: right-click → **Open Web Console** — complete first-run setup wizard if the appliance has one
+3. Verify network connectivity: `ping <appliance-ip>` and browse to the appliance management UI
+4. Optionally convert the VM to a VM template for reuse: right-click → **Template → Convert to Template**
+
+---
+
+## Create a vSphere Distributed Switch (VDS)
+
+A VDS is a cluster-wide virtual switch managed centrally from vCenter, replacing per-host vSS configuration. Required for advanced features: Network I/O Control, port mirroring, LACP, LLDP, and NSX overlay transport.
+
+### Step 1 — Create the VDS
+
+1. vCenter → **Datacenter → Configure → Distributed Switches → New Distributed Switch**
+2. Set:
+   - **Name**: e.g., `prod-dvs-01`
+   - **Version**: match or exceed the oldest ESXi host version in the cluster (VDS version must be ≤ ESXi version)
+   - **Number of uplinks**: typically 2 (one per physical NIC per host); increase for link aggregation
+   - **Network I/O Control**: enable (allows bandwidth reservations for management, vMotion, storage traffic)
+3. Create a default **port group** during the wizard or skip and create manually
+
+### Step 2 — Add Hosts to the VDS
+
+1. Right-click the VDS → **Add and Manage Hosts**
+2. Select **Add Hosts** → select all hosts in the cluster
+3. **Manage Physical Adapters**: for each host, assign physical NICs to VDS uplinks
+   - Uplink 1 → vmnic2 (leave vmnic0 on vSS for management continuity)
+   - Uplink 2 → vmnic3
+4. **Manage VMkernel Adapters**: optionally migrate existing vmkernel adapters (vMotion, storage) from vSS to VDS port groups
+5. **Network Connectivity**: vCenter validates no management connectivity loss before committing
+
+!!! warning "Migrating vmnic0 (management NIC) to the VDS risks losing host connectivity"
+    If the management vmkernel adapter (vmk0) is on vmnic0 and vmnic0 is being moved to the VDS, vCenter must simultaneously move the management adapter to a VDS port group. If misconfigured, the host loses management connectivity and requires physical console access to recover. Always migrate management network last, one host at a time, and verify connectivity before proceeding to the next host.
+
+### Step 3 — Create Port Groups
+
+1. Right-click the VDS → **Distributed Port Group → New Distributed Port Group**
+2. Configure:
+   - **Name**: `dpg-vmotion-vlan20`, `dpg-storage-vlan30`, `dpg-vm-prod-vlan100`, etc.
+   - **VLAN**: set the VLAN ID (or VLAN Trunk for uplink-facing port groups)
+   - **Port Binding**: Static (for vmkernel) or Dynamic (for VMs)
+   - **Security Policy**: Promiscuous mode Off / MAC Changes Reject / Forged Transmits Reject (standard defaults)
+
+### Step 4 — Verify
+
+```powershell
+# PowerCLI — confirm VDS is created and hosts are added
+Get-VDSwitch -Name "prod-dvs-01" | Select-Object Name, Version, NumUplinkPorts
+Get-VDSwitch -Name "prod-dvs-01" | Get-VMHost | Select-Object Name, ConnectionState
+Get-VDPortgroup | Where-Object {$_.VDSwitch.Name -eq "prod-dvs-01"} | Select-Object Name, VlanConfiguration
+```
+
+---
+
+## Configure Enhanced Linked Mode (ELM)
+
+Enhanced Linked Mode joins multiple vCenter instances into a federated Single Sign-On domain, providing a unified inventory view and single authentication across all vCenters from any vSphere Client.
+
+### Prerequisites
+
+- All vCenters must be in the same SSO domain (e.g., `vsphere.local`) — each vCenter must be deployed pointing to the same Platform Services Controller (external PSC) or replication partner
+- vCenter versions must be within one major version of each other
+- All vCenters must have network connectivity to each other on TCP 443
+- ELM requires vCenter 6.5+ with embedded PSC (VCSA 7.x+ has no separate PSC)
+
+### For vCenter 7.x / 8.x (Embedded PSC — Replication-Based)
+
+1. Deploy the second vCenter VCSA with the same SSO domain (`vsphere.local`) configured during setup — during the VCSA deployment wizard, select **Join an existing SSO domain** and provide the first vCenter's FQDN as the partner
+2. Accept the replication partner certificate and provide the SSO administrator password
+3. Complete VCSA deployment — the SSO service replicates identity data (users, groups, permissions) between both vCenters automatically
+
+### Step 2 — Verify Linked Mode is Active
+
+1. Log in to either vCenter's vSphere Client
+2. Navigate to **Home → Inventory** — both vCenter instances should appear in the inventory tree
+3. Click the second vCenter's tree — it should expand without re-authentication (single sign-on)
+
+```bash
+# Confirm SSO replication from vCenter CLI
+/usr/lib/vmware-vmafd/bin/vdcrepadmin -f showservers -h localhost -u administrator -w <password>
+# Output should list both vCenters as replication partners
+```
+
+### Step 3 — Configure Cross-vCenter Permissions (Optional)
+
+Global permissions set at the SSO domain level apply across all linked vCenters:
+
+1. vSphere Client → **Administration → Access Control → Global Permissions → Add**
+2. Assign the user or group, select the role, and check **Propagate to children** to apply across the linked domain
+
+!!! warning "Global permissions bypass per-vCenter permission scoping"
+    A global permission at the root level grants access to every object in every vCenter in the linked domain. Use sparingly — prefer per-vCenter datacenter-level permissions where tighter scoping is needed.
+
+---
+
 ## See also
 
 - [vCenter — Health Checks](health-checks/)
