@@ -264,12 +264,6 @@ SRM → Summary → Replication → vSphere Replication Servers: [listed]
 
 ---
 
-## See also
-
-- [vSphere Replication — Health Checks](health-checks/)
-- [vSphere Replication — Common Issues](../troubleshooting/common-issues/)
-- [vSphere Replication — CLI Reference](cli-reference/)
-
 ## Verify VR Appliance Registration
 
 Confirms that the VRA is correctly registered with vCenter and SRM. Run this check after deploying a new VRA, after a site recovery, or during routine DR health checks.
@@ -418,3 +412,108 @@ After a failover (planned or unplanned), re-protection reconfigures replication 
 8. Once status is `OK`, update SRM protection groups at the recovery site to include this VM in a protection group targeting the original site.
 9. Validate by running a replication test (see "Test a Replication").
 **Note:** Re-protection does not move the VM back to the source — it keeps the VM at the recovery site and builds a new replication stream in the reverse direction. This is the correct approach when the source site is operational but you have not yet decided to fail back.
+
+---
+
+## Upgrade the vSphere Replication Appliance
+
+The vSphere Replication Appliance (VRA) is upgraded by deploying a new OVA and importing the configuration from the old appliance.
+
+### Prerequisites
+
+- Download the new VRA OVA from the Broadcom portal
+- Verify the new VRA version is compatible with both site vCenter versions
+- Confirm the VRA's current configuration: note the VRA IP, FQDN, and the vCenter it is registered with
+
+### Step 1 — Take a Snapshot of the Existing VRA
+
+In vCenter: right-click the VRA VM → **Snapshot → Take Snapshot** (label: `pre-upgrade-<date>`). This is a rollback point only — it is not part of the upgrade itself.
+
+### Step 2 — Deploy the New VRA OVA
+
+1. vCenter → right-click the target cluster → **Deploy OVF Template**
+2. Select the downloaded VRA OVA and complete the wizard:
+   - Assign the **same IP address and FQDN** as the existing VRA (the upgrade is in-place replacement, not side-by-side, if using the same IP)
+   - Or assign a new IP if deploying side-by-side (update DNS after cutover)
+3. Do **not** power on the new VRA yet
+
+### Step 3 — Power Off the Old VRA and Power On the New One
+
+1. Confirm no active recovery operations are running (VR replication continues independently of the VRA appliance — this step only interrupts management operations)
+2. Shut down the old VRA: right-click → **Guest OS → Shut Down**
+3. Power on the new VRA: right-click → **Power On**
+4. Navigate to `https://<vra-ip>:5480` → complete first-run setup (enter the same vCenter registration credentials)
+
+### Step 4 — Re-register with vCenter and SRM
+
+If the new VRA uses the same IP/FQDN, vCenter and SRM may re-discover it automatically. If not:
+
+1. vCenter → **Site Recovery → Open Site Recovery** → select the site → **vSphere Replication → Configure**
+2. Re-register the VRA with the site's vCenter
+3. In SRM: **Site Recovery → Configuration → vSphere Replication** → confirm VRA registration shows the new version
+
+### Step 5 — Validate Replications
+
+```bash
+# Check all replications resumed after the VRA upgrade
+# In vCenter: Site Recovery → Replications — all replications should return to "OK" within one cycle
+```
+
+- [ ] VRA version shows the new version in Site Recovery UI
+- [ ] All protected VMs show replication status `OK` (may take up to 1 RPO cycle)
+- [ ] SRM → Protection Groups → all groups showing `OK`
+- [ ] Delete the pre-upgrade snapshot after confirming success
+
+---
+
+## Configure Initial Replication Seeds (Large VM Sync)
+
+For VMs with large disks (>500 GB), the initial replication sync can take days over a WAN link. Seeds allow you to use a pre-copied disk image at the recovery site to avoid a full initial sync.
+
+### When to Use Seeds
+
+Use seeds when:
+- Initial sync would take more than 24–48 hours over the available WAN bandwidth
+- You have a mechanism to physically ship or copy disk data to the recovery site (backup tape, shipping drives, or a local copy)
+
+### Step 1 — Create a Disk Copy at the Recovery Site
+
+Option A — From a recent backup:
+Restore the VM's disks from a recent backup to a datastore at the recovery site. This is the seed.
+
+Option B — Copy via storage snapshot:
+Use array-level snapshot and transport (SRDF, SnapMirror, or similar) to copy the disk to the recovery site datastore.
+
+The seed disks must be identical to the source VM's disks at the time replication is configured (delta changes from that point will sync normally).
+
+### Step 2 — Configure Replication with Seed Selection
+
+1. At the **source site vCenter**, right-click the VM → **vSphere Replication → Configure Replication**
+2. Set the target site and datastore as usual
+3. On the **Seeds** screen: enable **Use seed disks** → browse to the recovery site datastore where the seed VMDKs are located
+4. Map each source disk to its corresponding seed disk
+5. Complete the wizard
+
+vSphere Replication will calculate the delta between the source and the seed and transfer only the changed blocks, dramatically reducing initial sync time.
+
+### Step 3 — Monitor Initial Sync
+
+```bash
+# Monitor sync progress in vCenter: Site Recovery → Replications → select VM
+# "Syncing" status shows transfer bytes and estimated completion
+# Once "OK", full replication protection is active
+```
+
+---
+
+## See also
+
+- [vSphere Replication — Health Checks](health-checks/)
+- [vSphere Replication — Common Issues](../troubleshooting/common-issues/)
+- [vSphere Replication — CLI Reference](cli-reference/)
+
+## Verify
+
+- **Alarms:** vSphere Client → Home → Alarms — no new critical alarms after the operation
+- **Events:** monitor Site Recovery → Replications for status changes after any configuration change
+- **Health check:** run the vSphere Replication health-check sequence after any topology change

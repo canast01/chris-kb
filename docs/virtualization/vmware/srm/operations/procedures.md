@@ -488,6 +488,128 @@ $incoming | Where-Object { $_.State -ne "Replicating" } | Select-Object Name, St
 
 ---
 
+## Add Custom Steps to a Recovery Plan
+
+Custom steps let you insert pre/post scripts, manual prompt pauses, and notification steps into SRM recovery plans. Common uses: trigger a database application-consistent quiesce before failover, update firewall rules after VMs come online, or page on-call teams at key points.
+
+### Step 1 — Edit the Recovery Plan
+
+SRM → **Recovery Plans** → select the plan → **Edit**
+
+### Step 2 — Add a Custom Step
+
+In the recovery plan editor, click **Add Step** at the appropriate point (before VM power-on, between groups, or after all VMs are online):
+
+**Message step (manual pause with acknowledgement):**
+
+```text
+Step type: Message
+Title: Notify DBA team that database failover is starting
+Message: Contact DBA on-call at +1-555-0100. Wait for acknowledgement before continuing.
+Timeout: 3600 seconds (1 hour)
+```
+
+This pauses the recovery plan and displays the message — a human must click **Resume** to continue.
+
+**Call local command (pre/post script on SRM server):**
+
+```text
+Step type: Call local command
+Path: C:\SRM-Scripts\update-firewall.ps1
+Arguments: -site Recovery -action enable
+Timeout: 120 seconds
+Run as: svc-srm@example.local
+```
+
+The script runs on the SRM Server appliance. Use this for tasks that cannot run inside VMs (firewall API calls, CMDB updates, DNS changes).
+
+**Call remote command (script inside a VM):**
+
+```text
+Step type: Call remote command
+VM: jump-host-recovery
+Path: /opt/scripts/notify-teams.sh
+Credentials: (SRM uses VMware Tools guest auth)
+```
+
+The script runs inside the specified VM using VMware Tools. The VM must be powered on and have Tools installed. This is suitable for application-layer tasks.
+
+### Step 3 — Order Steps Correctly
+
+Review the step execution order — SRM executes steps sequentially within each priority group:
+
+- **Pre-power-on steps**: DNS updates, storage mapping verification, firewall pre-staging
+- **Between VM groups**: database primary promotion, application config updates
+- **Post-recovery steps**: ITSM incident creation, monitoring re-baseline, end-user notification
+
+### Step 4 — Test the Custom Steps
+
+Run a test failover (see [Run a Test Failover](#run-a-test-failover-non-disruptive)) — SRM executes custom steps in test mode too. Review the test report to confirm each custom step ran and returned success. Fix any script errors before relying on them in a real DR event.
+
+---
+
+## Resolve a Failed Recovery Plan Step
+
+When a recovery plan run fails mid-execution (a VM fails to power on, a script returns non-zero, or a manual step times out), SRM halts the plan and requires operator intervention.
+
+### Step 1 — Identify the Failed Step
+
+SRM → **Recovery Plans → History** → select the failed run → expand the step tree to find the first red (failed) step. Note the step type, the VM or script involved, and the error message.
+
+### Step 2 — Diagnose the Root Cause
+
+| Failure Type | Common Cause | Resolution |
+|---|---|---|
+| VM power-on timeout | Network mapping missing or wrong | Check SRM → **Site Pair → Inventory Mappings → Network** |
+| VM power-on timeout | Datastore mapping missing | Check SRM → **Site Pair → Inventory Mappings → Datastore** |
+| Script step failed | Script returned non-zero exit code | RDP to SRM server, run the script manually, check output |
+| Script step timed out | Script ran longer than the configured timeout | Increase timeout in the custom step, or fix the script to run faster |
+| Manual step timed out | No operator responded within the timeout | Review who should acknowledge; increase timeout or lower it |
+| VM stays in "Waiting for heartbeat" | VMware Tools not responding | Connect to VM console; check OS boot; check Tools service |
+
+### Step 3 — Fix the Root Cause
+
+Resolve the underlying issue (fix the network mapping, fix the script, etc.) before resuming or retrying.
+
+### Step 4 — Resume or Restart the Plan
+
+Once the root cause is resolved:
+
+- **Resume from failure point**: SRM → running plan → **Resume** — SRM retries the failed step and continues from where it stopped (only available if the plan is still in a "paused" state)
+- **Re-run from beginning**: if too much time has passed or the plan state is inconsistent, cancel the current run → start a fresh recovery plan run
+
+After any mid-plan failure during a real DR event, document what happened in the incident record and update the recovery plan's custom steps to prevent recurrence.
+
+---
+
+## Configure SRM Email Notifications
+
+SRM can send email notifications at recovery plan milestones (start, completion, failure). Requires SMTP relay access from the SRM Server.
+
+### Step 1 — Configure SMTP in SRM
+
+SRM → **Site Recovery → Configuration → Email** (this option may be under the SRM Server's VAMI at `https://<srm-ip>:5480` for appliance-based SRM):
+
+- **SMTP server**: FQDN or IP of the mail relay (e.g., `smtp.example.local`)
+- **Port**: 25 (unauthenticated) or 587 (STARTTLS)
+- **From address**: `srm-alerts@example.local`
+- Click **Test** — verify a test email is received
+
+### Step 2 — Add Email Recipients to a Recovery Plan
+
+SRM → **Recovery Plans** → select the plan → **Edit** → navigate to **Notifications**:
+
+1. Click **Add Recipient**
+2. Enter the recipient email (e.g., DR team distribution list: `dr-team@example.local`)
+3. Select notification events: **Plan started** / **Plan completed** / **Plan failed** / **Custom step failed**
+4. Save
+
+### Step 3 — Add an Email Step Inline (Alternative)
+
+Instead of notifications, add a **Message** step with instructions for operators — this keeps all DR communication as part of the recovery plan audit trail and does not depend on SMTP.
+
+---
+
 ## See also
 
 - [SRM — Health Checks](health-checks/)
