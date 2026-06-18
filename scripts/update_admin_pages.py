@@ -11,11 +11,12 @@ Updates:
   - ASCII diagram box content totals
 """
 
-import os, re, datetime, subprocess
+import os, re, datetime, subprocess, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(REPO, 'docs')
 TODAY = datetime.date.today().isoformat()
+NO_AUDIT = '--no-audit' in sys.argv
 
 
 def all_md():
@@ -58,17 +59,20 @@ def compute_stats():
         if re.search(r'^tags:', text, re.MULTILINE):
             has_tags += 1
 
-    # Audit score (quick: count passing checks)
-    try:
-        result = subprocess.run(
-            ['python3', 'scripts/site_audit.py'],
-            capture_output=True, text=True, cwd=REPO
-        )
-        total_checks = len(re.findall(r'✅ Clean', result.stdout))
-        fail_checks = len(re.findall(r'❌', result.stdout))
-        audit_score = f'{total_checks} / {total_checks + fail_checks}'
-    except Exception:
-        audit_score = '?'
+    # Audit score (skip with --no-audit for fast hook runs)
+    if NO_AUDIT:
+        audit_score = None
+    else:
+        try:
+            result = subprocess.run(
+                ['python3', 'scripts/site_audit.py'],
+                capture_output=True, text=True, cwd=REPO
+            )
+            total_checks = len(re.findall(r'✅ Clean', result.stdout))
+            fail_checks = len(re.findall(r'❌', result.stdout))
+            audit_score = f'{total_checks} / {total_checks + fail_checks}'
+        except Exception:
+            audit_score = '?'
 
     return {
         'total': total,
@@ -107,9 +111,10 @@ def update_file(path, stats):
             rf'\g<1> {stats["has_summary"]:,}',
         r'(Pages with tags\s*\|)\s*[\d,]+':
             rf'\g<1> {stats["has_tags"]:,}',
-        r'(Audit score\s*\|)\s*[^\n]+\|':
-            rf'\g<1> {stats["audit_score"]} |',
     }
+    if stats['audit_score'] is not None:
+        replacements[r'(Audit score\s*\|)\s*[^\n]+\|'] = \
+            rf'\g<1> {stats["audit_score"]} |'
     for pattern, replacement in replacements.items():
         content = re.sub(pattern, replacement, content)
 
@@ -146,11 +151,12 @@ def update_file(path, stats):
         content
     )
     # Update "Audit score: N/N clean" in ASCII box
-    content = re.sub(
-        r'(Audit score: )[\d/]+ clean',
-        lambda m: m.group(1) + f'{stats["audit_score"]} clean',
-        content
-    )
+    if stats['audit_score'] is not None:
+        content = re.sub(
+            r'(Audit score: )[\d/]+ clean',
+            lambda m: m.group(1) + f'{stats["audit_score"]} clean',
+            content
+        )
 
     with open(path, 'w') as f:
         f.write(content)
@@ -166,7 +172,9 @@ def main():
     print(f'  Mermaid:         {stats["has_mermaid"]:,}')
     print(f'  kb-summary:      {stats["has_summary"]:,}')
     print(f'  Tags:            {stats["has_tags"]:,}')
-    print(f'  Audit score:     {stats["audit_score"]}')
+    print(f'  Audit score:     {stats["audit_score"] or "(skipped)"}')
+    if NO_AUDIT:
+        print('  (audit score skipped — run without --no-audit for full update)')
 
     for fname in ('site-quality.md', 'usage-metrics.md'):
         path = os.path.join(DOCS, fname)

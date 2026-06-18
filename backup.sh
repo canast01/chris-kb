@@ -29,8 +29,8 @@ INFO
 
 echo "Backup created: $DEST"
 
-# Keep only the 10 most recent backups; delete the rest
-KEEP=10
+# Keep only the 5 most recent backups; delete the rest
+KEEP=5
 BACKUP_COUNT=$(ls -1d "$BACKUP_ROOT"/????-??-??_* 2>/dev/null | wc -l | tr -d ' ')
 if [ "$BACKUP_COUNT" -gt "$KEEP" ]; then
   DELETE_COUNT=$((BACKUP_COUNT - KEEP))
