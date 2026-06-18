@@ -583,13 +583,13 @@ for _admin_page in ['site-quality.md', 'usage-metrics.md']:
     else:
         warn(issues, f'{_admin_page}: no "Total markdown pages" row found in table')
 
-    # Check generated date — warn if more than 30 days old
+    # Check generated date — warn if more than 1 day old
     _dm = _re.search(r'Generated:\s*(\d{4}-\d{2}-\d{2})', _text)
     if _dm:
         _gen_date = _dt.date.fromisoformat(_dm.group(1))
         _age = (_dt.date.today() - _gen_date).days
-        if _age > 30:
-            warn(issues, f'{_admin_page}: Generated date {_dm.group(1)} is {_age} days old (>30 days)')
+        if _age > 1:
+            warn(issues, f'{_admin_page}: Generated date {_dm.group(1)} is {_age} days old (>1 day)')
     else:
         warn(issues, f'{_admin_page}: no "Generated: YYYY-MM-DD" line found')
 
