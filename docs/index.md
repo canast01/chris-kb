@@ -83,5 +83,10 @@
   <span>Cheat sheets, interaction maps, decision trees, glossary, and version matrices.</span>
 </a>
 
+<a class="kb-card" href="labs/">
+  <strong>Lab Guides</strong>
+  <span>Nested ESXi homelab, vSAN 2-node, NSX-T, and VCF step-by-step walkthroughs.</span>
+</a>
+
 </div>
 
