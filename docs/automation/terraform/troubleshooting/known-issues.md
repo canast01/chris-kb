@@ -96,6 +96,6 @@ Catalog of known Terraform and Terraform Enterprise bugs, error codes, and worka
 
 ## See also
 
-- [Terraform — Common Issues](common-issues.md)
-- [Ansible — Known Issues](../../ansible/troubleshooting/known-issues/)
-- [GitHub Actions — Known Issues](../../github-actions/troubleshooting/known-issues/)
+- [Terraform — Common Issues](common-issues/)
+- [Ansible — Known Issues](../../ansible/troubleshooting/known-issues.md)
+- [GitHub Actions — Known Issues](../../github-actions/troubleshooting/known-issues.md)

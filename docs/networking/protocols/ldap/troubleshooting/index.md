@@ -161,8 +161,8 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Diagnostics
 
 ## See also
 
-- [Binds](binds/)
-- [Ports](ports/)
-- [Queries](queries/)
-- [Tls](tls/)
+- [Binds](../binds/)
+- [Ports](../ports/)
+- [Queries](../queries/)
+- [Tls](../tls/)
 - [LDAP — Overview](../)

@@ -88,5 +88,4 @@ Catalog of known GPU and local AI inference bugs, error codes, and workarounds c
 
 ## See also
 
-- [GPU — Common Issues](common-issues.md)
-- [Ollama — Known Issues](../../ollama/troubleshooting/known-issues/)
+- [Ollama — Known Issues](../../ollama/troubleshooting/known-issues.md)

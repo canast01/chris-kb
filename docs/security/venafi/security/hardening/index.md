@@ -107,7 +107,7 @@ All certificate lifecycle events are captured in the Venafi audit log and should
 
 ## See also
 
-- [Venafi — Access Control](access-control/)
-- [Venafi — Authentication](authentication/)
-- [Venafi — Encryption](encryption/)
+- [Venafi — Access Control](../access-control/)
+- [Venafi — Authentication](../authentication/)
+- [Venafi — Encryption](../encryption/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

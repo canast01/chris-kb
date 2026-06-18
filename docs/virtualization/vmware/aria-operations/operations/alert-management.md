@@ -58,6 +58,8 @@ Alert Management reference covering Common Alert Sources, Alert Noise Reduction 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Custom Alert Thresholds
+
 ### Disk Space
 
 ```bash

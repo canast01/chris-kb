@@ -147,8 +147,8 @@ SAN Troubleshooting reference covering Diagnostic Scenario Reference, FLOGI Fail
 
 ## See also
 
-- [Fabric Concepts](fabric-concepts/)
-- [Practice Notes](practice-notes/)
-- [Review Plan](review-plan/)
-- [Zoning](zoning/)
+- [Fabric Concepts](../fabric-concepts/)
+- [Practice Notes](../practice-notes/)
+- [Review Plan](../review-plan/)
+- [Zoning](../zoning/)
 - [SAN Certifications — Overview](../)

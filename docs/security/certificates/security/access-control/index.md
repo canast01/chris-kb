@@ -134,7 +134,7 @@ certutil -CRL
 
 ## See also
 
-- [Certificates — Authentication](authentication/)
-- [Certificates — Encryption](encryption/)
-- [Certificates — Security Hardening](hardening/)
+- [Certificates — Authentication](../authentication/)
+- [Certificates — Encryption](../encryption/)
+- [Certificates — Security Hardening](../hardening/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

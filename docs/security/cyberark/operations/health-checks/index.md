@@ -142,9 +142,9 @@ Run these checks each morning to confirm CyberArk Vault, CPM, and PSM are operat
 
 ## See also
 
-- [CyberArk — Procedures](procedures/)
-- [CyberArk — CLI Reference](cli-reference/)
-- [CyberArk — Scripts](scripts/)
-- [CyberArk — Backup and Restore](backup-restore/)
-- [CyberArk — Install and Upgrade](install-upgrade/)
+- [CyberArk — Procedures](../procedures/)
+- [CyberArk — CLI Reference](../cli-reference/)
+- [CyberArk — Scripts](../scripts/)
+- [CyberArk — Backup and Restore](../backup-restore/)
+- [CyberArk — Install and Upgrade](../install-upgrade/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

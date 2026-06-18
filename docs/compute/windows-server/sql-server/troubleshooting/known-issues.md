@@ -96,6 +96,6 @@ Catalog of known SQL Server bugs, error codes, and workarounds covering connecti
 
 ## See also
 
-- [SQL Server — Common Issues](common-issues.md)
-- [Windows Server — Known Issues](../../troubleshooting/known-issues/)
-- [Active Directory — Known Issues](../../active-directory/troubleshooting/known-issues/)
+- [SQL Server — Common Issues](common-issues/)
+- [Windows Server — Known Issues](../../troubleshooting/known-issues.md)
+- [Active Directory — Known Issues](../../active-directory/troubleshooting/known-issues.md)

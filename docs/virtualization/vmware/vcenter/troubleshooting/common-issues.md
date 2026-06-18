@@ -63,6 +63,9 @@ Common Issues reference covering Issue Summary, vCenter Services Not Starting, C
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## vpxd Service Failure
+
 ### Resolution
 
 ```bash

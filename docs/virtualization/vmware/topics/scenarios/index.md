@@ -36,7 +36,7 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Issues
+## Issues
 
 <div class="kb-grid kb-grid-5">
 
@@ -172,7 +172,7 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 
 </div>
 
-### Tasks
+## Tasks
 
 <div class="kb-grid kb-grid-5">
 

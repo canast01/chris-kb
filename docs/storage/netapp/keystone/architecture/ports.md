@@ -120,5 +120,5 @@ systemctl status keystone-collector
 ## See also
 
 - [NetApp Keystone — Architecture](how-it-works/)
-- [NetApp ONTAP — Ports](../../ontap/architecture/ports/)
-- [NetApp SnapCenter — Ports](../../snapcenter/architecture/ports/)
+- [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)
+- [NetApp SnapCenter — Ports](../../snapcenter/architecture/ports.md)

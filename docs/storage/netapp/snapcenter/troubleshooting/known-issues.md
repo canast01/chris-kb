@@ -98,5 +98,5 @@ Catalog of known SnapCenter bugs, error codes, and workarounds covering plugin d
 
 ## See also
 
-- [NetApp SnapCenter — Common Issues](common-issues.md)
-- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues/)
+- [NetApp SnapCenter — Common Issues](common-issues/)
+- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)

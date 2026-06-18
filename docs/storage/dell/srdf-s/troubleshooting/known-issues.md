@@ -89,6 +89,6 @@ Catalog of known SRDF/S (Synchronous) bugs, error codes, and workarounds. SRDF/S
 
 ## See also
 
-- [Dell SRDF-S — Common Issues](common-issues.md)
-- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues/)
-- [Dell SRDF-A — Known Issues](../../srdf-a/troubleshooting/known-issues/)
+- [Dell SRDF-S — Common Issues](common-issues/)
+- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)
+- [Dell SRDF-A — Known Issues](../../srdf-a/troubleshooting/known-issues.md)

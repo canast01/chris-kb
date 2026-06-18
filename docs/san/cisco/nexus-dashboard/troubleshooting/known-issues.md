@@ -95,6 +95,6 @@ Catalog of known Nexus Dashboard bugs, error codes, and workarounds covering clu
 
 ## See also
 
-- [Cisco Nexus Dashboard — Common Issues](common-issues.md)
-- [Cisco DCNM — Known Issues](../../cisco-dcnm/troubleshooting/known-issues/)
-- [Cisco MDS — Known Issues](../../mds/troubleshooting/known-issues/)
+- [Cisco Nexus Dashboard — Common Issues](common-issues/)
+- [Cisco DCNM — Known Issues](../../cisco-dcnm/troubleshooting/known-issues.md)
+- [Cisco MDS — Known Issues](../../mds/troubleshooting/known-issues.md)

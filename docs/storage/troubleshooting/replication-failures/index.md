@@ -320,5 +320,5 @@ Escalate immediately to DR coordinator / management when:
 ## See also
 
 - [Storage — Storage Latency Troubleshooting](../storage-latency/)
-- [Storage — Known Issues](../known-issues/)
+- [Storage — Known Issues](../known-issues.md)
 - [Storage — Troubleshooting Overview](../)

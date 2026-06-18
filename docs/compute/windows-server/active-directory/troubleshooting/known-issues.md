@@ -103,6 +103,6 @@ Catalog of known Active Directory bugs, error codes, and workarounds covering re
 
 ## See also
 
-- [Active Directory — Common Issues](common-issues.md)
-- [Windows Server — Known Issues](../../troubleshooting/known-issues/)
-- [CyberArk — Known Issues](../../../../security/cyberark/troubleshooting/known-issues/)
+- [Active Directory — Common Issues](common-issues/)
+- [Windows Server — Known Issues](../../troubleshooting/known-issues.md)
+- [CyberArk — Known Issues](../../../../security/cyberark/troubleshooting/known-issues.md)

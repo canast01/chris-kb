@@ -165,5 +165,5 @@ nc -zv <aria-ops-vip> 3331
 - [Aria Operations — Architecture](how-it-works/)
 - [Aria Operations — Deploy](../deploy/)
 - [Aria Operations — Operations](../operations/)
-- [Aria Automation — Ports](../../aria-automation/architecture/ports/)
-- [vCenter — Ports](../../vcenter/architecture/ports/)
+- [Aria Automation — Ports](../../aria-automation/architecture/ports.md)
+- [vCenter — Ports](../../vcenter/architecture/ports.md)

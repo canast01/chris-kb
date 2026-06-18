@@ -61,6 +61,9 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## SRM Configuration Export
+
 The exported XML contains:
 - Site pairing information.
 - SRA configuration (array manager entries — credentials are encrypted and may not be re-importable directly).

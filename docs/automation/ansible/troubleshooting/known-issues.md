@@ -102,5 +102,5 @@ Catalog of known Ansible Automation Platform bugs, error codes, and workarounds 
 
 ## See also
 
-- [Ansible — Common Issues](common-issues.md)
-- [Terraform — Known Issues](../../terraform/troubleshooting/known-issues/)
+- [Ansible — Common Issues](common-issues/)
+- [Terraform — Known Issues](../../terraform/troubleshooting/known-issues.md)

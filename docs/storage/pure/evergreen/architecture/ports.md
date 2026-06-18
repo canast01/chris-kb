@@ -91,6 +91,3 @@ The only network-level requirement specific to Evergreen is that each array can 
 ## See also
 
 - [Pure Storage Evergreen — Architecture](how-it-works/)
-- [Pure Storage FlashArray — Ports](../flasharray/architecture/ports/)
-- [Pure Storage FlashBlade — Ports](../flashblade/architecture/ports/)
-- [Pure1 — Ports](../pure1/architecture/ports/)

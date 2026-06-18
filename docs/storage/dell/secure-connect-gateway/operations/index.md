@@ -195,6 +195,6 @@ dsagw proxy show
 
 ## See also
 
-- [Cli Reference](cli-reference/)
-- [Scripts](scripts/)
+- [Cli Reference](../cli-reference/)
+- [Scripts](../scripts/)
 - [Secure Connect Gateway — Overview](../)

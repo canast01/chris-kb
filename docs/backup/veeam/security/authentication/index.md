@@ -54,6 +54,8 @@ Authentication reference covering Multi-Factor Authentication, CyberArk Integrat
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## REST API Token Configuration
+
 ### Token Expiry
 
 | Token Type | Default Lifetime | Notes |

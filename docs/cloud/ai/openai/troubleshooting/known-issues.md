@@ -96,4 +96,3 @@ Catalog of known OpenAI API bugs, error codes, and workarounds covering rate lim
 
 ## See also
 
-- [OpenAI — Common Issues](common-issues.md)

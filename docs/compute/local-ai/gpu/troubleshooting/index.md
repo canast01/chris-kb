@@ -231,8 +231,8 @@ If throttling occurs, check airflow, verify TDP power limits are set correctly, 
 
 ## See also
 
-- [Drivers](drivers/)
-- [Monitoring](monitoring/)
-- [Performance](performance/)
-- [Sizing](sizing/)
+- [Drivers](../drivers/)
+- [Monitoring](../monitoring/)
+- [Performance](../performance/)
+- [Sizing](../sizing/)
 - [GPU — Overview](../)

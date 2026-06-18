@@ -97,5 +97,5 @@ Catalog of known PowerScale / OneFS bugs, error codes, and workarounds covering 
 
 ## See also
 
-- [Dell PowerScale — Common Issues](common-issues.md)
-- [Superna Eyeglass — Known Issues](../../../netapp/superna-eyeglass/troubleshooting/known-issues/)
+- [Dell PowerScale — Common Issues](common-issues/)
+- [Superna Eyeglass — Known Issues](../../../netapp/superna-eyeglass/troubleshooting/known-issues.md)

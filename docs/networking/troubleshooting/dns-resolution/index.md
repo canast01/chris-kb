@@ -326,5 +326,5 @@ Escalate to DNS / AD team or network team when:
 ## See also
 
 - [Network Connectivity Troubleshooting](../network-connectivity/)
-- [Networking — Known Issues](../known-issues/)
+- [Networking — Known Issues](../known-issues.md)
 - [Networking — Troubleshooting Overview](../)

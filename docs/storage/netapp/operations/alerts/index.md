@@ -154,4 +154,4 @@ system health alert delete -node <node> -alert-id <id>
 
 ## See also
 
-- [NetApp — Health Checks](health-checks/)
+- [NetApp — Health Checks](../health-checks/)

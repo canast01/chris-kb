@@ -63,6 +63,8 @@ Integrations reference covering Veeam Backup & Replication, Identity and Authent
 - **IWA**: Uses the machine account of the VCSA; requires VCSA joined to AD domain
 - **LDAP**: Explicit bind account; use LDAPS (port 636) for encrypted queries
 
+## Identity Integration
+
 ### SSO Domain
 
 vCenter ships with a local `vsphere.local` SSO domain. The `administrator@vsphere.local` account is the bootstrap admin. In production:

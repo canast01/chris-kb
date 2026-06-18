@@ -94,6 +94,6 @@ Catalog of known Jira Data Center bugs, error codes, and workarounds covering cl
 
 ## See also
 
-- [Jira — Common Issues](common-issues.md)
-- [Confluence — Known Issues](../../confluence/troubleshooting/known-issues/)
-- [PostgreSQL — Known Issues](../../../compute/linux/postgresql/troubleshooting/known-issues/)
+- [Jira — Common Issues](common-issues/)
+- [Confluence — Known Issues](../../confluence/troubleshooting/known-issues.md)
+- [PostgreSQL — Known Issues](../../../compute/linux/postgresql/troubleshooting/known-issues.md)

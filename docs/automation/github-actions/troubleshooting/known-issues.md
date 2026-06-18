@@ -95,6 +95,6 @@ Catalog of known GitHub Actions bugs, error codes, and workarounds covering self
 
 ## See also
 
-- [GitHub Actions — Common Issues](common-issues.md)
-- [Ansible — Known Issues](../../ansible/troubleshooting/known-issues/)
-- [Terraform — Known Issues](../../terraform/troubleshooting/known-issues/)
+- [GitHub Actions — Common Issues](common-issues/)
+- [Ansible — Known Issues](../../ansible/troubleshooting/known-issues.md)
+- [Terraform — Known Issues](../../terraform/troubleshooting/known-issues.md)

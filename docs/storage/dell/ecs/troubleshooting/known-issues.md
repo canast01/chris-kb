@@ -97,5 +97,5 @@ Catalog of known ECS (Elastic Cloud Storage) bugs, error codes, and workarounds 
 
 ## See also
 
-- [Dell ECS — Common Issues](common-issues.md)
-- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues/)
+- [Dell ECS — Common Issues](common-issues/)
+- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

@@ -130,4 +130,4 @@ iscsiadm -m discovery -t sendtargets -p <unity-iscsi-ip>:3260
 ## See also
 
 - [Dell Unity — Architecture](how-it-works/)
-- [Dell PowerStore — Ports](../../powerstore/architecture/ports/)
+- [Dell PowerStore — Ports](../../powerstore/architecture/ports.md)

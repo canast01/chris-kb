@@ -97,6 +97,6 @@ Catalog of known Aria Automation (vRA) bugs, error codes, and workarounds coveri
 
 ## See also
 
-- [VMware Aria Automation — Common Issues](common-issues.md)
-- [VMware Aria Suite Lifecycle — Known Issues](../../aria-suite-lifecycle/troubleshooting/known-issues/)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware Aria Automation — Common Issues](common-issues/)
+- [VMware Aria Suite Lifecycle — Known Issues](../../aria-suite-lifecycle/troubleshooting/known-issues.md)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

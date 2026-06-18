@@ -90,5 +90,5 @@ Firewall port reference for Dell COD (Capacity on Demand). COD is a capacity lic
 ## See also
 
 - [Dell COD — Architecture](how-it-works/)
-- [Dell PowerMax — Ports](../../powermax/architecture/ports/)
-- [Dell FOD — Ports](../../fod/architecture/ports/)
+- [Dell PowerMax — Ports](../../powermax/architecture/ports.md)
+- [Dell FOD — Ports](../../fod/architecture/ports.md)

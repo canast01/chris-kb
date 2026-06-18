@@ -103,5 +103,4 @@ Catalog of known Ceph bugs, error codes, and workarounds covering OSD failures, 
 
 ## See also
 
-- [Ceph — Common Issues](common-issues.md)
-- [Ceph — Diagnostics](diagnostics.md)
+- [Ceph — Common Issues](common-issues/)

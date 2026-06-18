@@ -76,7 +76,7 @@ Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Poli
 
 - [Cisco Nexus Dashboard — Operations Backup & Restore](backup-restore.md)
 - [Cisco Nexus Dashboard — Operations CLI Reference](cli-reference.md)
-- [Cisco Nexus Dashboard — Operations Common Issues](common-issues.md)
+- [Cisco Nexus Dashboard — Operations Common Issues](common-issues/)
 - [Nexus Dashboard — Operations](index.md)
 - [Nexus Dashboard — Architecture](../architecture/)
 - [Nexus Dashboard — Initial Deployment](../deploy/)

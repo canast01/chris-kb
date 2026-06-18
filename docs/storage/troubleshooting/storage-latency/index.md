@@ -304,5 +304,5 @@ Escalate to storage team or vendor TAC when:
 ## See also
 
 - [Storage — Replication Failures](../replication-failures/)
-- [Storage — Known Issues](../known-issues/)
+- [Storage — Known Issues](../known-issues.md)
 - [Storage — Troubleshooting Overview](../)

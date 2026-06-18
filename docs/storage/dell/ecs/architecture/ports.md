@@ -132,4 +132,4 @@ curl -sk -o /dev/null -w "%{http_code}" https://<ecs-mgmt-ip>/login
 ## See also
 
 - [Dell ECS — Architecture](how-it-works/)
-- [Ceph — Ports](../../../ceph/architecture/ports/)
+- [Ceph — Ports](../../../ceph/architecture/ports.md)

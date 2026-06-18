@@ -132,6 +132,6 @@ ntpq -p
 
 - [Aria Suite Lifecycle — Architecture](how-it-works/)
 - [Aria Suite Lifecycle — Deploy](../deploy/)
-- [Aria Automation — Ports](../../aria-automation/architecture/ports/)
-- [Aria Operations — Ports](../../aria-operations/architecture/ports/)
-- [vCenter — Ports](../../vcenter/architecture/ports/)
+- [Aria Automation — Ports](../../aria-automation/architecture/ports.md)
+- [Aria Operations — Ports](../../aria-operations/architecture/ports.md)
+- [vCenter — Ports](../../vcenter/architecture/ports.md)

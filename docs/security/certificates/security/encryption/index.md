@@ -123,7 +123,7 @@ Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Services\CertSvc\Configur
 
 ## See also
 
-- [Certificates — Access Control](access-control/)
-- [Certificates — Authentication](authentication/)
-- [Certificates — Security Hardening](hardening/)
+- [Certificates — Access Control](../access-control/)
+- [Certificates — Authentication](../authentication/)
+- [Certificates — Security Hardening](../hardening/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

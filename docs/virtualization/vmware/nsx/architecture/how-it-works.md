@@ -114,6 +114,8 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Control and Data Plane
+
 ### NSX 3-Plane Architecture
 
 ```mermaid

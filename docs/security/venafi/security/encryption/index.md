@@ -108,7 +108,7 @@ HSM integration protects the CA private keys and Venafi service credentials. Key
 
 ## See also
 
-- [Venafi — Access Control](access-control/)
-- [Venafi — Authentication](authentication/)
-- [Venafi — Security Hardening](hardening/)
+- [Venafi — Access Control](../access-control/)
+- [Venafi — Authentication](../authentication/)
+- [Venafi — Security Hardening](../hardening/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

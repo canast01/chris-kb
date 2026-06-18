@@ -141,9 +141,9 @@ Use this section for practical certificate inventory notes, checks, and field re
 
 ## See also
 
-- [Venafi — Procedures](procedures/)
-- [Venafi — CLI Reference](cli-reference/)
-- [Venafi — Scripts](scripts/)
-- [Venafi — Backup and Restore](backup-restore/)
-- [Venafi — Install and Upgrade](install-upgrade/)
+- [Venafi — Procedures](../procedures/)
+- [Venafi — CLI Reference](../cli-reference/)
+- [Venafi — Scripts](../scripts/)
+- [Venafi — Backup and Restore](../backup-restore/)
+- [Venafi — Install and Upgrade](../install-upgrade/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

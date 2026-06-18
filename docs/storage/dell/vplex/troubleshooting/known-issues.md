@@ -95,5 +95,5 @@ Catalog of known VPLEX bugs, error codes, and workarounds covering Metro cluster
 
 ## See also
 
-- [Dell VPLEX — Common Issues](common-issues.md)
-- [Dell RecoverPoint — Known Issues](../../recoverpoint/troubleshooting/known-issues/)
+- [Dell VPLEX — Common Issues](common-issues/)
+- [Dell RecoverPoint — Known Issues](../../recoverpoint/troubleshooting/known-issues.md)

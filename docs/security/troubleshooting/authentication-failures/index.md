@@ -326,6 +326,5 @@ netdom query fsmo | findstr "PDC"
 
 ## See also
 
-- [Security — Known Issues](../known-issues/)
+- [Security — Known Issues](../known-issues.md)
 - [Security — Troubleshooting Overview](../)
-- [Security Operations — Runbooks](../operations/runbooks/)

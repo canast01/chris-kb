@@ -150,6 +150,6 @@ Version lifecycle and End of General Support (EOGS) / End of Technical Guidance 
 
 ## See also
 
-- [VMware Interoperability Matrix](interoperability/)
+- [VMware Interoperability Matrix](../interoperability/)
 - [VMware Upgrade Readiness](../upgrade-readiness/)
 - [VMware Design Standards](../../vcenter/architecture/design-standards/)

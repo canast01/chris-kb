@@ -144,5 +144,5 @@ Get-Service SQLBrowser
 
 - [SQL Server — Architecture](how-it-works/)
 - [SQL Server — Operations](../operations/)
-- [Windows Server — Ports](../../architecture/ports/)
-- [Active Directory — Ports](../../active-directory/architecture/ports/)
+- [Windows Server — Ports](../../architecture/ports.md)
+- [Active Directory — Ports](../../active-directory/architecture/ports.md)

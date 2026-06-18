@@ -222,9 +222,9 @@ ss -tlnp | grep 11434
 
 ## See also
 
-- [Cli Reference](cli-reference/)
-- [Gpu Usage](gpu-usage/)
-- [Install Notes](install-notes/)
-- [Models](models/)
-- [Testing](testing/)
+- [Cli Reference](../cli-reference/)
+- [Gpu Usage](../gpu-usage/)
+- [Install Notes](../install-notes/)
+- [Models](../models/)
+- [Testing](../testing/)
 - [Ollama — Overview](../)

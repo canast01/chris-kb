@@ -153,7 +153,7 @@ API keys are scoped to the permissions of the TPP user account that generated th
 
 ## See also
 
-- [Venafi — Authentication](authentication/)
-- [Venafi — Encryption](encryption/)
-- [Venafi — Security Hardening](hardening/)
+- [Venafi — Authentication](../authentication/)
+- [Venafi — Encryption](../encryption/)
+- [Venafi — Security Hardening](../hardening/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

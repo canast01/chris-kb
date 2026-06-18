@@ -290,9 +290,9 @@ Schedule automated compliance reports via **Reporting → Scheduled Reports** to
 
 ## See also
 
-- [Venafi — Health Checks](health-checks/)
-- [Venafi — CLI Reference](cli-reference/)
-- [Venafi — Scripts](scripts/)
-- [Venafi — Backup and Restore](backup-restore/)
-- [Venafi — Install and Upgrade](install-upgrade/)
+- [Venafi — Health Checks](../health-checks/)
+- [Venafi — CLI Reference](../cli-reference/)
+- [Venafi — Scripts](../scripts/)
+- [Venafi — Backup and Restore](../backup-restore/)
+- [Venafi — Install and Upgrade](../install-upgrade/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

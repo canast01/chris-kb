@@ -113,5 +113,3 @@ nc -zv pure1.purestorage.com 443
 ## See also
 
 - [Pure1 — Architecture](how-it-works/)
-- [Pure Storage FlashArray — Ports](../flasharray/architecture/ports/)
-- [Pure Storage FlashBlade — Ports](../flashblade/architecture/ports/)

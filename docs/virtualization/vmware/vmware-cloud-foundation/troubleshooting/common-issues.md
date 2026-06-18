@@ -63,6 +63,9 @@ VCF Common Failure Points — Quick Reference
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## General Troubleshooting
+
 ### Common Failure Points
 
 - Lifecycle bundle issue

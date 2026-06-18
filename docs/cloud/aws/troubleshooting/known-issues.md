@@ -103,5 +103,5 @@ Catalog of known AWS bugs, error codes, and workarounds covering IAM, EC2, netwo
 
 ## See also
 
-- [AWS — Common Issues](common-issues.md)
-- [AWS EVS — Known Issues](../evs/troubleshooting/known-issues/)
+- [AWS — Common Issues](common-issues/)
+- [AWS EVS — Known Issues](../evs/troubleshooting/known-issues.md)

@@ -224,9 +224,9 @@ echo "ssl_cert_expiry_seconds{host=\"example.com\"} $EPOCH" \
 
 ## See also
 
-- [Certificates — Procedures](procedures/)
-- [Certificates — CLI Reference](cli-reference/)
-- [Certificates — Scripts](scripts/)
-- [Certificates — Backup and Restore](backup-restore/)
-- [Certificates — Install and Upgrade](install-upgrade/)
+- [Certificates — Procedures](../procedures/)
+- [Certificates — CLI Reference](../cli-reference/)
+- [Certificates — Scripts](../scripts/)
+- [Certificates — Backup and Restore](../backup-restore/)
+- [Certificates — Install and Upgrade](../install-upgrade/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

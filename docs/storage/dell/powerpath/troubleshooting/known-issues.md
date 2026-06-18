@@ -97,6 +97,6 @@ Catalog of known PowerPath bugs, error codes, and workarounds covering path mana
 
 ## See also
 
-- [Dell PowerPath — Common Issues](common-issues.md)
-- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues/)
-- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues/)
+- [Dell PowerPath — Common Issues](common-issues/)
+- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)
+- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)

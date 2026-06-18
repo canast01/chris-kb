@@ -54,6 +54,8 @@ Veeam encryption: backup job-level encryption, encryption key management in the 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Immutable Repository Configuration
+
 ### S3 Object Lock (SOBR Capacity Tier)
 
 Configure Object Lock in `Compliance` mode:

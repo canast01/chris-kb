@@ -79,6 +79,6 @@ Evergreen is a commercial subscription program — it has no dedicated software 
 
 ## See also
 
-- [Pure Storage FlashArray — Known Issues](../../flasharray/troubleshooting/known-issues/)
-- [Pure Storage FlashBlade — Known Issues](../../flashblade/troubleshooting/known-issues/)
-- [Pure1 — Known Issues](../../pure1/troubleshooting/known-issues/)
+- [Pure Storage FlashArray — Known Issues](../../flasharray/troubleshooting/known-issues.md)
+- [Pure Storage FlashBlade — Known Issues](../../flashblade/troubleshooting/known-issues.md)
+- [Pure1 — Known Issues](../../pure1/troubleshooting/known-issues.md)

@@ -136,4 +136,4 @@ terraform plan -var 'test=true' 2>&1 | grep -i "error\|warning\|failed\|timeout"
 - [Terraform — Architecture](how-it-works/)
 - [Terraform — Deploy](../deploy/)
 - [Terraform — Operations](../operations/)
-- [Ansible — Ports](../../ansible/architecture/ports/)
+- [Ansible — Ports](../../ansible/architecture/ports.md)

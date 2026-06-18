@@ -68,6 +68,9 @@ Aria Operations — CLI Command Reference Map
 │  GET  /api/cluster/nodes        node status                                                           │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## vcops-admin CLI
+
 ### Adapter Management
 
 ```bash

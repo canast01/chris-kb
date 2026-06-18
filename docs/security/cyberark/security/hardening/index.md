@@ -82,7 +82,7 @@ The Digital Vault server must follow the CyberArk-supplied Windows Server harden
 
 ## See also
 
-- [CyberArk — Access Control](access-control/)
-- [CyberArk — Authentication](authentication/)
-- [CyberArk — Encryption](encryption/)
+- [CyberArk — Access Control](../access-control/)
+- [CyberArk — Authentication](../authentication/)
+- [CyberArk — Encryption](../encryption/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

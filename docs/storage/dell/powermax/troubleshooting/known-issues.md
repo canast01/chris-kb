@@ -103,6 +103,6 @@ Catalog of known PowerMax bugs, error codes, and workarounds covering Unisphere,
 
 ## See also
 
-- [Dell PowerMax — Common Issues](common-issues.md)
-- [Dell SRDF-A — Known Issues](../../srdf-a/troubleshooting/known-issues/)
-- [Dell SRDF-S — Known Issues](../../srdf-s/troubleshooting/known-issues/)
+- [Dell PowerMax — Common Issues](common-issues/)
+- [Dell SRDF-A — Known Issues](../../srdf-a/troubleshooting/known-issues.md)
+- [Dell SRDF-S — Known Issues](../../srdf-s/troubleshooting/known-issues.md)

@@ -100,5 +100,5 @@ Catalog of known MySQL bugs, error codes, and workarounds covering replication, 
 
 ## See also
 
-- [MySQL — Common Issues](common-issues.md)
-- [Linux — Known Issues](../../troubleshooting/known-issues/)
+- [MySQL — Common Issues](common-issues/)
+- [Linux — Known Issues](../../troubleshooting/known-issues.md)

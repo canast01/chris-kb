@@ -88,6 +88,5 @@ Catalog of known Pure1 issues covering array connectivity, portal access, and da
 
 ## See also
 
-- [Pure1 — Common Issues](common-issues.md)
-- [Pure Storage FlashArray — Known Issues](../../flasharray/troubleshooting/known-issues/)
-- [Pure Storage FlashBlade — Known Issues](../../flashblade/troubleshooting/known-issues/)
+- [Pure Storage FlashArray — Known Issues](../../flasharray/troubleshooting/known-issues.md)
+- [Pure Storage FlashBlade — Known Issues](../../flashblade/troubleshooting/known-issues.md)

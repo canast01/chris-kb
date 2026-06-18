@@ -61,6 +61,9 @@ Backup & Restore reference covering Alert on Backup Failure, Restore Procedure, 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Restore from File-Based Backup
+
 ### Prerequisites
 
 - Encryption password (from your password vault)

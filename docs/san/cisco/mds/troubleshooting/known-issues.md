@@ -93,5 +93,5 @@ Catalog of known Cisco MDS SAN switch bugs, error codes, and workarounds coverin
 
 ## See also
 
-- [Cisco MDS — Common Issues](common-issues.md)
-- [Cisco DCNM — Known Issues](../../cisco-dcnm/troubleshooting/known-issues/)
+- [Cisco MDS — Common Issues](common-issues/)
+- [Cisco DCNM — Known Issues](../../cisco-dcnm/troubleshooting/known-issues.md)

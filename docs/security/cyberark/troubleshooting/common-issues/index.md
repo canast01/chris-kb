@@ -169,6 +169,6 @@ graph TD
 
 ## See also
 
-- [CyberArk — Diagnostics](diagnostics/)
-- [CyberArk — Escalation](escalation/)
+- [CyberArk — Diagnostics](../diagnostics/)
+- [CyberArk — Escalation](../escalation/)
 - [CyberArk — Procedures](../../operations/procedures/)

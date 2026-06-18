@@ -97,6 +97,6 @@ Catalog of known Git server bugs, error codes, and workarounds covering GitLab s
 
 ## See also
 
-- [Git — Common Issues](common-issues.md)
-- [Jira — Known Issues](../../jira/troubleshooting/known-issues/)
-- [Ansible — Known Issues](../../../automation/ansible/troubleshooting/known-issues/)
+- [Git — Common Issues](common-issues/)
+- [Jira — Known Issues](../../jira/troubleshooting/known-issues.md)
+- [Ansible — Known Issues](../../../automation/ansible/troubleshooting/known-issues.md)

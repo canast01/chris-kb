@@ -97,6 +97,3 @@ Catalog of known TLS issues covering handshake failures, certificate validation 
 
 ## See also
 
-- [TLS — Common Issues](common-issues.md)
-- [Certificates / PKI — Known Issues](../../../security/certificates/troubleshooting/known-issues/)
-- [Venafi — Known Issues](../../../security/venafi/troubleshooting/known-issues/)

@@ -95,6 +95,3 @@ Catalog of known SMB issues covering access denied, share enumeration, signing, 
 
 ## See also
 
-- [SMB — Common Issues](common-issues.md)
-- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues/)
-- [Dell PowerScale — Known Issues](../../../storage/dell/powerscale/troubleshooting/known-issues/)

@@ -82,6 +82,6 @@ Dell COD (Capacity on Demand) is a PowerMax capacity licensing model, not a sepa
 
 ## See also
 
-- [Dell COD — Common Issues](common-issues.md)
-- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues/)
-- [Dell FOD — Known Issues](../../fod/troubleshooting/known-issues/)
+- [Dell COD — Common Issues](common-issues/)
+- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)
+- [Dell FOD — Known Issues](../../fod/troubleshooting/known-issues.md)

@@ -149,4 +149,4 @@ AutoSupport also generates case numbers automatically when critical EMS events a
 
 ## See also
 
-- [NetApp — Health Checks](health-checks/)
+- [NetApp — Health Checks](../health-checks/)

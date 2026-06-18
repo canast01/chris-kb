@@ -95,5 +95,5 @@ Catalog of known Aria Operations for Logs (vRLI) bugs, error codes, and workarou
 
 ## See also
 
-- [VMware Aria Operations for Logs — Common Issues](common-issues.md)
-- [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues/)
+- [VMware Aria Operations for Logs — Common Issues](common-issues/)
+- [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues.md)

@@ -96,5 +96,5 @@ Catalog of known PowerStore bugs, error codes, and workarounds covering NAS, SAN
 
 ## See also
 
-- [Dell PowerStore — Common Issues](common-issues.md)
-- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues/)
+- [Dell PowerStore — Common Issues](common-issues/)
+- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

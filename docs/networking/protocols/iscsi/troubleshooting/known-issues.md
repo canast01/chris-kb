@@ -95,5 +95,3 @@ Catalog of known iSCSI issues covering initiator discovery, session stability, m
 
 ## See also
 
-- [iSCSI — Common Issues](common-issues.md)
-- [NetApp ONTAP — Known Issues](../../../storage/netapp/ontap/troubleshooting/known-issues/)

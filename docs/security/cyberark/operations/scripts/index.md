@@ -284,9 +284,9 @@ Close-PASSession
 
 ## See also
 
-- [CyberArk — Procedures](procedures/)
-- [CyberArk — Health Checks](health-checks/)
-- [CyberArk — CLI Reference](cli-reference/)
-- [CyberArk — Backup and Restore](backup-restore/)
-- [CyberArk — Install and Upgrade](install-upgrade/)
+- [CyberArk — Procedures](../procedures/)
+- [CyberArk — Health Checks](../health-checks/)
+- [CyberArk — CLI Reference](../cli-reference/)
+- [CyberArk — Backup and Restore](../backup-restore/)
+- [CyberArk — Install and Upgrade](../install-upgrade/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

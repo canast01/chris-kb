@@ -319,8 +319,8 @@ certutil -cainfo >> C:\Temp\certutil-verify.txt 2>&1
 
 ## See also
 
-- [Certificates — Common Issues](common-issues/)
-- [Certificates — Escalation](escalation/)
+- [Certificates — Common Issues](../common-issues/)
+- [Certificates — Escalation](../escalation/)
 
 ## Verify resolution
 

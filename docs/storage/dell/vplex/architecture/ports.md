@@ -126,4 +126,4 @@ nc -zv <site-b-vplex-mgmt-ip> 443
 
 - [Dell VPLEX — Architecture](how-it-works/)
 - [Dell VPLEX — Operations](../operations/)
-- [Dell RecoverPoint — Ports](../../recoverpoint/architecture/ports/)
+- [Dell RecoverPoint — Ports](../../recoverpoint/architecture/ports.md)

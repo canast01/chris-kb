@@ -88,5 +88,5 @@ Catalog of known SANnav bugs, error codes, and workarounds covering switch disco
 
 ## See also
 
-- [Brocade SANnav — Common Issues](common-issues.md)
-- [Brocade Fabric OS — Known Issues](../../fabric-os/troubleshooting/known-issues/)
+- [Brocade SANnav — Common Issues](common-issues/)
+- [Brocade Fabric OS — Known Issues](../../fabric-os/troubleshooting/known-issues.md)

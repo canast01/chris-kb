@@ -113,6 +113,6 @@ Catalog of known ESXi bugs, error codes, and workarounds. Each entry includes th
 
 ## See also
 
-- [VMware ESXi — Common Issues](common-issues.md)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
-- [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues/)
+- [VMware ESXi — Common Issues](common-issues/)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)
+- [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues.md)

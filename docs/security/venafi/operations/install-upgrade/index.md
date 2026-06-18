@@ -294,9 +294,9 @@ Plan upgrades at least 6 months before the current version reaches End of Standa
 
 ## See also
 
-- [Venafi — Procedures](procedures/)
-- [Venafi — Health Checks](health-checks/)
-- [Venafi — CLI Reference](cli-reference/)
-- [Venafi — Scripts](scripts/)
-- [Venafi — Backup and Restore](backup-restore/)
+- [Venafi — Procedures](../procedures/)
+- [Venafi — Health Checks](../health-checks/)
+- [Venafi — CLI Reference](../cli-reference/)
+- [Venafi — Scripts](../scripts/)
+- [Venafi — Backup and Restore](../backup-restore/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

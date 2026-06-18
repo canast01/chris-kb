@@ -293,8 +293,8 @@ Write-Host "Diagnostic bundle: $dest.zip"
 
 ## See also
 
-- [CyberArk — Common Issues](common-issues/)
-- [CyberArk — Escalation](escalation/)
+- [CyberArk — Common Issues](../common-issues/)
+- [CyberArk — Escalation](../escalation/)
 - [CyberArk — Procedures](../../operations/procedures/)
 
 ## Verify resolution

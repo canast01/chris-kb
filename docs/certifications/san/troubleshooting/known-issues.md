@@ -88,5 +88,5 @@ Catalog of known issues related to SAN certification exam preparation — coveri
 ## See also
 
 - [SAN — Common Issues](index.md)
-- [Brocade Fabric OS — Known Issues](../../../san/brocade/fabric-os/troubleshooting/known-issues/)
-- [Cisco MDS — Known Issues](../../../san/cisco/mds/troubleshooting/known-issues/)
+- [Brocade Fabric OS — Known Issues](../../../san/brocade/fabric-os/troubleshooting/known-issues.md)
+- [Cisco MDS — Known Issues](../../../san/cisco/mds/troubleshooting/known-issues.md)

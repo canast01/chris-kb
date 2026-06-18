@@ -102,5 +102,5 @@ Catalog of known PostgreSQL bugs, error codes, and workarounds covering connecti
 
 ## See also
 
-- [PostgreSQL — Common Issues](common-issues.md)
-- [Linux — Known Issues](../../troubleshooting/known-issues/)
+- [PostgreSQL — Common Issues](common-issues/)
+- [Linux — Known Issues](../../troubleshooting/known-issues.md)

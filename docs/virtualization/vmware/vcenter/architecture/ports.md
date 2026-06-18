@@ -134,8 +134,8 @@ ntpq -p
 
 ## See also
 
-- [ESXi — Ports](../../esxi/architecture/ports/)
-- [vSAN — Ports](../../vsan/architecture/ports/)
-- [NSX — Ports](../../nsx/architecture/ports/)
+- [ESXi — Ports](../../esxi/architecture/ports.md)
+- [vSAN — Ports](../../vsan/architecture/ports.md)
+- [NSX — Ports](../../nsx/architecture/ports.md)
 - [vCenter — Architecture](how-it-works/)
 - [vCenter — Deploy](../../vcenter/deploy/)

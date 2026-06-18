@@ -103,7 +103,7 @@ Session recordings are encrypted at rest using AES-256. Vault audit log integrit
 
 ## See also
 
-- [CyberArk — Access Control](access-control/)
-- [CyberArk — Authentication](authentication/)
-- [CyberArk — Security Hardening](hardening/)
+- [CyberArk — Access Control](../access-control/)
+- [CyberArk — Authentication](../authentication/)
+- [CyberArk — Security Hardening](../hardening/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

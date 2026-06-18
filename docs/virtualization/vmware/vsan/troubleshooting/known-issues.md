@@ -111,6 +111,6 @@ Catalog of known vSAN bugs, error codes, and workarounds including degraded comp
 
 ## See also
 
-- [VMware vSAN — Common Issues](common-issues.md)
-- [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues/)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware vSAN — Common Issues](common-issues/)
+- [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues.md)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

@@ -97,6 +97,3 @@ Catalog of known Fibre Channel issues covering HBA, fabric login, zoning, and li
 
 ## See also
 
-- [Fibre Channel — Common Issues](common-issues.md)
-- [Brocade Fabric OS — Known Issues](../../../san/brocade/fabric-os/troubleshooting/known-issues/)
-- [Cisco MDS — Known Issues](../../../san/cisco/mds/troubleshooting/known-issues/)

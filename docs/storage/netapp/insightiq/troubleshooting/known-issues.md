@@ -87,6 +87,5 @@ Catalog of known InsightIQ bugs, error codes, and workarounds covering data coll
 
 ## See also
 
-- [NetApp InsightIQ — Common Issues](common-issues.md)
-- [Dell PowerScale — Known Issues](../../../dell/powerscale/troubleshooting/known-issues/)
-- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues/)
+- [Dell PowerScale — Known Issues](../../../dell/powerscale/troubleshooting/known-issues.md)
+- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)

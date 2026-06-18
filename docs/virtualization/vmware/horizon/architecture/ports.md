@@ -183,4 +183,4 @@ curl -sk -o /dev/null -w "%{http_code}" https://<connection-server-ip>/broker/xm
 - [Horizon — Deploy](../deploy/)
 - [Horizon — Operations](../operations/)
 - [Horizon — Troubleshooting](../troubleshooting/)
-- [vCenter — Ports](../../vcenter/architecture/ports/)
+- [vCenter — Ports](../../vcenter/architecture/ports.md)

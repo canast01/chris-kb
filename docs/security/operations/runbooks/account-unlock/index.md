@@ -147,5 +147,5 @@ faillock --user <username> --reset
 
 ## See also
 
-- [Certificate Renewal](certificate-renewal/)
+- [Certificate Renewal](../certificate-renewal/)
 - [Chris Kb — Overview](../)

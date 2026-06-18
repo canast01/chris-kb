@@ -135,4 +135,4 @@ nc -zv <site-b-rpa-ip> 7218
 
 - [Dell RecoverPoint — Architecture](how-it-works/)
 - [Dell RecoverPoint — Operations](../operations/)
-- [Dell SRDF-A — Ports](../../srdf-a/architecture/ports/)
+- [Dell SRDF-A — Ports](../../srdf-a/architecture/ports.md)

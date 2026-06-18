@@ -103,6 +103,6 @@ Catalog of known Azure bugs, error codes, and workarounds covering ARM, VM provi
 
 ## See also
 
-- [Azure — Common Issues](common-issues.md)
-- [AWS — Known Issues](../../aws/troubleshooting/known-issues/)
-- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues/)
+- [Azure — Common Issues](common-issues/)
+- [AWS — Known Issues](../../aws/troubleshooting/known-issues.md)
+- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues.md)

@@ -106,6 +106,6 @@ Catalog of known PKI and certificate bugs, error codes, and workarounds covering
 
 ## See also
 
-- [Certificates — Common Issues](common-issues.md)
-- [Venafi — Known Issues](../../venafi/troubleshooting/known-issues/)
-- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues/)
+- [Certificates — Common Issues](common-issues/)
+- [Venafi — Known Issues](../../venafi/troubleshooting/known-issues.md)
+- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues.md)

@@ -103,5 +103,5 @@ Catalog of known NetBackup bugs, error codes, and workarounds covering backup po
 
 ## See also
 
-- [NetBackup — Common Issues](common-issues.md)
-- [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues/)
+- [NetBackup — Common Issues](common-issues/)
+- [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues.md)

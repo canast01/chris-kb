@@ -430,9 +430,9 @@ REM From the PVWA server — test Vault connection
 
 ## See also
 
-- [CyberArk — Procedures](procedures/)
-- [CyberArk — Health Checks](health-checks/)
-- [CyberArk — CLI Reference](cli-reference/)
-- [CyberArk — Scripts](scripts/)
-- [CyberArk — Install and Upgrade](install-upgrade/)
+- [CyberArk — Procedures](../procedures/)
+- [CyberArk — Health Checks](../health-checks/)
+- [CyberArk — CLI Reference](../cli-reference/)
+- [CyberArk — Scripts](../scripts/)
+- [CyberArk — Install and Upgrade](../install-upgrade/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

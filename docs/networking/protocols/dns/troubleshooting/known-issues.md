@@ -95,5 +95,3 @@ Catalog of known DNS bugs, error codes, and workarounds covering resolution fail
 
 ## See also
 
-- [DNS — Common Issues](common-issues.md)
-- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues/)

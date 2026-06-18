@@ -90,5 +90,4 @@ Catalog of known Keystone STaaS bugs, error codes, and workarounds. Most Keyston
 
 ## See also
 
-- [NetApp Keystone — Common Issues](common-issues.md)
-- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues/)
+- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)

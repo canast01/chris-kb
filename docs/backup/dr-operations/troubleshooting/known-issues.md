@@ -94,6 +94,5 @@ Catalog of known issues in DR runbook operations covering failover testing, netw
 
 ## See also
 
-- [DR Operations — Common Issues](common-issues.md)
-- [Veeam — Known Issues](../../veeam/troubleshooting/known-issues/)
-- [VMware SRM — Known Issues](../../../virtualization/vmware/srm/troubleshooting/known-issues/)
+- [Veeam — Known Issues](../../veeam/troubleshooting/known-issues.md)
+- [VMware SRM — Known Issues](../../../virtualization/vmware/srm/troubleshooting/known-issues.md)

@@ -111,5 +111,5 @@ symrdf -g <rdfg-number> query
 ## See also
 
 - [Dell SRDF/A — Architecture](how-it-works/)
-- [Dell SRDF/S — Ports](../../srdf-s/architecture/ports/)
-- [Dell PowerMax — Ports](../../powermax/architecture/ports/)
+- [Dell SRDF/S — Ports](../../srdf-s/architecture/ports.md)
+- [Dell PowerMax — Ports](../../powermax/architecture/ports.md)

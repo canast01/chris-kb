@@ -339,11 +339,11 @@ Verify the test AutoSupport was received by NetApp Active IQ (check the Active I
 
 ## See also
 
-- [Insightiq](insightiq/)
-- [Keystone](keystone/)
-- [Ontap](ontap/)
-- [Operations](operations/)
-- [Snapcenter](snapcenter/)
-- [Snapmirror](snapmirror/)
-- [Superna Eyeglass](superna-eyeglass/)
+- [Insightiq](../insightiq/)
+- [Keystone](../keystone/)
+- [Ontap](../ontap/)
+- [Operations](../operations/)
+- [Snapcenter](../snapcenter/)
+- [Snapmirror](../snapmirror/)
+- [Superna Eyeglass](../superna-eyeglass/)
 - [NetApp — Overview](../)

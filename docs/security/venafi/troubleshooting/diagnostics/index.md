@@ -293,8 +293,8 @@ Write-Host "Diagnostic bundle: $diagDir.zip"
 
 ## See also
 
-- [Venafi — Common Issues](common-issues/)
-- [Venafi — Escalation](escalation/)
+- [Venafi — Common Issues](../common-issues/)
+- [Venafi — Escalation](../escalation/)
 - [Venafi — Procedures](../../operations/procedures/)
 
 ## Verify resolution

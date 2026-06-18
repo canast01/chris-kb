@@ -419,9 +419,9 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ## See also
 
-- [Venafi — Procedures](procedures/)
-- [Venafi — Health Checks](health-checks/)
-- [Venafi — CLI Reference](cli-reference/)
-- [Venafi — Scripts](scripts/)
-- [Venafi — Install and Upgrade](install-upgrade/)
+- [Venafi — Procedures](../procedures/)
+- [Venafi — Health Checks](../health-checks/)
+- [Venafi — CLI Reference](../cli-reference/)
+- [Venafi — Scripts](../scripts/)
+- [Venafi — Install and Upgrade](../install-upgrade/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

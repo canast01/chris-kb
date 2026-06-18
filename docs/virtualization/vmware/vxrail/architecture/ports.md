@@ -135,7 +135,7 @@ curl -sk -o /dev/null -w "%{http_code}" https://downloads.dell.com
 
 - [VxRail — Architecture](how-it-works/)
 - [VxRail — RASR](../rasr/)
-- [vCenter — Ports](../../vcenter/architecture/ports/)
-- [ESXi — Ports](../../esxi/architecture/ports/)
-- [vSAN — Ports](../../vsan/architecture/ports/)
-- [NSX — Ports](../../nsx/architecture/ports/)
+- [vCenter — Ports](../../vcenter/architecture/ports.md)
+- [ESXi — Ports](../../esxi/architecture/ports.md)
+- [vSAN — Ports](../../vsan/architecture/ports.md)
+- [NSX — Ports](../../nsx/architecture/ports.md)

@@ -96,5 +96,5 @@ Catalog of known Commvault bugs, error codes, and workarounds covering backup jo
 
 ## See also
 
-- [Commvault — Common Issues](common-issues.md)
-- [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues/)
+- [Commvault — Common Issues](common-issues/)
+- [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues.md)

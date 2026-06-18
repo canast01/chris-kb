@@ -102,5 +102,4 @@ Catalog of known OpenShift bugs, error codes, and workarounds covering cluster o
 
 ## See also
 
-- [OpenShift — Common Issues](common-issues.md)
-- [Kubernetes — Networking Reference](../../networking/protocols/)
+- [OpenShift — Common Issues](common-issues/)

@@ -131,4 +131,4 @@ nc -zv <peer-jira-node> 5701
 
 - [Jira — Architecture](how-it-works/)
 - [Jira — Operations](../operations/)
-- [Confluence — Ports](../../confluence/architecture/ports/)
+- [Confluence — Ports](../../confluence/architecture/ports.md)

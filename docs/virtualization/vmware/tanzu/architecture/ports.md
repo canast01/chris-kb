@@ -144,6 +144,6 @@ tanzu cluster list
 
 - [Tanzu — Architecture](how-it-works/)
 - [Tanzu — Deploy](../deploy/)
-- [NSX — Ports](../../nsx/architecture/ports/)
-- [OpenShift — Ports](../../../openshift/architecture/ports/)
-- [vCenter — Ports](../../vcenter/architecture/ports/)
+- [NSX — Ports](../../nsx/architecture/ports.md)
+- [OpenShift — Ports](../../../openshift/architecture/ports.md)
+- [vCenter — Ports](../../vcenter/architecture/ports.md)

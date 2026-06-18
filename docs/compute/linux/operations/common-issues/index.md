@@ -265,10 +265,10 @@ chronyc tracking | grep "System time"
 
 ## See also
 
-- [Linux — Procedures](procedures/)
-- [Linux — Health Checks](health-checks/)
-- [Linux — CLI Reference](cli-reference/)
-- [Linux — Scripts](scripts/)
-- [Linux — Backup and Restore](backup-restore/)
-- [Linux — Install and Upgrade](install-upgrade/)
+- [Linux — Procedures](../procedures/)
+- [Linux — Health Checks](../health-checks/)
+- [Linux — CLI Reference](../cli-reference/)
+- [Linux — Scripts](../scripts/)
+- [Linux — Backup and Restore](../backup-restore/)
+- [Linux — Install and Upgrade](../install-upgrade/)
 - [Linux — Common Issues](../../troubleshooting/common-issues/)

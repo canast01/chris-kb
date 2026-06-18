@@ -325,7 +325,7 @@ Escalate to application team, platform team, or vendor when:
 
 ## See also
 
-- [Linux — Common Issues](common-issues/)
-- [Linux — Diagnostics](diagnostics/)
-- [Linux — Escalation](escalation/)
+- [Linux — Common Issues](../common-issues/)
+- [Linux — Diagnostics](../diagnostics/)
+- [Linux — Escalation](../escalation/)
 - [Linux — Procedures](../../operations/procedures/)

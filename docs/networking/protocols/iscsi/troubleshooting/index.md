@@ -149,8 +149,8 @@ dmesg | grep -i "Attached scsi"
 
 ## See also
 
-- [Initiators](initiators/)
-- [Multipathing](multipathing/)
-- [Sessions](sessions/)
-- [Targets](targets/)
+- [Initiators](../initiators/)
+- [Multipathing](../multipathing/)
+- [Sessions](../sessions/)
+- [Targets](../targets/)
 - [iSCSI — Overview](../)

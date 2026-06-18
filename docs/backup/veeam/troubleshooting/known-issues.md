@@ -101,5 +101,5 @@ Catalog of known Veeam bugs, error codes, and workarounds covering backup jobs, 
 
 ## See also
 
-- [Veeam — Common Issues](common-issues.md)
-- [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues/)
+- [Veeam — Common Issues](common-issues/)
+- [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues.md)

@@ -120,5 +120,5 @@ snmpget -v2c -c <community> <switch-ip> 1.3.6.1.2.1.1.1.0
 ## See also
 
 - [Cisco DCNM — Architecture](how-it-works/)
-- [Cisco Nexus Dashboard — Ports](../../nexus-dashboard/architecture/ports/)
-- [Cisco MDS — Ports](../../mds/architecture/ports/)
+- [Cisco Nexus Dashboard — Ports](../../nexus-dashboard/architecture/ports.md)
+- [Cisco MDS — Ports](../../mds/architecture/ports.md)

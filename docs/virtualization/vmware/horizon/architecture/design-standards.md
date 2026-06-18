@@ -61,6 +61,9 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Storage Design
+
 ### App Volumes Storage
 
 | Object | Typical Size |

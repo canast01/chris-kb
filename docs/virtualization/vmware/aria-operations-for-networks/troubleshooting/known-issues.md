@@ -94,6 +94,6 @@ Catalog of known Aria Operations for Networks (vRNI) bugs, error codes, and work
 
 ## See also
 
-- [VMware Aria Operations for Networks — Common Issues](common-issues.md)
-- [VMware NSX — Known Issues](../../nsx/troubleshooting/known-issues/)
-- [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues/)
+- [VMware Aria Operations for Networks — Common Issues](common-issues/)
+- [VMware NSX — Known Issues](../../nsx/troubleshooting/known-issues.md)
+- [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues.md)

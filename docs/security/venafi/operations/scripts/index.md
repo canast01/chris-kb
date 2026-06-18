@@ -107,9 +107,9 @@ $certs.Certificates | Export-Csv -Path "expiring-certs.csv" -NoTypeInformation
 
 ## See also
 
-- [Venafi — Procedures](procedures/)
-- [Venafi — Health Checks](health-checks/)
-- [Venafi — CLI Reference](cli-reference/)
-- [Venafi — Backup and Restore](backup-restore/)
-- [Venafi — Install and Upgrade](install-upgrade/)
+- [Venafi — Procedures](../procedures/)
+- [Venafi — Health Checks](../health-checks/)
+- [Venafi — CLI Reference](../cli-reference/)
+- [Venafi — Backup and Restore](../backup-restore/)
+- [Venafi — Install and Upgrade](../install-upgrade/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

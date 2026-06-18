@@ -164,5 +164,5 @@ curl -sk -o /dev/null -w "%{http_code}" https://s3.amazonaws.com/
 - [Commvault — Architecture](how-it-works/)
 - [Commvault — Deploy](../deploy/)
 - [Commvault — Operations](../operations/)
-- [Veeam — Ports](../../veeam/architecture/ports/)
-- [vCenter — Ports](../../../virtualization/vmware/vcenter/architecture/ports/)
+- [Veeam — Ports](../../veeam/architecture/ports.md)
+- [vCenter — Ports](../../../virtualization/vmware/vcenter/architecture/ports.md)

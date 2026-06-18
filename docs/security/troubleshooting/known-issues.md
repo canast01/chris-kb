@@ -79,5 +79,3 @@ Security product issues often cascade — a CyberArk CPM failure may stem from a
 ## See also
 
 - [Security — Common Issues](index.md)
-- [Active Directory — Known Issues](../compute/windows-server/active-directory/troubleshooting/known-issues/)
-- [TLS — Known Issues](../networking/protocols/tls/troubleshooting/known-issues/)

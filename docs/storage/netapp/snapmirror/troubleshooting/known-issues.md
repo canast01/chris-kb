@@ -98,6 +98,6 @@ Catalog of known SnapMirror bugs, error codes, and workarounds. SnapMirror is an
 
 ## See also
 
-- [NetApp SnapMirror — Common Issues](common-issues.md)
-- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues/)
-- [NetApp SnapCenter — Known Issues](../../snapcenter/troubleshooting/known-issues/)
+- [NetApp SnapMirror — Common Issues](common-issues/)
+- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)
+- [NetApp SnapCenter — Known Issues](../../snapcenter/troubleshooting/known-issues.md)

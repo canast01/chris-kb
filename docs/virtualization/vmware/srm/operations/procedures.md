@@ -100,6 +100,7 @@ Procedures ───────────────────────
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps
@@ -110,7 +111,6 @@ Procedures ───────────────────────
 ---
 
 ## Planned Migration
-```
 
 A planned migration gracefully shuts down VMs at the protected site, performs a final replication sync, then powers them on at the recovery site. Both sites must be operational.
 

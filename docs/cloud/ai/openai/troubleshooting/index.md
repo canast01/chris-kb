@@ -237,8 +237,8 @@ curl -s https://status.openai.com/api/v2/status.json \
 
 ## See also
 
-- [Api Notes](api-notes/)
-- [Automation Use Cases](automation-use-cases/)
-- [Prompt Patterns](prompt-patterns/)
-- [Security Review](security-review/)
+- [Api Notes](../api-notes/)
+- [Automation Use Cases](../automation-use-cases/)
+- [Prompt Patterns](../prompt-patterns/)
+- [Security Review](../security-review/)
 - [OpenAI — Overview](../)

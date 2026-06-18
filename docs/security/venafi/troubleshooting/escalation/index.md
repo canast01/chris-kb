@@ -208,6 +208,6 @@ flowchart TD
 
 ## See also
 
-- [Venafi — Common Issues](common-issues/)
-- [Venafi — Diagnostics](diagnostics/)
+- [Venafi — Common Issues](../common-issues/)
+- [Venafi — Diagnostics](../diagnostics/)
 - [Venafi — Procedures](../../operations/procedures/)

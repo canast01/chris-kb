@@ -290,9 +290,9 @@ If reconcile also fails, check network connectivity between the CPM server and t
 
 ## See also
 
-- [CyberArk — Health Checks](health-checks/)
-- [CyberArk — CLI Reference](cli-reference/)
-- [CyberArk — Scripts](scripts/)
-- [CyberArk — Backup and Restore](backup-restore/)
-- [CyberArk — Install and Upgrade](install-upgrade/)
+- [CyberArk — Health Checks](../health-checks/)
+- [CyberArk — CLI Reference](../cli-reference/)
+- [CyberArk — Scripts](../scripts/)
+- [CyberArk — Backup and Restore](../backup-restore/)
+- [CyberArk — Install and Upgrade](../install-upgrade/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

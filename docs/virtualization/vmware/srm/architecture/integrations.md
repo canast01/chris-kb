@@ -108,6 +108,8 @@ Integrations reference covering Storage Replication Adapter (SRA) Integration, v
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Storage Replication Adapters
+
 **Array Manager configuration for Pure:**
 
 | Field | Value |

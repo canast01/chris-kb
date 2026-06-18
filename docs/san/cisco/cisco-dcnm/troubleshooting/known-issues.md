@@ -87,6 +87,6 @@ Catalog of known Cisco DCNM (Data Center Network Manager) bugs, error codes, and
 
 ## See also
 
-- [Cisco DCNM — Common Issues](common-issues.md)
-- [Cisco MDS — Known Issues](../../mds/troubleshooting/known-issues/)
-- [Cisco Nexus Dashboard — Known Issues](../../nexus-dashboard/troubleshooting/known-issues/)
+- [Cisco DCNM — Common Issues](common-issues/)
+- [Cisco MDS — Known Issues](../../mds/troubleshooting/known-issues.md)
+- [Cisco Nexus Dashboard — Known Issues](../../nexus-dashboard/troubleshooting/known-issues.md)

@@ -143,7 +143,7 @@ aws ec2 describe-security-groups --group-ids <evs-sg-id>
 ## See also
 
 - [AWS EVS — Architecture](how-it-works/)
-- [AWS — Ports](../architecture/ports/)
-- [VMware vSphere — Ports](../../../../virtualization/vmware/vcenter/architecture/ports/)
-- [VMware vSAN — Ports](../../../../virtualization/vmware/vsan/architecture/ports/)
-- [VMware NSX — Ports](../../../../virtualization/vmware/nsx/architecture/ports/)
+- [AWS — Ports](../architecture/ports.md)
+- [VMware vSphere — Ports](../../../../virtualization/vmware/vcenter/architecture/ports.md)
+- [VMware vSAN — Ports](../../../../virtualization/vmware/vsan/architecture/ports.md)
+- [VMware NSX — Ports](../../../../virtualization/vmware/nsx/architecture/ports.md)

@@ -190,5 +190,5 @@ systemctl reload nginx
 
 ## See also
 
-- [Account Unlock](account-unlock/)
+- [Account Unlock](../account-unlock/)
 - [Chris Kb — Overview](../)

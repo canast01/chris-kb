@@ -138,5 +138,5 @@ ssh admin@<mds-mgmt-ip> show topology
 
 - [Cisco MDS — Architecture](how-it-works/)
 - [Cisco MDS — Operations](../operations/)
-- [Cisco Nexus Dashboard — Ports](../../nexus-dashboard/architecture/ports/)
-- [Brocade FOS — Ports](../../../brocade/fabric-os/architecture/ports/)
+- [Cisco Nexus Dashboard — Ports](../../nexus-dashboard/architecture/ports.md)
+- [Brocade FOS — Ports](../../../brocade/fabric-os/architecture/ports.md)

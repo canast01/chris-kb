@@ -110,5 +110,3 @@ Storage issues often surface as application errors (I/O timeout, permission deni
 ## See also
 
 - [Storage — Common Issues](index.md)
-- [NFS — Known Issues](../networking/protocols/nfs/troubleshooting/known-issues/)
-- [iSCSI — Known Issues](../networking/protocols/iscsi/troubleshooting/known-issues/)

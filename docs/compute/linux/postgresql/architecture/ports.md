@@ -129,5 +129,5 @@ psql -c "SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;"
 
 - [PostgreSQL — Architecture](how-it-works/)
 - [PostgreSQL — Operations](../operations/)
-- [MySQL — Ports](../../mysql/architecture/ports/)
-- [Linux — Ports](../../architecture/ports/)
+- [MySQL — Ports](../../mysql/architecture/ports.md)
+- [Linux — Ports](../../architecture/ports.md)

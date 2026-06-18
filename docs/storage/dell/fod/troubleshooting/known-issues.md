@@ -83,6 +83,6 @@ Dell FOD (Feature on Demand) is a software feature licensing mechanism for Dell 
 
 ## See also
 
-- [Dell FOD — Common Issues](common-issues.md)
-- [Dell COD — Known Issues](../../cod/troubleshooting/known-issues/)
-- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues/)
+- [Dell FOD — Common Issues](common-issues/)
+- [Dell COD — Known Issues](../../cod/troubleshooting/known-issues.md)
+- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)

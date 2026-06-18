@@ -104,6 +104,6 @@ Catalog of known ONTAP bugs, error codes, and workarounds covering NFS, SMB, Sna
 
 ## See also
 
-- [NetApp ONTAP — Common Issues](common-issues.md)
-- [NetApp SnapMirror — Known Issues](../../snapmirror/troubleshooting/known-issues/)
-- [NetApp SnapCenter — Known Issues](../../snapcenter/troubleshooting/known-issues/)
+- [NetApp ONTAP — Common Issues](common-issues/)
+- [NetApp SnapMirror — Known Issues](../../snapmirror/troubleshooting/known-issues.md)
+- [NetApp SnapCenter — Known Issues](../../snapcenter/troubleshooting/known-issues.md)

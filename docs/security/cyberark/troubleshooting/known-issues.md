@@ -96,5 +96,4 @@ Catalog of known CyberArk PAM bugs, error codes, and workarounds covering Vault,
 
 ## See also
 
-- [CyberArk — Common Issues](common-issues.md)
-- [Active Directory — Known Issues](../../compute/windows-server/active-directory/troubleshooting/known-issues/)
+- [CyberArk — Common Issues](common-issues/)

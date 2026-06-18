@@ -118,7 +118,7 @@ curl -s "https://crt.sh/?q=corp.example.com&output=json" | jq '.[0:5] | .[] | {i
 
 ## See also
 
-- [Certificates — Access Control](access-control/)
-- [Certificates — Encryption](encryption/)
-- [Certificates — Security Hardening](hardening/)
+- [Certificates — Access Control](../access-control/)
+- [Certificates — Encryption](../encryption/)
+- [Certificates — Security Hardening](../hardening/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

@@ -119,7 +119,7 @@ graph TD
 
 ## See also
 
-- [CyberArk — Authentication](authentication/)
-- [CyberArk — Encryption](encryption/)
-- [CyberArk — Security Hardening](hardening/)
+- [CyberArk — Authentication](../authentication/)
+- [CyberArk — Encryption](../encryption/)
+- [CyberArk — Security Hardening](../hardening/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

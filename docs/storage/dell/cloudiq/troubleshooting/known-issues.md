@@ -90,5 +90,5 @@ Catalog of known CloudIQ bugs, error codes, and workarounds. CloudIQ is a SaaS p
 
 ## See also
 
-- [Dell CloudIQ — Common Issues](common-issues.md)
-- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues/)
+- [Dell CloudIQ — Common Issues](common-issues/)
+- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)

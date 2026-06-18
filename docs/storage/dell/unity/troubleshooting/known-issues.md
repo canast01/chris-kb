@@ -96,5 +96,5 @@ Catalog of known Unity XT bugs, error codes, and workarounds covering Unisphere 
 
 ## See also
 
-- [Dell Unity — Common Issues](common-issues.md)
-- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues/)
+- [Dell Unity — Common Issues](common-issues/)
+- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

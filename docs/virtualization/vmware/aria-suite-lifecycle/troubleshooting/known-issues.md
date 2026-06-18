@@ -95,6 +95,6 @@ Catalog of known Aria Suite Lifecycle (LCM) bugs, error codes, and workarounds c
 
 ## See also
 
-- [VMware Aria Suite Lifecycle — Common Issues](common-issues.md)
-- [VMware Aria Automation — Known Issues](../../aria-automation/troubleshooting/known-issues/)
-- [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues/)
+- [VMware Aria Suite Lifecycle — Common Issues](common-issues/)
+- [VMware Aria Automation — Known Issues](../../aria-automation/troubleshooting/known-issues.md)
+- [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues.md)

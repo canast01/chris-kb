@@ -149,4 +149,4 @@ curl -sk -o /dev/null -w "%{http_code}" https://localhost:10250/healthz
 - [OpenShift — Architecture](how-it-works/)
 - [OpenShift — Deploy](../deploy/)
 - [OpenShift — Operations](../operations/)
-- [Tanzu — Ports](../../vmware/tanzu/architecture/ports/)
+- [Tanzu — Ports](../../vmware/tanzu/architecture/ports.md)

@@ -96,5 +96,3 @@ Catalog of known LDAP and LDAPS issues covering bind failures, certificate error
 
 ## See also
 
-- [LDAP — Common Issues](common-issues.md)
-- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues/)

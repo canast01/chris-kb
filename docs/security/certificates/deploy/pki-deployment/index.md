@@ -336,7 +336,3 @@ certutil -CRL
 
 ## See also
 
-- [Certificates — Procedures](../operations/procedures/)
-- [Certificates — Health Checks](../operations/health-checks/)
-- [Certificates — CLI Reference](../operations/cli-reference/)
-- [Certificates — Common Issues](../troubleshooting/common-issues/)

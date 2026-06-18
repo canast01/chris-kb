@@ -96,5 +96,5 @@ Catalog of known PowerCLI bugs, error codes, and workarounds covering module loa
 
 ## See also
 
-- [VMware PowerCLI — Common Issues](common-issues.md)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware PowerCLI — Common Issues](common-issues/)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

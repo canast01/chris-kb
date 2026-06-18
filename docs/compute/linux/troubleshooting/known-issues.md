@@ -101,6 +101,6 @@ Catalog of known Linux OS bugs, error codes, and workarounds covering boot issue
 
 ## See also
 
-- [Linux — Common Issues](common-issues.md)
-- [MySQL — Known Issues](mysql/troubleshooting/known-issues/)
-- [PostgreSQL — Known Issues](postgresql/troubleshooting/known-issues/)
+- [Linux — Common Issues](common-issues/)
+- [MySQL — Known Issues](../mysql/troubleshooting/known-issues/)
+- [PostgreSQL — Known Issues](../postgresql/troubleshooting/known-issues/)

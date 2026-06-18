@@ -176,10 +176,10 @@ done
 
 ## See also
 
-- [Certificates — Procedures](procedures/)
-- [Certificates — Health Checks](health-checks/)
-- [Certificates — CLI Reference](cli-reference/)
-- [Certificates — Scripts](scripts/)
-- [Certificates — Backup and Restore](backup-restore/)
-- [Certificates — Install and Upgrade](install-upgrade/)
+- [Certificates — Procedures](../procedures/)
+- [Certificates — Health Checks](../health-checks/)
+- [Certificates — CLI Reference](../cli-reference/)
+- [Certificates — Scripts](../scripts/)
+- [Certificates — Backup and Restore](../backup-restore/)
+- [Certificates — Install and Upgrade](../install-upgrade/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

@@ -102,5 +102,5 @@ Catalog of known Nutanix AOS / AHV bugs, error codes, and workarounds covering C
 
 ## See also
 
-- [Nutanix — Common Issues](common-issues.md)
+- [Nutanix — Common Issues](common-issues/)
 - [Nutanix — Diagnostics](diagnostics.md)

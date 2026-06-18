@@ -62,6 +62,9 @@ VMkernel Internals — Resource Stack
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## VMkernel Architecture
+
 ### VMkernel Resource Scheduling
 
 ```mermaid

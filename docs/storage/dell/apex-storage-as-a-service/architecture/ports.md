@@ -102,5 +102,5 @@ APEX Storage uses the same data access ports as the underlying array type:
 ## See also
 
 - [Dell APEX — Architecture](how-it-works/)
-- [Dell CloudIQ — Ports](../../cloudiq/architecture/ports/)
-- [Dell PowerStore — Ports](../../powerstore/architecture/ports/)
+- [Dell CloudIQ — Ports](../../cloudiq/architecture/ports.md)
+- [Dell PowerStore — Ports](../../powerstore/architecture/ports.md)

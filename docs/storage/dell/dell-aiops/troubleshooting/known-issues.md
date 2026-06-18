@@ -79,5 +79,4 @@ Dell AIOps is a SaaS analytics layer on CloudIQ. All operational issues relate t
 
 ## See also
 
-- [Dell AIOps — Common Issues](common-issues.md)
-- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues/)
+- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

@@ -101,6 +101,3 @@ Pure requires uninterrupted outbound access to Pure1 for remote management, mete
 ## See also
 
 - [Pure Storage Evergreen//One — Architecture](how-it-works/)
-- [Pure Storage FlashArray — Ports](../flasharray/architecture/ports/)
-- [Pure Storage FlashBlade — Ports](../flashblade/architecture/ports/)
-- [Pure1 — Ports](../pure1/architecture/ports/)

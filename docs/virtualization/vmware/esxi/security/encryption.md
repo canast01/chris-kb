@@ -64,6 +64,8 @@ ESXi Encryption Stack
 ```
 The VM must be powered off or in a compatible state. Encryption processes each VMDK in-place.
 
+## VM Encryption Operations
+
 ### Verify VM Encryption Status
 
 ```powershell

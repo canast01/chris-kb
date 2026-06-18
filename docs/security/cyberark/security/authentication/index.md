@@ -130,7 +130,7 @@ PVWA Administration > Authentication Methods > RADIUS:
 
 ## See also
 
-- [CyberArk — Access Control](access-control/)
-- [CyberArk — Encryption](encryption/)
-- [CyberArk — Security Hardening](hardening/)
+- [CyberArk — Access Control](../access-control/)
+- [CyberArk — Encryption](../encryption/)
+- [CyberArk — Security Hardening](../hardening/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

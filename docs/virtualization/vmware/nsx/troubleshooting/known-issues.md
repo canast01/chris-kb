@@ -112,6 +112,6 @@ Catalog of known NSX-T / NSX 4.x bugs, error codes, and workarounds covering man
 
 ## See also
 
-- [VMware NSX — Common Issues](common-issues.md)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
-- [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues/)
+- [VMware NSX — Common Issues](common-issues/)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)
+- [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues.md)

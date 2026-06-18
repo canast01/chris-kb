@@ -135,5 +135,5 @@ curl -sk -o /dev/null -w "%{http_code}" https://<vcenter-ip>/rest/com/vmware/cis
 ## See also
 
 - [vSphere Replication — Architecture](how-it-works/)
-- [SRM — Ports](../../srm/architecture/ports/)
-- [ESXi — Ports](../../esxi/architecture/ports/)
+- [SRM — Ports](../../srm/architecture/ports.md)
+- [ESXi — Ports](../../esxi/architecture/ports.md)

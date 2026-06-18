@@ -69,6 +69,8 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Physical Network Integration
+
 ### VLAN Requirements
 
 | Traffic Type | VLAN | MTU Requirement |

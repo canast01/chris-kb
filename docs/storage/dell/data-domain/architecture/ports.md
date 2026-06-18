@@ -169,7 +169,4 @@ replication show config all
 ## See also
 
 - [Dell Data Domain — Architecture](how-it-works/)
-- [Dell Data Domain — Deploy](../deploy/)
 - [Dell Data Domain — Operations](../operations/)
-- [Veeam — Ports](../../../backup/veeam/architecture/ports/)
-- [Commvault — Ports](../../../backup/commvault/architecture/ports/)

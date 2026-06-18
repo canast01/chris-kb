@@ -131,5 +131,5 @@ showmount -e <ontap-nfs-lif>
 ## See also
 
 - [NetApp SnapCenter — Architecture](how-it-works/)
-- [NetApp ONTAP — Ports](../../ontap/architecture/ports/)
-- [NetApp SnapMirror — Ports](../../snapmirror/architecture/ports/)
+- [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)
+- [NetApp SnapMirror — Ports](../../snapmirror/architecture/ports.md)

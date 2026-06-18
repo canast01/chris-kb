@@ -137,5 +137,5 @@ nc -zv <gitaly-host> 8075
 
 - [Git — Architecture](how-it-works/)
 - [Git — Operations](../operations/)
-- [Jira — Ports](../../jira/architecture/ports/)
-- [GitHub Actions — Ports](../../../automation/github-actions/architecture/ports/)
+- [Jira — Ports](../../jira/architecture/ports.md)
+- [GitHub Actions — Ports](../../../automation/github-actions/architecture/ports.md)

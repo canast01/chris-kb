@@ -98,6 +98,6 @@ Catalog of known FlashArray bugs, error codes, and workarounds covering host con
 
 ## See also
 
-- [Pure Storage FlashArray — Common Issues](common-issues.md)
-- [Pure Storage FlashBlade — Known Issues](../../flashblade/troubleshooting/known-issues/)
-- [Pure1 — Known Issues](../../pure1/troubleshooting/known-issues/)
+- [Pure Storage FlashArray — Common Issues](common-issues/)
+- [Pure Storage FlashBlade — Known Issues](../../flashblade/troubleshooting/known-issues.md)
+- [Pure1 — Known Issues](../../pure1/troubleshooting/known-issues.md)

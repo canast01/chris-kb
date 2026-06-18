@@ -156,8 +156,8 @@ netsh trace stop
 
 ## See also
 
-- [Ntfs](ntfs/)
-- [Permissions](permissions/)
-- [Sessions](sessions/)
-- [Shares](shares/)
+- [Ntfs](../ntfs/)
+- [Permissions](../permissions/)
+- [Sessions](../sessions/)
+- [Shares](../shares/)
 - [SMB — Overview](../)

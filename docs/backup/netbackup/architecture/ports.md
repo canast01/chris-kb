@@ -170,5 +170,5 @@ bpclntcmd -pn -client <client-hostname>
 - [NetBackup — Architecture](how-it-works/)
 - [NetBackup — Deploy](../deploy/)
 - [NetBackup — Operations](../operations/)
-- [Veeam — Ports](../../veeam/architecture/ports/)
-- [Dell Data Domain — Ports](../../../storage/dell/data-domain/architecture/ports/)
+- [Veeam — Ports](../../veeam/architecture/ports.md)
+- [Dell Data Domain — Ports](../../../storage/dell/data-domain/architecture/ports.md)

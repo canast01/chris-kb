@@ -164,6 +164,6 @@ nc -zv <switch-ip> 22
 
 - [Aria Operations for Networks — Architecture](how-it-works/)
 - [Aria Operations for Networks — Deploy](../deploy/)
-- [Aria Operations — Ports](../../aria-operations/architecture/ports/)
-- [NSX — Ports](../../nsx/architecture/ports/)
-- [vCenter — Ports](../../vcenter/architecture/ports/)
+- [Aria Operations — Ports](../../aria-operations/architecture/ports.md)
+- [NSX — Ports](../../nsx/architecture/ports.md)
+- [vCenter — Ports](../../vcenter/architecture/ports.md)

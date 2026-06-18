@@ -316,6 +316,6 @@ Escalate to backup vendor TAC or infrastructure team when:
 
 ## See also
 
-- [DR Operations — Known Issues](../known-issues/)
+- [DR Operations — Known Issues](../known-issues.md)
 - [DR Operations — Troubleshooting Overview](../)
 - [DR Operations — Overview](../../)

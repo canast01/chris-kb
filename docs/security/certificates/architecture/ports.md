@@ -160,5 +160,5 @@ curl -sk -o /dev/null -w "%{http_code}" https://acme-v02.api.letsencrypt.org/dir
 ## See also
 
 - [Certificates — Architecture](how-it-works/)
-- [Venafi — Ports](../../venafi/architecture/ports/)
-- [Active Directory — Ports](../../../compute/windows-server/active-directory/architecture/ports/)
+- [Venafi — Ports](../../venafi/architecture/ports.md)
+- [Active Directory — Ports](../../../compute/windows-server/active-directory/architecture/ports.md)

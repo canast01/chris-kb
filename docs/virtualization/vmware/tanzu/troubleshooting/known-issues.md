@@ -96,6 +96,6 @@ Catalog of known Tanzu Kubernetes Grid (TKG) and Supervisor cluster bugs, error 
 
 ## See also
 
-- [VMware Tanzu — Common Issues](common-issues.md)
-- [VMware NSX — Known Issues](../../nsx/troubleshooting/known-issues/)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware Tanzu — Common Issues](common-issues/)
+- [VMware NSX — Known Issues](../../nsx/troubleshooting/known-issues.md)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

@@ -83,7 +83,7 @@ Venafi RBAC is managed through built-in roles: Policy Master (full policy tree c
 
 ## See also
 
-- [Venafi — Access Control](access-control/)
-- [Venafi — Encryption](encryption/)
-- [Venafi — Security Hardening](hardening/)
+- [Venafi — Access Control](../access-control/)
+- [Venafi — Encryption](../encryption/)
+- [Venafi — Security Hardening](../hardening/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

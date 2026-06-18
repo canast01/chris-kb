@@ -103,6 +103,6 @@ Catalog of known VxRail bugs, error codes, and workarounds covering LCM upgrades
 
 ## See also
 
-- [Dell VxRail — Common Issues](common-issues.md)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
-- [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues/)
+- [Dell VxRail — Common Issues](common-issues/)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)
+- [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues.md)

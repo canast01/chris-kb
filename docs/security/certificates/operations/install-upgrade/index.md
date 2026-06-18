@@ -237,9 +237,9 @@ Reason codes: 0 = Unspecified, 1 = Key Compromise, 2 = CA Compromise, 3 = Affili
 
 ## See also
 
-- [Certificates — Procedures](procedures/)
-- [Certificates — Health Checks](health-checks/)
-- [Certificates — CLI Reference](cli-reference/)
-- [Certificates — Scripts](scripts/)
-- [Certificates — Backup and Restore](backup-restore/)
+- [Certificates — Procedures](../procedures/)
+- [Certificates — Health Checks](../health-checks/)
+- [Certificates — CLI Reference](../cli-reference/)
+- [Certificates — Scripts](../scripts/)
+- [Certificates — Backup and Restore](../backup-restore/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

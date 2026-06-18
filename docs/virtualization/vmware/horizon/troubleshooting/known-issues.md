@@ -106,5 +106,5 @@ Catalog of known Horizon bugs, error codes, and workarounds covering Blast Extre
 
 ## See also
 
-- [VMware Horizon — Common Issues](common-issues.md)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware Horizon — Common Issues](common-issues/)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

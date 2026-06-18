@@ -95,6 +95,4 @@ Catalog of known PowerShell and WinRM bugs, error codes, and workarounds coverin
 
 ## See also
 
-- [PowerShell — Common Issues](common-issues.md)
-- [Windows Server — Known Issues](../../compute/windows-server/troubleshooting/known-issues/)
-- [Ansible — Known Issues](../../automation/ansible/troubleshooting/known-issues/)
+- [PowerShell — Common Issues](common-issues/)

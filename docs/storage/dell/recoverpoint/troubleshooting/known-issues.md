@@ -95,5 +95,5 @@ Catalog of known RecoverPoint bugs, error codes, and workarounds covering RPA cl
 
 ## See also
 
-- [Dell RecoverPoint — Common Issues](common-issues.md)
-- [Dell VPLEX — Known Issues](../../vplex/troubleshooting/known-issues/)
+- [Dell RecoverPoint — Common Issues](common-issues/)
+- [Dell VPLEX — Known Issues](../../vplex/troubleshooting/known-issues.md)

@@ -140,8 +140,8 @@ porterrshow
 
 ## See also
 
-- [Fabric Login](fabric-login/)
-- [Paths](paths/)
-- [Wwns](wwns/)
-- [Zoning](zoning/)
+- [Fabric Login](../fabric-login/)
+- [Paths](../paths/)
+- [Wwns](../wwns/)
+- [Zoning](../zoning/)
 - [Fibre Channel — Overview](../)

@@ -101,9 +101,9 @@ CyberArk follows a structured upgrade sequence to preserve Vault integrity: the 
 
 ## See also
 
-- [CyberArk — Procedures](procedures/)
-- [CyberArk — Health Checks](health-checks/)
-- [CyberArk — CLI Reference](cli-reference/)
-- [CyberArk — Scripts](scripts/)
-- [CyberArk — Backup and Restore](backup-restore/)
+- [CyberArk — Procedures](../procedures/)
+- [CyberArk — Health Checks](../health-checks/)
+- [CyberArk — CLI Reference](../cli-reference/)
+- [CyberArk — Scripts](../scripts/)
+- [CyberArk — Backup and Restore](../backup-restore/)
 - [CyberArk — Common Issues](../../troubleshooting/common-issues/)

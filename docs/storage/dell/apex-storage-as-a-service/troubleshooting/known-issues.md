@@ -87,6 +87,6 @@ Dell APEX Storage is a Dell-managed STaaS offering. Hardware operational issues 
 
 ## See also
 
-- [Dell APEX — Common Issues](common-issues.md)
-- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues/)
-- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues/)
+- [Dell APEX — Common Issues](common-issues/)
+- [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)
+- [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

@@ -220,10 +220,10 @@ Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStat
 
 ## See also
 
-- [Windows Server — Procedures](procedures/)
-- [Windows Server — Health Checks](health-checks/)
-- [Windows Server — CLI Reference](cli-reference/)
-- [Windows Server — Scripts](scripts/)
-- [Windows Server — Backup and Restore](backup-restore/)
-- [Windows Server — Install and Upgrade](install-upgrade/)
+- [Windows Server — Procedures](../procedures/)
+- [Windows Server — Health Checks](../health-checks/)
+- [Windows Server — CLI Reference](../cli-reference/)
+- [Windows Server — Scripts](../scripts/)
+- [Windows Server — Backup and Restore](../backup-restore/)
+- [Windows Server — Install and Upgrade](../install-upgrade/)
 - [Windows Server — Common Issues](../../troubleshooting/common-issues/)

@@ -95,6 +95,6 @@ Catalog of known Aria Operations (vROps) bugs, error codes, and workarounds cove
 
 ## See also
 
-- [VMware Aria Operations — Common Issues](common-issues.md)
-- [VMware Aria Operations for Logs — Known Issues](../../aria-operations-for-logs/troubleshooting/known-issues/)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware Aria Operations — Common Issues](common-issues/)
+- [VMware Aria Operations for Logs — Known Issues](../../aria-operations-for-logs/troubleshooting/known-issues.md)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

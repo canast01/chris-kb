@@ -194,6 +194,6 @@ Target resolution time: expired internal certificate — 2 hours. Expired extern
 
 ## See also
 
-- [Certificates — Diagnostics](diagnostics/)
-- [Certificates — Escalation](escalation/)
+- [Certificates — Diagnostics](../diagnostics/)
+- [Certificates — Escalation](../escalation/)
 - [Certificates — Procedures](../../operations/procedures/)

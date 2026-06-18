@@ -96,6 +96,6 @@ Catalog of known SRM bugs, error codes, and workarounds covering protection grou
 
 ## See also
 
-- [VMware SRM — Common Issues](common-issues.md)
-- [VMware vSphere Replication — Known Issues](../../vsphere-replication/troubleshooting/known-issues/)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware SRM — Common Issues](common-issues/)
+- [VMware vSphere Replication — Known Issues](../../vsphere-replication/troubleshooting/known-issues.md)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

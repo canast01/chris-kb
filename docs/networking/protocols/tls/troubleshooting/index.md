@@ -134,9 +134,9 @@ openssl s_client -connect host:443 \
 
 ## See also
 
-- [Certificates](certificates/)
-- [Chains](chains/)
-- [Ciphers](ciphers/)
-- [Expiration](expiration/)
-- [Validation](validation/)
+- [Certificates](../certificates/)
+- [Chains](../chains/)
+- [Ciphers](../ciphers/)
+- [Expiration](../expiration/)
+- [Validation](../validation/)
 - [TLS — Overview](../)

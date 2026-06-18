@@ -269,9 +269,9 @@ Test-NetConnection -ComputerName <VaultIP> -Port 1858
 
 ## See also
 
-- [Architecture](architecture/)
-- [Learning Path](learning-path/)
-- [Operations](operations/)
-- [Security](security/)
-- [Troubleshooting](troubleshooting/)
+- [Architecture](../architecture/)
+- [Learning Path](../learning-path/)
+- [Operations](../operations/)
+- [Security](../security/)
+- [Troubleshooting](../troubleshooting/)
 - [CyberArk — Overview](../)

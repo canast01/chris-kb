@@ -100,5 +100,3 @@ purealertalert test
 ## See also
 
 - [Pure Storage FlashBlade — Architecture](how-it-works/)
-- [Pure Storage FlashArray — Ports](../flasharray/architecture/ports/)
-- [Pure1 — Ports](../pure1/architecture/ports/)

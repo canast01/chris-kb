@@ -83,6 +83,6 @@ network interface show -role intercluster
 
 ## See also
 
-- [NetApp ONTAP — Ports](../../ontap/architecture/ports/)
-- [NetApp SnapCenter — Ports](../../snapcenter/architecture/ports/)
+- [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)
+- [NetApp SnapCenter — Ports](../../snapcenter/architecture/ports.md)
 - [NetApp ONTAP — Architecture](../../ontap/architecture/how-it-works/)

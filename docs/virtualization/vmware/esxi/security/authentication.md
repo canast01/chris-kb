@@ -73,6 +73,9 @@ ESXi Authentication Paths
 │  /Config/Etc/issue             = login banner text                                                    │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Local Account Management
+
 ### List and Remove Unused Local Accounts
 
 ```bash

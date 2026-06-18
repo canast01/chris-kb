@@ -95,5 +95,5 @@ For VMware-specific issues within EVS, refer to:
 
 ## See also
 
-- [AWS EVS — Common Issues](common-issues.md)
-- [AWS — Known Issues](../../troubleshooting/known-issues/)
+- [AWS EVS — Common Issues](common-issues/)
+- [AWS — Known Issues](../../troubleshooting/known-issues.md)

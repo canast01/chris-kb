@@ -61,6 +61,9 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## hvconfig CLI
+
 ### Desktop and Pool Operations
 
 ```cmd

@@ -95,6 +95,6 @@ Catalog of known Windows Server bugs, error codes, and workarounds covering WinR
 
 ## See also
 
-- [Windows Server — Common Issues](common-issues.md)
-- [Active Directory — Known Issues](active-directory/troubleshooting/known-issues/)
-- [SQL Server — Known Issues](sql-server/troubleshooting/known-issues/)
+- [Windows Server — Common Issues](common-issues/)
+- [Active Directory — Known Issues](../active-directory/troubleshooting/known-issues/)
+- [SQL Server — Known Issues](../sql-server/troubleshooting/known-issues/)

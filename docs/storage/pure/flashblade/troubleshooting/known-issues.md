@@ -97,5 +97,5 @@ Catalog of known FlashBlade bugs, error codes, and workarounds covering NFS, SMB
 
 ## See also
 
-- [Pure Storage FlashBlade — Common Issues](common-issues.md)
-- [Pure Storage FlashArray — Known Issues](../../flasharray/troubleshooting/known-issues/)
+- [Pure Storage FlashBlade — Common Issues](common-issues/)
+- [Pure Storage FlashArray — Known Issues](../../flasharray/troubleshooting/known-issues.md)

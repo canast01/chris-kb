@@ -130,6 +130,6 @@ Add known issues here as they come up.
 
 ## See also
 
-- [Venafi — Diagnostics](diagnostics/)
-- [Venafi — Escalation](escalation/)
+- [Venafi — Diagnostics](../diagnostics/)
+- [Venafi — Escalation](../escalation/)
 - [Venafi — Procedures](../../operations/procedures/)

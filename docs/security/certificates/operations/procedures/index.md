@@ -495,9 +495,9 @@ certutil -view -restrict "Disposition=20" -out "RequestID,CommonName,NotBefore,N
 
 ## See also
 
-- [Certificates — Health Checks](health-checks/)
-- [Certificates — CLI Reference](cli-reference/)
-- [Certificates — Scripts](scripts/)
-- [Certificates — Backup and Restore](backup-restore/)
-- [Certificates — Install and Upgrade](install-upgrade/)
+- [Certificates — Health Checks](../health-checks/)
+- [Certificates — CLI Reference](../cli-reference/)
+- [Certificates — Scripts](../scripts/)
+- [Certificates — Backup and Restore](../backup-restore/)
+- [Certificates — Install and Upgrade](../install-upgrade/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

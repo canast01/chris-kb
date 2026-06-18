@@ -88,6 +88,6 @@ Catalog of known Superna Eyeglass bugs, error codes, and workarounds covering Sy
 
 ## See also
 
-- [Superna Eyeglass — Common Issues](common-issues.md)
-- [Dell PowerScale — Known Issues](../../../dell/powerscale/troubleshooting/known-issues/)
-- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues/)
+- [Superna Eyeglass — Common Issues](common-issues/)
+- [Dell PowerScale — Known Issues](../../../dell/powerscale/troubleshooting/known-issues.md)
+- [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)

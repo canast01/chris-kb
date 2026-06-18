@@ -86,5 +86,3 @@ For network issues, identify the protocol layer first before looking up specific
 ## See also
 
 - [Networking — Common Issues](index.md)
-- [Brocade Fabric OS — Known Issues](../san/brocade/fabric-os/troubleshooting/known-issues/)
-- [Cisco MDS — Known Issues](../san/cisco/mds/troubleshooting/known-issues/)

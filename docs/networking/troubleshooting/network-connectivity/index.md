@@ -333,5 +333,5 @@ Escalate to network or data centre team when:
 ## See also
 
 - [DNS Resolution Troubleshooting](../dns-resolution/)
-- [Networking — Known Issues](../known-issues/)
+- [Networking — Known Issues](../known-issues.md)
 - [Networking — Troubleshooting Overview](../)

@@ -165,8 +165,8 @@ umount -f /mnt/data
 
 ## See also
 
-- [Exports](exports/)
-- [Mounts](mounts/)
-- [Permissions](permissions/)
-- [Versions](versions/)
+- [Exports](../exports/)
+- [Mounts](../mounts/)
+- [Permissions](../permissions/)
+- [Versions](../versions/)
 - [NFS — Overview](../)

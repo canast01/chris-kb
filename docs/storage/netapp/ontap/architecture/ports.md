@@ -181,6 +181,5 @@ system node autosupport invoke -node * -type test
 ## See also
 
 - [NetApp ONTAP — Architecture](how-it-works/)
-- [NetApp ONTAP — Deploy](../deploy/)
 - [NetApp ONTAP — Operations](../operations/)
 - [NetApp ONTAP — Troubleshooting](../troubleshooting/)

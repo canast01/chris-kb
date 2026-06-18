@@ -120,6 +120,6 @@ curl -sk -o /dev/null -w "%{http_code}" https://<satellite-or-repo-host>/
 
 - [Linux — Architecture](how-it-works/)
 - [Linux — Operations](../operations/)
-- [MySQL — Ports](../mysql/architecture/ports/)
-- [PostgreSQL — Ports](../postgresql/architecture/ports/)
-- [Ansible — Ports](../../../automation/ansible/architecture/ports/)
+- [MySQL — Ports](../mysql/architecture/ports.md)
+- [PostgreSQL — Ports](../postgresql/architecture/ports.md)
+- [Ansible — Ports](../../../automation/ansible/architecture/ports.md)

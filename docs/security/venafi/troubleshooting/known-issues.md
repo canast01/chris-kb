@@ -95,6 +95,6 @@ Catalog of known Venafi TPP bugs, error codes, and workarounds covering certific
 
 ## See also
 
-- [Venafi TPP — Common Issues](common-issues.md)
-- [Certificates — Known Issues](../../certificates/troubleshooting/known-issues/)
-- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues/)
+- [Venafi TPP — Common Issues](common-issues/)
+- [Certificates — Known Issues](../../certificates/troubleshooting/known-issues.md)
+- [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues.md)

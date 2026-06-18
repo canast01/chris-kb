@@ -96,5 +96,5 @@ Catalog of known Fabric OS bugs, error codes, and workarounds covering switch he
 
 ## See also
 
-- [Brocade Fabric OS — Common Issues](common-issues.md)
-- [Brocade SANnav — Known Issues](../../sannav/troubleshooting/known-issues/)
+- [Brocade Fabric OS — Common Issues](common-issues/)
+- [Brocade SANnav — Known Issues](../../sannav/troubleshooting/known-issues.md)

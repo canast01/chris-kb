@@ -96,5 +96,3 @@ Catalog of known NFS issues covering mount failures, permission errors, NFSv4 be
 
 ## See also
 
-- [NFS — Common Issues](common-issues.md)
-- [NetApp ONTAP — Known Issues](../../../storage/netapp/ontap/troubleshooting/known-issues/)

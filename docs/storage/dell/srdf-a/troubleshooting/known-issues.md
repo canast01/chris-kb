@@ -93,6 +93,6 @@ Catalog of known SRDF/A (Asynchronous) bugs, error codes, and workarounds coveri
 
 ## See also
 
-- [Dell SRDF-A — Common Issues](common-issues.md)
-- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues/)
-- [Dell SRDF-S — Known Issues](../../srdf-s/troubleshooting/known-issues/)
+- [Dell SRDF-A — Common Issues](common-issues/)
+- [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)
+- [Dell SRDF-S — Known Issues](../../srdf-s/troubleshooting/known-issues.md)

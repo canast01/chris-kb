@@ -60,6 +60,9 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Backup Tool Integration
+
 **Reset CBT if incremental backups are failing:**
 
 ```bash

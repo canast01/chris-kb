@@ -95,6 +95,6 @@ Catalog of known Python scripting bugs, error codes, and workarounds covering vi
 
 ## See also
 
-- [Python — Common Issues](common-issues.md)
-- [Ansible — Known Issues](../../ansible/troubleshooting/known-issues/)
-- [Terraform — Known Issues](../../terraform/troubleshooting/known-issues/)
+- [Python — Common Issues](common-issues/)
+- [Ansible — Known Issues](../../ansible/troubleshooting/known-issues.md)
+- [Terraform — Known Issues](../../terraform/troubleshooting/known-issues.md)

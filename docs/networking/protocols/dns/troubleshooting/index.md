@@ -153,8 +153,8 @@ $zone = "corp.local"
 
 ## See also
 
-- [Forwarders](forwarders/)
-- [Lookups](lookups/)
-- [Records](records/)
-- [Zones](zones/)
+- [Forwarders](../forwarders/)
+- [Lookups](../lookups/)
+- [Records](../records/)
+- [Zones](../zones/)
 - [DNS — Overview](../)

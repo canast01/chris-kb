@@ -173,8 +173,8 @@ vmkping -I vmk1 <destination-esxi-vmk1-ip>
 
 ## See also
 
-- [vCenter — Ports](../../vcenter/architecture/ports/)
-- [vSAN — Ports](../../vsan/architecture/ports/)
-- [NSX — Ports](../../nsx/architecture/ports/)
+- [vCenter — Ports](../../vcenter/architecture/ports.md)
+- [vSAN — Ports](../../vsan/architecture/ports.md)
+- [NSX — Ports](../../nsx/architecture/ports.md)
 - [ESXi — Architecture](how-it-works/)
 - [ESXi — Deploy](../../esxi/deploy/)

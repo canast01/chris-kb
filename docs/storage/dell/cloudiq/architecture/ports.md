@@ -111,5 +111,5 @@ curl -sk -o /dev/null -w "%{http_code}" https://cloudiq.dell.com/
 ## See also
 
 - [Dell CloudIQ — Architecture](how-it-works/)
-- [Dell PowerStore — Ports](../../powerstore/architecture/ports/)
-- [Dell PowerScale — Ports](../../powerscale/architecture/ports/)
+- [Dell PowerStore — Ports](../../powerstore/architecture/ports.md)
+- [Dell PowerScale — Ports](../../powerscale/architecture/ports.md)

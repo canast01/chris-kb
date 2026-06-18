@@ -94,6 +94,6 @@ Catalog of known vSphere Replication bugs, error codes, and workarounds covering
 
 ## See also
 
-- [VMware vSphere Replication — Common Issues](common-issues.md)
-- [VMware SRM — Known Issues](../../srm/troubleshooting/known-issues/)
-- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues/)
+- [VMware vSphere Replication — Common Issues](common-issues/)
+- [VMware SRM — Known Issues](../../srm/troubleshooting/known-issues.md)
+- [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

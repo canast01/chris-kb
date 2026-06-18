@@ -120,7 +120,7 @@ Catalog of known vCenter / VCSA bugs, error codes, and workarounds. Each entry i
 
 ## See also
 
-- [vCenter — Common Issues](common-issues.md)
+- [vCenter — Common Issues](common-issues/)
 - [vCenter — Diagnostics](diagnostics.md)
-- [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues/)
-- [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues/)
+- [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues.md)
+- [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues.md)

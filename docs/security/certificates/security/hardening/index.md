@@ -126,7 +126,7 @@ openssl s_client -connect host.corp.example.com:443 -status -tlsextdebug 2>&1 | 
 
 ## See also
 
-- [Certificates — Access Control](access-control/)
-- [Certificates — Authentication](authentication/)
-- [Certificates — Encryption](encryption/)
+- [Certificates — Access Control](../access-control/)
+- [Certificates — Authentication](../authentication/)
+- [Certificates — Encryption](../encryption/)
 - [Certificates — Common Issues](../../troubleshooting/common-issues/)

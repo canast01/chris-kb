@@ -93,6 +93,6 @@ Catalog of known Confluence Data Center bugs, error codes, and workarounds cover
 
 ## See also
 
-- [Confluence — Common Issues](common-issues.md)
-- [Jira — Known Issues](../../jira/troubleshooting/known-issues/)
-- [PostgreSQL — Known Issues](../../../compute/linux/postgresql/troubleshooting/known-issues/)
+- [Confluence — Common Issues](common-issues/)
+- [Jira — Known Issues](../../jira/troubleshooting/known-issues.md)
+- [PostgreSQL — Known Issues](../../../compute/linux/postgresql/troubleshooting/known-issues.md)

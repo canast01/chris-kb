@@ -97,6 +97,4 @@ Catalog of known Data Domain bugs, error codes, and workarounds covering DD Boos
 
 ## See also
 
-- [Dell Data Domain — Common Issues](common-issues.md)
-- [Veeam — Known Issues](../../../backup/veeam/troubleshooting/known-issues/)
-- [Commvault — Known Issues](../../../backup/commvault/troubleshooting/known-issues/)
+- [Dell Data Domain — Common Issues](common-issues/)

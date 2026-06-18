@@ -189,9 +189,9 @@ openssl s_client -connect <host>:443 -servername <host>
 
 ## See also
 
-- [Venafi — Procedures](procedures/)
-- [Venafi — Health Checks](health-checks/)
-- [Venafi — Scripts](scripts/)
-- [Venafi — Backup and Restore](backup-restore/)
-- [Venafi — Install and Upgrade](install-upgrade/)
+- [Venafi — Procedures](../procedures/)
+- [Venafi — Health Checks](../health-checks/)
+- [Venafi — Scripts](../scripts/)
+- [Venafi — Backup and Restore](../backup-restore/)
+- [Venafi — Install and Upgrade](../install-upgrade/)
 - [Venafi — Common Issues](../../troubleshooting/common-issues/)

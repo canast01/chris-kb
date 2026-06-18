@@ -95,5 +95,4 @@ Catalog of known Ollama bugs, error codes, and workarounds covering model loadin
 
 ## See also
 
-- [Ollama — Common Issues](common-issues.md)
-- [GPU — Known Issues](../../gpu/troubleshooting/known-issues/)
+- [GPU — Known Issues](../../gpu/troubleshooting/known-issues.md)

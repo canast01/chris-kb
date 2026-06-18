@@ -95,5 +95,5 @@ Catalog of known ServiceNow bugs, error codes, and workarounds covering MID Serv
 
 ## See also
 
-- [ServiceNow — Common Issues](common-issues.md)
-- [Ansible — Known Issues](../../../automation/ansible/troubleshooting/known-issues/)
+- [ServiceNow — Common Issues](common-issues/)
+- [Ansible — Known Issues](../../../automation/ansible/troubleshooting/known-issues.md)
