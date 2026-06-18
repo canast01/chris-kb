@@ -48,4 +48,8 @@ How VMware products connect — compute, network, storage, management, and autom
 <strong>Decision Trees</strong><br>
 Flowcharts for vSAN policy, NSX topology, DR tool selection, and Aria product selection.
 </a>
+<a class="kb-card" href="glossary/">
+<strong>Glossary</strong><br>
+155+ terms covering VMware products, networking, storage, security, Kubernetes, and observability.
+</a>
 </div>
