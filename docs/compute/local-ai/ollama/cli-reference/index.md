@@ -1,3 +1,9 @@
+---
+tags:
+  - ollama
+  - ai
+  - local-ai
+---
 # Ollama CLI Reference
 
 

@@ -670,7 +670,8 @@ _tags_enabled = bool(re.search(r'^\s*-\s*tags\b', _mkdocs_text, re.MULTILINE))
 if not _tags_enabled:
     warn(issues, 'PENDING — tags plugin not enabled in mkdocs.yml (Spectacular Track 1)')
 else:
-    _SKIP_TAGS = {'tags.md', 'site-map.md', 'index.md', 'usage-metrics.md', 'site-quality.md'}
+    _SKIP_TAGS = {'tags.md', 'site-map.md', 'index.md', 'usage-metrics.md', 'site-quality.md',
+                  'offline/index.md', 'stats/index.md'}
     for _path in all_md():
         _rel = os.path.relpath(_path, DOCS)
         if _rel in _SKIP_TAGS:

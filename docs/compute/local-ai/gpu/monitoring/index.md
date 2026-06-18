@@ -1,3 +1,9 @@
+---
+tags:
+  - gpu
+  - ai
+  - local-ai
+---
 # GPU Monitoring
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - azure
+  - ai
+---
 # Azure OpenAI Monitoring
 
 

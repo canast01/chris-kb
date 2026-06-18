@@ -1,3 +1,9 @@
+---
+tags:
+  - openai
+  - ai
+  - security
+---
 # OpenAI Security Review
 
 

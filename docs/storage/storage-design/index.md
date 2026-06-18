@@ -1,3 +1,8 @@
+---
+tags:
+  - storage
+  - architecture
+---
 # Storage Design
 
 

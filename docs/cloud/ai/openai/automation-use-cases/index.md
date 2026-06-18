@@ -1,3 +1,8 @@
+---
+tags:
+  - openai
+  - ai
+---
 # OpenAI Automation Use Cases
 
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - aws
+  - ai
+---
 # Bedrock Monitoring
 
 
