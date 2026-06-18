@@ -44,4 +44,8 @@ Top-10 CLI and PowerCLI commands for each VMware product on a single page.
 <strong>Interaction Maps</strong><br>
 How VMware products connect — compute, network, storage, management, and automation domains.
 </a>
+<a class="kb-card" href="decision-trees/">
+<strong>Decision Trees</strong><br>
+Flowcharts for vSAN policy, NSX topology, DR tool selection, and Aria product selection.
+</a>
 </div>

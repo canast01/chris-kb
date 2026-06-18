@@ -17,10 +17,10 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
 │   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,622   │  │  Storage:          709       │  │  ASCII diagrams:     2,611  │  │
+│   │  Total pages:       2,627   │  │  Storage:          709       │  │  ASCII diagrams:     2,616  │  │
 │   │  Sections:             12   │  │  Virtualization:   685       │  │  SVG diagrams:         118  │  │
-│   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     676  │  │
-│   │  Updated 2026-06-18         │  │                              │  │  kb-summary divs:    2,342  │  │
+│   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     680  │  │
+│   │  Updated 2026-06-18         │  │                              │  │  kb-summary divs:    2,347  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
@@ -53,13 +53,13 @@ Generated: 2026-06-18
 
 | Metric | Count |
 |---|---:|
-| Total markdown pages | 2,622 |
+| Total markdown pages | 2,627 |
 | Sections | 11 |
-| Pages with full-width ASCII diagrams | 2,611 |
+| Pages with full-width ASCII diagrams | 2,616 |
 | Pages with SVG diagrams | 118 |
-| Pages with Mermaid diagrams | 676 |
-| Pages with kb-summary | 2,342 |
-| Pages with tags | 2,595 |
+| Pages with Mermaid diagrams | 680 |
+| Pages with kb-summary | 2,347 |
+| Pages with tags | 2,600 |
 | Audit score | 36 / 37 |
 
 ## Section page counts
