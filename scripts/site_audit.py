@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-KB site audit — 28 checks.
+KB site audit — 35 checks.
 
 Usage:
-    python3 scripts/site_audit.py          # run all checks, print summary
-    python3 scripts/site_audit.py --full   # include full issue lists (no truncation)
+    python3 scripts/site_audit.py               # run all checks, print summary
+    python3 scripts/site_audit.py --full        # include full issue lists (no truncation)
+    python3 scripts/site_audit.py --check-links # also validate external URLs (slow)
 """
 
 import os, re, sys, xml.etree.ElementTree as ET
@@ -13,6 +14,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(REPO, 'docs')
 ASSETS = os.path.join(DOCS, 'assets')
 FULL = '--full' in sys.argv
+CHECK_LINKS = '--check-links' in sys.argv
 
 results = {}
 
@@ -592,6 +594,163 @@ for _admin_page in ['site-quality.md', 'usage-metrics.md']:
         warn(issues, f'{_admin_page}: no "Generated: YYYY-MM-DD" line found')
 
 
+# ── Check 29: Orphaned assets ────────────────────────────────────────────────
+issues = check(29, 'Orphaned assets (unreferenced files in docs/assets/)')
+_referenced_assets = set()
+for _path in all_md():
+    _text = open(_path).read()
+    for _m in re.finditer(r'(?:!\[.*?\]\(|src=")([^)"]+)', _text):
+        _ref = _m.group(1)
+        if _ref.startswith('http'):
+            continue
+        _abs = os.path.normpath(os.path.join(os.path.dirname(_path), _ref))
+        _referenced_assets.add(_abs)
+if os.path.isdir(ASSETS):
+    for _fname in sorted(os.listdir(ASSETS)):
+        _fpath = os.path.join(ASSETS, _fname)
+        if not os.path.isfile(_fpath):
+            continue
+        if _fpath not in _referenced_assets:
+            warn(issues, f'assets/{_fname}: not referenced by any page')
+
+
+# ── Check 30: External link rot ───────────────────────────────────────────────
+issues = check(30, 'External link rot')
+_ext_urls = set()
+for _path in all_md():
+    for _m in re.finditer(r'https?://[^\s\)\]"\'<>]+', open(_path).read()):
+        _ext_urls.add(_m.group(0).rstrip('.,;)>'))
+results[30]['url_count'] = len(_ext_urls)
+if CHECK_LINKS:
+    import urllib.request as _ur
+    for _url in sorted(_ext_urls):
+        try:
+            _req = _ur.Request(_url, headers={'User-Agent': 'Mozilla/5.0'})
+            _resp = _ur.urlopen(_req, timeout=8)
+            if _resp.status >= 400:
+                warn(issues, f'HTTP {_resp.status}: {_url}')
+        except Exception as _e:
+            warn(issues, f'Error ({_e}): {_url}')
+
+
+# ── Check 31: SVG per-section coverage (procedures / health-checks) ───────────
+issues = check(31, 'SVG per-section coverage (procedures/health-checks)')
+_proc_pages_with_svgs = 0
+for _path in all_md():
+    if os.path.basename(_path) not in ('procedures.md', 'health-checks.md'):
+        continue
+    _lines = open(_path).readlines()
+    for _i, _line in enumerate(_lines):
+        if _line.startswith('### ') and _i + 1 < len(_lines):
+            _nxt = [l.strip() for l in _lines[_i+1:_i+4] if l.strip()]
+            if _nxt and re.match(r'!\[.*\]\(.*\.svg\)', _nxt[0]):
+                _proc_pages_with_svgs += 1
+                break
+if _proc_pages_with_svgs == 0:
+    warn(issues, 'PENDING — SVG expansion (Step A1) not started; re-run after first batch')
+else:
+    for _path in all_md():
+        if os.path.basename(_path) not in ('procedures.md', 'health-checks.md'):
+            continue
+        _lines = open(_path).readlines()
+        _rel = os.path.relpath(_path, DOCS)
+        for _i, _line in enumerate(_lines):
+            if not _line.startswith('### '):
+                continue
+            _nxt = [l.strip() for l in _lines[_i+1:_i+4] if l.strip()]
+            _has_svg = bool(_nxt and re.match(r'!\[.*\]\(.*\.svg\)', _nxt[0]))
+            if not _has_svg:
+                warn(issues, f'{_rel}: "### {_line[4:].strip()}" missing SVG ref')
+
+
+# ── Check 32: Tag coverage ────────────────────────────────────────────────────
+issues = check(32, 'Tag coverage (product + domain tags)')
+_mkdocs_text = open(os.path.join(REPO, 'mkdocs.yml')).read() if os.path.exists(os.path.join(REPO, 'mkdocs.yml')) else ''
+_tags_enabled = bool(re.search(r'^\s*-\s*tags\b', _mkdocs_text, re.MULTILINE))
+if not _tags_enabled:
+    warn(issues, 'PENDING — tags plugin not enabled in mkdocs.yml (Spectacular Track 1)')
+else:
+    _SKIP_TAGS = {'tags.md', 'site-map.md', 'index.md', 'usage-metrics.md', 'site-quality.md'}
+    for _path in all_md():
+        _rel = os.path.relpath(_path, DOCS)
+        if _rel in _SKIP_TAGS:
+            continue
+        _text = open(_path).read()
+        if 'kb-grid' in _text or 'kb-card' in _text:
+            continue
+        _fm = re.match(r'^---\n(.*?)\n---', _text, re.DOTALL)
+        if not _fm or 'tags:' not in _fm.group(1):
+            warn(issues, f'{_rel}: no tags in front matter')
+
+
+# ── Check 33: "Run This Routine" on health-check pages ───────────────────────
+issues = check(33, '"Run This Routine" block on health-check pages')
+_missing_routine = []
+for _path in all_md():
+    if os.path.basename(_path) != 'health-checks.md':
+        continue
+    _c = open(_path).read()
+    if 'kb-grid' in _c or len(_c.splitlines()) < 20:
+        continue
+    if 'Run This Routine' not in _c:
+        _missing_routine.append(os.path.relpath(_path, DOCS))
+if _missing_routine:
+    for _p in (_missing_routine if FULL else _missing_routine[:12]):
+        warn(issues, f'Missing "Run This Routine": {_p}')
+    if not FULL and len(_missing_routine) > 12:
+        warn(issues, f'... and {len(_missing_routine)-12} more (run --full)')
+
+
+# ── Check 34: Heading hierarchy ───────────────────────────────────────────────
+issues = check(34, 'Heading hierarchy (H3 without H2, H4 without H3)')
+for _path in all_md():
+    _lines = open(_path).readlines()
+    _in_fence = False
+    _seen_h2 = _seen_h3 = False
+    _violations = []
+    for _i, _line in enumerate(_lines, 1):
+        _s = _line.strip()
+        if _s.startswith('```') or _s.startswith('~~~'):
+            _in_fence = not _in_fence
+        if _in_fence:
+            continue
+        if _line.startswith('## '):
+            _seen_h2 = True; _seen_h3 = False
+        elif _line.startswith('### '):
+            if not _seen_h2:
+                _violations.append(f'  line {_i}: H3 "{_line[4:].strip()}" before any H2')
+            _seen_h3 = True
+        elif _line.startswith('#### '):
+            if not _seen_h3:
+                _violations.append(f'  line {_i}: H4 "{_line[5:].strip()}" before any H3')
+    if _violations:
+        _rel = os.path.relpath(_path, DOCS)
+        warn(issues, f'{_rel}:')
+        for _v in _violations[:3]:
+            warn(issues, _v)
+
+
+# ── Check 35: "See also" link validity ───────────────────────────────────────
+issues = check(35, '"See also" internal link validity')
+for _path in all_md():
+    _c = open(_path).read()
+    _sm = re.search(r'## See also\n(.*?)(?=\n##|\Z)', _c, re.DOTALL)
+    if not _sm:
+        continue
+    _page_dir = os.path.dirname(_path)
+    for _lm in re.finditer(r'\[.*?\]\(([^)]+)\)', _sm.group(1)):
+        _href = _lm.group(1).split('#')[0]
+        if not _href or _href.startswith('http') or _href.startswith('mailto'):
+            continue
+        _target = os.path.normpath(os.path.join(_page_dir, _href))
+        _exists = (os.path.exists(_target)
+                   or os.path.exists(_target + '.md')
+                   or os.path.exists(os.path.join(_target, 'index.md')))
+        if not _exists:
+            _rel = os.path.relpath(_path, DOCS)
+            warn(issues, f'{_rel}: broken "See also" link "{_href}"')
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')
@@ -604,6 +763,8 @@ for n in sorted(results):
     extra = ''
     if n == 16 and 'svg_count' in r:
         extra = f' — {r["svg_count"]} SVGs checked'
+    if n == 30 and 'url_count' in r and not CHECK_LINKS:
+        extra = f' — {r["url_count"]} URLs found (run --check-links to validate)'
     status = f'✅ Clean{extra}' if not issues else f'❌ {len(issues)} issue(s)'
     print(f'Check {n:2d}: {r["name"]}')
     print(f'         {status}')
