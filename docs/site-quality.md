@@ -53,13 +53,13 @@ Generated: 2026-06-18
 
 | Item | Count |
 |---|---:|
-| Total markdown pages | 2,628 |
+| Total markdown pages | 2,629 |
 | Sections | 11 |
-| Pages with kb-summary | 2,348 |
-| Pages with full-width ASCII diagram | 2,617 |
+| Pages with kb-summary | 2,349 |
+| Pages with full-width ASCII diagram | 2,618 |
 | Pages with SVG diagrams | 118 |
 | Pages with Mermaid diagrams | 680 |
-| Pages with tags | 2,601 |
+| Pages with tags | 2,602 |
 | Audit score | 36 / 37 |
 | MkDocs strict build warnings | 0 |
 

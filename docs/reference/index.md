@@ -52,4 +52,8 @@ Flowcharts for vSAN policy, NSX topology, DR tool selection, and Aria product se
 <strong>Glossary</strong><br>
 155+ terms covering VMware products, networking, storage, security, Kubernetes, and observability.
 </a>
+<a class="kb-card" href="versions/">
+<strong>Version Matrix</strong><br>
+Minimum product versions for 65+ features across vSphere, vSAN, NSX, VCF, Aria Suite, and Tanzu.
+</a>
 </div>
