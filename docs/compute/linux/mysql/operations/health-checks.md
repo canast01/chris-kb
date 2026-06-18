@@ -20,6 +20,35 @@ MySQL/MariaDB health checks: `SHOW SLAVE STATUS`, `SHOW PROCESSLIST`, `SHOW ENGI
 
 ---
 
+## Run This Routine
+
+Run every morning to confirm the instance is healthy before business hours.
+
+```bash
+# 1. Service up
+systemctl status mysqld
+
+# 2. Connectivity
+mysql -u root -e "SELECT 1 AS alive;"
+
+# 3. Active connections vs max
+mysql -u root -e "SHOW STATUS LIKE 'Threads_connected'; SHOW VARIABLES LIKE 'max_connections';"
+
+# 4. Blocking queries (anything waiting > 5 min)
+mysql -u root -e "SELECT id, user, host, db, command, time, state, info FROM information_schema.processlist WHERE command != 'Sleep' AND time > 300 ORDER BY time DESC;"
+
+# 5. Replication lag (replica only)
+mysql -u root -e "SHOW SLAVE STATUS\G" 2>/dev/null | grep -E "Slave_(IO|SQL)_Running|Seconds_Behind_Master"
+
+# 6. Binary log / disk space
+df -h /var/lib/mysql
+mysql -u root -e "SHOW BINARY LOGS;" 2>/dev/null | tail -5
+```
+
+**Pass criteria:** service active, connectivity returns `1`, no threads blocked >300s, replication lag <30s, disk <80%.
+
+---
+
 ## Database — Daily Health Check
 
 ```bash
@@ -109,7 +138,7 @@ nc -zv <db-host> 3306    # MySQL
 nc -zv <db-host> 1433    # SQL Server
 ```
 
-Database — Capacity Monitoring
+## Database — Capacity Monitoring
 
 ```sql
 -- Database sizes
@@ -131,7 +160,7 @@ FROM pg_indexes
 ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
 ```text
-┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
+┌─────────────────────────────────── ## Database — Capacity Monitoring ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Track database growth, tablespace usage, log space, and forecast expansion needs       │   │
@@ -205,7 +234,7 @@ USE mydb;
 DBCC SHRINKFILE (mydb_log, 1024);  -- 1024 MB target
 ```
 
-Database — Replication Check
+## Database — Replication Check
 
 ```sql
 -- On PRIMARY: show connected replicas and lag
@@ -225,7 +254,7 @@ SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), res
 FROM pg_replication_slots;
 ```
 ```text
-┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
+┌──────────────────────────────────── ## Database — Replication Check ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Verify replication lag, sync state, and replica health for all HA database pairs       │   │

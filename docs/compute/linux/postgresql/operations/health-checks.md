@@ -20,6 +20,35 @@ PostgreSQL health checks: `pg_stat_replication`, `pg_stat_activity`, `pg_stat_bg
 
 ---
 
+## Run This Routine
+
+Run every morning to confirm the instance is healthy before business hours.
+
+```bash
+# 1. Service up
+systemctl status postgresql
+
+# 2. Connectivity
+psql -U postgres -c "SELECT 1 AS alive;"
+
+# 3. Active connections vs max
+psql -U postgres -c "SELECT count(*) AS active, (SELECT setting::int FROM pg_settings WHERE name='max_connections') AS max FROM pg_stat_activity WHERE state != 'idle';"
+
+# 4. Blocking queries (anything waiting > 5 min)
+psql -U postgres -c "SELECT pid, usename, state, wait_event_type, wait_event, now() - pg_stat_activity.query_start AS duration, query FROM pg_stat_activity WHERE state != 'idle' AND (now() - pg_stat_activity.query_start) > interval '5 minutes';"
+
+# 5. Replication lag (replica only)
+psql -U postgres -c "SELECT now() - pg_last_xact_replay_timestamp() AS replay_lag;" 2>/dev/null
+
+# 6. WAL / disk space
+df -h /var/lib/postgresql
+psql -U postgres -c "SELECT slot_name, active, pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes FROM pg_replication_slots;" 2>/dev/null
+```
+
+**Pass criteria:** service active, connectivity returns `1`, no sessions blocked >5 min, replication lag <30s, disk <80%, no inactive replication slots with large lag.
+
+---
+
 ## Database — Daily Health Check
 
 ```bash
@@ -109,7 +138,7 @@ nc -zv <db-host> 3306    # MySQL
 nc -zv <db-host> 1433    # SQL Server
 ```
 
-Database — Capacity Monitoring
+## Database — Capacity Monitoring
 
 ```sql
 -- Database sizes
@@ -131,7 +160,7 @@ FROM pg_indexes
 ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
 ```text
-┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
+┌─────────────────────────────────── ## Database — Capacity Monitoring ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Track database growth, tablespace usage, log space, and forecast expansion needs       │   │
@@ -205,7 +234,7 @@ USE mydb;
 DBCC SHRINKFILE (mydb_log, 1024);  -- 1024 MB target
 ```
 
-Database — Replication Check
+## Database — Replication Check
 
 ```sql
 -- On PRIMARY: show connected replicas and lag
@@ -225,7 +254,7 @@ SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), res
 FROM pg_replication_slots;
 ```
 ```text
-┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
+┌──────────────────────────────────── ## Database — Replication Check ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Verify replication lag, sync state, and replica health for all HA database pairs       │   │

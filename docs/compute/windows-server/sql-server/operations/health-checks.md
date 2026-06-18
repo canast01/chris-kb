@@ -20,6 +20,34 @@ SQL Server health checks: `sys.dm_exec_query_stats`, AG replica sync state, job 
 
 ---
 
+## Run This Routine
+
+Run every morning to confirm the instance is healthy before business hours.
+
+```powershell
+# 1. Service up (Windows)
+Get-Service -Name MSSQLSERVER | Select-Object Status, DisplayName
+
+# 2. Connectivity
+sqlcmd -S localhost -Q "SELECT 1 AS alive"
+
+# 3. Active sessions and blocking chains
+sqlcmd -S localhost -Q "SELECT session_id, blocking_session_id, wait_type, wait_time/1000 AS wait_sec, DB_NAME(database_id) AS db FROM sys.dm_exec_requests WHERE blocking_session_id != 0 OR wait_time > 300000 ORDER BY wait_time DESC;"
+
+# 4. AG replica health (if Always On configured)
+sqlcmd -S localhost -Q "SELECT ag.name, ar.replica_server_name, rs.synchronization_health_desc FROM sys.dm_hadr_availability_replica_states rs JOIN sys.availability_replicas ar ON rs.replica_id = ar.replica_id JOIN sys.availability_groups ag ON ar.group_id = ag.group_id;"
+
+# 5. SQL Agent jobs — last 24h failures
+sqlcmd -S localhost -Q "SELECT j.name, h.run_date, h.run_time, h.message FROM msdb.dbo.sysjobhistory h JOIN msdb.dbo.sysjobs j ON h.job_id = j.job_id WHERE h.run_status = 0 AND h.run_date >= CONVERT(int, CONVERT(varchar, GETDATE()-1, 112)) ORDER BY h.run_date DESC, h.run_time DESC;"
+
+# 6. Disk space (data/log volumes)
+Get-PSDrive -PSProvider FileSystem | Where-Object {$_.Used -gt 0} | Select-Object Name, @{N='Used(GB)';E={[math]::Round($_.Used/1GB,1)}}, @{N='Free(GB)';E={[math]::Round($_.Free/1GB,1)}}
+```
+
+**Pass criteria:** service Running, connectivity returns `1`, no sessions blocked >5 min, all AG replicas HEALTHY, no Agent job failures in 24h, volumes <80% full.
+
+---
+
 ## Database — Daily Health Check
 
 ```bash
@@ -109,7 +137,7 @@ nc -zv <db-host> 3306    # MySQL
 nc -zv <db-host> 1433    # SQL Server
 ```
 
-Database — Capacity Monitoring
+## Database — Capacity Monitoring
 
 ```sql
 -- Database sizes
@@ -131,7 +159,7 @@ FROM pg_indexes
 ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
 ```text
-┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
+┌─────────────────────────────────── ## Database — Capacity Monitoring ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Track database growth, tablespace usage, log space, and forecast expansion needs       │   │
@@ -205,7 +233,7 @@ USE mydb;
 DBCC SHRINKFILE (mydb_log, 1024);  -- 1024 MB target
 ```
 
-Database — Replication Check
+## Database — Replication Check
 
 ```sql
 -- On PRIMARY: show connected replicas and lag
@@ -225,7 +253,7 @@ SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), res
 FROM pg_replication_slots;
 ```
 ```text
-┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
+┌──────────────────────────────────── ## Database — Replication Check ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Verify replication lag, sync state, and replica health for all HA database pairs       │   │

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 35 checks.
+KB site audit — 37 checks.
 
 Usage:
     python3 scripts/site_audit.py               # run all checks, print summary
@@ -749,6 +749,75 @@ for _path in all_md():
         if not _exists:
             _rel = os.path.relpath(_path, DOCS)
             warn(issues, f'{_rel}: broken "See also" link "{_href}"')
+
+
+# ── Check 36: Anchor fragment validity ───────────────────────────────────────
+def _slug(text):
+    text = text.lower().strip()
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[\s_]+', '-', text)
+    return text.strip('-')
+
+def _page_anchors(path):
+    anchors = set()
+    in_fence = False
+    for line in open(path, errors='replace'):
+        s = line.strip()
+        if s.startswith('```') or s.startswith('~~~'):
+            in_fence = not in_fence
+        if in_fence:
+            continue
+        m = re.match(r'^(#{1,6})\s+(.+)', line)
+        if m:
+            anchors.add(_slug(m.group(2)))
+    return anchors
+
+issues = check(36, 'Anchor fragment validity (internal #links)')
+_anchor_cache = {}
+for _path in all_md():
+    _c = open(_path).read()
+    _page_dir = os.path.dirname(_path)
+    for _lm in re.finditer(r'\[.*?\]\(([^)#"]+)#([^)"]+)\)', _c):
+        _file_ref, _fragment = _lm.group(1), _lm.group(2)
+        if _file_ref.startswith('http'):
+            continue
+        if not _file_ref:
+            _target_path = _path
+        else:
+            _raw = os.path.normpath(os.path.join(_page_dir, _file_ref))
+            if os.path.isdir(_raw):
+                _target_path = os.path.join(_raw, 'index.md')
+            elif os.path.exists(_raw + '.md'):
+                _target_path = _raw + '.md'
+            elif os.path.exists(_raw):
+                _target_path = _raw
+            else:
+                continue  # broken file ref — Check 35 already catches this
+        if not os.path.exists(_target_path):
+            continue
+        if _target_path not in _anchor_cache:
+            _anchor_cache[_target_path] = _page_anchors(_target_path)
+        if _slug(_fragment) not in _anchor_cache[_target_path]:
+            _rel = os.path.relpath(_path, DOCS)
+            warn(issues, f'{_rel}: broken anchor "#{_fragment}" in link to "{_file_ref or "self"}"')
+
+
+# ── Check 37: Missing "## Verify" on procedures pages ────────────────────────
+issues = check(37, 'Missing "## Verify" section on procedures pages')
+_missing_verify = []
+for _path in all_md():
+    if os.path.basename(_path) != 'procedures.md':
+        continue
+    _c = open(_path).read()
+    if 'kb-grid' in _c or len(_c.splitlines()) < 20:
+        continue
+    if '## Verify' not in _c:
+        _missing_verify.append(os.path.relpath(_path, DOCS))
+if _missing_verify:
+    for _p in (_missing_verify if FULL else _missing_verify[:12]):
+        warn(issues, f'Missing "## Verify": {_p}')
+    if not FULL and len(_missing_verify) > 12:
+        warn(issues, f'... and {len(_missing_verify)-12} more (run --full)')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────
