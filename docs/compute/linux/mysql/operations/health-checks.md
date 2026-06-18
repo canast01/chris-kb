@@ -160,7 +160,7 @@ FROM pg_indexes
 ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
 ```text
-┌─────────────────────────────────── ## Database — Capacity Monitoring ─────────────────────────────────┐
+┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Track database growth, tablespace usage, log space, and forecast expansion needs       │   │
@@ -254,7 +254,7 @@ SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), res
 FROM pg_replication_slots;
 ```
 ```text
-┌──────────────────────────────────── ## Database — Replication Check ──────────────────────────────────┐
+┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Verify replication lag, sync state, and replica health for all HA database pairs       │   │
