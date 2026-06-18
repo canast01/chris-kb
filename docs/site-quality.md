@@ -9,7 +9,7 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       Quality gates and content standards for the chrisanastasiadis.com knowledge base        │   │
-│   │                Every page reachable from nav · no raw HTML · fenced code only                 │   │
+│   │              37-check automated audit · pre-commit hooks · GitHub Actions CI                  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
@@ -17,10 +17,10 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │     Structure Rules         │  │      Content Rules           │  │       CI / Tooling          │  │
 │   │     ─────────────           │  │      ─────────────           │  │       ─────────────         │  │
-│   │  Every page in nav          │  │  ≥ 3 ## sections on CLI pg  │  │  validate-site.sh before    │   │
-│   │  index.md → card grid only  │  │  ≥ 1 code block on CLI pg   │  │  commit (strict build)      │   │
-│   │  No raw kb-grid in content  │  │  Mermaid via fenced block    │  │  audit-site.sh for counts   │  │
-│   │  Products under vendor nav  │  │  No raw HTML mermaid divs    │  │  preview-site.sh to check   │  │
+│   │  Every page in nav          │  │  ≥ 3 ## sections on CLI pg  │  │  site_audit.py (37 checks)  │   │
+│   │  index.md → card grid only  │  │  ≥ 1 code block on CLI pg   │  │  pre-commit hooks (5 rules) │   │
+│   │  No raw kb-grid in content  │  │  Mermaid via fenced block    │  │  GitHub Actions CI pipeline │  │
+│   │  Products under vendor nav  │  │  Tags on every content page  │  │  MkDocs strict build check  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
@@ -42,7 +42,7 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 │    kb-grid         = Card grid container; appears on index.md pages only, never content pages         │
 │    CLI reference   = Page with commands, flags, and examples; must have ≥ 3 sections + code block     │
 │    Mermaid         = Diagram syntax rendered by mkdocs-material; must use fenced ```mermaid block     │
-│    validate-site.sh= Runs mkdocs build --strict; fails on any warning; run before every commit        │
+│    site_audit.py   = 37-check automated audit; run before committing or after bulk changes            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -56,8 +56,11 @@ Generated: 2026-06-17
 | Total markdown pages | 2,599 |
 | Sections | 11 |
 | Pages with kb-summary | 2,319 |
-| Pages with full-width ASCII diagram | 2,593 |
+| Pages with full-width ASCII diagram | 2,591 |
+| Pages with SVG diagrams | 112 |
 | Pages with Mermaid diagrams | 676 |
+| Pages with tags | 2,572 |
+| Audit score | 36 / 37 |
 | MkDocs strict build warnings | 0 |
 
 ## Pages by section
@@ -85,11 +88,14 @@ Generated: 2026-06-17
 - No raw HTML card blocks (`kb-grid`, `kb-card`) in content pages — card grids belong on index pages only.
 - All CLI reference pages must have at least 3 `##` sections and at least one fenced code block.
 - Mermaid flowcharts are added via fenced ` ```mermaid ` blocks — do not use raw HTML `<div class="mermaid">`.
-- Run backup before bulk changes.
-- Run strict validation before committing.
+- Every content page must have at least one product tag and one domain tag.
+- Run `python3 scripts/site_audit.py` before bulk changes and after.
 
 ## Useful commands
 
-./validate-site.sh
-./audit-site.sh
-./preview-site.sh
+```bash
+python3 scripts/site_audit.py          # full 37-check audit
+python3 scripts/site_audit.py --full   # include all issue details
+mkdocs build --strict                  # strict build check
+mkdocs serve                           # local preview
+```

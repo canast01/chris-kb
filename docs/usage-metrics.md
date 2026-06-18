@@ -9,7 +9,7 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Knowledge base statistics: page counts, section distribution, and content type coverage  │   │
-│   │                   Run ./audit-site.sh to regenerate; reflects last deploy                     │   │
+│   │              Run python3 scripts/site_audit.py to regenerate; reflects last audit             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
@@ -17,8 +17,8 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
 │   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,599   │  │  Storage:          709       │  │  ASCII diagrams:     2,593  │  │
-│   │  Sections:             11   │  │  Virtualization:   685       │  │  Pages with tables:  1,985  │  │
+│   │  Total pages:       2,599   │  │  Storage:          709       │  │  ASCII diagrams:     2,591  │  │
+│   │  Sections:             11   │  │  Virtualization:   685       │  │  SVG diagrams:         112  │  │
 │   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     676  │  │
 │   │  Updated 2026-06-17         │  │                              │  │  kb-summary divs:    2,319  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
@@ -33,16 +33,16 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │   │   Compute          │   175   │  Automation         │   126   │                   │            │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Health: ./validate-site.sh · ./audit-site.sh · ./preview-site.sh                                   │
+│    Audit: python3 scripts/site_audit.py (37 checks) · Score: 36/37 clean                              │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
 │    Section         = Top-level KB area (Storage, Virtualization, Cloud, etc.)                         │
 │    CLI reference   = Page with CLI commands, flags, and usage examples                                │
 │    Mermaid         = Flowchart or sequence diagram embedded in a fenced mermaid block                 │
-│    ASCII diagram   = Full-width box-drawing architecture diagram (103+ chars wide)                    │
-│    audit-site.sh   = Script that counts pages, checks structure, and flags quality issues             │
-│    validate-site.sh= Strict MkDocs build check; run before every commit                               │
+│    ASCII diagram   = Full-width box-drawing architecture diagram (105 chars wide)                     │
+│    SVG diagram     = Vector diagram in docs/assets/; injected via markdown image reference             │
+│    site_audit.py   = 37-check automated audit; covers structure, content, links, and quality          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -55,10 +55,12 @@ Generated: 2026-06-17
 |---|---:|
 | Total markdown pages | 2,599 |
 | Sections | 11 |
-| Pages with full-width ASCII diagrams | 2,593 |
-| Pages with kb-summary | 2,319 |
+| Pages with full-width ASCII diagrams | 2,591 |
+| Pages with SVG diagrams | 112 |
 | Pages with Mermaid diagrams | 676 |
-| Pages with formatted tables | 1,985 |
+| Pages with kb-summary | 2,319 |
+| Pages with tags | 2,572 |
+| Audit score | 36 / 37 |
 
 ## Section page counts
 
@@ -78,8 +80,9 @@ Generated: 2026-06-17
 
 ## Health checks
 
-Run:
-
-./validate-site.sh
-./audit-site.sh
-./preview-site.sh
+```bash
+python3 scripts/site_audit.py          # full 37-check audit
+python3 scripts/site_audit.py --full   # include all issue details
+mkdocs build --strict                  # strict build check
+mkdocs serve                           # local preview
+```
