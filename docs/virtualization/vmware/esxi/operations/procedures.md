@@ -14,53 +14,7 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```text
-┌───────────────────────────────────── ESXi — Standard Procedures ──────────────────────────────────────┐
-│                                                                                                       │
-│  Maintenance mode, change control, and host decommission standard procedures.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Maintenance Mode Procedure          │  │              Change Management              │   │
-│   │          Drain VMs via vMotion/DRS           │  │          Raise change request (CR)          │   │
-│   │        Enter maintenance: vCenter UI         │  │          Pre-change health snapshot         │   │
-│   │        esxcli system maintenanceMode         │  │          Maintenance window agreed          │   │
-│   │         Verify no VMs remain on host         │  │            Post-change validation           │   │
-│   │        Perform task, exit maintenance        │  │            Close CR with evidence           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Maintenance mode drains VMs; change control wraps every host-level change.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Host Decommission               │  │             Emergency Procedures            │   │
-│   │           Migrate all VMs off host           │  │           Force maintenance if HA           │   │
-│   │         Remove from vSAN disk group          │  │          PSOD: capture vmkernel log         │   │
-│   │           Disconnect from vCenter            │  │          Isolate host from network          │   │
-│   │             Remove from cluster              │  │            Power off affected VMs           │   │
-│   │           Deregister from vCenter            │  │            Escalate to VMware GSS           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 host, iDRAC/IPMI for OOB control, management network, vCenter appliance                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Maintenance mode = host state; vCenter stops VM placement; drains existing                           │
-│  vMotion     = live VM migration; used to drain host before maintenance                               │
-│  PSOD        = Purple Screen Of Death; ESXi kernel panic / crash dump                                 │
-│  CR          = Change Request; ITSM ticket authorising planned changes                                │
-│  DRS         = Distributed Resource Scheduler; auto-migrates VMs                                      │
-│  HA          = High Availability; restarts VMs on remaining hosts                                     │
-│  Decommission= formal process to remove host from inventory and cluster                               │
-│  iDRAC       = Dell OOB management; power control when host unresponsive                              │
-│  vmkernel log= /var/log/vmkernel.log; primary diagnostic log on ESXi                                  │
-│  vSAN evac   = removes host disks from vSAN before decommission                                       │
-│  Force maint = maintenance without VM evacuation; HA failure scenario only                            │
-│  Health snap = pre/post change comparison of alarms/metrics/log tail                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -741,6 +695,8 @@ Use when permanently removing a host from the environment — for hardware retir
 
 ### Step 1 — Migrate All VMs Off the Host
 
+![Step 1 — Migrate All VMs Off the Host](../../../../assets/esxi-proc-step-1-migrate-all-vms-off-the-host.svg)
+
 ```powershell
 # PowerCLI — vMotion all powered-on VMs to other hosts in the cluster
 $host = Get-VMHost "esxi-host-04.example.local"
@@ -757,6 +713,8 @@ For powered-off VMs: move their home datastore registration to another host via 
 
 ### Step 2 — Evacuate vSAN Data (If vSAN Cluster)
 
+![Step 2 — Evacuate vSAN Data (If vSAN Cluster)](../../../../assets/esxi-proc-step-2-evacuate-vsan-data-if-vsan-cluster.svg)
+
 Put the host in maintenance mode with **Full data migration**:
 
 ```powershell
@@ -772,6 +730,8 @@ esxcli vsan debug resync list
 
 ### Step 3 — Enter Maintenance Mode (Non-vSAN)
 
+![Step 3 — Enter Maintenance Mode (Non-vSAN)](../../../../assets/esxi-proc-step-3-enter-maintenance-mode-non-vsan.svg)
+
 For non-vSAN clusters, enter standard maintenance mode:
 
 ```powershell
@@ -779,6 +739,8 @@ Set-VMHost -VMHost (Get-VMHost "esxi-host-04.example.local") -State Maintenance 
 ```
 
 ### Step 4 — Remove the Host from vCenter
+
+![Step 4 — Remove the Host from vCenter](../../../../assets/esxi-proc-step-4-remove-the-host-from-vcenter.svg)
 
 In vCenter: right-click the host → **Remove from Inventory**
 
@@ -792,11 +754,15 @@ Remove-VMHost -VMHost $host -Confirm:$false
 
 ### Step 5 — Clean Up DNS and IPAM
 
+![Step 5 — Clean Up DNS and IPAM](../../../../assets/esxi-proc-step-5-clean-up-dns-and-ipam.svg)
+
 - Remove the host's A and PTR DNS records
 - Release the management IP, vMotion IP, and storage IPs from IPAM
 - If the host is in the SAN zone configuration (Brocade/Cisco), remove its WWN from the zone
 
 ### Step 6 — Wipe the Host (Before Physical Repurposing)
+
+![Step 6 — Wipe the Host (Before Physical Repurposing)](../../../../assets/esxi-proc-step-6-wipe-the-host-before-physical-repurposing.svg)
 
 If the hardware is being repurposed or returned:
 
@@ -817,6 +783,8 @@ Used when connecting ESXi hosts to iSCSI storage arrays (NetApp, Pure FlashArray
 
 ### Step 1 — Add a VMkernel Adapter for iSCSI
 
+![Step 1 — Add a VMkernel Adapter for iSCSI](../../../../assets/esxi-proc-step-1-add-a-vmkernel-adapter-for-iscsi.svg)
+
 iSCSI traffic should run on a dedicated VMkernel adapter (not the management vmk0):
 
 1. vCenter → host → **Configure → Networking → VMkernel Adapters → Add**
@@ -828,10 +796,14 @@ For multipath iSCSI, create two vmkernel adapters on different uplinks (vmk2 on 
 
 ### Step 2 — Enable the Software iSCSI Adapter
 
+![Step 2 — Enable the Software iSCSI Adapter](../../../../assets/esxi-proc-step-2-enable-the-software-iscsi-adapter.svg)
+
 1. vCenter → host → **Configure → Storage → Storage Adapters → Add Software Adapter → Add iSCSI Adapter**
 2. Note the IQN of the new software adapter (format: `iqn.1998-01.com.vmware:<hostname>-<random>`)
 
 ### Step 3 — Bind vmkernel Adapters to the iSCSI Adapter
+
+![Step 3 — Bind vmkernel Adapters to the iSCSI Adapter](../../../../assets/esxi-proc-step-3-bind-vmkernel-adapters-to-the-iscsi-adapter.svg)
 
 Network binding ensures iSCSI traffic from each adapter uses the correct physical uplink:
 
@@ -839,6 +811,8 @@ Network binding ensures iSCSI traffic from each adapter uses the correct physica
 2. Add both iSCSI vmkernel adapters (vmk2, vmk3) to the binding
 
 ### Step 4 — Add Target Discovery
+
+![Step 4 — Add Target Discovery](../../../../assets/esxi-proc-step-4-add-target-discovery.svg)
 
 **Dynamic Discovery (Send Targets — recommended):**
 
@@ -853,9 +827,13 @@ Network binding ensures iSCSI traffic from each adapter uses the correct physica
 
 ### Step 5 — Register the Host IQN on the Array
 
+![Step 5 — Register the Host IQN on the Array](../../../../assets/esxi-proc-step-5-register-the-host-iqn-on-the-array.svg)
+
 On the storage array, create an initiator group / host record using the ESXi host's IQN noted in Step 2, and map the target LUNs to that initiator group.
 
 ### Step 6 — Rescan and Verify
+
+![Step 6 — Rescan and Verify](../../../../assets/esxi-proc-step-6-rescan-and-verify.svg)
 
 ```bash
 # Rescan all storage adapters
@@ -876,16 +854,22 @@ Host Profiles enforce a standardised ESXi configuration baseline across all host
 
 ### Step 1 — Create a Host Profile from a Reference Host
 
+![Step 1 — Create a Host Profile from a Reference Host](../../../../assets/esxi-proc-step-1-create-a-host-profile-from-a-reference-host.svg)
+
 1. vCenter → **Home → Policies and Profiles → Host Profiles → Create Profile**
 2. Select **Create profile from existing host** → choose the reference host (the most recently configured, known-good host in the cluster)
 3. Name the profile (e.g., `prod-esxi-baseline-2026`) and save
 
 ### Step 2 — Attach the Profile to a Cluster
 
+![Step 2 — Attach the Profile to a Cluster](../../../../assets/esxi-proc-step-2-attach-the-profile-to-a-cluster.svg)
+
 1. Right-click the target cluster → **Host Profiles → Attach/Detach Host Profile**
 2. Select the profile → **Attach** → all hosts in the cluster are now associated with this profile
 
 ### Step 3 — Check Compliance
+
+![Step 3 — Check Compliance](../../../../assets/esxi-proc-step-3-check-compliance.svg)
 
 1. Select the cluster → **Configure → Host Profiles → Check Compliance**
 2. vCenter compares each host's running configuration against the profile
@@ -900,6 +884,8 @@ Test-VMHostProfileCompliance -VMHost (Get-VMHost -Location $cluster) -VMHostProf
 ```
 
 ### Step 4 — Remediate Non-Compliant Hosts
+
+![Step 4 — Remediate Non-Compliant Hosts](../../../../assets/esxi-proc-step-4-remediate-non-compliant-hosts.svg)
 
 1. Select non-compliant hosts in the compliance report → **Remediate**
 2. Hosts that require a reboot (e.g., NTP or network changes): schedule during a maintenance window

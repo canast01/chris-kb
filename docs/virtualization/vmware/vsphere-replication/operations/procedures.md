@@ -12,28 +12,7 @@ Operational procedures for vSphere Replication — configuring VM replication, m
 *Applies to: vSphere Replication 8.x*
 </div>
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│              vSphere Replication — Operational Flow                                                   │
-│                                                                                                       │
-│  Configure Replication          Monitor + Manage                                                      │
-│  ┌────────────────────────┐     ┌────────────────────────┐                                            │
-│  │ vCenter → [VM] →       │     │ Pause / Resume         │                                            │
-│  │  Configure Replication │     │ Sync Now (immediate)   │                                            │
-│  │  RPO: 5min–24hrs       │     │ Change RPO             │                                            │
-│  │  Target DS + VRS       │     │ Change target DS       │                                            │
-│  │  Quiesce / encrypt     │     └────────────────────────┘                                            │
-│  └────────────────────────┘                                                                           │
-│                                                                                                       │
-│  Recover VM (standalone)        Add to SRM Protection Group                                           │
-│  ┌────────────────────────┐     ┌────────────────────────┐                                            │
-│  │ Target Site vCenter    │     │ 1. Configure VR on VM  │                                            │
-│  │ → Replications →       │     │ 2. Wait for initial    │                                            │
-│  │   Recover              │     │    sync (status: OK)   │                                            │
-│  │   (Test or actual)     │     │ 3. SRM → PG → Add VMs  │                                            │
-│  └────────────────────────┘     └────────────────────────┘                                            │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -421,15 +400,21 @@ The vSphere Replication Appliance (VRA) is upgraded by deploying a new OVA and i
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/vsphere-replication-proc-prerequisites.svg)
+
 - Download the new VRA OVA from the Broadcom portal
 - Verify the new VRA version is compatible with both site vCenter versions
 - Confirm the VRA's current configuration: note the VRA IP, FQDN, and the vCenter it is registered with
 
 ### Step 1 — Take a Snapshot of the Existing VRA
 
+![Step 1 — Take a Snapshot of the Existing VRA](../../../../assets/vsphere-replication-proc-step-1-take-a-snapshot-of-the-existing-vra.svg)
+
 In vCenter: right-click the VRA VM → **Snapshot → Take Snapshot** (label: `pre-upgrade-<date>`). This is a rollback point only — it is not part of the upgrade itself.
 
 ### Step 2 — Deploy the New VRA OVA
+
+![Step 2 — Deploy the New VRA OVA](../../../../assets/vsphere-replication-proc-step-2-deploy-the-new-vra-ova.svg)
 
 1. vCenter → right-click the target cluster → **Deploy OVF Template**
 2. Select the downloaded VRA OVA and complete the wizard:
@@ -439,12 +424,16 @@ In vCenter: right-click the VRA VM → **Snapshot → Take Snapshot** (label: `p
 
 ### Step 3 — Power Off the Old VRA and Power On the New One
 
+![Step 3 — Power Off the Old VRA and Power On the New One](../../../../assets/vsphere-replication-proc-step-3-power-off-the-old-vra-and-power-on-the-new-o.svg)
+
 1. Confirm no active recovery operations are running (VR replication continues independently of the VRA appliance — this step only interrupts management operations)
 2. Shut down the old VRA: right-click → **Guest OS → Shut Down**
 3. Power on the new VRA: right-click → **Power On**
 4. Navigate to `https://<vra-ip>:5480` → complete first-run setup (enter the same vCenter registration credentials)
 
 ### Step 4 — Re-register with vCenter and SRM
+
+![Step 4 — Re-register with vCenter and SRM](../../../../assets/vsphere-replication-proc-step-4-re-register-with-vcenter-and-srm.svg)
 
 If the new VRA uses the same IP/FQDN, vCenter and SRM may re-discover it automatically. If not:
 
@@ -453,6 +442,8 @@ If the new VRA uses the same IP/FQDN, vCenter and SRM may re-discover it automat
 3. In SRM: **Site Recovery → Configuration → vSphere Replication** → confirm VRA registration shows the new version
 
 ### Step 5 — Validate Replications
+
+![Step 5 — Validate Replications](../../../../assets/vsphere-replication-proc-step-5-validate-replications.svg)
 
 ```bash
 # Check all replications resumed after the VRA upgrade
@@ -472,11 +463,15 @@ For VMs with large disks (>500 GB), the initial replication sync can take days o
 
 ### When to Use Seeds
 
+![When to Use Seeds](../../../../assets/vsphere-replication-proc-when-to-use-seeds.svg)
+
 Use seeds when:
 - Initial sync would take more than 24–48 hours over the available WAN bandwidth
 - You have a mechanism to physically ship or copy disk data to the recovery site (backup tape, shipping drives, or a local copy)
 
 ### Step 1 — Create a Disk Copy at the Recovery Site
+
+![Step 1 — Create a Disk Copy at the Recovery Site](../../../../assets/vsphere-replication-proc-step-1-create-a-disk-copy-at-the-recovery-site.svg)
 
 Option A — From a recent backup:
 Restore the VM's disks from a recent backup to a datastore at the recovery site. This is the seed.
@@ -488,6 +483,8 @@ The seed disks must be identical to the source VM's disks at the time replicatio
 
 ### Step 2 — Configure Replication with Seed Selection
 
+![Step 2 — Configure Replication with Seed Selection](../../../../assets/vsphere-replication-proc-step-2-configure-replication-with-seed-selection.svg)
+
 1. At the **source site vCenter**, right-click the VM → **vSphere Replication → Configure Replication**
 2. Set the target site and datastore as usual
 3. On the **Seeds** screen: enable **Use seed disks** → browse to the recovery site datastore where the seed VMDKs are located
@@ -497,6 +494,8 @@ The seed disks must be identical to the source VM's disks at the time replicatio
 vSphere Replication will calculate the delta between the source and the seed and transfer only the changed blocks, dramatically reducing initial sync time.
 
 ### Step 3 — Monitor Initial Sync
+
+![Step 3 — Monitor Initial Sync](../../../../assets/vsphere-replication-proc-step-3-monitor-initial-sync.svg)
 
 ```bash
 # Monitor sync progress in vCenter: Site Recovery → Replications → select VM

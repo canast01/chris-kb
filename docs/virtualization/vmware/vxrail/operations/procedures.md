@@ -12,40 +12,7 @@ Operational procedures for VxRail cluster administration. Covers node maintenanc
 *Applies to: VxRail 7.x / 8.x*
 </div>
 
-```text
-┌───────────────────────────────────────── VxRail — Procedures ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Node maintenance mode: vSAN evacuates objects before ESXi maintenance begins                │   │
-│   │   Node expansion: VxRail Plugin discovers new node via iDRAC and installs ESXi automatically  │   │
-│   │   Disk replacement: identify failed disk · hot-swap · claim in vSAN · monitor rebalance       │   │
-│   │   Change readiness: vSAN green + resync=0 + all nodes online required before any change       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Node Maintenance      │  │       Node Expansion        │  │      Disk Replacement       │   │
-│   │   1. vSAN full evacuation   │  │   1. Rack + cable + power   │  │   1. Identify failed disk   │   │
-│   │   2. vMotion all VMs off    │  │   2. iDRAC IP configured    │  │   2. Node to maintenance    │   │
-│   │   3. Perform hardware work  │  │   3. VxRail Plugin: Add Node│  │   3. Hot-swap the disk      │   │
-│   │   4. Exit maintenance mode  │  │   4. Wait for vSAN rebalance│  │   4. Claim disk in vSAN     │   │
-│   │   5. Wait for vSAN resync   │  │   5. Post-expansion checks  │  │   5. Monitor rebalance      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Dell PowerEdge servers · iDRAC OOB port per node · vSAN NVMe/SSD disk groups · 25GbE NICs            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│  Maintenance mode = ESXi state that evacuates VMs via DRS and vSAN data before hardware operations    │
-│  vSAN evacuation  = vSAN ensures all data objects have a full copy elsewhere before node enters MM    │
-│  DRS              = Distributed Resource Scheduler; migrates VMs to other nodes during maintenance    │
-│  Disk group       = vSAN unit of storage: one cache device + one or more capacity devices per node    │
-│  Rebalance        = vSAN redistributes objects evenly across nodes after a disk or node is added      │
-│  iDRAC            = Integrated Dell Remote Access Controller; used for OOB discovery of new nodes     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -82,6 +49,8 @@ esxcli vsan debug resync list
 
 ### Post-Change Validation
 
+![Post-Change Validation](../../../../assets/vxrail-proc-post-change-validation.svg)
+
 - [ ] All VxRail nodes Online in VxRail Plugin
 - [ ] vSAN health all green
 - [ ] vSAN resync completed (0 bytes remaining)
@@ -101,6 +70,8 @@ VxRail nodes use vSAN as the storage layer. Before entering maintenance mode, vS
 
 ### Step 1 — Confirm Pre-Conditions
 
+![Step 1 — Confirm Pre-Conditions](../../../../assets/vxrail-proc-step-1-confirm-pre-conditions.svg)
+
 ```bash
 # vSAN must be fully synced before entering maintenance
 esxcli vsan debug resync list
@@ -111,6 +82,10 @@ esxcli vsan debug resync list
 - Sufficient capacity on remaining nodes to hold evacuated vSAN objects
 
 ### Step 2 — Enter Maintenance Mode
+
+![Step 2 — Enter Maintenance Mode](../../../../assets/vxrail-proc-step-2-enter-maintenance-mode.svg)
+
+![Step 2 — Enter Maintenance Mode](../../../../assets/vxrail-proc-step-2-enter-maintenance-mode.svg)
 
 In vCenter: right-click the host → **Maintenance Mode → Enter Maintenance Mode**
 
@@ -132,6 +107,8 @@ Set-VMHost -VMHost $host -State Maintenance -VsanDataMigrationMode Full -Confirm
 
 ### Step 3 — Wait for Maintenance Mode to be Active
 
+![Step 3 — Wait for Maintenance Mode to be Active](../../../../assets/vxrail-proc-step-3-wait-for-maintenance-mode-to-be-active.svg)
+
 vCenter shows the host icon with a wrench (maintenance) indicator. This can take 10–30 minutes depending on the amount of data to evacuate.
 
 ```bash
@@ -142,12 +119,18 @@ esxcli vsan debug resync list
 
 ### Step 4 — Perform Work
 
+![Step 4 — Perform Work](../../../../assets/vxrail-proc-step-4-perform-work.svg)
+
 With the node in maintenance mode and VMs migrated off:
 
 - Apply hardware changes, replace failed components, or allow LCM to proceed with upgrade
 - iDRAC reboot if needed: `racadm serveraction gracereboot`
 
 ### Step 5 — Exit Maintenance Mode
+
+![Step 5 — Exit Maintenance Mode](../../../../assets/vxrail-proc-step-5-exit-maintenance-mode.svg)
+
+![Step 5 — Exit Maintenance Mode](../../../../assets/vxrail-proc-step-5-exit-maintenance-mode.svg)
 
 In vCenter: right-click the host → **Maintenance Mode → Exit Maintenance Mode**
 
@@ -157,6 +140,8 @@ Set-VMHost -VMHost (Get-VMHost "vxrail-node-01.example.local") -State Connected 
 ```
 
 ### Step 6 — Wait for vSAN Resync
+
+![Step 6 — Wait for vSAN Resync](../../../../assets/vxrail-proc-step-6-wait-for-vsan-resync.svg)
 
 After the node rejoins, vSAN resyncs data back to the node. Do not start another maintenance window until resync completes.
 
@@ -174,6 +159,8 @@ Adding a node to a VxRail cluster is orchestrated entirely by VxRail Manager. Ma
 
 ### Pre-Expansion Requirements
 
+![Pre-Expansion Requirements](../../../../assets/vxrail-proc-pre-expansion-requirements.svg)
+
 - [ ] New node is racked, cabled, and powered on
 - [ ] iDRAC is accessible from the management network and configured with a static IP
 - [ ] New node's iDRAC credentials are known (root + password)
@@ -182,6 +169,8 @@ Adding a node to a VxRail cluster is orchestrated entirely by VxRail Manager. Ma
 - [ ] Existing cluster vSAN health is green and resync = 0
 
 ### Step 1 — Verify New Node iDRAC Accessibility
+
+![Step 1 — Verify New Node iDRAC Accessibility](../../../../assets/vxrail-proc-step-1-verify-new-node-idrac-accessibility.svg)
 
 ```bash
 # Ping the new node iDRAC from the management network
@@ -193,6 +182,8 @@ racadm getsysinfo
 ```
 
 ### Step 2 — Initiate Expansion via VxRail Plugin
+
+![Step 2 — Initiate Expansion via VxRail Plugin](../../../../assets/vxrail-proc-step-2-initiate-expansion-via-vxrail-plugin.svg)
 
 In vCenter: **Menu → VxRail → Cluster → Add Node**
 
@@ -224,6 +215,8 @@ curl -sk \
 
 ### Step 3 — Monitor Expansion
 
+![Step 3 — Monitor Expansion](../../../../assets/vxrail-proc-step-3-monitor-expansion.svg)
+
 Monitor via: **VxRail Plugin → Cluster → Events** or vCenter Tasks panel.
 
 Expansion steps performed by VxRail Manager:
@@ -237,6 +230,8 @@ Expansion steps performed by VxRail Manager:
 
 ### Step 4 — Wait for vSAN Rebalance
 
+![Step 4 — Wait for vSAN Rebalance](../../../../assets/vxrail-proc-step-4-wait-for-vsan-rebalance.svg)
+
 After the node joins, vSAN redistributes objects across the now-larger cluster. This is not instantaneous.
 
 ```bash
@@ -246,6 +241,8 @@ esxcli vsan debug resync list | grep -E "Total|Remaining"
 ```
 
 ### Step 5 — Post-Expansion Validation
+
+![Step 5 — Post-Expansion Validation](../../../../assets/vxrail-proc-step-5-post-expansion-validation.svg)
 
 ```powershell
 # Confirm new node is visible and version matches cluster
@@ -263,6 +260,8 @@ Get-VsanClusterHealthSummary -Cluster "VxRail-Cluster" | Select-Object OverallHe
 ## Disk Replacement Procedure
 
 ### Step 1 — Identify the Failed Disk
+
+![Step 1 — Identify the Failed Disk](../../../../assets/vxrail-proc-step-1-identify-the-failed-disk.svg)
 
 1. A vCenter alarm fires indicating a vSAN component is **Absent** or **Degraded**
 2. Navigate to: **vCenter → Cluster → Monitor → vSAN → Physical Disk**
@@ -284,6 +283,8 @@ esxcli vsan storage list | grep -E "Disk Group UUID|Display Name|In Caching Tier
 
 ### Step 2 — Assess vSAN Impact
 
+![Step 2 — Assess vSAN Impact](../../../../assets/vxrail-proc-step-2-assess-vsan-impact.svg)
+
 While the disk is failed, vSAN continues to serve data using remaining copies (if FTT > 0 and data is replicated). Check the number of degraded objects:
 
 ```bash
@@ -298,6 +299,8 @@ If vSAN shows **no remaining replicas** for any object (FTT exceeded), treat thi
 
 ### Step 3 — Enter Node Maintenance Mode
 
+![Step 3 — Enter Node Maintenance Mode](../../../../assets/vxrail-proc-step-3-enter-node-maintenance-mode.svg)
+
 Before physically replacing the disk, put the node in maintenance mode using **Full data migration** (see [Node Maintenance Mode](#node-maintenance-mode-procedure) above).
 
 !!! warning "Do not hot-swap without maintenance mode if a rebuild is already active"
@@ -306,6 +309,8 @@ Before physically replacing the disk, put the node in maintenance mode using **F
 If the disk failure has already caused vSAN to begin rebuilding on other nodes, you may be able to hot-swap without full maintenance mode — consult Dell support for guidance on whether in-place hot-swap is safe in your cluster configuration.
 
 ### Step 4 — Hot-Swap the Disk
+
+![Step 4 — Hot-Swap the Disk](../../../../assets/vxrail-proc-step-4-hot-swap-the-disk.svg)
 
 - Dell PowerEdge nodes support hot-swap of SAS/SATA/NVMe drives with the carrier
 - The failed drive's LED will be amber on the front panel
@@ -319,6 +324,8 @@ racadm storage get pdisks
 
 ### Step 5 — Exit Maintenance Mode and Claim Disk in vSAN
 
+![Step 5 — Exit Maintenance Mode and Claim Disk in vSAN](../../../../assets/vxrail-proc-step-5-exit-maintenance-mode-and-claim-disk-in-vsan.svg)
+
 Exit the node from maintenance mode (see Step 5 of the maintenance mode procedure).
 
 Once the node is back Online, claim the new disk in vSAN:
@@ -328,6 +335,8 @@ Once the node is back Online, claim the new disk in vSAN:
 Select the new unclaimed disk and add it to the existing disk group (or create a new disk group if the cache disk was also replaced).
 
 ### Step 6 — Monitor Rebalance and Rebuild
+
+![Step 6 — Monitor Rebalance and Rebuild](../../../../assets/vxrail-proc-step-6-monitor-rebalance-and-rebuild.svg)
 
 ```bash
 # Watch vSAN rebalance after disk claim
@@ -459,6 +468,8 @@ Use this procedure to permanently remove a node from the VxRail cluster — for 
 
 ### Step 1 — Pre-Decommission Checks
 
+![Step 1 — Pre-Decommission Checks](../../../../assets/vxrail-proc-step-1-pre-decommission-checks.svg)
+
 ```bash
 # Confirm vSAN health is green and resync = 0
 esxcli vsan debug resync list
@@ -470,6 +481,8 @@ Check that the cluster has sufficient free capacity on remaining nodes to absorb
 
 ### Step 2 — Migrate All VMs Off the Node
 
+![Step 2 — Migrate All VMs Off the Node](../../../../assets/vxrail-proc-step-2-migrate-all-vms-off-the-node.svg)
+
 Use vSphere DRS or manual vMotion to move all running VMs to other cluster nodes. This is a separate step from vSAN evacuation.
 
 ```powershell
@@ -479,6 +492,8 @@ Get-VM -Location $sourceHost | Move-VM -Destination (Get-VMHost | Where-Object {
 ```
 
 ### Step 3 — Enter Maintenance Mode with Full Data Migration
+
+![Step 3 — Enter Maintenance Mode with Full Data Migration](../../../../assets/vxrail-proc-step-3-enter-maintenance-mode-with-full-data-migration.svg)
 
 Put the node in maintenance mode using **Full data migration** so vSAN fully evacuates all objects to remaining nodes. See [Node Maintenance Mode](#node-maintenance-mode-procedure) for the detailed steps.
 
@@ -491,6 +506,8 @@ esxcli vsan debug resync list
 
 ### Step 4 — Remove the Node via VxRail Plugin
 
+![Step 4 — Remove the Node via VxRail Plugin](../../../../assets/vxrail-proc-step-4-remove-the-node-via-vxrail-plugin.svg)
+
 In vCenter: **Menu → VxRail → Cluster → Remove Node**
 
 Select the node to remove and confirm. VxRail Manager:
@@ -501,6 +518,8 @@ Select the node to remove and confirm. VxRail Manager:
 4. Removes the node record from VxRail Manager inventory
 
 ### Step 5 — Post-Removal Validation
+
+![Step 5 — Post-Removal Validation](../../../../assets/vxrail-proc-step-5-post-removal-validation.svg)
 
 ```bash
 # Confirm vSAN cluster is healthy with the reduced node count
@@ -518,6 +537,8 @@ esxcli vsan debug resync list
 
 ### Step 6 — Physical Removal
 
+![Step 6 — Physical Removal](../../../../assets/vxrail-proc-step-6-physical-removal.svg)
+
 Once the node is fully deregistered: power off the node (`racadm serveraction graceshutdown`), disconnect cables, and remove from rack. The node retains its ESXi installation; factory-reset via RASR if redeploying elsewhere.
 
 ---
@@ -528,6 +549,8 @@ VxRail Manager presents a TLS certificate for its UI and API endpoints. This cer
 
 ### Option A — LCM-Managed Certificate (Recommended)
 
+![Option A — LCM-Managed Certificate (Recommended)](../../../../assets/vxrail-proc-option-a-lcm-managed-certificate-recommended.svg)
+
 If VxRail is integrated with Aria Suite Lifecycle:
 
 1. LCM → Lifecycle Operations → Environments → VxRail card → **Replace Certificate**
@@ -536,6 +559,8 @@ If VxRail is integrated with Aria Suite Lifecycle:
 4. Verify: browse to `https://<vxm-fqdn>` and confirm the browser shows the new certificate expiry date
 
 ### Option B — Direct API Replacement (No LCM)
+
+![Option B — Direct API Replacement (No LCM)](../../../../assets/vxrail-proc-option-b-direct-api-replacement-no-lcm.svg)
 
 ```bash
 # Step 1 — Generate a CSR from VxRail Manager
@@ -573,6 +598,8 @@ Use this procedure when a deployed VxRail node's management, vMotion, or vSAN IP
 
 ### Step 1 — Pre-Check
 
+![Step 1 — Pre-Check](../../../../assets/vxrail-proc-step-1-pre-check.svg)
+
 ```bash
 # Confirm vSAN health and resync = 0 before making any network change
 esxcli vsan debug resync list
@@ -590,6 +617,8 @@ Set-VMHost -VMHost (Get-VMHost "vxrail-node-02.example.local") -State Maintenanc
 
 ### Step 3 — Reconfigure IPs via VxRail Manager
 
+![Step 3 — Reconfigure IPs via VxRail Manager](../../../../assets/vxrail-proc-step-3-reconfigure-ips-via-vxrail-manager.svg)
+
 VxRail Manager → **Inventory → Nodes → select node → Edit Network Settings**
 
 Update:
@@ -600,6 +629,8 @@ Update:
 Confirm — VxRail Manager updates ESXi vmkernel adapter configurations and updates its own inventory.
 
 ### Step 4 — Update iDRAC and DNS
+
+![Step 4 — Update iDRAC and DNS](../../../../assets/vxrail-proc-step-4-update-idrac-and-dns.svg)
 
 ```bash
 # Update iDRAC IP if it also changed
@@ -621,6 +652,8 @@ Set-VMHost -VMHost (Get-VMHost "vxrail-node-02.example.local") -State Connected 
 ```
 
 ### Step 6 — Validate
+
+![Step 6 — Validate](../../../../assets/vxrail-proc-step-6-validate.svg)
 
 ```bash
 # Ping the new management IP from the network

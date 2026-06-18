@@ -13,53 +13,7 @@ Site Recovery Manager procedures — planned migration, emergency failover, repr
 *Applies to: SRM 8.x / 9.x*
 </div>
 
-```text
-┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐
-│                                                                                                       │
-│  Routine SRM procedures: add VM to protection group, run DR test, perform planned                     │
-│  failover, reprotect after failover, and update recovery plan steps.                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              DR Test Procedure               │  │               Planned Failover              │   │
-│   │          Test: bubble network only           │  │          Notify stakeholders first          │   │
-│   │           Select plan: Test option           │  │           Replication sync: verify          │   │
-│   │            Monitor: plan progress            │  │            Run: Planned migration           │   │
-│   │           Cleanup: remove test VMs           │  │           Failback: Reprotect+run           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  DR test must always use Test mode; run actual failover only with explicit approval.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Protection Group Mgmt             │  │               Plan Maintenance              │   │
-│   │               Add VM to group                │  │             Update startup order            │   │
-│   │          Configure IP customisation          │  │           Add custom recovery step          │   │
-│   │          Verify replication running          │  │           Update network mappings           │   │
-│   │           Remove decommissioned VM           │  │             Document RTO target             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Test failover uses isolated network on recovery site; cleanup deletes test VMs;                      │
-│  planned failover powers off protected site VMs before starting.                                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Test mode     = failover to bubble network; no production impact                                     │
-│  Planned migration= graceful failover; quiesce source then fail over                                  │
-│  Disaster recovery= forced failover; uses last available replica                                      │
-│  Reprotect     = reverses replication; recovery becomes protected                                     │
-│  Failback      = reprotect then planned migration back to original                                    │
-│  Bubble network= isolated VLAN; test VMs not routable to production                                   │
-│  IP customisation= re-IP VMs with recovery-site addresses on failover                                 │
-│  Startup order = priority sequence; lower number powers on first                                      │
-│  Custom step   = script or manual step in recovery plan                                               │
-│  Cleanup       = SRM removes test VMs and associated snapshots                                        │
-│  Protection group= collection of VMs replicated and failed over together                              │
-│  Network mapping= maps source portgroup to recovery portgroup                                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ```text
 Procedures ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -116,6 +70,8 @@ A planned migration gracefully shuts down VMs at the protected site, performs a 
 
 ### Pre-Migration Checklist
 
+![Pre-Migration Checklist](../../../../assets/srm-proc-pre-migration-checklist.svg)
+
 - [ ] Both sites and SRM servers are reachable and healthy
 - [ ] Replication is healthy with zero or acceptable backlog (RPO at target)
 - [ ] Recovery plan has been tested successfully within the last quarter
@@ -124,6 +80,8 @@ A planned migration gracefully shuts down VMs at the protected site, performs a 
 - [ ] DNS/load balancer changes prepared (or scripted in recovery plan)
 
 ### Planned Migration Procedure
+
+![Planned Migration Procedure](../../../../assets/srm-proc-planned-migration-procedure.svg)
 
 1. Navigate to **Recovery Plans** > select plan > **Run** > **Planned Migration**.
 2. SRM confirms both sites are connected — if the protected site is unreachable, it refuses to run Planned Migration (use Emergency Failover instead).
@@ -147,6 +105,8 @@ A planned migration gracefully shuts down VMs at the protected site, performs a 
 Used when the protected site is unavailable. VMs are powered on from the most recent replica image. Some data loss is expected depending on RPO at the time of failure.
 
 ### Emergency Failover Procedure
+
+![Emergency Failover Procedure](../../../../assets/srm-proc-emergency-failover-procedure.svg)
 
 1. Declare disaster and invoke the DR change record.
 2. Navigate to **Recovery Plans** > select plan > **Run** > **Disaster Recovery**.
@@ -177,6 +137,8 @@ After any failover (planned or emergency), the recovered VMs are now running at 
 
 ### Reprotect Procedure
 
+![Reprotect Procedure](../../../../assets/srm-proc-reprotect-procedure.svg)
+
 1. Ensure the original protected site infrastructure (storage, network, vCenter) is restored and reachable.
 2. Navigate to **Recovery Plans** > select plan > **Reprotect**.
 3. SRM coordinates with the SRA or vSphere Replication to establish reverse replication:
@@ -199,6 +161,8 @@ Failback returns VMs to the original protected site. Mechanically, it is a plann
 
 ### Failback Procedure
 
+![Failback Procedure](../../../../assets/srm-proc-failback-procedure.svg)
+
 1. Confirm replication from recovery site → original site is healthy and RPO is at target.
 2. Navigate to **Recovery Plans** > select the **reverse/failback recovery plan** (SRM creates this automatically during Reprotect, or you create a new plan in the reverse direction).
 3. Run as **Planned Migration**.
@@ -207,6 +171,8 @@ Failback returns VMs to the original protected site. Mechanically, it is a plann
 6. Validate the environment; close the DR incident record.
 
 ### Failback Go/No-Go Criteria
+
+![Failback Go/No-Go Criteria](../../../../assets/srm-proc-failback-go-no-go-criteria.svg)
 
 | Criteria | Required State |
 |---|---|
@@ -493,9 +459,13 @@ Custom steps let you insert pre/post scripts, manual prompt pauses, and notifica
 
 ### Step 1 — Edit the Recovery Plan
 
+![Step 1 — Edit the Recovery Plan](../../../../assets/srm-proc-step-1-edit-the-recovery-plan.svg)
+
 SRM → **Recovery Plans** → select the plan → **Edit**
 
 ### Step 2 — Add a Custom Step
+
+![Step 2 — Add a Custom Step](../../../../assets/srm-proc-step-2-add-a-custom-step.svg)
 
 In the recovery plan editor, click **Add Step** at the appropriate point (before VM power-on, between groups, or after all VMs are online):
 
@@ -535,6 +505,8 @@ The script runs inside the specified VM using VMware Tools. The VM must be power
 
 ### Step 3 — Order Steps Correctly
 
+![Step 3 — Order Steps Correctly](../../../../assets/srm-proc-step-3-order-steps-correctly.svg)
+
 Review the step execution order — SRM executes steps sequentially within each priority group:
 
 - **Pre-power-on steps**: DNS updates, storage mapping verification, firewall pre-staging
@@ -542,6 +514,8 @@ Review the step execution order — SRM executes steps sequentially within each 
 - **Post-recovery steps**: ITSM incident creation, monitoring re-baseline, end-user notification
 
 ### Step 4 — Test the Custom Steps
+
+![Step 4 — Test the Custom Steps](../../../../assets/srm-proc-step-4-test-the-custom-steps.svg)
 
 Run a test failover (see [Run a Test Failover](#run-a-test-failover-non-disruptive)) — SRM executes custom steps in test mode too. Review the test report to confirm each custom step ran and returned success. Fix any script errors before relying on them in a real DR event.
 
@@ -553,9 +527,13 @@ When a recovery plan run fails mid-execution (a VM fails to power on, a script r
 
 ### Step 1 — Identify the Failed Step
 
+![Step 1 — Identify the Failed Step](../../../../assets/srm-proc-step-1-identify-the-failed-step.svg)
+
 SRM → **Recovery Plans → History** → select the failed run → expand the step tree to find the first red (failed) step. Note the step type, the VM or script involved, and the error message.
 
 ### Step 2 — Diagnose the Root Cause
+
+![Step 2 — Diagnose the Root Cause](../../../../assets/srm-proc-step-2-diagnose-the-root-cause.svg)
 
 | Failure Type | Common Cause | Resolution |
 |---|---|---|
@@ -568,9 +546,13 @@ SRM → **Recovery Plans → History** → select the failed run → expand the 
 
 ### Step 3 — Fix the Root Cause
 
+![Step 3 — Fix the Root Cause](../../../../assets/srm-proc-step-3-fix-the-root-cause.svg)
+
 Resolve the underlying issue (fix the network mapping, fix the script, etc.) before resuming or retrying.
 
 ### Step 4 — Resume or Restart the Plan
+
+![Step 4 — Resume or Restart the Plan](../../../../assets/srm-proc-step-4-resume-or-restart-the-plan.svg)
 
 Once the root cause is resolved:
 
@@ -587,6 +569,8 @@ SRM can send email notifications at recovery plan milestones (start, completion,
 
 ### Step 1 — Configure SMTP in SRM
 
+![Step 1 — Configure SMTP in SRM](../../../../assets/srm-proc-step-1-configure-smtp-in-srm.svg)
+
 SRM → **Site Recovery → Configuration → Email** (this option may be under the SRM Server's VAMI at `https://<srm-ip>:5480` for appliance-based SRM):
 
 - **SMTP server**: FQDN or IP of the mail relay (e.g., `smtp.example.local`)
@@ -596,6 +580,8 @@ SRM → **Site Recovery → Configuration → Email** (this option may be under 
 
 ### Step 2 — Add Email Recipients to a Recovery Plan
 
+![Step 2 — Add Email Recipients to a Recovery Plan](../../../../assets/srm-proc-step-2-add-email-recipients-to-a-recovery-plan.svg)
+
 SRM → **Recovery Plans** → select the plan → **Edit** → navigate to **Notifications**:
 
 1. Click **Add Recipient**
@@ -604,6 +590,8 @@ SRM → **Recovery Plans** → select the plan → **Edit** → navigate to **No
 4. Save
 
 ### Step 3 — Add an Email Step Inline (Alternative)
+
+![Step 3 — Add an Email Step Inline (Alternative)](../../../../assets/srm-proc-step-3-add-an-email-step-inline-alternative.svg)
 
 Instead of notifications, add a **Message** step with instructions for operators — this keeps all DR communication as part of the recovery plan audit trail and does not depend on SMTP.
 
