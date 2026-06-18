@@ -14,53 +14,7 @@ Operational how-to guides for day-to-day vSAN management. Each section covers a 
 *Applies to: vSAN 7.x / 8.x*
 </div>
 
-```text
-┌────────────────────────────────────── vSAN — Common Procedures ───────────────────────────────────────┐
-│                                                                                                       │
-│  vSAN operational procedures: disk replacement, host removal, policy update,                          │
-│  rebalancing, decommission, and storage policy compliance remediation.                                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Disk Replacement               │  │              Host Decommission              │   │
-│   │            Mark disk failed in UI            │  │          Full data evacuation mode          │   │
-│   │              Remove disk group               │  │           Wait for resync complete          │   │
-│   │           Physically replace disk            │  │             Remove from cluster             │   │
-│   │             Claim new disk in UI             │  │          Verify no degraded objects         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Always mark disk as failed before physical removal to trigger safe data migration.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Policy & Rebalancing             │  │             Capacity Management             │   │
-│   │       Edit policy: Policies & Profiles       │  │           Check usage in Health UI          │   │
-│   │          Apply policy to VM storage          │  │           Rebalance if imbalanced           │   │
-│   │        Compliance: fix non-compliant         │  │           Add host: expand cluster          │   │
-│   │           Re-apply: right-click VM           │  │          Decommission disk: gradual         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  All vSAN disk operations trigger resync; ensure >30% free space before starting;                     │
-│  replacements must use HCL-approved disk models.                                                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Mark failed    = UI action; moves data off disk before physical removal                              │
-│  Full evacuation= moves all data off host before decommission                                         │
-│  Resync         = rebuild missing components after disk/host change                                   │
-│  Policy compliance= VM storage matches defined FTT/RAID policy                                        │
-│  Non-compliant  = policy not met; often after host failure or disk loss                               │
-│  Rebalance      = redistribute objects across hosts for even utilisation                              │
-│  Policies & Profiles= VC area for defining storage policies                                           │
-│  Re-apply policy= recalculate placement to restore compliance                                         │
-│  Decommission disk= graceful removal with data migration                                              │
-│  Claim disk     = assign new physical disk to vSAN cache/capacity role                                │
-│  Disk group     = one cache + up to 7 capacity disks per ESXi host                                    │
-│  30% free       = minimum headroom for resync operations                                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Before you begin
 
@@ -74,6 +28,8 @@ Operational how-to guides for day-to-day vSAN management. Each section covers a 
 ## Disk Group Management
 
 ### Replace a Failed Capacity Disk
+
+![Replace a Failed Capacity Disk](../../../../assets/vsan-proc-replace-a-failed-capacity-disk.svg)
 
 A capacity disk failure causes all components on that disk to go absent. vSAN waits for the `clomRepairDelay` timer (default 60 minutes) before triggering a rebuild on another host. Treat this as P1 if FTT=1 — one more failure before rebuild completes means data loss.
 
@@ -127,6 +83,8 @@ Do not remove any additional disks until `Active resyncing components = 0`. Expe
 
 ### Replace a Failed Cache SSD
 
+![Replace a Failed Cache SSD](../../../../assets/vsan-proc-replace-a-failed-cache-ssd.svg)
+
 A failed cache SSD takes the entire disk group offline. All components on all capacity disks in that group become absent simultaneously — this is higher risk than a single capacity disk failure.
 
 **Step 1 — Identify the failed disk group**
@@ -178,6 +136,8 @@ watch -n 30 "esxcli vsan debug resync summary get"
 All objects that had components on this disk group must rebuild. Do not perform any other cluster maintenance until `Active resyncing components = 0`.
 
 ### Put a Host in Maintenance Mode
+
+![Put a Host in Maintenance Mode](../../../../assets/vsan-proc-put-a-host-in-maintenance-mode.svg)
 
 Always use vCenter, not the ESXi shell — vSAN health validation runs automatically before maintenance begins.
 
@@ -237,6 +197,8 @@ watch -n 60 "esxcli vsan debug resync summary get"
 
 ### Create a Storage Policy
 
+![Create a Storage Policy](../../../../assets/vsan-proc-create-a-storage-policy.svg)
+
 **Step 1 — Open the storage policy editor**
 
 **From vCenter UI:**
@@ -287,6 +249,8 @@ Get-SpbmStoragePolicy -Name "VSAN-T1-FTT2-RAID6" | Select Name, Description
 
 ### Apply a Storage Policy to a VM
 
+![Apply a Storage Policy to a VM](../../../../assets/vsan-proc-apply-a-storage-policy-to-a-vm.svg)
+
 **Step 1 — Apply via vCenter UI**
 
 **From vCenter UI:**
@@ -318,6 +282,8 @@ Wait until `Active resyncing components = 0` before applying further changes.
 
 ### Check Policy Compliance
 
+![Check Policy Compliance](../../../../assets/vsan-proc-check-policy-compliance.svg)
+
 **Step 1 — Check all VMs (PowerCLI)**
 
 ```powershell
@@ -345,6 +311,8 @@ Non-compliant objects mean the policy cannot be satisfied — typically due to i
 
 ### Check Resync Status
 
+![Check Resync Status](../../../../assets/vsan-proc-check-resync-status.svg)
+
 **Step 1 — Summary view (bytes remaining and operation count)**
 
 ```bash
@@ -369,6 +337,8 @@ Get-VsanResyncStatus -Cluster (Get-Cluster "VSAN-LON-01")
 Cluster → Monitor → vSAN → Resyncing Objects
 
 ### Throttle Resync During Production Hours
+
+![Throttle Resync During Production Hours](../../../../assets/vsan-proc-throttle-resync-during-production-hours.svg)
 
 **Step 1 — Check the current throttle setting**
 
@@ -396,6 +366,8 @@ esxcli vsan debug resync throttle set --throttle 0
 
 ### Adjust the Absent Component Timer
 
+![Adjust the Absent Component Timer](../../../../assets/vsan-proc-adjust-the-absent-component-timer.svg)
+
 The default `clomRepairDelay` is 60 minutes — vSAN waits this long before starting a rebuild for absent components.
 
 **Step 1 — View the current setting**
@@ -414,6 +386,8 @@ Recommended values:
 - Maximum: `240` minutes — do not exceed; objects stay unprotected too long
 
 ### Force a Policy Recalculation
+
+![Force a Policy Recalculation](../../../../assets/vsan-proc-force-a-policy-recalculation.svg)
 
 If objects remain non-compliant after a cluster change (host added, disk replaced) and the cluster has sufficient capacity:
 
@@ -453,6 +427,8 @@ Allow 15–30 minutes. If objects remain non-compliant, check capacity and host 
 
 ### Check Current Capacity
 
+![Check Current Capacity](../../../../assets/vsan-proc-check-current-capacity.svg)
+
 **Step 1 — Per-host disk summary**
 
 ```bash
@@ -482,6 +458,8 @@ Alert if `UsedPct` exceeds 70% — resync operations require 30% free headroom.
 
 ### Identify Large Snapshot Consumers
 
+![Identify Large Snapshot Consumers](../../../../assets/vsan-proc-identify-large-snapshot-consumers.svg)
+
 Snapshots are a common cause of unexpected capacity consumption. Each snapshot creates a delta disk that grows with every write.
 
 **Step 1 — Find VMs with large snapshots**
@@ -510,6 +488,8 @@ Get-VsanSpaceUsage -Cluster (Get-Cluster "VSAN-LON-01") |
 ```
 
 ### Add Capacity to an Existing Cluster
+
+![Add Capacity to an Existing Cluster](../../../../assets/vsan-proc-add-capacity-to-an-existing-cluster.svg)
 
 **Option A — Add a new host**
 
@@ -560,6 +540,8 @@ esxcli vsan storage list | grep -A5 "Disk Group UUID"
 
 ### Validate Stretched Cluster Health
 
+![Validate Stretched Cluster Health](../../../../assets/vsan-proc-validate-stretched-cluster-health.svg)
+
 **Step 1 — Check fault domain configuration**
 
 ```bash
@@ -588,6 +570,8 @@ Cluster → Configure → vSAN → Fault Domains
 Both data sites and the witness site must show as connected. A partition between a data site and the witness causes that site's VMs to go read-only to prevent split-brain.
 
 ### Site Failover Test (Planned)
+
+![Site Failover Test (Planned)](../../../../assets/vsan-proc-site-failover-test-planned.svg)
 
 **Step 1 — Confirm cluster health before starting**
 
@@ -633,6 +617,8 @@ watch -n 60 "esxcli vsan debug resync summary get"
 
 ### Enable vSAN Performance Service
 
+![Enable vSAN Performance Service](../../../../assets/vsan-proc-enable-vsan-performance-service.svg)
+
 **Step 1 — Enable via vCenter UI**
 
 **From vCenter UI:**
@@ -655,6 +641,8 @@ Get-VsanClusterConfiguration -Cluster (Get-Cluster "VSAN-LON-01") |
 
 ### View Performance Metrics
 
+![View Performance Metrics](../../../../assets/vsan-proc-view-performance-metrics.svg)
+
 **From vCenter UI:**
 Cluster → Monitor → vSAN → Performance → select a view (Cluster, Host, Disk Group, or VM)
 
@@ -669,6 +657,8 @@ Key metrics to monitor:
 | Resync throughput | 0 (idle) | High for > 24h (blocked?) |
 
 ### Collect Performance Counters via CLI
+
+![Collect Performance Counters via CLI](../../../../assets/vsan-proc-collect-performance-counters-via-cli.svg)
 
 **Per-VMDK performance stats:**
 
@@ -687,6 +677,8 @@ esxcli vsan storage stats get
 ## vSAN Witness (2-Node and Stretched Clusters)
 
 ### Deploy Witness Appliance
+
+![Deploy Witness Appliance](../../../../assets/vsan-proc-deploy-witness-appliance.svg)
 
 **Step 1 — Download the OVA**
 
@@ -722,6 +714,8 @@ Witness RTT must be < 200 ms from both data sites.
 
 ### Validate Witness Connectivity
 
+![Validate Witness Connectivity](../../../../assets/vsan-proc-validate-witness-connectivity.svg)
+
 **Step 1 — Ping witness vmkernel from data site hosts**
 
 ```bash
@@ -744,6 +738,8 @@ Cluster → Configure → vSAN → Fault Domains — witness site must show as c
 Test during peak hours, not only in lab conditions.
 
 ### Replace a Failed Witness
+
+![Replace a Failed Witness](../../../../assets/vsan-proc-replace-a-failed-witness.svg)
 
 **Step 1 — Deploy a new witness appliance**
 
@@ -780,12 +776,22 @@ vSAN on-disk format (ODF) must be upgraded manually after upgrading ESXi hosts. 
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/vsan-proc-prerequisites.svg)
+
+![Prerequisites](../../../../assets/vsan-proc-prerequisites.svg)
+
+![Prerequisites](../../../../assets/vsan-proc-prerequisites.svg)
+
+![Prerequisites](../../../../assets/vsan-proc-prerequisites.svg)
+
 - All ESXi hosts in the cluster must be upgraded to the target ESXi version first.
 - Cluster health must be green — no degraded or absent objects.
 - Minimum 30% free capacity (the upgrade triggers a rolling resync).
 - Take a snapshot or backup of critical VMs before starting.
 
 ### Check Current Format Version
+
+![Check Current Format Version](../../../../assets/vsan-proc-check-current-format-version.svg)
 
 **Step 1 — Check via CLI**
 
@@ -799,6 +805,8 @@ esxcli vsan cluster get | grep -i "disk format\|version"
 Cluster → Configure → vSAN → On-disk Format Upgrade — shows current version and the next available version
 
 ### Run the Upgrade
+
+![Run the Upgrade](../../../../assets/vsan-proc-run-the-upgrade.svg)
 
 **Step 1 — Run the pre-check**
 
@@ -822,6 +830,8 @@ Cluster → Configure → vSAN → On-disk Format Upgrade → Upgrade
 The upgrade runs host-by-host — each host's disk groups are upgraded one at a time while the cluster remains online.
 
 ### Monitor Progress
+
+![Monitor Progress](../../../../assets/vsan-proc-monitor-progress.svg)
 
 **Step 1 — Monitor resync during the upgrade**
 
@@ -991,6 +1001,8 @@ Deduplication and compression (dedup+compression) reduces capacity consumption b
 
 ### Requirements and Restrictions
 
+![Requirements and Restrictions](../../../../assets/vsan-proc-requirements-and-restrictions.svg)
+
 | Requirement | Detail |
 |---|---|
 | Architecture | OSA all-flash only (NVMe or SSD cache + SSD capacity). Not supported on hybrid (SSD cache + HDD capacity). |
@@ -1000,6 +1012,8 @@ Deduplication and compression (dedup+compression) reduces capacity consumption b
 | Performance impact | Increases CPU load on all hosts. Test in dev/test before enabling in production. |
 
 ### Enable Deduplication and Compression
+
+![Enable Deduplication and Compression](../../../../assets/vsan-proc-enable-deduplication-and-compression.svg)
 
 **Step 1 — Verify prerequisites**
 
@@ -1033,6 +1047,8 @@ watch -n 60 "esxcli vsan debug resync summary get"
 
 ### Disable Deduplication and Compression
 
+![Disable Deduplication and Compression](../../../../assets/vsan-proc-disable-deduplication-and-compression.svg)
+
 Disabling triggers a full cluster resync as data is rewritten without dedup.
 
 **Step 1 — Disable via vCenter UI**
@@ -1049,6 +1065,8 @@ watch -n 60 "esxcli vsan debug resync summary get"
 Allow 4–8 hours for resync to complete before performing any other cluster changes.
 
 ### Check Space Savings
+
+![Check Space Savings](../../../../assets/vsan-proc-check-space-savings.svg)
 
 **Step 1 — Check via vCenter UI**
 
@@ -1077,6 +1095,8 @@ vSAN Data at Rest Encryption (D@RE) encrypts all data on vSAN capacity disks. It
 
 ### Register KMS in vCenter
 
+![Register KMS in vCenter](../../../../assets/vsan-proc-register-kms-in-vcenter.svg)
+
 **Step 1 — Add the KMS provider**
 
 **From vCenter UI:**
@@ -1091,6 +1111,8 @@ Get-KeyManagementServer
 All KMS nodes should show as connected. Confirm at least 2 KMS nodes for HA.
 
 ### Enable Encryption
+
+![Enable Encryption](../../../../assets/vsan-proc-enable-encryption.svg)
 
 **Step 1 — Confirm dedup+compression is disabled**
 
@@ -1114,6 +1136,8 @@ Expected duration: several hours. Do not add or remove hosts during encryption e
 
 ### Rotate Encryption Keys
 
+![Rotate Encryption Keys](../../../../assets/vsan-proc-rotate-encryption-keys.svg)
+
 **Step 1 — Initiate key rotation via vCenter UI**
 
 **From vCenter UI:**
@@ -1135,6 +1159,8 @@ esxcli vsan storage list | grep -i encrypt
 
 ### Verify Encryption Status
 
+![Verify Encryption Status](../../../../assets/vsan-proc-verify-encryption-status.svg)
+
 **Step 1 — Check disk group encryption state via CLI**
 
 ```bash
@@ -1153,6 +1179,8 @@ Cluster → Configure → vSAN → Services → Data-at-Rest Encryption — show
 Non-compliant objects are vSAN objects that do not meet their assigned storage policy. Left unresolved, they represent under-protected VMs.
 
 ### Identify Non-Compliant Objects
+
+![Identify Non-Compliant Objects](../../../../assets/vsan-proc-identify-non-compliant-objects.svg)
 
 **Step 1 — Check via CLI**
 
@@ -1175,6 +1203,8 @@ Cluster → Monitor → vSAN → Virtual Objects → filter Non-compliant
 
 ### Diagnose the Cause
 
+![Diagnose the Cause](../../../../assets/vsan-proc-diagnose-the-cause.svg)
+
 | Symptom | Likely Cause | Fix |
 |---|---|---|
 | Objects non-compliant after host failure | FTT policy cannot be met with current host count | Add host or lower FTT policy temporarily |
@@ -1184,6 +1214,8 @@ Cluster → Monitor → vSAN → Virtual Objects → filter Non-compliant
 | Stale non-compliant (policy met, UI wrong) | vCenter cache stale | Re-apply policy to trigger recalculation |
 
 ### Force Re-evaluation
+
+![Force Re-evaluation](../../../../assets/vsan-proc-force-re-evaluation.svg)
 
 If the cluster has sufficient capacity and hosts but objects remain non-compliant:
 
@@ -1207,6 +1239,8 @@ watch -n 60 "esxcli vsan debug resync summary get"
 ```
 
 ### Bulk Remediation
+
+![Bulk Remediation](../../../../assets/vsan-proc-bulk-remediation.svg)
 
 **Step 1 — Re-apply policy to all non-compliant VMs**
 
@@ -1237,11 +1271,15 @@ Fault domains map ESXi hosts to physical boundaries (racks, PDUs) so vSAN places
 
 ### When to Use Fault Domains
 
+![When to Use Fault Domains](../../../../assets/vsan-proc-when-to-use-fault-domains.svg)
+
 Use fault domains when your cluster spans multiple racks or power domains. Without fault domains, vSAN may place both copies of a RAID-1 object on hosts sharing the same rack or PDU — a single rack failure could cause data loss.
 
 **Minimum requirement:** At least 3 fault domains for FTT=1; 5+ for FTT=2.
 
 ### Create Fault Domains
+
+![Create Fault Domains](../../../../assets/vsan-proc-create-fault-domains.svg)
 
 **Step 1 — Open fault domain configuration**
 
@@ -1268,6 +1306,8 @@ watch -n 60 "esxcli vsan debug resync summary get"
 
 ### Verify Fault Domain Configuration
 
+![Verify Fault Domain Configuration](../../../../assets/vsan-proc-verify-fault-domain-configuration.svg)
+
 **Step 1 — List domains and member hosts**
 
 ```powershell
@@ -1281,6 +1321,8 @@ Get-VsanFaultDomainConfiguration -Cluster (Get-Cluster "VSAN-LON-01") |
 Cluster → Configure → vSAN → Fault Domains — verify each host is in a named domain; no hosts should be in the "Default" (ungrouped) domain.
 
 ### Update Fault Domains After Hardware Changes
+
+![Update Fault Domains After Hardware Changes](../../../../assets/vsan-proc-update-fault-domains-after-hardware-changes.svg)
 
 **Step 1 — Assign new host to the correct domain**
 
@@ -1306,6 +1348,8 @@ Run this routine before any ESXi host or vSphere upgrade. It confirms the cluste
 
 ### Step 1 — Cluster Health
 
+![Step 1 — Cluster Health](../../../../assets/vsan-proc-step-1-cluster-health.svg)
+
 ```bash
 # Run from any host in the cluster
 esxcli vsan health cluster get
@@ -1317,6 +1361,8 @@ esxcli vsan health cluster get
 Cluster → Monitor → vSAN → Skyline Health — resolve all errors and warnings before upgrading.
 
 ### Step 2 — Object Health
+
+![Step 2 — Object Health](../../../../assets/vsan-proc-step-2-object-health.svg)
 
 ```bash
 # Confirm no degraded, absent, or non-compliant objects
@@ -1331,6 +1377,8 @@ Get-SpbmEntityConfiguration | Where-Object { $_.ComplianceStatus -ne "compliant"
 
 ### Step 3 — Capacity Headroom
 
+![Step 3 — Capacity Headroom](../../../../assets/vsan-proc-step-3-capacity-headroom.svg)
+
 ```powershell
 $usage = Get-VsanSpaceUsage -Cluster (Get-Cluster "VSAN-LON-01")
 $pct = [Math]::Round($usage.UsedCapacityGB / $usage.TotalCapacityGB * 100, 1)
@@ -1340,10 +1388,14 @@ Write-Host "Used: $pct%"
 
 ### Step 4 — HCL Compliance
 
+![Step 4 — HCL Compliance](../../../../assets/vsan-proc-step-4-hcl-compliance.svg)
+
 **From vCenter UI:**
 Cluster → Monitor → vSAN → Skyline Health → Hardware Compatibility — all disks and NICs must show as HCL-compliant for the target ESXi version.
 
 ### Step 5 — Active Resync Check
+
+![Step 5 — Active Resync Check](../../../../assets/vsan-proc-step-5-active-resync-check.svg)
 
 ```bash
 esxcli vsan debug resync summary get
@@ -1352,6 +1404,8 @@ esxcli vsan debug resync summary get
 
 ### Step 6 — Snapshot Inventory
 
+![Step 6 — Snapshot Inventory](../../../../assets/vsan-proc-step-6-snapshot-inventory.svg)
+
 ```powershell
 # Find VMs with snapshots — consolidate before upgrade
 Get-VM | Get-Snapshot | Select VM, Name, Created, SizeGB | Sort-Object SizeGB -Descending
@@ -1359,6 +1413,8 @@ Get-VM | Get-Snapshot | Select VM, Name, Created, SizeGB | Sort-Object SizeGB -D
 ```
 
 ### Step 7 — Compatibility Check
+
+![Step 7 — Compatibility Check](../../../../assets/vsan-proc-step-7-compatibility-check.svg)
 
 Run the vSphere Lifecycle Manager (vLCM) pre-check or the upgrade compatibility checker:
 
@@ -1381,6 +1437,8 @@ Use this workflow when a VM reports slow storage performance. Work through each 
 
 ### Step 1 — Check vSAN Cluster Health
 
+![Step 1 — Check vSAN Cluster Health](../../../../assets/vsan-proc-step-1-check-vsan-cluster-health.svg)
+
 Rule out infrastructure-level issues first:
 
 ```bash
@@ -1392,6 +1450,8 @@ Cluster → Monitor → vSAN → Skyline Health — any red/yellow items here ca
 
 ### Step 2 — Check for Active Resync
 
+![Step 2 — Check for Active Resync](../../../../assets/vsan-proc-step-2-check-for-active-resync.svg)
+
 Resync consumes significant I/O bandwidth and raises latency for all VMs:
 
 ```bash
@@ -1400,6 +1460,8 @@ esxcli vsan debug resync summary get
 ```
 
 ### Step 3 — Check Congestion
+
+![Step 3 — Check Congestion](../../../../assets/vsan-proc-step-3-check-congestion.svg)
 
 Congestion > 0 indicates the vSAN I/O stack is backed up:
 
@@ -1412,6 +1474,8 @@ esxcli vsan debug disk list | grep -i congestion
 Cluster → Monitor → vSAN → Performance → Disk Group view → Congestion metric
 
 ### Step 4 — Check Front-End Latency for the VM
+
+![Step 4 — Check Front-End Latency for the VM](../../../../assets/vsan-proc-step-4-check-front-end-latency-for-the-vm.svg)
 
 ```bash
 esxcli vsan debug vmdk list
@@ -1427,6 +1491,8 @@ Alert thresholds:
 
 ### Step 5 — Check Cache Hit Rate (OSA Clusters)
 
+![Step 5 — Check Cache Hit Rate (OSA Clusters)](../../../../assets/vsan-proc-step-5-check-cache-hit-rate-osa-clusters.svg)
+
 For OSA (hybrid or all-flash with a separate cache tier), a low cache hit rate means reads are going to capacity disks:
 
 ```bash
@@ -1437,6 +1503,8 @@ esxcli vsan debug disk list | grep -i "cache\|write buffer"
 Cache write buffer > 95% sustained = cache SSD is a bottleneck. Consider adding capacity disks or a larger cache SSD.
 
 ### Step 6 — Identify Noisy Neighbours
+
+![Step 6 — Identify Noisy Neighbours](../../../../assets/vsan-proc-step-6-identify-noisy-neighbours.svg)
 
 If overall cluster health is good but one VM is slow, check if another VM is saturating the cluster:
 
@@ -1459,6 +1527,8 @@ Get-VM -Location $cluster | ForEach-Object {
 
 ### Step 7 — Check vSAN Network
 
+![Step 7 — Check vSAN Network](../../../../assets/vsan-proc-step-7-check-vsan-network.svg)
+
 High network latency between hosts causes write latency (all writes go to at least 2 hosts):
 
 ```bash
@@ -1475,6 +1545,8 @@ esxcli network nic stats get -n vmnic2 | grep -E "errors|drops"
 
 ### Step 8 — Check Physical Disk Health
 
+![Step 8 — Check Physical Disk Health](../../../../assets/vsan-proc-step-8-check-physical-disk-health.svg)
+
 Degraded disks cause latency spikes even before complete failure:
 
 ```bash
@@ -1484,6 +1556,8 @@ esxcli storage core device smart get -d <naa>
 ```
 
 ### Decision tree summary
+
+![Decision tree summary](../../../../assets/vsan-proc-decision-tree-summary.svg)
 
 | Finding | Action |
 |---|---|
@@ -1504,6 +1578,8 @@ A 2-node vSAN cluster uses a witness appliance at a third site to form quorum. T
 
 ### Architecture
 
+![Architecture](../../../../assets/vsan-proc-architecture.svg)
+
 
 - Each data node holds a full copy of all objects (effective RAID-1 across 2 nodes).
 - The witness holds metadata only — no VM data. It provides quorum when one data node fails.
@@ -1518,6 +1594,8 @@ A 2-node vSAN cluster uses a witness appliance at a third site to form quorum. T
 - vSAN license that supports 2-node ROBO (check your licence tier).
 
 ### Enable 2-Node vSAN
+
+![Enable 2-Node vSAN](../../../../assets/vsan-proc-enable-2-node-vsan.svg)
 
 **Step 1 — Create the cluster and enable vSAN**
 
@@ -1547,6 +1625,8 @@ Get-VsanClusterConfiguration -Cluster (Get-Cluster "VSAN-ROBO-01") |
 
 ### Storage Policy for 2-Node
 
+![Storage Policy for 2-Node](../../../../assets/vsan-proc-storage-policy-for-2-node.svg)
+
 Do not use RAID-5 or RAID-6 — they require a minimum of 4 and 6 nodes respectively.
 
 **Step 1 — Create the 2-node storage policy**
@@ -1574,6 +1654,8 @@ Get-VM | ForEach-Object {
 
 ### Validate the 2-Node Setup
 
+![Validate the 2-Node Setup](../../../../assets/vsan-proc-validate-the-2-node-setup.svg)
+
 **Step 1 — Confirm witness is a cluster member**
 
 ```bash
@@ -1592,6 +1674,8 @@ vmkping -I vmk2 <witness_vsan_vmk_ip>
 Cluster → Monitor → vSAN → Skyline Health → 2-Node cluster checks — all should be green.
 
 ### Simulate Failure (Test)
+
+![Simulate Failure (Test)](../../../../assets/vsan-proc-simulate-failure-test.svg)
 
 **Step 1 — Put one data node into maintenance mode**
 
