@@ -14,53 +14,7 @@ Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and st
 *Applies to: vSphere 7.x / 8.x*
 </div>
 
-```text
-┌───────────────────────────────── vCenter Server — Common Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│  Routine vCenter procedures: certificate renewal, host add/remove, cluster                            │
-│  configuration, permissions management, and licence assignment.                                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Certificate Procedures            │  │               Host Procedures               │   │
-│   │           Renew machine cert: VAMI           │  │          Add host: Hosts & Clusters         │   │
-│   │          Replace cert: certmgr CLI           │  │            Enter maintenance mode           │   │
-│   │          STS cert: scripted renewal          │  │           Remove host: disconnect           │   │
-│   │        Renew all: certificate-manager        │  │          Reconnect: fix vpxa creds          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Certificate procedures require SSO admin; host procedures require host permissions.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Permissions & Licences            │  │              Cluster Procedures             │   │
-│   │         Assign role at object level          │  │           Enable DRS: auto/manual           │   │
-│   │            SSO groups: AD mapped             │  │          Enable HA: configure slots         │   │
-│   │         Licence: Administration tab          │  │           vSAN: create diskgroups           │   │
-│   │         Global perm: cross-DC roles          │  │            EVC: set CPU baseline            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  All procedures run over vCenter management network; certificate operations                           │
-│  cause brief service interruption (~2 min) during VCSA service restart.                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  certificate-manager = VCSA interactive script; renews/replaces all certs                             │
-│  certmgr       = low-level cert tool; used for individual cert replacement                            │
-│  STS cert      = Security Token Service cert; 2-year validity; manual renew                           │
-│  VAMI          = Appliance Management; port 5480; auto-renew machine cert                             │
-│  Maintenance mode= drain host of VMs before patching or removal                                       │
-│  vpxa creds    = host agent credentials; reconnect if changed via VC UI                               │
-│  EVC           = Enhanced vMotion Compatibility; CPU instruction masking                              │
-│  DRS slots     = admission control slots; HA reserves resources per policy                            │
-│  Global perm   = permission applies to all objects in all datacentres                                 │
-│  Role          = named permission set; e.g., Administrator, ReadOnly                                  │
-│  Licence key   = applied per product; vSAN, DRS, HA all need VC licence                               │
-│  Diskgroup     = vSAN storage unit; one cache tier + capacity tier per host                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 Service restart order for manual recovery:
 1. `vmware-vpostgres` — database must be running before vpxd
 2. `vmware-stsd` — SSO token service
@@ -560,6 +514,8 @@ Used to deploy pre-packaged virtual appliances (management tools, security scann
 
 ### Step 1 — Download and Validate the OVA
 
+![Step 1 — Download and Validate the OVA](../../../../assets/vcenter-proc-step-1-download-and-validate-the-ova.svg)
+
 Before deploying, verify the OVA integrity using the vendor-provided SHA-256 checksum:
 
 ```bash
@@ -568,6 +524,8 @@ shasum -a 256 vendor-appliance.ova
 ```
 
 ### Step 2 — Deploy via vCenter UI
+
+![Step 2 — Deploy via vCenter UI](../../../../assets/vcenter-proc-step-2-deploy-via-vcenter-ui.svg)
 
 1. In vCenter, right-click the target cluster or resource pool → **Deploy OVF Template**
 2. **Select Source**: upload the local `.ova` file or provide a URL
@@ -583,6 +541,8 @@ vCenter creates the VM and imports the disks. Monitor progress in **Tasks** (bot
 
 ### Step 3 — Post-Deploy Configuration
 
+![Step 3 — Post-Deploy Configuration](../../../../assets/vcenter-proc-step-3-post-deploy-configuration.svg)
+
 1. Power on the VM: right-click → **Power On**
 2. Open the Web Console: right-click → **Open Web Console** — complete first-run setup wizard if the appliance has one
 3. Verify network connectivity: `ping <appliance-ip>` and browse to the appliance management UI
@@ -596,6 +556,8 @@ A VDS is a cluster-wide virtual switch managed centrally from vCenter, replacing
 
 ### Step 1 — Create the VDS
 
+![Step 1 — Create the VDS](../../../../assets/vcenter-proc-step-1-create-the-vds.svg)
+
 1. vCenter → **Datacenter → Configure → Distributed Switches → New Distributed Switch**
 2. Set:
    - **Name**: e.g., `prod-dvs-01`
@@ -605,6 +567,8 @@ A VDS is a cluster-wide virtual switch managed centrally from vCenter, replacing
 3. Create a default **port group** during the wizard or skip and create manually
 
 ### Step 2 — Add Hosts to the VDS
+
+![Step 2 — Add Hosts to the VDS](../../../../assets/vcenter-proc-step-2-add-hosts-to-the-vds.svg)
 
 1. Right-click the VDS → **Add and Manage Hosts**
 2. Select **Add Hosts** → select all hosts in the cluster
@@ -619,6 +583,8 @@ A VDS is a cluster-wide virtual switch managed centrally from vCenter, replacing
 
 ### Step 3 — Create Port Groups
 
+![Step 3 — Create Port Groups](../../../../assets/vcenter-proc-step-3-create-port-groups.svg)
+
 1. Right-click the VDS → **Distributed Port Group → New Distributed Port Group**
 2. Configure:
    - **Name**: `dpg-vmotion-vlan20`, `dpg-storage-vlan30`, `dpg-vm-prod-vlan100`, etc.
@@ -627,6 +593,8 @@ A VDS is a cluster-wide virtual switch managed centrally from vCenter, replacing
    - **Security Policy**: Promiscuous mode Off / MAC Changes Reject / Forged Transmits Reject (standard defaults)
 
 ### Step 4 — Verify
+
+![Step 4 — Verify](../../../../assets/vcenter-proc-step-4-verify.svg)
 
 ```powershell
 # PowerCLI — confirm VDS is created and hosts are added
@@ -643,6 +611,8 @@ Enhanced Linked Mode joins multiple vCenter instances into a federated Single Si
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/vcenter-proc-prerequisites.svg)
+
 - All vCenters must be in the same SSO domain (e.g., `vsphere.local`) — each vCenter must be deployed pointing to the same Platform Services Controller (external PSC) or replication partner
 - vCenter versions must be within one major version of each other
 - All vCenters must have network connectivity to each other on TCP 443
@@ -650,11 +620,15 @@ Enhanced Linked Mode joins multiple vCenter instances into a federated Single Si
 
 ### For vCenter 7.x / 8.x (Embedded PSC — Replication-Based)
 
+![For vCenter 7.x / 8.x (Embedded PSC — Replication-Based)](../../../../assets/vcenter-proc-for-vcenter-7-x-8-x-embedded-psc-replication-based.svg)
+
 1. Deploy the second vCenter VCSA with the same SSO domain (`vsphere.local`) configured during setup — during the VCSA deployment wizard, select **Join an existing SSO domain** and provide the first vCenter's FQDN as the partner
 2. Accept the replication partner certificate and provide the SSO administrator password
 3. Complete VCSA deployment — the SSO service replicates identity data (users, groups, permissions) between both vCenters automatically
 
 ### Step 2 — Verify Linked Mode is Active
+
+![Step 2 — Verify Linked Mode is Active](../../../../assets/vcenter-proc-step-2-verify-linked-mode-is-active.svg)
 
 1. Log in to either vCenter's vSphere Client
 2. Navigate to **Home → Inventory** — both vCenter instances should appear in the inventory tree
@@ -667,6 +641,8 @@ Enhanced Linked Mode joins multiple vCenter instances into a federated Single Si
 ```
 
 ### Step 3 — Configure Cross-vCenter Permissions (Optional)
+
+![Step 3 — Configure Cross-vCenter Permissions (Optional)](../../../../assets/vcenter-proc-step-3-configure-cross-vcenter-permissions-optional.svg)
 
 Global permissions set at the SSO domain level apply across all linked vCenters:
 

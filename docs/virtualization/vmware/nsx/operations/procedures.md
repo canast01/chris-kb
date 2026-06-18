@@ -13,53 +13,7 @@ Step-by-step NSX procedures — segments, T0/T1 gateways, DFW security policies,
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
 
-```text
-┌────────────────────────────────────── NSX — Standard Procedures ──────────────────────────────────────┐
-│                                                                                                       │
-│  Segment creation, T0/T1 gateway config, DFW rule changes, and change control.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Add New Segment                │  │              T1 Gateway Config              │   │
-│   │        Policy > Networking > Segments        │  │                Add T1 gateway               │   │
-│   │           Set VNI / transport zone           │  │              Link to T0 gateway             │   │
-│   │           Set VLAN or overlay mode           │  │             Advertise connected             │   │
-│   │            Connect to T1 gateway             │  │               Set edge cluster              │   │
-│   │          Attach segment to VM vNIC           │  │            Apply DNS/DHCP profile           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Network change → DFW policy update → change control record → verify.                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               DFW Rule Changes               │  │              Change Management              │   │
-│   │            Add to security policy            │  │            Raise CR before change           │   │
-│   │          Define source/dest groups           │  │           Pre-change packet trace           │   │
-│   │           Set service (port/proto)           │  │             Change window agreed            │   │
-│   │            Publish policy changes            │  │           Post-change connectivity          │   │
-│   │             Verify in traceflow              │  │            Close CR with evidence           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager VMs, Edge VMs, ESXi hosts, ToR switches, vCenter, management net                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Segment     = logical L2 overlay network; mapped to a transport zone                                 │
-│  VNI         = VXLAN Network ID; unique per segment in overlay                                        │
-│  Transport zone = scope of overlay or VLAN segment reachability                                       │
-│  T1 gateway  = distributed L3 gateway; service router on edge cluster                                 │
-│  T0 gateway  = north-south routing gateway; BGP peers with fabric                                     │
-│  DFW         = Distributed Firewall; L4 stateful firewall per vNIC                                    │
-│  Security policy = DFW container grouping rules by purpose                                            │
-│  Groups      = NSX dynamic member sets (tag, OS, name, IP criteria)                                   │
-│  Traceflow   = NSX UI tool; injects synthetic packet to trace path/drops                              │
-│  Publish     = NSX action; commits policy changes to dataplane                                        │
-│  Packet trace= captures before change; confirms expected traffic flow                                 │
-│  CR          = Change Request; ITSM record authorising change                                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -1008,6 +962,8 @@ Execute this procedure only after the pre-upgrade validation checklist (above) r
 
 ### Step 1 — Upload the Upgrade Bundle
 
+![Step 1 — Upload the Upgrade Bundle](../../../../assets/nsx-proc-step-1-upload-the-upgrade-bundle.svg)
+
 1. Download the NSX upgrade bundle (`.mub` file) from the Broadcom portal
 2. NSX Manager UI → **System → Lifecycle Management → Upgrade**
 3. Click **Upload Bundle** — upload the `.mub` file; NSX Manager verifies the SHA checksum
@@ -1024,6 +980,8 @@ curl -sk -u 'admin:password' \
 
 ### Step 2 — Upgrade NSX Manager Cluster
 
+![Step 2 — Upgrade NSX Manager Cluster](../../../../assets/nsx-proc-step-2-upgrade-nsx-manager-cluster.svg)
+
 1. **System → Lifecycle Management → Upgrade → Upgrade Coordinator**
 2. Click **Upgrade** next to the Management Plane (NSX Manager nodes)
 3. NSX upgrades each Manager node in a rolling fashion (one at a time) — the UI becomes briefly unavailable during each node's restart (1–3 minutes)
@@ -1038,6 +996,8 @@ curl -sk -u 'admin:password' \
 
 ### Step 3 — Upgrade Edge Nodes
 
+![Step 3 — Upgrade Edge Nodes](../../../../assets/nsx-proc-step-3-upgrade-edge-nodes.svg)
+
 1. Upgrade Coordinator → **Edge Nodes**
 2. Select the Edge cluster(s) to upgrade — NSX upgrades one Edge node at a time within each cluster; during the upgrade of one node, the other handles traffic (requires N+1 sizing)
 3. Click **Upgrade** — monitor per-node progress in the Upgrade Coordinator
@@ -1051,6 +1011,8 @@ curl -sk -u 'admin:password' \
 
 ### Step 4 — Upgrade ESXi Transport Nodes
 
+![Step 4 — Upgrade ESXi Transport Nodes](../../../../assets/nsx-proc-step-4-upgrade-esxi-transport-nodes.svg)
+
 1. Upgrade Coordinator → **Host Transport Nodes**
 2. Select the upgrade group (by cluster); configure per-group parallelism (default: 1 host at a time)
 3. Click **Upgrade** — NSX places each ESXi host in maintenance mode, upgrades the NSX VIBs, reboots the host, and exits maintenance mode before starting the next host
@@ -1063,6 +1025,8 @@ curl -sk -u 'admin:password' \
 ```
 
 ### Step 5 — Post-Upgrade Validation
+
+![Step 5 — Post-Upgrade Validation](../../../../assets/nsx-proc-step-5-post-upgrade-validation.svg)
 
 ```bash
 # Confirm all fabric nodes are on the target version
@@ -1090,6 +1054,8 @@ Run when adding a new ESXi host to a cluster that uses NSX — the host must be 
 
 ### Step 1 — Verify Host Prerequisites
 
+![Step 1 — Verify Host Prerequisites](../../../../assets/nsx-proc-step-1-verify-host-prerequisites.svg)
+
 ```bash
 # From the host, verify mgmt connectivity to NSX Manager
 esxcli network ip connection list | grep 1234   # NSX Messaging Bus port
@@ -1103,6 +1069,8 @@ The host must be in the target vSphere cluster and visible in vCenter before pro
 
 ### Step 2 — Add as a Transport Node via NSX Manager UI
 
+![Step 2 — Add as a Transport Node via NSX Manager UI](../../../../assets/nsx-proc-step-2-add-as-a-transport-node-via-nsx-manager-ui.svg)
+
 1. NSX Manager → **System → Fabric → Hosts**
 2. Locate the host (listed under the vCenter / cluster view) — it shows as **Not Configured**
 3. Click the host → **Configure as Transport Node**
@@ -1113,6 +1081,8 @@ The host must be in the target vSphere cluster and visible in vCenter before pro
 5. Confirm — NSX Manager pushes the configuration to the host, installs NSX VIBs (requires host reboot or maintenance mode depending on Quick Boot support)
 
 ### Step 3 — Monitor Preparation
+
+![Step 3 — Monitor Preparation](../../../../assets/nsx-proc-step-3-monitor-preparation.svg)
 
 ```bash
 # Poll transport node preparation status
@@ -1125,6 +1095,8 @@ curl -sk -u 'admin:password' \
 Or monitor in UI: **System → Fabric → Hosts** — host status changes from "In Progress" to "Success".
 
 ### Step 4 — Validate Transport Node
+
+![Step 4 — Validate Transport Node](../../../../assets/nsx-proc-step-4-validate-transport-node.svg)
 
 ```bash
 # Confirm the host is in the transport zone

@@ -12,58 +12,7 @@ TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Har
 
 *Applies to: Tanzu 3.x*
 </div>
-```text
-┌──────────────────────── Virtualization Vmware Tanzu — Operational Procedures ─────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Vmware operational procedures: standard tasks for day-2 administration            │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Virtualization Vmware Tanzu infrastructure · management network · monitoring             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Vmware             = Virtualization Vmware Tanzu platform overview and core concepts               │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ---
@@ -503,6 +452,8 @@ This procedure activates the Tanzu Supervisor on a vSphere cluster, enabling it 
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/tanzu-proc-prerequisites.svg)
+
 - vSphere 7.x+ or 8.x with Enterprise Plus license
 - vSAN or an external NFS/iSCSI datastore for persistent storage
 - NSX-T or VDS-based networking (NSX-T required for pod networking; VDS supported for basic workloads)
@@ -510,6 +461,8 @@ This procedure activates the Tanzu Supervisor on a vSphere cluster, enabling it 
 - IP ranges reserved for: Supervisor Control Plane VMs (3 IPs), Ingress/Egress, Pods
 
 ### Step 1 — Configure Namespace and Network Settings in vCenter
+
+![Step 1 — Configure Namespace and Network Settings in vCenter](../../../../assets/tanzu-proc-step-1-configure-namespace-and-network-settings-in-vcenter.svg)
 
 1. vCenter → **Workload Management → Enable**
 2. Select the target cluster → **Enable Workload Management**
@@ -525,6 +478,8 @@ This procedure activates the Tanzu Supervisor on a vSphere cluster, enabling it 
 
 ### Step 2 — Monitor Enablement
 
+![Step 2 — Monitor Enablement](../../../../assets/tanzu-proc-step-2-monitor-enablement.svg)
+
 ```bash
 # Monitor from vCenter → Workload Management → Supervisor
 # Status progresses: Configuring → Running (typically 10–20 min)
@@ -535,6 +490,8 @@ kubectl get svc -n kube-system --kubeconfig <supervisor-kubeconfig>
 
 ### Step 3 — Download the Supervisor kubeconfig
 
+![Step 3 — Download the Supervisor kubeconfig](../../../../assets/tanzu-proc-step-3-download-the-supervisor-kubeconfig.svg)
+
 1. vCenter → **Workload Management → Supervisors → select the supervisor → Configure → Namespace → Download kubeconfig**
 2. Save as `supervisor.kubeconfig`
 
@@ -544,6 +501,8 @@ kubectl --kubeconfig=supervisor.kubeconfig get nodes
 ```
 
 ### Step 4 — Post-Enablement Validation
+
+![Step 4 — Post-Enablement Validation](../../../../assets/tanzu-proc-step-4-post-enablement-validation.svg)
 
 - [ ] Supervisor shows **Running** in vCenter → Workload Management
 - [ ] Three Supervisor Control Plane VMs visible in vCenter (prefixed `SupervisorControlPlaneVM`)
@@ -557,6 +516,8 @@ kubectl --kubeconfig=supervisor.kubeconfig get nodes
 Antrea is the default CNI plugin for Tanzu workload clusters. Antrea Network Policies restrict traffic between pods and namespaces, implementing micro-segmentation at the Kubernetes layer.
 
 ### Kubernetes NetworkPolicy (Standard)
+
+![Kubernetes NetworkPolicy (Standard)](../../../../assets/tanzu-proc-kubernetes-networkpolicy-standard.svg)
 
 Kubernetes NetworkPolicy objects are namespace-scoped and select pods by label. They define allowed ingress and egress:
 
@@ -590,6 +551,8 @@ kubectl get networkpolicy -n prod
 
 ### Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)
 
+![Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)](../../../../assets/tanzu-proc-antrea-clusternetworkpolicy-cluster-wide-higher-priority.svg)
+
 Antrea ClusterNetworkPolicy (ACNP) applies cluster-wide and takes priority over namespace-scoped NetworkPolicy. Use for enforcing baseline security rules that namespace owners cannot override:
 
 ```yaml
@@ -620,6 +583,8 @@ kubectl get clusternetworkpolicy
 
 ### Test Policy Enforcement
 
+![Test Policy Enforcement](../../../../assets/tanzu-proc-test-policy-enforcement.svg)
+
 ```bash
 # Verify policy is enforced: exec into the frontend pod and test connectivity
 kubectl exec -n prod -it <frontend-pod> -- curl http://backend-svc:8080   # should succeed
@@ -640,6 +605,8 @@ Decommissioning a namespace removes all TKG clusters, PVCs, and Kubernetes objec
 
 ### Step 1 — Delete TKG Workload Clusters First
 
+![Step 1 — Delete TKG Workload Clusters First](../../../../assets/tanzu-proc-step-1-delete-tkg-workload-clusters-first.svg)
+
 Before deleting the namespace, explicitly delete all TKG clusters it contains:
 
 ```bash
@@ -656,6 +623,8 @@ kubectl get tanzukubernetescluster -n <namespace>
 
 ### Step 2 — Release Persistent Volumes
 
+![Step 2 — Release Persistent Volumes](../../../../assets/tanzu-proc-step-2-release-persistent-volumes.svg)
+
 ```bash
 # List PVCs in the namespace
 kubectl get pvc -n <namespace>
@@ -665,6 +634,8 @@ kubectl delete pvc --all -n <namespace>
 ```
 
 ### Step 3 — Delete the Namespace via vCenter
+
+![Step 3 — Delete the Namespace via vCenter](../../../../assets/tanzu-proc-step-3-delete-the-namespace-via-vcenter.svg)
 
 1. vCenter → **Workload Management → Namespaces** → select the namespace → **Delete**
 2. vCenter deregisters the namespace from the Supervisor, removes network and storage allocations
@@ -676,6 +647,8 @@ kubectl --kubeconfig=supervisor.kubeconfig delete namespace <namespace>
 ```
 
 ### Step 4 — Post-Deletion Validation
+
+![Step 4 — Post-Deletion Validation](../../../../assets/tanzu-proc-step-4-post-deletion-validation.svg)
 
 - [ ] Namespace no longer appears in vCenter → Workload Management → Namespaces
 - [ ] `kubectl get ns` on the Supervisor no longer lists the namespace

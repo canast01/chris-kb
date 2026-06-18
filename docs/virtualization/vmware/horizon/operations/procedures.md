@@ -14,53 +14,7 @@ Day-2 Horizon procedures — managing desktop and RDS pools, user entitlements, 
 </div>
 
   Common Operational Procedures
-```text
-┌───────────────────────────────── VMware Horizon — Common Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│  Common Horizon procedures: update golden image, push to pool, manage sessions,                       │
-│  entitle users, and maintain certificates on Connection Servers.                                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Golden Image Update              │  │              Session Management             │   │
-│   │          Power off, snapshot parent          │  │            Logoff: force if stuck           │   │
-│   │             Install patches/apps             │  │            Reset: restart desktop           │   │
-│   │            Snapshot: new version             │  │             Send message to user            │   │
-│   │        Push scheduled via Horizon UI         │  │          Disable: maintenance mode          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Golden image update is the most frequent Horizon maintenance task; schedule off-hours.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Entitlements & Certs             │  │               Pool Maintenance              │   │
-│   │          Add entitlement: AD group           │  │          Pool in maintenance: drain         │   │
-│   │           Remove: revoke from pool           │  │            Delete stuck VM: force           │   │
-│   │         Cert: replace on CS via MMC          │  │         Add machines: increase pool         │   │
-│   │          vdmadmin: reset passwords           │  │         Disable provisioning: pause         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Golden image updates temporarily reduce pool availability; schedule maintenance windows;             │
-│  certificate replacement requires IIS restart on Connection Server.                                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Golden image  = parent VM for instant clone pools                                                    │
-│  Push          = schedule pool to use new parent snapshot                                             │
-│  Maintenance mode= pool unavailable; existing sessions continue                                       │
-│  Entitlement   = AD user or group assigned to a pool                                                  │
-│  Revoke        = remove AD group/user entitlement from pool                                           │
-│  MMC           = Microsoft Management Console; cert store on Windows                                  │
-│  IIS restart   = required after cert replacement on CS                                                │
-│  Force delete  = remove stuck VM from pool that failed to provision                                   │
-│  Send message  = warn users before forced logoff/pool push                                            │
-│  Pool size     = min/max/spare desktops; tuned for peak usage                                         │
-│  Drain         = wait for sessions to end before pool action                                          │
-│  Provisioning  = Horizon auto-creates VMs to fill pool spare count                                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 ool] → Entitlements → Add** — add AD groups
 
 ```powershell
@@ -597,6 +551,8 @@ Connection Server upgrades must be done in a rolling fashion — one replica at 
 
 ### Step 1 — Pre-Upgrade Checks
 
+![Step 1 — Pre-Upgrade Checks](../../../../assets/horizon-proc-step-1-pre-upgrade-checks.svg)
+
 - [ ] All Connection Servers show green in Horizon Admin Console → **Servers → Connection Servers**
 - [ ] Horizon Events database is reachable and up to date
 - [ ] Active session count is low (best to upgrade during off-peak hours)
@@ -605,9 +561,13 @@ Connection Server upgrades must be done in a rolling fashion — one replica at 
 
 ### Step 2 — Download the Installer
 
+![Step 2 — Download the Installer](../../../../assets/horizon-proc-step-2-download-the-installer.svg)
+
 Download the Horizon Connection Server installer from the Broadcom portal. The file name is typically `VMware-viewconnectionserver-x86_64-<version>.exe`.
 
 ### Step 3 — Upgrade the First Replica (Non-Primary)
+
+![Step 3 — Upgrade the First Replica (Non-Primary)](../../../../assets/horizon-proc-step-3-upgrade-the-first-replica-non-primary.svg)
 
 Start with a replica (not the primary Connection Server) to preserve the primary as fallback:
 
@@ -620,9 +580,13 @@ Start with a replica (not the primary Connection Server) to preserve the primary
 
 ### Step 4 — Upgrade Remaining Replicas and Primary
 
+![Step 4 — Upgrade Remaining Replicas and Primary](../../../../assets/horizon-proc-step-4-upgrade-remaining-replicas-and-primary.svg)
+
 Repeat Step 3 for each additional replica, then for the primary Connection Server. Always verify green status after each upgrade before starting the next.
 
 ### Step 5 — Upgrade Horizon Agents (Optional — Separate Window)
+
+![Step 5 — Upgrade Horizon Agents (Optional — Separate Window)](../../../../assets/horizon-proc-step-5-upgrade-horizon-agents-optional-separate-window.svg)
 
 Horizon Agent (on the golden images or RDS servers) can be upgraded independently:
 
@@ -631,6 +595,8 @@ Horizon Agent (on the golden images or RDS servers) can be upgraded independentl
 3. For RDS farms: update the RDSH server and restart the farm
 
 ### Step 6 — Post-Upgrade Validation
+
+![Step 6 — Post-Upgrade Validation](../../../../assets/horizon-proc-step-6-post-upgrade-validation.svg)
 
 - [ ] All Connection Servers show green at the new version
 - [ ] Test a desktop launch from Horizon Client — full session must connect successfully
@@ -671,22 +637,30 @@ Cloud Pod Architecture (CPA) joins multiple Horizon pods across sites into a fed
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/horizon-proc-prerequisites.svg)
+
 - Two or more Horizon pods, each with at least one Connection Server
 - Connectivity between all Connection Servers in all pods (TCP 22389, TCP 8472, TCP 32111)
 - All pods must have the same version of Horizon (within one minor version)
 
 ### Step 1 — Initialize CPA on the First Pod
 
+![Step 1 — Initialize CPA on the First Pod](../../../../assets/horizon-proc-step-1-initialize-cpa-on-the-first-pod.svg)
+
 1. Horizon Admin Console on Pod 1 → **View Configuration → Cloud Pod Architecture → Initialize Cloud Pod Architecture**
 2. This creates the federated LDAP layer and elects the first pod as the CPA primary
 
 ### Step 2 — Join the Second Pod to the Federation
+
+![Step 2 — Join the Second Pod to the Federation](../../../../assets/horizon-proc-step-2-join-the-second-pod-to-the-federation.svg)
 
 1. Horizon Admin Console on Pod 2 → **View Configuration → Cloud Pod Architecture → Join Cloud Pod Architecture**
 2. Provide the FQDN of any Connection Server in Pod 1 and an admin credential
 3. Confirm — Pod 2's Connection Servers join the federation and replicate global entitlement data
 
 ### Step 3 — Create a Global Entitlement
+
+![Step 3 — Create a Global Entitlement](../../../../assets/horizon-proc-step-3-create-a-global-entitlement.svg)
 
 A Global Entitlement maps a user or group to desktops across all federated pods:
 
@@ -698,12 +672,16 @@ A Global Entitlement maps a user or group to desktops across all federated pods:
 
 ### Step 4 — Configure Global Load Balancing DNS
 
+![Step 4 — Configure Global Load Balancing DNS](../../../../assets/horizon-proc-step-4-configure-global-load-balancing-dns.svg)
+
 Users must connect to a single URL that resolves to a Connection Server in their nearest pod. Use a Global Server Load Balancer (GSLB) or manual DNS:
 
 - `horizon.example.com` → GSLB VIP that routes to Pod 1 (Site A) or Pod 2 (Site B) based on latency
 - Configure the Horizon URL to match: **Horizon Admin Console → View Configuration → Servers → Connection Server → edit → External URL**
 
 ### Step 5 — Test Global Entitlement
+
+![Step 5 — Test Global Entitlement](../../../../assets/horizon-proc-step-5-test-global-entitlement.svg)
 
 1. Connect to `horizon.example.com` from a client in Site A — confirm assignment from Pod 1 pool
 2. Disconnect and reconnect from Site B — confirm assignment from Pod 2 pool

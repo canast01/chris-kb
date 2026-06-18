@@ -56,8 +56,8 @@ Generated: 2026-06-18
 | Total markdown pages | 2,638 |
 | Sections | 11 |
 | Pages with kb-summary | 2,358 |
-| Pages with full-width ASCII diagram | 2,623 |
-| Pages with SVG diagrams | 123 |
+| Pages with full-width ASCII diagram | 2,618 |
+| Pages with SVG diagrams | 128 |
 | Pages with Mermaid diagrams | 680 |
 | Pages with tags | 2,611 |
 | Audit score | 36 / 37 |
