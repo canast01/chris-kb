@@ -10,6 +10,14 @@ tags:
 Complete procedure: add virtual disks to nested ESXi VMs, mark disks as SSD, deploy the witness appliance, enable vSAN, create a storage policy, and verify cluster health.
 </div>
 
+```text
+┌─────────────────────────────────── Lab 2 — Phase Overview ────────────────────────────────────────────┐
+│  Phase 1: Add virtual SSD + HDD to each nested ESXi VM  →  Phase 2: Deploy witness appliance VM       │
+│  Phase 3: Enable vSAN 2-node cluster in vCenter (Manual disk claim, select witness)                   │
+│  Phase 4: Create FTT=1 RAID-1 storage policy  →  Phase 5: Verify vSAN health + proactive tests        │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Phase 1 — Add Virtual Disks to Nested ESXi VMs

@@ -11,6 +11,14 @@ tags:
 Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration workbook, deploy Cloud Builder, run pre-deployment validation, and deploy the VCF management domain.
 </div>
 
+```text
+┌─────────────────────────────────── Lab 4 — Phase Overview ────────────────────────────────────────────┐
+│  Phase 1: Prepare 4 nested ESXi hosts (vhv, UUID, SSD tags, DNS, NTP)                                 │
+│  Phase 2: Fill VCF workbook (IPs, hostnames, VLANs, passwords, license keys)                          │
+│  Phase 3: Deploy Cloud Builder  →  Phase 4: Run validation  →  Phase 5: Deploy management domain      │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Phase 1 — Prepare Four Nested ESXi Hosts
@@ -197,7 +205,7 @@ This deploys a new vCenter, a new NSX domain (or reuse the management NSX cluste
 
 ## Next Steps
 
-- [VCF Architecture](../../virtualization/vmware/vcf/architecture/)
+- [VCF Architecture](../../virtualization/vmware/vmware-cloud-foundation/architecture/)
 - [NSX Topology Decision Tree](../../reference/decision-trees/nsx-topology/)
 - [vSAN Cheat Sheet](../../reference/cheat-sheets/vsan/)
 - [NSX Cheat Sheet](../../reference/cheat-sheets/nsx/)

@@ -61,5 +61,5 @@ Prepare networking, fill in the VCF workbook, deploy Cloud Builder, run validati
 - [Lab 1 — Nested ESXi Homelab](../nested-esxi/) — understand the nested ESXi foundation
 - [Lab 2 — vSAN 2-node](../vsan-2node/) — understand vSAN before running VCF
 - [Lab 3 — NSX-T nested](../nsx-nested/) — understand NSX before running VCF
-- [VCF Architecture](../../virtualization/vmware/vcf/architecture/)
+- [VCF Architecture](../../virtualization/vmware/vmware-cloud-foundation/architecture/)
 - [NSX Topology Decision Tree](../../reference/decision-trees/nsx-topology/)
