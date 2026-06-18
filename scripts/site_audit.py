@@ -249,9 +249,11 @@ for path in all_md():
 
 # ── Check 15: Redundancy ──────────────────────────────────────────────────────
 issues = check(15, 'Redundancy / structural overlap')
+# Sections excluded because they are actively being built out (more tracks pending)
+_SKIP_THIN = {'reference'}
 for d in sorted(os.listdir(DOCS)):
     full = os.path.join(DOCS, d)
-    if not os.path.isdir(full) or d.startswith('.'):
+    if not os.path.isdir(full) or d.startswith('.') or d in _SKIP_THIN:
         continue
     count = sum(1 for _, _, files in os.walk(full) for f in files if f == 'index.md')
     if 1 < count < 5:

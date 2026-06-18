@@ -17,10 +17,10 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
 │   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
 │   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
-│   │  Total pages:       2,599   │  │  Storage:          709       │  │  ASCII diagrams:     2,591  │  │
-│   │  Sections:             11   │  │  Virtualization:   685       │  │  SVG diagrams:         112  │  │
+│   │  Total pages:       2,616   │  │  Storage:          709       │  │  ASCII diagrams:     2,608  │  │
+│   │  Sections:             12   │  │  Virtualization:   685       │  │  SVG diagrams:         112  │  │
 │   │  Avg pages/section:   236   │  │  Cloud:            295       │  │  Mermaid diagrams:     676  │  │
-│   │  Updated 2026-06-17         │  │                              │  │  kb-summary divs:    2,319  │  │
+│   │  Updated 2026-06-18         │  │                              │  │  kb-summary divs:    2,336  │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
@@ -41,25 +41,25 @@ Knowledge base statistics: page counts, section distribution, and content type c
 │    CLI reference   = Page with CLI commands, flags, and usage examples                                │
 │    Mermaid         = Flowchart or sequence diagram embedded in a fenced mermaid block                 │
 │    ASCII diagram   = Full-width box-drawing architecture diagram (105 chars wide)                     │
-│    SVG diagram     = Vector diagram in docs/assets/; injected via markdown image reference             │
+│    SVG diagram     = Vector diagram in docs/assets/; injected via markdown image reference            │
 │    site_audit.py   = 37-check automated audit; covers structure, content, links, and quality          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-06-17
+Generated: 2026-06-18
 
 ## Current totals
 
 | Metric | Count |
 |---|---:|
-| Total markdown pages | 2,599 |
+| Total markdown pages | 2,616 |
 | Sections | 11 |
-| Pages with full-width ASCII diagrams | 2,591 |
+| Pages with full-width ASCII diagrams | 2,608 |
 | Pages with SVG diagrams | 112 |
 | Pages with Mermaid diagrams | 676 |
-| Pages with kb-summary | 2,319 |
-| Pages with tags | 2,572 |
+| Pages with kb-summary | 2,336 |
+| Pages with tags | 2,589 |
 | Audit score | 36 / 37 |
 
 ## Section page counts

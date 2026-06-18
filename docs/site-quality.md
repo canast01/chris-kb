@@ -47,19 +47,19 @@ Quality gates and content standards for the chrisanastasiadis.com knowledge base
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-06-17
+Generated: 2026-06-18
 
 ## Current state
 
 | Item | Count |
 |---|---:|
-| Total markdown pages | 2,599 |
+| Total markdown pages | 2,616 |
 | Sections | 11 |
-| Pages with kb-summary | 2,319 |
-| Pages with full-width ASCII diagram | 2,591 |
+| Pages with kb-summary | 2,336 |
+| Pages with full-width ASCII diagram | 2,608 |
 | Pages with SVG diagrams | 112 |
 | Pages with Mermaid diagrams | 676 |
-| Pages with tags | 2,572 |
+| Pages with tags | 2,589 |
 | Audit score | 36 / 37 |
 | MkDocs strict build warnings | 0 |
 

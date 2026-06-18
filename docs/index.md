@@ -78,5 +78,10 @@
   <span>Study notes, practice exam materials, review plans, and weak-area trackers for SAN and storage vendor certifications.</span>
 </a>
 
+<a class="kb-card" href="reference/">
+  <strong>Quick Reference</strong>
+  <span>Cheat sheets, interaction maps, decision trees, glossary, and version matrices.</span>
+</a>
+
 </div>
 
