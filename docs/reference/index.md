@@ -40,4 +40,8 @@ Quick-reference material for VMware infrastructure: cheat sheets, interaction ma
 <strong>Cheat Sheets</strong><br>
 Top-10 CLI and PowerCLI commands for each VMware product on a single page.
 </a>
+<a class="kb-card" href="interaction-map/">
+<strong>Interaction Maps</strong><br>
+How VMware products connect — compute, network, storage, management, and automation domains.
+</a>
 </div>
