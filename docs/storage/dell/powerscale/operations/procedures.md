@@ -317,6 +317,150 @@ isi snapshot snapshots revert <snap_id>
 
 ---
 
+### SmartConnect Zone Configuration
+
+![SmartConnect Zone Configuration](../../../../assets/powerscale-proc-smartconnect-zone-configuration.svg)
+
+SmartConnect zones distribute NFS and SMB client connections across node pools using DNS-based load balancing.
+
+```bash
+# Create an IP pool with a SmartConnect DNS zone and round-robin load balancing
+isi network pools create \
+    --name=pool1 \
+    --subnet=subnet0 \
+    --ifaces=1:ext-1 \
+    --sc-dns-zone=pool1.cluster.domain.com \
+    --sc-load-balance-policy=round_robin
+
+# Verify the pool configuration
+isi network pools view pool1
+```
+
+Delegate the SmartConnect zone FQDN (`pool1.cluster.domain.com`) in your DNS infrastructure to the cluster's SmartConnect service IP. Test: `nslookup pool1.cluster.domain.com` — it should return multiple node IPs in rotation across successive lookups.
+
+### SmartQuotas — Create and Monitor Quotas
+
+![SmartQuotas — Create and Monitor Quotas](../../../../assets/powerscale-proc-smartquotas-create-and-monitor-quotas.svg)
+
+Set hard and soft limits on directories, users, or groups to control storage consumption.
+
+```bash
+# Create a directory quota with hard, soft, and advisory thresholds
+isi quota quotas create \
+    --path=/ifs/data/project1 \
+    --type=directory \
+    --hard-threshold=10T \
+    --soft-threshold=8T \
+    --soft-grace=7D \
+    --advisory-threshold=9T
+
+# List all active quotas
+isi quota quotas list
+
+# Generate a quota usage report
+isi quota reports create
+isi quota reports list
+```
+
+Quota events appear in `isi event events list` when thresholds are crossed. Review reports regularly and adjust thresholds before directories approach the hard limit.
+
+### SyncIQ — Configure Replication Policy
+
+![SyncIQ — Configure Replication Policy](../../../../assets/powerscale-proc-synciq-configure-replication-policy.svg)
+
+Set up asynchronous replication from this cluster to a remote PowerScale cluster for DR.
+
+```bash
+# Create a SyncIQ replication policy
+isi sync policies create \
+    --name=DR-Policy \
+    --action=sync \
+    --source-root=/ifs/data \
+    --target-host=<remote-cluster-ip> \
+    --target-path=/ifs/data-replica \
+    --schedule="every 1 hours"
+
+# Trigger an immediate manual run
+isi sync policies run DR-Policy
+
+# Monitor replication job progress
+isi sync jobs list
+```
+
+Confirm the job completes with status SUCCESS. Check `isi sync reports list --policy=DR-Policy` for transfer statistics and any errors from previous runs.
+
+### SyncIQ — Failover and Failback
+
+![SyncIQ — Failover and Failback](../../../../assets/powerscale-proc-synciq-failover-and-failback.svg)
+
+Promote the replica to writable on a DR event, then re-establish replication when the primary recovers.
+
+```bash
+# --- FAILOVER (run on the TARGET / DR cluster) ---
+# Allow writes to the replica — breaks the replication relationship
+isi sync recovery allow-write --policy=DR-Policy
+
+# Update client mount points and DNS to point to the target cluster
+
+# --- FAILBACK (run when primary cluster is recovered) ---
+# On the TARGET cluster: prepare the replica for resync back to the primary
+isi sync recovery resync-prep --policy=DR-Policy
+
+# On the TARGET cluster: commit the resync and re-establish original direction
+isi sync recovery commit --policy=DR-Policy
+
+# Verify replication is active again
+isi sync policies list
+```
+
+After failback, trigger a manual run with `isi sync policies run DR-Policy` and confirm SUCCESS before updating client mount points back to the primary cluster.
+
+### Access Zone Management
+
+![Access Zone Management](../../../../assets/powerscale-proc-access-zone-management.svg)
+
+Access zones isolate client namespaces and authentication providers, enabling multi-tenancy on a single cluster.
+
+```bash
+# Create a new access zone with a dedicated root path
+isi zone zones create --name=Zone-DMZ --path=/ifs/dmz --create-path
+
+# Add an authentication provider to the zone
+isi zone zones modify Zone-DMZ --add-auth-providers=lsa-local-provider:System
+
+# View the zone configuration
+isi zone zones view Zone-DMZ
+```
+
+After creating the zone, create a dedicated IP pool and SmartConnect zone scoped to `Zone-DMZ` so that clients connecting to the zone's IP are isolated from other zones. Verify NFS exports and SMB shares in the zone are reachable from the correct client subnet.
+
+### Node Pool and Tier Management
+
+![Node Pool and Tier Management](../../../../assets/powerscale-proc-node-pool-and-tier-management.svg)
+
+Assign nodes to pools and configure file pool policies to place data on appropriate performance tiers.
+
+```bash
+# List existing node pools and their assigned nodes
+isi storagepool nodepools list
+
+# Assign specific nodes (by logical node number) to a pool
+isi storagepool nodepools modify <pool-name> --lnns=1,2,3
+
+# Create a file pool policy to direct archive data to a capacity tier
+isi filepool policies create \
+    --name=Archive \
+    --apply-data-storage-target=capacity-pool1 \
+    --file-matching-criteria="accessed > 90 days"
+
+# Verify overall storage pool health and tier usage
+isi storagepool health
+```
+
+Run `isi job list` after modifying pool assignments — a Restripe job will start automatically to redistribute data. Monitor it to completion before making further pool changes.
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

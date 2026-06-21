@@ -391,6 +391,128 @@ NFS clients experience a brief interruption (seconds) during NAS server failover
 
 ---
 
+### Manage Protection Policies
+
+![Manage Protection Policies](../../../../assets/powerstore-proc-manage-protection-policies.svg)
+
+Protection policies bundle snapshot rules and replication rules and are assigned to volumes or volume groups.
+
+```bash
+# List all protection policies
+pstcli -server <ip> -user admin protection_policy list
+
+# List snapshot rules
+curl -k -X GET "https://<mgmt-ip>/api/rest/snapshot_rule" \
+  -H "DELL-EMC-TOKEN: <token>"
+
+# Assign a protection policy to a volume
+curl -k -X PATCH "https://<mgmt-ip>/api/rest/volume/<volume-id>" \
+  -H "DELL-EMC-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"protection_policy_id": "<policy-id>"}'
+```
+
+GUI path: Protection → Protection Policies → Create. Assign snapshot rule (name, interval, retained copies) and optional replication rule. Assign policy to volumes via Volumes → select volume → Protection → Assign Policy. Snapshots begin on the defined schedule immediately after assignment.
+
+### Volume Migration (Import / Mobility)
+
+![Volume Migration (Import / Mobility)](../../../../assets/powerstore-proc-volume-migration-import-mobility.svg)
+
+Move a volume between storage tiers within the same cluster, or import volumes from an external array.
+
+```bash
+# Modify a volume's storage tier (Performance, Capacity, Extreme)
+curl -k -X PATCH "https://<mgmt-ip>/api/rest/volume/<volume-id>" \
+  -H "DELL-EMC-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"appliance_id": "<target-appliance-id>"}'
+
+# List active import sessions
+curl -k -X GET "https://<mgmt-ip>/api/rest/import_session" \
+  -H "DELL-EMC-TOKEN: <token>"
+```
+
+GUI path for tier change: Storage → Volumes → select volume → Modify → Storage Tier. For import from external array (VPLEX, Unity, VNX): Storage → Import → Create Import Session; select source array and volume; initiate cutover when ready. Monitor progress under Storage → Import → Active Sessions.
+
+### NAS File System Creation and Share
+
+![NAS File System Creation and Share](../../../../assets/powerstore-proc-nas-file-system-creation-and-share.svg)
+
+PowerStore supports NFS and SMB shares from the same NAS server. Create the NAS server first before creating file systems.
+
+```bash
+# Step 1: Create a NAS server
+curl -k -X POST "https://<mgmt-ip>/api/rest/nas_server" \
+  -H "DELL-EMC-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "nas-prod-002",
+    "current_node_id": "<node-id>"
+  }'
+
+# Step 2: Create a file system on the NAS server
+curl -k -X POST "https://<mgmt-ip>/api/rest/filesystem" \
+  -H "DELL-EMC-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "dept-shares-001",
+    "nas_server_id": "<nas-server-id>",
+    "size_total": 2199023255552
+  }'
+
+# Step 3: Create an NFS export
+curl -k -X POST "https://<mgmt-ip>/api/rest/nfs_export" \
+  -H "DELL-EMC-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "dept-shares-export",
+    "filesystem_id": "<fs-id>",
+    "path": "/",
+    "rw_hosts": [{"ip": "192.168.10.0", "prefix_length": 24}]
+  }'
+
+# Step 4: Create an SMB share
+curl -k -X POST "https://<mgmt-ip>/api/rest/smb_share" \
+  -H "DELL-EMC-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "dept-shares",
+    "filesystem_id": "<fs-id>",
+    "path": "/"
+  }'
+```
+
+Verify NFS from Linux: `mount <ip>:/dept-shares-001 /mnt/test`. Verify SMB from Windows: map `\\<ip>\dept-shares`. GUI path: Storage → NAS Servers → Create; then Storage → File Systems → Create.
+
+### Performance Policy Management
+
+![Performance Policy Management](../../../../assets/powerstore-proc-performance-policy-management.svg)
+
+Performance policies enforce IOPS and bandwidth limits per volume for QoS across workloads.
+
+```bash
+# List existing performance policies
+curl -k -X GET "https://<mgmt-ip>/api/rest/performance_policy" \
+  -H "DELL-EMC-TOKEN: <token>"
+
+# Create a performance policy with IOPS and bandwidth limits
+curl -k -X POST "https://<mgmt-ip>/api/rest/performance_policy" \
+  -H "DELL-EMC-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "dev-limited",
+    "max_iops": 1000,
+    "max_bandwidth": 104857600
+  }'
+
+# Assign a performance policy to a volume
+pstcli -server <ip> -user admin volume modify --name <vol> --performance_policy_id <id>
+```
+
+GUI path: Storage → Storage Policies → Performance Policies → Create (set IOPS limit and/or bandwidth limit in MB/s). Assign to a volume via Volumes → Modify → Storage Policy → select performance policy. View utilisation against limits under Dashboard → Performance. A value of `0` for `max_iops` or `max_bandwidth` means unlimited.
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

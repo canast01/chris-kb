@@ -242,6 +242,167 @@ Confirm the new schedule aligns with the required RPO — more frequent schedule
 
 ---
 
+## Create a SnapMirror Relationship
+
+Create the destination volume, peer the clusters and SVMs, then create and initialize the relationship.
+
+```bash
+# Step 1: Peer the clusters (run on the local cluster, referencing the remote)
+cluster peer create -peer-addrs <remote_cluster_mgmt_ip>
+
+# Step 2: Peer the SVMs
+vserver peer create -vserver <local_svm> -peer-vserver <remote_svm> \
+    -peer-cluster <remote_cluster_name> -applications snapmirror
+
+# Step 3: Create the destination volume as a DP (data protection) type
+volume create -vserver <dest_svm> -volume <dest_vol> \
+    -aggregate <dest_aggr> -type DP -size <size>
+
+# Step 4: Create the SnapMirror relationship
+snapmirror create \
+    -source-path <src_svm:src_vol> \
+    -destination-path <dest_svm:dest_vol> \
+    -policy MirrorAllSnapshots
+
+# Step 5: Initialize (baseline transfer — copies all data; may take hours)
+snapmirror initialize -destination-path <dest_svm:dest_vol>
+
+# Monitor initialization progress
+snapmirror show -destination-path <dest_svm:dest_vol> -fields state,lag-time
+```
+
+Wait until state shows **Idle** before considering the relationship established.
+
+---
+
+## Schedule Management
+
+Create a named cron schedule and assign it to a SnapMirror relationship.
+
+```bash
+# Create a cron schedule (runs every hour, on the hour)
+job schedule cron create -name hourly-sm -hour 0 -minute 0
+
+# Assign the schedule to an existing relationship
+snapmirror modify -destination-path <dest_svm:dest_vol> -schedule hourly-sm
+
+# Verify the schedule is applied
+snapmirror show -destination-path <dest_svm:dest_vol> -fields schedule
+```
+
+Confirm the schedule aligns with the required RPO — more frequent transfers reduce RPO but increase network utilisation.
+
+---
+
+## Manual Update (On-Demand Transfer)
+
+Trigger an immediate incremental transfer outside the scheduled window.
+
+```bash
+# Trigger an on-demand incremental update
+snapmirror update -destination-path <dest_svm:dest_vol>
+
+# Check lag after the transfer completes
+snapmirror show -destination-path <dest_svm:dest_vol> -fields lag-time
+```
+
+Verify lag-time drops to near-zero after the update, confirming the destination is current.
+
+---
+
+## Quiesce and Resume
+
+Pause transfers for maintenance without breaking the relationship.
+
+```bash
+# Quiesce — pauses new transfers but lets any in-progress transfer finish
+snapmirror quiesce -destination-path <dest_svm:dest_vol>
+
+# Verify the relationship is in Quiesced state before proceeding
+snapmirror show -destination-path <dest_svm:dest_vol>
+
+# Perform maintenance on the source or network...
+
+# Resume transfers after maintenance is complete
+snapmirror resume -destination-path <dest_svm:dest_vol>
+
+# Trigger an immediate update to minimize lag catch-up
+snapmirror update -destination-path <dest_svm:dest_vol>
+```
+
+Quiesce does not break the relationship — no resync is needed after resuming.
+
+---
+
+## Monitor Lag and Health
+
+Check the status of all SnapMirror relationships.
+
+```bash
+# View health and lag across all relationships
+snapmirror show -fields healthy,lag-time,last-transfer-type,last-transfer-size
+
+# Confirm no relationships are in broken-off state (should return nothing)
+snapmirror show -relationship-status broken-off
+
+# Check for SnapMirror-related errors in the event log
+event log show -severity ERROR -message-name snapmirror.*
+```
+
+Alert if `healthy` is `false` on any critical relationship, or if `lag-time` exceeds the agreed RPO threshold.
+
+---
+
+## Delete a Relationship
+
+Cleanly remove a SnapMirror relationship. Quiesce and break before deleting.
+
+```bash
+# Step 1: Quiesce to stop transfers
+snapmirror quiesce -destination-path <dest_svm:dest_vol>
+
+# Step 2: Break to make destination writable (required before delete)
+snapmirror break -destination-path <dest_svm:dest_vol>
+
+# Step 3: Delete the relationship metadata
+snapmirror delete -destination-path <dest_svm:dest_vol>
+
+# Optional: remove the destination volume if no longer needed
+volume delete -vserver <dest_svm> -volume <dest_vol>
+```
+
+Verify with `snapmirror show` that the relationship no longer appears after deletion.
+
+---
+
+## Convert Async to Synchronous (SM-BC)
+
+Convert an async relationship to SnapMirror Business Continuity (SM-BC) for zero-RPO SAN replication. Requires ONTAP Mediator deployed and reachable from both clusters.
+
+```bash
+# Step 1: Create a synchronous AutomatedFailOver policy
+snapmirror policy create -vserver <svm> \
+    -policy AutomatedFailOver \
+    -type sync \
+    -sync-type AutomatedFailOver
+
+# Step 2: Create the SM-BC relationship using the new policy
+snapmirror create \
+    -source-path <src_svm:src_vol> \
+    -destination-path <dest_svm:dest_vol> \
+    -policy AutomatedFailOver
+
+# Step 3: Initialize the relationship
+snapmirror initialize -destination-path <dest_svm:dest_vol>
+
+# Step 4: Verify the relationship is InSync
+snapmirror show -type sync -fields is-healthy
+```
+
+**Note:** SM-BC supports iSCSI and FCP SAN volumes only — NAS (NFS/SMB) volumes are not supported. Confirm ONTAP Mediator is registered and both clusters can reach the mediator before initializing.
+
+---
+
 ## See also
 
 - [Snapmirror — Health Checks](health-checks/)

@@ -253,6 +253,156 @@ configupload -all -P ftp -h <server> -u <user> -f <filename>
 
 ---
 
+### Enable and Disable Ports
+
+![Enable and Disable Ports](../../../../assets/fabric-os-proc-enable-and-disable-ports.svg)
+
+Control individual FC ports for maintenance or isolation.
+
+```bash
+# Take a port offline
+portdisable <port-number>
+
+# Bring a port back online
+portenable <port-number>
+
+# Disable a range of ports
+portdisable --range 0-7
+
+# Verify port state
+switchshow | grep -E "^<port>"
+```
+
+Always disable both ends of an ISL before removing a cable. Never disable a port that is the only active path to a host.
+
+### Configure an ISL (E-Port / Trunk)
+
+![Configure an ISL (E-Port / Trunk)](../../../../assets/fabric-os-proc-configure-an-isl-e-port-trunk.svg)
+
+Inter-switch links connect fabric switches. Connect cables first, then verify E-port negotiation.
+
+```bash
+# Confirm the port has negotiated as E-Port
+switchshow
+
+# Enable trunking on the ISL port
+portcfgtrunkport <port-number> 1
+
+# Set ISL R_RDY mode for best performance
+portcfg isl <port-number>
+
+# View current trunk groups
+trunkshow
+
+# Verify fabric topology and switch membership
+fabricshow
+nsallshow
+```
+
+The port column in `switchshow` must show `E-Port` before enabling trunking. Fabric parameters (BB credit, speed, distance) must match on both ends.
+
+### Firmware Upgrade
+
+![Firmware Upgrade](../../../../assets/fabric-os-proc-firmware-upgrade.svg)
+
+Download and apply a Fabric OS upgrade one switch at a time. Never upgrade both fabric planes simultaneously.
+
+```bash
+# Step 1: Download firmware — -b triggers HA boot to standby CP first
+firmwaredownload -s -b -n <ftp-or-sftp-host> <path/to/FOS_image>
+
+# Step 2: Monitor download and install progress
+firmwaredownloadstatus
+
+# Step 3: Confirm both CPs are on the new version
+firmwareshow
+```
+
+The `-b` flag causes the standby CP to upgrade and reboot first; the active CP follows automatically. Verify all ISLs are healthy and no alarms are present before starting.
+
+### Switch Health Check
+
+![Switch Health Check](../../../../assets/fabric-os-proc-switch-health-check.svg)
+
+Full health snapshot to run before any change window.
+
+```bash
+# Overall pass/fail status
+switchstatusshow
+
+# Temperature, fan, and power sensor readings
+sensorshow
+
+# Blade and slot status (chassis switches)
+slotshow
+
+# Per-port detail for a specific port
+portshow <port>
+
+# Error log — last 100 entries
+errdump
+
+# Fabric membership — count expected switches
+fabricshow
+```
+
+Flag any `FAIL` or `MARGINAL` result before proceeding. A healthy switch shows all sensors `OK` and all expected switches in `fabricshow`.
+
+### User and RBAC Management
+
+![User and RBAC Management](../../../../assets/fabric-os-proc-user-and-rbac-management.svg)
+
+Create role-based accounts for operators and admins. Brocade FOS supports predefined roles: `user`, `admin`, `securityadmin`, `zoneadmin`, `fabricadmin`.
+
+```bash
+# Add a read-only operator account
+userconfig --add <username> -r user -p <password>
+
+# Add a full admin account
+userconfig --add <username> -r admin -p <password>
+
+# Add a zone-admin-only account
+userconfig --add zone-admin -r zoneadmin -p <password>
+
+# List all local accounts
+userconfig --show -a
+
+# Change a user's password
+passwd <username>
+
+# Delete a user account
+userconfig --delete <username>
+```
+
+Verify: `userconfig --show -a` should list the account with the correct role. Use `securityadmin` role for managing certificates and security policies only.
+
+### Port Diagnostics
+
+![Port Diagnostics](../../../../assets/fabric-os-proc-port-diagnostics.svg)
+
+Run loopback and frame tests to verify port hardware health.
+
+```bash
+# Internal loopback — no cable needed, tests internal hardware path
+portloopbacktest -port <port>
+
+# External loopback — requires loopback SFP installed
+portloopbacktest -port <port> -type eloopback
+
+# Real-time frame counts and error rates on a connected port
+portperfshow <port>
+
+# Check BB credit starvation — B2B credit 0 count indicates congestion
+portbuffershow <port>
+
+# Per-port CRC, LR, and link failure counters
+porterrshow
+```
+
+A non-zero B2B credit 0 count in `portbuffershow` indicates the remote end is not returning credits fast enough — investigate slow-drain devices on that path. `portperfshow` output auto-refreshes every second; press Ctrl-C to exit.
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

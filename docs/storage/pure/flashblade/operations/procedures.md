@@ -291,6 +291,153 @@ No downtime is required. NFS clients see the new capacity immediately. Confirm t
 
 ---
 
+### Create a File System
+
+![Create a File System](../../../../assets/flashblade-proc-create-a-file-system.svg)
+
+Create a new NFS or SMB file system on FlashBlade with a provisioned size limit.
+
+```bash
+# Create a file system with NFS enabled and SMB disabled
+purefb fs create <name> --size 10T --nfs-enabled true --smb-enabled false
+
+# Verify the file system was created
+purefb fs list <name>
+```
+
+GUI path: **Storage → File Systems → Create**. Set a hard limit (enforced) or soft limit (advisory with grace period) at creation time.
+
+### Configure an NFS Export
+
+![Configure an NFS Export](../../../../assets/flashblade-proc-configure-an-nfs-export.svg)
+
+Add export rules to an existing file system so NFS clients can mount it.
+
+```bash
+# Apply an export policy to the file system
+purefb fs update <name> --nfs-export-policy <policy-name>
+
+# Add a rule to the export policy granting read-write access to a subnet
+purefb nfs-export-policy rule create <policy-name> \
+    --client 10.0.0.0/24 \
+    --access read-write \
+    --security sys
+
+# Verify the policy and rules
+purefb nfs-export-policy list
+purefb nfs-export-policy rule list <policy-name>
+```
+
+Test from a client: `mount -t nfs <fb-data-vip>:/<name> /mnt/test` and confirm read-write access.
+
+### Configure an SMB Share
+
+![Configure an SMB Share](../../../../assets/flashblade-proc-configure-an-smb-share.svg)
+
+Enable SMB on a file system and create a named share for Windows clients.
+
+```bash
+# Enable SMB on the file system
+purefb fs update <name> --smb-enabled true
+
+# Create an SMB share backed by the file system
+purefb smb-share create <share-name> --file-system <fs-name>
+
+# Update share-level ACLs (alternative: use Windows MMC)
+purefb smb-share acl-update <share-name> --permission full-control --user DOMAIN\\AdminGroup
+```
+
+Verify from a Windows client: `net use \\<fb-mgmt>\<share>` — confirm the share maps successfully and files are accessible.
+
+### Create an Object Store Bucket
+
+![Create an Object Store Bucket](../../../../assets/flashblade-proc-create-an-object-store-bucket.svg)
+
+Create an S3 bucket scoped to an object store account and verify access with the S3 API.
+
+```bash
+# Create the bucket under an existing object store account
+purefb bucket create <bucket-name> --account <account-name>
+
+# Create an access key for the account (GUI: Object Store → Users → Generate Access Key)
+# Then test bucket access using the generated credentials
+aws s3 ls s3://<bucket-name> \
+    --endpoint-url https://<fb-s3-vip>
+```
+
+Confirm the listing returns without error. For application integration, generate access keys via **Object Store → Users → Create User → Generate Access Key** in the GUI.
+
+### Configure Array-to-Array Replication
+
+![Configure Array-to-Array Replication](../../../../assets/flashblade-proc-configure-array-to-array-replication.svg)
+
+Set up asynchronous file system replication between two FlashBlade arrays for DR.
+
+```bash
+# Step 1 — Connect the remote FlashBlade array
+purefb array-connection create \
+    --management-address <remote-fb-mgmt-ip> \
+    --replication-addresses <remote-repl-ip>
+
+# Step 2 — Create an outbound replica link for the file system
+purefb fs-replica-link create \
+    --local-fs <fs-name> \
+    --remote-fs <remote-fs-name> \
+    --remote-array <remote-array-name> \
+    --direction outbound
+
+# Monitor replication status and lag
+purefb fs-replica-link list
+```
+
+Confirm the replica link shows as active and lag is within the RPO target. For failover, use ActiveDR procedures to promote the remote file system.
+
+### Expand a File System
+
+![Expand a File System](../../../../assets/flashblade-proc-expand-a-file-system.svg)
+
+Increase the provisioned size limit of an existing file system. Expansion is non-disruptive.
+
+```bash
+# Expand the file system to the new size
+purefb fs update <name> --size 20T
+
+# Verify the updated provisioned size
+purefb fs list <name>
+```
+
+NFS and SMB clients see the new capacity immediately without remounting. Confirm with `df -h` from a mounted client. Shrinking a file system is not supported — plan capacity requirements carefully before provisioning.
+
+### Manage Quotas (User and Group)
+
+![Manage Quotas (User and Group)](../../../../assets/flashblade-proc-manage-quotas-user-and-group.svg)
+
+Set per-user or per-group usage limits within a file system to prevent runaway consumption.
+
+```bash
+# Set a per-user quota limit (by UID)
+purefb quota-user set \
+    --file-system <name> \
+    --uid 1001 \
+    --quota-limit 500G
+
+# Set a per-group quota limit (by GID)
+purefb quota-group set \
+    --file-system <name> \
+    --gid 2000 \
+    --quota-limit 2T
+
+# List current user quotas for a file system
+purefb quota-user list --file-system <name>
+
+# List current group quotas
+purefb quota-group list --file-system <name>
+```
+
+Quota limits are enforced as hard limits. Users or groups that reach their limit receive a write error. Monitor quota usage regularly to identify accounts approaching their limit before they are blocked.
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

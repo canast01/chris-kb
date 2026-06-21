@@ -184,6 +184,132 @@ Policies define how SnapCenter performs backups — schedule, retention, SnapMir
 
 ---
 
+## Add a Host and Install Plugin
+
+Add a managed host and push the appropriate SnapCenter plugin to it.
+
+1. Navigate to **Hosts → Add**
+2. Enter the fully qualified domain name (FQDN) of the host
+3. Provide credentials (Windows: domain admin or local admin; Linux: root or sudo account)
+4. Select the plugin packages to install — SnapCenter Plugin for VMware vSphere, SQL Server, Oracle, or Windows File Systems as required
+5. Click **Submit** — SnapCenter connects to the host via WinRM (Windows) or SSH (Linux) and pushes the plugin
+6. Monitor installation progress in the **Jobs** pane
+7. Verify the host appears with status **Connected** and all plugins show **Running**
+
+```powershell
+# Verify via PowerShell after installation
+Get-SCHost
+```
+
+---
+
+## Create a Resource Group
+
+A resource group defines which resources are backed up together under a single policy and schedule.
+
+1. Navigate to **Resources → Resource Group → New**
+2. Name the resource group and select the resource type
+3. Add resources — VMs, databases, file systems, or application instances
+4. Assign one or more policies to the group
+5. Set the schedule (if not already defined in the policy)
+6. Review and click **Finish**
+
+```powershell
+# Create a resource group via PowerShell
+New-SCResourceGroup -Name "RG-Prod-SQL" -PolicyName "Daily-Policy"
+```
+
+Group resources that share the same RPO/RTO requirements — avoid mixing critical and non-critical resources in the same group.
+
+---
+
+## Restore from Backup
+
+Restore a resource to its original location or an alternate target.
+
+1. Navigate to **Resources** and select the resource to restore
+2. Click **Restore** from the resource actions menu
+3. Choose the backup copy to restore from — sort by date to find the correct recovery point
+4. Select the restore type:
+   - **Full restore** — overwrites the resource with snapshot data
+   - **Granular/item-level** — restore specific files, tables, or mailbox items
+5. For SQL Server: specify whether to restore to the original instance or an alternate instance
+6. For VMware: restore the VM to the original datastore or an alternate datastore/folder
+7. Confirm restore settings and click **Restore**
+8. Monitor the job and verify application connectivity after completion
+
+```powershell
+# Check restore job status via PowerShell
+Get-SCRestoreJob
+```
+
+---
+
+## Clone a Resource
+
+Use FlexClone to instantly create a writable, space-efficient clone for dev/test or QA purposes.
+
+1. Navigate to **Resources** and select the resource to clone
+2. Click **Clone** from the resource actions menu
+3. Select the snapshot to use as the clone source
+4. For SQL Server: specify the destination SQL instance and clone database name
+5. For VMware: specify the destination host/folder and clone VM name
+6. Configure any clone-specific options (mount path, log directory, NFS/iSCSI settings)
+7. Click **Clone** and monitor the job
+
+```powershell
+# Monitor clone job status
+Get-SCCloneJob
+```
+
+FlexClone operations complete in seconds regardless of volume size — no data is physically copied until the clone diverges from the parent snapshot.
+
+---
+
+## Monitor Backup Jobs and Alerts
+
+Track job status and configure alerting for backup failures.
+
+1. Navigate to **Monitor → Jobs** for live and historical job status
+2. Filter by resource group, status, or date range
+3. Click any job to view the detailed log including ONTAP snapshot operations
+
+```powershell
+# List failed backup jobs with error details
+Get-SCJob -Status Failed | Select-Object StartTime, EndTime, ErrorMessage
+```
+
+Configure email alerts for failures:
+
+1. Navigate to **Settings → Global Settings → SMTP**
+2. Enter SMTP server, sender address, and recipient list
+3. Enable notifications for **Failed** and **Completed with warnings** job states
+
+For monitoring integration, configure SNMP traps under **Settings → Global Settings → SNMP** and add SnapCenter as a trap source in your NMS.
+
+---
+
+## Manage Retention and Purge Old Backups
+
+Retention is enforced automatically by policy — SnapCenter deletes the oldest copies when the configured count is exceeded. To manually remove a specific backup:
+
+1. Navigate to **Resources** and select the resource
+2. Click **Manage Copies**
+3. Select the backup copy to delete
+4. Click **Delete** — this removes the snapshot from ONTAP and the entry from the SnapCenter catalog
+
+```powershell
+# Remove a backup via PowerShell
+Remove-SCBackup -BackupName <backup_name>
+
+# Clean up the catalog after manual snapshot deletions on ONTAP
+Invoke-SCCatalogCleanup
+```
+
+Run `Invoke-SCCatalogCleanup` after any out-of-band snapshot deletions on ONTAP to keep the SnapCenter catalog consistent with actual storage state.
+
+---
+
 ## See also
 
 - [Snapcenter — Health Checks](health-checks/)
