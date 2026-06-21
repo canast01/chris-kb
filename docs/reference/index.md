@@ -34,4 +34,8 @@ Flowcharts for vSAN policy, NSX topology, DR tool selection, and Aria product se
 <strong>Version Matrix</strong><br>
 Minimum product versions for 65+ features across vSphere, vSAN, NSX, VCF, Aria Suite, and Tanzu.
 </a>
+<a class="kb-card" href="quick-start/">
+<strong>Quick-Start Guides</strong><br>
+Day 1 orientation checklists for vSphere, ONTAP, NSX-T, Veeam, and Pure FlashArray.
+</a>
 </div>
