@@ -61,6 +61,8 @@ Run this checklist before any planned change to an Evergreen FlashArray — Puri
 
 ### Pre-Change Checklist
 
+![Pre-Change Checklist](../../../../assets/evergreen-proc-pre-change-checklist.svg)
+
 - [ ] **No active drive rebuilds** — `puredrive list` shows all drives `healthy`; no drives in `evacuating` or `recovering` state
 - [ ] **No active critical alerts** — `purealert list --severity error` returns no results
 - [ ] **Both controllers online** — `purearray list --controller` shows both CT0 and CT1 online running the same Purity version
@@ -93,6 +95,8 @@ Purity upgrades on Evergreen subscriptions are non-disruptive. Pure performs the
 
 ### Step 1 — Confirm Target Version and Path
 
+![Step 1 — Confirm Target Version and Path](../../../../assets/evergreen-proc-step-1-confirm-target-version-and-path.svg)
+
 ```bash
 # Check current Purity version
 purearray list
@@ -112,6 +116,8 @@ Confirm the target version with Pure Support. Pure will specify the upgrade path
 
 ### Step 2 — Pre-Upgrade Actions
 
+![Step 2 — Pre-Upgrade Actions](../../../../assets/evergreen-proc-step-2-pre-upgrade-actions.svg)
+
 ```bash
 # Clean up destroyed volumes and snapshots to reduce upgrade duration
 purevol eradicate --destroyed
@@ -128,6 +134,8 @@ purevol list > /tmp/pre-upgrade-volumes-$(date +%Y%m%d).txt
 ```
 
 ### Step 3 — Execute the Upgrade
+
+![Step 3 — Execute the Upgrade](../../../../assets/evergreen-proc-step-3-execute-the-upgrade.svg)
 
 Pure Support leads the upgrade execution. During the upgrade window:
 
@@ -152,6 +160,8 @@ esxcli storage nmp device list | grep -E "naa|State"
 ```
 
 ### Step 4 — Post-Upgrade Validation
+
+![Step 4 — Post-Upgrade Validation](../../../../assets/evergreen-proc-step-4-post-upgrade-validation.svg)
 
 ```bash
 # Confirm the new Purity version is running
@@ -186,6 +196,8 @@ The Ever Modern controller refresh replaces the physical FlashArray controller m
 
 ### 60 Days Before the Refresh Window
 
+![60 Days Before the Refresh Window](../../../../assets/evergreen-proc-60-days-before-the-refresh-window.svg)
+
 - [ ] Review the subscription dashboard in Pure1 — confirm the controller generation and refresh window deadline
 - [ ] Confirm Purity software version is within the supported range for the new controller generation — an upgrade may be required before the controller refresh
 - [ ] Identify all hosts connected to the array and confirm multipathing is configured on each
@@ -193,6 +205,8 @@ The Ever Modern controller refresh replaces the physical FlashArray controller m
 - [ ] Notify the Pure account team of available maintenance windows (minimum 4-hour window required)
 
 ### 7 Days Before the Refresh
+
+![7 Days Before the Refresh](../../../../assets/evergreen-proc-7-days-before-the-refresh.svg)
 
 ```bash
 # Full pre-upgrade readiness check
@@ -212,6 +226,8 @@ puresnap list --space | head -20
 ```
 
 ### During the Refresh Window
+
+![During the Refresh Window](../../../../assets/evergreen-proc-during-the-refresh-window.svg)
 
 Pure Storage engineers manage the physical replacement. The refresh sequence:
 
@@ -233,6 +249,8 @@ watch -n 2 multipath -ll | grep -E "policy|status|active|failed"
 ```
 
 ### Post-Refresh Validation
+
+![Post-Refresh Validation](../../../../assets/evergreen-proc-post-refresh-validation.svg)
 
 ```bash
 # Confirm both controllers are online and running the new hardware generation
@@ -263,6 +281,8 @@ purearray list --space
 
 ### Provisioning a New Volume
 
+![Provisioning a New Volume](../../../../assets/evergreen-proc-provisioning-a-new-volume.svg)
+
 ```bash
 # Create a volume (thin-provisioned; actual space consumed as data is written)
 purevol create --size 10T prod-oracle-vol03
@@ -286,6 +306,8 @@ esxcli storage nmp device list | grep <new_lun_naa>
 
 ### Expanding an Existing Volume
 
+![Expanding an Existing Volume](../../../../assets/evergreen-proc-expanding-an-existing-volume.svg)
+
 Volume expansion is non-disruptive and online. The host OS must rescan to see the new size after expansion.
 
 ```bash
@@ -307,6 +329,8 @@ storage rescan --adapter vmhba0 --type lun
 ```
 
 ### Protection Group Management
+
+![Protection Group Management](../../../../assets/evergreen-proc-protection-group-management.svg)
 
 All production volumes should be members of a protection group with replication to the DR site.
 
@@ -336,6 +360,8 @@ purepgroup list --replication prod-oracle-pg
 
 ### Annual True Forward Review
 
+![Annual True Forward Review](../../../../assets/evergreen-proc-annual-true-forward-review.svg)
+
 Conduct this review 60 days before the annual True Forward review date.
 
 ```bash
@@ -363,6 +389,8 @@ Prepare the following for the True Forward meeting with the Pure account team:
 If the current data reduction ratio is below the contracted guarantee, document this clearly and raise it with the Pure account team — Pure should provide additional capacity at no charge for the shortfall period.
 
 ### Subscription Renewal Preparation
+
+![Subscription Renewal Preparation](../../../../assets/evergreen-proc-subscription-renewal-preparation.svg)
 
 Begin renewal preparation 90 days before the current term expires:
 

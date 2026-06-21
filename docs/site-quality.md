@@ -57,7 +57,7 @@ Generated: 2026-06-21
 | Sections | 11 |
 | Pages with kb-summary | 2,358 |
 | Pages with full-width ASCII diagram | 2,612 |
-| Pages with SVG diagrams | 134 |
+| Pages with SVG diagrams | 137 |
 | Pages with Mermaid diagrams | 680 |
 | Pages with tags | 2,611 |
 | Audit score | 36 / 37 |

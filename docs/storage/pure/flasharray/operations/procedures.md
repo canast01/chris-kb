@@ -118,12 +118,16 @@ Hosts in Pure Storage represent the servers (physical or virtual) that are grant
 
 ### List Hosts
 
+![List Hosts](../../../../assets/flasharray-proc-list-hosts.svg)
+
 ```bash
 purehost list
 purehost list --connect   # show volume connections
 ```
 
 ### Create a Host
+
+![Create a Host](../../../../assets/flasharray-proc-create-a-host.svg)
 
 ```bash
 # Create host with FC WWNs
@@ -138,6 +142,8 @@ purehost create <hostname> --nqns <nqn1>
 
 ### Add Initiators to an Existing Host
 
+![Add Initiators to an Existing Host](../../../../assets/flasharray-proc-add-initiators-to-an-existing-host.svg)
+
 ```bash
 # Add WWN
 purehost setattr <hostname> --addwwnlist <new_wwn>
@@ -148,6 +154,8 @@ purehost setattr <hostname> --addiqnlist <new_iqn>
 
 ### Connect a Volume to a Host
 
+![Connect a Volume to a Host](../../../../assets/flasharray-proc-connect-a-volume-to-a-host.svg)
+
 ```bash
 purehost connect <hostname> --vol <volume_name>
 ```
@@ -156,11 +164,15 @@ This creates the host-to-volume connection (analogous to LUN masking on traditio
 
 ### Disconnect a Volume from a Host
 
+![Disconnect a Volume from a Host](../../../../assets/flasharray-proc-disconnect-a-volume-from-a-host.svg)
+
 ```bash
 purehost disconnect <hostname> --vol <volume_name>
 ```
 
 ### Host Groups
+
+![Host Groups](../../../../assets/flasharray-proc-host-groups.svg)
 
 For clustered hosts (e.g., ESXi cluster), use host groups so volumes can be connected to all members:
 
@@ -180,6 +192,8 @@ purehgroup list --connect
 
 ### Delete a Host
 
+![Delete a Host](../../../../assets/flasharray-proc-delete-a-host.svg)
+
 ```bash
 # Disconnect all volumes first
 purehost disconnect <hostname> --vol <volume_name>
@@ -189,6 +203,8 @@ purehost delete <hostname>
 ```
 
 ### Host Common Issues
+
+![Host Common Issues](../../../../assets/flasharray-proc-host-common-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|
@@ -203,6 +219,8 @@ purehost delete <hostname>
 
 ### List Volumes
 
+![List Volumes](../../../../assets/flasharray-proc-list-volumes.svg)
+
 ```bash
 purevol list
 purevol list --space      # includes capacity and data reduction stats
@@ -210,6 +228,8 @@ purevol list --details    # includes host connections and QoS settings
 ```
 
 ### Create a Volume
+
+![Create a Volume](../../../../assets/flasharray-proc-create-a-volume.svg)
 
 ```bash
 purevol create <volume_name> --size 1T
@@ -219,6 +239,8 @@ Size suffixes: `K`, `M`, `G`, `T`, `P`.
 
 ### Resize a Volume
 
+![Resize a Volume](../../../../assets/flasharray-proc-resize-a-volume.svg)
+
 ```bash
 purevol setattr <volume_name> --size 2T
 ```
@@ -226,6 +248,8 @@ purevol setattr <volume_name> --size 2T
 Volumes can only be grown, not shrunk.
 
 ### Connect and Disconnect a Volume
+
+![Connect and Disconnect a Volume](../../../../assets/flasharray-proc-connect-and-disconnect-a-volume.svg)
 
 ```bash
 # Connect to host
@@ -237,6 +261,8 @@ purehost disconnect <hostname> --vol <volume_name>
 
 ### Snapshot a Volume
 
+![Snapshot a Volume](../../../../assets/flasharray-proc-snapshot-a-volume.svg)
+
 ```bash
 # Create a snapshot
 purevol snap <volume_name> --suffix <snap_suffix>
@@ -247,6 +273,8 @@ purevol list <volume_name>.*
 
 ### Restore from Snapshot
 
+![Restore from Snapshot](../../../../assets/flasharray-proc-restore-from-snapshot.svg)
+
 ```bash
 # Overwrite volume with snapshot content
 purevol copy <volume_name>.<snap_suffix> --overwrite <volume_name>
@@ -254,11 +282,15 @@ purevol copy <volume_name>.<snap_suffix> --overwrite <volume_name>
 
 ### Create a Clone
 
+![Create a Clone](../../../../assets/flasharray-proc-create-a-clone.svg)
+
 ```bash
 purevol copy <source_vol> <clone_name>
 ```
 
 ### Delete a Volume
+
+![Delete a Volume](../../../../assets/flasharray-proc-delete-a-volume.svg)
 
 ```bash
 # Volumes go to the destroyed state first (recoverable for 24 hours)
@@ -270,11 +302,15 @@ purevol eradicate <volume_name>
 
 ### Recover a Destroyed Volume
 
+![Recover a Destroyed Volume](../../../../assets/flasharray-proc-recover-a-destroyed-volume.svg)
+
 ```bash
 purevol recover <volume_name>
 ```
 
 ### Volume Tags
+
+![Volume Tags](../../../../assets/flasharray-proc-volume-tags.svg)
 
 ```bash
 # Set a tag on a volume
@@ -285,6 +321,8 @@ purevol listtags <volume_name>
 ```
 
 ### Volume Common Issues
+
+![Volume Common Issues](../../../../assets/flasharray-proc-volume-common-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|
@@ -301,6 +339,8 @@ Protection groups (pgroups) define sets of volumes for consistent snapshot and r
 
 ### List Protection Groups
 
+![List Protection Groups](../../../../assets/flasharray-proc-list-protection-groups.svg)
+
 ```bash
 purepgroup list
 purepgroup list --schedule
@@ -309,11 +349,15 @@ purepgroup list --space
 
 ### View Protection Group Members
 
+![View Protection Group Members](../../../../assets/flasharray-proc-view-protection-group-members.svg)
+
 ```bash
 purepgroup listobj <pg_name> --member-type volume
 ```
 
 ### Create a Protection Group
+
+![Create a Protection Group](../../../../assets/flasharray-proc-create-a-protection-group.svg)
 
 ```bash
 purepgroup create <pg_name>
@@ -321,11 +365,15 @@ purepgroup create <pg_name>
 
 ### Add Volumes to a Protection Group
 
+![Add Volumes to a Protection Group](../../../../assets/flasharray-proc-add-volumes-to-a-protection-group.svg)
+
 ```bash
 purepgroup addvollist <pg_name> --vollist <vol1>,<vol2>
 ```
 
 ### Configure Snapshot Schedule
+
+![Configure Snapshot Schedule](../../../../assets/flasharray-proc-configure-snapshot-schedule.svg)
 
 ```bash
 # Set snapshot schedule (every 1 hour, retain 24 per day, 7 days)
@@ -337,6 +385,8 @@ purepgroup schedule <pg_name> \
 ```
 
 ### Configure Replication Schedule (Async to Remote)
+
+![Configure Replication Schedule (Async to Remote)](../../../../assets/flasharray-proc-configure-replication-schedule-async-to-remote.svg)
 
 ```bash
 # Enable replication target
@@ -350,11 +400,15 @@ purepgroup schedule <pg_name> \
 
 ### Take a Manual Snapshot
 
+![Take a Manual Snapshot](../../../../assets/flasharray-proc-take-a-manual-snapshot.svg)
+
 ```bash
 purepgroup snap --pgroup <pg_name> --suffix <snap_name>
 ```
 
 ### List Snapshots
+
+![List Snapshots](../../../../assets/flasharray-proc-list-snapshots.svg)
 
 ```bash
 purepgroup listsnaps <pg_name>
@@ -362,12 +416,16 @@ purepgroup listsnaps <pg_name>
 
 ### Delete a Protection Group
 
+![Delete a Protection Group](../../../../assets/flasharray-proc-delete-a-protection-group.svg)
+
 ```bash
 purepgroup destroy <pg_name>
 purepgroup eradicate <pg_name>
 ```
 
 ### Protection Group Common Issues
+
+![Protection Group Common Issues](../../../../assets/flasharray-proc-protection-group-common-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|

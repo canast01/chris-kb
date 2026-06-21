@@ -92,12 +92,16 @@ FlashBlade supports snapshots at the file system level. Snapshots are space-effi
 
 ### List Snapshots
 
+![List Snapshots](../../../../assets/flashblade-proc-list-snapshots.svg)
+
 ```bash
 purefb fs-snapshot list
 purefb fs-snapshot list --filter "source='<fs_name>'"
 ```
 
 ### Create a Snapshot
+
+![Create a Snapshot](../../../../assets/flashblade-proc-create-a-snapshot.svg)
 
 ```bash
 purefb fs-snapshot create --source <fs_name> --suffix <snap_name>
@@ -110,6 +114,8 @@ purefb fs-snapshot create --source prod-nfs --suffix daily-2026-05-06
 
 ### Accessing Snapshot Data
 
+![Accessing Snapshot Data](../../../../assets/flashblade-proc-accessing-snapshot-data.svg)
+
 Snapshots are accessible via the NFS `.snapshot` directory (if enabled):
 
 ```bash
@@ -121,6 +127,8 @@ Users can browse and copy files directly from the `.snapshot` path without admin
 
 ### Restore a File System from Snapshot
 
+![Restore a File System from Snapshot](../../../../assets/flashblade-proc-restore-a-file-system-from-snapshot.svg)
+
 ```bash
 # Overwrite the live file system with snapshot content
 purefb fs-snapshot restore <fs_name>.<snap_name> --overwrite-fs
@@ -130,6 +138,8 @@ purefb fs-snapshot restore <fs_name>.<snap_name> --overwrite-fs
 
 ### Copy a Snapshot to a New File System
 
+![Copy a Snapshot to a New File System](../../../../assets/flashblade-proc-copy-a-snapshot-to-a-new-file-system.svg)
+
 ```bash
 purefb fs-snapshot copy <fs_name>.<snap_name> --name <new_fs_name>
 ```
@@ -137,6 +147,8 @@ purefb fs-snapshot copy <fs_name>.<snap_name> --name <new_fs_name>
 Creates a new independent file system from the snapshot without affecting the original.
 
 ### Delete a Snapshot
+
+![Delete a Snapshot](../../../../assets/flashblade-proc-delete-a-snapshot.svg)
 
 ```bash
 # Destroy (recoverable for 24 hours)
@@ -147,6 +159,8 @@ purefb fs-snapshot eradicate <fs_name>.<snap_name>
 ```
 
 ### Snapshot Policy (Automated Scheduling)
+
+![Snapshot Policy (Automated Scheduling)](../../../../assets/flashblade-proc-snapshot-policy-automated-scheduling.svg)
 
 FlashBlade supports policy-based snapshots via the GUI:
 1. Navigate to **Protection → Snapshot Policies**
@@ -159,6 +173,8 @@ purefb policies list
 ```
 
 ### Common Issues
+
+![Common Issues](../../../../assets/flashblade-proc-common-issues.svg)
 
 | Issue | Check | Action |
 |---|---|---|
