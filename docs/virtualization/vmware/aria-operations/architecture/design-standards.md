@@ -12,52 +12,10 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 
 *Applies to: Aria Operations 8.x*
 </div>
+![Aria Operations — Standards](../../../../assets/virtualization-vmware-aria-operations-architecture-design-st.svg)
 
-```text
-┌────────────────────────────────── Aria Operations Design Standards ───────────────────────────────────┐
-│                                                                                                       │
-│  Node sizing, cluster topology, and policy design standards for Aria Operations (vROps).              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Node Sizing                  │  │               Cluster Topology              │   │
-│   │         Small: <1500 objects, 4 vCPU         │  │            Master node: always 1            │   │
-│   │         Medium: <5000 objects, 8vCPU         │  │           Replica: HA standby node          │   │
-│   │        Large: <15000 objects, 16vCPU         │  │         Data nodes: scale analytics         │   │
-│   │           RAM: 32-256 GB by sizing           │  │          Remote collector: per site         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Sizing drives node count; topology drives HA; policy design drives alert quality.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Policy Design Standards            │  │              Storage & Network              │   │
-│   │         Default policy: base alerts          │  │          SSD datastore recommended          │   │
-│   │         Custom policy: per workload          │  │         1 GbE min; 10 GbE preferred         │   │
-│   │         Alert criticality: 1-5 scale         │  │           NFS or vSAN shared store          │   │
-│   │           Symptom + recommendation           │  │          Dedicated management VLAN          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps VMs on vSphere cluster; SSD-backed NFS or vSAN datastore; management VLAN                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Master Node         = Primary vROps node; hosts UI, analytics, and cluster management                │
-│  Replica Node        = Standby master; takes over if master fails for HA                              │
-│  Data Node           = Analytics scale-out node; adds capacity for more objects                       │
-│  Remote Collector    = Lightweight VM deployed per site; forwards data to cluster                     │
-│  Object              = Any monitored entity: VM, host, datastore, application                         │
-│  Policy              = Named set of alert thresholds and capacity model settings                      │
-│  Symptom             = Single condition (e.g. CPU > 90%) contributing to an alert                     │
-│  Recommendation      = Action suggested by vROps when an alert fires                                  │
-│  Alert Criticality   = Severity 1-5 scale; 1=info, 5=critical for vROps alerts                        │
-│  CaSA Store          = Configuration and Support Archive; vROps internal config DB                    │
-│  Management Pack     = Plugin extending vROps with additional adapters and dashboards                 │
-│  Adapter             = Collection plugin; connects vROps to a specific data source                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Naming Conventions
 

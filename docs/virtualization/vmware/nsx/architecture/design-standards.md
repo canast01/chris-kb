@@ -13,61 +13,10 @@ Design Standards reference covering Segments (Logical Switches), Design Rules, C
 
 *Applies to: NSX-T 3.x · NSX 4.x*
 </div>
+![NSX — Design Standards](../../../../assets/virtualization-vmware-nsx-architecture-design-standards.svg)
 
-```text
-┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       NSX design standards: transport zones, T0/T1 gateway tiers, Edge sizing, IP pools       │   │
-│   │       Two transport zones: VLAN TZ (N-S Edge uplinks) + Overlay TZ (E-W tenant segments)      │   │
-│   │          T0 per environment (provider); T1 per tenant or application group (consumer)         │   │
-│   │        Edge clusters: min 2 Edge Nodes for HA; bare-metal for high-throughput workloads       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Transport Zone design → Gateway tier → Edge cluster → IP pool → segment naming                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Transport Zones       │  │        Gateway Design       │  │         Edge Sizing         │   │
-│   │          Overlay TZ         │  │         T0: provider        │  │         Small: 2vCPU        │   │
-│   │           VLAN TZ           │  │        T1: per tenant       │  │        Medium: 4vCPU        │   │
-│   │         No cross-TZ         │  │         T0 BGP ECMP         │  │         Large: 8vCPU        │   │
-│   │        Host TZ attach       │  │        T1 static/OSPF       │  │        Bare-metal max       │   │
-│   │        Multi-TZ Edge        │  │         NAT on T1 SR        │  │        Min 2 per site       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    TEP pool: /24 minimum; no overlap with VM or management networks; MTU 1600+ on pNIC                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Design area    │     Standard     │        Why        │      Verify      │      Notes       │   │
-│   │     TEP pool     │ /24 non-overlap  │     No routing    │    Ping TEPs     │     MTU 1600     │   │
-│   │     Edge HA      │   2 nodes min    │    SR failover    │    BFD state     │    A/S or A/A    │   │
-│   │    T0 uplinks    │    2 per Edge    │     ECMP / HA     │    BGP peers     │     VLAN TZ      │   │
-│   │    Seg naming    │   <env>-<app>    │    Readability    │      Audit       │    No spaces     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: pNIC MTU ≥ 1600 for Geneve · dedicated TEP VLAN · ToR BGP peer config                    │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Overlay TZ    = Transport Zone spanning all hosts; carries Geneve-encapsulated E-W traffic         │
-│    VLAN TZ       = Transport Zone for Edge uplinks; carries native VLAN traffic to physical           │
-│    TEP pool      = IP pool assigned to hosts for Geneve src/dst; one IP per host TEP vmknic           │
-│    T0 gateway    = Provider Logical Router; BGP to physical; ECMP over multiple Edge uplinks          │
-│    T1 gateway    = Tenant Logical Router; connects segments upstream to T0                            │
-│    Edge cluster  = Group of Edge Nodes hosting Service Routers; provides N-S HA                       │
-│    BFD           = Bidirectional Forwarding Detection; fast failover between Edge uplinks             │
-│    ECMP          = Equal-Cost Multi-Path; distributes N-S traffic across multiple Edge uplinks        │
-│    Active/Standby = SR runs on one Edge; fails to standby if primary fails                            │
-│    Active/Active  = Two SRs active; stateless traffic only; requires external LB for SPI              │
-│    MTU 1600      = Minimum pNIC MTU for Geneve (50-byte overhead) + standard 1500 payload             │
-│    Seg naming    = Consistent segment naming prevents confusion in large environments                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Topology Design
 

@@ -11,6 +11,8 @@ FabricOS integrations: DCNM and Brocade Network Advisor connectivity, SANnav man
 
 *Applies to: Brocade FOS 9.x*
 </div>
+![FabricOS — Integrations](../../../../assets/san-brocade-fabric-os-architecture-integrations.svg)
+
 
 ---
 
@@ -40,60 +42,7 @@ sequenceDiagram
     Storage-->>HBA: ACC — FCP ready
     Note over HBA,Storage: LUN discovery and I/O can begin
 ```
-```text
-┌────────────────────────────────── Brocade Fabric OS — Integrations ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     FOS integrates with management tools, monitoring platforms, and automation frameworks     │   │
-│   │       SANnav: primary GUI management via SSH + REST API; fabric discovery and monitoring      │   │
-│   │       SNMP v3: NMS integration for trap forwarding; Brocade MIBs cover port/fabric OIDs       │   │
-│   │             LDAP/AD: centralised authentication; role mapping via group membership            │   │
-│   │          REST API: JSON-based programmatic management for Ansible and CI/CD pipelines         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Management tools -> monitoring/alerting -> identity -> automation integrations                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Management         │  │          Monitoring         │  │          Automation         │   │
-│   │          SANnav GUI         │  │        SNMP v3 traps        │  │           REST API          │   │
-│   │           SSH CLI           │  │        Syslog (SIEM)        │  │       Ansible modules       │   │
-│   │         LDAP/AD auth        │  │         MAPS alerts         │  │        Python scripts       │   │
-│   │        vCenter plugin       │  │         Email alerts        │  │        CI/CD pipeline       │   │
-│   │           NTP sync          │  │          Dashboard          │  │          Terraform          │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    All integrations use out-of-band Ethernet management; FC data plane unaffected                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Integration    │     Protocol     │        Auth       │     Use case     │      Notes       │   │
-│   │      SANnav      │     SSH+REST     │    Password/key   │    Full mgmt     │   Primary tool   │   │
-│   │     SNMP v3      │     UDP 162      │      AuthPriv     │    NMS traps     │   Brocade MIBs   │   │
-│   │     REST API     │    HTTPS 443     │   Session token   │    Automation    │     FOS 8.2+     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: mgmt Ethernet port on each switch · OOB management network · NTP server                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SANnav         = Brocade SAN management GUI; primary operational tool for FOS switches             │
-│    REST API       = HTTPS-based FOS management API; returns JSON; requires FOS 8.2+                   │
-│    SNMP v3        = SNMPv3 with authentication (SHA) and encryption (AES) for secure traps            │
-│    Brocade MIBs   = SNMP MIB files defining Brocade-specific OIDs for port/fabric telemetry           │
-│    LDAP/AD        = Switch authenticates admin users against Active Directory                         │
-│    MAPS           = Monitoring and Alerting Policy Suite; configures thresholds and actions           │
-│    Syslog         = Switch event log forwarded to SIEM (Splunk, QRadar) for correlation               │
-│    Ansible module = brocade_fibrechannel Ansible collection for zone/port automation                  │
-│    vCenter plugin = Shows FC path visibility from VM HBA through fabric to storage                    │
-│    Session token  = REST API Bearer token returned on login; used in subsequent API calls             │
-│    NTP sync       = Switch clock synchronised to NTP for accurate log timestamps                      │
-│    OOB mgmt       = Out-of-band management via dedicated Ethernet port; separate from FC              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

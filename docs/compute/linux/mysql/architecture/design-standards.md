@@ -10,39 +10,10 @@ MySQL design standards — HA topology choices, replication sizing, InnoDB tunin
 
 *Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
+![MySQL / MariaDB — Design Standards](../../../../assets/compute-linux-mysql-architecture-design-standards.svg)
 
-```text
-┌────────────────────────────────────── MySQL — Design Standards ───────────────────────────────────────┐
-│                                                                                                       │
-│   Design decisions made before deployment define reliability, recovery time, and operational cost     │
-│   Minimum production standard: semi-sync replication + automated failover + nightly backup            │
-│   InnoDB Cluster (Group Replication + MySQL Router) for zero-manual-failover HA                       │
-│                                                                                                       │
-│   HA topology selection                                                                               │
-│   Async 1+1: primary + one replica; manual failover; use for dev/test or low RPO tolerance            │
-│   Semi-sync 1+1: primary ACKs replica before commit; no data loss on primary crash                    │
-│   Group Replication: multi-primary or single-primary; auto-failover; high write availability          │
-│   InnoDB Cluster: Group Replication + MySQL Router + MySQL Shell; fully managed HA                    │
-│   ProxySQL: connection proxy; read/write split; app-transparent failover routing                      │
-│                                                                                                       │
-│   InnoDB tuning baselines                                                                             │
-│   innodb_buffer_pool_size: 60-80% of total RAM; single most impactful setting                         │
-│   innodb_log_file_size: 1-4 GB for write-heavy workloads; larger = faster writes, slower recovery     │
-│   innodb_flush_log_at_trx_commit=1: full ACID; set to 2 for write performance if durability permits   │
-│   max_connections: set to expected peak concurrency; each connection uses ~1 MB RAM                   │
-│                                                                                                       │
-│   Naming conventions                                                                                  │
-│   Database: lowercase_underscore (app_db, reporting_db); no spaces, no uppercase                      │
-│   Tables: plural nouns (users, orders, audit_log); prefix with schema if multi-tenant                 │
-│   Service accounts: svc_<app>_rw (read-write) and svc_<app>_ro (read-only) per application            │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   RPO           = Recovery Point Objective; max acceptable data loss (semi-sync = near zero)          │
-│   RTO           = Recovery Time Objective; max acceptable downtime (InnoDB Cluster = seconds)         │
-│   innodb_buffer_pool = in-memory InnoDB page cache; sizing directly controls I/O load                 │
-│   MySQL Router  = lightweight proxy included with InnoDB Cluster; routes to current primary           │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## High-Availability Topologies
 

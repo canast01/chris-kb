@@ -11,6 +11,8 @@ How It Works reference covering Overview, Component Topology, Connectivity, Key 
 
 *Applies to: Superna Eyeglass*
 </div>
+![Superna Eyeglass — How It Works](../../../../assets/storage-netapp-superna-eyeglass-architecture-how-it-works.svg)
+
 
 ## Overview
 
@@ -34,62 +36,7 @@ graph LR
   class EG mgmt
   class ADMIN,DNS host
 ```
-```text
-┌─────────────────────────────────── Superna Eyeglass — How It Works ───────────────────────────────────┐
-│                                                                                                       │
-│    Superna Eyeglass data flow — from source to target through the protection pipeline:                │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 1  Source / Production System                                 │   │
-│   │             Eyeglass Appliance   — VM monitoring PowerScale clusters; REST API-driven         │   │
-│   │          Host writes are intercepted or snapshotted by the Superna Eyeglass agent/proxy       │   │
-│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
-│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Changed data forwarded to Superna Eyeglass — compression and encryption in transit                 │
-│                                                                                                       │
-│                                                   ▼                                                   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   2  Superna Eyeglass Engine                                  │   │
-│   │     RAPA Engine          — Ransomware Protection with Automated Response; quarantine on dete  │   │
-│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
-│   │                  Metadata catalog updated; job status reported to control plane               │   │
-│   │                                          igls quota list                                      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                                                   ▼                                                   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     3  Target / Repository                                    │   │
-│   │       DFS Namespace Mgr    — Windows DFS-N failover automation; transparent client redirect   │   │
-│   │                  Recovery point written; retention policy applied automatically               │   │
-│   │                                     Restore: igls dr runbook                                  │   │
-│   │                     RTO driven by target storage performance and data volume                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
-│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
-│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
-│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
-│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
-│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
-│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
-│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
-│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
-│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
-│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
-│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
-│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
-│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Sizing
 

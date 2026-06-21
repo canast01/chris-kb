@@ -10,35 +10,10 @@ VM sizing, data retention policy, network access requirements, naming convention
 
 *Applies to: InsightIQ*
 </div>
+![InsightIQ — Design Standards](../../../../assets/storage-netapp-insightiq-architecture-design-standards.svg)
 
-```text
-┌──────────────────────────────────── InsightIQ — Design Standards ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Deployment Standards             │  │             Collection Standards            │   │
-│   │            Dedicated VM per site             │  │           30-sec interval default           │   │
-│   │             200 GB disk minimum              │  │              All clusters added             │   │
-│   │             SSD-backed datastore             │  │             Client stats enabled            │   │
-│   │            Backup config nightly             │  │             PAPI read-only user             │   │
-│   │             2-year retention min             │  │                 TLS for PAPI                │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  InsightIQ VM on management cluster · SSD datastore · TCP 8080/443 to PowerScale                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Dedicated VM = InsightIQ on separate VM from monitored workloads                                     │
-│  SSD datastore = Flash storage for PostgreSQL write performance at 30-sec intervals                   │
-│  Client stats = isi_clientstats enabled on PowerScale; required for per-client breakdown              │
-│  PAPI read-only = Minimum-privilege user; cannot modify cluster configuration                         │
-│  TLS for PAPI = HTTPS connection to PAPI; verify certificate or accept self-signed                    │
-│  2-year retention = Minimum raw data retention for trend analysis and compliance                      │
-│  Backup config = InsightIQ appliance backup includes config and DB; NFS or SCP target                 │
-│  200 GB minimum = Disk allocation for ~5 clusters at 30-sec interval over 2 years                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## VM Sizing
 
 | Parameter | Minimum | Recommended (production) |

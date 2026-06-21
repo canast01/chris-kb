@@ -11,58 +11,9 @@ Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Pro
 
 *Applies to: PowerStore 3.x*
 </div>
-```text
-┌─────────────────────────── Dell PowerStore — Architecture Design Standards ───────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     PowerStore design standards: network isolation, redundancy, sizing, naming conventions    │   │
-│   │          Network: dedicated storage VLAN; jumbo frames for iSCSI; dual-fabric for FC          │   │
-│   │          Redundancy: dual controllers, multipath I/O, and no single points of failure         │   │
-│   │       Monitoring: set capacity and latency alerts; baseline performance after deployment      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Requirements → architecture design → redundancy review → size → deploy                             │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
-│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
-│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
-│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
-│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   Volume group   │ Logical containe │      iSCSI/FC     │    Host group    │  Shared policy   │   │
-│   │Protection policy │ Snapshot/repl ru │      Internal     │    Admin role    │    Per volume    │   │
-│   │   Metro volume   │ Sync replication │    Internal RPC   │   Certificate    │     Zero RPO     │   │
-│   │     Snapshot     │     PiT copy     │      Internal     │    Admin role    │ Space-efficient  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
-│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
-│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
-│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
-│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
-│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
-│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
-│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
-│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
-│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
-│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
-│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![PowerStore — Standards](../../../../assets/storage-dell-powerstore-architecture-design-standards.svg)
+
+
 
 
 ## Naming Conventions

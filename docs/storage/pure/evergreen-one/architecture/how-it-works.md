@@ -11,58 +11,9 @@ How It Works reference covering STaaS Delivery Model, Components, HA Topology, C
 
 *Applies to: Evergreen//One*
 </div>
-```text
-┌───────────────────────────────── Pure Evergreen//ONE — How It Works ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Evergreen//ONE operational flow: request → controller → data service → host acknowledgement  │   │
-│   │       Data path: host I/O → Evergreen//ONE controller → storage media → persistent write      │   │
-│   │   Management: Pure1 / Purity REST API provides unified control for all operational functions  │   │
-│   │           Protection: snapshots, replication, and redundancy ensure data durability           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Host I/O → Evergreen//ONE controller → storage media → acknowledge → replicate                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │           Hardware          │  │         On-prem Pure        │  │          Pure-owned         │   │
-│   │           Billing           │  │        Committed TiB        │  │         Monthly sub.        │   │
-│   │           Refresh           │  │        Non-disruptive       │  │        Pure delivers        │   │
-│   │          Management         │  │          Pure1 SaaS         │  │         AI analytics        │   │
-│   │           Support           │  │        24x7 proactive       │  │          AI-driven          │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │      Pure1       │   SaaS portal    │       HTTPS       │     SSO/SAML     │   AI analytics   │   │
-│   │    FlashArray    │    Block/file    │    FC/iSCSI/NFS   │  CHAP/Kerberos   │     All-NVMe     │   │
-│   │    FlashBlade    │   File/object    │     NFS/SMB/S3    │   Kerberos/IAM   │   Parallel I/O   │   │
-│   │  ActiveCluster   │ Sync replication │    Internal RPC   │   Certificate    │     Zero RPO     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Pure FlashArray or FlashBlade on-prem (Pure-owned) · Pure1 cloud · WAN to Pure           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Evergreen//ONE     = Pure STaaS; Pure-owned hardware on customer premises with subscription billing│
-│    Pure1              = Pure Storage cloud management portal; AI-based analytics and capacity planning│
-│    Non-disruptive upgrade = hardware upgrade without host I/O interruption; Pure handles logistics    │
-│    Committed TiB      = minimum subscribed capacity; billed monthly regardless of actual usage        │
-│    Burst capacity     = additional capacity above commitment; no pre-ordering; billed as consumed     │
-│    Hardware refresh   = Pure delivers and installs new controllers and shelves on 3-year cadence      │
-│    Purity//FA         = FlashArray OS; unified block and file with NVMe-native architecture           │
-│    Purity//FB         = FlashBlade OS; object and file storage with massive parallel throughput       │
-│    AI copilot         = Pure1 AI feature; recommends workload placement and anomaly remediation       │
-│    TaaS               = Technology as a Service; hardware ownership stays with Pure throughout subs...│
-│    ActiveCluster      = sync stretch replication included; ActiveDR async replication optional        │
-│    SAML SSO           = Pure1 supports SAML 2.0; identity provider integrates with corporate IdP      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Evergreen//One — How It Works](../../../../assets/storage-pure-evergreen-one-architecture-how-it-works.svg)
+
+
 
 
 ## STaaS Delivery Model

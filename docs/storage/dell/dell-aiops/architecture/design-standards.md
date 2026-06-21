@@ -10,35 +10,10 @@ SCG prerequisites, configuration baselines, alert acknowledgement workflow, and 
 
 *Applies to: Dell AIOps*
 </div>
+![Dell AIOps — Design Standards](../../../../assets/storage-dell-dell-aiops-architecture-design-standards.svg)
 
-```text
-┌──────────────────────────────────── Dell AIOps — Design Standards ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Deployment Standards             │  │            Operational Standards            │   │
-│   │             Dedicated AIOps VMs              │  │            All Dell infra covered           │   │
-│   │            SSD for time-series DB            │  │             Adapters per product            │   │
-│   │               HA pair minimum                │  │            Consistent thresholds            │   │
-│   │                Backup nightly                │  │             Alert to ITSM always            │   │
-│   │              TLS 1.2 end-to-end              │  │            Review recommendations           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  AIOps VMs on management cluster · SSD datastore · management VLAN only                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Dedicated VMs = AIOps runs on reserved VMs; not co-located with monitored workloads                  │
-│  SSD datastore = Fast storage required for time-series DB write throughput                            │
-│  HA pair = Two AIOps nodes for redundancy; active/passive or load-balanced                            │
-│  Threshold consistency = Same alert trigger values across all environments; documented in runbook     │
-│  Adapter per product = Each Dell product type has a dedicated adapter configured                      │
-│  ITSM always = Every fired alert routed to ServiceNow; no silent monitoring                           │
-│  Recommendation review = Weekly process to act on or dismiss open AI recommendations                  │
-│  Nightly backup = AIOps config and DB snapshot to NFS or object store                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Prerequisites
 
 Dell AIOps capability is delivered through the CloudIQ platform — no separate AIOps appliance is deployed. The prerequisites mirror the CloudIQ SCG deployment:

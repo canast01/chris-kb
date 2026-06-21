@@ -11,23 +11,11 @@ Design Standards reference covering Naming Conventions, Build Baseline, Subscrip
 
 *Applies to: Evergreen*
 </div>
+![Evergreen — Design Standards](../../../../assets/storage-pure-evergreen-architecture-design-standards.svg)
+
 
 Evergreen Subscription Design Checklist
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Tier selection   │  //X / //C / //E — match workload                                                 │
-├──────────────────────────────────────────────────────────┤
-│  Capacity sizing  │  committed TiB + True Forward headroom                                            │
-├──────────────────────────────────────────────────────────┤
-│  Naming           │  site-fa-01 / env-app-vol01 etc.                                                  │
-├──────────────────────────────────────────────────────────┤
-│  Protection       │  PGroup per app, SafeMode enabled                                                 │
-├──────────────────────────────────────────────────────────┤
-│  Refresh schedule │  ~3 yr Ever Modern, plan 90 days ahead                                            │
-├──────────────────────────────────────────────────────────┤
-│  Pure1 phone-home │  always active — required for support                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Naming Conventions
 

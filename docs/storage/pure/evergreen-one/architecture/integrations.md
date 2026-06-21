@@ -11,6 +11,8 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 
 *Applies to: Evergreen//One*
 </div>
+![Evergreen//One — Integrations](../../../../assets/storage-pure-evergreen-one-architecture-integrations.svg)
+
 
 ```text
   FlashArray / FlashBlade

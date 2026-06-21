@@ -12,52 +12,10 @@ Design Standards reference covering Sizing, Collector Placement Guidelines, Netw
 
 *Applies to: Aria Operations for Networks 6.x*
 </div>
+![Aria Operations for Networks — Design Standards](../../../../assets/virtualization-vmware-aria-operations-for-networks-architect.svg)
 
-```text
-┌──────────────────────────────────────── vRNI Design Standards ────────────────────────────────────────┐
-│                                                                                                       │
-│  Sizing, collector placement, and data source standards for Aria Operations for Networks.             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Platform Appliance Sizing           │  │             Collector Placement             │   │
-│   │        Small: up to 1000 VMs, 4 vCPU         │  │       1 collector per network segment       │   │
-│   │        Medium: up to 3000 VMs, 8 vCPU        │  │       Collector close to data sources       │   │
-│   │       Large: up to 10000 VMs, 16 vCPU        │  │        Max 10 collectors per platform       │   │
-│   │         RAM scales with flow volume          │  │        Collector: 4 vCPU / 12 GB RAM        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Platform appliance receives flows; collectors aggregate from remote segments.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Data Source Standards             │  │             Network Requirements            │   │
-│   │          NSX-T: primary flow source          │  │          UDP 2055 for NetFlow/IPFIX         │   │
-│   │        vCenter: inventory + topology         │  │          TCP 443 to vCenter/NSX API         │   │
-│   │        Physical switches: SNMP/IPFIX         │  │        Collector to platform: TCP 443       │   │
-│   │           Cloud: AWS VPC Flow Logs           │  │           DNS resolution required           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM on vSphere; collector VMs per segment; NTP sync required                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Platform Appliance  = Central vRNI VM; stores flow data, runs analytics, hosts UI                    │
-│  Collector           = Lightweight VM that receives IPFIX/NetFlow and forwards to platform            │
-│  IPFIX               = IP Flow Information Export; standard protocol for flow telemetry               │
-│  NetFlow             = Cisco flow export protocol; v5/v9 supported by vRNI collectors                 │
-│  Data Source         = Any device or system providing flows or inventory to vRNI                      │
-│  NSX-T               = Primary flow source; exposes distributed firewall and overlay flows            │
-│  vCenter             = Inventory source; maps VM names, hosts, clusters to flow IPs                   │
-│  SNMP                = Used to poll physical switch interface counters and topology                   │
-│  VPC Flow Logs       = AWS/Azure cloud flow records ingested via cloud data source                    │
-│  Flow Map            = vRNI visual topology showing traffic paths between entities                    │
-│  Retention           = Default 13 months for flows; configurable per deployment size                  │
-│  PAK File            = Upgrade bundle for vRNI; applied via VAMI or update manager                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ## Sizing
 
 ### Platform VM Sizing

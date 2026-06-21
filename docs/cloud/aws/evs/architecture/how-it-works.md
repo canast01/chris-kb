@@ -10,50 +10,10 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — How It Works](../../../../assets/cloud-aws-evs-architecture-how-it-works.svg)
 
-```text
-┌────────────────────────────────────── Amazon EVS — How It Works ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   EVS = VCF on AWS bare-metal; runs in your VPC; treated like on-prem vSphere by VMware tools │   │
-│   │   Bare-metal EC2 (i3en, i4i): dedicated physical hosts; ESXi installed by AWS on deploy       │   │
-│   │   NSX-T overlay: separate VLAN + Geneve tunnel; uses ENIs on bare-metal hosts as uplinks      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VPC                                                                                         │   │
-│   │   ┌──────────────────────────┐    ┌──────────────────────────┐    ┌────────────────────────┐  │   │
-│   │   │   ESXi Host 1 (i4i.metal)│    │   ESXi Host 2            │    │   ESXi Host 3+         │  │   │
-│   │   │   ─────────────          │    │   ─────────────           │    │   ─────────────        │  │  │
-│   │   │  vSAN disk groups        │    │  vSAN disk groups         │    │  vSAN disk groups      │  │  │
-│   │   │  NSX-T vtep (ENI)        │    │  NSX-T vtep (ENI)         │    │  NSX-T vtep (ENI)      │  │  │
-│   │   │  mgmt ENI (VPC-native)   │    │  mgmt ENI (VPC-native)    │    │  mgmt ENI (VPC-native) │  │  │
-│   │   └──────────────────────────┘    └──────────────────────────┘    └────────────────────────┘  │   │
-│   │                │                              │                               │                 │ │
-│   │                └──────────────────────────────┴───────────────────────────────┘                 │ │
-│   │                                     vSAN Cluster                                                │ │
-│   │                                                                                                  ││
-│   │   ┌─────────────────────────────┐  ┌─────────────────────────────────────────────────────────┐  │ │
-│   │   │   VCF Management Domain     │  │   NSX-T Overlay                                         │  │ │
-│   │   │   ─────────────             │  │   ─────────────                                          │  ││
-│   │   │  vCenter (VM on ESXi)       │  │  NSX Manager (3-node cluster VM)                        │  │ │
-│   │   │  SDDC Manager               │  │  Geneve tunnels between ESXi hosts                      │  │ │
-│   │   │  NSX Manager                │  │  Distributed router + firewall                          │  │ │
-│   │   │  vSAN datastore             │  │  T0 router → VPC subnet (BGP or static)                 │  │ │
-│   │   └─────────────────────────────┘  └─────────────────────────────────────────────────────────┘  │ │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    EVS         = Amazon Elastic VMware Service; VCF running on bare-metal EC2 in your VPC             │
-│    i4i.metal   = Common EVS host type; NVMe-based vSAN; 128 vCPU, 1 TB RAM per host                   │
-│    ENI         = Elastic Network Interface; used for VMkernel and NSX-T VTEP traffic                  │
-│    VTEP        = VXLAN Tunnel End Point; NSX-T overlay transport endpoint per host                    │
-│    HCX         = VMware Hybrid Cloud Extension; live migration between on-prem and EVS                │
-│    Direct Connect= Dedicated private network link from on-premises data center to AWS                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

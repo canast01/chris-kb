@@ -11,59 +11,10 @@ Internal architecture and data-path reference: Director architecture, Global Cac
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
+![Dell PowerMax — How It Works](../../../../assets/storage-dell-powermax-architecture-how-it-works.svg)
 
-```text
-┌──────────────────────────────────────────── Dell PowerMax ────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       PowerMax: high-end enterprise NVMe all-flash array for mission-critical workloads       │   │
-│   │                      Protocols: FC · iSCSI · NVMe-oF · SRDF (replication)                     │   │
-│   │                     Management: Unisphere for PowerMax / Solutions Enabler                    │   │
-│   │                Sections: Architecture · Operations · Security · Troubleshooting               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Architecture → Operations → Security → Troubleshooting → Escalation                                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
-│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
-│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
-│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
-│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │    SRDF Sync     │   Zero-RPO DR    │    RDF protocol   │   Certificate    │   Metro <200ms   │   │
-│   │    SRDF Async    │  Near-zero RPO   │    RDF protocol   │   Certificate    │   Any distance   │   │
-│   │    TimeFinder    │ Local snapshots  │      Internal     │ Solutions Enabl  │   256 snaps/SG   │   │
-│   │Solutions Enabler │   CLI/API mgmt   │    HTTPS/symcli   │   Certificate    │     Symm CLI     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond late  │
-│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
-│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
-│    Storage group      = logical container for volumes sharing service level and host access policy    │
-│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
-│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
-│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
-│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
-│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
-│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
-│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache res  │
-│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 
 ## Architecture Overview

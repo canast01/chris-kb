@@ -10,42 +10,10 @@ EVS integration with on-premises infrastructure via HCX and Direct Connect, AWS 
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Integrations](../../../../assets/cloud-aws-evs-architecture-integrations.svg)
 
-```text
-┌────────────────────────────────────── Amazon EVS — Integrations ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   HCX: live migration and cold migration between on-prem vSphere and EVS; no re-IP required   │   │
-│   │   Direct Connect: private link; required for HCX vMotion; 1 Gbps min for production           │   │
-│   │   Transit Gateway: connect EVS VPC to workload VPCs and on-premises; hub-and-spoke routing    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       HCX Migration         │  │      AWS Native Services     │  │     Direct Connect / TGW    │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  vMotion (live, no downtime)│  │  S3: backup/cold storage     │  │  DX: private connectivity   │  │
-│   │  Cold migration (offline)   │  │  Route 53: DNS resolution    │  │  TGW: VPC-to-VPC routing   │   │
-│   │  Bulk migration (WAN opt.)  │  │  IAM: EVS service roles      │  │  VPN: fallback only         │  │
-│   │  No re-IP of VMs during mig │  │  CloudWatch: metrics via CW  │  │  BGP on T0 router to VPC   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  HCX          = VMware Hybrid Cloud Extension; live and cold migration between sites                  │
-│  vMotion      = Live VM migration while powered on; zero downtime; requires sufficient DX bandwidth   │
-│  Cold migration = Powered-off VM transfer; faster for bulk moves; no vMotion bandwidth constraint     │
-│  Network Extension = HCX L2 stretch; VMs keep their IP addresses during migration window              │
-│  Service Mesh = Paired HCX appliances: Interconnect + WAN Optimizer + NE deployed together            │
-│  Direct Connect = Private dedicated AWS link; sub-100ms latency required for HCX vMotion              │
-│  Transit Gateway = AWS routing hub connecting EVS VPC to other VPCs and on-premises networks          │
-│  Route 53     = AWS DNS; use private hosted zone to resolve EVS management FQDNs inside VPC           │
-│  IAM role     = AWS identity with permission policies; controls evs:* API action authorisation        │
-│  CloudWatch   = AWS monitoring; EVS publishes host-level metrics for dashboards and alerting          │
-│  BGP          = Border Gateway Protocol; T0 router peers with VPC subnet for workload routing         │
-│  S3           = AWS object storage; primary backup destination for EVS configuration data             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph LR

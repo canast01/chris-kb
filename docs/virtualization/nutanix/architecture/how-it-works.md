@@ -12,46 +12,10 @@ AOS distributed storage fabric, CVM role on every node, AHV hypervisor internals
 
 *Applies to: AOS 6.x · AHV*
 </div>
+![Nutanix — How It Works](../../../assets/virtualization-nutanix-architecture-how-it-works.svg)
 
-```text
-┌──────────────────────────────────── Nutanix HCI Architecture ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              Prism Central (multi-cluster plane)                              │   │
-│   │     Manage N clusters · Calm automation · Flow micro-seg · Karbon K8s · LCM · Objects        │    │
-│   └────────────────────────────────────────┬──────────────────────────────────────────────────────┘   │
-│                                            │ REST API / v3                                            │
-│   ┌────────────────────────────────────────▼──────────────────────────────────────────────────────┐   │
-│   │                         Prism Element (per-cluster management)                                │   │
-│   │            Cluster dashboard · NCC health · LCM upgrades · Storage policies                   │   │
-│   └───────────┬────────────────────────────┬────────────────────────────┬───────────────────────────┘ │
-│               │                            │                            │                             │
-│  ┌────────────▼──────────┐   ┌─────────────▼─────────┐   ┌─────────────▼─────────┐                    │
-│  │        Node A         │   │        Node B         │   │        Node C         │                    │
-│  │  AHV (KVM) · VMs      │   │  AHV (KVM) · VMs      │   │  AHV (KVM) · VMs      │                    │
-│  │  CVM (Controller VM)  │   │  CVM (Controller VM)  │   │  CVM (Controller VM)  │                    │
-│  │  Stargate · Cassandra │   │  Stargate · Cassandra │   │  Stargate · Cassandra │                    │
-│  │  NVMe cache · SSD cap │   │  NVMe cache · SSD cap │   │  NVMe cache · SSD cap │                    │
-│  └───────────────────────┘   └───────────────────────┘   └───────────────────────┘                    │
-│                                                                                                       │
-│   All CVMs form a distributed storage fabric over 10/25 GbE — no external array required              │
-│                                                                                                       │
-│   Physical: NX / Dell XC / HPE dHCI · 10/25 GbE NIC (bonded) · NVMe + SSD · IPMI/iDRAC/iLO            │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   AOS      = Acropolis Operating System; Nutanix's distributed storage and hypervisor management      │
-│   AHV      = Acropolis Hypervisor; KVM-based Type-1 hypervisor embedded in every Nutanix node         │
-│   CVM      = Controller VM; runs AOS services on every node; owns local storage I/O path              │
-│   Prism E  = Prism Element; per-cluster management UI/API; health · config · storage policies         │
-│   Prism C  = Prism Central; multi-cluster governance, analytics, automation, and Calm/Flow            │
-│   NCC      = Nutanix Cluster Check; 400+ automated health and compliance tests for the cluster        │
-│   RF2/RF3  = Replication Factor 2 or 3; number of data copies spread across nodes/blocks              │
-│   LCM      = Life Cycle Manager; handles AOS, AHV, firmware, and Prism upgrades non-disruptively      │
-│   vDisk    = Virtual disk managed by AOS; stored as objects in the distributed container              │
-│   DSIP     = Data Services IP; cluster IP used by CVMs to serve I/O to user VMs                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ---
 

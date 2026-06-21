@@ -13,106 +13,12 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 
 *Applies to: NSX-T 3.x · NSX 4.x*
 </div>
+![NSX — How It Works](../../../../assets/virtualization-vmware-nsx-architecture-how-it-works.svg)
 
-```text
-┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       NSX separates control, management, and data planes; overlay runs on each ESXi host      │   │
-│   │      Control plane: NSX Manager (3-node cluster) pushes config to Transport Nodes via RPC     │   │
-│   │        Data plane: DLR runs on each host; Geneve encapsulates E-W traffic between TEPs        │   │
-│   │          North-South: SR on Edge Node routes to physical; BGP peers with ToR switches         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    NSX Manager config → Transport Node kernel modules → Geneve overlay → Edge SR → physical           │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Control Plane        │  │       Data Plane (E-W)      │  │          Edge (N-S)         │   │
-│   │       NSX Manager × 3       │  │       DLR on each host      │  │        Service Router       │   │
-│   │       Config RPC push       │  │        Geneve VNI tag       │  │          BGP to ToR         │   │
-│   │       TEP pool assign       │  │         TEP src/dst         │  │         SNAT / DNAT         │   │
-│   │        DFW rule push        │  │         DFW at vNIC         │  │          LB service         │   │
-│   │        Segment create       │  │       BUM replication       │  │        GRE/IPsec VPN        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    VM-to-VM same host: no Geneve; DFW filters and DLR forwards in-kernel directly                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Traffic type   │   Entry point    │        Path       │    Exit point    │     Protocol     │   │
-│   │  E-W same host   │     VM vNIC      │     DFW → DLR     │    Target VM     │  None/in-kernel  │   │
-│   │  E-W diff host   │     VM vNIC      │      DFW→TEP      │    TEP→DFW→VM    │ Geneve/UDP 6081  │   │
-│   │   N-S outbound   │    VM → T1 DR    │   T1 SR → T0 SR   │   ToR→upstream   │     BGP ECMP     │   │
-│   │   N-S inbound    │   ToR → T0 SR    │     T0 → T1 SR    │    DNAT → VM     │    BGP + SNAT    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ESXi hosts · N-VDS/VDS with TEP vmknic · Edge VMs on bare-metal or VM form               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DLR           = Distributed Logical Router; runs as kernel module on every ESXi host               │
-│    SR            = Service Router; runs on Edge Node; handles stateful N-S services                   │
-│    TEP           = Tunnel End Point; vmknic IP used as Geneve encap src/dst per host                  │
-│    Geneve        = Generic Network Virtualization Encapsulation; NSX overlay protocol                 │
-│    VNI           = Virtual Network Identifier; 24-bit segment ID in Geneve header                     │
-│    DFW           = Distributed Firewall; stateful L4-L7 kernel-level filter at each vNIC              │
-│    BUM           = Broadcast/Unknown-unicast/Multicast; replicated via head-end or multicast          │
-│    T0 gateway    = Tier-0 Logical Router; provider-level; BGP peers with physical fabric              │
-│    T1 gateway    = Tier-1 Logical Router; tenant-level; connects segments to T0                       │
-│    BGP ECMP      = T0 uses ECMP over multiple Edge uplinks for active-active North-South              │
-│    N-VDS         = NSX-managed vSwitch; hosts TEP vmknic and overlay traffic                          │
-│    ToR           = Top-of-Rack physical switch; BGP peer for T0 gateway uplinks                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
-```text
-┌──────────────────────────── NSX — Distributed Firewall Packet Processing ─────────────────────────────┐
-│                                                                                                       │
-│    DFW enforces policy at every vNIC on every ESXi host. Rules are kernel-level;                      │
-│    no external firewall appliance is in the data path for east-west traffic.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │       Ingress (arriving at dest vNIC)        │  │         Egress (leaving source vNIC)        │   │
-│   │       Packet arrives from network/TEP        │  │        Guest OS sends TCP/UDP packet        │   │
-│   │       DFW intercepts before guest recv       │  │       DFW intercepts at vNIC in kernel      │   │
-│   │     Connection table: established → pass     │  │     Connection table: established → pass    │   │
-│   │        New flow → evaluate rule table        │  │        New flow → evaluate rule table       │   │
-│   │         Permit → deliver to guest OS         │  │          Permit → send to DLR / TEP         │   │
-│   │       Drop → discard (silent / logged)       │  │       Drop → discard (silent / logged)      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Rule table is evaluated top-down; first match wins; implicit deny at the bottom.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Rule Table Structure             │  │             Connection Tracking             │   │
-│   │       Applied-to: VM / group / segment       │  │    5-tuple key: src IP:port, dst IP:port,   │   │
-│   │      Match: src group + dst group + svc      │  │         proto → connection table entry      │   │
-│   │        Actions: allow · drop · reject        │  │      ESTABLISHED flow: fast path bypass     │   │
-│   │     Per-rule logging: optional (costly)      │  │     TCP FIN/RST: removes entry promptly     │   │
-│   │       Default rule: deny all (bottom)        │  │       UDP: idle timeout removes entry       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical Infrastructure (the hardware everything above runs on):                                   │
-│    ESXi hosts with N-VDS · NSX Manager cluster (×3) · TEP vmknic on each host                         │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DFW rule table    = ordered list of rules pushed by NSX Manager to each ESXi host                  │
-│    Applied-to        = scope of the rule: individual VM, group, segment, or cluster                   │
-│    Connection table  = per-host stateful table; avoids rule re-eval for open flows                    │
-│    Group             = dynamic or static set of VMs/IPs used as src/dst in DFW rules                  │
-│    Reject            = drop packet AND send TCP RST or ICMP unreachable to sender                     │
-│    N-VDS             = NSX-managed vSwitch; required for DFW to function on a host                    │
-│    Fast path         = established flow matched in connection table, skips rule table                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
+
 
 ## Control and Data Plane
 

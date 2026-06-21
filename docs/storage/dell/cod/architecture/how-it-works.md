@@ -11,6 +11,8 @@ How It Works reference covering Overview, Capacity Model, Object Storage Data Mo
 
 *Applies to: Cloud for Desktop (COD)*
 </div>
+![Capacity on Demand — How It Works](../../../../assets/storage-dell-cod-architecture-how-it-works.svg)
+
 
 ## Overview
 
@@ -30,42 +32,7 @@ graph LR
   class APEX,BILL cloud
   class ADMIN host
 ```
-```text
-┌─────────────────────────────────────── Dell COD — How It Works ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Hardware ships with locked capacity; Dell licensing portal generates key for array serial   │   │
-│   │      Apply license key via array management GUI or REST API; capacity available instantly     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Step 1 — Verify locked capacity visible in array: check available unlicensed drives/TB    │   │
-│   │                  Step 2 — Log in to Dell Licensing Portal: licensing.dell.com                 │   │
-│   │               Step 3 — Generate COD license key for specific array serial number              │   │
-│   │            Step 4 — Apply key in array management UI: Settings > Licenses > Upload            │   │
-│   │           Step 5 — Verify new capacity appears in available pool (no reboot needed)           │   │
-│   │            Step 6 — Update CMDB: record activation date, TB unlocked, remaining COD           │   │
-│   │               Step 7 — Close change ticket with before/after capacity screenshot              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  PowerStore REST activation:                                  │   │
-│   │                   POST /api/rest/license  --data {"key": "<license_string>"}                  │   │
-│   │                                                                                               │   │
-│   │                                     Verify on PowerStore:                                     │   │
-│   │                  GET /api/rest/capacity  → check used_gb and total_gb change                  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Locked capacity  = Drives/nodes installed but not accessible; shown as "reserved" in array         │
-│    Licensing portal = Dell web portal for generating COD/FOD keys per array serial number             │
-│    Key binding      = COD key cryptographically tied to array serial; cannot be reused                │
-│    Instant unlock   = Capacity joins pool within seconds; no volume migration or downtime             │
-│    Before/after     = Screenshot capacity before and after activation; attach to change ticket        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Object Storage Data Model
 

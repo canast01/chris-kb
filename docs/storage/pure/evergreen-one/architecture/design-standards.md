@@ -11,6 +11,8 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
 
 *Applies to: Evergreen//One*
 </div>
+![Evergreen//One — Design Standards](../../../../assets/storage-pure-evergreen-one-architecture-design-standards.svg)
+
 
 ```text
   Capacity Planning                  Refresh Triggers

@@ -11,23 +11,11 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 
 *Applies to: Evergreen*
 </div>
+![Evergreen — How It Works](../../../../assets/storage-pure-evergreen-architecture-how-it-works.svg)
+
 
 Evergreen — What's Included vs. Customer-Managed
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  Included in Evergreen subscription                                                                   │
-│  ├── Purity software upgrades (non-disruptive NDU)                                                    │
-│  ├── Ever Modern controller refresh every ~3 years                                                    │
-│  ├── Hardware support + parts replacement                                                             │
-│  └── Pure1 cloud monitoring + phonehome telemetry                                                     │
-├────────────────────────────────────────────────────────────┤
-│  Customer manages                                                                                     │
-│  ├── Host connectivity (FC zoning, iSCSI, NVMe-oF)                                                    │
-│  ├── Volume / protection group configuration                                                          │
-│  ├── Replication targets (ActiveDR / ActiveCluster)                                                   │
-│  └── Capacity growth (True Forward annual reconciliation)                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## Overview
 

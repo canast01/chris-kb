@@ -11,6 +11,8 @@ Standards reference covering Sizing Considerations, MTree Naming Convention, DD 
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
+![Data Domain — Standards](../../../../assets/storage-dell-data-domain-architecture-design-standards.svg)
+
 
 ## Sizing Considerations
 
@@ -38,43 +40,7 @@ graph TD
     nbOracle -->|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
     cvSQL -->|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]
 ```
-```text
-┌────────────────────────────────── Dell Data Domain Design Standards ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Size DD at 2× expected logical retention to account for dedup variation            │   │
-│   │            Separate MTrees per backup application or environment for quota control            │   │
-│   │           Replication: active site primary → passive site DR; test restore quarterly          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Sizing Standards               │  │               Layout Standards              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         2× logical retention in raw          │  │              MTree per app/env              │   │
-│   │         Plan for 10–30x dedup ratio          │  │            MTree quotas enforced            │   │
-│   │           Leave 20% free headroom            │  │            NFS exports per MTree            │   │
-│   │         DD Boost preferred protocol          │  │            DD Boost users per app           │   │
-│   │           NVRAM: do not exceed 80%           │  │            Replication per MTree            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │     Standard     │      Value       │       Reason      │      Owner       │      Review      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Raw headroom   │      > 20%       │   Dedup overhead  │   Backup team    │     Monthly      │   │
-│   │   MTree quotas   │ Per environment  │  Prevent runaway  │   Backup team    │    Quarterly     │   │
-│   │   Rep schedule   │  4-hour RPO max  │     DR target     │   Backup team    │      Annual      │   │
-│   │   Restore test   │    Quarterly     │     Verify DR     │   Backup team    │     Per test     │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Dedup ratio      = Logical data stored ÷ physical space used; 10–30x typical for backup            │
-│    20% headroom     = DDOS performance degrades when filesystem > 80% full; always leave buffer       │
-│    MTree quota      = Soft/hard limits on MTree logical capacity; prevents one app starving others    │
-│    DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 Each storage unit maps to exactly one MTree. Create the MTree first, then create the storage unit pointing at it.
 

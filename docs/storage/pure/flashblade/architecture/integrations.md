@@ -4,16 +4,10 @@ tags:
   - pure
 ---
 # FlashBlade — Integrations
+![FlashBlade — Integrations](../../../../assets/storage-pure-flashblade-architecture-integrations.svg)
 
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                       FlashBlade                                                                      │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                                                             │
-│  │  NFS/SMB │  │    S3    │  │   Mgmt   │                                                             │
-│  │  data    │  │  object  │  │  HTTPS   │                                                             │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘                                                             │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 ```sql
 
 > Part of the [FlashBlade Architecture](index.md) reference.

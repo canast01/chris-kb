@@ -11,58 +11,9 @@ Integrations reference covering S3 Client Integration, Veeam Object Repository, 
 
 *Applies to: ECS 3.x*
 </div>
-```text
-┌─────────────────────────────────────── Dell ECS — Integrations ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       ECS integrations: VMware vSphere, Kubernetes CSI, backup software, and monitoring       │   │
-│   │           Protocols: S3 · Azure Blob API · Swift · Atmos · NFS (via gateway) · HDFS           │   │
-│   │ API: ECS Management Portal / REST API REST API enables automation and third-party tool integr │   │
-│   │             Plug-ins available for vCenter, OpenShift, Splunk, and SIEM platforms             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    ECS → REST API / plug-ins → VMware / K8s / backup / monitoring                                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Node            │  │        x86 appliance        │  │        Shared-nothing       │   │
-│   │         Storage pool        │  │          Node group         │  │        Erasure coded        │   │
-│   │             VDC             │  │          Virtual DC         │  │        Per-site unit        │   │
-│   │          Rep. group         │  │          Multi-VDC          │  │        Geo redundancy       │   │
-│   │            Bucket           │  │       Object container      │  │        S3/Swift/Blob        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
-│   │   Storage pool   │ Drive aggregatio │      Internal     │       N/A        │   Erasure 12+4   │   │
-│   │       VDC        │  Site grouping   │      Internal     │       N/A        │   HA per site    │   │
-│   │      Bucket      │ Object namespace │   S3/Swift/Blob   │   S3 keys/IAM    │    Per tenant    │   │
-│   │ Replication grp  │ Geo replication  │    ECS protocol   │   Certificate    │    3-way geo     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ECS appliance nodes · 10/25 GbE backend network · commodity SAS drives                   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ECS                = Elastic Cloud Storage; Dell S3-compatible object store for unstructured data  │
-│    VDC                = Virtual Data Center; group of ECS nodes at a single geographic site           │
-│    Storage pool       = collection of nodes within a VDC; defines the erasure coding domain           │
-│    Replication group  = links VDCs for geo-redundant object storage; 3-way replication                │
-│    Bucket             = top-level S3 namespace; equivalent to S3 bucket or Azure container            │
-│    Erasure coding     = data protection scheme; default 12+4 provides 4-drive fault tolerance         │
-│    Namespace          = tenant-level isolation; multiple tenants share a single ECS cluster           │
-│    CAS                = Content Addressed Storage; fixed-content object storage with WORM support     │
-│    Replication factor = number of VDC copies; 3-way geo-replication for maximum durability            │
-│    Atmos API          = legacy Dell Atmos-compatible API; supported for migration from Atmos systems  │
-│    HDFS connector     = ECS Hadoop connector; ECS appears as HDFS namespace for analytics jobs        │
-│    Quota              = per-namespace or per-bucket storage quota; enforced as hard or soft limit     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Dell ECS — Integrations](../../../../assets/storage-dell-ecs-architecture-integrations.svg)
+
+
 
 
 ## S3 Client Integration

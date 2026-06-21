@@ -12,53 +12,11 @@ Standards reference covering Pre-Deployment Checklist, Deployment Size Reference
 
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
+![Aria Suite Lifecycle — Standards](../../../../assets/virtualization-vmware-aria-suite-lifecycle-architecture-desi.svg)
+
 
   LCM Design Standards at a Glance
-```text
-┌─────────────────────────────────── Aria Suite LCM Design Standards ───────────────────────────────────┐
-│                                                                                                       │
-│  Environment sizing, product grouping, and naming standards for Aria Suite Lifecycle Manager.         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             LCM Appliance Sizing             │  │              Environment Design             │   │
-│   │         Standard: 4 vCPU / 16 GB RAM         │  │         One environment per vCenter         │   │
-│   │             100 GB disk minimum              │  │          Group products by function         │   │
-│   │        Separate from managed products        │  │           Naming: site-env-product          │   │
-│   │              NTP + DNS required              │  │          vIDM in every environment          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  LCM appliance manages products grouped in environments; naming must be consistent.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Product Grouping Standards          │  │            Certificate Standards            │   │
-│   │          vIDM: always first product          │  │           CA-signed certs for all           │   │
-│   │         vROps: analytics environment         │  │           Wildcard or per-product           │   │
-│   │          vRLI: logging environment           │  │          LCM manages cert lifecycle         │   │
-│   │         vRA: automation environment          │  │            Cert SAN matches FQDN            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM on vSphere; NFS/S3 for content library; CA for cert issuance; NTP/DNS                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LCM                 = Aria Suite Lifecycle Manager; deploys and upgrades Aria products               │
-│  Environment         = LCM logical grouping of products sharing a vCenter and vIDM                    │
-│  vIDM                = VMware Identity Manager; SSO hub; first product in environment                 │
-│  Product             = Managed Aria component: vROps, vRLI, vRA, vRNI, etc.                           │
-│  Depot               = LCM content source: VMware Customer Connect or local NFS                       │
-│  Naming Convention   = site-env-product; ensures FQDN and DNS consistency                             │
-│  Certificate         = TLS cert managed by LCM; must match product FQDN SAN                           │
-│  SAN                 = Subject Alternative Name; cert field listing valid hostnames                   │
-│  Wildcard Cert       = *.domain.com cert covering all products in an environment                      │
-│  NTP Sync            = All LCM and product VMs must sync to same NTP source                           │
-│  Content Library     = NFS or S3 store holding PAK and OVA files for LCM                              │
-│  Pre-check           = LCM validation before deploy/upgrade: disk, DNS, certs                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 | Product | Short Name | Example |
 |---|---|---|
 | Aria Suite Lifecycle | lcm | `lcm-prod-01.example.local` |

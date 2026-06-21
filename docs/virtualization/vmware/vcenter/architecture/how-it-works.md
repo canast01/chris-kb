@@ -13,6 +13,8 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 
 *Applies to: vSphere 7.x · 8.x*
 </div>
+![vCenter — How It Works](../../../../assets/virtualization-vmware-vcenter-architecture-how-it-works.svg)
+
 
 ## Deployment Model
 
@@ -79,53 +81,7 @@ graph LR
     class witness witness
     class clients client
 ```
-```text
-┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│  vCenter Server is the centralised management platform for vSphere; all                               │
-│  ESXi hosts, VMs, clusters, and policies are controlled through its APIs.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Client Layer                 │  │             API / Service Layer             │   │
-│   │          vSphere Client (HTML5 UI)           │  │             REST API + SOAP API             │   │
-│   │             CLI: govc, PowerCLI              │  │           SSO token auth for calls          │   │
-│   │            SDKs: Python, Go, Java            │  │             vCenter API gateway             │   │
-│   │             vCenter Mob browser              │  │               Task / event bus              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Client requests hit the API gateway; SSO validates the token before any operation.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Core Services                 │  │              Host Agent (vpxa)              │   │
-│   │          Inventory: hosts/VMs/nets           │  │            Runs on each ESXi host           │   │
-│   │            Scheduler: DRS/HA/DPM             │  │            Relays tasks to hostd            │   │
-│   │            Storage: SDRS/profiles            │  │           Reports events up to VC           │   │
-│   │           Postgres DB: full state            │  │           Reconnects on VC restart          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vCenter Server Appliance (VCSA) runs as a Linux VM on an ESXi host; requires                         │
-│  shared storage and management network reachability from all managed hosts.                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCSA          = vCenter Server Appliance; OVA-deployed Photon OS VM                                  │
-│  vpxd          = vCenter Server daemon; core process; crash restarts service                          │
-│  vpxa          = vCenter agent on each ESXi host; bridges host and vCenter                            │
-│  hostd         = host daemon on ESXi; handles VM power ops, storage, network                          │
-│  PSC           = Platform Services Controller; merged into VCSA 7.0+                                  │
-│  SSO           = Single Sign-On; identity store; issues SAML tokens for API                           │
-│  DRS           = Distributed Resource Scheduler; automates VM placement                               │
-│  HA            = High Availability; restarts VMs on host failure automatically                        │
-│  DPM           = Distributed Power Management; powers off idle hosts                                  │
-│  SDRS          = Storage DRS; balances datastore utilisation automatically                            │
-│  vDS           = vSphere Distributed Switch; managed centrally from vCenter                           │
-│  Inventory     = hierarchical object tree: DC → cluster → host → VM                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
@@ -322,145 +278,25 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 
 ## Content Library — Publish & Subscribe
 
-```text
-┌─────────────────────────── Content Library — Publish & Subscribe Topology ────────────────────────────┐
-│                                                                                                       │
-│  A published library exposes its catalogue over HTTPS. Subscribed libraries on any                    │
-│  vCenter instance sync the content locally, enabling fast VM deployment without cross-site I/O.       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │      Published Library (source vCenter)      │  │     Subscribed Library (target vCenter)     │   │
-│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
-│   │ Contains: OVF/OVA templates                  │  │ Subscribes to published HTTPS URL           │   │
-│   │   VM templates (native format)               │  │ Sync policy: on-demand or immediate         │   │
-│   │   ISO images                                 │  │ Content cached locally on datastore         │   │
-│   │   Scripts and files                          │  │ VM deploy uses local copy — fast            │   │
-│   │ Publication endpoint: HTTPS URL              │  │ Read-only — changes made at source          │   │
-│   │ HTTPS + optional password                    │  │ Multiple subscribers supported              │   │
-│   │                                              │  │                                             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Published → Subscribed sync flow:                                                                  │
-│      1.  Admin creates local library → enables "Published" checkbox → gets HTTPS URL                  │
-│      2.  On target vCenter: New Subscribed Library → paste URL → set sync policy                      │
-│      3.  Initial full sync downloads all items to target datastore                                    │
-│      4.  Updates: source library changes → subscribers detect delta → sync diff only                  │
-│      5.  Deploy VM from subscribed library = pulls from local datastore copy                          │
-│                                                                                                       │
-│    OVF template  = Open Virtualisation Format; portable VM descriptor + disk(s)                       │
-│    On-demand     = content downloaded only when needed for deployment                                 │
-│    Immediate     = content synced as soon as source library updates                                   │
-│    ISO sync      = entire ISO downloaded; large files sync in background                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
 ## Resource Pools — Shares, Limits & Reservations
 
-```text
-┌─────────────────────────── Resource Pools — Shares, Limits & Reservations ────────────────────────────┐
-│                                                                                                       │
-│  Resource pools create a hierarchy of guaranteed and throttled resource entitlements.                 │
-│  Shares determine proportional access when contention exists; limits cap usage absolutely.            │
-│                                                                                                       │
-│    Cluster root  (all hosts combined: e.g. 128 pCPU, 1024 GB RAM)                                     │
-│    │                                                                                                  │
-│    ├── Resource Pool: Production  [shares: High 8000, limit: none, reservation: 64 GHz]               │
-│    │     │  VMs here guaranteed 64 GHz floor; can burst to cluster max                                │
-│    │     ├── VM-Prod-1  (4 vCPU, reservation: 4 GHz)                                                  │
-│    │     └── VM-Prod-2  (8 vCPU, no reservation)                                                      │
-│    │                                                                                                  │
-│    ├── Resource Pool: Dev  [shares: Normal 4000, limit: 32 GHz, reservation: none]                    │
-│    │     │  VMs capped at 32 GHz total even if cluster is idle                                        │
-│    │     └── VM-Dev-1  (2 vCPU, no reservation or limit)                                              │
-│    │                                                                                                  │
-│    └── Resource Pool: Test  [shares: Low 2000, limit: 16 GHz, reservation: none]                      │
-│          │  During contention: Prod gets 2x Dev shares, 4x Test shares                                │
-│          └── VM-Test-1  (2 vCPU, limit: 2 GHz — hard cap always enforced)                             │
-│                                                                                                       │
-│    Shares      = relative priority during contention; High:Normal:Low = 4:2:1                         │
-│    Reservation = guaranteed minimum CPU/mem; cluster must be able to meet all reservations            │
-│    Limit       = hard ceiling on usage; never exceeded even if resources are free                     │
-│    Expandable  = if set, child pool can borrow from parent when parent has slack                      │
-│    Overhead    = vSphere reserves CPU/mem for VMkernel overhead per running VM                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
 ## vMotion Types — Comparison
 
-```text
-┌─────────────────────────────── VM Migration — vMotion Type Comparison ────────────────────────────────┐
-│                                                                                                       │
-│    Type                  VM State     What Moves           Storage         vCenter                    │
-│    ────────────────────────────────────────────────────────────────────────────────────               │
-│    vMotion               Powered ON   CPU + memory state   Stays on same   Same SSO                   │
-│                                       vNIC reconnects      datastore       domain                     │
-│                                       < 1 s downtime                                                  │
-│                                                                                                       │
-│    Storage vMotion       Powered ON   VMDK files (live)    Moves to new    Same SSO                   │
-│    (svMotion)                         VM stays running     datastore       domain                     │
-│                                       Mirror → switch                                                 │
-│                                                                                                       │
-│    Cold Migration        Powered OFF  All VM files         Moves (opt.)    Same or                    │
-│                                       .vmx .vmdk .nvram    New datastore   cross-VC                   │
-│                                       No memory to xfer    or same                                    │
-│                                                                                                       │
-│    Cross-vCenter Export  Powered OFF  All VM files         Moves           Different                  │
-│    (cross-VC vMotion*)   (or ON**)    Registered at dest   Optional        vCenters                   │
-│    * Enhanced linked mode required for powered-on cross-VC vMotion (xvMotion)                         │
-│                                                                                                       │
-│    vMotion requirements: shared storage visible from both hosts; same L2 or vDS port group;           │
-│      compatible CPU families (or EVC mode enabled); sufficient memory on target host.                 │
-│                                                                                                       │
-│    vMotion    = live migration of running VM between hosts; no storage move                           │
-│    svMotion   = live storage migration; VM stays on same host; VMDK mirrored then cut                 │
-│    EVC        = Enhanced vMotion Compatibility; masks CPU features for cross-gen moves                │
-│    xvMotion   = cross-vCenter vMotion (powered-on); requires Enhanced Linked Mode                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 
 ## DRS — Placement & Balancing Logic
 
-```text
-┌────────────────────────────────── DRS — Placement & Balancing Logic ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │       Initial Placement (VM power-on)        │  │       Ongoing Balancing (every 5 min)       │   │
-│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
-│   │ DRS scores all eligible hosts                │  │ Measures host resource utilisation          │   │
-│   │ Prefers host with most headroom              │  │ Calculates cluster imbalance score          │   │
-│   │ Respects: affinity rules,                    │  │ Generates migration recommendations         │   │
-│   │  reservations, NUMA topology                 │  │ Weighs move cost vs. benefit gained         │   │
-│   │ Picks best-scored host,                      │  │ Applies recs per automation level:          │   │
-│   │  powers on VM there                          │  │  Manual / Partial / Fully Automated         │   │
-│   │                                              │  │                                             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Automation levels:                                                                                 │
-│      Manual          — DRS generates recommendations; admin reviews and applies each                  │
-│      Partially Auto  — Auto power-on placement; manual approval for ongoing balancing                 │
-│      Fully Automated — Auto placement + auto migration; threshold 1 (aggr) – 5 (cons)                 │
-│                                                                                                       │
-│    Affinity / Anti-affinity rules:                                                                    │
-│      VM-VM affinity      — keep these VMs on the same host (HA pair, licensing)                       │
-│      VM-VM anti-affinity — keep these VMs on different hosts (HA separation)                          │
-│      VM-Host affinity    — prefer or require VMs on specific hosts (licensing, hardware)              │
-│                                                                                                       │
-│    DRS     = Distributed Resource Scheduler; runs in vCenter; uses vMotion to balance                 │
-│    Score   = per-host metric: 0 (ideal) to 100 (overloaded); DRS targets uniform score                │
-│    Imbal.  = deviation of host scores from cluster average; triggers migration at threshold           │
-│    DPM     = Distributed Power Management; companion to DRS; powers off idle hosts                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ## See also
 

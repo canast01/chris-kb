@@ -97,6 +97,39 @@ PAGE_TYPES = {
         ],
         'footer': 'Ports Reference',
     },
+    'how-it-works': {
+        'subtitle': 'Architecture Overview',
+        'boxes': [
+            ('Components', '& Layers', '#e3f2fd', '#1565c0'),
+            ('Internal', 'Interactions', '#e8eaf6', '#3949ab'),
+            ('Data /\nControl Flow', '', '#fff8e1', '#f57f17'),
+            ('Integration', 'Points', '#fce4ec', '#c62828'),
+            ('✓ Architecture', 'Understood', GREEN_L, GREEN),
+        ],
+        'footer': 'Architecture Reference',
+    },
+    'design-standards': {
+        'subtitle': 'Design Standards Flow',
+        'boxes': [
+            ('Requirements', '& Constraints', '#e3f2fd', '#1565c0'),
+            ('Design', 'Principles', '#e8eaf6', '#3949ab'),
+            ('Standards', '& Patterns', '#fff8e1', '#f57f17'),
+            ('Review /\nValidation', '', '#fce4ec', '#c62828'),
+            ('✓ Compliant', 'Design', GREEN_L, GREEN),
+        ],
+        'footer': 'Design Standards Reference',
+    },
+    'integrations': {
+        'subtitle': 'Integration Topology',
+        'boxes': [
+            ('Source', 'System', '#e3f2fd', '#1565c0'),
+            ('API /\nProtocol', '', '#e8eaf6', '#3949ab'),
+            ('Connector /\nAdapter', '', '#fff8e1', '#f57f17'),
+            ('Target', 'System', '#fce4ec', '#c62828'),
+            ('✓ Integrated', '& Verified', GREEN_L, GREEN),
+        ],
+        'footer': 'Integrations Reference',
+    },
 }
 
 _ASCII_RE   = re.compile(r'```text\n┌[^`]*?┘[ \t]*\n```', re.DOTALL)

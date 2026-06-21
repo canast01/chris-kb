@@ -11,6 +11,8 @@ How It Works reference covering Overview, Architecture, Data Path, Components, H
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
+![Data Domain — How It Works](../../../../assets/storage-dell-data-domain-architecture-how-it-works.svg)
+
 
 ## Overview
 
@@ -33,48 +35,7 @@ graph TB
   class CLOUD cloud
   class DDDR dr
 ```
-```text
-┌─────────────────────────────────── Dell Data Domain — How It Works ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Data Domain performs inline dedup: segments incoming data, hashes, checks index        │   │
-│   │            Unique segments written to DDOS; duplicates recorded as references only            │   │
-│   │           NVRAM buffers writes; segment index (fingerprint DB) held in RAM for speed          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Write path: data → segment → hash → index lookup → unique: write / dup: reference only             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Write Path                  │  │                  Read Path                  │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │       1. Data enters via NFS/Boost/VTL       │  │          1. Restore request arrives         │   │
-│   │      2. Chunked into variable segments       │  │        2. DDOS resolves segment refs        │   │
-│   │       3. SHA-1 fingerprint per segment       │  │          3. Segments read from disk         │   │
-│   │         4. Index lookup in RAM/NVRAM         │  │           4. Reassembled in order           │   │
-│   │       5. Unique: write to disk + index       │  │         5. Decompressed + delivered         │   │
-│   │       6. Duplicate: metadata ref only        │  │          6. Data returned to client         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     DD Boost: client-side library segments data before sending; reduces network by 50–90%     │   │
-│   │       Cleaning: DDOS garbage collects orphaned segments during off-hours (cron default)       │   │
-│   │           Replication: only sends unique new segments to DR DD; bandwidth-efficient           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Segment       = Variable-length data chunk (avg 8 KB); unit of deduplication                       │
-│    Fingerprint   = SHA-1 hash of segment content; used as dedup index key                             │
-│    Segment index = In-RAM hash table mapping fingerprints to disk locations                           │
-│    NVRAM cache   = Incoming writes staged in NVRAM; protects against power loss mid-stream            │
-│    Cleaning      = Scheduled DDOS process removing segments no longer referenced                      │
-│    DD Boost lib  = Plugin installed in backup app (NBU, Networker, Veeam); enables client dedup       │
-│    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.
 

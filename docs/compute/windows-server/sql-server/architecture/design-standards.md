@@ -10,37 +10,10 @@ SQL Server design standards — HA topology (Always On AG, FCI), edition selecti
 
 *Applies to: SQL Server 2019 / 2022*
 </div>
+![SQL Server — Design Standards](../../../../assets/compute-windows-server-sql-server-architecture-design-standa.svg)
 
-```text
-┌──────────────────────────────────── SQL Server — Design Standards ────────────────────────────────────┐
-│                                                                                                       │
-│   Always On AG is the primary HA pattern; log-based replication with automatic failover               │
-│   Separate volumes required for data, log, tempdb, and backup; no sharing between workloads           │
-│   max server memory must be set; leave 10 GB for OS; default unbounded setting causes OOM             │
-│                                                                                                       │
-│   HA topologies                                                                                       │
-│   Always On AG: log-based replication; automatic failover; readable secondaries; preferred pattern    │
-│   Failover Cluster Instance (FCI): shared storage; cluster failover; legacy SAN-based environments    │
-│   Log Shipping: async; manual failover; warm standby; used for DR and reporting copies                │
-│                                                                                                       │
-│   Edition selection                                                                                   │
-│   Enterprise: Always On AG (unlimited replicas), partitioning, online operations, analytics           │
-│   Standard: limited AG (2 replicas); no online index rebuild on most operations                       │
-│   Developer: full Enterprise features; free; non-production only                                      │
-│   Express: free; 10 GB database size limit; no SQL Agent                                              │
-│                                                                                                       │
-│   Disk and memory                                                                                     │
-│   Data files (.mdf/.ndf): RAID 10 or SSD; Log (.ldf): sequential writes; dedicated SSD                │
-│   tempdb: local NVMe preferred; one file per logical CPU core (cap at 8); equal size                  │
-│   max server memory: set to RAM minus 10 GB for OS; use sp_configure to apply                         │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   Always On AG   = Availability Group; log-based HA with primary and secondary replicas               │
-│   FCI            = Failover Cluster Instance; shared disk; single instance on a Windows cluster       │
-│   tempdb         = system database for temporary objects and sort spills; one file per core           │
-│   MAXDOP         = max degree of parallelism; cap at 4 for OLTP; 0 for DW/reporting workloads         │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## High-Availability Topologies
 

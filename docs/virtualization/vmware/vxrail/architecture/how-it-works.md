@@ -12,51 +12,9 @@ Dell VxRail is a hyper-converged infrastructure (HCI) appliance that combines co
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-```text
-┌─────────────────────── VxRail Appliance — Manager and Lifecycle Control Plane ────────────────────────┐
-│                                                                                                       │
-│    VxRail Manager runs as a vCenter plugin and standalone VM; it owns the full                        │
-│    lifecycle — from first-run wizard through rolling LCM upgrades to support.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           VxRail Manager Services            │  │            Controlled Components            │   │
-│   │     vCenter plugin: UI for cluster mgmt      │  │       ESXi hosts: add/remove/maintain       │   │
-│   │      LCM engine: bundle + upgrade logic      │  │      vSAN: disk claim + health monitor      │   │
-│   │        REST API: automation endpoint         │  │        vCenter: register + configure        │   │
-│   │      Health monitor: iDRAC + vSAN + HW       │  │      iDRAC: firmware + hardware alerts      │   │
-│   │        OMIVV: OpenManage integration         │  │      NSX: optional overlay integration      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    VxRail Manager controls all components; iDRAC is always available for OOB access.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               First Run Wizard               │  │               LCM Upgrade Flow              │   │
-│   │       1. Boot nodes from factory image       │  │         1. Download bundle from Dell        │   │
-│   │          2. Set mgmt IP + DNS + NTP          │  │       2. Run LCM pre-check validation       │   │
-│   │       3. Wizard deploys vCenter + SSO        │  │      3. Place node in maintenance mode      │   │
-│   │      4. vSAN auto-configured from disks      │  │       4. Upgrade ESXi + firmware + VxM      │   │
-│   │      5. Cluster validation: HA + DRS on      │  │     5. Exit maintenance; repeat per node    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical Infrastructure (the hardware everything above runs on):                                   │
-│    VxRail nodes (compute + NVMe/SSD) · ToR switches · iDRAC management network                        │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VxRail Manager    = VM running the VxRail management stack; ships with each cluster                │
-│    vCenter plugin    = VxRail UI embedded in vCenter; exposes cluster health + LCM                    │
-│    LCM               = Lifecycle Manager; orchestrates rolling upgrades node-by-node                  │
-│    First Run Wizard  = Browser-based guided setup; runs once per cluster lifecycle                    │
-│    OMIVV             = OpenManage Integration for VMware vCenter; hardware visibility                 │
-│    iDRAC             = Dell out-of-band controller on every node; survives ESXi crash                 │
-│    Bundle            = VxRail update package: ESXi ISO + firmware + VxM RPM bundled                   │
-│    Pre-check         = LCM automated validation: vSAN health, host connectivity, space                │
-│    Maintenance mode  = ESXi state where VMs are vMotioned off before patching begins                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![VxRail — How It Works (VMware Platform)](../../../../assets/virtualization-vmware-vxrail-architecture-how-it-works.svg)
+
+
 
 
  Every VxRail cluster runs vSAN as its storage layer — there is no shared external storage in a standard VxRail deployment.

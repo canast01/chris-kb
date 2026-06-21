@@ -12,29 +12,11 @@ Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation
 
 *Applies to: vSphere Replication 8.x*
 </div>
+![vSphere Replication — Design Standards](../../../../assets/virtualization-vmware-vsphere-replication-architecture-desig.svg)
+
 
   Sizing and Bandwidth Design
-```text
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│  VRA sizing                                                                                           │
-│  ┌─────────────────────────────────────────────────────┐                                              │
-│  │ ≤200 VMs: Small (2 vCPU / 8 GB)                     │                                              │
-│  │ ≤500 VMs: Medium (4 vCPU / 16 GB) ← one VRA max     │                                              │
-│  │ >500 VMs: add VRS (+500 per appliance)               │                                             │
-│  └─────────────────────────────────────────────────────┘                                              │
-│                                                                                                       │
-│  Bandwidth formula per VM (RPO-based):                                                                │
-│  ┌─────────────────────────────────────────────────────┐                                              │
-│  │ BW(Mbps) = (Daily change GB × 8) / (86400 × RPO_s)  │                                              │
-│  │                                                      │                                             │
-│  │  5 min RPO → 12× more BW than 1 hr RPO              │                                              │
-│  │  1 hr RPO → ~1–2 Mbps typical enterprise VM         │                                              │
-│  │  Max RTT: 100ms between sites                        │                                             │
-│  └─────────────────────────────────────────────────────┘                                              │
-│                                                                                                       │
-│  Target datastore = source disk + (N points × avg delta)                                              │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ---
 

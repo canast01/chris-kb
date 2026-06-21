@@ -13,54 +13,10 @@ Integrations reference covering NSX Integration, Stretched Cluster Witness, File
 
 *Applies to: vSAN 7.x · 8.x*
 </div>
+![vSAN — Integrations](../../../../assets/virtualization-vmware-vsan-architecture-integrations.svg)
 
-```text
-┌───────────────────────────────────────── vSAN — Integrations ─────────────────────────────────────────┐
-│                                                                                                       │
-│  vSAN integrates with vCenter for management, NSX for micro-segmentation,                             │
-│  external KMS for encryption, and backup tools via VADP.                                              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             vCenter Integration              │  │              Backup Integration             │   │
-│   │         Managed via Hosts & Clusters         │  │             VADP: CBT snapshots             │   │
-│   │           Storage policies from VC           │  │          Veeam / Commvault / Avamar         │   │
-│   │             Health in vCenter UI             │  │            NFS target: not needed           │   │
-│   │          Alarms: disk/host failures          │  │           SRM: vSAN datastores OK           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  vCenter is the single management plane; policies defined here flow to all vSAN hosts.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Security Integrations             │  │           Monitoring Integrations           │   │
-│   │          KMS: external KMIP server           │  │             vROps: vSAN capacity            │   │
-│   │           Data-at-rest encryption            │  │             vSAN Skyline health             │   │
-│   │         NSX: microsegment VM traffic         │  │          SNMP: disk failure alerts          │   │
-│   │         vSAN ESA: inline encryption          │  │             Syslog: host events             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  KMS must be reachable from each ESXi host on KMIP port 5696; monitoring tools                        │
-│  use vCenter APIs to pull vSAN health and capacity data.                                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VADP     = vStorage APIs for Data Protection; backup quiescing                                       │
-│  CBT      = Changed Block Tracking; incremental backup efficiency                                     │
-│  KMIP     = Key Management Interoperability Protocol; port 5696                                       │
-│  KMS      = Key Management Server; holds KEKs for vSAN encryption                                     │
-│  SRM      = Site Recovery Manager; supports vSAN datastores directly                                  │
-│  vROps    = Aria Operations; capacity planning for vSAN                                               │
-│  Skyline  = VMware proactive support; vSAN health telemetry                                           │
-│  NSX      = network virtualisation; micro-segments guest VMs                                          │
-│  Storage policy= VC-defined rules: FTT, RAID, IOPs limit per VM                                       │
-│  Avamar   = Dell backup tool; VADP integration for vSAN VMs                                           │
-│  Commvault = backup tool; VADP snapshot integration                                                   │
-│  Inline enc= ESA encrypts data as it enters the storage layer                                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 Key vCenter-managed vSAN functions:
 

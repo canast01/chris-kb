@@ -12,6 +12,8 @@ How It Works reference covering Overview, Deployment Models, Cluster Topology, C
 
 *Applies to: Aria Automation 8.x*
 </div>
+![Aria Automation — How It Works](../../../../assets/virtualization-vmware-aria-automation-architecture-how-it-wo.svg)
+
 
 ## Overview
 
@@ -43,96 +45,9 @@ graph TB
   class ADMIN host
   class CLOUDS cloud
 ```
-```text
-┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│  Cloud-agnostic self-service automation via blueprints, cloud templates, and resource orchestration.  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │       Service Portal (Consumer layer)        │  │            Designer / Admin layer           │   │
-│   │     Self-service catalog of deployments      │  │       Cloud templates (YAML/drag-drop)      │   │
-│   │      Request → approval → provisioning       │  │     Blueprints define topology + inputs     │   │
-│   │    Day-2 actions: resize/snapshot/delete     │  │       Policies: cost, network, storage      │   │
-│   │   Role: consumer sees only entitled items    │  │      Projects isolate teams and quotas      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Approved requests flow to the orchestration engine which calls cloud account APIs.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Orchestration Engine             │  │          Cloud Accounts / Endpoints         │   │
-│   │       Workflow runs: Aria Orchestrator       │  │      vSphere, AWS, Azure, GCP accounts      │   │
-│   │       ABX extensibility actions (FaaS)       │  │        NSX-T for network provisioning       │   │
-│   │       Resource lifecycle state machine       │  │       vCenter clusters and datastores       │   │
-│   │        Event broker for async events         │  │        Terraform provider integration       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Linux VMs (vRA appliances) · vCenter hosts · DNS · LDAP/AD · NTP · TLS certificates                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Cloud template    = YAML descriptor defining resources, inputs, and conditions for a deployment      │
-│  Blueprint         = Older term for cloud template; still used in vRA 8.x UI and docs                 │
-│  Project           = Tenant boundary in vRA; owns cloud accounts, members, and quotas                 │
-│  Catalog item      = Versioned cloud template published to the service catalog for consumers          │
-│  ABX action        = Action-Based Extensibility; serverless function triggered by vRA events          │
-│  Aria Orchestrator = Workflow engine embedded in vRA; executes complex multi-step automations         │
-│  Day-2 action      = Post-deployment operation (resize, snapshot, decommission) on a resource         │
-│  Cloud account     = vRA connection to an infrastructure endpoint (vCenter, AWS, Azure)               │
-│  Deployment        = Running instance of a provisioned cloud template with tracked lifecycle          │
-│  Approval policy   = Governance rule requiring human sign-off before provisioning proceeds            │
-│  Terraform config  = HCL workspace managed by vRA IaaC integration for Terraform providers            │
-│  Event subscription= vRA event broker rule mapping resource event to ABX action or workflow           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
-```text
-┌──────────────────────── Aria Automation — Blueprint and Deployment Lifecycle ─────────────────────────┐
-│                                                                                                       │
-│    A cloud template moves through defined states from authoring to decommission.                      │
-│    Day-2 actions (resize, snapshot, delete) are available while Deployed.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Template States                │  │         System Actions at Each State        │   │
-│   │         Draft — author editing YAML          │  │      Validate inputs, properties, cloud     │   │
-│   │        Published — visible in catalog        │  │      Apply entitlement + project scope      │   │
-│   │      Requested — consumer submits form       │  │      Run approval policy if configured      │   │
-│   │     Provisioning — Orchestrator running      │  │     Call cloud account APIs; track tasks    │   │
-│   │          Deployed — resources live           │  │      Day-2: resize / snapshot / delete      │   │
-│   │      Expired / Deleted — deprovisioned       │  │       Release quota; cleanup resources      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Failed provisioning → resources remain in Failed state until deleted or retried.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Request Processing Flow            │  │             Extensibility Hooks             │   │
-│   │       1. Consumer selects catalog item       │  │      ABX action: pre-provision webhook      │   │
-│   │      2. Form inputs validated vs schema      │  │      Event broker: async notifications      │   │
-│   │        3. Approval workflow (if set)         │  │      Orchestrator: multi-step workflows     │   │
-│   │    4. Cloud account API call per resource    │  │      ABX action: post-provision config      │   │
-│   │     5. Deployment record created in vRA      │  │     Terraform: via embedded TF provider     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical Infrastructure (the hardware everything above runs on):                                   │
-│    vRA appliance cluster · vCenter/cloud endpoints · AD/LDAP · TLS certificates                       │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Cloud template  = YAML resource definition; inputs, conditions, and properties                     │
-│    Blueprint       = older term for cloud template; still used in UI and API context                  │
-│    ABX             = Action-Based Extensibility; FaaS-style scripts run as hooks                      │
-│    Event broker    = pub/sub bus; triggers ABX or Orchestrator on state transitions                   │
-│    Entitlement     = policy linking a catalog item to a project/user/group                            │
-│    Day-2 action    = post-deploy operation (power, resize, snapshot) via catalog item                 │
-│    Project         = Aria Automation multi-tenancy unit; owns quotas and endpoints                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Cloud Account Types
 

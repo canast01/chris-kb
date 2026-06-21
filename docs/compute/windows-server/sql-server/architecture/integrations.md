@@ -10,37 +10,10 @@ SQL Server integration points — application drivers (JDBC, ODBC, ADO.NET, pyod
 
 *Applies to: SQL Server 2019 / 2022*
 </div>
+![SQL Server — Integrations](../../../../assets/compute-windows-server-sql-server-architecture-integrations.svg)
 
-```text
-┌────────────────────────────────────── SQL Server — Integrations ──────────────────────────────────────┐
-│                                                                                                       │
-│   SQL Server connects to applications via ODBC, JDBC, ADO.NET, pyodbc, and native drivers             │
-│   Linked servers enable T-SQL queries across SQL Server instances and heterogeneous sources           │
-│   Monitoring uses DMVs natively; third-party tools scrape DMV metrics via sql_exporter                │
-│                                                                                                       │
-│   Application drivers                                                                                 │
-│   .NET: Microsoft.Data.SqlClient; Server=host;Database=db;User Id=u;Password=p;                       │
-│   Java: mssql-jdbc; jdbc:sqlserver://host:1433;databaseName=db                                        │
-│   Python: pyodbc + ODBC Driver 18; mssql+pyodbc://user:pass@host/db?driver=...                        │
-│   Node.js: mssql / tedious npm package; connection pool recommended                                   │
-│                                                                                                       │
-│   Linked servers                                                                                      │
-│   sp_addlinkedserver: registers remote SQL Server or heterogeneous OLE DB source                      │
-│   sp_addlinkedsrvlogin: maps local login to remote login credentials                                  │
-│   Query: SELECT * FROM [REMOTE_SERVER].[database].[schema].[table]                                    │
-│                                                                                                       │
-│   Analytics components (SSIS / SSRS / SSAS)                                                           │
-│   SSIS: ETL and data integration; packages deployed to SSISDB; scheduled via SQL Agent                │
-│   SSRS: reporting server; connects to SQL data sources; REST API for embedding                        │
-│   SSAS: analytical / OLAP; tabular or multidimensional model; Power BI compatible                     │
-│                                                                                                       │
-│   Key terms:                                                                                          │
-│   ODBC         = Open Database Connectivity; standard API for relational database access              │
-│   DMV          = Dynamic Management View; sys.dm_* views exposing SQL Server runtime state            │
-│   SSISDB       = SQL Server Integration Services catalog database; package deployment target          │
-│   sql_exporter = Prometheus exporter for SQL Server; collects DMV metrics for Grafana                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Application Drivers
 

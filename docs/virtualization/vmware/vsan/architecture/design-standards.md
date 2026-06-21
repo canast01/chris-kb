@@ -13,54 +13,10 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
 
 *Applies to: vSAN 7.x · 8.x*
 </div>
+![vSAN — Design Standards](../../../../assets/virtualization-vmware-vsan-architecture-design-standards.svg)
 
-```text
-┌─────────────────────────────────────── vSAN — Design Standards ───────────────────────────────────────┐
-│                                                                                                       │
-│  vSAN design standards cover host sizing, disk group ratios, network requirements,                    │
-│  fault tolerance policy selection, and cluster expansion rules.                                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Host & Disk Standards             │  │              Network Standards              │   │
-│   │             Min 3 hosts (FTT=1)              │  │        10GbE minimum; 25GbE preferred       │   │
-│   │         Homogeneous hosts preferred          │  │            Dedicated VMkernel NIC           │   │
-│   │          Cache:capacity 1:10 ratio           │  │            Jumbo frames: MTU 9000           │   │
-│   │          vSAN HCL: all disks listed          │  │          Latency <1ms host to host          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  All hardware must appear on the vSAN HCL; off-HCL disks cause unsupported state.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Policy Standards               │  │              Capacity Planning              │   │
-│   │            Prod VMs: FTT=1 RAID-1            │  │            Slack: 30% free always           │   │
-│   │            Critical: FTT=2 RAID-6            │  │           Resync headroom: 1 host           │   │
-│   │           Test/dev: FTT=0 (no HA)            │  │         Expand by 3 hosts (FD rule)         │   │
-│   │           Encryption: policy-based           │  │           Dedup/compress: OSA only          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  All ESXi hosts contribute their local NVMe/SSD/HDD to the shared vSAN datastore;                     │
-│  TOR switches must support jumbo frames and LLDP for vSAN network health.                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  HCL          = Hardware Compatibility List; VMware approved disk list                                │
-│  FTT          = Failures To Tolerate; defines redundancy level                                        │
-│  RAID-1       = mirroring; FTT=1 needs 3 hosts; simple, higher cost                                   │
-│  RAID-5/6     = erasure coding; space-efficient; FTT=1 needs 4, FTT=2 needs 6                         │
-│  Cache ratio  = 1:10 cache to capacity; e.g., 400GB cache → 4TB capacity                              │
-│  30% slack    = required for resync operations after disk/host failure                                │
-│  Resync headroom= capacity to rebuild one failed host worth of data                                   │
-│  OSA          = Original Storage Architecture; HDD+SSD; supports dedup                                │
-│  ESA          = Express Storage Architecture; all-NVMe; no dedup needed                               │
-│  Homogeneous  = same CPU/RAM/disk model per host; simplifies policy math                              │
-│  MTU 9000     = jumbo frames; reduces CPU overhead for large I/O                                      │
-│  LLDP         = Link Layer Discovery Protocol; used for vSAN net health                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ## Cluster Configuration
 

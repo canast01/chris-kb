@@ -11,58 +11,9 @@ How It Works reference covering Overview, Metering Model, Supported Platforms, U
 
 *Applies to: Dell FOD*
 </div>
-```text
-┌─────────────────────────────────────── Dell FoD — How It Works ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        FoD operational flow: request → controller → data service → host acknowledgement       │   │
-│   │            Data path: host I/O → FoD controller → storage media → persistent write            │   │
-│   │ Management: Dell License Manager / array CLI provides unified control for all operational fun │   │
-│   │           Protection: snapshots, replication, and redundancy ensure data durability           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Host I/O → FoD controller → storage media → acknowledge → replicate                                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │         License type        │  │        Permanent/Term       │  │       Feature-specific      │   │
-│   │          Activation         │  │         Key → array         │  │        Instant unlock       │   │
-│   │            Scope            │  │         Per-array SN        │  │       Non-transferable      │   │
-│   │           Features          │  │       Replication/Tier      │  │       Product-defined       │   │
-│   │            Audit            │  │        License report       │  │          Compliance         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Component     │     Purpose      │       Access      │       Auth       │      Notes       │   │
-│   │   FoD license    │  Feature unlock  │  Portal download  │   Entitlement    │   Array-bound    │   │
-│   │  License portal  │  Purchase/track  │       HTTPS       │    SSO login     │ licensing.dell.  │   │
-│   │  Array firmware  │ FoD enforcement  │     Array mgmt    │    Admin role    │  Validates key   │   │
-│   │   Audit report   │ Compliance check │     DDMC/array    │    Read-only     │  Monthly review  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Dell array with FoD-capable firmware · Dell licensing portal · array management          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FoD                = Feature on Demand; software capabilities locked in firmware, unlocked by li...│
-│    License key        = alphanumeric string generated at purchase; applied via GUI, CLI, or REST API  │
-│    Permanent license  = perpetual feature unlock; tied to specific array serial number                │
-│    Term license       = time-limited feature unlock; expires unless renewed through Dell portal       │
-│    Entitlement        = purchased right to use a feature; tracked in Dell software licensing portal   │
-│    License transfer   = FoD licenses are non-transferable between different array serial numbers      │
-│    Replication FoD    = unlocks synchronous or asynchronous array replication features                │
-│    Tier FoD           = unlocks FAST VP or cloud tiering between performance and capacity tiers       │
-│    License audit      = periodic reconciliation of active features versus licensed entitlements       │
-│    LicenseManager     = Dell tool for bulk license management across multiple array systems           │
-│    Array serial       = unique array identifier; FoD licenses are cryptographically bound to it       │
-│    FoD portal         = licensing.dell.com; purchase, download, and track all FoD license keys        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Flex on Demand — How It Works](../../../../assets/storage-dell-fod-architecture-how-it-works.svg)
+
+
 
 
 ## Overview

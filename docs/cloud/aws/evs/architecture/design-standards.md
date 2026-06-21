@@ -10,42 +10,10 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 
 *Applies to: Amazon EVS*
 </div>
+![Amazon EVS — Design Standards](../../../../assets/cloud-aws-evs-architecture-design-standards.svg)
 
-```text
-┌──────────────────────────────────── Amazon EVS — Design Standards ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Minimum: 3 hosts (FTT=1 RAID-1); production: 4+ hosts; stretched: 6+ (3 per AZ + witness)  │    │
-│   │   CIDR: reserve /20 for management + /20 for NSX-T VTEP + /16 for workload segments           │   │
-│   │   Direct Connect: minimum 1 Gbps per 100 VMs being migrated with HCX                          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      Host Sizing            │  │      Network Design          │  │      AZ Placement           │  │
-│   │      ─────────────          │  │      ─────────────           │  │      ─────────────          │  │
-│   │  i4i.metal: 128vCPU/1TB    │  │  /20 management subnet       │  │  Single AZ: simplest        │   │
-│   │  3 hosts min, 16 hosts max │  │  /20 VTEP overlay subnet     │  │  Multi-AZ: stretched vSAN   │   │
-│   │  vSAN ESA on NVMe          │  │  /16+ for workload VMs       │  │  Witness: t3.medium in 3rd  │   │
-│   │  Scale: add 1 host at time │  │  Avoid overlap with on-prem  │  │  AZ: DR isolation           │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  i4i.metal    = EVS bare-metal host; 128 vCPU, 1 TB RAM, 30 TB NVMe — standard choice                 │
-│  i3en.metal   = Storage-heavy EVS host; 96 vCPU, 768 GB RAM, 60 TB NVMe                               │
-│  FTT          = Failures to Tolerate; FTT=1 (RAID-1) needs 3 hosts; FTT=2 needs 5 hosts               │
-│  vSAN ESA     = Express Storage Architecture; NVMe-optimised single tier; no cache/capacity split     │
-│  HCI          = Hyper-Converged Infrastructure; compute + storage on the same bare-metal hosts        │
-│  AZ           = Availability Zone; physically isolated AWS data center with independent power         │
-│  Stretched cluster = vSAN across 2 AZs; requires witness VM in a third AZ for quorum                  │
-│  Witness VM   = Lightweight t3.medium EC2 in 3rd AZ; holds tiebreaker vote; no data stored            │
-│  VTEP subnet  = Dedicated /20 for NSX-T Geneve overlay tunnel endpoints on each host ENI              │
-│  Direct Connect = Private dedicated link from on-prem to AWS; required for HCX production use         │
-│  CIDR         = Plan 3 non-overlapping IP ranges: management / VTEP overlay / workload VMs            │
-│  Admission control = vSphere HA policy reserving cluster capacity for host failure recovery           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
 
 ```mermaid
 graph TB

@@ -12,96 +12,12 @@ How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, 
 
 *Applies to: Aria Operations 8.x*
 </div>
+![Aria Operations — How It Works](../../../../assets/virtualization-vmware-aria-operations-architecture-how-it-wo.svg)
 
-```text
-┌────────────────────────────────────── How Aria Operations Works ──────────────────────────────────────┐
-│                                                                                                       │
-│  Metric collection via adapters, analytics engine processing, and dashboard rendering.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Collection Layer               │  │                Adapter Types                │   │
-│   │        Adapters poll sources via API         │  │          vSphere adapter (built-in)         │   │
-│   │          Collection interval: 5 min          │  │             vSAN management pack            │   │
-│   │        Remote collector offloads WAN         │  │             NSX management pack             │   │
-│   │          Push adapters via webhook           │  │           AWS/Azure cloud adapters          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Adapters collect; analytics engine correlates; dashboards and alerts surface insights.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Analytics Engine               │  │             Dashboards & Alerts             │   │
-│   │        Dynamic thresholds per object         │  │        Pre-built dashboards per role        │   │
-│   │          Capacity forecasting model          │  │            Custom widget builder            │   │
-│   │         Rightsizing recommendations          │  │          Alert: email/SNMP/webhook          │   │
-│   │         Compliance benchmark checks          │  │          Report: schedule + export          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster on vSphere; remote collectors per site; vCenter/NSX as metric sources                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Adapter             = Plugin that polls a specific source (vCenter, NSX, cloud)                      │
-│  Collection Interval = Frequency of metric polling; default 5 minutes for vSphere                     │
-│  Remote Collector    = Lightweight vROps VM forwarding metrics from remote sites                      │
-│  Dynamic Threshold   = Self-learned baseline; alerts only on genuine anomalies                        │
-│  Capacity Forecast   = Time-series projection of when resources will be exhausted                     │
-│  Rightsizing         = Recommendation to reclaim idle CPU/RAM from over-provisioned VMs               │
-│  Compliance Benchmark= Policy check vs CIS/DISA/custom standard                                       │
-│  Dashboard           = Visual collection of widgets showing metric trends and alerts                  │
-│  Widget              = Individual chart or table on a dashboard; drag-and-drop layout                 │
-│  Alert               = Fired when symptom conditions in a policy are met                              │
-│  Webhook             = HTTP push notification from vROps to external ITSM or chat                     │
-│  Report              = Scheduled PDF/HTML export of dashboard or capacity data                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
-```text
-┌─────────────────────── Aria Operations — Alert Evaluation and Symptom Pipeline ───────────────────────┐
-│                                                                                                       │
-│    Aria Operations processes metrics into symptoms, combines symptoms into alerts,                    │
-│    and generates recommendations. Alerts trigger notifications and actions.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Symptom Evaluation              │  │               Alert Generation              │   │
-│   │     Metric collected by adapter (5 min)      │  │    Alert definition: 1+ symptoms = alert    │   │
-│   │   Symptom definition: condition on metric    │  │    Criticality: Info / Warning / Critical   │   │
-│   │      Threshold: static value or dynamic      │  │     Active alert: condition is true now     │   │
-│   │       Dynamic: learns normal baseline        │  │     Cancelled: condition no longer true     │   │
-│   │    Symptom active → contributes to alert     │  │       Impact badge: affects N VMs/apps      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    One alert can aggregate symptoms from CPU, memory, storage, and network metrics.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Recommendation Engine             │  │           Notification and Action           │   │
-│   │     Alert triggers recommendation lookup     │  │       Outbound: email · SNMP · webhook      │   │
-│   │     Recommendation: action to fix cause      │  │      ServiceNow ITSM: auto-open ticket      │   │
-│   │   Automated action: run script / call API    │  │      Aria Automation: trigger blueprint     │   │
-│   │      Rightsizing: CPU/mem resize advice      │  │        Log Insight: launch in context       │   │
-│   │    Capacity forecast: days to exhaustion     │  │    Suppress: maintenance window silences    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical Infrastructure (the hardware everything above runs on):                                   │
-│    Aria Ops cluster (master + replicas) · remote collectors per site · vCenter/NSX                    │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Symptom         = a single metric condition (e.g. CPU > 90% for 10 min)                            │
-│    Alert           = one or more symptoms combined into a named problem state                         │
-│    Dynamic threshold= learned baseline per-object; flags anomalies vs. peers                          │
-│    Recommendation  = prescribed remediation step linked to an alert definition                        │
-│    Automated action= script or API call Aria Ops runs when alert fires                                │
-│    Criticality     = severity tier: Info (blue) / Warning (yellow) / Critical (red)                   │
-│    Rightsizing     = Aria Ops advice to reduce or increase VM vCPU/RAM allocation                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+
+
 ## Overview
 
 Aria Operations (formerly vRealize Operations) is an analytics cluster that collects metrics, events, and properties from vSphere, NSX, storage, and cloud endpoints. Adapters (solutions/management packs) feed data into the cluster. Remote collectors extend monitoring reach into remote sites or DMZs without requiring firewall holes back to the primary cluster.
