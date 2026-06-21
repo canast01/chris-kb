@@ -10,6 +10,9 @@ Cross-platform storage operational runbooks — volume expansion, LUN provisioni
 
 <div class="kb-grid kb-grid-1">
 <a class="kb-card" href="volume-expansion/"><strong>Volume Expansion</strong><span>End-to-end volume expansion runbook — array LUN resize, host rescan, partition extension, and filesystem grow across Linux, Windows, LVM, and ESXi.</span></a>
+<a class="kb-card" href="vmware-vsan-to-ontap-migration/"><strong>vSAN to ONTAP NFS Migration</strong><span>Cross-product runbook for migrating VM workloads from VMware vSAN to a NetApp ONTAP NFS datastore using Storage vMotion — SVM prep, per-VM and bulk svmotion, validation, and cutover.</span></a>
+<a class="kb-card" href="veeam-ontap-snapvault-integration/"><strong>Veeam + ONTAP SnapVault Integration</strong><span>Integrate Veeam Backup &amp; Replication with NetApp SnapVault for long-term offload — SnapVault policy setup, Veeam job configuration, instant VM recovery, and granular file restore from vault snapshots.</span></a>
+<a class="kb-card" href="dr-failover-vmware-srm-snapmirror/"><strong>DR Failover: SRM + SnapMirror</strong><span>Full DR failover and failback runbook for VMware SRM with NetApp SnapMirror — pre-failover checks, recovery plan execution, SnapMirror break, VM validation, DNS cutover, and planned failback.</span></a>
 </div>
 
 ## LUN Provisioning Runbook
