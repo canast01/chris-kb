@@ -11,58 +11,7 @@ PowerScale (Isilon) procedures — NFS export and SMB share management, snapshot
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-```text
-┌────────────────────────────── Dell PowerScale — Operational Procedures ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           PowerScale operational procedures: standard tasks for day-2 administration          │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │           Function          │   │
-│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
-│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
-│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
-│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
-│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
-│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
-│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
-│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
-│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
-│    Access zone        = logical container with separate authentication and export namespace per tenant│
-│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
-│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
-│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
-│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
-│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
-│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -170,6 +119,8 @@ isi nfs exports check
 
 ### Export Client Access Levels
 
+![Export Client Access Levels](../../../../assets/powerscale-proc-export-client-access-levels.svg)
+
 | Client Type | Permission |
 |---|---|
 | `--clients` | Read-only access |
@@ -177,6 +128,8 @@ isi nfs exports check
 | `--root-clients` | Root access (uid 0 not squashed) |
 
 ### NFS Zones (Access Zones)
+
+![NFS Zones (Access Zones)](../../../../assets/powerscale-proc-nfs-zones-access-zones.svg)
 
 ```bash
 # List access zones
@@ -192,6 +145,8 @@ isi nfs exports list --zone Zone1
 ```
 
 ### Troubleshooting NFS
+
+![Troubleshooting NFS](../../../../assets/powerscale-proc-troubleshooting-nfs.svg)
 
 ```bash
 # Check mount errors from client side (Linux)
@@ -237,6 +192,8 @@ isi smb shares delete <share_name>
 
 ### SMB Permissions
 
+![SMB Permissions](../../../../assets/powerscale-proc-smb-permissions.svg)
+
 ```bash
 # View share permissions (ACL)
 isi smb shares view <share_name> | grep -A 20 "Permission"
@@ -260,6 +217,8 @@ isi smb shares modify <share_name> \
 
 ### SMB Sessions and Open Files
 
+![SMB Sessions and Open Files](../../../../assets/powerscale-proc-smb-sessions-and-open-files.svg)
+
 ```bash
 # Active SMB sessions
 isi smb sessions list
@@ -272,6 +231,8 @@ isi smb sessions delete <session_id>
 ```
 
 ### Troubleshooting SMB
+
+![Troubleshooting SMB](../../../../assets/powerscale-proc-troubleshooting-smb.svg)
 
 ```bash
 # Check SMB protocol stats
@@ -315,6 +276,8 @@ isi snapshot snapshots delete --name project1-20260101
 
 ### Snapshot Schedules
 
+![Snapshot Schedules](../../../../assets/powerscale-proc-snapshot-schedules.svg)
+
 ```bash
 # List all schedules
 isi snapshot schedules list
@@ -334,6 +297,8 @@ isi snapshot schedules delete <schedule_name>
 ```
 
 ### Recovering Files from a Snapshot
+
+![Recovering Files from a Snapshot](../../../../assets/powerscale-proc-recovering-files-from-a-snapshot.svg)
 
 ```bash
 # Copy a specific file from snapshot back to live filesystem

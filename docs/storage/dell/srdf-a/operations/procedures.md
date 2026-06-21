@@ -69,11 +69,15 @@ SRDF/A procedures: establishing SRDF/A groups, cycle time tuning, DSE (Delta Set
 
 ### Overview
 
+![Overview](../../../../assets/srdf-a-proc-overview.svg)
+
 SRDF/A failover promotes R2 volumes to read/write. Because SRDF/A is asynchronous, R2 is consistent to the last **completed cycle** rather than the last write, so there is an inherent RPO equal to the lag at the moment of failure. Before failing over, always check the cycle state and lag to understand the data exposure window.
 
 Planned failover (site still accessible) uses `-establish` to immediately reverse replication after the split. Unplanned failover (primary site down) uses the standard `failover` command and requires a separate restore+establish sequence to recover replication.
 
 ### Failover Decision Flow
+
+![Failover Decision Flow](../../../../assets/srdf-a-proc-failover-decision-flow.svg)
 
 ```mermaid
 flowchart TD
@@ -111,47 +115,7 @@ flowchart TD
     style validateApp fill:#15803d,color:#fff
     style waitSite fill:#6b7280,color:#fff
 ```
-```text
-┌───────────────────────────────────────── SRDF/A — Procedures ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Routine Procedures              │  │                DR Procedures                │   │
-│   │          Add new protection source           │  │              Initiate failover              │   │
-│   │           Modify retention policy            │  │               Validate replica              │   │
-│   │          Expire old recover points           │  │              Redirect host I/O              │   │
-│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
-│   │           Service account rotation           │  │            Failback to production           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Change Control Requirements for SRDF/A                            │   │
-│   │           All changes to protection policies require change ticket with rollback plan         │   │
-│   │                      Failover tests must be scheduled in maintenance window                   │   │
-│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
-│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
-│  R1            = source SRDF volume on production array; host writes flow here                        │
-│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
-│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
-│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
-│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
-│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
-│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
-│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
-│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
-│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
-│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
-│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
-│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 | RPO Factor | How to Check | Acceptable Threshold |
 |---|---|---|
@@ -161,6 +125,8 @@ flowchart TD
 | Time since last Consistent | Last Consistent timestamp | Per business RPO agreement |
 
 ### Post-Failover Steps
+
+![Post-Failover Steps](../../../../assets/srdf-a-proc-post-failover-steps.svg)
 
 ```bash
 # Verify R2 devices are Failed Over and accessible
@@ -174,6 +140,8 @@ symrdf -g 20 -type A query | grep -v "Failed Over"
 ```
 
 ### Failback and Replication Restoration
+
+![Failback and Replication Restoration](../../../../assets/srdf-a-proc-failback-and-replication-restoration.svg)
 
 ```mermaid
 flowchart TD
@@ -213,6 +181,8 @@ symrdf -g 20 -type A query
 
 ### Planned Failover via SYMCLI
 
+![Planned Failover via SYMCLI](../../../../assets/srdf-a-proc-planned-failover-via-symcli.svg)
+
 ```bash
 # Confirm all R1 applications are quiesced or shut down
 # Initiate planned failover:
@@ -223,6 +193,8 @@ symrdf failover -sid <r1_sid> -rdfg <rdf_group_number> -type RDF/A -planned
 ```
 
 ### Known Issues — Failover
+
+![Known Issues — Failover](../../../../assets/srdf-a-proc-known-issues-failover.svg)
 
 - **Failover refused when DSE is 100% full**: The array may block the failover operation if DSE is completely full and data has not been transmitted. Suspend the group first to stop accumulating writes, then failover.
 - **R2 shows stale data at failover**: This is expected with SRDF/A — check the last completed cycle timestamp to determine the actual recovery point and communicate it to application owners.

@@ -65,46 +65,11 @@ flowchart TD
     L -->|Yes| N["Run test DDBoost backup\nConfirm job success"]
     N --> O([Close Window])
 ```
-```text
-┌───────────────────────────────────── Dell Data Domain Procedures ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Standard procedures: create MTree, configure replication, set quota, run cleaning       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                      # Create a new MTree                                     │   │
-│   │                                mtree create /data/col1/mybackup                               │   │
-│   │            mtree modify /data/col1/mybackup quota soft-limit 10 TB hard-limit 12 TB           │   │
-│   │                                                                                               │   │
-│   │                                 # Create NFS export from MTree                                │   │
-│   │                        nfs add /data/col1/mybackup clients 10.0.0.0/24                        │   │
-│   │                                                                                               │   │
-│   │                                   # Configure DD Boost user                                   │   │
-│   │                           ddboost user assign myboostuser role admin                          │   │
-│   │                        ddboost storage-unit create /data/col1/mybackup                        │   │
-│   │                                                                                               │   │
-│   │                      # Configure replication context (MTree replication)                      │   │
-│   │                 replication add source mtree://dd-primary/data/col1/mybackup \                │   │
-│   │                           destination mtree://dd-dr/data/col1/mybackup                        │   │
-│   │                  replication initialize mtree://dd-primary/data/col1/mybackup                 │   │
-│   │                                                                                               │   │
-│   │                                     # Run manual cleaning                                     │   │
-│   │                                      filesys clean start                                      │   │
-│   │                             filesys clean show  # monitor progress                            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    mtree create      = Creates logical partition in DDOS; quota enforced per MTree                    │
-│    ddboost storage-unit= Registers MTree as DD Boost storage unit; backup app connects here           │
-│    replication initialize= Seeds initial MTree copy to DR DD; only sends unique segments              │
-│    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Replication State
+
+![Replication State](../../../../assets/data-domain-proc-replication-state.svg)
 
 ```bash
 # Check which MTrees are replicating and their state
@@ -116,6 +81,8 @@ replication show stats | grep <mtree_name>
 
 ### Retention Lock Review
 
+![Retention Lock Review](../../../../assets/data-domain-proc-retention-lock-review.svg)
+
 ```bash
 # Check if retention lock is enabled on an MTree
 mtree retention-lock status /data/col1/<mtree_name>
@@ -125,6 +92,8 @@ mtree list --verbose | grep -E "mtree|retention"
 ```
 
 ### Creating MTrees for New Backup Applications
+
+![Creating MTrees for New Backup Applications](../../../../assets/data-domain-proc-creating-mtrees-for-new-backup-applications.svg)
 
 ```bash
 # Step 1 — create the MTree
@@ -146,6 +115,8 @@ mtree quota show
 
 ### Decommissioning an MTree
 
+![Decommissioning an MTree](../../../../assets/data-domain-proc-decommissioning-an-mtree.svg)
+
 ```bash
 # Step 1 — confirm backup data has been expired in the backup application
 # Step 2 — remove the NFS export or DDBoost storage unit
@@ -163,6 +134,8 @@ filesys clean status
 
 ### MTree Health Summary
 
+![MTree Health Summary](../../../../assets/data-domain-proc-mtree-health-summary.svg)
+
 | Metric | Target | Check |
 |---|---|---|
 | MTree quota used | < 85% | `mtree quota show` |
@@ -176,12 +149,16 @@ Cleaning (garbage collection) reclaims disk space after backup data is expired o
 
 ### How Cleaning Works
 
+![How Cleaning Works](../../../../assets/data-domain-proc-how-cleaning-works.svg)
+
 1. Backup application marks expired data for deletion.
 2. Data Domain marks the associated dedup segments as unreferenced.
 3. Cleaning scans all segments, identifies unreferenced ones, and reclaims their space.
 4. Post-clean, `filesys show space` shows reduced post-comp usage.
 
 ### Running Cleaning
+
+![Running Cleaning](../../../../assets/data-domain-proc-running-cleaning.svg)
 
 ```bash
 # Start an immediate cleaning cycle
@@ -195,6 +172,8 @@ filesys clean stop
 ```
 
 ### Automatic Cleaning Schedule
+
+![Automatic Cleaning Schedule](../../../../assets/data-domain-proc-automatic-cleaning-schedule.svg)
 
 ```bash
 # View scheduled cleaning windows
@@ -212,6 +191,8 @@ filesys clean schedule disable
 
 ### Monitoring Cleaning Progress
 
+![Monitoring Cleaning Progress](../../../../assets/data-domain-proc-monitoring-cleaning-progress.svg)
+
 ```bash
 # Active cleaning progress
 filesys clean status
@@ -225,6 +206,8 @@ filesys clean show history
 
 ### Space Reclaim Expectations
 
+![Space Reclaim Expectations](../../../../assets/data-domain-proc-space-reclaim-expectations.svg)
+
 | Dataset Size | Estimated Cleaning Duration |
 |---|---|
 | < 10 TB | 1–2 hours |
@@ -235,12 +218,16 @@ Cleaning can run concurrently with backup operations but will impact throughput.
 
 ### When to Trigger Cleaning
 
+![When to Trigger Cleaning](../../../../assets/data-domain-proc-when-to-trigger-cleaning.svg)
+
 - After expiring a large backup policy
 - After deleting old data manually
 - When capacity is above 75% and not recovering naturally
 - Before a capacity upgrade (to accurately assess current usage)
 
 ### Cleaning Troubleshooting
+
+![Cleaning Troubleshooting](../../../../assets/data-domain-proc-cleaning-troubleshooting.svg)
 
 ```bash
 # Cleaning not reclaiming space — confirm data is actually expired

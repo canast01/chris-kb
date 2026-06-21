@@ -12,60 +12,7 @@ Nexus Dashboard and NDFC procedures — site registration, SAN fabric discovery,
 *Applies to: Cisco MDS · Nexus*
 </div>
 
-```text
-┌─────────────────────────── Cisco Nexus Dashboard — Operational Procedures ────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        ND operational procedures: cluster upgrade, node replacement, backup and restore       │   │
-│   │          Upgrade: backup first → upload image → trigger upgrade → validate each node          │   │
-│   │          Node replace: cordon node → drain pods → decommission → rejoin with same IP          │   │
-│   │          Restore: deploy fresh cluster → import backup → validate site and app config         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Pre-check → backup → execute → verify cluster health → verify apps → document                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Cluster Upgrade       │  │         Node Replace        │  │        Backup/Restore       │   │
-│   │         Check compat        │  │         Cordon node         │  │        Backup cluster       │   │
-│   │         Take backup         │  │          Drain pods         │  │       Copy off-cluster      │   │
-│   │         Upload image        │  │         Decommission        │  │        Deploy new ND        │   │
-│   │       Trigger upgrade       │  │       Replace hardware      │  │        Import backup        │   │
-│   │       Validate health       │  │        Rejoin cluster       │  │         Verify apps         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    ND upgrade is rolling (one node at a time); cluster remains available during upgrade               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │       Step       │     Command/UI    │      Verify      │      Notes       │   │
-│   │     Upgrade      │    Pre-check     │   Admin>Upgrade   │    Compat ok     │   Backup first   │   │
-│   │   Node replace   │      Cordon      │    Admin>Nodes    │   Pods drained   │  Same IP reuse   │   │
-│   │      Backup      │     Schedule     │    Admin>Backup   │    File size     │   Off-cluster    │   │
-│   │     Restore      │   Fresh deploy   │   Import backup   │   Apps healthy   │   Sites re-add   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ND VM snapshots before upgrade · replacement hardware in rack · OOB cables               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Rolling upgrade   = ND upgrades one node at a time; other nodes serve traffic                      │
-│    Cordon            = Mark node unschedulable so no new pods land on it before replacement           │
-│    Drain             = Move all running pods off a node before maintenance                            │
-│    Decommission      = Remove node from ND cluster database; do before physical replacement           │
-│    Rejoin            = New or replaced node boots and joins cluster using same IP and certs           │
-│    Backup import     = ND restore: import cluster config + app state from backup file                 │
-│    Compat check      = Confirm ND release supports all installed app versions before upgrade          │
-│    Off-cluster copy  = Transfer backup file to external storage before proceeding                     │
-│    Pre-upgrade check = ND built-in upgrade readiness validator; run before uploading image            │
-│    Cluster health    = All nodes Healthy, all pods Running; check after every procedure               │
-│    VM snapshot       = Take vSphere snapshot of ND VMs before upgrade; rollback option                │
-│    Sites re-add      = After restore, verify all site credentials still work in Admin>Sites           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 > Part of the [Nexus Dashboard](../index.md) reference.
 
@@ -119,6 +66,8 @@ Sites in Nexus Dashboard represent managed data centre locations. Each site is a
 
 ### Create a New VSAN
 
+![Create a New VSAN](../../../../assets/nexus-dashboard-proc-create-a-new-vsan.svg)
+
 1. Navigate to **NDFC > Fabrics > [Fabric] > VSANs > Create VSAN**.
 2. Enter:
    - VSAN ID: follow the VSAN numbering standard (production: 10-99)
@@ -128,6 +77,8 @@ Sites in Nexus Dashboard represent managed data centre locations. Each site is a
 5. Verify: **NDFC > VSANs** — VSAN should show **Active** on all member switches.
 
 ### Assign a Port to a VSAN
+
+![Assign a Port to a VSAN](../../../../assets/nexus-dashboard-proc-assign-a-port-to-a-vsan.svg)
 
 1. Navigate to **NDFC > Fabrics > [Fabric] > Interfaces**.
 2. Select the target switch and port.
@@ -140,11 +91,15 @@ Sites in Nexus Dashboard represent managed data centre locations. Each site is a
 
 ### Prerequisites
 
+![Prerequisites](../../../../assets/nexus-dashboard-proc-prerequisites.svg)
+
 - Host HBA WWN: obtain from HBA driver, from ESXi host, or from NDFC **End Devices** view after HBA is connected
 - Storage port WWN: obtain from storage array or NDFC End Devices
 - Device aliases for both HBA and storage port (create first if not existing)
 
 ### Create Device Aliases
+
+![Create Device Aliases](../../../../assets/nexus-dashboard-proc-create-device-aliases.svg)
 
 1. Navigate to **NDFC > Fabrics > [Fabric] > Device Alias > Create**.
 2. Enter:
@@ -155,6 +110,8 @@ Sites in Nexus Dashboard represent managed data centre locations. Each site is a
 5. Click **Commit** to distribute aliases fabric-wide via CFS.
 
 ### Create the Zone
+
+![Create the Zone](../../../../assets/nexus-dashboard-proc-create-the-zone.svg)
 
 1. Navigate to **NDFC > Fabrics > [Fabric] > Zoning**.
 2. Select the VSAN from the dropdown.
@@ -176,11 +133,15 @@ Sites in Nexus Dashboard represent managed data centre locations. Each site is a
 
 ### Upload Firmware Image
 
+![Upload Firmware Image](../../../../assets/nexus-dashboard-proc-upload-firmware-image.svg)
+
 1. Navigate to **NDFC > Image Management > Manage Images > Upload**.
 2. Select the MDS NX-OS `.bin` file.
 3. Wait for upload and checksum validation.
 
 ### Upgrade a Switch
+
+![Upgrade a Switch](../../../../assets/nexus-dashboard-proc-upgrade-a-switch.svg)
 
 1. Navigate to **NDFC > Image Management > Upgrade**.
 2. Select target switches.
@@ -211,6 +172,8 @@ NDI detects anomalies across fabric topology, flow telemetry, and configuration 
 
 ### Flow Anomaly Investigation (SAN Insights)
 
+![Flow Anomaly Investigation (SAN Insights)](../../../../assets/nexus-dashboard-proc-flow-anomaly-investigation-san-insights.svg)
+
 For SAN flow anomalies (high latency, low throughput, slow-drain):
 
 1. Navigate to **NDI > Explore > Flows**.
@@ -226,6 +189,8 @@ For SAN flow anomalies (high latency, low throughput, slow-drain):
 
 ### Acknowledge and Clear Alarms
 
+![Acknowledge and Clear Alarms](../../../../assets/nexus-dashboard-proc-acknowledge-and-clear-alarms.svg)
+
 1. Navigate to **NDFC > Monitor > Alarms > Active Alarms**.
 2. Select one or more alarms.
 3. Click **Acknowledge** — marks the alarm as in-progress and assigns it to your account.
@@ -234,6 +199,8 @@ For SAN flow anomalies (high latency, low throughput, slow-drain):
 Cleared alarms are retained in the historical alarm log and remain searchable.
 
 ### Configure Notification Rules
+
+![Configure Notification Rules](../../../../assets/nexus-dashboard-proc-configure-notification-rules.svg)
 
 1. Navigate to **NDFC > Monitor > Alarms > Notification Rules**.
 2. Click **Add Rule**:
@@ -246,6 +213,8 @@ Cleared alarms are retained in the historical alarm log and remain searchable.
 4. Test: **NDFC > Monitor > Alarms > Notification Rules > Test**.
 
 ### Suppress Alarms During Maintenance
+
+![Suppress Alarms During Maintenance](../../../../assets/nexus-dashboard-proc-suppress-alarms-during-maintenance.svg)
 
 1. Navigate to **NDFC > Monitor > Alarms > Suppression**.
 2. Click **Add Suppression Rule**:
@@ -260,6 +229,8 @@ Cleared alarms are retained in the historical alarm log and remain searchable.
 
 ### On-Demand Reports
 
+![On-Demand Reports](../../../../assets/nexus-dashboard-proc-on-demand-reports.svg)
+
 1. Navigate to **NDFC > Reports > Generate**.
 2. Select report type:
    - **Inventory** — switch, port, and device inventory
@@ -270,6 +241,8 @@ Cleared alarms are retained in the historical alarm log and remain searchable.
 4. Click **Generate**. The report downloads or emails to configured recipients.
 
 ### Scheduled Reports
+
+![Scheduled Reports](../../../../assets/nexus-dashboard-proc-scheduled-reports.svg)
 
 1. Navigate to **NDFC > Reports > Scheduled Reports > New**.
 2. Configure: type, schedule (daily/weekly/monthly), recipients, and format.

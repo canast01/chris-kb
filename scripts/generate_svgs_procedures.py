@@ -92,9 +92,9 @@ PRODUCTS = {
     'ecs':                    'storage/dell/ecs/operations/procedures.md',
     # SAN / Compute
     'nexus-dashboard':        'san/cisco/nexus-dashboard/operations/procedures.md',
-    'cisco-mds':              'san/cisco/cisco-mds/operations/procedures.md',
+    'cisco-mds':              'san/cisco/mds/operations/procedures.md',
     'fabric-os':              'san/brocade/fabric-os/operations/procedures.md',
-    'active-directory':       'compute/windows/active-directory/operations/procedures.md',
+    'active-directory':       'compute/windows-server/active-directory/operations/procedures.md',
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────

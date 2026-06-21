@@ -11,58 +11,7 @@ Dell ECS operational procedures — namespace and bucket provisioning, IAM user 
 
 *Applies to: ECS 3.x*
 </div>
-```text
-┌────────────────────────────────── Dell ECS — Operational Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │              ECS operational procedures: standard tasks for day-2 administration              │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Node            │  │        x86 appliance        │  │        Shared-nothing       │   │
-│   │         Storage pool        │  │          Node group         │  │        Erasure coded        │   │
-│   │             VDC             │  │          Virtual DC         │  │        Per-site unit        │   │
-│   │          Rep. group         │  │          Multi-VDC          │  │        Geo redundancy       │   │
-│   │            Bucket           │  │       Object container      │  │        S3/Swift/Blob        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ECS appliance nodes · 10/25 GbE backend network · commodity SAS drives                   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ECS                = Elastic Cloud Storage; Dell S3-compatible object store for unstructured data  │
-│    VDC                = Virtual Data Center; group of ECS nodes at a single geographic site           │
-│    Storage pool       = collection of nodes within a VDC; defines the erasure coding domain           │
-│    Replication group  = links VDCs for geo-redundant object storage; 3-way replication                │
-│    Bucket             = top-level S3 namespace; equivalent to S3 bucket or Azure container            │
-│    Erasure coding     = data protection scheme; default 12+4 provides 4-drive fault tolerance         │
-│    Namespace          = tenant-level isolation; multiple tenants share a single ECS cluster           │
-│    CAS                = Content Addressed Storage; fixed-content object storage with WORM support     │
-│    Replication factor = number of VDC copies; 3-way geo-replication for maximum durability            │
-│    Atmos API          = legacy Dell Atmos-compatible API; supported for migration from Atmos systems  │
-│    HDFS connector     = ECS Hadoop connector; ECS appears as HDFS namespace for analytics jobs        │
-│    Quota              = per-namespace or per-bucket storage quota; enforced as hard or soft limit     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -415,6 +364,8 @@ Dell ECS uses S3-compatible buckets as the fundamental storage object. Buckets c
 
 ### Common Bucket Operations
 
+![Common Bucket Operations](../../../../assets/ecs-proc-common-bucket-operations.svg)
+
 ```bash
 # List all buckets accessible to the configured object user
 aws s3 ls \
@@ -451,6 +402,8 @@ aws s3api get-object-lock-configuration \
 
 ### Capacity Monitoring
 
+![Capacity Monitoring](../../../../assets/ecs-proc-capacity-monitoring.svg)
+
 | Metric | Check Location |
 |---|---|
 | Per-bucket usage | ECS Management Console → Monitoring → Bucket Usage |
@@ -458,6 +411,8 @@ aws s3api get-object-lock-configuration \
 | Replication lag | ECS Management Console → Replication Groups |
 
 ### Common Object Operations
+
+![Common Object Operations](../../../../assets/ecs-proc-common-object-operations.svg)
 
 | Task | Command |
 |---|---|

@@ -124,6 +124,8 @@ For planned DR tests, use Image Access. Invoke a full failover only on declared 
 
 ### Bookmark-Based Recovery Flow
 
+![Bookmark-Based Recovery Flow](../../../../assets/recoverpoint-proc-bookmark-based-recovery-flow.svg)
+
 ```mermaid
 flowchart TD
     listBookmarks["List Available Bookmarks\ngroup list_bookmarks --gname cgname"]
@@ -148,48 +150,11 @@ flowchart TD
     style disableImageAccess fill:#b45309,color:#fff
     style confirmActive fill:#15803d,color:#fff
 ```
-```text
-┌────────────────────────────────────── RecoverPoint — Procedures ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Standard procedures: failover, failback, test copy, image access, bookmark creation      │   │
-│   │   Always set a bookmark before any maintenance or planned failover for clean recovery point   │   │
-│   │      Failover pre-check: confirm lag, journal %, network readiness, VM power state at DR      │   │
-│   │   Failback pre-check: production site healthy, reverse replication established, data synced   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Failover          │  │           Failback          │  │          Test Copy          │   │
-│   │       1. Set bookmark       │  │      1. Verify prod OK      │  │     1. Create bubble net    │   │
-│   │     2. Disable prod VMs     │  │     2. Reverse replicate    │  │      2. Select bookmark     │   │
-│   │        3. Failover CG       │  │       3. Wait for sync      │  │      3. Start test copy     │   │
-│   │      4. Power on DR VMs     │  │        4. Failback CG       │  │     4. Power on test VMs    │   │
-│   │     5. Redirect traffic     │  │       5. Re-enable CG       │  │    5. Validate & end test   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: test VMs on bubble portgroup (no uplinks); DR network must be pre-configured             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Failover         = Commit journal image; power on VMs at DR site; production traffic moves         │
-│    Failback         = Reverse replication; sync DR changes back to prod; cut over to prod             │
-│    Reverse replicate= After failover; replication runs DR→prod direction; syncs delta writes          │
-│    Test copy        = Non-disruptive; replica boots on bubble VLAN; no prod impact                    │
-│    Image access     = Read-only or r/w mount; source continues; no VM power-on at DR                  │
-│    Bookmark         = Set before maintenance; provides clean point for any recovery type              │
-│    Pre-check        = Verify lag, journal fill, DR network config, and ESXi connectivity              │
-│    Bubble network   = Isolated portgroup created for test; removed after test ends                    │
-│    Traffic redirect = DNS/load balancer update to point to DR site IP addresses                       │
-│    Resync           = After failback; establishes forward replication again (prod → DR)               │
-│    CG disable       = Pause replication before planned failover; prevents writes during cutover       │
-│    Post-failover    = Confirm all VMs running; validate application; set new bookmark                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Post-Failover Validation
+
+![Post-Failover Validation](../../../../assets/recoverpoint-proc-post-failover-validation.svg)
 
 ```bash
 # Confirm DR copy is now in production role
@@ -214,6 +179,8 @@ alarms list
 | Alarms | No critical alarms |
 
 ### Failover and Failback Sequence
+
+![Failover and Failback Sequence](../../../../assets/recoverpoint-proc-failover-and-failback-sequence.svg)
 
 ```mermaid
 sequenceDiagram
@@ -240,6 +207,8 @@ sequenceDiagram
 ```
 
 ### Failback — Return to Original Production Site
+
+![Failback — Return to Original Production Site](../../../../assets/recoverpoint-proc-failback-return-to-original-production-site.svg)
 
 After DR operations are complete and the primary site is restored:
 
@@ -276,6 +245,8 @@ RecoverPoint supports three recovery scenarios, each using the journal to restor
 
 ### DR Test — Image Access Recovery
 
+![DR Test — Image Access Recovery](../../../../assets/recoverpoint-proc-dr-test-image-access-recovery.svg)
+
 ```bash
 # SSH to RPA cluster
 ssh admin@<rpa-cluster-ip>
@@ -299,6 +270,8 @@ groups status
 ```
 
 ### Full Failover — Production Site Down
+
+![Full Failover — Production Site Down](../../../../assets/recoverpoint-proc-full-failover-production-site-down.svg)
 
 ```bash
 # Step 1 — Confirm production site is unreachable (not a false alarm)
@@ -326,6 +299,8 @@ groups status detail
 
 ### Point-in-Time Recovery
 
+![Point-in-Time Recovery](../../../../assets/recoverpoint-proc-point-in-time-recovery.svg)
+
 Recover to a specific point in time — for example, before a ransomware event or a bad database transaction.
 
 ```bash
@@ -348,6 +323,8 @@ group disable-image-access --gname <cg_name>
 
 ### Post-Recovery Validation
 
+![Post-Recovery Validation](../../../../assets/recoverpoint-proc-post-recovery-validation.svg)
+
 ```bash
 # Confirm no image access sessions remain active
 groups status | grep -i "image"
@@ -366,6 +343,8 @@ alarms list
 ```
 
 ### Recovery RTO/RPO Reference
+
+![Recovery RTO/RPO Reference](../../../../assets/recoverpoint-proc-recovery-rto-rpo-reference.svg)
 
 | Recovery Type | Typical RTO | RPO |
 |---|---|---|

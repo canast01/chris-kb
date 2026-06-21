@@ -11,58 +11,7 @@ Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Cont
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-```text
-┌──────────────────── Security Active Directory Operations — Operational Procedures ────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Active Directory operational procedures: standard tasks for day-2 administration       │   │
-│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
-│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
-│   │            All procedures require approved change management tickets in production            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Open change → pre-check → execute → verify → post-check → close                                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Layer            │  │          Component          │  │            Notes            │   │
-│   │             Core            │  │       Primary service       │  │        Main function        │   │
-│   │          Management         │  │        Control plane        │  │         Admin access        │   │
-│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
-│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
-│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
-│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
-│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
-│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
-│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Security Active Directory Operations infrastructure · management network · monitoring    │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Active Directory   = Security Active Directory Operations platform overview and core concepts      │
-│    Management         = management console and command-line interface for administration              │
-│    Monitoring         = health and performance monitoring dashboards and alerting                     │
-│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
-│    Security           = access control, authentication, and encryption configuration                  │
-│    Backup             = backup and recovery procedures and schedule configuration                     │
-│    Upgrade            = software version upgrades and firmware patching procedures                    │
-│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
-│    Escalation         = vendor support escalation path and severity triage process                    │
-│    Documentation      = vendor knowledge base and official product documentation                      │
-│    Change management  = change ticket requirements for production modifications                       │
-│    Audit log          = admin action logging for compliance and security review                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 
 ## Before you begin
@@ -94,6 +43,8 @@ AD groups control access to resources and distribution of email. Choosing the co
 
 ### Group Types and Scopes
 
+![Group Types and Scopes](../../../../assets/active-directory-proc-group-types-and-scopes.svg)
+
 | Scope | Can Contain | Used For | Replicates To |
 |---|---|---|---|
 | Domain Local | Users, Global, Universal from any domain | Assigning permissions to local resources | Domain only |
@@ -104,6 +55,8 @@ AD groups control access to resources and distribution of email. Choosing the co
 Best practice: follow AGDLP — Accounts in Global groups, Global in Domain Local groups, Domain Local assigned Permissions.
 
 ### Creating Groups
+
+![Creating Groups](../../../../assets/active-directory-proc-creating-groups.svg)
 
 ```powershell
 # Create a security group (Global scope)
@@ -128,6 +81,8 @@ New-ADGroup -Name "DL-FileShare-Finance-RW" `
 
 ### Managing Group Membership
 
+![Managing Group Membership](../../../../assets/active-directory-proc-managing-group-membership.svg)
+
 ```powershell
 # Add a single member
 Add-ADGroupMember -Identity "SG-ServerAdmins" -Members "jsmith"
@@ -147,6 +102,8 @@ Get-ADPrincipalGroupMembership -Identity "jsmith" | Select-Object Name, GroupSco
 
 ### Group Nesting
 
+![Group Nesting](../../../../assets/active-directory-proc-group-nesting.svg)
+
 ```powershell
 # Add a Global group into a Domain Local group (AGDLP)
 Add-ADGroupMember -Identity "DL-FileShare-Finance-RW" -Members "SG-FinanceUsers"
@@ -161,6 +118,8 @@ Get-ADPrincipalGroupMembership -Identity "jsmith" -Recursive |
 ```
 
 ### Auditing and Reporting
+
+![Auditing and Reporting](../../../../assets/active-directory-proc-auditing-and-reporting.svg)
 
 ```powershell
 # Find empty groups
@@ -189,6 +148,8 @@ GPOs apply configuration to computers and users in AD. They are linked to Sites,
 
 ### GPO Processing Order
 
+![GPO Processing Order](../../../../assets/active-directory-proc-gpo-processing-order.svg)
+
 | Level | Priority (low to high) | Notes |
 |---|---|---|
 | Local | 1 | Machine-local policy |
@@ -200,6 +161,8 @@ GPOs apply configuration to computers and users in AD. They are linked to Sites,
 Later-processed policies win unless Block Inheritance or Enforced (No Override) is set.
 
 ### Creating and Linking a GPO
+
+![Creating and Linking a GPO](../../../../assets/active-directory-proc-creating-and-linking-a-gpo.svg)
 
 ```powershell
 # Create a new GPO
@@ -216,6 +179,8 @@ Set-GPLink -Name "Desktop Lockscreen" -Target "OU=Workstations,DC=corp,DC=exampl
 ```
 
 ### Viewing Applied Policy
+
+![Viewing Applied Policy](../../../../assets/active-directory-proc-viewing-applied-policy.svg)
 
 ```cmd
 # Show applied GPOs for the current user and computer
@@ -236,6 +201,8 @@ gpupdate /target:user
 
 ### RSoP (Resultant Set of Policy)
 
+![RSoP (Resultant Set of Policy)](../../../../assets/active-directory-proc-rsop-resultant-set-of-policy.svg)
+
 ```cmd
 # RSoP wizard (GUI)
 rsop.msc
@@ -248,6 +215,8 @@ gpresult /r /scope computer | findstr /i "password"
 ```
 
 ### GPO Backup and Restore
+
+![GPO Backup and Restore](../../../../assets/active-directory-proc-gpo-backup-and-restore.svg)
 
 ```powershell
 # Backup all GPOs
@@ -265,6 +234,8 @@ Import-GPO -BackupGpoName "Security Baseline - Servers" `
 ```
 
 ### GPO Inheritance and Filtering
+
+![GPO Inheritance and Filtering](../../../../assets/active-directory-proc-gpo-inheritance-and-filtering.svg)
 
 ```powershell
 # Block inheritance on an OU
@@ -290,6 +261,8 @@ Domain Controllers host the AD DS database (ntds.dit), authenticate users, and h
 
 ### FSMO Roles
 
+![FSMO Roles](../../../../assets/active-directory-proc-fsmo-roles.svg)
+
 Five Flexible Single Master Operations roles exist across forest and domain levels. Only one DC holds each role at a time.
 
 | Role | Scope | Function |
@@ -311,6 +284,8 @@ Get-ADForest | Select-Object SchemaMaster, DomainNamingMaster
 
 ### Promoting a New DC
 
+![Promoting a New DC](../../../../assets/active-directory-proc-promoting-a-new-dc.svg)
+
 ```powershell
 # Install AD DS role
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
@@ -327,6 +302,8 @@ Install-ADDSDomainController `
 
 ### Demoting a DC
 
+![Demoting a DC](../../../../assets/active-directory-proc-demoting-a-dc.svg)
+
 ```powershell
 # Graceful demotion
 Uninstall-ADDSDomainController `
@@ -340,6 +317,8 @@ ntdsutil
 ```
 
 ### Transferring and Seizing FSMO Roles
+
+![Transferring and Seizing FSMO Roles](../../../../assets/active-directory-proc-transferring-and-seizing-fsmo-roles.svg)
 
 ```powershell
 # Transfer PDC Emulator gracefully
@@ -360,6 +339,8 @@ ntdsutil
 
 ### DC Health Validation
 
+![DC Health Validation](../../../../assets/active-directory-proc-dc-health-validation.svg)
+
 ```cmd
 # Run all dcdiag tests
 dcdiag /test:all /v
@@ -378,6 +359,8 @@ ntdsutil "activate instance ntds" "files" "integrity" quit quit
 ```
 
 ### Time Synchronisation
+
+![Time Synchronisation](../../../../assets/active-directory-proc-time-synchronisation.svg)
 
 The PDC Emulator is the authoritative time source for the domain. All other DCs and clients sync from the hierarchy.
 
@@ -449,12 +432,16 @@ Enable auditing to capture privileged account and group changes for security and
 
 ### Enable Audit Policy via GPO
 
+![Enable Audit Policy via GPO](../../../../assets/active-directory-proc-enable-audit-policy-via-gpo.svg)
+
 1. Create or edit a GPO linked to Domain Controllers OU.
 2. Navigate to **Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy Configuration → DS Access**.
 3. Enable **Audit Directory Service Changes** → Success and Failure.
 4. Run `gpupdate /force` on all DCs.
 
 ### Key Event IDs to Monitor
+
+![Key Event IDs to Monitor](../../../../assets/active-directory-proc-key-event-ids-to-monitor.svg)
 
 | Event ID | Description |
 |---|---|
@@ -467,6 +454,8 @@ Enable auditing to capture privileged account and group changes for security and
 | 4732 | Member added to a security-enabled local group |
 
 ### Query Security Event Log
+
+![Query Security Event Log](../../../../assets/active-directory-proc-query-security-event-log.svg)
 
 ```powershell
 # Find all account lockout events (4740) in the last 24 hours

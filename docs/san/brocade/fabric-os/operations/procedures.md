@@ -40,62 +40,11 @@ flowchart TD
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff
 ```
-```text
-┌────────────────────────────── Brocade Fabric OS — Operations Procedures ──────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             Standard FOS operational procedures for day-to-day SAN administration             │   │
-│   │            Zone change: create alias -> create zone -> add to zone set -> cfgenable           │   │
-│   │      Port management: portdisable/portenable; portcfgpersistentdisable for permanent off      │   │
-│   │          Firmware upgrade: firmwaredownload -s; verify with firmwareshow after reboot         │   │
-│   │              Config backup: configupload to save switch config to SCP/FTP server              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Pre-checks -> change procedure -> post-checks -> documentation and rollback plan                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Zone Mgmt          │  │          Port Mgmt          │  │          Lifecycle          │   │
-│   │          alicreate          │  │         portdisable         │  │       firmwaredownload      │   │
-│   │          zonecreate         │  │          portenable         │  │         configupload        │   │
-│   │            cfgadd           │  │         portcfgspeed        │  │        configdownload       │   │
-│   │          cfgenable          │  │         portcfgmode         │  │         supportshow         │   │
-│   │           cfgsave           │  │           portshow          │  │         firmwareshow        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Always cfgsave after cfgenable; changes without cfgsave lost on switch reboot                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │   CLI command    │       Impact      │     Rollback     │      Notes       │   │
-│   │     Zone add     │    cfgenable     │    Fabric-wide    │  cfgenable old   │   CAB required   │   │
-│   │   Port disable   │   portdisable    │     Port only     │    portenable    │    Log first     │   │
-│   │    FW upgrade    │ firmwaredownload │   Switch reboot   │  Prior version   │    NDU for HA    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SSH to switch mgmt IP · SCP server for config/firmware files                             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    alicreate      = FOS CLI command to create a WWN alias for a host or storage port                  │
-│    zonecreate     = Creates a new zone with specified member aliases or WWNs                          │
-│    cfgadd         = Adds a zone to an existing zone configuration                                     │
-│    cfgenable      = Activates the named zone configuration across the entire fabric                   │
-│    cfgsave        = Saves the zone database to non-volatile memory on all switches                    │
-│    portdisable    = Administratively disables an FC port (state: No_Light or D_Port)                  │
-│    portcfgspeed   = Sets port speed (auto, 8G, 16G, 32G, 64G)                                         │
-│    firmwaredownload = Downloads FOS image from SCP/FTP and reboots switch to activate                 │
-│    configupload   = Uploads running switch config to SCP/FTP for backup                               │
-│    configdownload = Restores switch config from previously uploaded backup file                       │
-│    supportshow    = Collects full diagnostic data bundle for TAC support                              │
-│    NDU            = Non-Disruptive Upgrade; HA chassis upgrades one blade at a time                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
 
 ### Create Aliases
+
+![Create Aliases](../../../../assets/fabric-os-proc-create-aliases.svg)
 
 ```bash
 # Host HBA
@@ -107,6 +56,8 @@ alicreate "fa01_ct0_p1", "52:4a:93:7c:00:00:00:02"
 ```
 
 ### Create and Manage Zones
+
+![Create and Manage Zones](../../../../assets/fabric-os-proc-create-and-manage-zones.svg)
 
 ```bash
 # Create zone
@@ -123,6 +74,8 @@ zonedelete "esxi01_hba0__fa01_ct0_p0"
 ```
 
 ### Zone Set Management
+
+![Zone Set Management](../../../../assets/fabric-os-proc-zone-set-management.svg)
 
 ```bash
 # Create zone set and add initial members
@@ -142,6 +95,8 @@ cfgsave
 ```
 
 ### Example: Zone a New Host to FlashArray
+
+![Example: Zone a New Host to FlashArray](../../../../assets/fabric-os-proc-example-zone-a-new-host-to-flasharray.svg)
 
 ```bash
 # 1. Create host HBA aliases
@@ -164,6 +119,8 @@ cfgsave
 
 ### Zone Audit
 
+![Zone Audit](../../../../assets/fabric-os-proc-zone-audit.svg)
+
 ```bash
 # Show all zones and member count — find zones with > 1 initiator
 zoneshow
@@ -177,6 +134,8 @@ nszonemember "<alias_or_wwn>"
 ```
 
 ### Zoning Troubleshooting
+
+![Zoning Troubleshooting](../../../../assets/fabric-os-proc-zoning-troubleshooting.svg)
 
 | Symptom | Command | Action |
 |---|---|---|
