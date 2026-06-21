@@ -14,13 +14,13 @@ Generated: 2026-06-21
 
 | Metric | Count |
 |---|---:|
-| Total markdown pages | 2,739 |
+| Total markdown pages | 2,744 |
 | Sections | 11 |
-| Pages with full-width ASCII diagrams | 271 |
-| Pages with SVG diagrams | 2,737 |
+| Pages with full-width ASCII diagrams | 272 |
+| Pages with SVG diagrams | 2,741 |
 | Pages with Mermaid diagrams | 681 |
-| Pages with kb-summary | 2,460 |
-| Pages with tags | 2,712 |
+| Pages with kb-summary | 2,465 |
+| Pages with tags | 2,717 |
 | Audit score | 36 / 37 |
 
 ## Section page counts
