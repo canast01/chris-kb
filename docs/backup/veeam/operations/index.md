@@ -48,6 +48,11 @@ Veeam day-to-day operations — backup job management, restore procedures, scale
   <span>Automation scripts for health checks and operations.</span>
 </a>
 
+<a class="kb-card" href="morning-health-check/">
+  <strong>Morning Health-Check</strong>
+  <span>Daily Veeam job and repository health-check runbook — takes ~5 minutes.</span>
+</a>
+
 </div>
 
 ---

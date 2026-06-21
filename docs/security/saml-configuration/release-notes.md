@@ -9,6 +9,10 @@ Version history and release notes for SAML Configuration.
 </div>
 
 ![Release Notes](../../assets/saml-configuration-release-notes.svg)
+## Before you begin
+
+No special prerequisites — review the version table and cross-reference your deployed version before applying any update.
+
 
 ## Version History
 

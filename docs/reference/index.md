@@ -38,4 +38,16 @@ Minimum product versions for 65+ features across vSphere, vSAN, NSX, VCF, Aria S
 <strong>Quick-Start Guides</strong><br>
 Day 1 orientation checklists for vSphere, ONTAP, NSX-T, Veeam, and Pure FlashArray.
 </a>
+<a class="kb-card" href="incident-response/">
+<strong>Incident Response Playbooks</strong><br>
+Structured Triage → Isolate → Diagnose → Resolve → Post-Mortem for the top 5 infrastructure incidents.
+</a>
+<a class="kb-card" href="monitoring-thresholds/">
+<strong>Monitoring Thresholds</strong><br>
+Standard alert thresholds for compute, storage, network, and backup across all product families.
+</a>
+<a class="kb-card" href="capacity-planning/">
+<strong>Capacity Planning</strong><br>
+CPU, RAM, vSAN, and network sizing formulas with worked examples and 3-horizon worksheets.
+</a>
 </div>

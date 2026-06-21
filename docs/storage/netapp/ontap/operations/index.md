@@ -23,5 +23,6 @@ ONTAP — Operations reference: Health Checks, Procedures, CLI Reference, Instal
 <a class="kb-card" href="install-upgrade/"><strong>Install & Upgrade</strong><span>Installation, upgrade, patching, and decommission.</span></a>
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
 <a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
+<a class="kb-card" href="morning-health-check/"><strong>Morning Health-Check</strong><span>Daily ONTAP cluster health-check runbook — takes ~10 minutes.</span></a>
 </div>
 

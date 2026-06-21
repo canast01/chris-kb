@@ -13,7 +13,7 @@ search:
 Daily ONTAP cluster health-check sequence — takes ~10 minutes. Run this every morning before starting any operational work.
 </div>
 
-![ONTAP Morning Health-Check Runbook](../../../../assets/storage-netapp-ontap-operations-morning-health-check-index.svg)
+![ONTAP Morning Health-Check Runbook](../../../../../assets/storage-netapp-ontap-operations-morning-health-check-index.svg)
 
 ## Before you begin
 
